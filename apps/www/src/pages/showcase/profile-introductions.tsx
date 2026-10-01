@@ -88,7 +88,7 @@ const CONTEXT_GLYPH: Record<Suggestion["contextType"], typeof MessageCircleIcon>
 
 export function ProfileIntroductionsShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-3xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           People you may know
@@ -105,16 +105,16 @@ export function ProfileIntroductionsShowcasePage() {
             return (
               <li
                 key={s.name}
-                className="rounded-xl border border-border/60 bg-background/40 p-5"
+                className="rounded-xl border border-border/60 bg-background/40 p-4 sm:p-5"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3">
-                    <Avatar className="size-12">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex min-w-0 items-start gap-3">
+                    <Avatar className="size-12 shrink-0">
                       <AvatarFallback className="text-base">
                         {s.initials}
                       </AvatarFallback>
                     </Avatar>
-                    <div>
+                    <div className="min-w-0">
                       <div className="text-sm">{s.name}</div>
                       <div className="text-muted-foreground text-xs">
                         {s.role}
@@ -123,7 +123,8 @@ export function ProfileIntroductionsShowcasePage() {
                   </div>
                   <button
                     type="button"
-                    className="grid size-6 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
+                    aria-label={`Dismiss ${s.name}`}
+                    className="-mt-1 -mr-1 grid size-8 shrink-0 place-items-center rounded-md pointer-coarse:size-10 text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
                   >
                     <XIcon className="size-3.5" />
                   </button>
@@ -131,7 +132,7 @@ export function ProfileIntroductionsShowcasePage() {
 
                 <div
                   className={
-                    "mt-3 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] " +
+                    "mt-3 inline-flex max-w-full items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] " +
                     CONTEXT_TONE[s.contextType]
                   }
                 >
@@ -159,7 +160,7 @@ export function ProfileIntroductionsShowcasePage() {
                         key={m}
                         className="size-5 border-2 border-background"
                       >
-                        <AvatarFallback className="text-[9px]">
+                        <AvatarFallback className="text-[10px]">
                           {m}
                         </AvatarFallback>
                       </Avatar>

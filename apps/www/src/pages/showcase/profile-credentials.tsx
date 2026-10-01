@@ -35,7 +35,7 @@ const KEYS = [
 
 export function ProfileCredentialsShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-3xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Settings · security
@@ -47,9 +47,9 @@ export function ProfileCredentialsShowcasePage() {
         </p>
 
         <div className="mt-6 rounded-xl border border-border/60 bg-emerald-500/[0.04] p-4">
-          <div className="flex items-start gap-3">
-            <ShieldCheckIcon className="mt-0.5 size-5 text-emerald-600 dark:text-emerald-400" />
-            <div className="flex-1">
+          <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
+            <ShieldCheckIcon className="mt-0.5 size-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <div className="min-w-0 flex-1 basis-[calc(100%-2rem)] sm:basis-auto">
               <div className="text-sm">
                 Your account is protected with two-factor and a passkey.
               </div>
@@ -57,21 +57,21 @@ export function ProfileCredentialsShowcasePage() {
                 Recovery codes regenerated 14 days ago.
               </div>
             </div>
-            <Button variant="ghost" type="button">
+            <Button variant="ghost" type="button" className="max-sm:ml-6">
               Review
             </Button>
           </div>
         </div>
 
         <section className="mt-8">
-          <div className="flex items-end justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h2 className="font-heading text-lg">Active sessions</h2>
               <p className="text-muted-foreground text-xs">
                 {SESSIONS.length} devices · 1 active now
               </p>
             </div>
-            <Button variant="outline" type="button">
+            <Button variant="outline" type="button" className="self-start sm:self-auto">
               Sign out everywhere
             </Button>
           </div>
@@ -80,13 +80,15 @@ export function ProfileCredentialsShowcasePage() {
             {SESSIONS.map((s) => (
               <li
                 key={s.device + s.ip}
-                className="grid grid-cols-[44px_1fr_140px_auto] items-center gap-3 px-4 py-3.5"
+                // Phones: icon · device + meta (last active/IP move under the
+                // browser line) · action. The meta column returns from sm.
+                className="grid grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3.5 sm:grid-cols-[44px_minmax(0,1fr)_140px_auto] sm:px-4"
               >
                 <div className="flex size-10 items-center justify-center rounded-lg bg-foreground/[0.06]">
                   <s.Icon className="size-5 opacity-70" />
                 </div>
                 <div className="min-w-0">
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                     {s.device}
                     {s.current ? (
                       <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 font-mono text-[10px] text-emerald-700 uppercase tracking-[0.2em] dark:text-emerald-400">
@@ -102,19 +104,23 @@ export function ProfileCredentialsShowcasePage() {
                   <div className="text-muted-foreground text-xs">
                     {s.browser} · {s.location}
                   </div>
+                  <div className="mt-0.5 font-mono text-[10px] text-muted-foreground sm:hidden">
+                    {s.lastActive} · {s.ip}
+                  </div>
                 </div>
-                <div className="text-right font-mono text-[10px] text-muted-foreground">
+                <div className="text-right font-mono text-[10px] text-muted-foreground max-sm:hidden">
                   <div>{s.lastActive}</div>
                   <div>{s.ip}</div>
                 </div>
                 {s.current ? (
-                  <span className="font-mono text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em]">
+                  <span aria-label="Current session" className="px-3 font-mono text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em]">
                     —
                   </span>
                 ) : (
                   <button
                     type="button"
-                    className="rounded-md border border-border/60 px-3 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:border-rose-500/40 hover:text-rose-600 dark:hover:text-rose-400"
+                    aria-label={`Sign out ${s.device}`}
+                    className="min-h-8 whitespace-nowrap rounded-md border border-border/60 px-3 py-1 font-mono text-[10px] pointer-coarse:min-h-10 text-muted-foreground uppercase tracking-[0.2em] hover:border-rose-500/40 hover:text-rose-600 dark:hover:text-rose-400"
                   >
                     Sign out
                   </button>
@@ -125,9 +131,9 @@ export function ProfileCredentialsShowcasePage() {
         </section>
 
         <section className="mt-8">
-          <div className="flex items-end justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <h2 className="font-heading text-lg">Passkeys & security keys</h2>
-            <Button variant="outline" type="button">
+            <Button variant="outline" type="button" className="self-start sm:self-auto">
               <KeyRoundIcon />
               Add a passkey
             </Button>
@@ -136,20 +142,21 @@ export function ProfileCredentialsShowcasePage() {
             {KEYS.map((k) => (
               <li
                 key={k.label}
-                className="grid grid-cols-[44px_1fr_auto] items-center gap-3 px-4 py-3"
+                className="grid grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:grid-cols-[44px_minmax(0,1fr)_auto] sm:px-4"
               >
                 <div className="flex size-10 items-center justify-center rounded-lg bg-foreground/[0.06]">
                   <LockIcon className="size-4 opacity-70" />
                 </div>
-                <div>
-                  <div className="text-sm">{k.label}</div>
+                <div className="min-w-0">
+                  <div className="break-words text-sm">{k.label}</div>
                   <div className="font-mono text-[10px] text-muted-foreground">
                     Added {k.added} · last used {k.lastUsed}
                   </div>
                 </div>
                 <button
                   type="button"
-                  className="rounded-md border border-border/60 px-3 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:border-rose-500/40 hover:text-rose-600 dark:hover:text-rose-400"
+                  aria-label={`Remove ${k.label}`}
+                  className="min-h-8 rounded-md border border-border/60 px-3 py-1 font-mono text-[10px] pointer-coarse:min-h-10 text-muted-foreground uppercase tracking-[0.2em] hover:border-rose-500/40 hover:text-rose-600 dark:hover:text-rose-400"
                 >
                   Remove
                 </button>

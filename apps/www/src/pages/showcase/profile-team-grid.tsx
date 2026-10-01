@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { GlobeIcon, MailIcon, MapPinIcon, SearchIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
 import { Button } from "@orbit/ui/button";
@@ -40,10 +41,19 @@ const DEPARTMENTS: Department[] = [
 ];
 
 export function ProfileTeamGridShowcasePage() {
+  const [query, setQuery] = useState("");
+  const q = query.trim().toLowerCase();
+  const departments = DEPARTMENTS.map((d) => ({
+    ...d,
+    members: d.members.filter(
+      (m) => !q || m.name.toLowerCase().includes(q) || m.role.toLowerCase().includes(q),
+    ),
+  })).filter((d) => d.members.length > 0);
+
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Acme · 6 teammates · 4 cities
@@ -53,19 +63,29 @@ export function ProfileTeamGridShowcasePage() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 rounded-md border border-border/60 bg-background/40 px-3 py-1.5 text-xs">
-              <SearchIcon className="size-3.5 opacity-60" />
+            <label className="flex min-h-9 min-w-0 flex-1 items-center gap-2 rounded-md border border-border/60 bg-background/40 px-3 py-1.5 text-xs focus-within:ring-2 focus-within:ring-ring sm:w-64 sm:flex-none">
+              <SearchIcon className="size-3.5 shrink-0 opacity-60" />
               <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                aria-label="Search teammates"
                 placeholder="Search by name or role"
-                className="bg-transparent outline-none placeholder:text-muted-foreground"
+                className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground sm:text-xs"
               />
-            </div>
-            <Button type="button">Invite</Button>
+            </label>
+            <Button type="button" className="shrink-0">Invite</Button>
           </div>
         </div>
 
-        {DEPARTMENTS.map((d) => (
-          <section key={d.name} className="mt-10">
+        {departments.length === 0 ? (
+          <p className="mt-10 text-center text-muted-foreground text-sm">
+            No teammates match "{query}".
+          </p>
+        ) : null}
+
+        {departments.map((d) => (
+          <section key={d.name} className="mt-8 sm:mt-10">
             <div className="mb-3 flex items-center gap-3">
               <h2 className="font-heading text-base">{d.name}</h2>
               <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
@@ -73,18 +93,19 @@ export function ProfileTeamGridShowcasePage() {
               </span>
               <span className="ml-auto h-px flex-1 bg-border/40" />
             </div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {d.members.map((m) => (
                 <article
                   key={m.name}
                   className="rounded-xl border border-border/60 bg-background/40 p-4 transition-colors hover:bg-background/60"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="relative">
+                    <div className="relative shrink-0">
                       <Avatar className="size-12">
                         <AvatarFallback>{m.initials}</AvatarFallback>
                       </Avatar>
                       <span
+                        aria-hidden
                         className={
                           "absolute right-0 bottom-0 size-3 rounded-full border-2 border-background " +
                           (m.status === "online"
@@ -96,10 +117,11 @@ export function ProfileTeamGridShowcasePage() {
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex flex-wrap items-center gap-x-1.5">
                         <span className="text-sm">{m.name}</span>
+                        <span className="sr-only">, {m.status}</span>
                         {m.pronouns ? (
-                          <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-[0.2em]">
+                          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                             {m.pronouns}
                           </span>
                         ) : null}
@@ -119,14 +141,14 @@ export function ProfileTeamGridShowcasePage() {
                     </span>
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 hover:text-foreground"
+                      className="-mx-1 inline-flex min-h-8 items-center gap-1 rounded px-1 hover:text-foreground pointer-coarse:min-h-10"
                     >
                       <MailIcon className="size-3" />
                       Email
                     </button>
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 hover:text-foreground"
+                      className="-mx-1 inline-flex min-h-8 items-center gap-1 rounded px-1 hover:text-foreground pointer-coarse:min-h-10"
                     >
                       <GlobeIcon className="size-3" />
                       Profile

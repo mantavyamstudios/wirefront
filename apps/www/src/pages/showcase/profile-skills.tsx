@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { PlusIcon, ThumbsUpIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
 
@@ -25,13 +26,21 @@ const SKILLS: Skill[] = [
 ];
 
 export function ProfileSkillsShowcasePage() {
+  const [endorsed, setEndorsed] = useState<Set<string>>(() => new Set());
+  const toggleEndorse = (name: string) =>
+    setEndorsed((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
   const grouped = SKILLS.reduce<Record<string, Skill[]>>((acc, s) => {
     (acc[s.category] ??= []).push(s);
     return acc;
   }, {});
 
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-3xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Maya Okafor · skills
@@ -60,28 +69,32 @@ export function ProfileSkillsShowcasePage() {
                   className="rounded-xl border border-border/60 bg-background/40 px-3.5 py-2.5 transition-colors hover:bg-background/60"
                 >
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="text-sm">{s.name}</span>
+                    <span className="min-w-0 break-words text-sm">{s.name}</span>
                     <Stars level={s.level} />
                   </div>
-                  <div className="mt-2 flex items-center justify-between">
+                  <div className="mt-2 flex items-center justify-between gap-2">
                     <div className="flex items-center -space-x-1.5">
                       {s.endorsers.slice(0, 4).map((e) => (
                         <Avatar
                           key={e}
                           className="size-5 border-2 border-background"
                         >
-                          <AvatarFallback className="text-[9px]">
+                          <AvatarFallback className="text-[10px]">
                             {e}
                           </AvatarFallback>
                         </Avatar>
                       ))}
                       <span className="ml-3 font-mono text-[10px] text-muted-foreground tabular-nums">
-                        {s.endorsements}
+                        {s.endorsements + (endorsed.has(s.name) ? 1 : 0)}
+                        <span className="sr-only"> endorsements</span>
                       </span>
                     </div>
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 rounded-md bg-foreground/[0.04] px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:bg-foreground/[0.08] hover:text-foreground"
+                      aria-pressed={endorsed.has(s.name)}
+                      aria-label={`Endorse ${s.name}`}
+                      onClick={() => toggleEndorse(s.name)}
+                      className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-md bg-foreground/[0.04] px-2.5 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:bg-foreground/[0.08] hover:text-foreground aria-pressed:bg-foreground aria-pressed:text-background pointer-coarse:min-h-10"
                     >
                       <ThumbsUpIcon className="size-3" />
                       Endorse
@@ -95,7 +108,7 @@ export function ProfileSkillsShowcasePage() {
 
         <button
           type="button"
-          className="mt-6 inline-flex items-center gap-2 rounded-md border border-dashed border-border/70 px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:border-foreground/40 hover:text-foreground"
+          className="mt-6 inline-flex min-h-10 items-center gap-2 rounded-md border border-dashed border-border/70 px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:border-foreground/40 hover:text-foreground"
         >
           <PlusIcon className="size-3.5" />
           Add a skill
@@ -107,7 +120,7 @@ export function ProfileSkillsShowcasePage() {
 
 function Stars({ level }: { level: number }) {
   return (
-    <div className="flex items-center gap-0.5">
+    <div role="img" aria-label={`Proficiency ${level} of 5`} className="flex shrink-0 items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
         <span
           key={i}

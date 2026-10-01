@@ -80,7 +80,7 @@ const PERMISSION_TONE: Record<Member["permission"], string> = {
 
 export function ProfileCompactCardShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-2xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Workspace members · 5 of 28
@@ -91,7 +91,9 @@ export function ProfileCompactCardShowcasePage() {
           {MEMBERS.map((m) => (
             <li
               key={m.email}
-              className="grid grid-cols-[44px_1fr_140px_120px_28px] items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 shadow-sm transition-colors hover:bg-background/95"
+              // Phones: avatar · name/role/status · permission · menu. The role
+              // column only appears from md, where there's room for it.
+              className="grid grid-cols-[40px_minmax(0,1fr)_auto_auto] items-center gap-2 rounded-xl border border-border bg-background px-3 py-3 shadow-sm transition-colors hover:bg-background/95 sm:gap-3 sm:px-4 md:grid-cols-[44px_minmax(0,1fr)_140px_120px_auto]"
             >
               <div className="relative">
                 <Avatar className="size-10">
@@ -100,6 +102,7 @@ export function ProfileCompactCardShowcasePage() {
                   </AvatarFallback>
                 </Avatar>
                 <span
+                  aria-hidden
                   className={
                     "absolute right-0 bottom-0 size-3 rounded-full border-2 border-background " +
                     STATUS_DOT[m.status]
@@ -110,22 +113,25 @@ export function ProfileCompactCardShowcasePage() {
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="truncate text-sm">{m.name}</span>
-                  <span className="font-mono text-[10px] text-muted-foreground">
+                  <span className="sr-only">, {m.status}</span>
+                  <span className="shrink-0 font-mono text-[10px] text-muted-foreground max-sm:hidden">
                     @{m.email.split("@")[0]}
                   </span>
                 </div>
                 {m.customStatus ? (
                   <div className="mt-0.5 truncate text-foreground/80 text-xs">
+                    <span className="text-muted-foreground md:hidden">{m.role} · </span>
                     {m.customStatus}
                   </div>
                 ) : (
-                  <div className="mt-0.5 text-muted-foreground text-xs">
+                  <div className="mt-0.5 truncate text-muted-foreground text-xs">
+                    <span className="md:hidden">{m.role} · </span>
                     {m.active}
                   </div>
                 )}
               </div>
 
-              <div className="text-muted-foreground text-xs">
+              <div className="text-muted-foreground text-xs max-md:hidden">
                 <div>{m.role}</div>
                 <div className="font-mono text-[10px] uppercase tracking-[0.2em]">
                   {m.active}
@@ -135,8 +141,10 @@ export function ProfileCompactCardShowcasePage() {
               <div>
                 <button
                   type="button"
+                  aria-haspopup="menu"
+                  aria-label={`Permission for ${m.name}: ${m.permission}`}
                   className={
-                    "inline-flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 font-mono text-[11px] " +
+                    "inline-flex min-h-8 w-full items-center justify-between gap-1.5 rounded-md px-2 py-1.5 font-mono text-[11px] pointer-coarse:min-h-10 " +
                     PERMISSION_TONE[m.permission]
                   }
                 >
@@ -147,7 +155,8 @@ export function ProfileCompactCardShowcasePage() {
 
               <button
                 type="button"
-                className="grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
+                aria-label={`More actions for ${m.name}`}
+                className="-mr-1 grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
               >
                 <MoreHorizontalIcon className="size-4" />
               </button>
