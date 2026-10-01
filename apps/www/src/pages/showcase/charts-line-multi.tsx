@@ -26,7 +26,7 @@ const DATA = WEB.map((_, i) => ({
 
 export function ChartsLineMultiShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Daily active users · Apr 2026
@@ -76,8 +76,8 @@ export function ChartsLineMultiShowcasePage() {
           <ChartContainer className="mt-4 h-72">
             <LineChart data={DATA} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
               <ChartGrid />
-              <ChartAxis dataKey="day" interval={4} />
-              <ChartAxis axis="y" width={36} />
+              <ChartAxis dataKey="day" />
+              <ChartAxis axis="y" />
               <ChartTooltip />
               {SERIES.map((s) => (
                 <Line

@@ -73,7 +73,7 @@ const BARS = buildBars();
 
 export function ChartsWaterfallShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           ARR movement · Q4 → Q1 (k)
@@ -103,7 +103,7 @@ export function ChartsWaterfallShowcasePage() {
             <BarChart data={BARS} margin={{ top: 24, right: 8, left: 0, bottom: 0 }}>
               <ChartGrid />
               <ChartAxis dataKey="label" />
-              <ChartAxis axis="y" width={40} />
+              <ChartAxis axis="y" />
               <ChartTooltip />
               <Bar dataKey="base" stackId="w" fill="transparent" />
               <Bar dataKey="delta" stackId="w" radius={[3, 3, 0, 0]}>

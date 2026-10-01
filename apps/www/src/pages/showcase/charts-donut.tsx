@@ -13,7 +13,7 @@ export function ChartsDonutShowcasePage() {
   const total = SLICES.reduce((acc, s) => acc + s.value, 0);
 
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Revenue mix · Q1 2026

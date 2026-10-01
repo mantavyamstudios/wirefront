@@ -43,7 +43,7 @@ const POINTS: Point[] = [
 
 export function ChartsScatterShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Account health · top 15 customers
@@ -72,7 +72,6 @@ export function ChartsScatterShowcasePage() {
                 type="number"
                 domain={[0, 100]}
                 ticks={[0, 25, 50, 75, 100]}
-                width={36}
                 tickFormatter={(v) => `${v}%`}
               />
               <ZAxis dataKey="size" range={[80, 720]} />

@@ -35,7 +35,7 @@ export function ChartsRevenueAreaShowcasePage() {
   const total = DATA[DATA.length - 1].total;
 
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Revenue · last 12 months
@@ -90,7 +90,6 @@ export function ChartsRevenueAreaShowcasePage() {
               <ChartAxis dataKey="month" />
               <ChartAxis
                 axis="y"
-                width={36}
                 tickFormatter={(v) => `${v}k`}
               />
               <ChartTooltip />

@@ -64,7 +64,7 @@ export function ChartContainer({
 }) {
   return (
     <div
-      className={`${className} text-foreground [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:font-mono [&_.recharts-cartesian-axis-tick_text]:text-[10px] [&_.recharts-cartesian-axis-tick_text]:uppercase [&_.recharts-cartesian-axis-tick_text]:tracking-[0.2em] [&_.recharts-cartesian-grid-bg]:fill-transparent [&_.recharts-cartesian-grid_line]:stroke-border [&_.recharts-polar-grid_line]:stroke-border [&_.recharts-polar-angle-axis-tick_text]:fill-muted-foreground [&_.recharts-polar-angle-axis-tick_text]:font-mono [&_.recharts-polar-angle-axis-tick_text]:text-[10px]`}
+      className={`${className} text-foreground [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:font-mono [&_.recharts-cartesian-axis-tick_text]:text-[10px] [&_.recharts-cartesian-axis-tick_text]:uppercase [&_.recharts-xAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.2em] [&_.recharts-yAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.05em] [&_.recharts-cartesian-grid-bg]:fill-transparent [&_.recharts-cartesian-grid_line]:stroke-border [&_.recharts-polar-grid_line]:stroke-border [&_.recharts-polar-angle-axis-tick_text]:fill-muted-foreground [&_.recharts-polar-angle-axis-tick_text]:font-mono [&_.recharts-polar-angle-axis-tick_text]:text-[10px]`}
     >
       <ResponsiveContainer width="100%" height="100%">
         {children as React.ReactElement}
@@ -124,6 +124,11 @@ export function ChartAxis({
   interval?: number | "preserveStart" | "preserveEnd" | "preserveStartEnd";
   padding?: { left?: number; right?: number; top?: number; bottom?: number };
 }) {
+  // Tick metrics are passed explicitly so Recharts measures labels the way
+  // they are styled (10px mono, tracked). Without this, CSS letter-spacing
+  // was applied after layout: Y labels overflowed a fixed 36px axis and got
+  // clipped ("100%" rendered as "0%"), and X labels collided on narrow charts.
+  const isY = axis === "y";
   const common = {
     dataKey,
     tickFormatter,
@@ -131,24 +136,40 @@ export function ChartAxis({
     tickCount,
     domain,
     hide,
-    width,
     type,
-    interval,
     padding,
     tickLine: false,
     axisLine: false,
     tickMargin: 10,
-    minTickGap: 8,
+    minTickGap: 16,
+    fontSize: 10,
+    letterSpacing: isY ? 0.5 : 2,
     stroke: "currentColor",
   } as const;
-  if (axis === "y") {
+  if (isY) {
     const o =
       orientation === "left" || orientation === "right" ? orientation : undefined;
-    return <YAxis {...common} orientation={o} />;
+    // `width` acts as a floor; "auto" sizes the axis to its longest label.
+    return (
+      <YAxis
+        {...common}
+        interval={interval}
+        width={width === undefined ? "auto" : Math.max(width, 44)}
+        orientation={o}
+      />
+    );
   }
   const o =
     orientation === "top" || orientation === "bottom" ? orientation : undefined;
-  return <XAxis {...common} orientation={o} />;
+  // Default: keep first/last labels and drop any that would collide.
+  return (
+    <XAxis
+      {...common}
+      width={width}
+      interval={interval ?? "preserveStartEnd"}
+      orientation={o}
+    />
+  );
 }
 
 /**

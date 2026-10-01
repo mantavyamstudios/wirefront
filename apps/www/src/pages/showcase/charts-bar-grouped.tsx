@@ -22,7 +22,7 @@ const DATA = [
 
 export function ChartsBarGroupedShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Quarterly bookings · ARR (k)
@@ -54,7 +54,7 @@ export function ChartsBarGroupedShowcasePage() {
             <BarChart data={DATA} margin={{ top: 16, right: 8, left: 0, bottom: 0 }}>
               <ChartGrid />
               <ChartAxis dataKey="quarter" />
-              <ChartAxis axis="y" width={36} />
+              <ChartAxis axis="y" />
               <ChartTooltip />
               {SERIES.map((s) => (
                 <Bar
