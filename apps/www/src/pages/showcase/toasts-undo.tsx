@@ -1,75 +1,113 @@
 import { useEffect, useState } from "react";
-import { TrashIcon, XIcon } from "lucide-react";
+import { ArchiveIcon, TrashIcon, XIcon } from "lucide-react";
+import { Button } from "@orbit/ui/button";
+import { ToastPrimitive as Toast } from "@orbit/ui/toast";
 
+const UNDO_MS = 8000;
+const PROJECTS = ["Q3 planning", "Design system", "Billing revamp", "Mobile app"];
+
+// A dedicated manager keeps this showcase self-contained. In an app, mount
+// <ToastProvider> once and use the shared `toastManager` from @orbit/ui/toast.
+const toasts = Toast.createToastManager<{ undo: () => void }>();
+
+// Archive → snackbar with Undo. The undo window is the toast's own timeout,
+// so it pauses while the snackbar is hovered or focused, and the progress
+// bar pauses with it. The window is announced once, not every tick.
 export function ToastsUndoShowcasePage() {
-  const [remaining, setRemaining] = useState(8);
+  const [archived, setArchived] = useState<string[]>([]);
 
-  useEffect(() => {
-    const t = window.setInterval(() => {
-      setRemaining((r) => (r > 0 ? r - 0.05 : 0));
-    }, 50);
-    return () => window.clearInterval(t);
-  }, []);
+  const archive = (name: string) => {
+    setArchived((a) => [...a, name]);
+    toasts.add({
+      id: `archived-${name}`,
+      title: "Project archived",
+      description: `"${name}" moved to archive. Undo within ${UNDO_MS / 1000} seconds.`,
+      timeout: UNDO_MS,
+      data: { undo: () => setArchived((a) => a.filter((n) => n !== name)) },
+    });
+  };
 
-  const pct = Math.max(0, (remaining / 8) * 100);
+  useEffect(() => archive(PROJECTS[0]!), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="relative min-h-svh overflow-hidden bg-background text-foreground">
-      <FakeAppBackdrop />
-      <div className="-translate-x-1/2 absolute bottom-8 left-1/2 z-50 w-96">
-        <div className="overflow-hidden rounded-lg border border-foreground/10 bg-foreground text-background shadow-xl">
-          <div className="flex items-center gap-3 px-3.5 py-2.5">
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-background/15">
-              <TrashIcon className="size-3.5" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="font-medium text-sm">Project archived</div>
-              <p className="mt-0.5 truncate text-xs opacity-70">
-                "Q3 planning" moved to archive.
-              </p>
-            </div>
-            <button
-              type="button"
-              className="rounded-md bg-background/15 px-2.5 py-1 font-medium text-xs transition-colors hover:bg-background/25"
+    <Toast.Provider toastManager={toasts} limit={1}>
+      <div className="relative min-h-svh bg-background p-4 pb-32 text-foreground sm:p-10">
+        <h1 className="font-heading text-xl">Projects</h1>
+        <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {PROJECTS.filter((p) => !archived.includes(p)).map((p) => (
+            <li
+              key={p}
+              className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-foreground/[0.02] px-4 py-3"
             >
-              Undo
-            </button>
-            <button
-              type="button"
-              aria-label="Dismiss"
-              className="rounded-md p-1 opacity-60 transition-opacity hover:opacity-100"
-            >
-              <XIcon className="size-3.5" />
-            </button>
-          </div>
-          <div className="h-0.5 bg-background/10">
-            <div
-              className="h-full bg-background/40 transition-[width] duration-100"
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-        </div>
-        <div className="mt-2 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
-          {remaining > 0 ? `${remaining.toFixed(1)}s left to undo` : "Permanent"}
-        </div>
+              <span className="min-w-0 truncate text-sm">{p}</span>
+              <Button
+                size="sm"
+                variant="ghost"
+                type="button"
+                onClick={() => archive(p)}
+                aria-label={`Archive ${p}`}
+              >
+                <ArchiveIcon />
+                <span className="max-sm:sr-only">Archive</span>
+              </Button>
+            </li>
+          ))}
+        </ul>
+        <UndoViewport />
       </div>
-    </div>
+    </Toast.Provider>
   );
 }
 
-function FakeAppBackdrop() {
+// Phones: full-width above the home indicator. sm+: a centred 24rem snackbar.
+function UndoViewport() {
+  const { toasts: list } = Toast.useToastManager<{ undo: () => void }>();
   return (
-    <div className="absolute inset-0 p-10 opacity-50 space-y-3">
-      <div className="h-4 w-56 rounded bg-foreground/15" />
-      <div className="h-2 w-72 rounded bg-foreground/10" />
-      <div className="grid grid-cols-2 gap-3">
-        {[0, 1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="h-24 rounded-xl border border-border/40 bg-foreground/[0.02]"
-          />
+    <Toast.Portal>
+      <Toast.Viewport className="fixed inset-x-0 bottom-0 z-50 flex flex-col gap-2 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none sm:inset-x-auto sm:bottom-8 sm:left-1/2 sm:w-96 sm:-translate-x-1/2 sm:px-0 sm:pb-0">
+        {list.map((t) => (
+          <Toast.Root
+            key={t.id}
+            toast={t}
+            swipeDirection={["down", "left", "right"]}
+            className="group/toast translate-x-(--toast-swipe-movement-x) translate-y-(--toast-swipe-movement-y) overflow-hidden rounded-lg border border-foreground/10 bg-foreground text-background shadow-xl transition-[translate,opacity] duration-300 data-ending-style:opacity-0 data-starting-style:translate-y-3 data-starting-style:opacity-0 motion-reduce:transition-none"
+          >
+            <div className="flex items-center gap-3 py-2 pr-2 pl-3.5">
+              <span
+                aria-hidden
+                className="flex size-7 shrink-0 items-center justify-center rounded-full bg-background/15"
+              >
+                <TrashIcon className="size-3.5" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <Toast.Title className="font-medium text-sm" />
+                <Toast.Description className="mt-0.5 truncate text-xs opacity-70" />
+              </div>
+              <Toast.Close
+                onClick={() => t.data?.undo()}
+                className="min-h-8 shrink-0 rounded-md bg-background/15 px-3 font-medium text-xs transition-colors hover:bg-background/25 pointer-coarse:min-h-10"
+              >
+                Undo
+              </Toast.Close>
+              <Toast.Close
+                aria-label="Dismiss"
+                className="grid size-8 shrink-0 place-items-center rounded-md opacity-60 transition-opacity hover:opacity-100 pointer-coarse:size-10"
+              >
+                <XIcon className="size-3.5" />
+              </Toast.Close>
+            </div>
+            {/* Drains over the undo window; pauses while the toast is expanded
+                (hovered/focused), exactly like Base UI's timer. */}
+            <div aria-hidden className="h-0.5 bg-background/10">
+              <div
+                className="h-full origin-left bg-background/40 [animation:undo-drain_linear_forwards] group-data-expanded/toast:[animation-play-state:paused] motion-reduce:hidden"
+                style={{ animationDuration: `${UNDO_MS}ms` }}
+              />
+            </div>
+          </Toast.Root>
         ))}
-      </div>
-    </div>
+      </Toast.Viewport>
+      <style>{"@keyframes undo-drain{from{transform:scaleX(1)}to{transform:scaleX(0)}}"}</style>
+    </Toast.Portal>
   );
 }
