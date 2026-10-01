@@ -26,8 +26,11 @@ export function AuthMagicLinkSentShowcasePage() {
   };
 
   return (
-    <div className="relative min-h-svh bg-background flex items-center justify-center px-4">
+    <div className="relative min-h-svh bg-background flex items-center-safe justify-center px-4 py-10">
       <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-magic-float] { animation: none !important; }
+        }
         @keyframes magic-float-a {
           0%, 100% { transform: translate(0, 0); opacity: 0.55; }
           50% { transform: translate(0, -6px); opacity: 0.95; }
@@ -55,7 +58,7 @@ export function AuthMagicLinkSentShowcasePage() {
         }}
       />
 
-      <Card className="relative z-10 w-full max-w-md p-8">
+      <Card className="relative z-10 w-full max-w-md p-5 sm:p-8">
         <div className="flex flex-col items-center text-center">
           <EnvelopeArt />
 
@@ -110,7 +113,7 @@ export function AuthMagicLinkSentShowcasePage() {
 
           <p className="mt-6 text-muted-foreground text-xs">
             Didn't get it? Check your spam folder, or{" "}
-            <a className="underline cursor-pointer">use a different email</a>.
+            <button type="button" className="cursor-pointer underline">use a different email</button>.
           </p>
         </div>
       </Card>
@@ -123,28 +126,32 @@ function EnvelopeArt() {
     <div className="relative flex size-24 items-center justify-center">
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-2 rounded-2xl bg-primary/10 animate-ping"
+        className="pointer-events-none absolute inset-2 rounded-2xl bg-primary/10 motion-safe:animate-ping"
         style={{ animationDuration: "3s" }}
       />
 
       <span
         aria-hidden
         className="pointer-events-none absolute top-1 left-2 size-1 rounded-full bg-muted-foreground/60"
+        data-magic-float
         style={{ animation: "magic-float-a 3s ease-in-out infinite" }}
       />
       <span
         aria-hidden
         className="pointer-events-none absolute top-3 right-1 size-1.5 rounded-full bg-muted-foreground/50"
+        data-magic-float
         style={{ animation: "magic-float-b 4s ease-in-out infinite 0.4s" }}
       />
       <span
         aria-hidden
         className="pointer-events-none absolute bottom-2 left-0 size-1 rounded-full bg-muted-foreground/40"
+        data-magic-float
         style={{ animation: "magic-float-c 3.6s ease-in-out infinite 0.8s" }}
       />
       <span
         aria-hidden
         className="pointer-events-none absolute right-0 bottom-4 size-1 rounded-full bg-muted-foreground/55"
+        data-magic-float
         style={{ animation: "magic-float-a 3.4s ease-in-out infinite 1.2s" }}
       />
 

@@ -143,7 +143,7 @@ function SignInForm() {
               type="button"
               onClick={() => setReveal((v) => !v)}
               aria-label={reveal ? "Hide password" : "Show password"}
-              className="cursor-pointer rounded p-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="cursor-pointer rounded p-1 pointer-coarse:p-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {reveal ? (
                 <EyeOffIcon className="size-4" />
@@ -203,7 +203,7 @@ function RightColumn() {
 
 function TestimonialCard() {
   return (
-    <Card className="w-full p-8">
+    <Card className="w-full p-6 xl:p-8">
       <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
         Testimonial
       </div>
@@ -233,7 +233,7 @@ function LogoStrip() {
       <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
         Trusted by 2,400 teams
       </div>
-      <div className="flex w-full items-center justify-center gap-6 text-muted-foreground">
+      <div className="flex w-full flex-wrap items-center justify-center gap-x-6 gap-y-3 text-muted-foreground">
         {logos.map((logo, i) => (
           <div key={logo} className="flex items-center gap-6">
             {i > 0 ? (

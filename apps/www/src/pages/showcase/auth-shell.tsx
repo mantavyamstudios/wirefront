@@ -35,7 +35,7 @@ export function AuthShell({
   return (
     <TypingImpulseContext.Provider value={typingImpulseRef}>
       <AuthSplitLayout
-        rightClassName="lg:w-[620px]"
+        rightClassName="lg:w-[min(620px,55%)]"
         left={
           <>
             <ParticleField

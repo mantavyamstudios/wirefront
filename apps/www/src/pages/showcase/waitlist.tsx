@@ -5,7 +5,10 @@ import emptyRoomSrc from "@/assets/figures/empty-room.png";
 export function WaitlistShowcasePage() {
   const typingImpulse = useRef(0);
   return (
-    <div className="relative h-dvh w-dvw overflow-hidden bg-background">
+    // min-h-dvh + in-flow copy: the page can grow (landscape phones, zoom)
+    // instead of clipping. `w-full` avoids the scrollbar overflow of 100dvw.
+    <div className="relative flex min-h-dvh w-full flex-col justify-end overflow-hidden bg-background">
+      <div className="absolute inset-0">
       <ParticleField
         src={emptyRoomSrc}
         sampleStep={3}
@@ -15,6 +18,7 @@ export function WaitlistShowcasePage() {
         align="center"
         typingImpulseRef={typingImpulse}
       />
+      </div>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -39,7 +43,7 @@ export function WaitlistShowcasePage() {
             "radial-gradient(420px 220px at 50% 78%, color-mix(in srgb, var(--background) 85%, transparent) 0%, transparent 70%)",
         }}
       />
-      <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-4 px-6 pb-16 text-center">
+      <div className="relative z-10 flex flex-col items-center gap-4 px-6 pt-[45svh] pb-[max(4rem,env(safe-area-inset-bottom))] text-center">
         <div
           className="pointer-events-none font-mono text-[11px] uppercase tracking-[0.3em] text-foreground/55"
           style={{ textShadow: "0 1px 16px rgba(0,0,0,0.7)" }}
@@ -60,7 +64,7 @@ export function WaitlistShowcasePage() {
         </p>
         <a
           href="#"
-          className="mt-2 inline-flex h-10 items-center justify-center rounded-md bg-foreground px-5 font-medium text-background text-sm transition-opacity hover:opacity-90"
+          className="mt-2 inline-flex h-10 items-center justify-center rounded-md bg-foreground px-5 font-medium text-background text-sm transition-opacity hover:opacity-90 pointer-coarse:h-11"
         >
           Join the waitlist
         </a>

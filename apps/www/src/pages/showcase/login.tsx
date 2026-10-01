@@ -21,9 +21,9 @@ export function LoginShowcasePage() {
 function LoginForm() {
   return (
     <>
-      <div className="absolute top-6 left-6 flex items-center gap-2 font-mono text-sm lg:hidden">
-        <span className="inline-block h-2 w-2 rounded-full bg-foreground" />
-        <span className="tracking-[0.2em] uppercase">Mantavyam's scatch pad</span>
+      <div className="absolute top-4 left-4 flex max-w-[calc(100%-5rem)] items-center gap-2 font-mono text-sm sm:top-6 sm:left-6 lg:hidden">
+        <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-foreground" />
+        <span className="truncate tracking-[0.12em] uppercase sm:tracking-[0.2em]">Mantavyam's scatch pad</span>
       </div>
 
       <div className="w-full max-w-lg">
@@ -99,14 +99,15 @@ function MagicLinkForm() {
           Send sign-in link
         </Button>
         {!sentTo ? (
-          <p className="text-center text-muted-foreground text-xs">
+          // Keyboard hint is meaningless on touch screens.
+          <p className="text-center text-muted-foreground text-xs pointer-coarse:hidden">
             <Kbd className="font-mono">⌘↵</Kbd> to submit
           </p>
         ) : null}
       </form>
 
       {sentTo ? (
-        <div className="mt-4 rounded-lg border border-border/70 bg-background/40 px-3 py-2 text-muted-foreground text-sm">
+        <div role="status" className="mt-4 rounded-lg border border-border/70 bg-background/40 px-3 py-2 text-muted-foreground text-sm">
           Link sent to <span className="text-foreground">{sentTo}</span>. Open
           your inbox to continue.
         </div>

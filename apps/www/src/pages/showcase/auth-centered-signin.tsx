@@ -17,10 +17,10 @@ import { Separator } from "@orbit/ui/separator";
 
 export function AuthCenteredSigninShowcasePage() {
   return (
-    <div className="relative flex min-h-svh items-center justify-center bg-background px-4 py-12 text-foreground">
+    <div className="relative flex min-h-svh items-center-safe justify-center bg-background px-4 py-12 text-foreground">
       <PageBackdrop />
       <div className="relative w-full max-w-sm">
-        <Card className="p-7">
+        <Card className="p-5 sm:p-7">
           <CardHeader className="flex flex-col items-center gap-4 p-0 text-center">
             <BrandMark />
             <div className="flex flex-col gap-1.5">
@@ -168,7 +168,7 @@ function SignInForm() {
               type="button"
               onClick={() => setReveal((v) => !v)}
               aria-label={reveal ? "Hide password" : "Show password"}
-              className="cursor-pointer rounded p-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="cursor-pointer rounded p-1 pointer-coarse:p-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {reveal ? (
                 <EyeOffIcon className="size-4" />
@@ -189,7 +189,7 @@ function SignInForm() {
 
 function FooterLinks() {
   return (
-    <div className="flex items-baseline justify-between gap-4 text-xs">
+    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 text-xs">
       <a
         href="#"
         className="text-muted-foreground hover:text-foreground hover:underline"

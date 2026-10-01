@@ -83,11 +83,11 @@ function OnboardingFlow() {
 
 function Stepper({ step }: { step: number }) {
   return (
-    <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+    <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">
       <span>
         Step {String(step + 1).padStart(2, "0")} / {STEPS.length}
       </span>
-      <div className="ml-2 flex items-center gap-1.5">
+      <div aria-hidden className="ml-2 flex items-center gap-1.5">
         {STEPS.map((_, i) => (
           <span
             key={i}
@@ -184,7 +184,7 @@ function InviteStep({
           onChange={(e) => onPendingChange(e.target.value)}
           nativeInput
         />
-        <Button type="submit" variant="outline">
+        <Button type="submit" variant="outline" className="shrink-0">
           Add
         </Button>
       </form>
@@ -194,13 +194,14 @@ function InviteStep({
           {invitees.map((email) => (
             <li
               key={email}
-              className="flex items-center justify-between rounded-md border border-border/70 bg-background/40 px-3 py-2 text-sm"
+              className="flex items-center justify-between gap-2 rounded-md border border-border/70 bg-background/40 py-1 pr-1 pl-3 text-sm"
             >
               <span className="truncate text-foreground/85">{email}</span>
               <button
                 type="button"
                 onClick={() => onRemove(email)}
-                className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:text-foreground"
+                aria-label={`Remove ${email}`}
+                className="min-h-8 shrink-0 px-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:text-foreground pointer-coarse:min-h-11"
               >
                 Remove
               </button>
@@ -213,11 +214,11 @@ function InviteStep({
         </div>
       )}
 
-      <div className="mt-8 flex items-center justify-between">
+      <div className="mt-8 flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-between">
         <Button variant="ghost" type="button" onClick={onBack}>
           Back
         </Button>
-        <Button type="button" size="lg" onClick={onContinue}>
+        <Button type="button" size="lg" onClick={onContinue} className="max-sm:w-full">
           {invitees.length === 0
             ? "Skip for now"
             : `Send ${invitees.length} invite${invitees.length === 1 ? "" : "s"}`}
@@ -248,7 +249,7 @@ function ReadyStep({
           : `We've sent ${count} invite${count === 1 ? "" : "s"}. They'll show up here once accepted.`}
       </p>
 
-      <div className="mt-8 grid grid-cols-3 gap-2">
+      <div className="mt-8 grid grid-cols-1 gap-2 min-[420px]:grid-cols-3">
         <FactCard label="Workspace" value={workspace} />
         <FactCard label="Members" value={String(count + 1)} />
         <FactCard label="Plan" value="Free" />

@@ -87,9 +87,9 @@ export function AuthCenteredSignupShowcasePage() {
   };
 
   return (
-    <div className="relative min-h-svh overflow-hidden bg-background text-foreground">
+    <div className="relative min-h-svh overflow-x-clip bg-background text-foreground">
       <PageBackdrop />
-      <div className="relative flex min-h-svh flex-col items-center justify-center px-4 py-12">
+      <div className="relative flex min-h-svh flex-col items-center justify-center-safe px-4 py-12">
         <BenefitPills />
 
         <Card className="w-full max-w-md">
@@ -170,7 +170,7 @@ export function AuthCenteredSignupShowcasePage() {
                       type="button"
                       onClick={() => setReveal((v) => !v)}
                       aria-label={reveal ? "Hide password" : "Show password"}
-                      className="cursor-pointer rounded p-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="cursor-pointer rounded p-1 pointer-coarse:p-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       {reveal ? (
                         <EyeOffIcon className="size-4" />
@@ -200,7 +200,7 @@ export function AuthCenteredSignupShowcasePage() {
                 </div>
               </Field>
 
-              <div className="flex items-start gap-2.5">
+              <div className="flex items-start gap-2.5 pointer-coarse:min-h-11">
                 <Checkbox
                   id="signup-terms"
                   checked={terms}
@@ -209,7 +209,7 @@ export function AuthCenteredSignupShowcasePage() {
                 />
                 <Label
                   htmlFor="signup-terms"
-                  className="text-muted-foreground text-sm leading-snug"
+                  className="block text-muted-foreground text-sm leading-snug"
                 >
                   I agree to the{" "}
                   <a
@@ -276,9 +276,9 @@ function BenefitPills() {
 
 function PageBackdrop() {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0">
-      <div className="absolute top-[-10%] left-[-10%] size-[40rem] rounded-full bg-primary/10 blur-3xl" />
-      <div className="absolute right-[-10%] bottom-[-10%] size-[40rem] rounded-full bg-accent/15 blur-3xl" />
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="absolute top-[-10%] left-[-10%] size-[24rem] rounded-full bg-primary/10 blur-3xl sm:size-[40rem]" />
+      <div className="absolute right-[-10%] bottom-[-10%] size-[24rem] rounded-full bg-accent/15 blur-3xl sm:size-[40rem]" />
       <div
         className="absolute inset-0"
         style={{

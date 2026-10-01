@@ -20,8 +20,9 @@ export function InsetLoginShowcasePage() {
   return (
     <div className="relative min-h-svh bg-background text-foreground">
       <PageBackdrop />
-      <div className="relative mx-auto flex min-h-svh max-w-[1440px] items-stretch p-4 md:p-10 lg:p-16">
-        <div className="relative grid w-full grid-cols-1 overflow-hidden rounded-3xl border border-border bg-card shadow-2xl shadow-foreground/10 lg:grid-cols-[1fr_minmax(440px,560px)]">
+      {/* Edge-to-edge on phones; the inset frame appears from sm up. */}
+      <div className="relative mx-auto flex min-h-svh max-w-[1440px] items-stretch sm:p-4 md:p-10 lg:p-16">
+        <div className="relative grid w-full grid-cols-1 overflow-hidden bg-card sm:rounded-3xl sm:border sm:border-border sm:shadow-2xl sm:shadow-foreground/10 lg:grid-cols-[1fr_minmax(440px,560px)]">
           <LeftPanel />
           <RightPanel />
         </div>
@@ -257,9 +258,12 @@ function MeshShader({ palette }: { palette: Palette }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const targetRef = useRef(palette.colors);
   const currentRef = useRef(palette.colors.map((c) => [...c]) as Palette["colors"]);
+  // Lets a palette change wake the loop if it has paused.
+  const kickRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     targetRef.current = palette.colors;
+    kickRef.current();
   }, [palette]);
 
   useEffect(() => {
@@ -325,16 +329,37 @@ function MeshShader({ palette }: { palette: Palette }) {
     ro.observe(canvas);
     resize();
 
+    // Only animate while visible (the panel is `hidden` below lg) and the tab
+    // is in the foreground. Reduced motion freezes the flow and stops the loop
+    // once a palette transition has settled.
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let raf = 0;
+    let running = false;
+    let inView = true;
+    const shouldRun = () => inView && document.visibilityState === "visible";
+    const startLoop = () => {
+      if (running || !shouldRun()) return;
+      running = true;
+      raf = requestAnimationFrame(tick);
+    };
+    kickRef.current = startLoop;
+
     const start = performance.now();
     const tick = (now: number) => {
-      const t = now - start;
+      if (!shouldRun()) {
+        running = false;
+        return;
+      }
+      const reduced = reducedMotion.matches;
+      const t = reduced ? 0 : now - start;
       // ease current toward target (~600ms feel)
       const k = 0.06;
+      let delta = 0;
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 3; j++) {
-          currentRef.current[i][j] +=
-            (targetRef.current[i][j] - currentRef.current[i][j]) * k;
+          const d = targetRef.current[i][j] - currentRef.current[i][j];
+          currentRef.current[i][j] += d * k;
+          delta = Math.max(delta, Math.abs(d));
         }
       }
       gl.uniform2f(uRes, canvas.width, canvas.height);
@@ -345,12 +370,30 @@ function MeshShader({ palette }: { palette: Palette }) {
       gl.uniform3f(uC2, c[2][0], c[2][1], c[2][2]);
       gl.uniform3f(uC3, c[3][0], c[3][1], c[3][2]);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
+      if (reduced && delta < 0.001) {
+        running = false;
+        return;
+      }
       raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
+
+    const io = new IntersectionObserver((entries) => {
+      inView = entries.some((e) => e.isIntersecting);
+      startLoop();
+    });
+    io.observe(canvas);
+    const onWake = () => startLoop();
+    document.addEventListener("visibilitychange", onWake);
+    reducedMotion.addEventListener("change", onWake);
+    startLoop();
 
     return () => {
       cancelAnimationFrame(raf);
+      running = false;
+      kickRef.current = () => {};
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onWake);
+      reducedMotion.removeEventListener("change", onWake);
       ro.disconnect();
       gl.deleteProgram(prog);
       gl.deleteShader(vs);
@@ -370,8 +413,8 @@ function MeshShader({ palette }: { palette: Palette }) {
 
 function RightPanel() {
   return (
-    <div className="relative flex min-h-[680px] flex-col overflow-y-auto bg-card text-foreground">
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-6 py-10 lg:py-14">
+    <div className="relative flex flex-col overflow-y-auto bg-card text-foreground lg:min-h-[680px]">
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-5 py-10 sm:px-6 lg:py-14">
         <BrandMark />
         <Heading />
         <OAuthRow />
@@ -583,7 +626,7 @@ function SignInForm() {
 
 function FooterLinks() {
   return (
-    <div className="mt-5 flex items-baseline justify-between gap-4 text-sm">
+    <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 text-sm">
       <p className="whitespace-nowrap text-muted-foreground">
         Don't have an account?{" "}
         <a href="#" className="text-foreground hover:underline">

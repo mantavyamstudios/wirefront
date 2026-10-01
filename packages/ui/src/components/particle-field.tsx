@@ -227,6 +227,20 @@ export function ParticleField({
     let currentImage: HTMLImageElement | null = null;
     let loadToken = 0;
 
+    // The loop only runs while the field is on screen and the tab is visible:
+    // a `display: none` parent (e.g. `hidden lg:block`) or a background tab
+    // shouldn't burn battery. With reduced motion, ambient drift is disabled
+    // and the loop stops as soon as particles settle.
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let inView = true;
+    let running = false;
+    const shouldRun = () => !destroyed && inView && document.visibilityState === "visible";
+    const startLoop = () => {
+      if (running || !shouldRun()) return;
+      running = true;
+      rafId = requestAnimationFrame(render);
+    };
+
     const ensureCanvasSize = () => {
       const rect = wrapper.getBoundingClientRect();
       width = Math.max(1, Math.floor(rect.width));
@@ -428,7 +442,12 @@ export function ParticleField({
     };
 
     const render = () => {
-      if (destroyed) return;
+      if (!shouldRun()) {
+        running = false;
+        return;
+      }
+      const reduced = reducedMotionQuery.matches;
+      let maxMotion = 0;
       time += 0.016;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = fillColorRef.current;
@@ -443,7 +462,7 @@ export function ParticleField({
       const mr = mouseRadiusV * dpr;
       const mr2 = mr * mr;
 
-      let typing = typingImpulseRef?.current ?? 0;
+      let typing = reduced ? 0 : (typingImpulseRef?.current ?? 0);
       if (typingImpulseRef && typing > 1e-4) {
         typingImpulseRef.current *= 0.93;
       }
@@ -473,9 +492,11 @@ export function ParticleField({
           }
         }
 
-        const drift = Math.sin(time * 0.8 + p.phase) * 0.08;
-        p.vx += drift * 0.05 * typingBoost;
-        p.vy += Math.cos(time * 0.9 + p.phase) * 0.04 * typingBoost;
+        if (!reduced) {
+          const drift = Math.sin(time * 0.8 + p.phase) * 0.08;
+          p.vx += drift * 0.05 * typingBoost;
+          p.vy += Math.cos(time * 0.9 + p.phase) * 0.04 * typingBoost;
+        }
 
         if (typing > 1e-4) {
           p.vx += (Math.random() - 0.5) * typing * 2.8;
@@ -492,6 +513,7 @@ export function ParticleField({
         p.vy *= dampingV;
         p.x += p.vx;
         p.y += p.vy;
+        maxMotion = Math.max(maxMotion, Math.abs(p.vx) + Math.abs(p.vy), Math.abs(p.ox - p.x) + Math.abs(p.oy - p.y) > 0.5 ? 1 : 0);
 
         const appearTarget = p.fading ? 0 : 1;
         p.appear += (appearTarget - p.appear) * 0.08;
@@ -501,10 +523,12 @@ export function ParticleField({
           continue;
         }
 
-        const twinkle =
-          0.85 +
-          Math.sin(time * (1.4 + typing * 2.2) + p.phase) *
-            (0.15 + typing * 0.35);
+        const twinkle = reduced
+          ? 1
+          : 0.85 +
+            Math.sin(time * (1.4 + typing * 2.2) + p.phase) *
+              (0.15 + typing * 0.35);
+        if (Math.abs(1 - p.appear) > 0.01) maxMotion = Math.max(maxMotion, 1);
         ctx.globalAlpha = p.alpha * p.appear * twinkle;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -515,6 +539,11 @@ export function ParticleField({
       }
       if (writeIdx !== particles.length) particles.length = writeIdx;
       ctx.globalAlpha = 1;
+      // Under reduced motion, stop once everything has come to rest.
+      if (reduced && maxMotion < 0.01 && particles.length > 0) {
+        running = false;
+        return;
+      }
       rafId = requestAnimationFrame(render);
     };
 
@@ -523,7 +552,15 @@ export function ParticleField({
       pointerRef.current.x = e.clientX - rect.left;
       pointerRef.current.y = e.clientY - rect.top;
       pointerRef.current.active = true;
+      startLoop();
     };
+
+    const io = new IntersectionObserver((entries) => {
+      inView = entries.some((entry) => entry.isIntersecting);
+      startLoop();
+    });
+    const onVisibility = () => startLoop();
+    const onMotionChange = () => startLoop();
     const onPointerLeave = () => {
       pointerRef.current.active = false;
       pointerRef.current.x = -9999;
@@ -537,6 +574,7 @@ export function ParticleField({
         // Drag-resizing can fire continuously; debounce expensive resampling.
         resizeTimer = setTimeout(() => {
           if (currentImage) buildFresh(currentImage);
+          startLoop();
         }, 120);
       });
     });
@@ -551,6 +589,7 @@ export function ParticleField({
         currentImage = image;
         if (asMorph) morphTo(image);
         else buildFresh(image);
+        startLoop();
       };
       image.src = nextSrc;
     };
@@ -562,7 +601,10 @@ export function ParticleField({
     // second load (e.g. parallel src-change effect) supersedes the initial
     // load's onload before it had a chance to kick off the RAF.
     ro.observe(wrapper);
-    rafId = requestAnimationFrame(render);
+    io.observe(wrapper);
+    document.addEventListener("visibilitychange", onVisibility);
+    reducedMotionQuery.addEventListener("change", onMotionChange);
+    startLoop();
 
     loadAndApply(srcRef.current, false);
 
@@ -575,6 +617,9 @@ export function ParticleField({
       if (resizeRaf) cancelAnimationFrame(resizeRaf);
       if (resizeTimer) clearTimeout(resizeTimer);
       ro.disconnect();
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      reducedMotionQuery.removeEventListener("change", onMotionChange);
       wrapper.removeEventListener("pointermove", onPointerMove);
       wrapper.removeEventListener("pointerleave", onPointerLeave);
       applySrcRef.current = null;

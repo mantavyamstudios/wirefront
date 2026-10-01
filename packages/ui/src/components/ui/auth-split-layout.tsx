@@ -26,7 +26,7 @@ export function AuthSplitLayout({
         className,
       )}
     >
-      <ThemeToggle className="absolute top-6 right-6 z-30" />
+      <ThemeToggle className="absolute top-4 right-4 z-30 sm:top-6 sm:right-6" />
       <div
         className={cn(
           "relative mx-auto flex h-full w-full max-w-[1600px]",
@@ -45,7 +45,10 @@ export function AuthSplitLayout({
         </div>
         <div
           className={cn(
-            "relative flex w-full flex-col items-center justify-center overflow-y-auto px-6 py-10 lg:w-[560px] lg:px-14",
+            // `justify-center-safe`: centred when it fits, top-aligned when the
+            // form is taller than the viewport (landscape phones, zoom) so the
+            // heading never ends up above the scroll origin.
+            "relative flex w-full flex-col items-center justify-center-safe overflow-y-auto px-4 py-16 sm:px-6 lg:w-[560px] lg:px-14",
             rightClassName,
           )}
         >

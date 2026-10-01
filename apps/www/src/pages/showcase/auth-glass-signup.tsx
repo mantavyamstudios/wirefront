@@ -12,9 +12,9 @@ import { Separator } from "@orbit/ui/separator";
 
 export function AuthGlassSignupShowcasePage() {
   return (
-    <div className="dark relative min-h-svh overflow-hidden bg-[#0a0a0c] text-white flex items-center justify-center px-4">
+    <div className="dark relative min-h-svh overflow-hidden bg-[#0a0a0c] text-white flex items-center-safe justify-center px-4 py-10">
       <BlobBackground />
-      <div className="relative z-10 w-full max-w-md rounded-2xl border border-white/15 bg-white/[0.06] p-8 shadow-2xl backdrop-blur-xl backdrop-saturate-150">
+      <div className="relative z-10 w-full max-w-md rounded-2xl border border-white/15 bg-white/[0.06] p-5 shadow-2xl backdrop-blur-lg backdrop-saturate-150 sm:p-8 sm:backdrop-blur-xl">
         <div className="flex justify-center">
           <BrandMark />
         </div>
@@ -209,7 +209,7 @@ function SignupForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           nativeInput
-          className="border-white/15 bg-white/[0.06] text-white placeholder:text-white/40 hover:bg-white/[0.08] focus-visible:border-white/30"
+          className="border-white/15 bg-white/[0.06] text-white placeholder:text-white/50 hover:bg-white/[0.08] focus-visible:border-white/30"
         />
       </Field>
 
@@ -228,14 +228,14 @@ function SignupForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             nativeInput
-            className="text-white placeholder:text-white/40"
+            className="text-white placeholder:text-white/50"
           />
           <InputGroupAddon align="inline-end">
             <button
               type="button"
               onClick={() => setReveal((v) => !v)}
               aria-label={reveal ? "Hide password" : "Show password"}
-              className="cursor-pointer rounded p-1 text-white/55 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+              className="cursor-pointer rounded p-1 pointer-coarse:p-2 text-white/55 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             >
               {reveal ? (
                 <EyeOffIcon className="size-4" />

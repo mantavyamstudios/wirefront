@@ -42,11 +42,11 @@ export function AuthOtpVerifyShowcasePage() {
   };
 
   return (
-    <div className="min-h-svh bg-background flex items-center justify-center px-4">
+    <div className="min-h-svh bg-background flex items-start justify-center px-4 py-10 sm:items-center-safe">
       <div className="w-full max-w-sm">
         <a
           href="#"
-          className="mb-3 inline-flex items-center gap-1 text-muted-foreground text-xs transition-colors hover:text-foreground"
+          className="mb-3 inline-flex min-h-8 items-center gap-1 text-muted-foreground text-xs transition-colors hover:text-foreground pointer-coarse:min-h-11"
         >
           <ChevronLeftIcon className="size-3.5" />
           Cancel
@@ -93,7 +93,7 @@ export function AuthOtpVerifyShowcasePage() {
                 <button
                   type="button"
                   onClick={onResend}
-                  className="text-foreground underline-offset-4 transition-colors hover:underline"
+                  className="inline-flex min-h-8 items-center text-foreground underline-offset-4 transition-colors hover:underline pointer-coarse:min-h-11"
                 >
                   Resend code
                 </button>

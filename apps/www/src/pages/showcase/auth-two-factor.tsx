@@ -47,7 +47,7 @@ export function AuthTwoFactorShowcasePage() {
   };
 
   return (
-    <div className="min-h-svh bg-background flex items-center justify-center px-4">
+    <div className="min-h-svh bg-background flex items-start justify-center px-4 py-10 sm:items-center-safe">
       <Card className="w-full max-w-sm">
         <CardHeader className="flex flex-col items-center gap-4 text-center">
           <BrandMark />
@@ -99,7 +99,7 @@ export function AuthTwoFactorShowcasePage() {
             <button
               type="button"
               onClick={mode === "code" ? switchToRecovery : switchToCode}
-              className="text-center text-muted-foreground text-sm transition-colors hover:text-foreground hover:underline"
+              className="min-h-8 text-center text-muted-foreground text-sm transition-colors hover:text-foreground hover:underline pointer-coarse:min-h-11"
             >
               {mode === "code"
                 ? "Use a recovery code instead"
@@ -152,8 +152,8 @@ function CodeFields({
         </OTPField>
       </div>
 
-      <div className="flex items-center justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 px-3 py-2.5">
-        <Label htmlFor="remember-device" className="text-sm font-normal">
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 px-3 py-2.5 pointer-coarse:min-h-12">
+        <Label htmlFor="remember-device" className="flex-1 cursor-pointer text-sm font-normal">
           Remember this device for 30 days
         </Label>
         <Switch

@@ -100,7 +100,7 @@ function DashboardMock() {
             key={t.label}
             className="rounded-lg border border-border/70 bg-foreground/[0.02] px-2 py-2"
           >
-            <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-[0.2em]">
+            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
               {t.label}
             </div>
             <div className="mt-1 font-heading font-semibold text-sm tabular-nums">
@@ -147,7 +147,7 @@ function DashboardMock() {
 function FormColumn() {
   return (
     <div className="flex items-center justify-center px-6 py-12 lg:border-border/60 lg:border-l lg:px-12">
-      <Card className="w-full max-w-sm gap-0 px-6 py-8 shadow-sm">
+      <Card className="w-full max-w-sm gap-0 px-5 py-8 shadow-sm sm:px-6">
         <BrandMark />
         <Heading />
         <OAuthRow />
@@ -265,7 +265,7 @@ function SignInForm() {
               type="button"
               onClick={() => setReveal((v) => !v)}
               aria-label={reveal ? "Hide password" : "Show password"}
-              className="cursor-pointer rounded p-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="cursor-pointer rounded p-1 pointer-coarse:p-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {reveal ? (
                 <EyeOffIcon className="size-4" />
@@ -286,7 +286,7 @@ function SignInForm() {
 
 function FooterLinks() {
   return (
-    <div className="mt-5 flex items-baseline justify-between gap-4 text-sm">
+    <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 text-sm">
       <a
         href="#"
         className="whitespace-nowrap text-muted-foreground hover:text-foreground hover:underline"

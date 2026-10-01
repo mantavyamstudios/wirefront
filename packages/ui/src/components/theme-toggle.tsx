@@ -9,19 +9,21 @@ type ThemeToggleProps = {
 };
 
 export function ThemeToggle({ className }: ThemeToggleProps) {
-  const { resolved, toggleLightDark } = useTheme();
-  const isDark = resolved === "dark";
+  const { toggleLightDark } = useTheme();
 
+  // The icon is driven by the `.dark` class (set by the head script before
+  // hydration) instead of JS state, so server and client markup always match.
   return (
     <Button
       type="button"
       variant="ghost"
       size="icon"
       className={className}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label="Toggle light/dark theme"
       onClick={toggleLightDark}
     >
-      {isDark ? <Sun /> : <Moon />}
+      <Sun className="hidden dark:block" />
+      <Moon className="dark:hidden" />
     </Button>
   );
 }

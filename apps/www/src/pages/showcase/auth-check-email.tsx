@@ -52,7 +52,8 @@ export function AuthCheckEmailShowcasePage() {
         </p>
 
         <div className="mt-7 flex flex-col gap-2">
-          <Button size="lg" type="button">
+          {/* On phones this opens the default mail app. */}
+          <Button size="lg" render={<a href="mailto:" />}>
             <MailIcon />
             Open mail app
           </Button>
@@ -71,7 +72,7 @@ export function AuthCheckEmailShowcasePage() {
         </div>
 
         {resendCount > 0 ? (
-          <div className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-emerald-500/10 px-2 py-1 font-mono text-[10px] text-emerald-700 uppercase tracking-[0.25em] dark:text-emerald-400">
+          <div role="status" className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-emerald-500/10 px-2 py-1 font-mono text-[10px] text-emerald-700 uppercase tracking-[0.25em] dark:text-emerald-400">
             <CheckCircle2Icon className="size-3" />
             Sent again · {resendCount}
           </div>
@@ -80,7 +81,7 @@ export function AuthCheckEmailShowcasePage() {
         <div className="mt-8 border-border/60 border-t pt-5">
           <a
             href="#"
-            className="inline-flex items-center gap-1.5 text-muted-foreground text-sm transition-colors hover:text-foreground"
+            className="inline-flex min-h-8 items-center gap-1.5 text-muted-foreground text-sm transition-colors hover:text-foreground pointer-coarse:min-h-11"
           >
             <ArrowLeftIcon className="size-3.5" />
             Use a different email

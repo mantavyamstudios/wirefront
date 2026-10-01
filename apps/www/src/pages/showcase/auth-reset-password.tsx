@@ -33,7 +33,7 @@ export function AuthResetPasswordShowcasePage() {
   };
 
   return (
-    <div className="relative min-h-svh bg-background flex items-center justify-center px-4">
+    <div className="relative min-h-svh bg-background flex items-center-safe justify-center px-4 py-16">
       <Card className="w-full max-w-sm">
         {sent ? (
           <SentState
@@ -53,7 +53,7 @@ export function AuthResetPasswordShowcasePage() {
       <button
         type="button"
         onClick={() => (sent ? reset() : setSent(true))}
-        className="absolute right-4 bottom-4 cursor-pointer rounded font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] opacity-40 transition-opacity hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none"
+        className="absolute right-4 bottom-4 min-h-8 cursor-pointer rounded px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] opacity-60 transition-opacity hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none"
       >
         Demo: toggle state →
       </button>
