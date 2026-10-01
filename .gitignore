@@ -46,3 +46,6 @@ apps/api/src/generated
 
 # Generated shadcn registry JSON (run `npm run registry`)
 apps/www/public/r/
+
+# Responsive audit output (run `npm run audit:responsive`)
+.audit/

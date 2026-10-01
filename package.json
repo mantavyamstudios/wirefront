@@ -17,7 +17,8 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "registry": "tsx scripts/build-registry.ts",
-    "snapshot": "tsx scripts/snapshot.ts"
+    "snapshot": "tsx scripts/snapshot.ts",
+    "audit:responsive": "tsx scripts/responsive-audit.ts"
   },
   "devDependencies": {
     "@types/node": "^24.12.2",
