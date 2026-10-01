@@ -87,7 +87,7 @@ const EVENTS: {
 
 export function TimelinesApprovalsShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-4xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           acme/web · Pull request #128
@@ -95,18 +95,18 @@ export function TimelinesApprovalsShowcasePage() {
         <h1 className="mt-1 font-heading text-2xl">
           Persist 1y audit log retention on Business plan
         </h1>
-        <div className="mt-2 flex items-center gap-3 font-mono text-xs text-muted-foreground">
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2 py-0.5 text-emerald-700 dark:text-emerald-400">
             <span className="size-1.5 rounded-full bg-emerald-500" /> Open
           </span>
-          <span className="inline-flex items-center gap-1">
-            <GitBranchIcon className="size-3" /> feat/audit-log → main
+          <span className="inline-flex min-w-0 items-center gap-1 break-all">
+            <GitBranchIcon className="size-3 shrink-0" /> feat/audit-log → main
           </span>
           <span>· 14 commits · 8 files</span>
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-[1fr_280px]">
-          <div className="rounded-xl border border-border/60 bg-background/40 p-5">
+        <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
+          <div className="min-w-0 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-5">
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
               Activity
             </div>
@@ -118,7 +118,7 @@ export function TimelinesApprovalsShowcasePage() {
               {EVENTS.map((e, i) => (
                 <li
                   key={i}
-                  className="relative grid grid-cols-[32px_1fr_auto] items-start gap-3 py-2.5"
+                  className="relative grid grid-cols-[32px_minmax(0,1fr)_auto] items-start gap-3 py-2.5"
                 >
                   <span
                     className={
@@ -147,23 +147,23 @@ export function TimelinesApprovalsShowcasePage() {
                     )}
                   </span>
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2 text-sm">
+                    <div className="flex items-start gap-2 text-sm">
                       {e.initials ? (
-                        <Avatar className="size-5">
-                          <AvatarFallback className="text-[9px]">
+                        <Avatar className="size-5 shrink-0">
+                          <AvatarFallback className="text-[10px]">
                             {e.initials}
                           </AvatarFallback>
                         </Avatar>
                       ) : null}
-                      <span className="truncate">{e.label}</span>
+                      <span className="min-w-0 break-words">{e.label}</span>
                     </div>
                     {e.detail ? (
-                      <div className="mt-1 truncate text-muted-foreground text-xs">
+                      <div className="mt-1 break-words text-muted-foreground text-xs">
                         {e.detail}
                       </div>
                     ) : null}
                   </div>
-                  <span className="self-center font-mono text-[10px] text-muted-foreground">
+                  <span className="whitespace-nowrap pt-0.5 font-mono text-[10px] text-muted-foreground">
                     {e.time} ago
                   </span>
                 </li>
@@ -171,7 +171,9 @@ export function TimelinesApprovalsShowcasePage() {
             </ol>
           </div>
 
-          <div className="flex flex-col gap-4">
+          {/* Below lg the merge status (reviewers + checks) comes first — it's the
+              answer to "can I merge?" — and sits side by side from sm. */}
+          <div className="order-first grid grid-cols-1 content-start gap-4 sm:grid-cols-2 lg:order-none lg:grid-cols-1">
             <div className="rounded-xl border border-border/60 bg-background/40 p-4">
               <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 Reviewers · 3 / 4 approved
@@ -211,14 +213,18 @@ export function TimelinesApprovalsShowcasePage() {
                     className="flex items-center gap-2 text-xs"
                   >
                     <span
+                      aria-hidden
                       className={
-                        "size-1.5 rounded-full " +
+                        "size-1.5 shrink-0 rounded-full " +
                         (c.status === "passed"
                           ? "bg-emerald-500"
                           : "bg-rose-500")
                       }
                     />
-                    <span className="flex-1 font-mono">{c.name}</span>
+                    <span className="min-w-0 flex-1 truncate font-mono">
+                      <span className="sr-only">{c.status}: </span>
+                      {c.name}
+                    </span>
                     <span className="font-mono text-[10px] text-muted-foreground">
                       {c.time}
                     </span>

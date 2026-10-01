@@ -85,7 +85,7 @@ export function TimelinesPrOpsConsoleShowcasePage() {
   const failedPct = (FAILING.length / total) * 100;
 
   return (
-    <div className="min-h-svh bg-muted/30 px-6 py-10">
+    <div className="min-h-svh bg-muted/30 px-3 py-6 sm:px-6 sm:py-10">
       <div className="mx-auto max-w-3xl space-y-4">
         <PrTitle />
 
@@ -133,11 +133,11 @@ export function TimelinesPrOpsConsoleShowcasePage() {
             body="Draft pull requests cannot be merged."
             action={<Button>Ready for review</Button>}
           />
-          <div className="flex items-center gap-3 px-5 py-4">
+          <div className="flex flex-col items-start gap-3 px-4 py-4 sm:flex-row sm:items-center sm:px-5">
             <button
               type="button"
               disabled
-              className="rounded-md border border-border bg-muted/50 px-3 py-1.5 font-medium text-[13px] text-muted-foreground"
+              className="shrink-0 rounded-md border border-border bg-muted/50 px-3 py-1.5 font-medium text-[13px] text-muted-foreground"
             >
               Squash and merge
             </button>
@@ -167,7 +167,7 @@ function PrTitle() {
       <div className="min-w-0">
         <h1 className="font-heading text-xl leading-tight">
           Persist 1y audit-log retention on Business plan
-          <span className="ml-2 font-mono text-base text-muted-foreground tabular-nums">
+          <span className="ml-2 whitespace-nowrap font-mono text-base text-muted-foreground tabular-nums">
             #3284
           </span>
         </h1>
@@ -220,7 +220,7 @@ function Header({
   failedPct: number;
 }) {
   return (
-    <div className="flex items-start gap-4 border-border/70 border-b px-5 py-4">
+    <div className="flex items-start gap-3 border-border/70 border-b px-4 py-4 sm:gap-4 sm:px-5">
       <StatusRing passedPct={passedPct} failedPct={failedPct} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
@@ -228,7 +228,7 @@ function Header({
             Some checks were not successful
           </h2>
         </div>
-        <div className="mt-0.5 flex items-center gap-3 text-[13px] text-muted-foreground">
+        <div className="mt-0.5 flex flex-wrap items-center gap-3 text-[13px] text-muted-foreground">
           <span>
             <span className="font-medium text-rose-600 dark:text-rose-400">
               {failing} failing
@@ -243,7 +243,7 @@ function Header({
           </span>
         </div>
       </div>
-      <div className="flex items-center gap-1">
+      <div className="-mr-2 flex shrink-0 items-center gap-1 sm:mr-0">
         <IconButton aria-label="Settings">
           <SettingsIcon className="size-4" />
         </IconButton>
@@ -330,7 +330,7 @@ function CheckGroup({
 
   return (
     <details open={defaultOpen} className="group border-border/70 border-b last:border-b-0">
-      <summary className="flex cursor-pointer list-none items-center gap-1.5 px-5 py-2 text-[13px] hover:bg-muted/40">
+      <summary className="flex min-h-10 cursor-pointer list-none items-center gap-1.5 px-4 py-2 text-[13px] sm:px-5 hover:bg-muted/40">
         <ChevronDownIcon className="size-3.5 text-muted-foreground transition-transform group-open:rotate-0 -rotate-90" />
         <span className={labelTone}>{label}</span>
       </summary>
@@ -345,29 +345,32 @@ function CheckGroup({
 
 function CheckRow({ check }: { check: Check }) {
   return (
-    <li className="flex items-center gap-3 px-5 py-2.5 hover:bg-muted/30">
+    <li className="flex items-center gap-2 px-4 py-2.5 hover:bg-muted/30 sm:gap-3 sm:px-5">
       <StatusIcon status={check.status} />
       <AppIcon app={check.app} />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline gap-x-2">
-          <span className="truncate font-medium text-[13px]">{check.name}</span>
-          <span className="truncate text-[12px] text-muted-foreground">
+          <span className="min-w-0 truncate font-medium text-[13px]">{check.name}</span>
+          <span className="min-w-0 truncate text-[12px] text-muted-foreground">
             {check.detail}
           </span>
         </div>
       </div>
+      {/* Always visible from sm up; on phones "Details" lives in the More menu
+          (no hover there), so the row keeps room for the check name. */}
       <a
         href="#"
-        className="hidden text-[12px] text-sky-600 hover:underline group-hover:inline dark:text-sky-400 sm:inline"
+        aria-label={`Details for ${check.name}`}
+        className="hidden text-[12px] text-sky-600 hover:underline sm:inline dark:text-sky-400"
       >
         Details
       </a>
       {check.required && (
-        <span className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground">
+        <span className="shrink-0 rounded-full border max-sm:hidden border-border px-2 py-0.5 text-[11px] text-muted-foreground">
           Required
         </span>
       )}
-      <IconButton aria-label="More">
+      <IconButton aria-label={`More actions for ${check.name}${check.required ? " (required)" : ""}`}>
         <MoreHorizontalIcon className="size-4" />
       </IconButton>
     </li>
@@ -448,7 +451,7 @@ function IconButton({
     <button
       type="button"
       {...props}
-      className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+      className="inline-flex size-7 shrink-0 items-center justify-center rounded-md pointer-coarse:size-10 text-muted-foreground hover:bg-muted hover:text-foreground"
     >
       {children}
     </button>
@@ -474,17 +477,18 @@ function Notice({
       : "bg-foreground/10 text-foreground";
 
   return (
-    <div className="flex items-start gap-4 border-border/70 border-b px-5 py-4">
+    // Action drops under the message on phones instead of crushing it.
+    <div className="flex flex-wrap items-start gap-x-4 gap-y-3 border-border/70 border-b px-4 py-4 sm:flex-nowrap sm:px-5">
       <span
         className={`mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-full ${ring}`}
       >
         {icon}
       </span>
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 basis-[calc(100%-3rem)] sm:basis-auto">
         <div className="font-semibold text-[14px]">{title}</div>
         <p className="mt-0.5 text-[13px] text-muted-foreground">{body}</p>
       </div>
-      <div className="shrink-0">{action}</div>
+      <div className="shrink-0 max-sm:ml-12">{action}</div>
     </div>
   );
 }
@@ -493,7 +497,7 @@ function Button({ children }: { children: React.ReactNode }) {
   return (
     <button
       type="button"
-      className="rounded-md border border-border bg-background px-3 py-1.5 font-medium text-[13px] hover:bg-muted"
+      className="min-h-8 rounded-md border border-border bg-background px-3 py-1.5 font-medium text-[13px] hover:bg-muted pointer-coarse:min-h-10"
     >
       {children}
     </button>
@@ -505,14 +509,14 @@ function SplitButton({ primary }: { primary: string }) {
     <div className="inline-flex overflow-hidden rounded-md border border-border">
       <button
         type="button"
-        className="bg-background px-3 py-1.5 font-medium text-[13px] hover:bg-muted"
+        className="min-h-8 bg-background px-3 py-1.5 font-medium text-[13px] hover:bg-muted pointer-coarse:min-h-10"
       >
         {primary}
       </button>
       <button
         type="button"
         aria-label="More options"
-        className="border-border border-l bg-background px-1.5 hover:bg-muted"
+        className="border-border border-l bg-background px-1.5 hover:bg-muted pointer-coarse:px-3"
       >
         <ChevronDownIcon className="size-3.5" />
       </button>

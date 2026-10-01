@@ -90,9 +90,9 @@ export function TimelinesCommitsShowcasePage() {
   );
 
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-4xl">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Repository · acme/web
@@ -149,7 +149,9 @@ export function TimelinesCommitsShowcasePage() {
               {COMMITS.map((c) => (
                 <li
                   key={c.hash}
-                  className="flex items-center gap-4 pr-4"
+                  // Rows keep a fixed height (the branch graph is drawn against it), so on
+                  // phones the meta line drops low-priority bits rather than wrapping.
+                  className="flex items-center gap-2 pr-2 sm:gap-4 sm:pr-4"
                   style={{
                     height: ROW_H,
                     paddingLeft: 16 + graphWidth + 16,
@@ -157,8 +159,8 @@ export function TimelinesCommitsShowcasePage() {
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <Avatar className="size-5">
-                        <AvatarFallback className="text-[9px]">
+                      <Avatar className="size-5 shrink-0 max-sm:hidden">
+                        <AvatarFallback className="text-[10px]">
                           {c.initials}
                         </AvatarFallback>
                       </Avatar>
@@ -172,29 +174,36 @@ export function TimelinesCommitsShowcasePage() {
                         {c.message}
                       </span>
                       {c.tag ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em] max-sm:hidden">
                           <TagIcon className="size-2.5" />
                           {c.tag}
                         </span>
                       ) : null}
                     </div>
-                    <div className="mt-1 flex items-center gap-2 font-mono text-[10px] text-muted-foreground">
+                    <div className="mt-1 flex items-center gap-2 overflow-hidden whitespace-nowrap font-mono text-[10px] text-muted-foreground">
+                      {/* On phones the tag moves here so the message keeps the first line. */}
+                      {c.tag ? (
+                        <span className="inline-flex items-center gap-1 text-foreground sm:hidden">
+                          <TagIcon className="size-2.5" />
+                          {c.tag} ·
+                        </span>
+                      ) : null}
                       <span>{c.author}</span>
-                      <span>·</span>
-                      <span>{c.scope}</span>
+                      <span className="max-sm:hidden">·</span>
+                      <span className="max-sm:hidden">{c.scope}</span>
                       <span>·</span>
                       <span>{c.time}</span>
                       {!c.merge ? (
                         <>
-                          <span>·</span>
-                          <span>
+                          <span className="max-md:hidden">·</span>
+                          <span className="max-md:hidden">
                             {c.filesChanged}{" "}
                             {c.filesChanged === 1 ? "file" : "files"}
                           </span>
-                          <span className="text-emerald-600 dark:text-emerald-400">
+                          <span className="text-emerald-600 max-md:hidden dark:text-emerald-400">
                             +{c.additions}
                           </span>
-                          <span className="text-rose-600 dark:text-rose-400">
+                          <span className="text-rose-600 max-md:hidden dark:text-rose-400">
                             -{c.deletions}
                           </span>
                         </>
@@ -204,10 +213,11 @@ export function TimelinesCommitsShowcasePage() {
 
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-background px-2 py-1 font-mono text-[11px] text-muted-foreground hover:text-foreground"
+                    aria-label={`Copy commit ${c.hash}`}
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border/60 bg-background px-2 py-1 font-mono text-[11px] text-muted-foreground hover:text-foreground pointer-coarse:min-h-9"
                   >
                     <CopyIcon className="size-3" />
-                    {c.hash}
+                    <span className="max-sm:hidden">{c.hash}</span>
                   </button>
                 </li>
               ))}

@@ -41,9 +41,9 @@ const DEPLOYS: Deploy[] = [
 
 export function TimelinesDeploysShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-4xl">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               acme/web · last 7 days
@@ -53,7 +53,7 @@ export function TimelinesDeploysShowcasePage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="rounded-md border border-border/60 bg-background/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground"
+              className="rounded-md border border-border/60 bg-background/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground pointer-coarse:min-h-10"
             >
               All envs
             </button>
@@ -72,10 +72,12 @@ export function TimelinesDeploysShowcasePage() {
             {DEPLOYS.map((d) => (
               <li
                 key={d.id}
-                className="grid grid-cols-[24px_120px_1fr_180px_auto] items-center gap-4 px-5 py-3.5"
+                // Phones: status | env, message, author stacked | action.
+                // md+: the original five columns with a flexible message column.
+                className="grid grid-cols-[20px_minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1.5 px-4 py-3.5 sm:px-5 md:grid-cols-[24px_110px_minmax(0,1fr)_170px_auto] md:items-center md:gap-4"
               >
                 <StatusGlyph status={d.status} />
-                <div>
+                <div className="max-md:col-start-2 max-md:row-start-1">
                   <span
                     className={
                       "rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.25em] " +
@@ -85,9 +87,9 @@ export function TimelinesDeploysShowcasePage() {
                     {d.env}
                   </span>
                 </div>
-                <div className="min-w-0">
-                  <div className="truncate text-sm">{d.message}</div>
-                  <div className="mt-1 flex items-center gap-2 font-mono text-[10px] text-muted-foreground">
+                <div className="min-w-0 max-md:col-start-2">
+                  <div className="line-clamp-2 text-sm md:truncate">{d.message}</div>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-[10px] text-muted-foreground">
                     <GitBranchIcon className="size-3" />
                     {d.branch}
                     <span>·</span>
@@ -96,27 +98,28 @@ export function TimelinesDeploysShowcasePage() {
                     <span>{d.duration}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Avatar className="size-5">
-                    <AvatarFallback className="text-[9px]">
+                <div className="flex min-w-0 items-center gap-2 max-md:col-start-2">
+                  <Avatar className="size-5 shrink-0">
+                    <AvatarFallback className="text-[10px]">
                       {d.initials}
                     </AvatarFallback>
                   </Avatar>
                   <span className="truncate text-xs">{d.by}</span>
-                  <span className="ml-auto font-mono text-[10px] text-muted-foreground">
+                  <span className="shrink-0 font-mono text-[10px] text-muted-foreground md:ml-auto">
                     {d.when} ago
                   </span>
                 </div>
                 {d.env === "production" && d.status === "succeeded" ? (
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-background px-2 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
+                    aria-label={`Roll back ${d.sha}`}
+                    className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-background px-2 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground max-md:col-start-3 max-md:row-start-1 pointer-coarse:min-h-10"
                   >
                     <RotateCcwIcon className="size-3" />
-                    Roll back
+                    <span className="max-sm:sr-only">Roll back</span>
                   </button>
                 ) : (
-                  <span className="font-mono text-[10px] text-muted-foreground">
+                  <span className="font-mono text-[10px] text-muted-foreground max-md:col-start-3 max-md:row-start-1">
                     {d.id}
                   </span>
                 )}
@@ -138,7 +141,7 @@ function StatusGlyph({ status }: { status: Status }) {
     return <CircleAlertIcon className="size-5 text-amber-500" />;
   return (
     <span className="grid size-5 place-items-center">
-      <span className="absolute size-3 animate-ping rounded-full bg-foreground/30" />
+      <span className="absolute size-3 rounded-full bg-foreground/30 motion-safe:animate-ping" />
       <span className="size-2 rounded-full bg-foreground" />
     </span>
   );

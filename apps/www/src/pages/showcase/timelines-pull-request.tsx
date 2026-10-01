@@ -183,9 +183,9 @@ export function TimelinesPullRequestShowcasePage() {
   const linesRemoved = 18;
 
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-6xl">
-        <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+        <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           <span>acme/web</span>
           <span>›</span>
           <span>pulls</span>
@@ -193,9 +193,9 @@ export function TimelinesPullRequestShowcasePage() {
           <span className="text-foreground">#3284</span>
         </div>
 
-        <div className="mt-3 flex items-start justify-between gap-6">
+        <div className="mt-3">
           <div className="min-w-0">
-            <h1 className="font-heading text-3xl">
+            <h1 className="text-balance font-heading text-2xl sm:text-3xl">
               Persist 1y audit-log retention on Business plan
             </h1>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-muted-foreground text-sm">
@@ -204,7 +204,7 @@ export function TimelinesPullRequestShowcasePage() {
                 Open
               </span>
               <Avatar className="size-5">
-                <AvatarFallback className="text-[9px]">SB</AvatarFallback>
+                <AvatarFallback className="text-[10px]">SB</AvatarFallback>
               </Avatar>
               <span className="text-foreground">Mantavyam</span>
               <span>wants to merge 3 commits into</span>
@@ -212,7 +212,7 @@ export function TimelinesPullRequestShowcasePage() {
                 main
               </span>
               <span>from</span>
-              <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[11px] text-foreground">
+              <span className="break-all rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[11px] text-foreground">
                 feat/audit-log
               </span>
             </div>
@@ -229,7 +229,7 @@ export function TimelinesPullRequestShowcasePage() {
           blockingChecks={blockingChecks}
         />
 
-        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_280px]">
+        <div className="mt-6 grid grid-cols-1 gap-8 sm:mt-8 lg:grid-cols-[minmax(0,1fr)_280px]">
           <div className="min-w-0 space-y-4">
             <Description linesAdded={linesAdded} linesRemoved={linesRemoved} />
             <ChecksPanel />
@@ -494,7 +494,7 @@ function ChecksPanel() {
   const running = CHECKS.filter((c) => c.status === "running").length;
   return (
     <details className="group rounded-xl border border-border/60 bg-background/40">
-      <summary className="flex cursor-pointer list-none items-center justify-between p-4">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4">
         <div className="flex items-center gap-3">
           <div className="flex size-7 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
             <CheckIcon className="size-4" />
@@ -514,9 +514,9 @@ function ChecksPanel() {
         {CHECKS.map((c) => (
           <li
             key={`${c.name}/${c.context}`}
-            className="flex items-center justify-between px-4 py-2 font-mono text-xs"
+            className="flex items-center justify-between gap-3 px-4 py-2 font-mono text-xs"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 flex-wrap items-center gap-x-2">
               {c.status === "passed" && (
                 <CheckIcon className="size-3.5 text-emerald-500" />
               )}
@@ -524,13 +524,13 @@ function ChecksPanel() {
                 <XIcon className="size-3.5 text-rose-500" />
               )}
               {c.status === "running" && (
-                <span className="size-2 animate-pulse rounded-full bg-amber-500" />
+                <span className="size-2 rounded-full bg-amber-500 motion-safe:animate-pulse" />
               )}
               <span>{c.name}</span>
               <span className="text-muted-foreground">/</span>
               <span className="text-muted-foreground">{c.context}</span>
             </div>
-            <span className="text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+            <span className="shrink-0 text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
               {c.duration ?? "running"}
             </span>
           </li>
@@ -604,9 +604,9 @@ function TimelineBody({ item }: { item: TimelineItem }) {
     case "comment":
       return (
         <div className="rounded-xl border border-border/60 bg-background/40 p-3">
-          <div className="flex items-baseline gap-2 text-sm">
+          <div className="flex flex-wrap items-baseline gap-x-2 text-sm">
             <Avatar className="size-5">
-              <AvatarFallback className="text-[9px]">
+              <AvatarFallback className="text-[10px]">
                 {item.initials}
               </AvatarFallback>
             </Avatar>
@@ -617,9 +617,9 @@ function TimelineBody({ item }: { item: TimelineItem }) {
           </div>
           {item.diff && (
             <div className="mt-2 overflow-hidden rounded-md border border-border/60 bg-foreground/[0.02]">
-              <div className="flex items-center justify-between border-border/40 border-b px-3 py-1.5 font-mono text-[10px] text-muted-foreground">
-                <span>{item.diff.file}</span>
-                <span>line {item.diff.line}</span>
+              <div className="flex items-center justify-between gap-3 border-border/40 border-b px-3 py-1.5 font-mono text-[10px] text-muted-foreground">
+                <span className="min-w-0 truncate">{item.diff.file}</span>
+                <span className="shrink-0">line {item.diff.line}</span>
               </div>
               <pre className="overflow-x-auto px-3 py-2 font-mono text-[11px]">
                 {item.diff.lines.map((l, i) => (

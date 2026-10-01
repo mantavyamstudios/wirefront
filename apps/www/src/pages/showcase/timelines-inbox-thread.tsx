@@ -47,23 +47,25 @@ const MSGS: Msg[] = [
 
 export function TimelinesInboxThreadShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-3xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Inbox · thread
         </div>
-        <div className="mt-1 flex items-start justify-between">
+        <div className="mt-1 flex items-start justify-between gap-3">
           <h1 className="font-heading text-2xl leading-tight">
             Audit log retention proposal
           </h1>
           <button
             type="button"
-            className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
+            aria-label="Star thread"
+            aria-pressed={false}
+            className="-mr-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
           >
             <StarIcon className="size-4" />
           </button>
         </div>
-        <div className="mt-1 flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+        <div className="mt-1 flex flex-wrap items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           <span>3 messages</span>
           <span>·</span>
           <span>2 participants</span>
@@ -78,16 +80,22 @@ export function TimelinesInboxThreadShowcasePage() {
         <div className="mt-6 overflow-hidden rounded-xl border border-border/60 bg-background/40">
           <ol className="relative divide-y divide-border/40">
             {MSGS.map((m, i) => (
-              <li key={i} className="grid grid-cols-[40px_1fr] gap-4 px-5 py-5">
-                <Avatar className="mt-0.5 size-9">
+              // Phones: the avatar moves inline with the sender so the body gets the full width.
+              <li key={i} className="grid grid-cols-1 gap-4 px-4 py-4 sm:grid-cols-[40px_minmax(0,1fr)] sm:px-5 sm:py-5">
+                <Avatar className="mt-0.5 size-9 max-sm:hidden">
                   <AvatarFallback className="text-xs">
                     {m.initials}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <div className="flex items-baseline gap-2">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 sm:items-baseline">
+                    <Avatar className="size-6 sm:hidden">
+                      <AvatarFallback className="text-[10px]">
+                        {m.initials}
+                      </AvatarFallback>
+                    </Avatar>
                     <span className="font-medium text-sm">{m.who}</span>
-                    <span className="text-muted-foreground text-xs">
+                    <span className="min-w-0 truncate text-muted-foreground text-xs max-sm:order-last max-sm:basis-full">
                       {m.email}
                     </span>
                     <span className="ml-auto font-mono text-[10px] text-muted-foreground">
@@ -95,7 +103,7 @@ export function TimelinesInboxThreadShowcasePage() {
                     </span>
                   </div>
                   {m.quoted ? (
-                    <blockquote className="mt-3 flex gap-3 border-foreground/30 border-l-2 pl-3 text-muted-foreground text-sm italic">
+                    <blockquote className="mt-3 flex gap-3 break-words border-foreground/30 border-l-2 pl-3 text-muted-foreground text-sm italic">
                       <CornerUpLeftIcon className="mt-0.5 size-3 shrink-0 opacity-60" />
                       "{m.quoted}"
                     </blockquote>
@@ -108,26 +116,26 @@ export function TimelinesInboxThreadShowcasePage() {
                       {m.attachments.map((a) => (
                         <div
                           key={a}
-                          className="inline-flex w-fit items-center gap-2 rounded-md border border-border/60 bg-background px-2.5 py-1.5 text-xs"
+                          className="inline-flex max-w-full items-center gap-2 rounded-md border border-border/60 bg-background px-2.5 py-1.5 text-xs"
                         >
-                          <PaperclipIcon className="size-3 opacity-60" />
-                          {a}
+                          <PaperclipIcon className="size-3 shrink-0 opacity-60" />
+                          <span className="min-w-0 truncate">{a}</span>
                         </div>
                       ))}
                     </div>
                   ) : null}
                   {i < MSGS.length - 1 ? (
-                    <div className="mt-3 flex items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+                    <div className="mt-2 -ml-2 flex items-center gap-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                       <button
                         type="button"
-                        className="inline-flex items-center gap-1 hover:text-foreground"
+                        className="inline-flex min-h-8 items-center gap-1 rounded-md px-2 hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:min-h-10"
                       >
                         <ReplyIcon className="size-3" />
                         Reply
                       </button>
                       <button
                         type="button"
-                        className="inline-flex items-center gap-1 hover:text-foreground"
+                        className="inline-flex min-h-8 items-center gap-1 rounded-md px-2 hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:min-h-10"
                       >
                         <SmileIcon className="size-3" />
                         React
@@ -141,13 +149,15 @@ export function TimelinesInboxThreadShowcasePage() {
 
           <div className="border-border/60 border-t bg-background p-4">
             <Textarea
-              placeholder="Reply to Maya, James — Cmd+Enter to send"
+              aria-label="Reply"
+              placeholder="Reply to Maya, James…"
               className="min-h-24"
             />
-            <div className="mt-2 flex items-center justify-between">
+            <div className="mt-2 flex items-center justify-between gap-2">
               <button
                 type="button"
-                className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
+                aria-label="Attach file"
+                className="grid size-8 shrink-0 pointer-coarse:size-10 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
               >
                 <PaperclipIcon className="size-4" />
               </button>

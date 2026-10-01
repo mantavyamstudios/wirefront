@@ -6,7 +6,7 @@ import {
   MessageCircleIcon,
   SettingsIcon,
 } from "lucide-react";
-import type { ComponentType } from "react";
+import { type ComponentType, useState } from "react";
 import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
 
 interface Notif {
@@ -75,12 +75,32 @@ const EARLIER: Notif[] = [
   },
 ];
 
+type Filter = "all" | "unread" | "mentions";
+
+const FILTERS: { id: Filter; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "unread", label: "Unread" },
+  { id: "mentions", label: "Mentions" },
+];
+
+function matches(n: Notif, f: Filter) {
+  if (f === "unread") return !!n.unread;
+  if (f === "mentions") return n.Icon === AtSignIcon;
+  return true;
+}
+
+// On phones the notification centre is a full-screen panel (no card chrome);
+// from sm up it's the familiar popover-sized card.
 export function TimelinesNotificationsShowcasePage() {
+  const [filter, setFilter] = useState<Filter>("all");
+  const today = TODAY.filter((n) => matches(n, filter));
+  const earlier = EARLIER.filter((n) => matches(n, filter));
+
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-md">
-        <div className="overflow-hidden rounded-xl border border-border bg-background shadow-sm">
-          <div className="flex items-center justify-between border-border/60 border-b px-4 py-3">
+        <div className="overflow-hidden bg-background max-sm:min-h-svh sm:rounded-xl sm:border sm:border-border sm:shadow-sm">
+          <div className="flex items-center justify-between gap-3 border-border/60 border-b px-4 py-3 max-sm:pt-[max(0.75rem,env(safe-area-inset-top))]">
             <div className="flex items-center gap-2">
               <BellIcon className="size-4 opacity-70" />
               <span className="font-heading text-sm">Notifications</span>
@@ -90,49 +110,56 @@ export function TimelinesNotificationsShowcasePage() {
             </div>
             <button
               type="button"
-              className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground"
+              className="-mr-2 min-h-8 rounded-md px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground pointer-coarse:min-h-10"
             >
               Mark all read
             </button>
           </div>
 
-          <div className="flex items-center gap-1 border-border/60 border-b px-3 py-2">
-            <button
-              type="button"
-              className="rounded-md bg-foreground/[0.06] px-2.5 py-1 text-xs"
-            >
-              All
-            </button>
-            <button
-              type="button"
-              className="rounded-md px-2.5 py-1 text-muted-foreground text-xs hover:bg-foreground/[0.03] hover:text-foreground"
-            >
-              Unread
-            </button>
-            <button
-              type="button"
-              className="rounded-md px-2.5 py-1 text-muted-foreground text-xs hover:bg-foreground/[0.03] hover:text-foreground"
-            >
-              Mentions
-            </button>
+          <div
+            role="group"
+            aria-label="Filter notifications"
+            className="flex items-center gap-1 border-border/60 border-b px-3 py-2"
+          >
+            {FILTERS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                aria-pressed={filter === f.id}
+                onClick={() => setFilter(f.id)}
+                className="min-h-8 rounded-md px-3 text-muted-foreground text-sm hover:bg-foreground/[0.03] hover:text-foreground aria-pressed:bg-foreground/[0.06] aria-pressed:text-foreground pointer-coarse:min-h-10 sm:text-xs"
+              >
+                {f.label}
+              </button>
+            ))}
           </div>
 
-          <Section label="Today">
-            {TODAY.map((n, i) => (
-              <Item key={i} n={n} />
-            ))}
-          </Section>
+          {today.length ? (
+            <Section label="Today">
+              {today.map((n, i) => (
+                <Item key={i} n={n} />
+              ))}
+            </Section>
+          ) : null}
 
-          <Section label="Earlier">
-            {EARLIER.map((n, i) => (
-              <Item key={i} n={n} />
-            ))}
-          </Section>
+          {earlier.length ? (
+            <Section label="Earlier">
+              {earlier.map((n, i) => (
+                <Item key={i} n={n} />
+              ))}
+            </Section>
+          ) : null}
 
-          <div className="border-border/60 border-t px-4 py-2 text-center">
+          {!today.length && !earlier.length ? (
+            <div className="px-4 py-10 text-center text-muted-foreground text-sm">
+              You're all caught up.
+            </div>
+          ) : null}
+
+          <div className="border-border/60 border-t px-4 py-1 text-center max-sm:pb-[max(0.25rem,env(safe-area-inset-bottom))]">
             <button
               type="button"
-              className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground"
+              className="min-h-10 px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground"
             >
               See all activity →
             </button>
@@ -169,22 +196,23 @@ function Item({ n }: { n: Notif }) {
       }
     >
       {n.unread ? (
-        <span className="absolute top-4 left-1.5 size-1.5 rounded-full bg-blue-500" />
+        <span aria-hidden className="absolute top-4 left-1.5 size-1.5 rounded-full bg-blue-500" />
       ) : null}
-      <div className="relative">
+      <div className="relative shrink-0">
         <Avatar className="size-9">
           <AvatarFallback className="text-[11px]">
             {n.initials}
           </AvatarFallback>
         </Avatar>
-        <span className="absolute -bottom-1 -right-1 grid size-4 place-items-center rounded-full bg-background">
+        <span aria-hidden className="absolute -bottom-1 -right-1 grid size-4 place-items-center rounded-full bg-background">
           <span className="grid size-3.5 place-items-center rounded-full bg-foreground text-background">
             <n.Icon className="size-2" />
           </span>
         </span>
       </div>
       <div className="min-w-0 flex-1 leading-snug">
-        <div className="text-sm">
+        <div className="break-words text-sm">
+          {n.unread ? <span className="sr-only">Unread: </span> : null}
           <span className="font-medium">{n.who}</span>{" "}
           <span className="text-muted-foreground">{n.what}</span>{" "}
           {n.context ? (

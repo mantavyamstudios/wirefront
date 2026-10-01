@@ -1,5 +1,6 @@
 import {
   ChevronDownIcon,
+  ChevronRightIcon,
   KeyIcon,
   ShieldIcon,
   Trash2Icon,
@@ -93,7 +94,7 @@ const SEV_DOT: Record<Severity, string> = {
 
 export function TimelinesAuditShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-3xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Security · Audit log
@@ -103,7 +104,7 @@ export function TimelinesAuditShowcasePage() {
           Last 30 days · 218 events · retained for 1 year on Business plan.
         </p>
 
-        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 px-5 py-3">
+        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 px-3 py-3 sm:px-5">
           <ol className="relative">
             <span
               aria-hidden
@@ -112,7 +113,7 @@ export function TimelinesAuditShowcasePage() {
             {EVENTS.map((e, i) => (
               <li
                 key={i}
-                className="relative grid grid-cols-[34px_1fr_auto] items-start gap-3 py-3"
+                className="relative grid grid-cols-[34px_minmax(0,1fr)_auto] items-start gap-3 py-3"
               >
                 <span
                   className={
@@ -123,27 +124,28 @@ export function TimelinesAuditShowcasePage() {
                   <e.Icon className="size-3.5" />
                 </span>
                 <div className="min-w-0 pt-1.5">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Avatar className="size-5">
-                      <AvatarFallback className="text-[9px]">
+                  {/* Wraps instead of truncating, so the action's target stays readable on phones. */}
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
+                    <Avatar className="size-5 shrink-0">
+                      <AvatarFallback className="text-[10px]">
                         {e.initials}
                       </AvatarFallback>
                     </Avatar>
                     <span className="font-medium">{e.actor}</span>
                     <span className="text-muted-foreground">{e.action}</span>
                     {e.target ? (
-                      <span className="truncate text-foreground/85">
+                      <span className="min-w-0 break-words text-foreground/85">
                         {e.target}
                       </span>
                     ) : null}
                   </div>
                   {e.diff ? (
                     <details className="group mt-2">
-                      <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded bg-foreground/[0.04] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:bg-foreground/[0.06]">
+                      <summary className="inline-flex min-h-6 cursor-pointer list-none items-center gap-1 rounded bg-foreground/[0.04] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:bg-foreground/[0.06]">
                         <ChevronDownIcon className="size-3 -rotate-90 transition-transform group-open:rotate-0" />
                         diff
                       </summary>
-                      <div className="mt-2 overflow-hidden rounded-md border border-border/60 font-mono text-[11px]">
+                      <div className="mt-2 overflow-hidden rounded-md border border-border/60 font-mono text-[11px] [&>div]:break-all">
                         <div className="border-rose-500/20 border-b bg-rose-500/[0.06] px-2 py-1 text-rose-700 dark:text-rose-400">
                           - {e.diff.before}
                         </div>
@@ -153,17 +155,21 @@ export function TimelinesAuditShowcasePage() {
                       </div>
                     </details>
                   ) : null}
-                  <div className="mt-1 flex items-center gap-2 font-mono text-[10px] text-muted-foreground">
+                  <div className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-[10px] text-muted-foreground">
                     <span className={"size-1 rounded-full " + SEV_DOT[e.severity]} />
+                    <span className="sr-only">{e.severity} severity,</span>
                     {e.time}
                     {e.ip ? <span>· from {e.ip}</span> : null}
                   </div>
                 </div>
+                {/* Text label on wider screens, a chevron with a 40px hit area on phones. */}
                 <button
                   type="button"
-                  className="self-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:text-foreground"
+                  aria-label={`View event: ${e.actor} ${e.action}${e.target ? " " + e.target : ""}`}
+                  className="-mr-2 grid min-h-10 min-w-10 place-items-center self-center rounded-md font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:bg-foreground/[0.04] hover:text-foreground sm:mr-0 sm:min-h-8 sm:px-2"
                 >
-                  view
+                  <span aria-hidden className="max-sm:hidden">view</span>
+                  <ChevronRightIcon aria-hidden className="size-4 sm:hidden" />
                 </button>
               </li>
             ))}

@@ -89,9 +89,9 @@ const TONE_BG: Record<string, string> = {
 
 export function TimelinesChangelogShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12">
       <div className="mx-auto max-w-3xl">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Changelog
@@ -102,30 +102,32 @@ export function TimelinesChangelogShowcasePage() {
           </div>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-md border border-border/60 bg-background/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground"
+            className="inline-flex min-h-9 items-center gap-2 self-start rounded-md border border-border/60 bg-background/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground"
           >
             <RssIcon className="size-3" />
             Subscribe
           </button>
         </div>
 
-        <div className="mt-10 flex flex-col">
+        <div className="mt-6 flex flex-col sm:mt-10">
           {RELEASES.map((r, i) => (
             <article
               key={r.version}
-              className="grid grid-cols-[140px_1fr] gap-8 border-border/40 border-b py-10 last:border-b-0"
+              // Below md the date/version aside becomes a header above each entry,
+              // so the release notes get the full width.
+              className="grid grid-cols-1 gap-4 border-border/40 border-b py-8 last:border-b-0 md:grid-cols-[140px_minmax(0,1fr)] md:gap-8 md:py-10"
             >
-              <aside className="sticky top-8 self-start">
+              <aside className="flex flex-wrap items-center gap-x-3 gap-y-1 md:sticky md:top-8 md:block md:self-start">
                 <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                   <CalendarIcon className="size-3" />
                   {r.date}
                 </div>
-                <div className="mt-1 flex items-center gap-2">
+                <div className="flex items-center gap-2 md:mt-1">
                   <span className="font-heading text-xl tracking-tight">
                     {r.version}
                   </span>
                   {r.highlight ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-foreground px-2 py-0.5 font-mono text-[9px] text-background uppercase tracking-[0.2em]">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-foreground px-2 py-0.5 font-mono text-[10px] text-background uppercase tracking-[0.2em]">
                       <SparklesIcon className="size-2.5" />
                       Latest
                     </span>
@@ -139,7 +141,7 @@ export function TimelinesChangelogShowcasePage() {
                     <div className="grid h-full place-items-center">
                       <div className="text-center">
                         <SparklesIcon className="mx-auto size-6 opacity-50" />
-                        <div className="mt-2 font-heading text-lg">
+                        <div className="mt-2 px-4 font-heading text-base sm:text-lg">
                           Audit log, palette, and more.
                         </div>
                       </div>

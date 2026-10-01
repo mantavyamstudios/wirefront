@@ -87,14 +87,14 @@ const STATE_DOT: Record<Severity, string> = {
 
 export function TimelinesStatusPageShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12">
       <div className="mx-auto max-w-3xl">
         <header className="text-center">
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Acme Status · status.acme.dev
           </div>
-          <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-amber-500/15 px-4 py-1.5 font-mono text-[12px] text-amber-700 dark:text-amber-400">
-            <span className="size-2 animate-pulse rounded-full bg-amber-500" />
+          <div className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-amber-500/15 px-4 py-1.5 text-left font-mono text-[12px] text-amber-700 dark:text-amber-400">
+            <span className="size-2 shrink-0 rounded-full bg-amber-500 motion-safe:animate-pulse" />
             One service is experiencing degraded performance
           </div>
           <h1 className="mt-4 font-heading text-3xl tracking-tight">
@@ -102,27 +102,30 @@ export function TimelinesStatusPageShowcasePage() {
           </h1>
         </header>
 
-        <div className="mt-8 rounded-xl border border-border/60 bg-background/40 px-5 py-4">
+        <div className="mt-8 rounded-xl border border-border/60 bg-background/40 px-4 py-4 sm:px-5">
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
-            90-day uptime
+            <span className="sm:hidden">30-day uptime</span>
+            <span className="max-sm:hidden">90-day uptime</span>
           </div>
           <ul className="mt-3 divide-y divide-border/40">
             {COMPONENTS.map((c) => (
-              <li key={c.name} className="flex items-center gap-4 py-3">
+              // Phones: name + % on one line, a full-width 30-day strip below.
+              <li key={c.name} className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3 sm:flex-nowrap">
                 <span
+                  aria-hidden
                   className={
-                    "size-2 rounded-full " +
+                    "size-2 shrink-0 rounded-full " +
                     (c.status === "operational" ? "bg-emerald-500" : "bg-amber-500")
                   }
                 />
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <div className="text-sm">{c.name}</div>
                   <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                     {c.status}
                   </div>
                 </div>
                 <UptimeBars degraded={c.status !== "operational"} />
-                <span className="w-20 text-right font-mono text-[11px] text-muted-foreground">
+                <span className="shrink-0 text-right font-mono text-[11px] text-muted-foreground sm:order-last sm:w-20">
                   {c.uptime}
                 </span>
               </li>
@@ -199,14 +202,20 @@ export function TimelinesStatusPageShowcasePage() {
 
 function UptimeBars({ degraded }: { degraded: boolean }) {
   return (
-    <div className="hidden gap-[2px] sm:flex">
+    <div
+      role="img"
+      aria-label={degraded ? "Degraded in the last 3 days" : "No incidents in this period"}
+      className="flex w-full basis-full gap-[2px] sm:w-auto sm:basis-auto"
+    >
       {Array.from({ length: 60 }).map((_, i) => {
         const bad = degraded && i > 56;
         return (
           <span
             key={i}
             className={
-              "h-7 w-[3px] rounded-sm " +
+              // Phones show the most recent 30 days as flexible bars.
+              "h-6 min-w-0 flex-1 rounded-sm sm:h-7 sm:w-[3px] sm:flex-none " +
+              (i < 30 ? "max-sm:hidden " : "") +
               (bad ? "bg-amber-500" : "bg-emerald-500/80")
             }
           />
