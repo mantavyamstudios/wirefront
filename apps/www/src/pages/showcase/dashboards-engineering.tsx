@@ -56,21 +56,21 @@ const CI_HEALTH = {
 
 export function DashboardsEngineeringShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-6xl space-y-6">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Engineering · last 30 days
             </div>
             <h1 className="mt-1 font-heading text-2xl">Velocity</h1>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" size="sm" className="gap-1.5 pointer-coarse:h-10">
               All teams
               <ChevronDownIcon className="size-3" />
             </Button>
-            <Button variant="outline" size="sm" className="gap-1.5">
+            <Button variant="outline" size="sm" className="gap-1.5 pointer-coarse:h-10">
               30d
               <ChevronDownIcon className="size-3" />
             </Button>
@@ -84,8 +84,8 @@ export function DashboardsEngineeringShowcasePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/60 lg:grid-cols-[1fr_320px]">
-          <div className="bg-background p-6">
-            <div className="flex items-baseline justify-between">
+          <div className="bg-background p-4 sm:p-6">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
               <div>
                 <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
                   PR throughput · last 8 weeks
@@ -104,7 +104,7 @@ export function DashboardsEngineeringShowcasePage() {
             </div>
           </div>
 
-          <div className="bg-background p-6">
+          <div className="bg-background p-4 sm:p-6">
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               CI health
             </div>
@@ -128,7 +128,7 @@ export function DashboardsEngineeringShowcasePage() {
         </div>
 
         <div className="overflow-hidden rounded-2xl border border-border/60 bg-background">
-          <div className="flex items-baseline justify-between border-border/40 border-b px-5 py-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-border/40 border-b px-4 py-3 sm:px-5">
             <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Top contributors
             </span>
@@ -143,7 +143,8 @@ export function DashboardsEngineeringShowcasePage() {
               return (
                 <li
                   key={c.name}
-                  className="grid grid-cols-[2rem_auto_1fr_auto_auto] items-center gap-4 px-5 py-2.5"
+                  // Lead time drops below sm so the name + bar column keeps its room.
+                  className="grid grid-cols-[1.5rem_auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-2.5 sm:grid-cols-[2rem_auto_minmax(0,1fr)_auto_auto] sm:gap-4 sm:px-5"
                 >
                   <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
                     #{i + 1}
@@ -154,7 +155,7 @@ export function DashboardsEngineeringShowcasePage() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0">
-                    <div className="text-sm">{c.name}</div>
+                    <div className="truncate text-sm">{c.name}</div>
                     <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-foreground/[0.04]">
                       <div
                         className="h-full bg-emerald-500/70"
@@ -171,7 +172,7 @@ export function DashboardsEngineeringShowcasePage() {
                       {c.reviewed} reviewed
                     </div>
                   </div>
-                  <div className="text-right font-mono text-[11px] text-muted-foreground tabular-nums">
+                  <div className="text-right font-mono text-[11px] text-muted-foreground tabular-nums max-sm:hidden">
                     {c.leadTime}
                   </div>
                 </li>
@@ -253,7 +254,7 @@ function MiniSpark({ values }: { values: number[] }) {
 
 function Legend() {
   return (
-    <div className="flex items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+    <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
       <span className="flex items-center gap-1.5">
         <span className="size-2 rounded-sm bg-emerald-500" />
         merged
@@ -277,7 +278,11 @@ function PrChart({
 }) {
   const max = Math.max(...weeks.map((w) => w.merged + w.open + w.closed));
   return (
-    <div className="flex h-48 items-end gap-3">
+    <div
+      role="img"
+      aria-label={`Pull requests per week: ${weeks.map((w) => `${w.week} ${w.merged} merged, ${w.open} open, ${w.closed} closed`).join("; ")}`}
+      className="flex h-40 items-end gap-1.5 sm:h-48 sm:gap-3"
+    >
       {weeks.map((w) => {
         const total = w.merged + w.open + w.closed;
         const totalPct = (total / max) * 100;
@@ -285,7 +290,8 @@ function PrChart({
         const openPct = (w.open / total) * 100;
         const closedPct = (w.closed / total) * 100;
         return (
-          <div key={w.week} className="flex flex-1 flex-col items-center gap-1.5">
+          // h-full + justify-end so the bar's percentage height has a reference.
+          <div key={w.week} className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1.5">
             <div
               className="relative w-full overflow-hidden rounded-md"
               style={{ height: `${totalPct}%` }}
@@ -305,7 +311,7 @@ function PrChart({
                 />
               </div>
             </div>
-            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+            <span aria-hidden className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.05em] sm:tracking-[0.2em]">
               {w.week}
             </span>
           </div>

@@ -3,6 +3,7 @@ import {
   ArrowUpRightIcon,
   DownloadIcon,
 } from "lucide-react";
+import { useId } from "react";
 import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
 import { Button } from "@orbit/ui/button";
 
@@ -36,19 +37,21 @@ export function DashboardsRevenueShowcasePage() {
   const growth = ((current - lastMonth) / lastMonth) * 100;
 
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-6xl space-y-6">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Revenue · last 24 months
             </div>
             <h1 className="mt-1 font-heading text-2xl">Recurring revenue</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <div role="group" aria-label="Range" className="flex items-center gap-1">
             <RangeButton label="24m" active />
             <RangeButton label="12m" />
             <RangeButton label="3m" />
+            </div>
             <Button variant="outline" size="sm" className="gap-1.5">
               <DownloadIcon className="size-3.5" />
               Export
@@ -57,14 +60,14 @@ export function DashboardsRevenueShowcasePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/60 lg:grid-cols-[1.4fr_1fr]">
-          <div className="bg-background p-6">
-            <div className="flex items-baseline justify-between">
+          <div className="bg-background p-4 sm:p-6">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
               <div>
                 <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
                   MRR
                 </div>
                 <div className="mt-2 flex items-baseline gap-3">
-                  <span className="font-heading text-5xl tabular-nums">
+                  <span className="font-heading text-4xl tabular-nums sm:text-5xl">
                     ${current.toFixed(1)}k
                   </span>
                   <Delta value={growth} />
@@ -79,7 +82,7 @@ export function DashboardsRevenueShowcasePage() {
             </div>
           </div>
 
-          <div className="bg-background p-6">
+          <div className="bg-background p-4 sm:p-6">
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Net new this month
             </div>
@@ -97,7 +100,14 @@ export function DashboardsRevenueShowcasePage() {
                 <span className="font-heading text-3xl tabular-nums">112%</span>
                 <Delta value={2.1} />
               </div>
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-foreground/[0.06]">
+              <div
+                role="progressbar"
+                aria-label="Net revenue retention: 112% of the 100% baseline"
+                aria-valuenow={112}
+                aria-valuemin={0}
+                aria-valuemax={120}
+                className="mt-3 h-2 overflow-hidden rounded-full bg-foreground/[0.06]"
+              >
                 <div
                   className="h-full bg-emerald-500"
                   style={{ width: "112%", maxWidth: "100%" }}
@@ -113,7 +123,7 @@ export function DashboardsRevenueShowcasePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/60 lg:grid-cols-2">
-          <div className="bg-background p-6">
+          <div className="bg-background p-4 sm:p-6">
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               By plan
             </div>
@@ -143,14 +153,14 @@ export function DashboardsRevenueShowcasePage() {
             </div>
           </div>
 
-          <div className="bg-background p-6">
+          <div className="bg-background p-4 sm:p-6">
             <div className="flex items-baseline justify-between">
               <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
                 Top accounts
               </div>
               <a
                 href="#"
-                className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground"
+                className="min-h-8 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground pointer-coarse:min-h-10"
               >
                 view all →
               </a>
@@ -194,7 +204,8 @@ function RangeButton({ label, active }: { label: string; active?: boolean }) {
   return (
     <button
       type="button"
-      className={`rounded-md px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] ${
+      aria-pressed={active}
+      className={`rounded-md px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] pointer-coarse:min-h-10 ${
         active
           ? "bg-foreground/[0.06] text-foreground"
           : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
@@ -250,6 +261,7 @@ function Delta({ value, small }: { value: number; small?: boolean }) {
 }
 
 function AreaChart({ values }: { values: number[] }) {
+  const gradientId = useId();
   const w = 600;
   const h = 160;
   const max = Math.max(...values);
@@ -261,15 +273,23 @@ function AreaChart({ values }: { values: number[] }) {
   const fillPath = `M 0,${h} L ${points.replace(/ /g, " L ")} L ${w},${h} Z`;
   const linePath = `M ${points.replace(/ /g, " L ")}`;
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="h-40 w-full" preserveAspectRatio="none">
+    // Stretches to the card width; the stroke opts out of scaling so it stays
+    // 2px at any size. Unique gradient id per instance.
+    <svg
+      viewBox={`0 0 ${w} ${h}`}
+      className="h-32 w-full text-emerald-500 sm:h-40"
+      preserveAspectRatio="none"
+      role="img"
+      aria-label={`Monthly recurring revenue over ${values.length} months`}
+    >
       <defs>
-        <linearGradient id="rev-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgb(16 185 129)" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="rgb(16 185 129)" stopOpacity="0" />
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d={fillPath} fill="url(#rev-grad)" />
-      <path d={linePath} fill="none" stroke="rgb(16 185 129)" strokeWidth="2" />
+      <path d={fillPath} fill={`url(#${gradientId})`} />
+      <path d={linePath} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }

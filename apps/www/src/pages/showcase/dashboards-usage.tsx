@@ -20,8 +20,8 @@ const ROWS: UsageRow[] = [
 export function DashboardsUsageShowcasePage() {
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="border-b border-border/60 px-10 py-6">
-        <div className="mx-auto flex max-w-5xl items-end justify-between">
+      <div className="border-b border-border/60 px-4 py-5 sm:px-6 sm:py-6 lg:px-10">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-end justify-between gap-3">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Billing · Usage
@@ -34,7 +34,7 @@ export function DashboardsUsageShowcasePage() {
         </div>
       </div>
 
-      <main className="mx-auto max-w-5xl px-10 py-8">
+      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-[2fr_1fr]">
           <div className="rounded-xl border border-border/60 bg-background/40 p-6">
             <div className="flex items-center justify-between">
@@ -57,8 +57,8 @@ export function DashboardsUsageShowcasePage() {
               </div>
             </div>
 
-            <div className="mt-6 flex items-center justify-between rounded-lg border border-border/60 bg-background/40 p-3">
-              <div>
+            <div className="mt-6 flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-background/40 p-3">
+              <div className="min-w-0">
                 <div className="font-medium text-sm">Renews May 14</div>
                 <p className="mt-0.5 text-muted-foreground text-xs">
                   Card on file: Visa ending 4242
@@ -84,7 +84,14 @@ export function DashboardsUsageShowcasePage() {
               <span className="font-heading text-3xl">12</span>
               <span className="text-muted-foreground text-xs">/ 31 days</span>
             </div>
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-foreground/[0.08]">
+            <div
+              role="progressbar"
+              aria-label="Billing cycle elapsed"
+              aria-valuenow={12}
+              aria-valuemin={0}
+              aria-valuemax={31}
+              className="mt-3 h-1.5 overflow-hidden rounded-full bg-foreground/[0.08]"
+            >
               <div
                 className="h-full rounded-full bg-foreground/70"
                 style={{ width: `${(12 / 31) * 100}%` }}
@@ -128,8 +135,8 @@ function UsageMeter({ row }: { row: UsageRow }) {
   return (
     <li>
       <div className="flex items-baseline justify-between gap-3">
-        <div className="font-medium text-sm">{row.label}</div>
-        <div className="font-mono text-xs">
+        <div className="min-w-0 font-medium text-sm">{row.label}</div>
+        <div className="shrink-0 font-mono text-xs">
           <span className="text-foreground">{fmt(row.used)}</span>
           <span className="text-muted-foreground">
             {" "}
@@ -137,7 +144,14 @@ function UsageMeter({ row }: { row: UsageRow }) {
           </span>
         </div>
       </div>
-      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-foreground/[0.06]">
+      <div
+        role="progressbar"
+        aria-label={`${row.label} usage`}
+        aria-valuenow={Math.round(pct)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        className="mt-2 h-1.5 overflow-hidden rounded-full bg-foreground/[0.06]"
+      >
         <div
           className={`h-full rounded-full transition-all ${
             row.warn ? "bg-amber-500" : "bg-foreground/70"

@@ -1,3 +1,4 @@
+import { useId } from "react";
 import {
   ArrowDownRightIcon,
   ArrowUpRightIcon,
@@ -65,21 +66,21 @@ const NEWS = [
 
 export function DashboardsMarketShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Portfolio · sean's index
             </div>
             <h1 className="mt-1 font-heading text-2xl">Markets</h1>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" size="sm" className="gap-1.5 pointer-coarse:h-10">
               1D
               <ChevronDownIcon className="size-3" />
             </Button>
-            <Button variant="outline" size="sm" className="gap-1.5">
+            <Button variant="outline" size="sm" className="gap-1.5 pointer-coarse:h-10">
               <PlusIcon className="size-3.5" />
               Add ticker
             </Button>
@@ -103,17 +104,17 @@ export function DashboardsMarketShowcasePage() {
 function FeaturedPane() {
   const positive = FEATURED.changePct >= 0;
   return (
-    <div className="bg-background p-6">
-      <div className="flex items-baseline justify-between">
-        <div>
-          <div className="flex items-baseline gap-2">
+    <div className="bg-background p-4 sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-baseline gap-x-2">
             <span className="font-heading text-2xl">{FEATURED.symbol}</span>
             <span className="font-mono text-muted-foreground text-xs uppercase tracking-[0.2em]">
               {FEATURED.name}
             </span>
           </div>
-          <div className="mt-2 flex items-baseline gap-3">
-            <span className="font-mono text-5xl tabular-nums">
+          <div className="mt-2 flex flex-wrap items-baseline gap-x-3">
+            <span className="font-mono text-4xl tabular-nums sm:text-5xl">
               ${FEATURED.price.toFixed(2)}
             </span>
             <span
@@ -135,12 +136,13 @@ function FeaturedPane() {
             +$4.34 today · vol {FEATURED.vol}
           </div>
         </div>
-        <div className="flex gap-1">
+        <div role="group" aria-label="Chart range" className="flex gap-1">
           {["1D", "1W", "1M", "1Y", "ALL"].map((r) => (
             <button
               key={r}
               type="button"
-              className={`rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.25em] ${
+              aria-pressed={r === "1D"}
+              className={`min-h-7 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.15em] pointer-coarse:min-h-10 pointer-coarse:px-2.5 ${
                 r === "1D"
                   ? "bg-foreground/[0.06] text-foreground"
                   : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
@@ -163,7 +165,7 @@ function PortfolioPane() {
   const change = 4_182;
   const changePct = (change / (total - change)) * 100;
   return (
-    <div className="bg-background p-6">
+    <div className="bg-background p-4 sm:p-6">
       <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
         Portfolio value
       </div>
@@ -214,7 +216,7 @@ function PortfolioPane() {
 function WatchlistTable() {
   return (
     <div className="bg-background">
-      <div className="flex items-baseline justify-between border-border/40 border-b px-5 py-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-border/40 border-b px-4 py-3 sm:px-5">
         <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Watchlist
         </span>
@@ -222,14 +224,15 @@ function WatchlistTable() {
           {WATCHLIST.length} tickers · last 24h
         </span>
       </div>
+      {/* Priority columns: sparkline from sm, volume from md. */}
       <table className="w-full">
         <thead>
           <tr className="border-border/40 border-b text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
-            <th className="px-5 py-2 font-normal">Symbol</th>
-            <th className="px-5 py-2 text-right font-normal">Price</th>
-            <th className="px-5 py-2 text-right font-normal">Change</th>
-            <th className="px-5 py-2 font-normal">24h</th>
-            <th className="px-5 py-2 text-right font-normal">Vol</th>
+            <th className="px-3 py-2 font-normal sm:px-5">Symbol</th>
+            <th className="px-3 py-2 text-right font-normal sm:px-5">Price</th>
+            <th className="px-3 py-2 text-right font-normal sm:px-5">Change</th>
+            <th className="px-5 py-2 font-normal max-sm:hidden">24h</th>
+            <th className="px-5 py-2 text-right font-normal max-md:hidden">Vol</th>
           </tr>
         </thead>
         <tbody>
@@ -241,16 +244,16 @@ function WatchlistTable() {
                 key={t.symbol}
                 className="border-border/30 border-b hover:bg-foreground/[0.02]"
               >
-                <td className="px-5 py-2.5">
+                <td className="px-3 py-2.5 sm:px-5">
                   <div className="font-mono text-sm">{t.symbol}</div>
-                  <div className="font-mono text-[10px] text-muted-foreground">
+                  <div className="max-w-[9rem] truncate font-mono text-[10px] text-muted-foreground">
                     {t.name}
                   </div>
                 </td>
-                <td className="px-5 py-2.5 text-right font-mono text-sm tabular-nums">
+                <td className="px-3 py-2.5 text-right font-mono text-sm tabular-nums sm:px-5">
                   ${t.price.toFixed(2)}
                 </td>
-                <td className="px-5 py-2.5 text-right font-mono text-sm tabular-nums">
+                <td className="px-3 py-2.5 text-right font-mono text-sm tabular-nums sm:px-5">
                   <span
                     className={
                       positive
@@ -262,12 +265,12 @@ function WatchlistTable() {
                     {t.changePct.toFixed(2)}%
                   </span>
                 </td>
-                <td className="px-5 py-2.5">
-                  <div className="h-7 w-32">
+                <td className="px-5 py-2.5 max-sm:hidden">
+                  <div className="h-7 w-24 lg:w-32">
                     <Spark values={t.series} color={color} />
                   </div>
                 </td>
-                <td className="px-5 py-2.5 text-right font-mono text-[11px] text-muted-foreground tabular-nums">
+                <td className="px-5 py-2.5 text-right font-mono text-[11px] text-muted-foreground tabular-nums max-md:hidden">
                   {t.vol}
                 </td>
               </tr>
@@ -282,7 +285,7 @@ function WatchlistTable() {
 function NewsPane() {
   return (
     <div className="bg-background">
-      <div className="flex items-baseline justify-between border-border/40 border-b px-5 py-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-border/40 border-b px-4 py-3 sm:px-5">
         <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Headlines
         </span>
@@ -292,7 +295,7 @@ function NewsPane() {
       </div>
       <ul className="divide-y divide-border/40">
         {NEWS.map((n, i) => (
-          <li key={i} className="px-5 py-3">
+          <li key={i} className="px-4 py-3 sm:px-5">
             <div className="flex items-baseline gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
               <span className="tabular-nums">{n.time}</span>
               <span>·</span>
@@ -313,6 +316,7 @@ function PriceChart({
   values: number[];
   positive: boolean;
 }) {
+  const gradientId = useId();
   const w = 700;
   const h = 200;
   const max = Math.max(...values);
@@ -330,7 +334,7 @@ function PriceChart({
       preserveAspectRatio="none"
     >
       <defs>
-        <linearGradient id="mkt-grad" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={color} stopOpacity="0.3" />
           <stop offset="100%" stopColor={color} stopOpacity="0" />
         </linearGradient>
@@ -346,8 +350,8 @@ function PriceChart({
           strokeDasharray="2 4"
         />
       ))}
-      <path d={`M 0,${h} L ${pts} L ${w},${h} Z`} fill="url(#mkt-grad)" />
-      <path d={`M ${pts}`} fill="none" stroke={color} strokeWidth="1.75" />
+      <path d={`M 0,${h} L ${pts} L ${w},${h} Z`} fill={`url(#${gradientId})`} />
+      <path d={`M ${pts}`} fill="none" stroke={color} strokeWidth="1.75" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }
@@ -368,7 +372,7 @@ function Spark({ values, color }: { values: number[]; color: string }) {
       className="h-full w-full"
       preserveAspectRatio="none"
     >
-      <path d={`M ${pts}`} fill="none" stroke={color} strokeWidth="1.5" />
+      <path d={`M ${pts}`} fill="none" stroke={color} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }

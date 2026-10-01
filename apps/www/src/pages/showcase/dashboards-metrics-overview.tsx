@@ -1,3 +1,4 @@
+import { useId } from "react";
 import {
   ArrowDownRightIcon,
   ArrowUpRightIcon,
@@ -27,15 +28,15 @@ const ACTIVITY = [
 export function DashboardsMetricsOverviewShowcasePage() {
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="border-b border-border/60 px-10 py-6">
-        <div className="mx-auto flex max-w-6xl items-end justify-between">
+      <div className="border-b border-border/60 px-4 py-5 sm:px-6 sm:py-6 lg:px-10">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Workspace · Acme inc.
             </div>
             <h1 className="mt-1 font-heading text-2xl">Overview</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <DateRangePill />
             <Button size="sm" type="button">
               <PlusIcon />
@@ -45,8 +46,8 @@ export function DashboardsMetricsOverviewShowcasePage() {
         </div>
       </div>
 
-      <main className="mx-auto max-w-6xl px-10 py-8">
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
+        <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-4">
           {STATS.map((s) => (
             <StatCard key={s.label} {...s} />
           ))}
@@ -83,7 +84,8 @@ function StatCard({
         </div>
         <button
           type="button"
-          className="text-muted-foreground/60 transition-colors hover:text-foreground"
+          aria-label={`More options for ${label}`}
+          className="-mr-1.5 flex size-7 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:size-10"
         >
           <MoreHorizontalIcon className="size-4" />
         </button>
@@ -113,7 +115,7 @@ function StatCard({
 function ChartCard() {
   return (
     <div className="rounded-xl border border-border/60 bg-background/40 p-5 lg:col-span-2">
-      <div className="flex items-end justify-between">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
             Active users · daily
@@ -126,29 +128,24 @@ function ChartCard() {
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
-          <button
-            type="button"
-            className="rounded px-2 py-1 transition-colors hover:bg-foreground/[0.05]"
-          >
-            7d
-          </button>
-          <button
-            type="button"
-            className="rounded bg-foreground/[0.08] px-2 py-1 text-foreground"
-          >
-            30d
-          </button>
-          <button
-            type="button"
-            className="rounded px-2 py-1 transition-colors hover:bg-foreground/[0.05]"
-          >
-            90d
-          </button>
+        <div role="tablist" aria-label="Range" className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+          {["7d", "30d", "90d"].map((r) => (
+            <button
+              key={r}
+              type="button"
+              role="tab"
+              aria-selected={r === "30d"}
+              className={`min-h-7 rounded px-2.5 py-1 transition-colors pointer-coarse:min-h-10 ${
+                r === "30d" ? "bg-foreground/[0.08] text-foreground" : "hover:bg-foreground/[0.05]"
+              }`}
+            >
+              {r}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="mt-6 h-44 w-full">
+      <div className="mt-6 h-36 w-full sm:h-44">
         <Sparkline data={SPARK} />
       </div>
     </div>
@@ -156,6 +153,7 @@ function ChartCard() {
 }
 
 function Sparkline({ data }: { data: number[] }) {
+  const gradientId = useId();
   const W = 600;
   const H = 160;
   const PAD = 8;
@@ -173,19 +171,28 @@ function Sparkline({ data }: { data: number[] }) {
   const area = `M ${PAD} ${H - PAD} L ${points
     .split(" ")
     .join(" L ")} L ${W - PAD} ${H - PAD} Z`;
+  const last = data[data.length - 1]!;
+  const lastX = PAD + (data.length - 1) * stepX;
+  const lastY = PAD + (1 - (last - min) / range) * (H - PAD * 2);
+  // The SVG stretches to the card width (preserveAspectRatio="none"), so the
+  // stroke opts out of scaling and the end marker is HTML, not an SVG circle
+  // that would turn into an ellipse.
   return (
+    <div className="relative h-full w-full">
     <svg
       viewBox={`0 0 ${W} ${H}`}
       preserveAspectRatio="none"
       className="h-full w-full"
+      role="img"
+      aria-label={`Trend over ${data.length} periods, latest ${last}`}
     >
       <defs>
-        <linearGradient id="dash-grad" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="currentColor" stopOpacity="0.2" />
           <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d={area} fill="url(#dash-grad)" className="text-primary" />
+      <path d={area} fill={`url(#${gradientId})`} className="text-primary" />
       <polyline
         points={points}
         fill="none"
@@ -193,20 +200,18 @@ function Sparkline({ data }: { data: number[] }) {
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
         className="text-primary"
       />
-      {data.map((v, i) => {
-        const x = PAD + i * stepX;
-        const y = PAD + (1 - (v - min) / range) * (H - PAD * 2);
-        const last = i === data.length - 1;
-        return last ? (
-          <g key={i}>
-            <circle cx={x} cy={y} r="6" className="text-primary opacity-25" fill="currentColor" />
-            <circle cx={x} cy={y} r="2.5" className="text-primary" fill="currentColor" />
-          </g>
-        ) : null;
-      })}
     </svg>
+    <span
+      aria-hidden
+      className="-translate-x-1/2 -translate-y-1/2 absolute flex size-3 items-center justify-center rounded-full bg-primary/25"
+      style={{ left: `${(lastX / W) * 100}%`, top: `${(lastY / H) * 100}%` }}
+    >
+      <span className="size-1.5 rounded-full bg-primary" />
+    </span>
+    </div>
   );
 }
 
@@ -219,7 +224,7 @@ function ActivityCard() {
         </div>
         <button
           type="button"
-          className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:text-foreground"
+          className="min-h-8 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:text-foreground pointer-coarse:min-h-10"
         >
           See all
         </button>
@@ -249,7 +254,7 @@ function DateRangePill() {
   return (
     <button
       type="button"
-      className="inline-flex items-center gap-2 rounded-md border border-border/70 bg-background/40 px-3 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
+      className="inline-flex items-center gap-2 whitespace-nowrap rounded-md border border-border/70 bg-background/40 px-3 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground pointer-coarse:min-h-10"
     >
       <span className="size-1.5 rounded-full bg-emerald-500" />
       Mar 27 – Apr 25

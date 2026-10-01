@@ -34,15 +34,15 @@ const BARS = [
 export function DashboardsAnalyticsShowcasePage() {
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="border-b border-border/60 px-10 py-6">
-        <div className="mx-auto flex max-w-6xl items-end justify-between">
+      <div className="border-b border-border/60 px-4 py-5 sm:px-6 sm:py-6 lg:px-10">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Analytics · Pageviews
             </div>
             <h1 className="mt-1 font-heading text-2xl">Last 30 days</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <RangePicker />
             <Button size="sm" type="button" variant="outline">
               Export CSV
@@ -51,9 +51,9 @@ export function DashboardsAnalyticsShowcasePage() {
         </div>
       </div>
 
-      <main className="mx-auto max-w-6xl px-10 py-8">
-        <section className="rounded-xl border border-border/60 bg-background/40 p-6">
-          <div className="flex items-end justify-between">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
+        <section className="rounded-xl border border-border/60 bg-background/40 p-4 sm:p-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 Pageviews
@@ -78,12 +78,16 @@ export function DashboardsAnalyticsShowcasePage() {
             </div>
           </div>
 
-          <div className="mt-6 flex items-end gap-1.5">
+          <div
+            role="img"
+            aria-label={`Daily pageviews for the last ${BARS.length} days; last 4 days are partial`}
+            className="mt-6 flex h-32 items-end gap-0.5 sm:h-40 sm:gap-1.5"
+          >
             {BARS.map((b, i) => (
               <div
                 key={i}
                 className="flex-1"
-                style={{ height: `${(b / 100) * 160}px` }}
+                style={{ height: `${b}%` }}
               >
                 <div
                   className="h-full w-full rounded-sm bg-foreground/75"
@@ -92,13 +96,14 @@ export function DashboardsAnalyticsShowcasePage() {
               </div>
             ))}
           </div>
-          <div className="mt-3 grid grid-cols-6 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
+          {/* Fewer labels on phones so they never collide. */}
+          <div aria-hidden className="mt-3 flex justify-between font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.12em] sm:tracking-[0.2em]">
             <span>Mar 27</span>
-            <span className="text-center">Apr 1</span>
-            <span className="text-center">Apr 6</span>
-            <span className="text-center">Apr 11</span>
-            <span className="text-center">Apr 16</span>
-            <span className="text-right">Apr 25</span>
+            <span className="max-sm:hidden">Apr 1</span>
+            <span>Apr 6</span>
+            <span className="max-sm:hidden">Apr 11</span>
+            <span>Apr 16</span>
+            <span>Apr 25</span>
           </div>
         </section>
 
@@ -134,8 +139,8 @@ export function DashboardsAnalyticsShowcasePage() {
                     key={p.path}
                     className="flex items-center justify-between gap-3 rounded-md px-2 py-2 text-sm transition-colors hover:bg-foreground/[0.03]"
                   >
-                    <span className="truncate font-mono text-[12px]">{p.path}</span>
-                    <span className="flex items-center gap-3">
+                    <span className="min-w-0 truncate font-mono text-[12px]">{p.path}</span>
+                    <span className="flex shrink-0 items-center gap-3">
                       <span className="font-mono text-xs">
                         {p.views.toLocaleString()}
                       </span>
@@ -157,7 +162,7 @@ export function DashboardsAnalyticsShowcasePage() {
         </div>
 
         <BreakdownCard title="Top countries" className="mt-3">
-          <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">
+          <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {COUNTRIES.map((c) => (
               <li
                 key={c.name}
@@ -198,7 +203,8 @@ function BreakdownCard({
         </div>
         <button
           type="button"
-          className="text-muted-foreground/60 transition-colors hover:text-foreground"
+          aria-label={`More options for ${title}`}
+          className="-mr-1.5 flex size-7 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:size-10"
         >
           <MoreHorizontalIcon className="size-4" />
         </button>
@@ -210,7 +216,7 @@ function BreakdownCard({
 
 function RangePicker() {
   return (
-    <div className="flex items-center rounded-md border border-border/70 bg-background/40 font-mono text-xs text-muted-foreground">
+    <div className="flex max-w-full items-center overflow-x-auto rounded-md border border-border/70 bg-background/40 font-mono text-xs text-muted-foreground [&>button]:shrink-0 [&>button]:whitespace-nowrap pointer-coarse:[&>button]:min-h-10">
       <button
         type="button"
         className="px-2.5 py-1.5 transition-colors hover:text-foreground"
@@ -219,6 +225,7 @@ function RangePicker() {
       </button>
       <button
         type="button"
+        aria-pressed="true"
         className="bg-foreground/[0.06] px-2.5 py-1.5 text-foreground"
       >
         30d
@@ -229,7 +236,7 @@ function RangePicker() {
       >
         90d
       </button>
-      <span className="mx-1 h-4 w-px bg-border/60" />
+      <span className="mx-1 h-4 w-px shrink-0 bg-border/60" />
       <button
         type="button"
         className="inline-flex items-center gap-1 px-2.5 py-1.5 transition-colors hover:text-foreground"

@@ -33,12 +33,12 @@ const SHORTCUTS = [
 export function DashboardsHomeShowcasePage() {
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="px-10 py-10">
+      <div className="px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
         <div className="mx-auto max-w-5xl">
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Saturday, Apr 26
           </div>
-          <h1 className="mt-1 font-heading text-4xl tracking-tight">
+          <h1 className="mt-1 font-heading text-3xl tracking-tight sm:text-4xl">
             Good morning, Sean.
           </h1>
           <p className="mt-2 max-w-xl text-muted-foreground text-sm">
@@ -50,7 +50,7 @@ export function DashboardsHomeShowcasePage() {
               <button
                 key={s.label}
                 type="button"
-                className="group flex items-center justify-between gap-2 rounded-lg border border-border/60 bg-background/40 px-3.5 py-2.5 text-left transition-colors hover:border-foreground/40 hover:bg-background/60"
+                className="group flex items-center justify-between gap-2 rounded-lg border border-border/60 bg-background/40 px-3.5 py-2.5 text-left transition-colors hover:border-foreground/40 hover:bg-background/60 pointer-coarse:min-h-12"
               >
                 <span className="text-sm">{s.label}</span>
                 <ArrowRightIcon className="size-3.5 opacity-50 transition-transform group-hover:translate-x-0.5 group-hover:opacity-90" />
@@ -69,34 +69,44 @@ export function DashboardsHomeShowcasePage() {
                 {TASKS.map((t) => (
                   <li
                     key={t.id}
-                    className="group flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.03]"
+                    className="group flex items-start gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.03] sm:items-center"
                   >
+                    {/* 20px circle inside a 28px (44px on touch) hit area. */}
                     <button
                       type="button"
-                      className={`flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
+                      aria-pressed={t.done}
+                      aria-label={`Mark "${t.title}" ${t.done ? "not done" : "done"}`}
+                      className="-m-1 flex size-7 shrink-0 items-center justify-center rounded-full pointer-coarse:-m-3 pointer-coarse:size-11"
+                    >
+                      <span className={`flex size-5 items-center justify-center rounded-full border transition-colors ${
                         t.done
                           ? "border-foreground/30 bg-foreground/10 text-foreground"
                           : "border-foreground/30 text-transparent hover:bg-foreground/[0.06]"
                       }`}
-                      aria-label="Toggle"
-                    >
+                      >
                       {t.done ? (
                         <CheckIcon className="size-3" />
                       ) : (
                         <CircleIcon className="size-3" />
                       )}
+                      </span>
                     </button>
-                    <span
-                      className={`flex-1 truncate text-sm ${t.done ? "text-muted-foreground line-through" : ""}`}
-                    >
-                      {t.title}
-                    </span>
-                    <span className="rounded bg-foreground/[0.05] px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground uppercase tracking-[0.2em]">
-                      {t.project}
-                    </span>
-                    <span className="w-16 text-right font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
-                      {t.due}
-                    </span>
+                    {/* Title on its own line below sm; meta follows underneath. */}
+                    <div className="min-w-0 flex-1 sm:flex sm:items-center sm:gap-3">
+                      <span
+                        className={`block text-sm sm:flex-1 sm:truncate ${t.done ? "text-muted-foreground line-through" : ""}`}
+                      >
+                        {t.title}
+                      </span>
+                      <span className="mt-1 flex items-center gap-2 sm:mt-0 sm:contents">
+                        <span className="rounded bg-foreground/[0.05] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">
+                          {t.project}
+                        </span>
+                        <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.15em] sm:w-16 sm:text-right">
+                          {t.due}
+                        </span>
+                      </span>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -137,7 +147,8 @@ export function DashboardsHomeShowcasePage() {
         </div>
       </div>
 
-      <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-md border border-border/70 bg-background/70 px-3 py-1.5 font-mono text-[10px] text-muted-foreground backdrop-blur">
+      {/* Keyboard hint: only where a keyboard is likely. */}
+      <div className="fixed right-6 bottom-6 z-50 hidden items-center gap-2 rounded-md border border-border/70 bg-background/70 px-3 py-1.5 font-mono text-[10px] text-muted-foreground backdrop-blur md:flex pointer-coarse:hidden">
         <CommandIcon className="size-3" />
         <span className="uppercase tracking-[0.25em]">⌘K to jump anywhere</span>
       </div>

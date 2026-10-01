@@ -113,22 +113,22 @@ export function DashboardsServicesShowcasePage() {
   const totalRps = SERVICES.reduce((acc, s) => acc + s.rps, 0);
 
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               acme/platform · 6 services
             </div>
             <h1 className="mt-1 font-heading text-2xl">Service health</h1>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" size="sm" className="gap-1.5 pointer-coarse:h-10">
               <FilterIcon className="size-3.5" />
               All envs
               <ChevronDownIcon className="size-3" />
             </Button>
-            <Button variant="outline" size="sm" className="gap-1.5">
+            <Button variant="outline" size="sm" className="gap-1.5 pointer-coarse:h-10">
               Last 1h
               <ChevronDownIcon className="size-3" />
             </Button>
@@ -201,7 +201,7 @@ function ServiceCard({ service: s }: { service: Service }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 px-4 pt-4">
+      <div className="grid grid-cols-3 gap-2 px-4 pt-4 sm:gap-3">
         <Metric
           label="rps"
           value={s.rps === 0 ? "—" : s.rps >= 1000 ? `${(s.rps / 1000).toFixed(1)}k` : String(s.rps)}
@@ -283,7 +283,7 @@ function Metric({
         : "text-foreground";
   return (
     <div className="rounded-md bg-foreground/[0.03] px-2 py-1.5">
-      <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+      <div className="truncate font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:tracking-[0.25em]">
         {label}
       </div>
       <div className={`mt-0.5 font-mono text-sm tabular-nums ${t}`}>
@@ -314,7 +314,7 @@ function Spark({ values, color }: { values: number[]; color: string }) {
         fill={color}
         fillOpacity="0.12"
       />
-      <path d={`M ${points}`} fill="none" stroke={color} strokeWidth="1.5" />
+      <path d={`M ${points}`} fill="none" stroke={color} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }
