@@ -12,8 +12,15 @@ interface DesignSearch {
 }
 
 export const Route = createFileRoute("/c/$category/$design")({
+  // TanStack JSON-parses search params, so `?preview=1` arrives as the
+  // number 1 and `?preview=true` as a boolean. Normalise to a string.
   validateSearch: (raw: Record<string, unknown>): DesignSearch => ({
-    preview: typeof raw.preview === "string" ? raw.preview : undefined,
+    preview:
+      typeof raw.preview === "string" ||
+      typeof raw.preview === "number" ||
+      typeof raw.preview === "boolean"
+        ? String(raw.preview)
+        : undefined,
   }),
   head: ({ params }) => {
     const category = getCategory(params.category as CategorySlug);
@@ -212,7 +219,9 @@ function DesignRoute() {
 
 function ShortcutHints() {
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
+    // Keyboard-only hints: hidden on small screens and touch devices, where
+    // they'd cover the design and can't be used anyway.
+    <div className="fixed bottom-4 right-4 z-50 hidden flex-col items-end gap-2 md:flex pointer-coarse:hidden">
       <div className="flex items-center gap-3 rounded-md border border-border/70 bg-background/70 px-3 py-1.5 font-mono text-[10px] text-muted-foreground backdrop-blur">
         <span className="flex items-center gap-1.5">
           <Kbd>esc</Kbd> back
