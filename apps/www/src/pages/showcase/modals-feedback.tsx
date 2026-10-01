@@ -4,9 +4,20 @@ import {
   HeartIcon,
   ImageIcon,
   LightbulbIcon,
-  XIcon,
 } from "lucide-react";
 import { Button } from "@orbit/ui/button";
+import { Checkbox } from "@orbit/ui/checkbox";
+import {
+  Dialog,
+  DialogClose,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogPanel,
+  DialogPopup,
+  DialogTitle,
+  DialogTrigger,
+} from "@orbit/ui/dialog";
 import { Textarea } from "@orbit/ui/textarea";
 
 type Kind = "bug" | "idea" | "praise";
@@ -45,39 +56,33 @@ export function ModalsFeedbackShowcasePage() {
   const [kind, setKind] = useState<Kind>("idea");
 
   return (
+    // Real Dialog (focus trap, Esc, scroll lock); bottom sheet on phones.
     <div className="relative min-h-svh bg-background">
-      <div aria-hidden className="px-10 py-10 opacity-25">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-8 sm:px-10 sm:py-10">
         <div className="font-heading text-2xl">Project board</div>
-      </div>
+      <Dialog defaultOpen>
+        <DialogTrigger render={<Button variant="outline" />}>Send feedback</DialogTrigger>
+        <DialogPopup className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-base">Send us feedback</DialogTitle>
+            <DialogDescription>
+              Goes to the product team. Replies within 1 business day.
+            </DialogDescription>
+          </DialogHeader>
 
-      <div className="absolute inset-0 grid place-items-center bg-background/70 backdrop-blur-sm">
-        <div className="w-full max-w-md overflow-hidden rounded-xl border border-border bg-background shadow-2xl">
-          <div className="flex items-center justify-between border-border/60 border-b px-5 py-3.5">
-            <div>
-              <div className="font-heading text-sm">Send us feedback</div>
-              <div className="mt-0.5 text-muted-foreground text-xs">
-                Goes to the product team. Replies within 1 business day.
-              </div>
-            </div>
-            <button
-              type="button"
-              className="rounded-md p-1 text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
-            >
-              <XIcon className="size-4" />
-            </button>
-          </div>
-
-          <div className="space-y-4 px-5 py-4">
-            <div className="grid grid-cols-3 gap-2">
+          <DialogPanel className="space-y-4">
+            <div role="radiogroup" aria-label="Feedback type" className="grid grid-cols-3 gap-2">
               {KINDS.map((k) => {
                 const active = kind === k.id;
                 return (
                   <button
                     key={k.id}
                     type="button"
+                    role="radio"
+                    aria-checked={active}
                     onClick={() => setKind(k.id)}
                     className={
-                      "flex flex-col items-center gap-1.5 rounded-lg border px-3 py-3 text-center transition-colors " +
+                      "flex flex-col items-center gap-1.5 rounded-lg border px-2 py-3 text-center transition-colors sm:px-3 " +
                       (active
                         ? "border-foreground/60 bg-foreground/[0.05]"
                         : "border-border/60 hover:border-foreground/30")
@@ -97,6 +102,7 @@ export function ModalsFeedbackShowcasePage() {
             </p>
 
             <Textarea
+              aria-label="Your feedback"
               placeholder={
                 kind === "bug"
                   ? "What did you do? What did you see? What did you expect?"
@@ -109,26 +115,23 @@ export function ModalsFeedbackShowcasePage() {
 
             <button
               type="button"
-              className="inline-flex items-center gap-2 rounded-md border border-dashed border-border/70 bg-background px-3 py-2 text-muted-foreground text-xs hover:border-foreground/40 hover:text-foreground"
+              className="inline-flex items-center gap-2 rounded-md border border-dashed border-border/70 bg-background px-3 py-2 text-muted-foreground text-xs hover:border-foreground/40 hover:text-foreground pointer-coarse:min-h-11"
             >
               <ImageIcon className="size-3.5" />
               Attach screenshot
             </button>
-          </div>
-
-          <div className="flex items-center justify-between border-border/60 border-t bg-background px-5 py-3">
-            <label className="flex items-center gap-2 text-muted-foreground text-xs">
-              <input type="checkbox" defaultChecked className="size-3.5" />
+            <label className="flex cursor-pointer items-center gap-2 text-muted-foreground text-xs pointer-coarse:min-h-11">
+              <Checkbox defaultChecked />
               Include console logs
             </label>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" type="button">
-                Cancel
-              </Button>
-              <Button type="button">Send feedback</Button>
-            </div>
-          </div>
-        </div>
+          </DialogPanel>
+
+          <DialogFooter>
+            <DialogClose render={<Button variant="ghost" type="button" />}>Cancel</DialogClose>
+            <Button type="button">Send feedback</Button>
+          </DialogFooter>
+        </DialogPopup>
+      </Dialog>
       </div>
     </div>
   );

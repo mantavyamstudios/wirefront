@@ -8,6 +8,16 @@ import {
   XIcon,
 } from "lucide-react";
 import { Button } from "@orbit/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogFooter,
+  DialogHeader,
+  DialogPanel,
+  DialogPopup,
+  DialogTitle,
+  DialogTrigger,
+} from "@orbit/ui/dialog";
 
 interface UploadFile {
   name: string;
@@ -32,33 +42,35 @@ export function ModalsUploadFilesShowcasePage() {
   );
 
   return (
+    // Real Dialog (focus trap, Esc, scroll lock); bottom sheet on phones.
     <div className="relative min-h-svh bg-background">
-      <div aria-hidden className="px-10 py-10 opacity-20">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-8 sm:px-10 sm:py-10">
         <div className="font-heading text-2xl">Assets · Brand</div>
-      </div>
-      <div className="absolute inset-0 grid place-items-center bg-background/70 backdrop-blur-sm">
-        <div className="w-full max-w-xl rounded-xl border border-border bg-background shadow-2xl">
-          <div className="flex items-center justify-between border-border/60 border-b px-5 py-3.5">
-            <div className="font-heading text-sm">Upload assets</div>
-            <button
-              type="button"
-              className="rounded-md p-1 text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
-            >
-              <XIcon className="size-4" />
-            </button>
-          </div>
+      <Dialog defaultOpen>
+        <DialogTrigger render={<Button />}>
+          <CloudUploadIcon />
+          Upload
+        </DialogTrigger>
+        <DialogPopup className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="text-base">Upload assets</DialogTitle>
+          </DialogHeader>
 
-          <div className="px-5 py-4">
+          <DialogPanel>
             <label className="block cursor-pointer rounded-xl border-2 border-dashed border-border/70 bg-background px-6 py-8 text-center transition-colors hover:border-foreground/40 hover:bg-muted/60">
-              <input type="file" multiple className="hidden" />
+              <input type="file" multiple className="sr-only" />
               <div className="mx-auto flex size-10 items-center justify-center rounded-full bg-foreground/[0.06]">
                 <CloudUploadIcon className="size-5 opacity-70" />
               </div>
+              {/* Drag-and-drop copy only where a pointer can drag. */}
               <div className="mt-3 text-sm">
-                Drag and drop files here, or{" "}
-                <span className="text-foreground underline-offset-2 hover:underline">
-                  browse
+                <span className="pointer-coarse:hidden">
+                  Drag and drop files here, or{" "}
+                  <span className="text-foreground underline-offset-2 hover:underline">
+                    browse
+                  </span>
                 </span>
+                <span className="hidden text-foreground pointer-coarse:inline">Tap to choose files</span>
               </div>
               <div className="mt-1 text-muted-foreground text-xs">
                 Up to 250 MB · png, jpg, pdf, fig, zip
@@ -74,7 +86,14 @@ export function ModalsUploadFilesShowcasePage() {
                   {overall}%
                 </div>
               </div>
-              <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                role="progressbar"
+                aria-label="Overall upload progress"
+                aria-valuenow={overall}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                className="h-1 w-full overflow-hidden rounded-full bg-muted"
+              >
                 <div
                   className="h-full bg-foreground"
                   style={{ width: `${overall}%` }}
@@ -93,11 +112,18 @@ export function ModalsUploadFilesShowcasePage() {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline justify-between gap-2">
                         <span className="truncate text-sm">{f.name}</span>
-                        <span className="font-mono text-[10px] text-muted-foreground">
+                        <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
                           {f.size}
                         </span>
                       </div>
-                      <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-muted">
+                      <div
+                        role="progressbar"
+                        aria-label={`${f.name} progress`}
+                        aria-valuenow={f.progress}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-muted"
+                      >
                         <div
                           className={
                             "h-full " +
@@ -113,7 +139,14 @@ export function ModalsUploadFilesShowcasePage() {
                     </div>
                     <button
                       type="button"
-                      className="grid size-6 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
+                      aria-label={
+                        f.state === "done"
+                          ? `${f.name} uploaded`
+                          : f.state === "paused"
+                            ? `Resume ${f.name}`
+                            : `Cancel ${f.name}`
+                      }
+                      className="grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
                     >
                       {f.state === "done" ? (
                         <CheckIcon className="size-3.5 text-emerald-600" />
@@ -127,15 +160,16 @@ export function ModalsUploadFilesShowcasePage() {
                 ))}
               </ul>
             </div>
-          </div>
+          </DialogPanel>
 
-          <div className="flex items-center justify-end gap-2 border-border/60 border-t px-5 py-3">
+          <DialogFooter>
             <Button variant="ghost" type="button">
               Cancel all
             </Button>
-            <Button type="button">Done</Button>
-          </div>
-        </div>
+            <DialogClose render={<Button type="button" />}>Done</DialogClose>
+          </DialogFooter>
+        </DialogPopup>
+      </Dialog>
       </div>
     </div>
   );

@@ -1,5 +1,15 @@
-import { CheckIcon, SparklesIcon, XIcon } from "lucide-react";
+import { CheckIcon, SparklesIcon } from "lucide-react";
 import { Button } from "@orbit/ui/button";
+import {
+  Dialog,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogPanel,
+  DialogPopup,
+  DialogTitle,
+  DialogTrigger,
+} from "@orbit/ui/dialog";
 
 const PLANS = [
   {
@@ -30,43 +40,41 @@ const PLANS = [
 
 export function ModalsUpgradeShowcasePage() {
   return (
+    // Real Dialog. Tall content scrolls inside DialogPanel (the old centred
+    // overlay pushed the heading off-screen); bottom sheet on phones.
     <div className="relative min-h-svh bg-background">
-      <div aria-hidden className="px-10 py-10 opacity-25">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-8 sm:px-10 sm:py-10">
         <div className="font-heading text-2xl">Workspace</div>
-      </div>
-
-      <div className="absolute inset-0 grid place-items-center bg-background/70 backdrop-blur-sm">
-        <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-border bg-background shadow-2xl">
-          <div className="relative flex items-start gap-4 border-border/60 border-b px-6 pt-6 pb-5">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-foreground text-background">
+      <Dialog defaultOpen>
+        <DialogTrigger render={<Button />}>
+          <SparklesIcon />
+          Upgrade
+        </DialogTrigger>
+        <DialogPopup className="sm:max-w-2xl">
+          <DialogHeader className="sm:flex-row sm:items-start sm:gap-4">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-foreground text-background max-sm:hidden">
               <SparklesIcon className="size-5" />
             </div>
-            <div className="flex-1">
-              <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+            <div className="flex flex-col gap-1">
+              <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">
                 Limit reached · 10 / 10 projects
               </div>
-              <div className="mt-1 font-heading text-xl">
+              <DialogTitle className="text-xl">
                 Time to grow into a bigger plan
-              </div>
-              <div className="mt-1.5 text-muted-foreground text-sm">
+              </DialogTitle>
+              <DialogDescription>
                 You've hit the project limit on Free. Upgrade to keep shipping
                 — switch back any time.
-              </div>
+              </DialogDescription>
             </div>
-            <button
-              type="button"
-              className="rounded-md p-1 text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
-            >
-              <XIcon className="size-4" />
-            </button>
-          </div>
+          </DialogHeader>
 
-          <div className="grid grid-cols-1 gap-3 px-6 py-5 sm:grid-cols-2">
+          <DialogPanel className="grid grid-cols-1 gap-3 pt-2 sm:grid-cols-2">
             {PLANS.map((p) => (
               <div
                 key={p.name}
                 className={
-                  "relative rounded-xl border p-5 " +
+                  "relative rounded-xl border p-4 sm:p-5 " +
                   (p.highlight
                     ? "border-foreground/60 bg-foreground/[0.04]"
                     : "border-border/60")
@@ -106,18 +114,19 @@ export function ModalsUpgradeShowcasePage() {
                 </Button>
               </div>
             ))}
-          </div>
+          </DialogPanel>
 
-          <div className="flex items-center justify-between border-border/60 border-t bg-background px-6 py-3 text-muted-foreground text-xs">
-            <span>14-day money-back · Cancel any time</span>
+          <DialogFooter className="text-muted-foreground text-xs sm:items-center sm:justify-between">
+            <span className="text-center sm:text-left">14-day money-back · Cancel any time</span>
             <button
               type="button"
-              className="underline-offset-2 hover:text-foreground hover:underline"
+              className="min-h-8 underline-offset-2 hover:text-foreground hover:underline pointer-coarse:min-h-10"
             >
               See full plan comparison →
             </button>
-          </div>
-        </div>
+          </DialogFooter>
+        </DialogPopup>
+      </Dialog>
       </div>
     </div>
   );
