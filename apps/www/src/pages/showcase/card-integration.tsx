@@ -68,7 +68,7 @@ const STATUS_DOT: Record<Integration["status"], string> = {
 
 export function CardIntegrationShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-2xl">
         <header className="mb-6 flex items-end justify-between">
           <div>
@@ -97,17 +97,17 @@ function IntegrationCard({ item }: { item: Integration }) {
   const status: Integration["status"] = enabled ? item.status : "off";
   return (
     <Card className="overflow-hidden">
-      <CardPanel className="flex items-center gap-4 p-4">
+      <CardPanel className="flex items-start gap-3 p-3 sm:items-center sm:gap-4 sm:p-4">
         <div
           className={
-            "flex size-11 shrink-0 items-center justify-center rounded-xl border bg-gradient-to-br font-heading font-semibold text-base " +
+            "flex size-10 shrink-0 items-center justify-center rounded-xl border bg-gradient-to-br font-heading font-semibold text-base sm:size-11 " +
             item.tone
           }
         >
           {item.letter}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span className="font-heading font-semibold text-base">
               {item.name}
             </span>
@@ -119,7 +119,7 @@ function IntegrationCard({ item }: { item: Integration }) {
               {STATUS_LABEL[status]}
             </Badge>
           </div>
-          <p className="truncate text-muted-foreground text-sm">{item.blurb}</p>
+          <p className="line-clamp-2 text-muted-foreground text-sm sm:line-clamp-1">{item.blurb}</p>
           {enabled && item.scopes.length ? (
             <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
               {item.scopes.map((s) => (
@@ -139,13 +139,14 @@ function IntegrationCard({ item }: { item: Integration }) {
             {item.lastSync}
           </div>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex shrink-0 flex-col items-end gap-2">
           <Switch
+            aria-label={`${item.name} ${enabled ? "enabled" : "disabled"}`}
             checked={enabled}
             onCheckedChange={(v) => setEnabled(Boolean(v))}
           />
-          <Button variant="ghost" size="xs" className="text-muted-foreground">
-            Configure
+          <Button variant="ghost" size="xs" aria-label={`Configure ${item.name}`} className="text-muted-foreground">
+            <span className="max-sm:sr-only">Configure</span>
             <ChevronRightIcon />
           </Button>
         </div>

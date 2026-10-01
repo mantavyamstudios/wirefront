@@ -58,7 +58,7 @@ const STATUS_STYLES: Record<Status, string> = {
 
 export function CardInvoiceShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-2xl">
         <header className="mb-6 flex items-end justify-between">
           <div>
@@ -86,17 +86,18 @@ export function CardInvoiceShowcasePage() {
 function InvoiceCard({ invoice }: { invoice: Invoice }) {
   return (
     <Card className="transition-shadow hover:shadow-md">
-      <CardPanel className="flex items-center gap-4 p-4">
+      <CardPanel className="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
+        {/* The status tile repeats the badge; drop it on phones to give the customer name room. */}
         <div
           className={
-            "flex size-10 shrink-0 items-center justify-center rounded-lg border font-mono text-[10px] uppercase " +
+            "flex size-10 shrink-0 items-center justify-center rounded-lg border font-mono text-[10px] uppercase max-sm:hidden " +
             STATUS_STYLES[invoice.status]
           }
         >
           {invoice.status === "paid" ? "PD" : invoice.number.slice(-2)}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span className="font-mono text-foreground text-sm">
               {invoice.number}
             </span>
@@ -110,13 +111,13 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
               {invoice.status}
             </Badge>
           </div>
-          <div className="truncate text-muted-foreground text-sm">
-            {invoice.customer}
-            <span className="mx-1.5 text-muted-foreground/50">·</span>
-            {invoice.due}
+          <div className="text-muted-foreground text-sm sm:truncate">
+            <span className="block truncate sm:inline">{invoice.customer}</span>
+            <span className="mx-1.5 text-muted-foreground/50 max-sm:hidden">·</span>
+            <span className="block text-xs sm:inline sm:text-sm">{invoice.due}</span>
           </div>
         </div>
-        <div className="text-right">
+        <div className="shrink-0 text-right">
           <div className="font-heading font-semibold text-base tabular-nums">
             {invoice.amount}
           </div>

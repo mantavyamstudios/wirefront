@@ -46,7 +46,7 @@ export function CardPaymentMethodShowcasePage() {
   );
 
   return (
-    <div className="min-h-svh bg-background px-6 py-16">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-16">
       <div className="mx-auto max-w-md">
         <header className="mb-6">
           <h1 className="font-heading text-xl">Payment methods</h1>
@@ -76,7 +76,7 @@ export function CardPaymentMethodShowcasePage() {
                 >
                   <BrandPill brand={m.brand} />
                   <div className="min-w-0 flex-1">
-                    <div className="font-mono text-foreground text-sm">
+                    <div className="whitespace-nowrap font-mono text-foreground text-sm">
                       •••• {m.last4}
                     </div>
                     <div className="text-muted-foreground text-xs">
@@ -94,9 +94,11 @@ export function CardPaymentMethodShowcasePage() {
                     <Button
                       size="xs"
                       variant="ghost"
+                      aria-label={`Make card ending ${m.last4} primary`}
                       onClick={() => setPrimaryId(m.id)}
                     >
-                      Make primary
+                      <span className="max-[360px]:hidden">Make primary</span>
+                      <span className="hidden max-[360px]:inline">Set primary</span>
                     </Button>
                   )}
                   <ChevronRightIcon className="size-4 text-muted-foreground" />
@@ -136,7 +138,7 @@ function CreditCardArt({
   };
   return (
     <div
-      className="relative h-44 w-full overflow-hidden rounded-xl text-white shadow-md"
+      className="relative aspect-[1.586/1] max-h-52 w-full overflow-hidden rounded-xl text-white shadow-md"
       style={{ background: palette[brand] }}
     >
       <div

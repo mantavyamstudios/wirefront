@@ -64,7 +64,7 @@ const PRODUCTS: Product[] = [
 
 export function CardProductShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
         <header className="mb-6">
           <h1 className="font-heading text-xl">Shop · spring drop</h1>
@@ -101,6 +101,7 @@ function ProductCard({ product }: { product: Product }) {
         <Button
           size="icon-sm"
           variant="outline"
+          aria-label={`Save ${product.name} to wishlist`}
           className="absolute top-2 right-2 rounded-full bg-background/80 backdrop-blur"
         >
           <HeartIcon />

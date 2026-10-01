@@ -61,7 +61,7 @@ const ARTICLES: Article[] = [
 
 export function CardMediaShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
         <header className="mb-6">
           <h1 className="font-heading text-xl">Latest from the journal</h1>

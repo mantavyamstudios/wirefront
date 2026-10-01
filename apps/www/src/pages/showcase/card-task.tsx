@@ -82,7 +82,7 @@ const PRIORITY_STYLE: Record<Priority, string> = {
 
 export function CardTaskShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
         <header className="mb-6">
           <h1 className="font-heading text-xl">Sprint 24 board</h1>
@@ -162,20 +162,20 @@ function TaskCard({ task }: { task: Task }) {
             </div>
           </div>
         ) : null}
-        <div className="mt-3 flex items-center justify-between">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center -space-x-1.5">
             {task.assignees.map((a) => (
               <Avatar
                 key={a}
                 className="size-5 border-2 border-background bg-foreground"
               >
-                <AvatarFallback className="bg-foreground text-[9px] text-background">
+                <AvatarFallback className="bg-foreground text-[10px] text-background">
                   {a}
                 </AvatarFallback>
               </Avatar>
             ))}
           </div>
-          <div className="flex items-center gap-3 text-muted-foreground text-xs">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground text-xs">
             <span className="inline-flex items-center gap-1">
               <CalendarDaysIcon className="size-3" />
               {task.due}

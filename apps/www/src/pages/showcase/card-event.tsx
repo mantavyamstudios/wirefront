@@ -68,7 +68,7 @@ const EVENTS: Event[] = [
 
 export function CardEventShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-2xl">
         <header className="mb-6">
           <h1 className="font-heading text-xl">Up next</h1>
@@ -92,20 +92,20 @@ function EventCard({ event }: { event: Event }) {
       <CardPanel className="flex items-stretch gap-0 p-0">
         <div
           className={
-            "flex w-20 shrink-0 flex-col items-center justify-center border-r bg-gradient-to-b p-4 " +
+            "flex w-16 shrink-0 flex-col items-center justify-center border-r bg-gradient-to-b p-3 sm:w-20 sm:p-4 " +
             event.tone
           }
         >
           <div className="font-mono text-[10px] text-foreground/60 uppercase tracking-[0.2em]">
             {event.month}
           </div>
-          <div className="font-heading text-3xl leading-none">{event.day}</div>
+          <div className="font-heading text-2xl leading-none sm:text-3xl">{event.day}</div>
           <div className="mt-1 font-mono text-[10px] text-foreground/60 uppercase tracking-[0.2em]">
             {event.weekday}
           </div>
         </div>
-        <div className="flex min-w-0 flex-1 flex-col p-4">
-          <div className="flex items-center gap-2">
+        <div className="flex min-w-0 flex-1 flex-col p-3 sm:p-4">
+          <div className="flex flex-wrap items-center gap-2">
             <h3 className="font-heading font-semibold text-base">
               {event.title}
             </h3>
@@ -131,7 +131,8 @@ function EventCard({ event }: { event: Event }) {
               {event.location}
             </span>
           </div>
-          <div className="mt-3 flex items-center justify-between">
+          {/* Wraps so RSVP/Join can't be pushed past the card edge. */}
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center -space-x-1.5">
               {event.attendees.slice(0, 5).map((a) => (
                 <Avatar
@@ -144,12 +145,12 @@ function EventCard({ event }: { event: Event }) {
                 </Avatar>
               ))}
               {event.attendees.length > 5 ? (
-                <span className="z-10 inline-flex size-6 items-center justify-center rounded-full border-2 border-card bg-foreground font-mono text-[9px] text-background">
+                <span className="z-10 inline-flex size-6 items-center justify-center rounded-full border-2 border-card bg-foreground font-mono text-[10px] text-background">
                   +{event.attendees.length - 5}
                 </span>
               ) : null}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="ms-auto flex items-center gap-2">
               <Button size="xs" variant="ghost">
                 Decline
               </Button>

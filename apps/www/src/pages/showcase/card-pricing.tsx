@@ -66,7 +66,7 @@ const TIERS: Tier[] = [
 
 export function CardPricingShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-16">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-16">
       <div className="mx-auto max-w-5xl">
         <header className="mb-10 text-center">
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
@@ -78,7 +78,8 @@ export function CardPricingShowcasePage() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {/* 1 → 2 → 3 columns; the featured plan leads until all three fit side by side. */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {TIERS.map((t) => (
             <PricingCard key={t.slug} tier={t} />
           ))}
@@ -93,7 +94,7 @@ function PricingCard({ tier }: { tier: Tier }) {
     <Card
       className={
         tier.highlight
-          ? "relative scale-[1.01] border-foreground/40 shadow-md"
+          ? "relative border-foreground/40 shadow-md max-lg:order-first lg:scale-[1.01]"
           : ""
       }
     >

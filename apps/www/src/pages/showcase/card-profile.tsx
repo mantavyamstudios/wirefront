@@ -13,7 +13,7 @@ import { Separator } from "@orbit/ui/separator";
 
 export function CardProfileShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-16">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-16">
       <div className="mx-auto max-w-md">
         <Card className="overflow-hidden">
           <Cover />

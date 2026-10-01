@@ -35,6 +35,21 @@ Env: `AUDIT_BASE_URL` (default `http://localhost:4000`), `AUDIT_CONCURRENCY` (de
 - `calendars/availability` is skipped with a warning: it's mapped in `source-files.ts`, but the file doesn't exist.
 - Editors flag missing Node types in `scripts/*.ts` because no tsconfig covers `scripts/`. This doesn't affect running the scripts with `tsx`.
 
+## Fix progress
+
+| Category | Status | `--strict` before → after | Notes |
+|----------|--------|---------------------------|-------|
+| Foundations | Done | — | `use-media-query` `md` = 768 (matches Tailwind); viewer accepts `?preview=1`/`true`; shortcut bar hidden below `md` and on touch |
+| Layouts | Done | 3/12 → 12/12 | Off-canvas `Sheet` nav, list→detail views, bottom tab bars, pointer-event resizer/canvas (pinch-zoom), toolbar collision handling. Canvas "clipped" = infinite canvas (intentional) |
+| Forms | Done | 2/4 → 4/4 | Settings nav → scroll tabs on mobile, stacked sections, labelled switches with full-cell hit areas, stacked footers; fixed `<button>`-in-`<button>` (hydration error) in invite field |
+| Auth & Onboarding | Done | 14/14 → 14/14 (gates already passed) | Shared: `AuthSplitLayout` safe-centred column (no clipped heading in landscape), `ThemeToggle` icon via `.dark` class (fixes 3 hydration errors), `ParticleField` + inset-login WebGL pause when hidden/background tab and honour reduced motion. Per-screen: wrapping footers, edge-to-edge cards on phones, touch-size reveal/links, keyboard hints hidden on touch, `mailto:` mail button |
+| Dashboards | Done | 4/9 → 9/9 | Responsive page padding + stacking headers, 2-line rows / priority columns instead of fixed-track grids (support, engineering, market), labelled range tabs and menus, bar/area charts fixed (percentage heights, non-scaling strokes, unique gradient ids, undistorted markers), `⌘K` hint hidden on touch. Clipped/squeezed/sub-24px targets at 375px: now 0 on all 9 |
+| Tables | Done | 3/9 → 9/9 | Priority columns per breakpoint with secondary data folded into the primary cell (no table needs horizontal scroll at 375/768/1024/1440), wrapping/iconified header actions, per-breakpoint footer rows, real selection state + bottom bulk-action bar on phones (orders), role editing via row menu (members), keyboard-openable log rows + bottom sheet on phones, copy buttons visible on touch/focus. Remaining "<24px" hits are checkbox/select internals inside larger label hit areas |
+| Filters | Done | 3/4 → 4/4 | Phones get a single "Filters (n)" trigger opening the same controls in a sheet (toolbar: bottom sheet; sidebar: left sheet below `lg` with "Show N results" closing it); 2-up/3-up product grid; facet/chip popovers clamp to viewport width, chip segments and facet rows sized for touch, selected facet values announced. |
+| Empty states | Done | 9/10 → 10/10 | Maintenance buttons wrap instead of clipping; safe-centred columns (no clipped top in landscape); inbox-zero/offline use `min-h-dvh`/`w-full` and in-flow content; decorative layers clip themselves (not the page); infinite pings are `motion-safe`; drag/paste copy swapped for tap copy on touch; larger chip remove targets; invite link truncates. |
+| Settings | Done | 10/12 → 12/12 | Responsive page padding; long-label button rows stack (security, billing, webhooks); fixed meta columns moved under labels (privacy, billing invoices); webhooks deliveries become 2-line rows and the endpoints table uses priority columns; permissions matrix: horizontal role chips, narrower opaque sticky column (fixes see-through cells); SSO compact stepper + stacked attribute mapping; full-row labels for switches/checkboxes; appearance OS-scheme read via `useSyncExternalStore` (fixes hydration error); popovers clamp to viewport. |
+| Cards | Done | 10/10 → 10/10 (gates already passed) | Event card actions wrap (no clipped RSVP), list cards give primary text room on phones (invoice status tile hidden, integration "Configure" iconified, blurbs 2-line), pricing 1→2→3 columns with featured plan first until 3-up, card art uses aspect ratio, labelled switches/icon buttons. |
+
 ## Index
 
 | Category | File | Screens | Worst-severity spread (P0 / P1 / P2 / P3) | Headline |
