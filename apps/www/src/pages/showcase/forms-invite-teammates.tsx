@@ -141,7 +141,7 @@ export function FormsInviteTeammatesShowcasePage() {
   };
 
   return (
-    <div className="min-h-svh bg-background px-6 py-16 text-foreground">
+    <div className="min-h-svh bg-background px-4 py-8 text-foreground sm:px-6 sm:py-16">
       <div className="mx-auto max-w-2xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Members · invite
@@ -154,7 +154,7 @@ export function FormsInviteTeammatesShowcasePage() {
 
         <form
           onSubmit={onSubmit}
-          className="mt-8 rounded-xl border border-border/60 bg-background/40 p-5"
+          className="mt-8 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-5"
         >
           <div className="flex items-center justify-between gap-3">
             <Label className="font-medium text-sm">Invitees</Label>
@@ -167,7 +167,7 @@ export function FormsInviteTeammatesShowcasePage() {
                 value={defaultRole}
                 onValueChange={(v) => setDefaultRole(v as Role)}
               >
-                <SelectTrigger size="sm" className="h-8 w-32 text-sm">
+                <SelectTrigger size="sm" aria-label="Default role" className="h-8 w-32 text-sm pointer-coarse:h-11">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectPopup>
@@ -186,8 +186,9 @@ export function FormsInviteTeammatesShowcasePage() {
             </div>
           </div>
 
-          <button
-            type="button"
+          {/* A div, not a button: it contains the input and chip buttons. */}
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: focus convenience; the input itself is focusable */}
+          <div
             onClick={() => inputRef.current?.focus()}
             className="mt-3 flex w-full cursor-text flex-wrap items-center gap-1.5 rounded-lg border border-input bg-background p-2 text-left transition-shadow focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/24"
           >
@@ -212,11 +213,12 @@ export function FormsInviteTeammatesShowcasePage() {
                   ? "name@example.com, another@example.com…"
                   : "Add another"
               }
-              className="min-w-[12ch] flex-1 bg-transparent px-1.5 py-1 text-sm outline-none placeholder:text-muted-foreground"
+              aria-label="Invitee emails"
+              className="min-w-[12ch] flex-1 bg-transparent px-1.5 py-1 text-sm outline-none placeholder:text-muted-foreground pointer-coarse:min-h-9"
             />
-          </button>
+          </div>
 
-          <div className="mt-2 flex items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+          <div aria-live="polite" className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
             <span>
               <span className="text-foreground">{stats.sendable}</span> to invite
             </span>
@@ -242,7 +244,7 @@ export function FormsInviteTeammatesShowcasePage() {
                 <button
                   type="button"
                   onClick={() => setShowMessage(false)}
-                  className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground"
+                  className="min-h-8 px-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground pointer-coarse:min-h-11"
                 >
                   Hide
                 </button>
@@ -259,18 +261,19 @@ export function FormsInviteTeammatesShowcasePage() {
             <button
               type="button"
               onClick={() => setShowMessage(true)}
-              className="mt-4 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground"
+              className="mt-3 min-h-8 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground pointer-coarse:min-h-11"
             >
               + Add a personal note
             </button>
           )}
 
-          <div className="mt-6 flex items-center justify-between gap-3 border-t border-border/60 pt-5">
+          <div className="mt-6 flex flex-col-reverse gap-3 border-t border-border/60 pt-5 sm:flex-row sm:items-center sm:justify-between">
             <CopyLinkButton />
             <Button
               type="submit"
               loading={pending}
               disabled={stats.sendable === 0}
+              className="max-sm:w-full pointer-coarse:h-11"
             >
               {stats.sendable > 0
                 ? `Send ${stats.sendable} invite${stats.sendable === 1 ? "" : "s"}`
@@ -283,7 +286,7 @@ export function FormsInviteTeammatesShowcasePage() {
         <div className="mt-5 rounded-lg border border-border/60 bg-background/40 px-4 py-3 text-sm">
           <div className="flex items-start gap-3">
             <ShieldIcon className="mt-0.5 size-4 shrink-0 opacity-60" />
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <div className="font-medium">Domain auto-join is on</div>
               <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">
                 Anyone with an{" "}
@@ -347,7 +350,7 @@ function ChipPill({
       <span className="truncate">{chip.email}</span>
 
       {autoJoin ? (
-        <span className="flex items-center gap-0.5 font-mono text-[9px] text-emerald-700 uppercase tracking-[0.2em] dark:text-emerald-400">
+        <span className="flex items-center gap-0.5 font-mono text-[10px] text-emerald-700 uppercase tracking-[0.2em] dark:text-emerald-400">
           <SparklesIcon className="size-2.5" />
           Auto
         </span>
@@ -357,7 +360,7 @@ function ChipPill({
             render={
               <button
                 type="button"
-                className="flex h-5 items-center gap-0.5 rounded-full px-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+                className="flex h-6 items-center gap-0.5 rounded-full px-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:h-8"
               >
                 {roleLabel(chip.role)}
                 <svg
@@ -404,7 +407,7 @@ function ChipPill({
           </PopoverPopup>
         </Popover>
       ) : (
-        <span className="font-mono text-[9px] uppercase tracking-[0.2em]">
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em]">
           Invalid
         </span>
       )}
@@ -413,7 +416,7 @@ function ChipPill({
         type="button"
         onClick={onRemove}
         aria-label={`Remove ${chip.email}`}
-        className="flex size-5 items-center justify-center rounded-full opacity-50 hover:bg-foreground/[0.06] hover:opacity-100"
+        className="flex size-6 items-center justify-center rounded-full opacity-50 hover:bg-foreground/[0.06] hover:opacity-100 pointer-coarse:size-8"
       >
         <XIcon className="size-3" />
       </button>
@@ -430,7 +433,7 @@ function CopyLinkButton() {
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1200);
       }}
-      className="group inline-flex items-center gap-2 rounded-md border border-dashed border-border/60 px-2.5 py-1.5 font-mono text-[11px] text-muted-foreground transition-colors hover:border-border hover:text-foreground"
+      className="group inline-flex min-w-0 max-w-full items-center gap-2 rounded-md border border-dashed border-border/60 px-2.5 py-1.5 font-mono text-[11px] text-muted-foreground transition-colors hover:border-border hover:text-foreground pointer-coarse:min-h-11"
     >
       {copied ? (
         <CheckIcon className="size-3.5 text-emerald-600 dark:text-emerald-400" />

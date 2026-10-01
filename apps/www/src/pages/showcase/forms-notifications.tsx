@@ -101,8 +101,8 @@ export function FormsNotificationsShowcasePage() {
     }));
 
   return (
-    <div className="min-h-svh bg-background py-16 text-foreground">
-      <div className="mx-auto max-w-3xl px-6">
+    <div className="min-h-svh bg-background py-8 text-foreground sm:py-16">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Settings · Notifications
         </div>
@@ -112,18 +112,19 @@ export function FormsNotificationsShowcasePage() {
           quiet side — turn things on as you need them.
         </p>
 
-        <div className="mt-8 flex items-center justify-end gap-6 border-y border-border/60 py-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
-          <span className="flex w-16 justify-center gap-1.5">
+        {/* Visual column headers; each switch carries its own accessible name. */}
+        <div aria-hidden className="sticky top-0 z-10 mt-8 flex items-center justify-end gap-2 border-y border-border/60 bg-background/95 py-3 pr-4 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] backdrop-blur sm:gap-6 sm:tracking-[0.3em]">
+          <span className="flex w-14 justify-center gap-1.5 sm:w-16">
             <MailIcon className="size-3.5 opacity-70" />
             Email
           </span>
-          <span className="flex w-16 justify-center gap-1.5">
+          <span className="flex w-14 justify-center gap-1.5 sm:w-16">
             <BellIcon className="size-3.5 opacity-70" />
             Push
           </span>
         </div>
 
-        {SECTIONS.map((section, idx) => (
+        {SECTIONS.map((section) => (
           <section key={section.id} className="mt-8">
             <header>
               <h2 className="font-heading text-base">{section.title}</h2>
@@ -138,34 +139,36 @@ export function FormsNotificationsShowcasePage() {
                 return (
                   <li
                     key={p.key}
-                    className="flex items-center gap-6 px-4 py-3.5"
+                    className="flex items-center gap-2 py-1.5 pl-4 sm:gap-6"
                   >
-                    <div className="min-w-0 flex-1">
+                    <div className="min-w-0 flex-1 py-2">
                       <div className="font-medium text-sm">{p.title}</div>
-                      <p className="mt-0.5 truncate text-muted-foreground text-xs">
+                      <p className="mt-0.5 line-clamp-2 text-muted-foreground text-xs">
                         {p.description}
                       </p>
                     </div>
-                    <div className="flex items-center justify-center gap-6">
-                      <div className="flex w-16 justify-center">
+                    <div className="flex items-stretch justify-center gap-2 pr-4 sm:gap-6">
+                      {/* Each cell is a label so the whole 44px area toggles. */}
+                      <label className="flex min-h-11 w-14 cursor-pointer items-center justify-center rounded-md hover:bg-foreground/[0.03] sm:w-16">
                         <Switch
+                          aria-label={`${p.title} — email`}
                           checked={v.email}
                           onCheckedChange={() => flip(p.key, "email")}
                         />
-                      </div>
-                      <div className="flex w-16 justify-center">
+                      </label>
+                      <label className="flex min-h-11 w-14 cursor-pointer items-center justify-center rounded-md hover:bg-foreground/[0.03] sm:w-16">
                         <Switch
+                          aria-label={`${p.title} — push`}
                           checked={v.push}
                           onCheckedChange={() => flip(p.key, "push")}
                         />
-                      </div>
+                      </label>
                     </div>
                   </li>
                 );
               })}
             </ul>
 
-            {idx < SECTIONS.length - 1 ? null : null}
           </section>
         ))}
 
@@ -173,15 +176,15 @@ export function FormsNotificationsShowcasePage() {
 
         <div className="rounded-xl border border-border/60 bg-background/40 p-4">
           <div className="flex items-start gap-3">
-            <MessageSquareIcon className="mt-0.5 size-4 opacity-60" />
-            <div className="flex-1">
+            <MessageSquareIcon className="mt-0.5 size-4 shrink-0 opacity-60" />
+            <div className="min-w-0 flex-1">
               <div className="font-medium text-sm">Quiet hours</div>
               <p className="mt-0.5 text-muted-foreground text-xs">
                 Push notifications are paused between 10pm and 8am in your
                 workspace timezone.
               </p>
             </div>
-            <Button variant="outline" size="sm" type="button">
+            <Button variant="outline" size="sm" type="button" className="pointer-coarse:h-11">
               Edit
             </Button>
           </div>

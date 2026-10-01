@@ -76,8 +76,8 @@ export function FormsApiKeyShowcasePage() {
 
   if (generated) {
     return (
-      <div className="flex min-h-svh items-center justify-center bg-background px-6 text-foreground">
-        <div className="w-full max-w-md rounded-2xl border border-border/60 bg-background/60 p-6">
+      <div className="flex min-h-svh justify-center bg-background px-4 py-8 text-foreground sm:items-center sm:px-6">
+        <div className="w-full max-w-md sm:rounded-2xl sm:border sm:border-border/60 sm:bg-background/60 sm:p-6">
           <div className="inline-flex size-10 items-center justify-center rounded-full bg-foreground/[0.06]">
             <KeyIcon className="size-5" aria-hidden />
           </div>
@@ -86,16 +86,18 @@ export function FormsApiKeyShowcasePage() {
             Copy it now — you won't see this again.
           </p>
 
-          <div className="mt-5 flex items-center gap-2 rounded-lg border border-border/70 bg-background px-3 py-2 font-mono text-[12px]">
-            <TerminalIcon className="size-3.5 opacity-50" />
-            <span className="flex-1 truncate">{generated}</span>
+          <div className="mt-5 flex items-start gap-2 rounded-lg border border-border/70 bg-background px-3 py-2 font-mono text-[12px]">
+            <TerminalIcon className="mt-0.5 size-3.5 shrink-0 opacity-50" />
+            {/* Wraps on small screens so the whole secret can be checked. */}
+            <span className="min-w-0 flex-1 break-all sm:truncate sm:break-normal">{generated}</span>
             <button
               type="button"
               onClick={() => {
                 setCopied(true);
                 window.setTimeout(() => setCopied(false), 1200);
               }}
-              className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+              aria-live="polite"
+              className="inline-flex min-h-7 shrink-0 items-center gap-1 rounded px-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:min-h-11"
             >
               <CopyIcon className="size-3" />
               {copied ? "Copied" : "Copy"}
@@ -103,7 +105,7 @@ export function FormsApiKeyShowcasePage() {
           </div>
 
           <div className="mt-6 flex justify-end">
-            <Button type="button" onClick={() => setGenerated(null)}>
+            <Button type="button" onClick={() => setGenerated(null)} className="max-sm:w-full pointer-coarse:h-11">
               Done
             </Button>
           </div>
@@ -113,10 +115,12 @@ export function FormsApiKeyShowcasePage() {
   }
 
   return (
-    <div className="flex min-h-svh items-center justify-center bg-background px-6 py-16 text-foreground">
+    // Top-aligned on phones so a tall form never loses its heading; the card
+    // chrome only appears where there's room for it.
+    <div className="flex min-h-svh justify-center bg-background px-4 py-8 text-foreground sm:items-center sm:px-6 sm:py-16">
       <form
         onSubmit={onSubmit}
-        className="w-full max-w-lg rounded-2xl border border-border/60 bg-background/60 p-6 shadow-sm"
+        className="w-full max-w-lg sm:rounded-2xl sm:border sm:border-border/60 sm:bg-background/60 sm:p-6 sm:shadow-sm"
       >
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           API · new key
@@ -171,13 +175,13 @@ export function FormsApiKeyShowcasePage() {
                             onCheckedChange={() => toggleScope(s.id)}
                             className="mt-0.5"
                           />
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
                               <span className="font-mono text-[11px] text-foreground">
                                 {s.id}
                               </span>
                               {s.destructive ? (
-                                <span className="rounded bg-destructive/10 px-1.5 py-0.5 font-mono text-[9px] text-destructive uppercase tracking-[0.2em]">
+                                <span className="rounded bg-destructive/10 px-1.5 py-0.5 font-mono text-[10px] text-destructive uppercase tracking-[0.2em]">
                                   Destructive
                                 </span>
                               ) : null}
@@ -201,18 +205,19 @@ export function FormsApiKeyShowcasePage() {
           <ExpirySelect value={expiry} onChange={setExpiry} />
         </div>
 
-        <div className="mt-8 flex items-center justify-between border-t border-border/60 pt-5">
-          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+        <div className="mt-8 flex flex-col gap-3 border-t border-border/60 pt-5 sm:flex-row sm:items-center sm:justify-between">
+          <span aria-live="polite" className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">
             {scopes.size} scope{scopes.size === 1 ? "" : "s"} selected
           </span>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" type="button">
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center">
+            <Button variant="ghost" size="sm" type="button" className="pointer-coarse:h-11">
               Cancel
             </Button>
             <Button
               type="submit"
               size="sm"
               disabled={!name.trim() || scopes.size === 0}
+              className="pointer-coarse:h-11"
             >
               Generate key
             </Button>
@@ -236,7 +241,7 @@ function ExpirySelect({
         id="key-expiry"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-9 w-full appearance-none rounded-lg border border-input bg-background pl-3 pr-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24"
+        className="h-9 w-full appearance-none rounded-lg pointer-coarse:h-11 border border-input bg-background pl-3 pr-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24"
       >
         <option value="7">7 days</option>
         <option value="30">30 days</option>
