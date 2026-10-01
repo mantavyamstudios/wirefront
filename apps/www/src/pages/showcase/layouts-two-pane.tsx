@@ -1,7 +1,10 @@
 import { Button } from "@orbit/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@orbit/ui/input-group";
+import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@orbit/ui/menu";
+import { Textarea } from "@orbit/ui/textarea";
 import {
   ArchiveIcon,
+  ChevronLeftIcon,
   ForwardIcon,
   MoreHorizontalIcon,
   ReplyIcon,
@@ -133,6 +136,8 @@ const AVATAR_COLORS: Record<string, string> = {
 export function LayoutsTwoPaneShowcasePage() {
   const [selectedId, setSelectedId] = useState<string>("3");
   const [activeTab, setActiveTab] = useState<Tab>("All");
+  // Below md, list and message are separate stacked views.
+  const [mobileView, setMobileView] = useState<"list" | "detail">("list");
 
   const filtered = INBOX.filter((m) => {
     if (activeTab === "Unread") return m.unread;
@@ -143,24 +148,30 @@ export function LayoutsTwoPaneShowcasePage() {
   const unreadCount = INBOX.filter((m) => m.unread).length;
 
   return (
-    <div className="grid min-h-svh grid-cols-[360px_1fr] bg-background text-foreground">
-      <aside className="flex h-svh flex-col border-r border-border/60">
+    <div className="min-h-svh bg-background text-foreground md:grid md:grid-cols-[minmax(300px,360px)_minmax(0,1fr)]">
+      <aside
+        className={`flex flex-col border-border/60 md:sticky md:top-0 md:h-svh md:border-r ${
+          mobileView === "detail" ? "max-md:hidden" : ""
+        }`}
+      >
         <div className="sticky top-0 z-10 border-b border-border/60 bg-background px-4 py-3">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="font-heading text-base">Inbox</h2>
+            <h1 className="font-heading text-base">Inbox</h1>
             <span className="rounded-full bg-foreground/10 px-2 py-0.5 text-muted-foreground text-xs">
               {unreadCount} unread
             </span>
           </div>
-          <div className="mt-2 flex items-center gap-1">
+          <div role="tablist" aria-label="Filter messages" className="mt-2 flex items-center gap-1">
             {TABS.map((tab) => {
               const active = tab === activeTab;
               return (
                 <button
                   key={tab}
                   type="button"
+                  role="tab"
+                  aria-selected={active}
                   onClick={() => setActiveTab(tab)}
-                  className={`rounded-md px-2 py-1 text-xs transition-colors ${
+                  className={`min-h-7 rounded-md px-2.5 py-1 text-xs transition-colors pointer-coarse:min-h-10 ${
                     active
                       ? "bg-foreground/[0.08] font-medium text-foreground"
                       : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"
@@ -176,22 +187,26 @@ export function LayoutsTwoPaneShowcasePage() {
               <InputGroupAddon>
                 <SearchIcon className="size-3.5 opacity-60" />
               </InputGroupAddon>
-              <InputGroupInput placeholder="Search threads…" />
+              <InputGroupInput placeholder="Search threads…" aria-label="Search threads" />
             </InputGroup>
           </div>
         </div>
 
-        <ul className="flex-1 overflow-y-auto">
+        <ul className="flex-1 md:overflow-y-auto">
           {filtered.map((m) => {
             const isSelected = m.id === selectedId;
             return (
               <li key={m.id}>
                 <button
                   type="button"
-                  onClick={() => setSelectedId(m.id)}
+                  aria-current={isSelected ? "true" : undefined}
+                  onClick={() => {
+                    setSelectedId(m.id);
+                    setMobileView("detail");
+                  }}
                   className={`flex w-full cursor-pointer items-start gap-3 border-border/40 border-b px-4 py-3 text-left transition-colors ${
                     isSelected
-                      ? "bg-foreground/[0.06]"
+                      ? "md:bg-foreground/[0.06]"
                       : "hover:bg-foreground/[0.03]"
                   }`}
                 >
@@ -204,7 +219,9 @@ export function LayoutsTwoPaneShowcasePage() {
                     <div className="flex items-center justify-between gap-2">
                       <span className="flex min-w-0 items-center gap-1.5">
                         {m.unread ? (
-                          <span className="size-2 shrink-0 rounded-full bg-blue-500" />
+                          <span className="size-2 shrink-0 rounded-full bg-blue-500">
+                            <span className="sr-only">Unread</span>
+                          </span>
                         ) : null}
                         <span
                           className={`truncate text-sm ${m.unread ? "font-semibold" : "font-medium"}`}
@@ -228,10 +245,23 @@ export function LayoutsTwoPaneShowcasePage() {
         </ul>
       </aside>
 
-      <main className="flex h-svh flex-col overflow-y-auto">
-        <div className="flex items-center gap-3 border-b border-border/60 px-6 py-4">
+      <main
+        className={`flex min-h-svh min-w-0 flex-col md:h-svh md:overflow-y-auto ${
+          mobileView === "list" ? "max-md:hidden" : ""
+        }`}
+      >
+        <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-border/60 bg-background/95 px-2 py-2 backdrop-blur sm:gap-3 md:static md:px-6 md:py-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Back to inbox"
+            className="md:hidden"
+            onClick={() => setMobileView("list")}
+          >
+            <ChevronLeftIcon />
+          </Button>
           <div
-            className={`flex size-10 shrink-0 items-center justify-center rounded-full font-medium text-[12px] text-background ${AVATAR_COLORS[selected.initials] ?? "bg-foreground/60"}`}
+            className={`hidden size-10 shrink-0 items-center justify-center rounded-full font-medium text-[12px] text-background sm:flex ${AVATAR_COLORS[selected.initials] ?? "bg-foreground/60"}`}
           >
             {selected.initials}
           </div>
@@ -241,26 +271,49 @@ export function LayoutsTwoPaneShowcasePage() {
               {selected.subject}
             </div>
           </div>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon-sm" aria-label="Reply">
+          <div className="flex shrink-0 items-center gap-1">
+            <Button variant="ghost" size="icon-sm" aria-label="Reply" className="max-lg:hidden">
               <ReplyIcon />
             </Button>
-            <Button variant="ghost" size="icon-sm" aria-label="Forward">
+            <Button variant="ghost" size="icon-sm" aria-label="Forward" className="max-lg:hidden">
               <ForwardIcon />
             </Button>
-            <Button variant="ghost" size="icon-sm" aria-label="Archive">
+            <Button variant="ghost" size="icon-sm" aria-label="Archive" className="pointer-coarse:size-11">
               <ArchiveIcon />
             </Button>
-            <Button variant="ghost" size="icon-sm" aria-label="Delete">
+            <Button variant="ghost" size="icon-sm" aria-label="Delete" className="pointer-coarse:size-11">
               <Trash2Icon />
             </Button>
-            <Button variant="ghost" size="icon-sm" aria-label="More">
-              <MoreHorizontalIcon />
-            </Button>
+            <Menu>
+              <MenuTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label="More actions"
+                    className="pointer-coarse:size-11"
+                  />
+                }
+              >
+                <MoreHorizontalIcon />
+              </MenuTrigger>
+              <MenuPopup align="end">
+                <MenuItem>
+                  <ReplyIcon /> Reply
+                </MenuItem>
+                <MenuItem>
+                  <ReplyIcon /> Reply all
+                </MenuItem>
+                <MenuItem>
+                  <ForwardIcon /> Forward
+                </MenuItem>
+              </MenuPopup>
+            </Menu>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 border-b border-border/60 px-6 py-2">
+        {/* Quick-reply row: desktop only; the overflow menu covers it below sm. */}
+        <div className="hidden flex-wrap items-center gap-2 border-b border-border/60 px-4 py-2 sm:flex md:px-6">
           <Button variant="outline" size="sm">
             <ReplyIcon />
             Reply
@@ -275,7 +328,7 @@ export function LayoutsTwoPaneShowcasePage() {
           </Button>
         </div>
 
-        <div className="flex-1 px-6 py-6">
+        <div className="flex-1 px-4 py-6 md:px-6">
           <div className="max-w-3xl space-y-4 text-foreground/85 text-sm leading-relaxed">
             <p>Hey team,</p>
             <p>
@@ -307,13 +360,17 @@ export function LayoutsTwoPaneShowcasePage() {
           </div>
         </div>
 
-        <div className="border-t border-border/60 px-6 py-4">
-          <div className="rounded-xl border border-border bg-card p-3">
-            <div className="text-muted-foreground text-sm">Reply…</div>
-            <div className="mt-8 flex items-center justify-end">
-              <Button size="sm">
+        <div className="sticky bottom-0 border-t border-border/60 bg-background px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6 md:py-4">
+          <div className="flex items-end gap-2 rounded-xl border border-border bg-card p-2 sm:block sm:p-3">
+            <Textarea
+              aria-label={`Reply to ${selected.sender}`}
+              placeholder="Reply…"
+              className="min-h-10 flex-1 border-0 bg-transparent shadow-none sm:min-h-16"
+            />
+            <div className="flex items-center justify-end sm:mt-2">
+              <Button size="sm" className="pointer-coarse:h-11">
                 <SendIcon />
-                Send
+                <span className="max-sm:sr-only">Send</span>
               </Button>
             </div>
           </div>

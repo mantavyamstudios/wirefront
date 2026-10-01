@@ -5,7 +5,9 @@ import {
   HashIcon,
   HomeIcon,
   InboxIcon,
+  MenuIcon,
   PlusIcon,
+  SearchIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
@@ -16,6 +18,7 @@ import {
   InputGroupInput,
 } from "@orbit/ui/input-group";
 import { Kbd } from "@orbit/ui/kbd";
+import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
 
 const PRIMARY = [
   { key: "home", icon: HomeIcon, label: "Home" },
@@ -52,29 +55,54 @@ const ACTIVITY = [
 
 export function LayoutsAppShellShowcasePage() {
   const [activeItem, setActiveItem] = useState("inbox");
+  const [navOpen, setNavOpen] = useState(false);
 
   return (
-    <div className="grid min-h-svh grid-rows-[56px_1fr] bg-background text-foreground">
-      <header className="col-span-2 flex h-14 items-center gap-4 border-b border-border/60 bg-background px-4">
+    <div className="flex min-h-svh flex-col bg-background text-foreground">
+      <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border/60 bg-background/95 px-2 backdrop-blur sm:gap-4 md:px-4">
+        <Sheet open={navOpen} onOpenChange={setNavOpen}>
+          <SheetTrigger
+            aria-label="Open navigation"
+            className="flex size-11 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground md:hidden"
+          >
+            <MenuIcon className="size-5" />
+          </SheetTrigger>
+          <SheetPopup side="left" className="max-w-[300px] bg-background">
+            <SheetTitle className="sr-only">Navigation</SheetTitle>
+            <SidebarNav
+              activeItem={activeItem}
+              onSelect={(key) => {
+                setActiveItem(key);
+                setNavOpen(false);
+              }}
+            />
+          </SheetPopup>
+        </Sheet>
+
         <button
           type="button"
-          className="flex items-center gap-2 rounded-md border border-border bg-card px-2 py-1.5 transition-colors hover:bg-foreground/[0.03]"
+          aria-haspopup="menu"
+          className="flex min-w-0 items-center gap-2 rounded-md border border-border bg-card px-2 py-1.5 transition-colors hover:bg-foreground/[0.03]"
         >
-          <span className="size-6 rounded bg-gradient-to-br from-emerald-500/80 to-sky-500/70" />
-          <span className="font-medium text-sm">Acme Inc.</span>
-          <ChevronDownIcon className="size-3.5 opacity-60" />
+          <span className="size-6 shrink-0 rounded bg-gradient-to-br from-emerald-500/80 to-sky-500/70" />
+          <span className="truncate whitespace-nowrap font-medium text-sm">Acme Inc.</span>
+          <ChevronDownIcon className="size-3.5 shrink-0 opacity-60" />
         </button>
 
-        <div className="mx-auto w-full max-w-md">
+        {/* Inline search from md up; an icon button below that. */}
+        <div className="mx-auto hidden w-full max-w-md md:block">
           <InputGroup>
-            <InputGroupInput placeholder="Search…" />
+            <InputGroupInput placeholder="Search…" aria-label="Search" />
             <InputGroupAddon align="inline-end">
               <Kbd>⌘K</Kbd>
             </InputGroupAddon>
           </InputGroup>
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-1 sm:gap-2">
+          <Button variant="ghost" size="icon" aria-label="Search" className="md:hidden">
+            <SearchIcon />
+          </Button>
           <Button variant="ghost" size="icon" aria-label="Notifications">
             <BellIcon />
           </Button>
@@ -87,108 +115,17 @@ export function LayoutsAppShellShowcasePage() {
         </div>
       </header>
 
-      <div className="grid grid-cols-[256px_1fr] overflow-hidden">
-        <aside className="flex w-64 flex-col overflow-y-auto border-r border-border/60 bg-foreground/[0.015]">
-          <SidebarSection label="WORKSPACE" />
-          <ul className="flex flex-col gap-0.5 px-2">
-            {PRIMARY.map((item) => {
-              const active = activeItem === item.key;
-              return (
-                <li key={item.key}>
-                  <button
-                    type="button"
-                    onClick={() => setActiveItem(item.key)}
-                    className={`flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors ${
-                      active
-                        ? "bg-foreground/[0.06] text-foreground"
-                        : "text-muted-foreground hover:bg-foreground/[0.04]"
-                    }`}
-                  >
-                    <item.icon className="size-4 opacity-70" />
-                    <span className="flex-1 text-left">{item.label}</span>
-                    {item.badge ? (
-                      <span className="rounded-full bg-foreground/10 px-1.5 py-0.5 font-mono text-[9px] text-foreground">
-                        {item.badge}
-                      </span>
-                    ) : null}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-
-          <SidebarSection label="PROJECTS" />
-          <ul className="flex flex-col gap-0.5 px-2">
-            {PROJECTS.map((p) => {
-              const active = activeItem === p.key;
-              return (
-                <li key={p.key}>
-                  <button
-                    type="button"
-                    onClick={() => setActiveItem(p.key)}
-                    className={`flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors ${
-                      active
-                        ? "bg-foreground/[0.06] text-foreground"
-                        : "text-muted-foreground hover:bg-foreground/[0.04]"
-                    }`}
-                  >
-                    <span className={`size-2 shrink-0 rounded-sm ${p.color}`} />
-                    <span className="flex-1 truncate text-left">{p.name}</span>
-                    <span className="font-mono text-[10px] text-muted-foreground/70">
-                      {p.count}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-
-          <SidebarSection label="TEAMS" />
-          <ul className="flex flex-col gap-0.5 px-2 pb-3">
-            {TEAMS.map((t) => {
-              const active = activeItem === t.key;
-              return (
-                <li key={t.key}>
-                  <button
-                    type="button"
-                    onClick={() => setActiveItem(t.key)}
-                    className={`flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors ${
-                      active
-                        ? "bg-foreground/[0.06] text-foreground"
-                        : "text-muted-foreground hover:bg-foreground/[0.04]"
-                    }`}
-                  >
-                    <HashIcon className="size-3.5 opacity-60" />
-                    <span className="flex-1 text-left">{t.name}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-
-          <button
-            type="button"
-            className="mt-auto flex items-center gap-2 border-t border-border/60 px-3 py-2.5 text-left transition-colors hover:bg-foreground/[0.03]"
-          >
-            <Avatar className="size-7">
-              <AvatarFallback>SB</AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <div className="truncate font-medium text-sm">Mantavyam</div>
-              <div className="truncate text-muted-foreground text-xs">
-                sean@cal.com
-              </div>
-            </div>
-            <ChevronUpIcon className="size-3.5 opacity-60" />
-          </button>
+      <div className="flex-1 md:grid md:grid-cols-[256px_minmax(0,1fr)]">
+        <aside className="sticky top-14 hidden h-[calc(100svh-3.5rem)] border-r border-border/60 bg-foreground/[0.015] md:block">
+          <SidebarNav activeItem={activeItem} onSelect={setActiveItem} />
         </aside>
 
-        <main className="overflow-y-auto p-6">
+        <main className="min-w-0 p-4 md:p-6">
           <div className="font-mono text-muted-foreground text-xs">
             Home / Inbox
           </div>
 
-          <div className="mt-2 flex items-center justify-between">
+          <div className="mt-2 flex items-center justify-between gap-3">
             <h1 className="font-heading text-2xl tracking-tight">Inbox</h1>
             <Button size="sm">
               <PlusIcon />
@@ -222,18 +159,20 @@ export function LayoutsAppShellShowcasePage() {
                 {ACTIVITY.map((a) => (
                   <li
                     key={a.name + a.time}
-                    className="flex items-center gap-3 px-4 py-3"
+                    className="flex items-start gap-3 px-4 py-3 sm:items-center"
                   >
-                    <Avatar className="size-7">
+                    <Avatar className="size-7 shrink-0">
                       <AvatarFallback>{a.initials}</AvatarFallback>
                     </Avatar>
-                    <div className="min-w-0 flex-1 truncate text-sm">
-                      <span className="font-medium">{a.name}</span>{" "}
-                      <span className="text-muted-foreground">{a.action}</span>
+                    <div className="min-w-0 flex-1 text-sm sm:flex sm:items-center sm:gap-3">
+                      <p className="line-clamp-2 sm:line-clamp-1 sm:flex-1">
+                        <span className="font-medium">{a.name}</span>{" "}
+                        <span className="text-muted-foreground">{a.action}</span>
+                      </p>
+                      <span className="mt-0.5 block shrink-0 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.12em] sm:mt-0 sm:tracking-[0.2em]">
+                        {a.time}
+                      </span>
                     </div>
-                    <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
-                      {a.time}
-                    </span>
                   </li>
                 ))}
               </ul>
@@ -242,6 +181,102 @@ export function LayoutsAppShellShowcasePage() {
         </main>
       </div>
     </div>
+  );
+}
+
+function SidebarNav({
+  activeItem,
+  onSelect,
+}: {
+  activeItem: string;
+  onSelect: (key: string) => void;
+}) {
+  const row = (active: boolean) =>
+    `flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors pointer-coarse:min-h-11 ${
+      active
+        ? "bg-foreground/[0.06] text-foreground"
+        : "text-muted-foreground hover:bg-foreground/[0.04]"
+    }`;
+
+  return (
+    <nav aria-label="Workspace" className="flex h-full min-h-0 flex-col">
+      <div className="flex-1 overflow-y-auto">
+        <SidebarSection label="WORKSPACE" />
+        <ul className="flex flex-col gap-0.5 px-2">
+          {PRIMARY.map((item) => (
+            <li key={item.key}>
+              <button
+                type="button"
+                onClick={() => onSelect(item.key)}
+                aria-current={activeItem === item.key ? "page" : undefined}
+                className={row(activeItem === item.key)}
+              >
+                <item.icon className="size-4 opacity-70" />
+                <span className="flex-1 text-left">{item.label}</span>
+                {item.badge ? (
+                  <span className="rounded-full bg-foreground/10 px-1.5 py-0.5 font-mono text-[10px] text-foreground">
+                    {item.badge}
+                  </span>
+                ) : null}
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <SidebarSection label="PROJECTS" />
+        <ul className="flex flex-col gap-0.5 px-2">
+          {PROJECTS.map((p) => (
+            <li key={p.key}>
+              <button
+                type="button"
+                onClick={() => onSelect(p.key)}
+                aria-current={activeItem === p.key ? "page" : undefined}
+                className={row(activeItem === p.key)}
+              >
+                <span className={`size-2 shrink-0 rounded-sm ${p.color}`} />
+                <span className="flex-1 truncate text-left">{p.name}</span>
+                <span className="font-mono text-[10px] text-muted-foreground/70">
+                  {p.count}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <SidebarSection label="TEAMS" />
+        <ul className="flex flex-col gap-0.5 px-2 pb-3">
+          {TEAMS.map((t) => (
+            <li key={t.key}>
+              <button
+                type="button"
+                onClick={() => onSelect(t.key)}
+                aria-current={activeItem === t.key ? "page" : undefined}
+                className={row(activeItem === t.key)}
+              >
+                <HashIcon className="size-3.5 opacity-60" />
+                <span className="flex-1 text-left">{t.name}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <button
+        type="button"
+        className="flex items-center gap-2 border-t border-border/60 px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] text-left transition-colors hover:bg-foreground/[0.03]"
+      >
+        <Avatar className="size-7">
+          <AvatarFallback>SB</AvatarFallback>
+        </Avatar>
+        <div className="min-w-0 flex-1">
+          <div className="truncate font-medium text-sm">Mantavyam</div>
+          <div className="truncate text-muted-foreground text-xs">
+            sean@cal.com
+          </div>
+        </div>
+        <ChevronUpIcon className="size-3.5 opacity-60" />
+      </button>
+    </nav>
   );
 }
 

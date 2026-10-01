@@ -35,11 +35,13 @@ export function LayoutsBottomNavShowcasePage() {
   const [activeTab, setActiveTab] = useState<TabKey>("home");
 
   return (
-    <div className="relative min-h-svh bg-foreground/[0.04] flex items-center justify-center px-6 py-12 text-foreground">
+    // Below md this *is* the phone: render the app full-bleed. From md up,
+    // show it inside a device mockup.
+    <div className="relative min-h-svh bg-background text-foreground md:flex md:items-center md:justify-center md:bg-foreground/[0.04] md:px-6 md:py-12">
       <PageBackdrop />
-      <div className="relative flex flex-col items-center gap-5">
+      <div className="relative md:flex md:flex-col md:items-center md:gap-5">
         <PhoneFrame activeTab={activeTab} setActiveTab={setActiveTab} />
-        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+        <span className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em] md:inline">
           MOBILE · 380×760
         </span>
       </div>
@@ -51,7 +53,7 @@ function PageBackdrop() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0"
+      className="pointer-events-none absolute inset-0 max-md:hidden"
       style={{
         background: [
           "radial-gradient(60% 50% at 15% 10%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 65%)",
@@ -70,13 +72,13 @@ function PhoneFrame({
   setActiveTab: (tab: TabKey) => void;
 }) {
   return (
-    <div className="relative w-[380px] h-[760px] rounded-[40px] border-8 border-foreground/15 bg-background shadow-2xl overflow-hidden">
-      <div className="relative h-full w-full rounded-[28px] overflow-hidden">
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-30 w-24 h-6 rounded-full bg-foreground/85" />
-        <div className="flex flex-col h-full">
+    <div className="relative min-h-svh w-full bg-background md:h-[min(760px,calc(100svh-6rem))] md:min-h-0 md:w-[380px] md:overflow-hidden md:rounded-[40px] md:border-8 md:border-foreground/15 md:shadow-2xl">
+      <div className="relative min-h-svh w-full md:h-full md:min-h-0 md:overflow-hidden md:rounded-[28px]">
+        <div aria-hidden className="absolute top-2 left-1/2 z-30 hidden h-6 w-24 -translate-x-1/2 rounded-full bg-foreground/85 md:block" />
+        <div className="flex min-h-svh flex-col md:h-full md:min-h-0">
           <StatusBar />
           <AppHeader title={TAB_TITLES[activeTab]} />
-          <main className="flex-1 overflow-y-auto px-5 py-4">
+          <main className="flex-1 px-4 pt-4 pb-[calc(72px+env(safe-area-inset-bottom)+1rem)] sm:px-5 md:overflow-y-auto md:pb-4">
             <TabContent tab={activeTab} />
           </main>
           <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -88,7 +90,7 @@ function PhoneFrame({
 
 function StatusBar() {
   return (
-    <div className="h-10 px-6 flex items-center justify-between text-xs font-medium pt-3">
+    <div aria-hidden className="hidden h-10 items-center justify-between px-6 pt-3 font-medium text-xs md:flex">
       <span>9:41</span>
       <div className="flex items-center gap-1.5">
         <SignalHigh className="size-3.5" />
@@ -101,7 +103,7 @@ function StatusBar() {
 
 function AppHeader({ title }: { title: string }) {
   return (
-    <div className="px-5 py-3 flex items-center justify-between border-b border-border/60">
+    <div className="sticky top-0 z-20 flex items-center justify-between border-b border-border/60 bg-background/95 px-3 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur sm:px-5 md:static md:py-3 md:pt-3">
       <div className="flex items-center gap-1">
         <Button variant="ghost" size="icon-sm" aria-label="Back">
           <ChevronLeftIcon />
@@ -431,7 +433,10 @@ function BottomNav({
   setActiveTab: (tab: TabKey) => void;
 }) {
   return (
-    <nav className="h-[72px] border-t border-border/60 bg-background flex items-stretch justify-around relative">
+    <nav
+      aria-label="Main"
+      className="fixed inset-x-0 bottom-0 z-30 flex h-[calc(72px+env(safe-area-inset-bottom))] items-stretch justify-around border-t border-border/60 bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:relative md:h-[72px] md:pb-0"
+    >
       {TABS.map((tab) => {
         const isActive = activeTab === tab.key;
         const isCenter = tab.key === "create";
@@ -442,14 +447,14 @@ function BottomNav({
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key)}
-              aria-label={tab.label}
+              aria-current={isActive ? "page" : undefined}
               className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 cursor-pointer"
             >
               <span className="flex size-12 items-center justify-center rounded-full bg-foreground text-background -translate-y-3 shadow-md">
                 <PlusIcon className="size-5" />
               </span>
               <span
-                className={`text-[10px] -mt-2 ${
+                className={`text-[11px] -mt-2 ${
                   isActive ? "text-foreground" : "text-muted-foreground"
                 }`}
               >
@@ -465,7 +470,6 @@ function BottomNav({
             key={tab.key}
             type="button"
             onClick={() => setActiveTab(tab.key)}
-            aria-label={tab.label}
             aria-current={isActive ? "page" : undefined}
             className={`relative flex flex-col items-center justify-center gap-0.5 flex-1 py-2 cursor-pointer transition-colors ${
               isActive ? "text-foreground" : "text-muted-foreground"
@@ -480,12 +484,13 @@ function BottomNav({
                 strokeWidth={isActive ? 2.4 : 2}
               />
               {tab.badge ? (
-                <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 rounded-full bg-foreground text-background text-[9px] font-medium flex items-center justify-center">
+                <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 rounded-full bg-foreground text-background text-[10px] font-medium flex items-center justify-center">
                   {tab.badge}
+                  <span className="sr-only"> new</span>
                 </span>
               ) : null}
             </span>
-            <span className="text-[10px]">{tab.label}</span>
+            <span className="text-[11px]">{tab.label}</span>
           </button>
         );
       })}

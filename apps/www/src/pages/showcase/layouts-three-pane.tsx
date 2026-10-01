@@ -3,6 +3,7 @@ import {
   BellRingIcon,
   BoldIcon,
   ChevronDownIcon,
+  ChevronLeftIcon,
   ItalicIcon,
   LinkIcon,
   PinIcon,
@@ -148,12 +149,16 @@ const MESSAGES_BOTTOM: Message[] = [
 export function LayoutsThreePaneShowcasePage() {
   const [activeWorkspace, setActiveWorkspace] = useState(WORKSPACES[0].id);
   const [activeChannel, setActiveChannel] = useState("design");
+  // Below md the channel list and the conversation are separate views.
+  const [mobileView, setMobileView] = useState<"channels" | "conversation">("channels");
 
   const channel = CHANNELS.find((c) => c.slug === activeChannel) ?? CHANNELS[1];
+  const workspace = WORKSPACES.find((w) => w.id === activeWorkspace) ?? WORKSPACES[0];
 
   return (
-    <div className="grid min-h-svh grid-cols-[64px_240px_1fr] bg-background text-foreground">
-      <aside className="flex flex-col items-center gap-2 border-r border-border/60 bg-foreground/[0.02] py-3">
+    <div className="min-h-svh bg-background text-foreground md:grid md:grid-cols-[240px_minmax(0,1fr)] lg:grid-cols-[64px_240px_minmax(0,1fr)]">
+      {/* Workspace rail: lg+ only. Below lg it becomes a horizontal strip. */}
+      <aside className="sticky top-0 hidden h-svh flex-col items-center gap-2 border-r border-border/60 bg-foreground/[0.02] py-3 lg:flex">
         {WORKSPACES.map((w) => {
           const isActive = activeWorkspace === w.id;
           return (
@@ -161,6 +166,7 @@ export function LayoutsThreePaneShowcasePage() {
               <button
                 type="button"
                 onClick={() => setActiveWorkspace(w.id)}
+                aria-current={isActive ? "true" : undefined}
                 className={`flex size-9 items-center justify-center rounded-lg font-medium text-[12px] text-foreground/85 transition-transform hover:scale-105 ${w.color}`}
                 aria-label={w.name}
               >
@@ -205,19 +211,52 @@ export function LayoutsThreePaneShowcasePage() {
         </div>
       </aside>
 
-      <aside className="flex flex-col border-r border-border/60 bg-foreground/[0.015]">
+      <aside
+        className={`flex min-h-svh flex-col border-border/60 bg-foreground/[0.015] md:sticky md:top-0 md:h-svh md:min-h-0 md:border-r ${
+          mobileView === "conversation" ? "max-md:hidden" : ""
+        }`}
+      >
+        {/* Workspace strip replaces the rail below lg */}
+        <div className="flex items-center gap-2 overflow-x-auto border-b border-border/60 px-3 py-2 lg:hidden">
+          {WORKSPACES.map((w) => {
+            const isActive = activeWorkspace === w.id;
+            return (
+              <button
+                key={w.id}
+                type="button"
+                onClick={() => setActiveWorkspace(w.id)}
+                aria-label={w.name}
+                aria-current={isActive ? "true" : undefined}
+                className={`flex size-9 shrink-0 items-center justify-center rounded-lg font-medium text-[12px] text-foreground/85 pointer-coarse:size-11 ${w.color} ${
+                  isActive ? "ring-2 ring-foreground ring-offset-2 ring-offset-background" : ""
+                }`}
+              >
+                {w.letter}
+              </button>
+            );
+          })}
+          <button
+            type="button"
+            aria-label="Add workspace"
+            className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-dashed border-border/70 text-muted-foreground pointer-coarse:size-11"
+          >
+            <PlusIcon className="size-4" />
+          </button>
+        </div>
+
         <div className="border-b border-border/60 px-3 py-3">
           <button
             type="button"
+            aria-haspopup="menu"
             className="flex w-full items-center justify-between gap-2 text-left"
           >
-            <span className="font-heading text-sm">Acme</span>
+            <span className="font-heading text-sm">{workspace.name}</span>
             <ChevronDownIcon className="size-3.5 opacity-60" />
           </button>
           <div className="mt-0.5 text-muted-foreground text-xs">16 members</div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-1.5 py-2">
+        <nav aria-label="Channels and messages" className="flex-1 overflow-y-auto px-1.5 py-2">
           <SectionLabel>Channels</SectionLabel>
           <ul className="flex flex-col gap-0.5">
             {CHANNELS.map((c) => {
@@ -226,10 +265,14 @@ export function LayoutsThreePaneShowcasePage() {
                 <li key={c.slug}>
                   <button
                     type="button"
-                    onClick={() => setActiveChannel(c.slug)}
-                    className={`flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-sm transition-colors ${
+                    onClick={() => {
+                      setActiveChannel(c.slug);
+                      setMobileView("conversation");
+                    }}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-sm transition-colors pointer-coarse:min-h-11 ${
                       isActive
-                        ? "bg-foreground/[0.08] text-foreground"
+                        ? "md:bg-foreground/[0.08] text-foreground"
                         : c.unread
                           ? "font-medium text-foreground hover:bg-foreground/[0.04]"
                           : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
@@ -240,7 +283,9 @@ export function LayoutsThreePaneShowcasePage() {
                       <span className="truncate">{c.name}</span>
                     </span>
                     {c.unread ? (
-                      <span className="size-1.5 shrink-0 rounded-full bg-primary" />
+                      <span className="size-1.5 shrink-0 rounded-full bg-primary">
+                        <span className="sr-only">Unread</span>
+                      </span>
                     ) : null}
                   </button>
                 </li>
@@ -254,11 +299,11 @@ export function LayoutsThreePaneShowcasePage() {
               <li key={d.slug}>
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+                  className="flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:min-h-11"
                 >
                   <span className="flex min-w-0 items-center gap-2">
                     <span className="relative">
-                      <span className="flex size-5 items-center justify-center rounded-full bg-foreground/10 font-medium text-[9px] text-foreground">
+                      <span className="flex size-5 items-center justify-center rounded-full bg-foreground/10 font-medium text-[10px] text-foreground">
                         {d.initials}
                       </span>
                       <span
@@ -274,7 +319,7 @@ export function LayoutsThreePaneShowcasePage() {
                     <span className="truncate">{d.name}</span>
                   </span>
                   {d.unread ? (
-                    <span className="rounded-full bg-primary px-1.5 py-0.5 font-mono text-[9px] text-primary-foreground">
+                    <span className="rounded-full bg-primary px-1.5 py-0.5 font-mono text-[10px] text-primary-foreground">
                       {d.unread}
                     </span>
                   ) : null}
@@ -289,10 +334,10 @@ export function LayoutsThreePaneShowcasePage() {
               <li key={a.slug}>
                 <button
                   type="button"
-                  className="flex w-full items-center gap-2 rounded-md px-2 py-1 text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1 text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:min-h-11"
                 >
                   <span
-                    className={`flex size-4 items-center justify-center rounded-sm font-medium text-[9px] ${a.color}`}
+                    className={`flex size-4 items-center justify-center rounded-sm font-medium text-[10px] ${a.color}`}
                   >
                     {a.letter}
                   </span>
@@ -301,39 +346,51 @@ export function LayoutsThreePaneShowcasePage() {
               </li>
             ))}
           </ul>
-        </div>
+        </nav>
       </aside>
 
-      <main className="flex flex-col">
-        <header className="flex items-center gap-3 border-b border-border/60 px-5 py-3">
+      <main
+        className={`flex min-h-svh min-w-0 flex-col md:h-svh ${
+          mobileView === "channels" ? "max-md:hidden" : ""
+        }`}
+      >
+        <header className="sticky top-0 z-10 flex items-center gap-2 border-b border-border/60 bg-background/95 px-2 py-2 backdrop-blur sm:gap-3 md:static md:px-5 md:py-3">
+          <button
+            type="button"
+            onClick={() => setMobileView("channels")}
+            aria-label="Back to channels"
+            className="flex size-11 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground md:hidden"
+          >
+            <ChevronLeftIcon className="size-5" />
+          </button>
           <div className="flex min-w-0 items-center gap-2">
             <span className="text-muted-foreground">#</span>
-            <span className="font-heading text-base">{channel.name}</span>
-            <span className="hidden truncate text-muted-foreground text-xs md:inline">
+            <h1 className="truncate font-heading text-base">{channel.name}</h1>
+            <span className="hidden truncate text-muted-foreground text-xs xl:inline">
               Where the design team hangs out
             </span>
           </div>
-          <div className="ml-auto flex items-center gap-1">
-            <HeaderIconButton label="Pin">
+          <div className="ml-auto flex shrink-0 items-center gap-1">
+            <HeaderIconButton label="Pin" className="max-sm:hidden">
               <PinIcon className="size-4" />
             </HeaderIconButton>
-            <HeaderIconButton label="Star">
+            <HeaderIconButton label="Star" className="max-sm:hidden">
               <StarIcon className="size-4" />
             </HeaderIconButton>
-            <HeaderIconButton label="Members">
+            <HeaderIconButton label="Members, 12">
               <UsersIcon className="size-4" />
             </HeaderIconButton>
-            <HeaderIconButton label="Settings">
+            <HeaderIconButton label="Channel settings">
               <SettingsIcon className="size-4" />
             </HeaderIconButton>
-            <span className="ml-2 flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-2 py-0.5 text-muted-foreground text-xs">
+            <span className="ml-2 hidden items-center gap-1.5 rounded-full border border-border/60 bg-card px-2 py-0.5 text-muted-foreground text-xs lg:flex">
               <UsersIcon className="size-3 opacity-70" />
               12 members
             </span>
           </div>
         </header>
 
-        <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-5 py-4">
+        <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4 md:px-5">
           {MESSAGES_TOP.map((m) => (
             <MessageRow key={m.id} message={m} />
           ))}
@@ -350,30 +407,32 @@ export function LayoutsThreePaneShowcasePage() {
             <div key={m.id} className="flex flex-col gap-2">
               <MessageRow message={m} />
               {i === 1 ? (
-                <div className="ml-12 flex items-center gap-2 rounded-md border border-border/60 bg-card/60 px-2.5 py-1.5">
-                  <div className="flex -space-x-1.5">
+                <button
+                  type="button"
+                  className="flex flex-wrap items-center gap-x-2 gap-y-1 self-start rounded-md border border-border/60 bg-card/60 px-2.5 py-1.5 text-left sm:ml-12 pointer-coarse:min-h-11"
+                >
+                  <span className="flex -space-x-1.5">
                     <span className="size-5 rounded-full bg-gradient-to-br from-emerald-500/70 to-emerald-500/30 ring-2 ring-card" />
                     <span className="size-5 rounded-full bg-gradient-to-br from-sky-500/70 to-sky-500/30 ring-2 ring-card" />
                     <span className="size-5 rounded-full bg-gradient-to-br from-violet-500/70 to-violet-500/30 ring-2 ring-card" />
-                  </div>
+                  </span>
                   <span className="text-foreground text-xs">3 replies</span>
                   <span className="text-muted-foreground text-xs">·</span>
                   <span className="text-muted-foreground text-xs">last reply 2h ago</span>
-                </div>
+                </button>
               ) : null}
             </div>
           ))}
         </div>
 
-        <div className="px-5 pb-5">
+        <div className="sticky bottom-0 bg-background px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:static md:px-5 md:pb-5">
           <div className="rounded-2xl border border-border bg-card p-3">
-            <div
-              role="textbox"
-              aria-label="Message"
-              className="min-h-[56px] w-full resize-none bg-transparent text-sm text-muted-foreground outline-none"
-            >
-              Message #{channel.name}
-            </div>
+            <textarea
+              aria-label={`Message #${channel.name}`}
+              placeholder={`Message #${channel.name}`}
+              rows={2}
+              className="min-h-10 w-full resize-none bg-transparent text-sm outline-none placeholder:text-muted-foreground md:min-h-[56px]"
+            />
             <div className="mt-2 flex items-center justify-between border-border/60 border-t pt-2">
               <div className="flex items-center gap-1">
                 <ComposerIconButton label="Bold">
@@ -391,7 +450,7 @@ export function LayoutsThreePaneShowcasePage() {
               </div>
               <button
                 type="button"
-                className="flex items-center gap-1.5 rounded-md bg-foreground px-2.5 py-1 font-medium text-[12px] text-background transition-opacity hover:opacity-90"
+                className="flex items-center gap-1.5 rounded-md bg-foreground px-2.5 py-1 font-medium text-[12px] text-background transition-opacity hover:opacity-90 pointer-coarse:min-h-11 pointer-coarse:px-4"
               >
                 <SendIcon className="size-3.5" />
                 Send
@@ -428,16 +487,18 @@ function MessageRow({ message }: { message: Message }) {
 
 function HeaderIconButton({
   label,
+  className,
   children,
 }: {
   label: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
     <button
       type="button"
       aria-label={label}
-      className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+      className={`flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:size-11 ${className ?? ""}`}
     >
       {children}
     </button>
@@ -455,7 +516,7 @@ function ComposerIconButton({
     <button
       type="button"
       aria-label={label}
-      className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+      className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
     >
       {children}
     </button>
@@ -465,7 +526,7 @@ function ComposerIconButton({
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="mt-4 mb-1 px-2 first:mt-1">
-      <span className="font-mono text-[9px] text-muted-foreground/70 uppercase tracking-[0.25em]">
+      <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em]">
         {children}
       </span>
     </div>

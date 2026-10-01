@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   BoldIcon,
   HighlighterIcon,
@@ -14,94 +14,124 @@ import { Button } from "@orbit/ui/button";
 import { Separator } from "@orbit/ui/separator";
 import { Tooltip, TooltipPopup, TooltipTrigger } from "@orbit/ui/tooltip";
 
-type ToolbarPos = { top: number; left: number };
+type Anchor = { top: number; bottom: number; centerX: number };
+type ToolbarPos = { top: number; left: number; placement: "above" | "below" };
+
+const GAP = 8;
+const EDGE = 8;
+
+// SSR-safe layout effect.
+const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 export function LayoutsFloatingToolbarShowcasePage() {
   const docRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
+  const rangeRef = useRef<Range | null>(null);
+  const pointerDownRef = useRef(false);
+  const [anchor, setAnchor] = useState<Anchor | null>(null);
   const [pos, setPos] = useState<ToolbarPos | null>(null);
-  const [visible, setVisible] = useState(false);
   const [manualOpen, setManualOpen] = useState(false);
 
+  // Anchor in viewport coordinates (the toolbar is position: fixed).
+  const measureAnchor = useCallback(() => {
+    if (manualOpen) {
+      const rect = docRef.current?.getBoundingClientRect();
+      if (rect) setAnchor({ top: rect.top + 120, bottom: rect.top + 120, centerX: rect.left + rect.width / 2 });
+      return;
+    }
+    const range = rangeRef.current;
+    if (!range) return;
+    const rect = range.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return;
+    setAnchor({ top: rect.top, bottom: rect.bottom, centerX: rect.left + rect.width / 2 });
+  }, [manualOpen]);
+
   useEffect(() => {
-    const handleSelectionChange = () => {
+    const clear = () => {
+      rangeRef.current = null;
+      setAnchor(null);
+    };
+
+    const readSelection = () => {
+      if (manualOpen) return;
       const sel = window.getSelection();
-      if (!sel || sel.isCollapsed || sel.rangeCount === 0) {
-        if (!manualOpen) {
-          setVisible(false);
-          setPos(null);
-        }
-        return;
-      }
+      if (!sel || sel.isCollapsed || sel.rangeCount === 0) return clear();
       const range = sel.getRangeAt(0);
       const container = range.commonAncestorContainer;
-      const docEl = docRef.current;
-      if (!docEl) return;
       const node =
         container.nodeType === Node.TEXT_NODE
           ? container.parentElement
           : (container as Element);
-      if (!node || !docEl.contains(node)) return;
-      const rect = range.getBoundingClientRect();
-      if (rect.width === 0 && rect.height === 0) return;
-      setPos({ top: rect.top + window.scrollY, left: rect.left + rect.width / 2 });
-      setVisible(true);
+      if (!node || !docRef.current?.contains(node)) return clear();
+      rangeRef.current = range;
+      measureAnchor();
     };
 
-    const handleMouseUp = () => {
-      window.setTimeout(handleSelectionChange, 0);
-    };
-
-    const handleClickOutside = (e: MouseEvent) => {
+    // Mouse: show after the drag ends. Touch: selection handles only fire
+    // `selectionchange`, so read it whenever no pointer is held down.
+    const onPointerDown = (e: PointerEvent) => {
+      pointerDownRef.current = true;
       const target = e.target as Node;
-      if (
-        docRef.current?.contains(target) ||
-        toolbarRef.current?.contains(target)
-      ) {
-        return;
-      }
-      if (!manualOpen) {
-        setVisible(false);
-        setPos(null);
+      if (!docRef.current?.contains(target) && !toolbarRef.current?.contains(target) && !manualOpen) {
+        clear();
       }
     };
+    const onPointerUp = () => {
+      pointerDownRef.current = false;
+      window.setTimeout(readSelection, 0);
+    };
+    const onSelectionChange = () => {
+      if (!pointerDownRef.current) readSelection();
+    };
+    const onViewportChange = () => measureAnchor();
 
-    document.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("selectionchange", () => {
-      const sel = window.getSelection();
-      if ((!sel || sel.isCollapsed) && !manualOpen) {
-        setVisible(false);
-      }
-    });
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("pointerup", onPointerUp);
+    document.addEventListener("selectionchange", onSelectionChange);
+    window.addEventListener("scroll", onViewportChange, { passive: true });
+    window.addEventListener("resize", onViewportChange);
     return () => {
-      document.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("pointerup", onPointerUp);
+      document.removeEventListener("selectionchange", onSelectionChange);
+      window.removeEventListener("scroll", onViewportChange);
+      window.removeEventListener("resize", onViewportChange);
     };
-  }, [manualOpen]);
+  }, [manualOpen, measureAnchor]);
+
+  // Place the toolbar once its size is known: clamp to the viewport edges and
+  // flip below the selection when there's no room above. On touch screens it
+  // always goes below, because the OS selection menu sits above.
+  useIsoLayoutEffect(() => {
+    const el = toolbarRef.current;
+    if (!anchor || !el) {
+      setPos(null);
+      return;
+    }
+    const { width, height } = el.getBoundingClientRect();
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const fitsAbove = anchor.top - height - GAP >= EDGE;
+    const placement = !coarse && fitsAbove ? "above" : "below";
+    const top = placement === "above" ? anchor.top - height - GAP : anchor.bottom + GAP;
+    const maxLeft = window.innerWidth - width - EDGE;
+    const left = Math.max(EDGE, Math.min(maxLeft, anchor.centerX - width / 2));
+    setPos({ top, left, placement });
+  }, [anchor]);
 
   const toggleManual = () => {
     if (manualOpen) {
       setManualOpen(false);
-      setVisible(false);
-      setPos(null);
+      setAnchor(null);
       return;
     }
     setManualOpen(true);
-    const docEl = docRef.current;
-    if (docEl) {
-      const rect = docEl.getBoundingClientRect();
-      setPos({
-        top: rect.top + window.scrollY + 120,
-        left: rect.left + rect.width / 2,
-      });
-      setVisible(true);
-    }
+    const rect = docRef.current?.getBoundingClientRect();
+    if (rect) setAnchor({ top: rect.top + 120, bottom: rect.top + 120, centerX: rect.left + rect.width / 2 });
   };
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <header className="flex items-center justify-between border-b border-border/60 px-6 py-3">
+      <header className="flex items-center justify-between gap-3 border-b border-border/60 px-4 py-3 sm:px-6">
         <div className="font-mono text-muted-foreground text-xs">
           Untitled · sean's pad
         </div>
@@ -116,7 +146,7 @@ export function LayoutsFloatingToolbarShowcasePage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-6 py-12">
+      <main className="mx-auto max-w-3xl px-5 py-8 sm:px-6 sm:py-12">
         <div className="mb-8 flex items-center justify-between gap-4">
           <p className="text-muted-foreground text-xs">
             Highlight any text to see the toolbar.
@@ -127,7 +157,7 @@ export function LayoutsFloatingToolbarShowcasePage() {
         </div>
 
         <article ref={docRef} className="flex flex-col gap-5">
-          <h1 className="font-heading text-4xl tracking-tight">
+          <h1 className="font-heading text-3xl tracking-tight sm:text-4xl">
             Floating toolbars
           </h1>
 
@@ -219,12 +249,16 @@ export function LayoutsFloatingToolbarShowcasePage() {
         </article>
       </main>
 
-      {pos ? (
+      {anchor ? (
         <div
           ref={toolbarRef}
-          onMouseDown={(e) => e.preventDefault()}
-          style={{ top: pos.top, left: pos.left }}
-          className={`-translate-x-1/2 -translate-y-full mt-[-8px] fixed z-50 inline-flex items-center gap-1 rounded-full border border-border bg-card px-1 py-1 shadow-lg transition-opacity duration-150 ${visible ? "opacity-100" : "pointer-events-none opacity-0"}`}
+          role="toolbar"
+          aria-label="Formatting"
+          // Keep the text selection when pressing toolbar buttons.
+          onPointerDown={(e) => e.preventDefault()}
+          style={pos ? { top: pos.top, left: pos.left } : { top: 0, left: 0 }}
+          data-placement={pos?.placement}
+          className={`fixed z-50 inline-flex max-w-[calc(100vw-16px)] items-center gap-1 overflow-x-auto rounded-full border border-border bg-card px-1 py-1 shadow-lg transition-opacity duration-150 ${pos ? "opacity-100" : "pointer-events-none opacity-0"}`}
         >
           <ToolbarButton label="Bold">
             <BoldIcon />
@@ -275,7 +309,7 @@ function ToolbarButton({
           <button
             type="button"
             aria-label={label}
-            className="inline-flex size-7 items-center justify-center rounded-full text-foreground/80 transition-colors hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 [&_svg]:size-4"
+            className="inline-flex size-7 shrink-0 items-center justify-center rounded-full pointer-coarse:size-10 text-foreground/80 transition-colors hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 [&_svg]:size-4"
           >
             {children}
           </button>

@@ -14,12 +14,14 @@ import {
   Pen,
   PlusIcon,
   Share2,
+  SlidersHorizontal,
   Square,
   Type,
   UnlockIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
 import { Separator } from "@orbit/ui/separator";
+import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
 import { Slider } from "@orbit/ui/slider";
 import {
   Tooltip,
@@ -173,8 +175,43 @@ export function LayoutsCanvasToolsShowcasePage() {
     };
   };
 
-  const onCanvasMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return;
+  // Active touch/pen pointers, for two-finger pinch-zoom + pan.
+  const pointersRef = useRef(new Map<number, Point>());
+  const pinchRef = useRef<{
+    startDist: number;
+    startMid: Point;
+    startZoom: number;
+    startPan: Point;
+  } | null>(null);
+
+  const pointerPair = () => {
+    const pts = [...pointersRef.current.values()];
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (pts.length < 2 || !rect) return null;
+    const [a, b] = pts as [Point, Point];
+    return {
+      dist: Math.hypot(a.x - b.x, a.y - b.y),
+      mid: { x: (a.x + b.x) / 2 - rect.left, y: (a.y + b.y) / 2 - rect.top },
+    };
+  };
+
+  const onCanvasPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (e.pointerType !== "mouse") {
+      pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      const pair = pointerPair();
+      if (pair) {
+        // Second finger down: cancel any single-pointer drag and pinch instead.
+        setDrag(null);
+        pinchRef.current = {
+          startDist: pair.dist,
+          startMid: pair.mid,
+          startZoom: zoom,
+          startPan: { ...pan },
+        };
+        return;
+      }
+    }
     const target = e.target as HTMLElement;
     const shapeEl = target.closest<HTMLElement>("[data-shape-id]");
     const clickedShapeId = shapeEl?.dataset.shapeId ?? null;
@@ -222,10 +259,40 @@ export function LayoutsCanvasToolsShowcasePage() {
     setSelectedId(null);
   };
 
-  // Window-level mousemove + mouseup for active drag.
+  // Pinch: track touch pointers at the window level.
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      if (!pointersRef.current.has(e.pointerId)) return;
+      pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      const pinch = pinchRef.current;
+      const pair = pointerPair();
+      if (!pinch || !pair) return;
+      const next = Math.min(4, Math.max(0.25, pinch.startZoom * (pair.dist / pinch.startDist)));
+      // Keep the world point under the starting midpoint under the fingers.
+      const wx = (pinch.startMid.x - pinch.startPan.x) / pinch.startZoom;
+      const wy = (pinch.startMid.y - pinch.startPan.y) / pinch.startZoom;
+      setZoom(next);
+      setPan({ x: pair.mid.x - wx * next, y: pair.mid.y - wy * next });
+    };
+    const onEnd = (e: PointerEvent) => {
+      pointersRef.current.delete(e.pointerId);
+      if (pointersRef.current.size < 2) pinchRef.current = null;
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onEnd);
+    window.addEventListener("pointercancel", onEnd);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onEnd);
+      window.removeEventListener("pointercancel", onEnd);
+    };
+  }, []);
+
+  // Window-level pointermove + pointerup for an active single-pointer drag.
   useEffect(() => {
     if (!drag) return;
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e: PointerEvent) => {
+      if (pinchRef.current) return;
       if (drag.kind === "pan") {
         const dx = e.clientX - drag.startScreen.x;
         const dy = e.clientY - drag.startScreen.y;
@@ -286,11 +353,13 @@ export function LayoutsCanvasToolsShowcasePage() {
       }
       setDrag(null);
     };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
     return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
     };
   }, [drag, pan.x, pan.y, zoom, creationCount]);
 
@@ -429,6 +498,31 @@ export function LayoutsCanvasToolsShowcasePage() {
         }
       : null;
 
+  const inspector = (className?: string) => (
+    <Inspector
+      className={className}
+      shape={selectedShape}
+      shapes={shapes}
+      selectedId={selectedId}
+      onSelect={setSelectedId}
+      onUpdate={updateShape}
+      onToggleVisible={(id) =>
+        setShapes((prev) =>
+          prev.map((s) => (s.id === id ? { ...s, visible: !s.visible } : s)),
+        )
+      }
+      onToggleLocked={(id) =>
+        setShapes((prev) =>
+          prev.map((s) => (s.id === id ? { ...s, locked: !s.locked } : s)),
+        )
+      }
+      onDelete={(id) => {
+        setShapes((prev) => prev.filter((s) => s.id !== id));
+        if (selectedId === id) setSelectedId(null);
+      }}
+    />
+  );
+
   const cursorClass = drag?.kind === "pan"
     ? "cursor-grabbing"
     : isPanGesture
@@ -443,8 +537,9 @@ export function LayoutsCanvasToolsShowcasePage() {
 
       <div
         ref={canvasRef}
-        className={cn("absolute inset-0", cursorClass)}
-        onMouseDown={onCanvasMouseDown}
+        // touch-none: the canvas owns all touch gestures (no page scroll/zoom).
+        className={cn("absolute inset-0 touch-none", cursorClass)}
+        onPointerDown={onCanvasPointerDown}
       >
         <div
           className="absolute top-0 left-0"
@@ -494,7 +589,24 @@ export function LayoutsCanvasToolsShowcasePage() {
         </div>
       </div>
 
-      <ToolsPalette tool={tool} onChangeTool={setTool} />
+      <ToolsPalette
+        tool={tool}
+        onChangeTool={setTool}
+        mobileExtra={
+          <Sheet>
+            <SheetTrigger
+              aria-label="Open inspector"
+              className="grid size-11 shrink-0 place-items-center rounded-md text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground"
+            >
+              <SlidersHorizontal className="size-4" />
+            </SheetTrigger>
+            <SheetPopup side="bottom" className="max-h-[70svh] pb-[env(safe-area-inset-bottom)]">
+              <SheetTitle className="sr-only">Inspector</SheetTitle>
+              {inspector("w-full border-0 bg-transparent pt-12 shadow-none backdrop-blur-none")}
+            </SheetPopup>
+          </Sheet>
+        }
+      />
       <CollabBar />
       <ZoomControls
         zoom={zoom}
@@ -504,27 +616,8 @@ export function LayoutsCanvasToolsShowcasePage() {
       />
       <StatusPill selected={selectedShape} total={shapes.length} />
 
-      <Inspector
-        shape={selectedShape}
-        shapes={shapes}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-        onUpdate={updateShape}
-        onToggleVisible={(id) =>
-          setShapes((prev) =>
-            prev.map((s) => (s.id === id ? { ...s, visible: !s.visible } : s)),
-          )
-        }
-        onToggleLocked={(id) =>
-          setShapes((prev) =>
-            prev.map((s) => (s.id === id ? { ...s, locked: !s.locked } : s)),
-          )
-        }
-        onDelete={(id) => {
-          setShapes((prev) => prev.filter((s) => s.id !== id));
-          if (selectedId === id) setSelectedId(null);
-        }}
-      />
+      {/* Floating inspector from md up; a bottom sheet below that. */}
+      <div className="hidden md:block">{inspector()}</div>
     </div>
   );
 }
@@ -642,12 +735,21 @@ function SelectionFrame({ shape, zoom }: { shape: Shape; zoom: number }) {
 function ToolsPalette({
   tool,
   onChangeTool,
+  mobileExtra,
 }: {
   tool: Tool;
   onChangeTool: (t: Tool) => void;
+  mobileExtra?: React.ReactNode;
 }) {
+  // Vertical palette top-left on md+; a horizontal, scrollable bottom bar on
+  // phones (thumb reach, and it keeps the top free for zoom/collab).
   return (
-    <div className="absolute top-3 left-3 z-10 flex flex-col gap-0.5 rounded-xl border border-border bg-card/85 p-1 shadow-lg backdrop-blur">
+    <div
+      role="toolbar"
+      aria-label="Tools"
+      className="absolute bottom-[calc(0.75rem+env(safe-area-inset-bottom))] left-1/2 z-10 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 rounded-xl border border-border bg-card/85 p-1 shadow-lg backdrop-blur md:top-3 md:bottom-auto md:left-3 md:translate-x-0"
+    >
+      <div className="flex min-w-0 flex-row gap-0.5 overflow-x-auto md:flex-col md:overflow-visible">
       {TOOLS.map((t) => {
         const Icon = t.icon;
         const isActive = tool === t.id;
@@ -658,7 +760,7 @@ function ToolsPalette({
               aria-pressed={isActive}
               onClick={() => onChangeTool(t.id)}
               className={cn(
-                "grid size-9 place-items-center rounded-md transition-colors",
+                "grid size-9 shrink-0 place-items-center rounded-md transition-colors pointer-coarse:size-11",
                 isActive
                   ? "bg-foreground/[0.1] text-foreground"
                   : "text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground",
@@ -679,18 +781,25 @@ function ToolsPalette({
           </Tooltip>
         );
       })}
+      </div>
+      {mobileExtra ? (
+        <>
+          <Separator orientation="vertical" className="mx-0.5 h-6 self-center md:hidden" />
+          <div className="md:hidden">{mobileExtra}</div>
+        </>
+      ) : null}
     </div>
   );
 }
 
 function CollabBar() {
   return (
-    <div className="-translate-x-1/2 absolute top-3 left-1/2 z-10 flex items-center gap-2 rounded-full border border-border bg-card/85 px-2 py-1 shadow-lg backdrop-blur">
+    <div className="absolute top-3 left-3 z-10 flex items-center gap-2 rounded-full border border-border bg-card/85 px-2 py-1 shadow-lg backdrop-blur md:left-1/2 md:-translate-x-1/2">
       <div className="flex -space-x-1.5">
-        {COLLAB.map((c) => (
+        {COLLAB.map((c, i) => (
           <Avatar
             key={c.initials}
-            className={cn("size-7 text-white ring-2 ring-card", c.tone)}
+            className={cn("size-7 text-white ring-2 ring-card", c.tone, i > 1 && "max-sm:hidden")}
           >
             <AvatarFallback className="bg-transparent font-medium text-[10px] text-white">
               {c.initials}
@@ -701,7 +810,7 @@ function CollabBar() {
       <Separator orientation="vertical" className="h-5" />
       <button
         type="button"
-        className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-2.5 py-1 font-medium text-[11px] text-background hover:bg-foreground/90"
+        className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-2.5 py-1 font-medium text-[11px] text-background hover:bg-foreground/90 pointer-coarse:min-h-9"
       >
         <Share2 className="size-3" />
         Share
@@ -727,7 +836,7 @@ function ZoomControls({
         <TooltipTrigger
           aria-label="Zoom out"
           onClick={onOut}
-          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground"
+          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:size-9"
         >
           <MinusIcon className="size-3.5" />
         </TooltipTrigger>
@@ -740,7 +849,7 @@ function ZoomControls({
         <TooltipTrigger
           aria-label="Zoom in"
           onClick={onIn}
-          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground"
+          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:size-9"
         >
           <PlusIcon className="size-3.5" />
         </TooltipTrigger>
@@ -751,7 +860,7 @@ function ZoomControls({
         <TooltipTrigger
           aria-label="Fit to screen"
           onClick={onFit}
-          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground"
+          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:size-9"
         >
           <Maximize2 className="size-3.5" />
         </TooltipTrigger>
@@ -760,7 +869,7 @@ function ZoomControls({
       <Tooltip>
         <TooltipTrigger
           aria-label="Fullscreen"
-          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground"
+          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground max-sm:hidden pointer-coarse:size-9"
         >
           <Maximize className="size-3.5" />
         </TooltipTrigger>
@@ -778,7 +887,10 @@ function StatusPill({
   total: number;
 }) {
   return (
-    <div className="absolute bottom-3 left-3 z-10 rounded-md border border-border bg-card/85 px-2 py-1 font-mono text-[10px] text-foreground/70 uppercase tracking-[0.2em] backdrop-blur">
+    <div
+      aria-live="polite"
+      className="absolute bottom-3 left-3 z-10 hidden rounded-md border border-border bg-card/85 px-2 py-1 font-mono text-[10px] text-foreground/70 uppercase tracking-[0.2em] backdrop-blur md:block"
+    >
       {selected
         ? `1 selected · ${Math.round(selected.width)} × ${Math.round(selected.height)}`
         : `${total} layer${total === 1 ? "" : "s"} · drag a tool to draw`}
@@ -787,6 +899,7 @@ function StatusPill({
 }
 
 function Inspector({
+  className,
   shape,
   shapes,
   selectedId,
@@ -796,6 +909,7 @@ function Inspector({
   onToggleLocked,
   onDelete,
 }: {
+  className?: string;
   shape: Shape | null;
   shapes: Shape[];
   selectedId: string | null;
@@ -806,7 +920,13 @@ function Inspector({
   onDelete: (id: string) => void;
 }) {
   return (
-    <div className="absolute right-3 bottom-3 z-10 w-72 overflow-hidden rounded-xl border border-border bg-card/85 shadow-lg backdrop-blur">
+    <div
+      className={cn(
+        "absolute right-3 bottom-3 z-10 w-72 overflow-hidden rounded-xl border border-border bg-card/85 shadow-lg backdrop-blur",
+        className && "static",
+        className,
+      )}
+    >
       <div className="flex border-border border-b px-1 pt-1">
         {["Design", "Prototype", "Inspect"].map((tab, i) => (
           <button
@@ -933,9 +1053,18 @@ function Inspector({
               return (
                 <div
                   key={layer.id}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isActive}
                   onClick={() => onSelect(layer.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onSelect(layer.id);
+                    }
+                  }}
                   className={cn(
-                    "flex w-full cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 text-left text-[11px] transition-colors",
+                    "flex w-full cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 text-left text-[11px] transition-colors pointer-coarse:min-h-11 pointer-coarse:text-xs",
                     isActive
                       ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
                       : "hover:bg-foreground/[0.05]",
@@ -947,8 +1076,8 @@ function Inspector({
                       e.stopPropagation();
                       onToggleVisible(layer.id);
                     }}
-                    aria-label={layer.visible ? "Hide" : "Show"}
-                    className="grid size-4 place-items-center text-foreground/50 hover:text-foreground"
+                    aria-label={`${layer.visible ? "Hide" : "Show"} ${layer.name}`}
+                    className="grid size-6 place-items-center rounded text-foreground/50 hover:text-foreground pointer-coarse:size-9"
                   >
                     {layer.visible ? (
                       <EyeIcon className="size-3" />
@@ -964,8 +1093,8 @@ function Inspector({
                       e.stopPropagation();
                       onToggleLocked(layer.id);
                     }}
-                    aria-label={layer.locked ? "Unlock" : "Lock"}
-                    className="grid size-4 place-items-center text-foreground/50 hover:text-foreground"
+                    aria-label={`${layer.locked ? "Unlock" : "Lock"} ${layer.name}`}
+                    className="grid size-6 place-items-center rounded text-foreground/50 hover:text-foreground pointer-coarse:size-9"
                   >
                     {layer.locked ? (
                       <LockIcon className="size-3" />

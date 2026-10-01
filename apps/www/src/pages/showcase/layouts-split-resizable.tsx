@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from "react";
 import { GripVerticalIcon, PlayIcon, RotateCcwIcon, Share2Icon, WandSparklesIcon } from "lucide-react";
 import { Highlight, themes } from "prism-react-renderer";
 import { Badge } from "@orbit/ui/badge";
@@ -27,65 +27,89 @@ export function Counter() {
 }
 `;
 
+// Each pane keeps at least this much room; percentages alone collapse panes
+// to unusable widths on narrow screens.
+const MIN_PANE_PX = 280;
+const KEY_STEP = 5;
+
+type MobilePane = "code" | "preview";
+
 export function LayoutsSplitResizableShowcasePage() {
   const [leftPct, setLeftPct] = useState(50);
   const [dragging, setDragging] = useState(false);
+  const [mobilePane, setMobilePane] = useState<MobilePane>("code");
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const clamp = (pct: number) => {
+    const width = containerRef.current?.getBoundingClientRect().width ?? 0;
+    const minPct = width > 0 ? Math.max(15, (MIN_PANE_PX / width) * 100) : 15;
+    return Math.min(100 - minPct, Math.max(minPct, pct));
+  };
+
+  // Pointer Events cover mouse, touch and pen with one code path.
+  const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setDragging(true);
+  };
+  const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
     if (!dragging) return;
-
-    const onMove = (e: MouseEvent) => {
-      const el = containerRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const raw = ((e.clientX - rect.left) / rect.width) * 100;
-      const clamped = Math.min(85, Math.max(15, raw));
-      setLeftPct(clamped);
-    };
-    const onUp = () => setDragging(false);
-
-    const prevCursor = document.body.style.cursor;
-    const prevSelect = document.body.style.userSelect;
-    document.body.style.cursor = "col-resize";
-    document.body.style.userSelect = "none";
-
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
-
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
-      document.body.style.cursor = prevCursor;
-      document.body.style.userSelect = prevSelect;
-    };
-  }, [dragging]);
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setLeftPct(clamp(((e.clientX - rect.left) / rect.width) * 100));
+  };
+  const onPointerUp = (e: PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    setDragging(false);
+  };
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    const next =
+      e.key === "ArrowLeft"
+        ? leftPct - KEY_STEP
+        : e.key === "ArrowRight"
+          ? leftPct + KEY_STEP
+          : e.key === "Home"
+            ? 0
+            : e.key === "End"
+              ? 100
+              : e.key === "Enter"
+                ? 50
+                : null;
+    if (next === null) return;
+    e.preventDefault();
+    setLeftPct(clamp(next));
+  };
 
   const leftLabel = Math.round(leftPct);
   const rightLabel = 100 - leftLabel;
 
   return (
-    <div className="flex h-svh flex-col overflow-hidden bg-background text-foreground">
-      <header className="flex h-12 items-center gap-3 border-border/60 border-b px-4">
-        <span className="font-mono text-muted-foreground text-xs">
-          scratchpad / playground.tsx
+    <div
+      className={`flex h-svh flex-col overflow-hidden bg-background text-foreground ${
+        dragging ? "cursor-col-resize select-none" : ""
+      }`}
+    >
+      <header className="flex h-12 shrink-0 items-center gap-2 border-border/60 border-b px-2 sm:gap-3 sm:px-4">
+        <span className="min-w-0 truncate font-mono text-muted-foreground text-xs">
+          <span className="max-sm:hidden">scratchpad / </span>playground.tsx
         </span>
-        <Separator orientation="vertical" className="h-5" />
-        <div className="flex items-center gap-1">
-          <Button size="xs" variant="ghost">
+        <Separator orientation="vertical" className="h-5 max-sm:hidden" />
+        <div className="flex shrink-0 items-center gap-1">
+          <Button size="xs" variant="ghost" aria-label="Format" className="pointer-coarse:size-10">
             <WandSparklesIcon />
-            Format
+            <span className="max-sm:hidden">Format</span>
           </Button>
-          <Button size="xs" variant="ghost">
+          <Button size="xs" variant="ghost" aria-label="Run" className="pointer-coarse:size-10">
             <PlayIcon />
-            Run
+            <span className="max-sm:hidden">Run</span>
           </Button>
-          <Button size="xs" variant="ghost">
+          <Button size="xs" variant="ghost" aria-label="Share" className="pointer-coarse:size-10">
             <Share2Icon />
-            Share
+            <span className="max-sm:hidden">Share</span>
           </Button>
         </div>
-        <div className="ml-auto flex items-center gap-2">
+        {/* Split ratio + reset only matter when the split is visible (md+). */}
+        <div className="ml-auto hidden shrink-0 items-center gap-2 md:flex">
           <Badge variant="outline" className="font-mono text-[10px] tracking-wider">
             {leftLabel}% / {rightLabel}%
           </Badge>
@@ -101,38 +125,75 @@ export function LayoutsSplitResizableShowcasePage() {
         </div>
       </header>
 
+      {/* Below md the panes become tabs instead of a split. */}
+      <div
+        role="tablist"
+        aria-label="Panes"
+        className="flex shrink-0 gap-1 border-border/60 border-b p-1.5 md:hidden"
+      >
+        {(["code", "preview"] as const).map((pane) => (
+          <button
+            key={pane}
+            type="button"
+            role="tab"
+            aria-selected={mobilePane === pane}
+            aria-controls={`pane-${pane}`}
+            onClick={() => setMobilePane(pane)}
+            className={`min-h-10 flex-1 rounded-md font-mono text-xs capitalize transition-colors ${
+              mobilePane === pane
+                ? "bg-foreground/[0.08] text-foreground"
+                : "text-muted-foreground hover:bg-foreground/[0.04]"
+            }`}
+          >
+            {pane}
+          </button>
+        ))}
+      </div>
+
       <div
         ref={containerRef}
-        className="relative flex flex-1 overflow-hidden"
+        className="relative flex min-h-0 flex-1 overflow-hidden"
+        style={{ "--left": `${leftPct}%` } as CSSProperties}
       >
         <div
-          className="flex shrink-0 flex-col overflow-hidden border-border/60 border-r bg-foreground/[0.02]"
-          style={{ width: `${leftPct}%` }}
+          id="pane-code"
+          className={`min-w-0 flex-col overflow-hidden bg-foreground/[0.02] md:flex md:w-[var(--left)] md:shrink-0 md:border-border/60 md:border-r ${
+            mobilePane === "code" ? "flex w-full" : "hidden"
+          }`}
         >
           <EditorPane />
         </div>
 
         <div
           role="separator"
+          tabIndex={0}
+          aria-label="Resize panes"
           aria-orientation="vertical"
+          aria-controls="pane-code"
           aria-valuenow={leftLabel}
-          aria-valuemin={15}
-          aria-valuemax={85}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            setDragging(true);
-          }}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+          onKeyDown={onKeyDown}
           onDoubleClick={() => setLeftPct(50)}
-          className={`group relative z-10 flex w-1.5 shrink-0 cursor-col-resize items-center justify-center transition-colors hover:bg-foreground/10 ${
-            dragging ? "bg-foreground/15" : ""
+          className={`group relative z-10 hidden w-3 shrink-0 -mx-1.5 cursor-col-resize touch-none items-center justify-center outline-none md:flex ${
+            dragging ? "bg-foreground/10" : "hover:bg-foreground/[0.06] focus-visible:bg-foreground/[0.08]"
           }`}
         >
-          <span className="pointer-events-none flex h-10 w-3 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100">
+          <span className="pointer-events-none flex h-10 w-3 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 pointer-coarse:opacity-100">
             <GripVerticalIcon className="size-3 text-muted-foreground" />
           </span>
         </div>
 
-        <div className="flex flex-1 flex-col overflow-hidden bg-background">
+        <div
+          id="pane-preview"
+          className={`min-w-0 flex-1 flex-col overflow-hidden bg-background md:flex ${
+            mobilePane === "preview" ? "flex" : "hidden"
+          }`}
+        >
           <PreviewPane count={3} dragging={dragging} />
         </div>
       </div>
@@ -143,6 +204,10 @@ export function LayoutsSplitResizableShowcasePage() {
 function EditorPane() {
   const { resolved } = useTheme();
   const theme = resolved === "dark" ? themes.vsDark : themes.vsLight;
+  // The resolved theme is only known on the client; colouring tokens before
+  // mount would make the server HTML disagree with hydration.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <div className="flex h-full flex-col">
@@ -151,6 +216,11 @@ function EditorPane() {
         <EditorTab label="config.json" />
       </div>
       <div className="flex-1 overflow-auto">
+        {!mounted ? (
+          <pre className="m-0 whitespace-pre px-3 py-3 font-mono text-[12.5px] leading-[1.65]">
+            {CODE.trimEnd()}
+          </pre>
+        ) : (
         <Highlight code={CODE.trimEnd()} language="tsx" theme={theme}>
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <pre
@@ -172,6 +242,7 @@ function EditorPane() {
             </pre>
           )}
         </Highlight>
+        )}
       </div>
     </div>
   );
@@ -181,7 +252,7 @@ function EditorTab({ label, active = false }: { label: string; active?: boolean 
   return (
     <button
       type="button"
-      className={`rounded-md px-2.5 py-1 font-mono text-[11px] transition-colors ${
+      className={`rounded-md px-2.5 py-1 font-mono text-[11px] transition-colors pointer-coarse:min-h-9 ${
         active
           ? "bg-foreground/[0.06] text-foreground"
           : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
@@ -200,7 +271,7 @@ function PreviewPane({ count, dragging }: { count: number; dragging: boolean }) 
         <EditorTab label="Console" />
       </div>
       <div
-        className={`flex flex-1 items-center justify-center overflow-auto p-8 ${
+        className={`flex flex-1 items-center justify-center overflow-auto p-4 sm:p-8 ${
           dragging ? "pointer-events-none" : ""
         }`}
       >
