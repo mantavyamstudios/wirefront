@@ -50,12 +50,12 @@ const PLANS = [
 export function PricingThreeTierShowcasePage() {
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-6xl px-6 py-16">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
         <div className="text-center">
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Pricing
           </div>
-          <h1 className="mt-2 font-heading text-4xl tracking-tight md:text-5xl">
+          <h1 className="mt-2 text-balance font-heading text-3xl tracking-tight sm:text-4xl md:text-5xl">
             Pay for what your team needs.
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-balance text-muted-foreground text-sm">
@@ -64,13 +64,14 @@ export function PricingThreeTierShowcasePage() {
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-3 lg:grid-cols-3 lg:items-stretch">
+        {/* 1 column → 2 at md (featured plan first, the third spans) → 3 at lg. */}
+        <div className="mt-10 grid grid-cols-1 gap-x-3 gap-y-6 sm:mt-12 md:grid-cols-2 lg:grid-cols-3 lg:items-stretch md:max-lg:[&>:last-child]:col-span-2">
           {PLANS.map((p) => (
             <div
               key={p.id}
-              className={`relative flex flex-col rounded-2xl border p-6 ${
+              className={`relative flex flex-col rounded-2xl border p-5 sm:p-6 ${
                 p.primary
-                  ? "border-foreground bg-foreground/[0.04] shadow-lg lg:scale-[1.02]"
+                  ? "border-foreground bg-foreground/[0.04] shadow-lg max-lg:order-first lg:scale-[1.02]"
                   : "border-border/60 bg-background/40"
               }`}
             >
@@ -93,6 +94,7 @@ export function PricingThreeTierShowcasePage() {
                 {p.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm">
                     <CheckIcon
+                      aria-hidden
                       className={`mt-0.5 size-4 shrink-0 ${
                         p.primary ? "text-foreground" : "text-emerald-600 dark:text-emerald-400"
                       }`}

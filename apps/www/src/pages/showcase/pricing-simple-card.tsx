@@ -22,7 +22,7 @@ export function PricingSimpleCardShowcasePage() {
         }}
       />
 
-      <div className="relative mx-auto flex min-h-svh max-w-md flex-col items-center justify-center px-6 py-16">
+      <div className="relative mx-auto flex min-h-svh max-w-md flex-col items-center justify-center px-4 py-10 sm:px-6 sm:py-16">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           One plan. Everything in.
         </div>
@@ -34,7 +34,7 @@ export function PricingSimpleCardShowcasePage() {
         </p>
 
         <div className="mt-10 w-full overflow-hidden rounded-2xl border border-border/60 bg-background shadow-xl">
-          <div className="relative px-7 py-7">
+          <div className="relative px-5 py-6 sm:px-7 sm:py-7">
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Pro
             </div>
@@ -54,7 +54,7 @@ export function PricingSimpleCardShowcasePage() {
               14 days free · no card needed
             </p>
           </div>
-          <div className="border-t border-border/60 bg-foreground/[0.02] px-7 py-6">
+          <div className="border-t border-border/60 bg-foreground/[0.02] px-5 py-5 sm:px-7 sm:py-6">
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Includes
             </div>

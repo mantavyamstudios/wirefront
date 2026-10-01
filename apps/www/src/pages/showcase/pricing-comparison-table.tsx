@@ -1,3 +1,4 @@
+import { Fragment, useState } from "react";
 import { CheckIcon, MinusIcon } from "lucide-react";
 import { Button } from "@orbit/ui/button";
 
@@ -44,31 +45,66 @@ const SECTIONS: { title: string; rows: Row[] }[] = [
   },
 ];
 
+// Phones: pick one plan with the switcher and compare it against the feature
+// names (two columns). md+: the full table in a horizontal scroller with a
+// sticky feature column.
 export function PricingComparisonTableShowcasePage() {
+  const [plan, setPlan] = useState("pro");
+  // Every plan column hides below md unless it's the picked one.
+  const col = (id: string) => (id === plan ? "" : "max-md:hidden ");
+
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-6xl px-6 py-12">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Compare plans
         </div>
-        <h1 className="mt-1 font-heading text-3xl">Every feature, side by side.</h1>
+        <h1 className="mt-1 font-heading text-2xl sm:text-3xl">Every feature, side by side.</h1>
 
-        <div className="mt-10 overflow-hidden rounded-xl border border-border/60">
-          <table className="w-full text-sm">
+        <div
+          role="group"
+          aria-label="Plan to compare"
+          className="mt-6 grid grid-cols-4 gap-1 rounded-lg border border-border/60 p-1 md:hidden"
+        >
+          {PLANS.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              aria-pressed={plan === p.id}
+              onClick={() => setPlan(p.id)}
+              className="min-h-10 rounded-md px-1 text-muted-foreground text-xs hover:text-foreground aria-pressed:bg-foreground aria-pressed:text-background"
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+
+        <div
+          tabIndex={0}
+          aria-label="Plan comparison"
+          className="mt-4 overflow-x-auto overscroll-x-contain rounded-xl border border-border/60 md:mt-10"
+        >
+          <table className="w-full text-sm md:min-w-[720px]">
             <thead>
               <tr className="bg-foreground/[0.02]">
-                <th className="w-[28%] px-4 py-4 text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+                <th
+                  scope="col"
+                  className="sticky left-0 z-10 w-[45%] bg-background px-4 py-4 text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em] md:w-[28%]"
+                >
                   Plan
                 </th>
                 {PLANS.map((p) => (
                   <th
                     key={p.id}
-                    className={`px-4 py-4 text-left ${
-                      p.highlight ? "bg-foreground/[0.06]" : ""
-                    }`}
+                    scope="col"
+                    className={
+                      col(p.id) +
+                      "px-4 py-4 text-left " +
+                      (p.highlight ? "bg-foreground/[0.06]" : "")
+                    }
                   >
                     <div className="font-medium">{p.name}</div>
-                    <div className="mt-1 flex items-baseline gap-1">
+                    <div className="mt-1 flex flex-wrap items-baseline gap-x-1">
                       <span className="font-heading text-xl">{p.price}</span>
                       <span className="text-muted-foreground text-xs">
                         {p.cadence}
@@ -80,36 +116,50 @@ export function PricingComparisonTableShowcasePage() {
             </thead>
             <tbody>
               {SECTIONS.map((section) => (
-                <>
-                  <tr key={`header-${section.title}`}>
-                    <td
+                <Fragment key={section.title}>
+                  <tr>
+                    <th
+                      scope="colgroup"
                       colSpan={5}
-                      className="border-y border-border/50 bg-foreground/[0.02] px-4 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]"
+                      className="border-border/50 border-y bg-foreground/[0.02] px-4 py-2 text-left font-mono text-[11px] text-muted-foreground uppercase tracking-[0.25em]"
                     >
                       {section.title}
-                    </td>
+                    </th>
                   </tr>
                   {section.rows.map((row, i) => (
                     <tr
-                      key={`${section.title}-${row.label}`}
-                      className={i < section.rows.length - 1 ? "border-b border-border/30" : ""}
+                      key={row.label}
+                      className={i < section.rows.length - 1 ? "border-border/30 border-b" : ""}
                     >
-                      <td className="px-4 py-3 text-foreground/85">{row.label}</td>
+                      <th
+                        scope="row"
+                        className="sticky left-0 z-10 bg-background px-4 py-3 text-left font-normal text-foreground/85"
+                      >
+                        {row.label}
+                      </th>
                       {row.values.map((v, j) => (
                         <td
-                          key={j}
-                          className={`px-4 py-3 ${
-                            PLANS[j]?.highlight ? "bg-foreground/[0.04]" : ""
-                          }`}
+                          key={PLANS[j]!.id}
+                          className={
+                            col(PLANS[j]!.id) +
+                            "px-4 py-3 " +
+                            (PLANS[j]?.highlight ? "bg-foreground/[0.04]" : "")
+                          }
                         >
                           {typeof v === "boolean" ? (
                             v ? (
-                              <CheckIcon className="size-4 text-emerald-600 dark:text-emerald-400" />
+                              <>
+                                <CheckIcon aria-hidden className="size-4 text-emerald-600 dark:text-emerald-400" />
+                                <span className="sr-only">Included</span>
+                              </>
                             ) : (
-                              <MinusIcon className="size-4 text-muted-foreground/40" />
+                              <>
+                                <MinusIcon aria-hidden className="size-4 text-muted-foreground/40" />
+                                <span className="sr-only">Not included</span>
+                              </>
                             )
                           ) : (
-                            <span className="font-mono text-sm text-foreground/85">
+                            <span className="font-mono text-foreground/85 text-sm">
                               {v}
                             </span>
                           )}
@@ -117,18 +167,20 @@ export function PricingComparisonTableShowcasePage() {
                       ))}
                     </tr>
                   ))}
-                </>
+                </Fragment>
               ))}
               <tr className="bg-foreground/[0.02]">
-                <td />
+                <td className="sticky left-0 z-10 bg-background" />
                 {PLANS.map((p) => (
-                  <td key={p.id} className="px-4 py-4">
+                  <td key={p.id} className={col(p.id) + "px-4 py-4"}>
                     <Button
                       size="sm"
                       variant={p.highlight ? "default" : "outline"}
                       type="button"
+                      className="max-md:w-full"
                     >
                       {p.id === "starter" ? "Get started" : p.id === "enterprise" ? "Talk to us" : "Choose"}
+                      <span className="sr-only"> {p.name}</span>
                     </Button>
                   </td>
                 ))}

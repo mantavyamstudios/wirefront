@@ -56,20 +56,26 @@ export function PricingMonthlyYearlyShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-6xl px-6 py-16">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
         <div className="text-center">
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Pricing
           </div>
-          <h1 className="mt-2 font-heading text-4xl tracking-tight">
+          <h1 className="mt-2 text-balance font-heading text-3xl tracking-tight sm:text-4xl">
             Pick a plan, switch any time.
           </h1>
 
-          <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-border/60 bg-background/40 p-1 font-mono text-xs uppercase tracking-[0.2em]">
+          <div
+            role="radiogroup"
+            aria-label="Billing period"
+            className="mt-8 inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/40 p-1 font-mono text-xs uppercase tracking-[0.15em] sm:gap-3 sm:tracking-[0.2em]"
+          >
             <button
               type="button"
+              role="radio"
+              aria-checked={!annual}
               onClick={() => setAnnual(false)}
-              className={`relative rounded-full px-4 py-1.5 transition-colors ${
+              className={`relative min-h-9 rounded-full px-4 py-1.5 transition-colors pointer-coarse:min-h-10 ${
                 !annual
                   ? "bg-foreground text-background"
                   : "text-muted-foreground hover:text-foreground"
@@ -79,30 +85,33 @@ export function PricingMonthlyYearlyShowcasePage() {
             </button>
             <button
               type="button"
+              role="radio"
+              aria-checked={annual}
               onClick={() => setAnnual(true)}
-              className={`relative rounded-full px-4 py-1.5 transition-colors ${
+              className={`relative min-h-9 rounded-full px-4 py-1.5 transition-colors pointer-coarse:min-h-10 ${
                 annual
                   ? "bg-foreground text-background"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Yearly
-              <span className="ml-2 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[9px] text-emerald-700 normal-case dark:text-emerald-400">
+              <span className="ml-2 rounded bg-emerald-500/20 px-1.5 py-0.5 font-mono text-[11px] text-emerald-700 normal-case tracking-normal dark:text-emerald-300">
                 save 20%
               </span>
             </button>
           </div>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-3 lg:grid-cols-3">
+        {/* 1 column → 2 at md (recommended first, the third spans) → 3 at lg. */}
+        <div className="mt-10 grid grid-cols-1 gap-x-3 gap-y-6 sm:mt-12 md:grid-cols-2 lg:grid-cols-3 md:max-lg:[&>:last-child]:col-span-2">
           {PLANS.map((p) => {
             const price = annual ? p.yearly : p.monthly;
             return (
               <div
                 key={p.id}
-                className={`relative flex flex-col rounded-2xl border p-6 ${
+                className={`relative flex flex-col rounded-2xl border p-5 sm:p-6 ${
                   p.primary
-                    ? "border-foreground bg-foreground/[0.04] shadow-lg"
+                    ? "border-foreground bg-foreground/[0.04] shadow-lg max-lg:order-first"
                     : "border-border/60 bg-background/40"
                 }`}
               >
@@ -114,7 +123,7 @@ export function PricingMonthlyYearlyShowcasePage() {
                 <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
                   {p.name}
                 </div>
-                <div className="mt-2 flex items-baseline gap-1">
+                <div aria-live="polite" className="mt-2 flex items-baseline gap-1">
                   <span className="font-heading text-4xl tracking-tight">
                     ${price}
                   </span>
@@ -125,7 +134,9 @@ export function PricingMonthlyYearlyShowcasePage() {
                 {annual && price > 0 ? (
                   <div className="mt-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                     Was{" "}
-                    <span className="line-through opacity-60">${p.monthly}</span>{" "}
+                    <s className="opacity-60">
+                      <span className="sr-only">monthly price </span>${p.monthly}
+                    </s>{" "}
                     · billed yearly
                   </div>
                 ) : null}
@@ -134,7 +145,7 @@ export function PricingMonthlyYearlyShowcasePage() {
                 <ul className="mt-6 flex flex-1 flex-col gap-2.5">
                   {p.features.map((f) => (
                     <li key={f} className="flex items-start gap-2 text-sm">
-                      <CheckIcon className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                      <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                       {f}
                     </li>
                   ))}

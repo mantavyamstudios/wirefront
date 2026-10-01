@@ -13,7 +13,7 @@ export function PricingSliderSeatsShowcasePage() {
   const totalAnnual = annual ? Math.round(yearly) : null;
 
   return (
-    <div className="flex min-h-svh items-center justify-center bg-background px-6 text-foreground">
+    <div className="flex min-h-svh items-center justify-center bg-background px-4 py-10 text-foreground sm:px-6">
       <div className="w-full max-w-2xl">
         <div className="text-center">
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
@@ -24,11 +24,12 @@ export function PricingSliderSeatsShowcasePage() {
           </h1>
         </div>
 
-        <div className="mt-10 rounded-2xl border border-border/60 bg-background/40 p-8">
-          <div className="flex items-baseline justify-between">
+        <div className="mt-8 rounded-2xl border border-border/60 bg-background/40 p-5 sm:mt-10 sm:p-8">
+          {/* Price over the billing toggle on phones; side by side from sm. */}
+          <div className="flex flex-col-reverse gap-4 sm:flex-row sm:items-baseline sm:justify-between">
             <div>
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading text-5xl tracking-tight">${display}</span>
+              <div aria-live="polite" className="flex items-baseline gap-1">
+                <span className="font-heading text-4xl tracking-tight sm:text-5xl">${display}</span>
                 <span className="text-muted-foreground text-sm">/ month</span>
               </div>
               {totalAnnual ? (
@@ -41,11 +42,17 @@ export function PricingSliderSeatsShowcasePage() {
                 </p>
               )}
             </div>
-            <div className="inline-flex rounded-full border border-border/60 bg-background/40 p-0.5 font-mono text-[11px] uppercase tracking-[0.2em]">
+            <div
+              role="radiogroup"
+              aria-label="Billing period"
+              className="inline-flex self-start rounded-full border border-border/60 bg-background/40 p-0.5 font-mono text-[11px] uppercase tracking-[0.2em] sm:self-auto"
+            >
               <button
                 type="button"
+                role="radio"
+                aria-checked={!annual}
                 onClick={() => setAnnual(false)}
-                className={`rounded-full px-3 py-1.5 transition-colors ${
+                className={`min-h-8 rounded-full px-3 py-1.5 transition-colors pointer-coarse:min-h-10 ${
                   !annual ? "bg-foreground text-background" : "text-muted-foreground"
                 }`}
               >
@@ -53,8 +60,10 @@ export function PricingSliderSeatsShowcasePage() {
               </button>
               <button
                 type="button"
+                role="radio"
+                aria-checked={annual}
                 onClick={() => setAnnual(true)}
-                className={`rounded-full px-3 py-1.5 transition-colors ${
+                className={`min-h-8 rounded-full px-3 py-1.5 transition-colors pointer-coarse:min-h-10 ${
                   annual ? "bg-foreground text-background" : "text-muted-foreground"
                 }`}
               >
@@ -83,19 +92,28 @@ export function PricingSliderSeatsShowcasePage() {
               max={50}
               value={seats}
               onChange={(e) => setSeats(Number(e.target.value))}
-              className="mt-3 w-full accent-foreground"
+              aria-valuetext={`${seats} seat${seats === 1 ? "" : "s"}, $${display} per month`}
+              // Taller input = bigger touch target for the native thumb.
+              className="mt-3 h-6 w-full cursor-pointer accent-foreground pointer-coarse:h-10"
             />
-            <div className="mt-2 flex justify-between font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
-              <span>1</span>
-              <span>10</span>
-              <span>20</span>
-              <span>30</span>
-              <span>40</span>
-              <span>50+</span>
+            {/* Ticks sit at their real slider positions (1–50). */}
+            <div aria-hidden className="relative mt-1 h-4 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.1em]">
+              {[1, 10, 20, 30, 40, 50].map((v, i, all) => (
+                <span
+                  key={v}
+                  className={
+                    "absolute " +
+                    (i === 0 ? "left-0" : i === all.length - 1 ? "right-0" : "-translate-x-1/2")
+                  }
+                  style={i > 0 && i < all.length - 1 ? { left: `${((v - 1) / 49) * 100}%` } : undefined}
+                >
+                  {v === 50 ? "50+" : v}
+                </span>
+              ))}
             </div>
           </div>
 
-          <ul className="mt-8 grid grid-cols-2 gap-2.5">
+          <ul className="mt-8 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
             {[
               "Unlimited projects",
               "1M API requests / mo",
@@ -105,7 +123,7 @@ export function PricingSliderSeatsShowcasePage() {
               "Custom roles",
             ].map((f) => (
               <li key={f} className="flex items-start gap-2 text-sm">
-                <CheckIcon className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                 {f}
               </li>
             ))}
