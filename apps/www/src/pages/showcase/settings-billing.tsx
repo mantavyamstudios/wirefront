@@ -20,7 +20,7 @@ const INVOICES = [
 export function SettingsBillingShowcasePage() {
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-4xl px-8 py-12">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Settings · Billing
         </div>
@@ -30,11 +30,11 @@ export function SettingsBillingShowcasePage() {
         </p>
 
         <section className="mt-8 overflow-hidden rounded-xl border border-border/60 bg-background/40">
-          <div className="flex items-center justify-between gap-6 p-6">
-            <div>
+          <div className="flex flex-wrap items-start justify-between gap-4 p-4 sm:items-center sm:gap-6 sm:p-6">
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <span className="font-heading text-2xl">Pro</span>
-                <span className="rounded bg-foreground/[0.08] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">
+                <span className="rounded bg-foreground/[0.08] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em]">
                   Annual
                 </span>
               </div>
@@ -46,7 +46,7 @@ export function SettingsBillingShowcasePage() {
                 Active · renews May 14
               </div>
             </div>
-            <div className="text-right">
+            <div className="sm:text-right">
               <div className="font-heading text-3xl">$240</div>
               <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 per month
@@ -54,11 +54,12 @@ export function SettingsBillingShowcasePage() {
             </div>
           </div>
           <Separator />
-          <div className="flex items-center justify-between gap-3 p-4">
+          {/* Wraps instead of clipping "Cancel plan" behind the card's overflow-hidden. */}
+          <div className="flex flex-wrap items-center justify-between gap-2 p-3 sm:gap-3 sm:p-4">
             <Button variant="ghost" size="sm">
               Compare plans
             </Button>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button variant="outline" size="sm">
                 Cancel plan
               </Button>
@@ -70,29 +71,29 @@ export function SettingsBillingShowcasePage() {
           </div>
         </section>
 
-        <section className="mt-3 rounded-xl border border-border/60 bg-background/40 p-6">
-          <header className="flex items-center justify-between">
+        <section className="mt-3 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-6">
+          <header className="flex items-center justify-between gap-3">
             <h2 className="font-heading text-base">Payment method</h2>
             <Button size="sm" variant="ghost">
               Update
             </Button>
           </header>
-          <div className="mt-4 flex items-center gap-4 rounded-lg border border-border/60 bg-background/40 p-4">
-            <div className="flex size-10 items-center justify-center rounded-md bg-foreground text-background">
+          <div className="mt-4 flex items-center gap-3 rounded-lg border border-border/60 bg-background/40 p-3 sm:gap-4 sm:p-4">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-foreground text-background">
               <CreditCardIcon className="size-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 whitespace-nowrap">
                 <span className="font-medium">Visa</span>
                 <span className="font-mono text-muted-foreground text-sm">
                   •••• 4242
                 </span>
               </div>
-              <p className="mt-0.5 text-muted-foreground text-xs">
+              <p className="mt-0.5 truncate text-muted-foreground text-xs">
                 Expires 09/27 · billing@acme.com
               </p>
             </div>
-            <span className="rounded bg-foreground/[0.06] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.25em]">
+            <span className="shrink-0 rounded bg-foreground/[0.06] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.25em]">
               Default
             </span>
           </div>
@@ -117,7 +118,7 @@ export function SettingsBillingShowcasePage() {
         </section>
 
         <section className="mt-3 rounded-xl border border-border/60 bg-background/40">
-          <header className="flex items-center justify-between p-5">
+          <header className="flex items-center justify-between gap-3 p-4 sm:p-5">
             <h2 className="font-heading text-base">Invoices</h2>
             <Button size="sm" variant="ghost">
               <ArrowDownToLineIcon />
@@ -129,25 +130,28 @@ export function SettingsBillingShowcasePage() {
             {INVOICES.map((inv, i) => (
               <li
                 key={inv.id}
-                className={`flex items-center gap-4 px-5 py-3 text-sm ${
+                className={`flex items-center gap-3 px-4 py-3 text-sm sm:gap-4 sm:px-5 ${
                   i < INVOICES.length - 1
                     ? "border-b border-border/40"
                     : ""
                 } transition-colors hover:bg-foreground/[0.02]`}
               >
-                <span className="font-mono text-[12px] text-muted-foreground">
-                  {inv.id}
+                {/* Below sm: id + date stack, the paid pill drops (amount stays). */}
+                <span className="min-w-0 flex-1 sm:flex sm:items-center sm:gap-4">
+                  <span className="block font-mono text-[12px] text-muted-foreground">
+                    {inv.id}
+                  </span>
+                  <span className="block truncate text-muted-foreground max-sm:text-xs sm:flex-1">{inv.date}</span>
                 </span>
-                <span className="flex-1 text-muted-foreground">{inv.date}</span>
-                <span className="font-mono">{inv.amount}</span>
-                <span className="inline-flex items-center gap-1 rounded bg-emerald-500/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
+                <span className="shrink-0 font-mono">{inv.amount}</span>
+                <span className="inline-flex shrink-0 items-center gap-1 rounded bg-emerald-500/10 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-700 max-sm:hidden dark:text-emerald-400">
                   <CheckCircle2Icon className="size-2.5" />
                   Paid
                 </span>
                 <button
                   type="button"
-                  className="ml-2 inline-flex items-center gap-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
-                  aria-label="Open"
+                  className="inline-flex shrink-0 items-center gap-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground sm:ml-2 pointer-coarse:p-3"
+                  aria-label={`Open invoice ${inv.id}`}
                 >
                   <ExternalLinkIcon className="size-3.5" />
                 </button>

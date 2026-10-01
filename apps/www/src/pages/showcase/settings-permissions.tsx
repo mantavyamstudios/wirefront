@@ -200,7 +200,7 @@ export function SettingsPermissionsShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-6xl px-8 py-12">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Settings · Permissions
         </div>
@@ -216,13 +216,15 @@ export function SettingsPermissionsShowcasePage() {
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
               Roles
             </div>
-            <ul className="flex flex-col gap-1">
+            {/* Horizontal, scrollable role cards below lg; a vertical list beside the matrix from lg. */}
+            <ul className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:px-0 lg:pb-0">
               {ROLES.map((role) => {
                 const isActive = role.id === activeRole;
                 return (
-                  <li key={role.id}>
+                  <li key={role.id} className="w-52 shrink-0 lg:w-auto">
                     <button
                       type="button"
+                      aria-pressed={isActive}
                       onClick={() => setActiveRole(role.id)}
                       className={`group w-full rounded-lg border px-3 py-2.5 text-left transition-colors ${
                         isActive
@@ -239,7 +241,7 @@ export function SettingsPermissionsShowcasePage() {
                           </span>
                           <span className="font-medium text-sm">{role.name}</span>
                         </div>
-                        <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[9px] tabular-nums text-muted-foreground">
+                        <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] tabular-nums text-muted-foreground">
                           {role.members}
                         </span>
                       </div>
@@ -252,9 +254,9 @@ export function SettingsPermissionsShowcasePage() {
               })}
             </ul>
 
-            <Separator className="my-3" />
+            <Separator className="my-3 max-lg:hidden" />
 
-            <Button variant="outline" size="sm" className="justify-start">
+            <Button variant="outline" size="sm" className="justify-start self-start lg:self-auto">
               <PlusIcon />
               Create custom role
             </Button>
@@ -270,7 +272,8 @@ export function SettingsPermissionsShowcasePage() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Filter capabilities…"
-                  className="h-9 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                  aria-label="Filter capabilities"
+                  className="h-9 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground pointer-coarse:h-11"
                 />
                 {query ? (
                   <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
@@ -278,7 +281,7 @@ export function SettingsPermissionsShowcasePage() {
                   </span>
                 ) : null}
               </div>
-              <label className="flex items-center gap-2.5 rounded-md border border-border/60 bg-background/40 px-3 py-1.5">
+              <label className="flex cursor-pointer items-center gap-2.5 rounded-md border border-border/60 bg-background/40 px-3 py-1.5 pointer-coarse:min-h-11">
                 <Switch
                   checked={diffOnly}
                   onCheckedChange={setDiffOnly}
@@ -297,7 +300,7 @@ export function SettingsPermissionsShowcasePage() {
                     <tr className="border-b border-border/60">
                       <th
                         scope="col"
-                        className="sticky left-0 z-20 min-w-[240px] bg-background/95 px-4 py-3 text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]"
+                        className="sticky left-0 z-20 min-w-[150px] bg-background px-3 py-3 text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:min-w-[200px] sm:px-4 lg:min-w-[240px]"
                       >
                         Capability
                       </th>
@@ -307,23 +310,24 @@ export function SettingsPermissionsShowcasePage() {
                           <th
                             key={role.id}
                             scope="col"
-                            className={`w-[88px] border-l border-border/40 px-2 py-3 text-center transition-colors ${
+                            className={`w-[72px] min-w-[72px] border-l border-border/40 px-1.5 py-3 text-center transition-colors sm:w-[88px] sm:px-2 ${
                               isActive ? "bg-foreground/[0.04]" : ""
                             }`}
                           >
                             <button
                               type="button"
                               onClick={() => setActiveRole(role.id)}
-                              className="flex w-full flex-col items-center gap-1"
+                              aria-pressed={isActive}
+                              className="flex w-full flex-col items-center gap-1 pointer-coarse:min-h-10"
                             >
                               <span
-                                className={`font-mono text-[10px] uppercase tracking-[0.2em] ${
+                                className={`font-mono text-[10px] uppercase tracking-[0.1em] sm:tracking-[0.2em] ${
                                   isActive ? "text-foreground" : "text-muted-foreground"
                                 }`}
                               >
                                 {role.name}
                               </span>
-                              <span className="font-mono text-[9px] tabular-nums text-muted-foreground/70">
+                              <span className="font-mono text-[10px] tabular-nums text-muted-foreground/70">
                                 {role.members}
                               </span>
                             </button>
@@ -389,7 +393,7 @@ function GroupRows({
       <tr className="border-b border-border/40 bg-foreground/[0.025]">
         <td
           colSpan={ROLES.length + 1}
-          className="sticky left-0 px-4 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]"
+          className="sticky left-0 bg-background px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4"
         >
           {group.label}
         </td>
@@ -403,11 +407,12 @@ function GroupRows({
               isLastRow ? "" : "border-b border-border/30"
             }`}
           >
-            <td className="sticky left-0 z-10 min-w-[240px] bg-inherit px-4 py-2.5">
+            {/* Opaque sticky cell: the row tint is translucent, so bg-inherit let scrolled cells show through. */}
+            <td className="sticky left-0 z-10 min-w-[150px] bg-background px-3 py-2.5 sm:min-w-[200px] sm:px-4 lg:min-w-[240px]">
               <div className="flex flex-col">
                 <span className="font-medium text-[13px]">{cap.label}</span>
                 {cap.hint ? (
-                  <span className="text-muted-foreground text-xs">{cap.hint}</span>
+                  <span className="line-clamp-2 text-muted-foreground text-xs">{cap.hint}</span>
                 ) : null}
               </div>
             </td>

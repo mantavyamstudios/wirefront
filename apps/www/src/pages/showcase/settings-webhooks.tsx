@@ -231,10 +231,10 @@ export function SettingsWebhooksShowcasePage() {
       : DELIVERIES;
 
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
         {/* Top bar */}
-        <header className="mb-8 flex items-end justify-between gap-4">
+        <header className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <h1 className="flex items-center gap-2 font-heading text-xl">
               <WebhookIcon className="size-5 text-muted-foreground" />
@@ -244,7 +244,7 @@ export function SettingsWebhooksShowcasePage() {
               Send realtime events to your servers.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="ghost"
               size="sm"
@@ -263,18 +263,18 @@ export function SettingsWebhooksShowcasePage() {
 
         {/* Signing secret row */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card px-4 py-3 shadow-xs/5">
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
               Signing secret
             </div>
-            <div className="inline-flex items-center gap-1 rounded-md border bg-background px-2 py-1 font-mono text-xs">
-              <span className="text-foreground/85">
+            <div className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md border bg-background px-2 py-1 font-mono text-xs">
+              <span className="min-w-0 truncate text-foreground/85">
                 {revealed ? SECRET_REAL : SECRET_MASKED}
               </span>
               <Button
                 size="icon"
                 variant="ghost"
-                className="-mr-1 size-5"
+                className="-mr-1 size-6 shrink-0 pointer-coarse:size-9"
                 aria-label={revealed ? "Hide signing secret" : "Reveal signing secret"}
                 onClick={() => setRevealed((v) => !v)}
               >
@@ -287,7 +287,7 @@ export function SettingsWebhooksShowcasePage() {
               <Button
                 size="icon"
                 variant="ghost"
-                className="size-5"
+                className="size-6 shrink-0 pointer-coarse:size-9"
                 aria-label="Copy signing secret"
                 onClick={() => {
                   try {
@@ -339,16 +339,18 @@ export function SettingsWebhooksShowcasePage() {
                 <TableHead className="ps-4 text-[10px] uppercase tracking-wider">
                   URL
                 </TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider">
+                <TableHead className="text-[10px] uppercase tracking-wider max-lg:hidden">
                   Events
                 </TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider">
+                <TableHead className="text-[10px] uppercase tracking-wider max-sm:hidden">
                   Status
                 </TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider">
+                <TableHead className="text-[10px] uppercase tracking-wider max-md:hidden">
                   Last delivery
                 </TableHead>
-                <TableHead className="w-px pe-4" />
+                <TableHead className="w-px pe-4">
+                  <span className="sr-only">Actions</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -358,17 +360,22 @@ export function SettingsWebhooksShowcasePage() {
                 const overflow = ep.events.length - visible.length;
                 return (
                   <TableRow key={ep.id}>
-                    <TableCell className="ps-4">
-                      <div className="flex max-w-[280px] items-center gap-2 font-mono text-xs">
+                    <TableCell className="w-full max-w-0 ps-4 sm:w-auto sm:max-w-none">
+                      <div className="flex items-center gap-2 font-mono text-xs sm:max-w-[280px]">
                         <span className="truncate text-foreground/90">
                           {ep.url}
                         </span>
                       </div>
-                      <div className="mt-0.5 font-mono text-[10px] text-muted-foreground/80">
+                      <div className="mt-0.5 flex flex-wrap items-center gap-x-2 font-mono text-[10px] text-muted-foreground/80">
                         {ep.id}
+                        <span className="inline-flex items-center gap-1 sm:hidden">
+                          <span className={"size-1.5 rounded-full " + tone.dot} />
+                          <span className={"uppercase tracking-wider " + tone.label}>{ep.status}</span>
+                        </span>
+                        <span className="md:hidden">· {ep.lastDelivery}</span>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="max-lg:hidden">
                       <div className="flex flex-wrap items-center gap-1">
                         {visible.map((e) => (
                           <Badge
@@ -404,7 +411,7 @@ export function SettingsWebhooksShowcasePage() {
                         ) : null}
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="max-sm:hidden">
                       <Tooltip>
                         <TooltipTrigger
                           render={
@@ -424,7 +431,7 @@ export function SettingsWebhooksShowcasePage() {
                         <TooltipPopup side="top">{tone.tip}</TooltipPopup>
                       </Tooltip>
                     </TableCell>
-                    <TableCell className="text-muted-foreground tabular-nums">
+                    <TableCell className="text-muted-foreground tabular-nums max-md:hidden">
                       {ep.lastDelivery}
                     </TableCell>
                     <TableCell className="pe-4">
@@ -464,8 +471,8 @@ export function SettingsWebhooksShowcasePage() {
 
         {/* Recent deliveries */}
         <div className="overflow-hidden rounded-xl border bg-card shadow-xs/5">
-          <header className="flex items-center justify-between gap-4 border-b px-4 py-3">
-            <div className="flex items-baseline gap-2">
+          <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b px-4 py-3">
+            <div className="flex flex-wrap items-baseline gap-x-2">
               <h2 className="font-heading text-sm">Recent deliveries</h2>
               <span className="font-mono text-[10px] text-muted-foreground/80 uppercase tracking-[0.2em]">
                 · last 24 hours
@@ -476,7 +483,7 @@ export function SettingsWebhooksShowcasePage() {
                 type="button"
                 onClick={() => setDeliveryFilter("all")}
                 className={
-                  "rounded px-2 py-0.5 font-mono text-[11px] transition-colors " +
+                  "rounded px-2 py-0.5 font-mono text-[11px] transition-colors pointer-coarse:min-h-9 pointer-coarse:px-3 " +
                   (deliveryFilter === "all"
                     ? "bg-foreground/[0.08] text-foreground"
                     : "text-muted-foreground hover:text-foreground")
@@ -488,7 +495,7 @@ export function SettingsWebhooksShowcasePage() {
                 type="button"
                 onClick={() => setDeliveryFilter("failed")}
                 className={
-                  "rounded px-2 py-0.5 font-mono text-[11px] transition-colors " +
+                  "rounded px-2 py-0.5 font-mono text-[11px] transition-colors pointer-coarse:min-h-9 pointer-coarse:px-3 " +
                   (deliveryFilter === "failed"
                     ? "bg-foreground/[0.08] text-foreground"
                     : "text-muted-foreground hover:text-foreground")
@@ -507,13 +514,17 @@ export function SettingsWebhooksShowcasePage() {
                   <button
                     type="button"
                     onClick={() => setExpandedId(expanded ? null : d.id)}
-                    className="grid w-full grid-cols-[64px_160px_1fr_56px_64px_24px] items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-foreground/[0.03]"
+                    aria-expanded={expanded}
+                    // Below sm: event + status + chevron on line 1, time · endpoint · ms
+                    // on line 2. From sm: the original six-column row, with a
+                    // flexible endpoint column instead of fixed widths.
+                    className="grid w-full grid-cols-[minmax(0,1fr)_auto_16px] items-center gap-x-3 gap-y-0.5 px-4 py-2.5 text-left transition-colors hover:bg-foreground/[0.03] sm:grid-cols-[64px_minmax(0,160px)_minmax(0,1fr)_56px_64px_24px]"
                   >
-                    <span className="text-muted-foreground tabular-nums">
+                    <span className="text-muted-foreground tabular-nums max-sm:hidden">
                       {d.ts}
                     </span>
                     <span className="truncate text-foreground/90">{d.event}</span>
-                    <span className="truncate text-muted-foreground">
+                    <span className="truncate text-muted-foreground max-sm:hidden">
                       {d.endpointShort}
                     </span>
                     <Badge
@@ -523,7 +534,7 @@ export function SettingsWebhooksShowcasePage() {
                     >
                       {d.status}
                     </Badge>
-                    <span className="flex items-center justify-end gap-1 text-muted-foreground tabular-nums">
+                    <span className="flex items-center justify-end gap-1 text-muted-foreground tabular-nums max-sm:hidden">
                       {d.retried ? (
                         <Tooltip>
                           <TooltipTrigger
@@ -542,6 +553,9 @@ export function SettingsWebhooksShowcasePage() {
                         (expanded ? "rotate-180" : "")
                       }
                     />
+                    <span className="col-start-1 truncate text-[11px] text-muted-foreground tabular-nums sm:hidden">
+                      {d.ts} · {d.endpointShort} · {d.ms}ms{d.retried ? " · retried" : ""}
+                    </span>
                   </button>
                   {expanded ? (
                     <div className="border-t bg-foreground/[0.02] px-4 py-3 dark:bg-white/[0.02]">

@@ -123,7 +123,7 @@ export function SettingsSsoShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-5xl px-8 py-12">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Settings · Authentication
         </div>
@@ -149,9 +149,9 @@ export function SettingsSsoShowcasePage() {
 
         {/* Wizard */}
         <div className="mt-10 overflow-hidden rounded-xl border border-border/70 bg-background/40">
-          <div className="flex items-center justify-between border-border/60 border-b px-5 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-border/60 border-b px-4 py-4 sm:px-5">
             <div className="flex items-center gap-3">
-              <div className="flex size-9 items-center justify-center rounded-lg bg-[#007DC1] font-medium text-[13px] text-white">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#007DC1] font-medium text-[13px] text-white">
                 O
               </div>
               <div>
@@ -170,16 +170,19 @@ export function SettingsSsoShowcasePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-[220px_1fr]">
             {/* Step rail */}
-            <ol className="flex flex-col gap-1 border-border/60 px-3 py-5 md:border-r">
+            {/* Below md: a compact horizontal stepper (numbers + current title). */}
+            <ol className="flex gap-1 overflow-x-auto border-border/60 border-b px-3 py-2 md:flex-col md:overflow-visible md:border-r md:border-b-0 md:py-5">
               {STEPS.map((s) => {
                 const isCurrent = s.id === currentStep;
                 const isComplete = s.id < maxReached;
                 return (
-                  <li key={s.id}>
+                  <li key={s.id} className="shrink-0">
                     <button
                       type="button"
                       onClick={() => goTo(s.id)}
-                      className={`flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-left transition-colors ${
+                      aria-current={isCurrent ? "step" : undefined}
+                      aria-label={`Step ${s.id}: ${s.title}`}
+                      className={`flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-left transition-colors pointer-coarse:min-h-11 ${
                         isCurrent
                           ? "bg-foreground/[0.06]"
                           : "hover:bg-foreground/[0.04]"
@@ -200,7 +203,7 @@ export function SettingsSsoShowcasePage() {
                           s.id
                         )}
                       </span>
-                      <span className="min-w-0 flex-1">
+                      <span className={`min-w-0 flex-1 ${isCurrent ? "" : "max-md:hidden"}`}>
                         <span
                           className={`block truncate text-sm ${
                             isCurrent
@@ -210,7 +213,7 @@ export function SettingsSsoShowcasePage() {
                         >
                           {s.title}
                         </span>
-                        <span className="block font-mono text-[9px] text-muted-foreground uppercase tracking-[0.25em]">
+                        <span className="block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] max-md:hidden">
                           {s.hint}
                         </span>
                       </span>
@@ -221,7 +224,7 @@ export function SettingsSsoShowcasePage() {
             </ol>
 
             {/* Step pane */}
-            <div className="px-6 py-6">
+            <div className="min-w-0 px-4 py-5 sm:px-6 sm:py-6">
               {currentStep === 1 ? <ApplicationSetupStep /> : null}
               {currentStep === 2 ? (
                 <AttributeMappingStep
@@ -259,7 +262,7 @@ export function SettingsSsoShowcasePage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-border/60 border-t bg-muted/20 px-5 py-3">
+          <div className="flex items-center justify-between gap-3 border-border/60 border-t bg-muted/20 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5">
             <Button
               type="button"
               variant="ghost"
@@ -269,7 +272,7 @@ export function SettingsSsoShowcasePage() {
               Back
             </Button>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] max-sm:hidden">
                 {currentStep === STEPS.length ? "Final step" : "Continue when ready"}
               </span>
               {currentStep === STEPS.length ? (
@@ -364,11 +367,12 @@ function CopyRow({ label, value }: { label: string; value: string }) {
         {label}
       </div>
       <div className="flex items-center gap-2 rounded-md border border-border/60 bg-background px-3 py-2">
-        <code className="flex-1 truncate font-mono text-xs">{value}</code>
+        {/* Wraps on phones so the whole URL / ID can be checked before pasting. */}
+        <code className="min-w-0 flex-1 break-all font-mono text-xs sm:truncate sm:break-normal">{value}</code>
         <button
           type="button"
           aria-label={`Copy ${label}`}
-          className="grid size-6 place-items-center rounded text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
+          className="grid size-6 shrink-0 place-items-center rounded text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-9"
         >
           <CopyIcon className="size-3.5" />
         </button>
@@ -395,7 +399,7 @@ function AttributeMappingStep({
       />
 
       <div className="mt-6 overflow-hidden rounded-md border border-border/60">
-        <div className="grid grid-cols-[1fr_auto_1fr_auto] items-center gap-3 border-border/60 border-b bg-muted/30 px-4 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+        <div className="hidden grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto] items-center gap-3 border-border/60 border-b bg-muted/30 px-4 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:grid">
           <span>IdP attribute</span>
           <span className="w-4" />
           <span>Orbit field</span>
@@ -405,7 +409,8 @@ function AttributeMappingStep({
           {mappings.map((m, idx) => (
             <li
               key={m.id}
-              className={`grid grid-cols-[1fr_auto_1fr_auto] items-center gap-3 px-4 py-2.5 ${
+              // Below sm: IdP attribute + required on line 1, the field select on line 2.
+              className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 px-4 py-2.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto] ${
                 idx < mappings.length - 1 ? "border-border/60 border-b" : ""
               }`}
             >
@@ -416,12 +421,12 @@ function AttributeMappingStep({
                   </span>
                 )}
               </code>
-              <ChevronRightIcon className="size-3.5 text-muted-foreground" />
+              <ChevronRightIcon className="size-3.5 text-muted-foreground max-sm:hidden" />
               <Select
                 value={m.target}
                 onValueChange={(v: unknown) => onChange(m.id, String(v))}
               >
-                <SelectTrigger size="sm" className="h-8 w-full text-xs">
+                <SelectTrigger size="sm" aria-label={`Orbit field for ${m.source || "new attribute"}`} className="h-8 w-full text-xs max-sm:order-3 max-sm:col-span-2 pointer-coarse:h-10">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectPopup>
@@ -432,9 +437,9 @@ function AttributeMappingStep({
                   ))}
                 </SelectPopup>
               </Select>
-              <div className="w-16 text-right">
+              <div className="text-right max-sm:order-2 max-sm:row-start-1 max-sm:col-start-2 sm:w-16">
                 {m.required ? (
-                  <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-[0.2em]">
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                     Required
                   </span>
                 ) : (

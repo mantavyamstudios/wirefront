@@ -110,7 +110,7 @@ export function SettingsIntegrationsShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-5xl px-8 py-12">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Settings · Integrations
         </div>
@@ -126,16 +126,18 @@ export function SettingsIntegrationsShowcasePage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Find an integration"
-              className="h-9 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              aria-label="Find an integration"
+              className="h-9 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground pointer-coarse:h-11"
             />
           </div>
-          <div className="flex flex-wrap gap-1.5">
+          <div role="group" aria-label="Category" className="flex flex-wrap gap-1.5">
             {FILTERS.map((f) => (
               <button
                 key={f}
                 type="button"
+                aria-pressed={filter === f}
                 onClick={() => setFilter(f)}
-                className={`rounded-md px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] transition-colors ${
+                className={`min-h-7 rounded-md px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors pointer-coarse:min-h-10 ${
                   filter === f
                     ? "bg-foreground text-background"
                     : "border border-border/60 text-muted-foreground hover:text-foreground"
@@ -175,7 +177,7 @@ function IntegrationCard({ integration }: { integration: Integration }) {
           {integration.glyph}
         </div>
         {integration.badge ? (
-          <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+          <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
             {integration.badge}
           </span>
         ) : null}
@@ -185,7 +187,7 @@ function IntegrationCard({ integration }: { integration: Integration }) {
         <div className="flex items-center gap-2">
           <span className="font-medium">{integration.name}</span>
           {integration.connected ? (
-            <span className="inline-flex items-center gap-1 rounded bg-emerald-500/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
+            <span className="inline-flex items-center gap-1 rounded bg-emerald-500/10 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
               <CheckIcon className="size-2.5" />
               On
             </span>
@@ -210,8 +212,8 @@ function IntegrationCard({ integration }: { integration: Integration }) {
         </Button>
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded-md border border-border/60 bg-background/40 p-2 text-muted-foreground transition-colors hover:text-foreground"
-          aria-label="Open docs"
+          className="inline-flex shrink-0 items-center justify-center rounded-md border border-border/60 bg-background/40 p-2 text-muted-foreground transition-colors hover:text-foreground pointer-coarse:size-10"
+          aria-label={`Open ${integration.name} docs`}
         >
           <ExternalLinkIcon className="size-3.5" />
         </button>

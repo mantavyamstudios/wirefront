@@ -197,7 +197,7 @@ export function SettingsDeveloperShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-4xl px-8 py-12">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <header className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
@@ -246,10 +246,9 @@ export function SettingsDeveloperShowcasePage() {
                   {group.flags.map((f) => {
                     const status = STATUS_STYLES[f.status];
                     return (
-                      <li
-                        key={f.key}
-                        className="flex items-center gap-4 px-4 py-3"
-                      >
+                      <li key={f.key}>
+                        {/* Whole row toggles the flag (the switch alone is a ~20px target). */}
+                        <label className="flex cursor-pointer items-center gap-4 px-4 py-3 transition-colors hover:bg-foreground/[0.02]">
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
                             <code className="font-mono text-[12px] text-foreground">
@@ -259,7 +258,7 @@ export function SettingsDeveloperShowcasePage() {
                               variant="outline"
                               size="sm"
                               className={
-                                "font-mono text-[9px] uppercase tracking-[0.18em] " +
+                                "font-mono text-[10px] uppercase tracking-[0.15em] " +
                                 status.className
                               }
                             >
@@ -271,9 +270,12 @@ export function SettingsDeveloperShowcasePage() {
                           </p>
                         </div>
                         <Switch
+                          aria-label={f.key}
+                          className="shrink-0"
                           checked={!!flags[f.key]}
                           onCheckedChange={() => flip(f.key)}
                         />
+                        </label>
                       </li>
                     );
                   })}
@@ -291,7 +293,7 @@ export function SettingsDeveloperShowcasePage() {
             Verbose tooling for engineers. Off by default.
           </p>
 
-          <div className="mt-4 flex items-center gap-4 rounded-xl border border-border/60 bg-background/40 px-4 py-3.5">
+          <label className="mt-4 flex cursor-pointer items-center gap-4 rounded-xl border border-border/60 bg-background/40 px-4 py-3.5">
             <div className="min-w-0 flex-1">
               <div className="font-medium text-sm">Debug mode</div>
               <p className="mt-0.5 text-muted-foreground text-xs">
@@ -299,8 +301,8 @@ export function SettingsDeveloperShowcasePage() {
                 the UI.
               </p>
             </div>
-            <Switch checked={debug} onCheckedChange={setDebug} />
-          </div>
+            <Switch className="shrink-0" checked={debug} onCheckedChange={setDebug} />
+          </label>
 
           {debug ? (
             <div className="mt-3 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-xs/5">
@@ -313,7 +315,7 @@ export function SettingsDeveloperShowcasePage() {
                   {LOG_LINES.length} lines
                 </span>
               </div>
-              <pre className="max-h-72 overflow-y-auto px-3 py-2.5 font-mono text-[11px] leading-relaxed text-zinc-300">
+              <pre className="max-h-72 overflow-auto px-3 py-2.5 font-mono text-[11px] leading-relaxed text-zinc-300">
                 {LOG_LINES.map((line, i) => (
                   <div key={i} className="flex gap-3 whitespace-pre">
                     <span className="text-zinc-600 tabular-nums">{line.ts}</span>

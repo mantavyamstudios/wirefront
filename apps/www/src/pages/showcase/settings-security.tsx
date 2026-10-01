@@ -135,7 +135,7 @@ export function SettingsSecurityShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-3xl px-8 py-12">
+      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Account · Security
         </div>
@@ -146,14 +146,14 @@ export function SettingsSecurityShowcasePage() {
 
         {/* 2FA banner */}
         <section className="mt-8 overflow-hidden rounded-xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.07] to-emerald-500/[0.02]">
-          <div className="flex items-start gap-4 p-5">
+          <div className="flex flex-wrap items-start gap-3 p-4 sm:flex-nowrap sm:gap-4 sm:p-5">
             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
               <ShieldCheckIcon className="size-5" />
             </div>
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 max-sm:basis-[calc(100%-3.25rem)]">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-medium text-sm">Two-factor authentication</span>
-                <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
+                <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
                   <CheckCircle2Icon className="size-2.5" />
                   Enabled
                 </span>
@@ -166,7 +166,7 @@ export function SettingsSecurityShowcasePage() {
                 Last verified 2 hours ago
               </div>
             </div>
-            <Button variant="ghost" size="sm" type="button">
+            <Button variant="ghost" size="sm" type="button" className="max-sm:ms-[3.25rem]">
               Manage
             </Button>
           </div>
@@ -174,7 +174,7 @@ export function SettingsSecurityShowcasePage() {
 
         {/* Passkeys */}
         <section className="mt-3 rounded-xl border border-border/60 bg-background/40">
-          <header className="flex items-start justify-between gap-3 p-5">
+          <header className="flex flex-wrap items-start justify-between gap-3 p-4 sm:p-5">
             <div>
               <h2 className="font-heading text-base">Passkeys</h2>
               <p className="mt-1 text-muted-foreground text-xs">
@@ -191,7 +191,7 @@ export function SettingsSecurityShowcasePage() {
             {PASSKEYS.map((p, i) => (
               <li
                 key={p.id}
-                className={`flex items-center gap-4 px-5 py-3.5 ${
+                className={`flex items-center gap-3 px-4 py-3.5 sm:gap-4 sm:px-5 ${
                   i < PASSKEYS.length - 1 ? "border-b border-border/40" : ""
                 }`}
               >
@@ -209,7 +209,7 @@ export function SettingsSecurityShowcasePage() {
                 </div>
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                  className="inline-flex shrink-0 items-center justify-center rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive pointer-coarse:p-3"
                   aria-label={`Remove ${p.name}`}
                 >
                   <TrashIcon className="size-3.5" />
@@ -221,7 +221,7 @@ export function SettingsSecurityShowcasePage() {
 
         {/* Active sessions */}
         <section className="mt-3 rounded-xl border border-border/60 bg-background/40">
-          <header className="flex items-center justify-between gap-3 p-5">
+          <header className="flex items-center justify-between gap-3 p-4 sm:p-5">
             <div>
               <h2 className="font-heading text-base">Active sessions</h2>
               <p className="mt-1 text-muted-foreground text-xs">
@@ -237,7 +237,7 @@ export function SettingsSecurityShowcasePage() {
             {SESSIONS.map((s) => (
               <li
                 key={s.id}
-                className={`flex items-center gap-4 rounded-lg px-3 py-3 ${
+                className={`flex items-center gap-3 rounded-lg px-3 py-3 sm:gap-4 ${
                   s.current
                     ? "bg-emerald-500/[0.06] ring-1 ring-emerald-500/25"
                     : "transition-colors hover:bg-foreground/[0.03]"
@@ -259,7 +259,7 @@ export function SettingsSecurityShowcasePage() {
                       {s.location}
                     </span>
                     {s.current ? (
-                      <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
+                      <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
                         <CheckCircle2Icon className="size-2.5" />
                         This device
                       </span>
@@ -278,14 +278,14 @@ export function SettingsSecurityShowcasePage() {
                   </span>
                 </div>
                 {s.current ? (
-                  <span className="w-[68px] text-right font-mono text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em]">
+                  <span className="shrink-0 text-right font-mono text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em] sm:w-[68px]">
                     Current
                   </span>
                 ) : (
                   <button
                     type="button"
-                    className="inline-flex w-[68px] items-center justify-center gap-1 rounded-md border border-border/60 bg-background/40 px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:border-destructive/40 hover:text-destructive"
-                    aria-label="Revoke session"
+                    className="inline-flex shrink-0 items-center justify-center gap-1 rounded-md border border-border/60 bg-background/40 px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:border-destructive/40 hover:text-destructive sm:w-[68px] pointer-coarse:min-h-10"
+                    aria-label={`Revoke session in ${s.location}`}
                   >
                     <XIcon className="size-2.5" />
                     Revoke
@@ -295,7 +295,8 @@ export function SettingsSecurityShowcasePage() {
             ))}
           </ul>
           <Separator />
-          <div className="flex items-center justify-between gap-3 p-4">
+          {/* Stacks below sm: the long-label button can't shrink, so it gets its own row. */}
+          <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-muted-foreground text-xs">
               Signs out everything except this device.
             </p>
@@ -303,7 +304,7 @@ export function SettingsSecurityShowcasePage() {
               size="sm"
               variant="outline"
               type="button"
-              className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+              className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive max-sm:w-full"
             >
               <LogOutIcon />
               Sign out of all other sessions
@@ -312,8 +313,8 @@ export function SettingsSecurityShowcasePage() {
         </section>
 
         {/* Recovery codes */}
-        <section className="mt-3 rounded-xl border border-border/60 bg-background/40 p-6">
-          <header className="flex items-start justify-between gap-3">
+        <section className="mt-3 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-6">
+          <header className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
                 <KeyRoundIcon className="size-4 opacity-60" />
@@ -353,12 +354,12 @@ export function SettingsSecurityShowcasePage() {
               {RECOVERY_CODES.map((code, i) => (
                 <li
                   key={code}
-                  className="flex items-center gap-3 rounded-md border border-border/50 bg-background/60 px-3 py-2"
+                  className="flex items-center gap-2 rounded-md border border-border/50 bg-background/60 px-2.5 py-2 sm:gap-3 sm:px-3"
                 >
                   <span className="font-mono text-[10px] text-muted-foreground/60 tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="font-mono text-[13px] tracking-wider">
+                  <span className="font-mono text-[12px] tracking-wide sm:text-[13px] sm:tracking-wider">
                     {code}
                   </span>
                 </li>

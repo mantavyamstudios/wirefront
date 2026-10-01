@@ -167,7 +167,7 @@ export function SettingsLocalizationShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-5xl px-6 py-12 sm:px-10 sm:py-14">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-10 sm:py-14">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Account · Localization
         </div>
@@ -312,6 +312,7 @@ export function SettingsLocalizationShowcasePage() {
                         type="button"
                         key={id}
                         onClick={() => setTimeFormat(id)}
+                        aria-pressed={checked}
                         className={`flex flex-col items-start gap-1 rounded-lg border p-3 text-left transition-colors ${
                           checked
                             ? "border-ring bg-accent/40"

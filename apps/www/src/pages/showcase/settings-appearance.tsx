@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { CheckIcon, MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 
 type Mode = "light" | "dark" | "system";
@@ -73,11 +73,21 @@ const SCHEMES = {
 
 type Scheme = (typeof SCHEMES)[keyof typeof SCHEMES];
 
-function getOsScheme(): "light" | "dark" {
-  if (typeof window === "undefined") return "dark";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+// Reading matchMedia during render made server and client HTML differ.
+// useSyncExternalStore hydrates with the server snapshot, then switches to
+// the real OS scheme and follows changes.
+const DARK_QUERY = "(prefers-color-scheme: dark)";
+function subscribeOsScheme(onChange: () => void) {
+  const mq = window.matchMedia(DARK_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+function useOsScheme(): "light" | "dark" {
+  return useSyncExternalStore(
+    subscribeOsScheme,
+    () => (window.matchMedia(DARK_QUERY).matches ? "dark" : "light"),
+    () => "dark",
+  );
 }
 
 export function SettingsAppearanceShowcasePage() {
@@ -88,7 +98,7 @@ export function SettingsAppearanceShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-6xl px-8 py-12">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Settings · Appearance
         </div>
@@ -276,8 +286,8 @@ function PreviewPane({
   density: Density;
   font: FontId;
 }) {
-  const effectiveMode: "light" | "dark" =
-    mode === "system" ? getOsScheme() : mode;
+  const osScheme = useOsScheme();
+  const effectiveMode: "light" | "dark" = mode === "system" ? osScheme : mode;
   const s = SCHEMES[effectiveMode];
   const accent = PALETTES.find((p) => p.id === palette)!.swatch[0];
   const accentSoft = PALETTES.find((p) => p.id === palette)!.swatch[1];

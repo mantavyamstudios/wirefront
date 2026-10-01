@@ -18,7 +18,7 @@ export function SettingsProfileShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-3xl px-8 py-12 pb-32">
+      <div className="mx-auto max-w-3xl px-4 pt-8 pb-32 sm:px-6 sm:pt-12 lg:px-8">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Account · Profile
         </div>
@@ -28,10 +28,10 @@ export function SettingsProfileShowcasePage() {
         </p>
 
         <Section title="Photo">
-          <div className="flex items-center gap-5">
-            <div className="size-20 shrink-0 rounded-full bg-gradient-to-br from-primary/40 to-primary/10 ring-1 ring-border/60" />
-            <div className="flex flex-1 flex-col gap-2">
-              <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4 sm:gap-5">
+            <div className="size-16 shrink-0 rounded-full sm:size-20 bg-gradient-to-br from-primary/40 to-primary/10 ring-1 ring-border/60" />
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Button size="sm" variant="outline" type="button">
                   <UploadIcon />
                   Upload
@@ -153,9 +153,9 @@ export function SettingsProfileShowcasePage() {
         </Section>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-background/85 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-8 py-3">
-          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-background/85 pb-[env(safe-area-inset-bottom)] backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+          <div role="status" className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">
             {dirty ? "Unsaved changes" : "All saved"}
           </div>
           <div className="flex items-center gap-2">

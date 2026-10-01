@@ -100,7 +100,7 @@ export function SettingsPrivacyShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-3xl px-8 py-12">
+      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Settings · Privacy & data
         </div>
@@ -112,18 +112,18 @@ export function SettingsPrivacyShowcasePage() {
 
         {/* ── Export ── */}
         <section className="mt-8 rounded-xl border border-border/60 bg-background/40">
-          <div className="flex items-start gap-4 p-6">
+          <div className="flex flex-wrap items-start gap-3 p-4 sm:flex-nowrap sm:gap-4 sm:p-6">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06]">
               <FileArchiveIcon className="size-4" />
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1 max-sm:basis-[calc(100%-3rem)]">
               <h2 className="font-heading text-base">Export your data</h2>
               <p className="mt-1 text-muted-foreground text-sm">
                 Bundle everything we hold for you into a single archive. We'll
                 email a download link when it's ready.
               </p>
             </div>
-            <div className="text-right">
+            <div className="max-sm:ms-12 sm:text-right">
               <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 Approx
               </div>
@@ -133,25 +133,28 @@ export function SettingsPrivacyShowcasePage() {
             </div>
           </div>
 
-          <div className="border-t border-border/40 px-6 py-4">
+          <div className="border-t border-border/40 px-4 py-4 sm:px-6">
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
               Include in archive
             </div>
             <ul className="mt-3 flex flex-col gap-1">
               {INCLUDE_OPTIONS.map((opt) => (
                 <li key={opt.key}>
-                  <label className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.03]">
+                  {/* Below sm the hint drops under the label so the label keeps its width. */}
+                  <label className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.03] pointer-coarse:min-h-11">
                     <Checkbox
                       checked={include[opt.key]}
                       onCheckedChange={(v) =>
                         setInclude((s) => ({ ...s, [opt.key]: Boolean(v) }))
                       }
                     />
-                    <span className="flex-1 text-sm">{opt.label}</span>
-                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-                      {opt.hint}
+                    <span className="min-w-0 flex-1 text-sm sm:flex sm:items-center sm:gap-3">
+                      <span className="block sm:flex-1">{opt.label}</span>
+                      <span className="block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:tracking-[0.2em]">
+                        {opt.hint}
+                      </span>
                     </span>
-                    <span className="w-16 text-right font-mono text-xs tabular-nums">
+                    <span className="shrink-0 text-right font-mono text-xs tabular-nums sm:w-16">
                       {opt.size}
                     </span>
                   </label>
@@ -162,7 +165,7 @@ export function SettingsPrivacyShowcasePage() {
 
           <div className="border-t border-border/40 p-4">
             {phase === "idle" ? (
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-muted-foreground text-xs">
                   We'll prepare the archive and email{" "}
                   <span className="font-mono">sean@cal.com</span> when it's
@@ -201,7 +204,7 @@ export function SettingsPrivacyShowcasePage() {
             ) : null}
 
             {phase === "done" ? (
-              <div className="flex items-center justify-between gap-3 rounded-lg bg-emerald-500/[0.08] px-3 py-2">
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-emerald-500/[0.08] px-3 py-2">
                 <div className="flex items-center gap-2">
                   <CheckCircle2Icon className="size-4 text-emerald-700 dark:text-emerald-400" />
                   <div>
@@ -235,7 +238,7 @@ export function SettingsPrivacyShowcasePage() {
 
         {/* ── Retention ── */}
         <section className="mt-3 rounded-xl border border-border/60 bg-background/40">
-          <div className="flex items-start gap-4 p-6">
+          <div className="flex items-start gap-3 p-4 sm:gap-4 sm:p-6">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06]">
               <TimerResetIcon className="size-4" />
             </div>
@@ -248,7 +251,7 @@ export function SettingsPrivacyShowcasePage() {
             </div>
           </div>
 
-          <div className="border-t border-border/40 px-6 py-2">
+          <div className="border-t border-border/40 px-4 py-2 sm:px-6">
             {RETENTION_ROWS.map((row, i) => {
               const stop = retention[row.key];
               const days = RETENTION_STOPS[stop] ?? RETENTION_STOPS[0];
@@ -315,7 +318,7 @@ export function SettingsPrivacyShowcasePage() {
             </span>
           </div>
 
-          <div className="flex items-start gap-4 p-6">
+          <div className="flex items-start gap-3 p-4 sm:gap-4 sm:p-6">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-destructive/10 text-destructive">
               {pending ? (
                 <AlertTriangleIcon className="size-4" />
@@ -355,7 +358,7 @@ function retentionPreview(noun: string, days: number): string {
 function DeleteActive({ onRequest }: { onRequest: () => void }) {
   return (
     <>
-      <div className="border-t border-destructive/20 px-6 py-4">
+      <div className="border-t border-destructive/20 px-4 py-4 sm:px-6">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           What happens
         </div>
@@ -377,7 +380,7 @@ function DeleteActive({ onRequest }: { onRequest: () => void }) {
           />
         </ul>
       </div>
-      <div className="flex items-center justify-between border-t border-destructive/20 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-destructive/20 p-4">
         <p className="text-muted-foreground text-xs">
           You'll receive a confirmation email before anything is touched.
         </p>
@@ -405,7 +408,7 @@ function DeletePending({ onCancel }: { onCancel: () => void }) {
 
   return (
     <div className="border-t border-destructive/20">
-      <div className="flex items-center gap-6 p-6">
+      <div className="flex items-center gap-4 p-4 sm:gap-6 sm:p-6">
         <div className="relative flex size-24 shrink-0 items-center justify-center">
           <svg
             viewBox="0 0 100 100"
@@ -454,7 +457,7 @@ function DeletePending({ onCancel }: { onCancel: () => void }) {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-between border-t border-destructive/20 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-destructive/20 p-4">
         <p className="text-muted-foreground text-xs">
           Cancelling restores your account to its current state immediately.
         </p>
@@ -488,13 +491,17 @@ function DeleteRow({
         ? "30 days"
         : "90 days";
   return (
-    <li className="flex items-center gap-3">
-      <span className={`size-1.5 shrink-0 rounded-full ${dot}`} />
-      <span className="flex-1">{label}</span>
-      <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+    // Below sm the explanation moves under the label instead of a fixed 11rem column.
+    <li className="flex items-start gap-3 sm:items-center">
+      <span className={`mt-1.5 size-1.5 shrink-0 rounded-full sm:mt-0 ${dot}`} />
+      <span className="min-w-0 flex-1">
+        {label}
+        <span className="mt-0.5 block text-muted-foreground text-xs sm:hidden">{sub}</span>
+      </span>
+      <span className="shrink-0 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
         {tag}
       </span>
-      <span className="w-44 text-right text-muted-foreground text-xs">
+      <span className="w-44 text-right text-muted-foreground text-xs max-sm:hidden">
         {sub}
       </span>
     </li>

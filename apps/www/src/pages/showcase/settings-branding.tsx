@@ -83,7 +83,7 @@ export function SettingsBrandingShowcasePage() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto max-w-4xl px-8 py-12">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Settings · Branding
         </div>
@@ -137,11 +137,11 @@ export function SettingsBrandingShowcasePage() {
                       style={{ background: colors[s.key] }}
                     />
                     <span className="font-medium text-xs">{s.label}</span>
-                    <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-[0.2em]">
+                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                       {colors[s.key]}
                     </span>
                   </PopoverTrigger>
-                  <PopoverContent className="w-60 p-3">
+                  <PopoverContent className="w-[min(15rem,calc(100vw-2rem))] p-3">
                     <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                       {s.label} · {s.hint}
                     </div>
@@ -163,7 +163,7 @@ export function SettingsBrandingShowcasePage() {
                         className="font-mono text-xs"
                       />
                     </div>
-                    <div className="mt-3 font-mono text-[9px] text-muted-foreground uppercase tracking-[0.2em]">
+                    <div className="mt-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                       Presets
                     </div>
                     <div className="mt-1.5 grid grid-cols-6 gap-1.5">
@@ -175,7 +175,7 @@ export function SettingsBrandingShowcasePage() {
                           onClick={() =>
                             setColors((c) => ({ ...c, [s.key]: p }))
                           }
-                          className={`size-7 rounded-md ring-1 ring-border/60 transition-transform hover:scale-110 ${
+                          className={`aspect-square w-full rounded-md ring-1 ring-border/60 transition-transform hover:scale-110 ${
                             colors[s.key].toLowerCase() === p.toLowerCase()
                               ? "ring-2 ring-foreground"
                               : ""
@@ -418,7 +418,7 @@ function LogoZone({ variant }: { variant: "light" | "dark" }) {
             {isLight ? "Light mode logo" : "Dark mode logo"}
           </span>
         </div>
-        <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-[0.25em]">
+        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           {isLight ? "Light" : "Dark"}
         </span>
       </div>
@@ -431,7 +431,7 @@ function LogoZone({ variant }: { variant: "light" | "dark" }) {
       >
         <BrandWordmark color={isLight ? "#0a0a0a" : "#fafafa"} />
         <div
-          className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1.5 border-t py-1.5 font-mono text-[9px] uppercase tracking-[0.25em]"
+          className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1.5 border-t py-1.5 font-mono text-[10px] uppercase tracking-[0.25em]"
           style={{
             background: isLight ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.4)",
             borderColor: isLight ? "#e4e4e7" : "#27272a",
@@ -439,10 +439,11 @@ function LogoZone({ variant }: { variant: "light" | "dark" }) {
           }}
         >
           <UploadCloudIcon className="size-3" />
-          Drop or click to replace
+          <span className="pointer-coarse:hidden">Drop or click to replace</span>
+          <span className="hidden pointer-coarse:inline">Tap to replace</span>
         </div>
       </div>
-      <div className="flex items-center justify-between gap-2 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3">
         <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           orbit-{variant}.svg · 4.2 KB
         </span>
@@ -561,7 +562,7 @@ function PalettePreview({ colors }: { colors: Record<SwatchKey, string> }) {
               12,408
             </span>
             <span
-              className="rounded px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]"
+              className="rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em]"
               style={{
                 background: "color-mix(in srgb, var(--p-accent) 20%, transparent)",
                 color: "var(--p-accent)",
