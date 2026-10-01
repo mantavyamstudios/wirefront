@@ -9,9 +9,9 @@ import {
 export function EmptyNoTeamShowcasePage() {
   const inviteUrl = "https://orbit.so/invite/8f3a2c";
   return (
-    <div className="relative min-h-svh overflow-hidden bg-background">
+    <div className="relative min-h-svh overflow-x-clip bg-background">
       <Backdrop />
-      <div className="relative mx-auto flex min-h-svh max-w-xl flex-col items-center justify-center px-6 text-center">
+      <div className="relative mx-auto flex min-h-svh max-w-xl flex-col items-center justify-center-safe px-4 py-10 text-center sm:px-6">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.4em]">
           Members · 1
         </div>
@@ -29,11 +29,11 @@ export function EmptyNoTeamShowcasePage() {
         <div className="mt-8 w-full max-w-md space-y-3">
           <InputGroup>
             <InputGroupAddon align="inline-start">
-              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] max-[400px]:sr-only">
                 Invite link
               </span>
             </InputGroupAddon>
-            <InputGroupInput readOnly value={inviteUrl} nativeInput />
+            <InputGroupInput readOnly value={inviteUrl} aria-label="Invite link" className="min-w-0 truncate" nativeInput />
             <InputGroupAddon align="inline-end">
               <Button size="xs" variant="ghost" type="button">
                 <CopyIcon />

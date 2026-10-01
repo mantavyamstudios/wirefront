@@ -23,7 +23,7 @@ export function EmptyNoResultsShowcasePage() {
   const [filters, setFilters] = useState<string[]>(INITIAL_FILTERS);
 
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         <InputGroup>
           <InputGroupAddon align="inline-start">
@@ -51,7 +51,7 @@ export function EmptyNoResultsShowcasePage() {
                 {f}
                 <button
                   type="button"
-                  className="-mr-0.5 rounded-sm opacity-60 hover:opacity-100"
+                  className="-my-1 -mr-1.5 flex size-6 items-center justify-center rounded-sm opacity-60 hover:opacity-100 pointer-coarse:size-8"
                   onClick={() =>
                     setFilters((prev) => prev.filter((x) => x !== f))
                   }

@@ -5,7 +5,7 @@ export function Empty404ShowcasePage() {
   return (
     <div className="relative min-h-svh overflow-hidden bg-background">
       <Grid />
-      <div className="relative mx-auto flex min-h-svh max-w-3xl flex-col items-center justify-center px-6 text-center">
+      <div className="relative mx-auto flex min-h-svh max-w-3xl flex-col items-center justify-center-safe px-6 py-10 text-center">
         <div className="mb-6 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.4em]">
           Status · 404
         </div>
@@ -20,7 +20,7 @@ export function Empty404ShowcasePage() {
           head back to somewhere you know.
         </p>
 
-        <div className="mt-8 flex items-center gap-2">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
           <Button variant="outline" size="default">
             <ArrowLeftIcon />
             Go back

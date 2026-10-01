@@ -22,7 +22,7 @@ export function EmptyMaintenanceShowcasePage() {
   const progress = ((TOTAL_SECONDS - remaining) / TOTAL_SECONDS) * 100;
 
   return (
-    <div className="min-h-svh bg-background px-6 py-16">
+    <div className="min-h-svh bg-background px-4 py-10 sm:px-6 sm:py-16">
       <div className="mx-auto flex max-w-xl flex-col items-center text-center">
         <Badge
           variant="outline"
@@ -30,7 +30,7 @@ export function EmptyMaintenanceShowcasePage() {
         >
           <span className="relative inline-flex">
             <span className="size-2 rounded-full bg-amber-500" />
-            <span className="absolute inset-0 size-2 animate-ping rounded-full bg-amber-500/60" />
+            <span className="absolute inset-0 size-2 rounded-full bg-amber-500/60 motion-safe:animate-ping" />
           </span>
           Scheduled maintenance
         </Badge>
@@ -55,10 +55,11 @@ export function EmptyMaintenanceShowcasePage() {
               {seconds.toString().padStart(2, "0")}
             </span>
           </div>
-          <Progress value={progress} className="mt-2" />
+          <Progress value={progress} aria-label="Maintenance progress" className="mt-2" />
         </div>
 
-        <div className="mt-8 flex items-center gap-2">
+        {/* Wraps (and centres) instead of overflowing both edges on phones. */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
           <Button variant="outline" size="sm">
             Subscribe to updates
           </Button>

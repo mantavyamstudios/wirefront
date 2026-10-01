@@ -14,9 +14,9 @@ export function EmptyNoFilesShowcasePage() {
   };
 
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-3xl">
-        <header className="mb-6 flex items-end justify-between">
+        <header className="mb-6 flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
           <div>
             <h1 className="font-heading text-xl">Files</h1>
             <p className="text-muted-foreground text-sm">
@@ -49,7 +49,15 @@ export function EmptyNoFilesShowcasePage() {
           <div className="flex flex-col items-center text-center">
             <PreviewStack />
             <h2 className="mt-6 font-heading font-semibold text-xl">
-              {filename ? "Ready to upload" : "Drop files to upload"}
+              {filename ? (
+                "Ready to upload"
+              ) : (
+                <>
+                  {/* Drag-and-drop and ⌘V only exist with a mouse/keyboard. */}
+                  <span className="pointer-coarse:hidden">Drop files to upload</span>
+                  <span className="hidden pointer-coarse:inline">Upload files</span>
+                </>
+              )}
             </h2>
             <p className="mt-1 max-w-sm text-balance text-muted-foreground text-sm">
               {filename ? (
@@ -59,8 +67,10 @@ export function EmptyNoFilesShowcasePage() {
                 </>
               ) : (
                 <>
-                  PNG, JPG, PDF up to 25 MB. Or paste from clipboard with{" "}
-                  <Kbd>⌘V</Kbd>.
+                  PNG, JPG, PDF up to 25 MB.
+                  <span className="pointer-coarse:hidden">
+                    {" "}Or paste from clipboard with <Kbd>⌘V</Kbd>.
+                  </span>
                 </>
               )}
             </p>

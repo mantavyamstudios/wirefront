@@ -12,11 +12,11 @@ import {
 export function EmptyTrashShowcasePage() {
   return (
     <div className="min-h-svh bg-background">
-      <div className="mx-auto max-w-3xl px-6 py-10">
+      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
         <Breadcrumb />
         <div className="mt-6 rounded-2xl border border-border/70 bg-background">
-          <div className="flex items-center justify-between border-border/60 border-b px-5 py-3">
-            <div>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-border/60 border-b px-4 py-3 sm:px-5">
+            <div className="min-w-0">
               <h1 className="font-heading text-base">Trash</h1>
               <p className="text-muted-foreground text-xs">
                 Items here are permanently removed after 30 days.

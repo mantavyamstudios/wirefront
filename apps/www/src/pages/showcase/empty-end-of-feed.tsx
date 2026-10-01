@@ -10,8 +10,8 @@ const FEED = [
 export function EmptyEndOfFeedShowcasePage() {
   return (
     <div className="min-h-svh bg-background">
-      <div className="mx-auto max-w-2xl px-6 py-12">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
           <h1 className="font-heading text-xl">Activity</h1>
           <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Today · 3 events

@@ -26,9 +26,9 @@ export function EmptyOfflineShowcasePage() {
   };
 
   return (
-    <div className="relative min-h-svh overflow-hidden bg-background">
+    <div className="relative min-h-svh overflow-x-clip bg-background">
       <Pulse />
-      <div className="relative mx-auto flex min-h-svh max-w-md flex-col items-center justify-center px-6 text-center">
+      <div className="relative mx-auto flex min-h-svh max-w-md flex-col items-center justify-center-safe px-6 py-10 text-center">
         <div className="relative flex size-16 items-center justify-center rounded-2xl border border-border bg-card text-foreground shadow-xs/5">
           <WifiOffIcon className="size-7" />
           <span className="-bottom-1 absolute right-2 size-3 rounded-full border-2 border-background bg-destructive" />
@@ -55,7 +55,7 @@ export function EmptyOfflineShowcasePage() {
           Try again
         </Button>
 
-        <div className="mt-6 h-8 overflow-hidden">
+        <div aria-live="polite" className="mt-6 min-h-8">
           <p className="font-mono text-[11px] text-muted-foreground" key={tipIndex}>
             {TIPS[tipIndex]}
           </p>
@@ -67,9 +67,9 @@ export function EmptyOfflineShowcasePage() {
 
 function Pulse() {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0">
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <div
-        className="absolute top-1/2 left-1/2 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full"
+        className="absolute top-1/2 left-1/2 size-[min(60vmin,90vw)] -translate-x-1/2 -translate-y-1/2 rounded-full motion-safe:animate-ping"
         style={{
           background:
             "radial-gradient(closest-side, color-mix(in srgb, var(--destructive) 8%, transparent), transparent 70%)",
