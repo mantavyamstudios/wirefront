@@ -100,28 +100,28 @@ const outflow = TXS.filter((t) => t.direction === "out" && t.status === "succeed
 
 export function TableTransactionsShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-6xl">
         <header className="mb-4 flex items-end justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <h1 className="font-heading text-xl">Transactions</h1>
             <p className="text-muted-foreground text-sm">
               Mercury · Operating account · last 7 days
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="ghost">
+          <div className="flex shrink-0 items-center gap-2">
+            <Button size="sm" variant="ghost" aria-label="Refresh" className="pointer-coarse:h-10">
               <RefreshCcwIcon />
-              Refresh
+              <span className="max-sm:sr-only">Refresh</span>
             </Button>
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="outline" aria-label="Export CSV" className="pointer-coarse:h-10">
               <ArrowDownToLineIcon />
               CSV
             </Button>
           </div>
         </header>
 
-        <div className="mb-4 grid grid-cols-3 gap-3">
+        <div className="mb-4 grid grid-cols-1 gap-2 min-[480px]:grid-cols-3 sm:gap-3">
           <SummaryTile label="Inflow" amount={inflow} tone="positive" />
           <SummaryTile label="Outflow" amount={outflow} tone="negative" />
           <SummaryTile label="Net" amount={inflow - outflow} tone="neutral" />
@@ -130,17 +130,17 @@ export function TableTransactionsShowcasePage() {
         <div className="rounded-xl border bg-card shadow-xs/5">
           {/* Toolbar */}
           <div className="flex flex-wrap items-center gap-2 border-b p-3">
-            <InputGroup className="w-64">
+            <InputGroup className="w-full sm:w-64">
               <InputGroupAddon>
                 <SearchIcon className="size-4 text-muted-foreground" />
               </InputGroupAddon>
               <InputGroupInput placeholder="Search description, ID, counterparty…" />
             </InputGroup>
 
-            <Separator orientation="vertical" className="mx-1 h-6" />
+            <Separator orientation="vertical" className="mx-1 h-6 max-sm:hidden" />
 
             <Select items={ACCOUNTS} defaultValue="op">
-              <SelectTrigger className="w-36" size="sm">
+              <SelectTrigger className="w-36 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectPopup>
@@ -153,7 +153,7 @@ export function TableTransactionsShowcasePage() {
             </Select>
 
             <Select items={DIRECTIONS} defaultValue="all">
-              <SelectTrigger className="w-32" size="sm">
+              <SelectTrigger className="w-32 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectPopup>
@@ -166,7 +166,7 @@ export function TableTransactionsShowcasePage() {
             </Select>
 
             <Select items={RANGES} defaultValue="7d">
-              <SelectTrigger className="w-40" size="sm">
+              <SelectTrigger className="w-40 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
                 <CalendarIcon className="text-muted-foreground" />
                 <SelectValue />
               </SelectTrigger>
@@ -184,22 +184,27 @@ export function TableTransactionsShowcasePage() {
             </span>
           </div>
 
+          {/*
+            Priority columns: phones see Description (date, counterparty and
+            status folded in) and Amount; Date and Status return at sm,
+            Counterparty at lg, Method at xl.
+          */}
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="ps-4">Date</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Counterparty</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead className="ps-4 max-sm:hidden">Date</TableHead>
+                <TableHead className="max-sm:ps-4">Description</TableHead>
+                <TableHead className="max-lg:hidden">Counterparty</TableHead>
+                <TableHead className="max-xl:hidden">Method</TableHead>
+                <TableHead className="max-sm:hidden">Status</TableHead>
                 <TableHead className="pe-4 text-right">Amount</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {TXS.map((t) => (
                 <TableRow key={t.id}>
-                  <TableCell className="ps-4 text-muted-foreground tabular-nums">{t.date}</TableCell>
-                  <TableCell>
+                  <TableCell className="ps-4 text-muted-foreground tabular-nums max-sm:hidden">{t.date}</TableCell>
+                  <TableCell className="w-full max-w-0 max-sm:ps-4 sm:w-auto sm:max-w-none">
                     <div className="flex items-center gap-2">
                       <div
                         className={
@@ -216,19 +221,23 @@ export function TableTransactionsShowcasePage() {
                           <ArrowUpRightIcon className="size-3.5" />
                         )}
                       </div>
-                      <div>
-                        <div className="font-medium">{t.description}</div>
-                        <div className="font-mono text-muted-foreground text-xs">{t.id}</div>
+                      <div className="min-w-0">
+                        <div className="truncate font-medium">{t.description}</div>
+                        <div className="truncate font-mono text-muted-foreground text-xs">
+                          <span className="sm:hidden">{t.date} · </span>
+                          {t.id}
+                        </div>
+                        <div className="truncate text-muted-foreground text-xs lg:hidden">{t.counterparty}</div>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{t.counterparty}</TableCell>
-                  <TableCell>
+                  <TableCell className="text-muted-foreground max-lg:hidden">{t.counterparty}</TableCell>
+                  <TableCell className="max-xl:hidden">
                     <Badge variant="outline" size="sm" className="font-mono text-[10px]">
                       {METHOD_LABEL[t.method]}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="max-sm:hidden">
                     <Badge variant="outline" className={"capitalize " + STATUS_TONE[t.status]}>
                       {t.status}
                     </Badge>
@@ -251,6 +260,11 @@ export function TableTransactionsShowcasePage() {
                         fee ${t.fee.toFixed(2)}
                       </div>
                     ) : null}
+                    {t.status !== "succeeded" ? (
+                      <Badge variant="outline" size="sm" className={"mt-1 capitalize sm:hidden " + STATUS_TONE[t.status]}>
+                        {t.status}
+                      </Badge>
+                    ) : null}
                   </TableCell>
                 </TableRow>
               ))}
@@ -258,7 +272,7 @@ export function TableTransactionsShowcasePage() {
           </Table>
 
           {/* Footer pagination */}
-          <div className="flex items-center justify-between border-t p-3">
+          <div className="flex flex-col items-center gap-2 border-t p-3 sm:flex-row sm:justify-between">
             <span className="text-muted-foreground text-xs">
               Showing <span className="text-foreground tabular-nums">1–8</span> of 412
             </span>
@@ -305,11 +319,11 @@ function SummaryTile({
         ? "text-foreground"
         : "text-foreground";
   return (
-    <div className="rounded-xl border bg-card p-4 shadow-xs/5">
+    <div className="flex items-baseline justify-between gap-2 rounded-xl border bg-card px-4 py-3 shadow-xs/5 min-[480px]:block min-[480px]:p-4">
       <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
         {label}
       </div>
-      <div className={"mt-1.5 font-heading font-semibold text-2xl tabular-nums " + cls}>
+      <div className={"font-heading font-semibold text-xl tabular-nums min-[480px]:mt-1.5 lg:text-2xl " + cls}>
         {sign}${Math.abs(amount).toLocaleString()}
       </div>
     </div>

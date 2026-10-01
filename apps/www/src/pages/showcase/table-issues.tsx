@@ -80,32 +80,32 @@ const ISSUES: Issue[] = [
 
 export function TableIssuesShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-6xl">
-        <header className="mb-4 flex items-end justify-between gap-4">
+        <header className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <h1 className="font-heading text-xl">Issues</h1>
             <p className="text-muted-foreground text-sm">
               ENG · Cycle 14 · 7 visible of 218
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="outline">Group: None</Button>
-            <Button size="sm">+ New issue</Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button size="sm" variant="outline" className="pointer-coarse:h-10">Group: None</Button>
+            <Button size="sm" className="pointer-coarse:h-10">+ New issue</Button>
           </div>
         </header>
 
         <div className="rounded-xl border bg-card shadow-xs/5">
           {/* Filter bar */}
           <div className="flex flex-wrap items-center gap-2 border-b p-3">
-            <InputGroup className="w-64">
+            <InputGroup className="w-full sm:w-64">
               <InputGroupAddon>
                 <SearchIcon className="size-4 text-muted-foreground" />
               </InputGroupAddon>
-              <InputGroupInput placeholder="Search issues…" />
+              <InputGroupInput placeholder="Search issues…" aria-label="Search issues" />
             </InputGroup>
 
-            <Separator orientation="vertical" className="mx-1 h-6" />
+            <Separator orientation="vertical" className="mx-1 h-6 max-sm:hidden" />
 
             <FacetButton label="Status" count={2} chips={["Todo", "In Progress"]}>
               <FacetSearch />
@@ -204,18 +204,25 @@ export function TableIssuesShowcasePage() {
             </span>
           </div>
 
+          {/*
+            Priority columns: phones see select, Title (status, ID, labels and
+            priority folded in) and Assignee; Priority returns at sm, ID and
+            Updated at md, Estimate at lg.
+          */}
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="ps-4 w-px">
                   <Checkbox aria-label="Select all" />
                 </TableHead>
-                <TableHead className="w-24">ID</TableHead>
+                <TableHead className="w-24 max-md:hidden">ID</TableHead>
                 <TableHead>Title</TableHead>
-                <TableHead className="w-32">Priority</TableHead>
-                <TableHead className="w-24">Estimate</TableHead>
-                <TableHead className="w-24">Assignee</TableHead>
-                <TableHead className="pe-4 w-28 text-right">Updated</TableHead>
+                <TableHead className="w-32 max-sm:hidden">Priority</TableHead>
+                <TableHead className="w-24 max-lg:hidden">Estimate</TableHead>
+                <TableHead className="w-24 max-sm:w-px max-sm:pe-4">
+                  <span className="max-sm:sr-only">Assignee</span>
+                </TableHead>
+                <TableHead className="pe-4 w-28 text-right max-md:hidden">Updated</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -225,17 +232,30 @@ export function TableIssuesShowcasePage() {
                 return (
                   <TableRow key={issue.id}>
                     <TableCell className="ps-4">
-                      <Checkbox aria-label={`Select ${issue.id}`} />
+                      <label className="-m-2.5 flex cursor-pointer p-2.5 pointer-coarse:-m-3.5 pointer-coarse:p-3.5">
+                        <Checkbox aria-label={`Select ${issue.id}`} />
+                      </label>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="max-md:hidden">
                       <span className="inline-flex items-center gap-2 font-mono text-muted-foreground text-xs">
                         <Icon className={"size-3.5 " + m.cls} />
                         {issue.id}
                       </span>
                     </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <span className="truncate font-medium">{issue.title}</span>
+                    <TableCell className="w-full max-w-0 max-md:whitespace-normal">
+                      <div className="mb-0.5 flex items-center gap-2 font-mono text-muted-foreground text-xs md:hidden">
+                        <Icon className={"size-3.5 " + m.cls} />
+                        {issue.id}
+                        <Badge
+                          variant="outline"
+                          size="sm"
+                          className={"font-mono text-[10px] sm:hidden " + PRIORITY_META[issue.priority].cls}
+                        >
+                          {PRIORITY_META[issue.priority].label}
+                        </Badge>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 md:flex-nowrap">
+                        <span className="line-clamp-2 font-medium md:truncate">{issue.title}</span>
                         {issue.labels.map((lbl) => (
                           <Badge
                             key={lbl}
@@ -248,7 +268,7 @@ export function TableIssuesShowcasePage() {
                         ))}
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="max-sm:hidden">
                       <Badge
                         variant="outline"
                         size="sm"
@@ -257,7 +277,7 @@ export function TableIssuesShowcasePage() {
                         {PRIORITY_META[issue.priority].label}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="max-lg:hidden">
                       {issue.estimate ? (
                         <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted font-mono text-[10px] tabular-nums">
                           {issue.estimate}
@@ -266,7 +286,7 @@ export function TableIssuesShowcasePage() {
                         <span className="text-muted-foreground/60">—</span>
                       )}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="max-sm:pe-4">
                       {issue.assignee ? (
                         <Avatar className={"size-6 " + issue.assignee.tone}>
                           <AvatarFallback className="bg-transparent font-medium text-[10px]">
@@ -280,7 +300,7 @@ export function TableIssuesShowcasePage() {
                         />
                       )}
                     </TableCell>
-                    <TableCell className="pe-4 text-right text-muted-foreground text-xs tabular-nums">
+                    <TableCell className="pe-4 text-right text-muted-foreground text-xs tabular-nums max-md:hidden">
                       {issue.updated}
                     </TableCell>
                   </TableRow>

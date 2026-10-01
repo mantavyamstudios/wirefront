@@ -65,9 +65,9 @@ const ACTIVE_CHIPS: Chip[] = [
 
 export function TableAuditLogShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-6xl">
-        <header className="mb-4 flex items-end justify-between gap-4">
+        <header className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <h1 className="flex items-center gap-2 font-heading text-xl">
               <ShieldIcon className="size-5 text-muted-foreground" />
@@ -77,18 +77,19 @@ export function TableAuditLogShowcasePage() {
               Security events · last 24h · 7 of 1,284
             </p>
           </div>
-          <Button size="sm" variant="outline">Export to SIEM</Button>
+          <Button size="sm" variant="outline" className="self-start sm:self-auto pointer-coarse:h-10">Export to SIEM</Button>
         </header>
 
         <div className="rounded-xl border bg-card shadow-xs/5">
           {/* Active filter chips bar */}
           <div className="flex flex-col gap-2 border-b p-3">
-            <div className="flex items-center gap-2">
+            {/* Label + clear sit on their own row below sm; chips wrap under. */}
+            <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
               <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
                 Filters
               </span>
-              <Separator orientation="vertical" className="h-4" />
-              <div className="flex flex-1 flex-wrap items-center gap-1.5">
+              <Separator orientation="vertical" className="h-4 max-sm:hidden" />
+              <div className="order-last flex w-full min-w-0 flex-wrap items-center gap-1.5 sm:order-none sm:w-auto sm:flex-1">
                 {ACTIVE_CHIPS.map((c, i) => (
                   <Chip key={`${c.field}-${i}`} chip={c} />
                 ))}
@@ -97,21 +98,29 @@ export function TableAuditLogShowcasePage() {
                   Add
                 </Button>
               </div>
-              <Button size="xs" variant="ghost" className="text-muted-foreground">
+              <Button size="xs" variant="ghost" className="ms-auto text-muted-foreground sm:ms-0 pointer-coarse:h-9">
                 <XIcon />
                 Clear all
               </Button>
             </div>
           </div>
 
+          {/*
+            Priority columns: phones see Event (actor, action, time folded in)
+            and Outcome; Time and Action return at sm, Resource at lg,
+            IP / Location at xl.
+          */}
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="ps-4 w-28">Time</TableHead>
-                <TableHead>Actor</TableHead>
-                <TableHead>Action</TableHead>
-                <TableHead>Resource</TableHead>
-                <TableHead>IP / Location</TableHead>
+                <TableHead className="ps-4 w-28 max-sm:hidden">Time</TableHead>
+                <TableHead className="max-sm:ps-4">
+                  <span className="sm:hidden">Event</span>
+                  <span className="max-sm:hidden">Actor</span>
+                </TableHead>
+                <TableHead className="max-sm:hidden">Action</TableHead>
+                <TableHead className="max-lg:hidden">Resource</TableHead>
+                <TableHead className="max-xl:hidden">IP / Location</TableHead>
                 <TableHead className="pe-4">Outcome</TableHead>
               </TableRow>
             </TableHeader>
@@ -127,24 +136,29 @@ export function TableAuditLogShowcasePage() {
                         : undefined
                     }
                   >
-                    <TableCell className="ps-4 font-mono text-muted-foreground text-xs tabular-nums">
+                    <TableCell className="ps-4 font-mono text-muted-foreground text-xs tabular-nums max-sm:hidden">
                       {e.ts}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="w-full max-w-0 max-sm:ps-4 sm:w-auto sm:max-w-none">
                       <div className="flex items-center gap-2">
                         <Avatar className={"size-6 " + e.actor.tone}>
                           <AvatarFallback className="bg-transparent font-medium text-[10px]">
                             {e.actor.initials}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm">{e.actor.name}</span>
+                        <span className="truncate text-sm">{e.actor.name}</span>
+                      </div>
+                      <div className="mt-1 truncate font-mono text-xs sm:hidden">{e.action}</div>
+                      <div className="truncate font-mono text-[11px] text-muted-foreground lg:hidden">
+                        <span className="sm:hidden">{e.ts} · </span>
+                        {e.resource}
                       </div>
                     </TableCell>
-                    <TableCell className="font-mono text-xs">{e.action}</TableCell>
-                    <TableCell className="font-mono text-muted-foreground text-xs">
+                    <TableCell className="font-mono text-xs max-sm:hidden">{e.action}</TableCell>
+                    <TableCell className="font-mono text-muted-foreground text-xs max-lg:hidden">
                       {e.resource}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="max-xl:hidden">
                       <div className="font-mono text-xs">{e.ip}</div>
                       <div className="text-muted-foreground text-xs">{e.location}</div>
                     </TableCell>
@@ -161,7 +175,7 @@ export function TableAuditLogShowcasePage() {
           </Table>
           <div className="flex items-center justify-between border-t p-3 text-muted-foreground text-xs">
             <span>5 filters · auto-refresh every 30s</span>
-            <Button size="xs" variant="ghost">Load older →</Button>
+            <Button size="xs" variant="ghost" className="pointer-coarse:h-9">Load older →</Button>
           </div>
         </div>
       </div>
@@ -183,12 +197,13 @@ function Chip({ chip }: { chip: Chip }) {
         ? "text-destructive"
         : "text-muted-foreground";
   return (
-    <div className={"inline-flex items-center divide-x divide-border overflow-hidden rounded-md border text-xs " + tone}>
+    <div className={"inline-flex max-w-full items-center divide-x divide-border overflow-hidden rounded-md border text-xs " + tone}>
       <span className="px-2 py-1 font-medium">{chip.field}</span>
       <span className={"px-2 py-1 font-mono text-[11px] " + opTone}>{chip.op}</span>
       <button
         type="button"
-        className="flex items-center gap-1 px-2 py-1 hover:bg-accent/60"
+        aria-label={`Edit ${chip.field} filter value: ${chip.value}`}
+        className="flex min-h-6 items-center gap-1 px-2 py-1 hover:bg-accent/60 pointer-coarse:min-h-9"
       >
         <span className="font-medium">{chip.value}</span>
         <ChevronDownIcon className="size-3 opacity-60" />
@@ -196,7 +211,7 @@ function Chip({ chip }: { chip: Chip }) {
       <button
         type="button"
         aria-label={`Remove ${chip.field} filter`}
-        className="flex items-center px-1.5 py-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+        className="flex min-h-6 min-w-6 items-center justify-center px-1.5 py-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive pointer-coarse:min-h-9 pointer-coarse:min-w-9"
       >
         <XIcon className="size-3" />
       </button>

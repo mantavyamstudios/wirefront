@@ -39,9 +39,9 @@ function stockTone(p: Product): { label: string; cls: string; barCls: string } {
 
 export function TableInventoryShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
-        <header className="mb-6 flex items-end justify-between gap-4">
+        <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <h1 className="flex items-center gap-2 font-heading text-xl">
               <ShoppingBagIcon className="size-5 text-muted-foreground" />
@@ -51,26 +51,31 @@ export function TableInventoryShowcasePage() {
               6 of 124 products · Field & Range
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="outline">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button size="sm" variant="outline" className="pointer-coarse:h-10">
               <ArrowUpDownIcon />
-              Sort: Stock low → high
+              <span className="sm:hidden">Stock low → high</span>
+              <span className="max-sm:hidden">Sort: Stock low → high</span>
             </Button>
-            <Button size="sm">
+            <Button size="sm" className="pointer-coarse:h-10">
               <PlusIcon />
               Product
             </Button>
           </div>
         </header>
 
+        {/*
+          Priority columns: phones see Product (stock folded in) + Price; Stock
+          returns at sm, SKU at md, Category at lg.
+        */}
         <div className="rounded-xl border bg-card shadow-xs/5">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="ps-4">Product</TableHead>
-                <TableHead>SKU</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="w-[260px]">Stock</TableHead>
+                <TableHead className="max-md:hidden">SKU</TableHead>
+                <TableHead className="max-lg:hidden">Category</TableHead>
+                <TableHead className="max-sm:hidden">Stock</TableHead>
                 <TableHead className="pe-4 text-right">Price</TableHead>
               </TableRow>
             </TableHeader>
@@ -80,7 +85,7 @@ export function TableInventoryShowcasePage() {
                 const pct = Math.min(100, Math.round((p.stock / p.capacity) * 100));
                 return (
                   <TableRow key={p.sku}>
-                    <TableCell className="ps-4">
+                    <TableCell className="w-full max-w-0 ps-4 sm:w-auto sm:max-w-none">
                       <div className="flex items-center gap-3">
                         <div
                           className={
@@ -91,30 +96,19 @@ export function TableInventoryShowcasePage() {
                         >
                           {p.thumb}
                         </div>
-                        <div>
-                          <div className="font-medium">{p.name}</div>
-                          <div className="text-muted-foreground text-xs">{p.variant}</div>
+                        <div className="min-w-0">
+                          <div className="truncate font-medium">{p.name}</div>
+                          <div className="truncate text-muted-foreground text-xs">{p.variant}</div>
+                          <div className="mt-1.5 sm:hidden">
+                            <StockMeter p={p} pct={pct} tone={tone} />
+                          </div>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="font-mono text-muted-foreground text-xs">{p.sku}</TableCell>
-                    <TableCell className="text-muted-foreground">{p.category}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className="h-1.5 w-32 overflow-hidden rounded-full bg-muted">
-                          <div
-                            className={"h-full " + tone.barCls}
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
-                        <span className="font-mono text-xs tabular-nums">
-                          {p.stock}
-                          <span className="text-muted-foreground/60">/{p.capacity}</span>
-                        </span>
-                        <Badge variant="outline" size="sm" className={"ml-1 " + tone.cls}>
-                          {tone.label}
-                        </Badge>
-                      </div>
+                    <TableCell className="font-mono text-muted-foreground text-xs max-md:hidden">{p.sku}</TableCell>
+                    <TableCell className="text-muted-foreground max-lg:hidden">{p.category}</TableCell>
+                    <TableCell className="max-sm:hidden">
+                      <StockMeter p={p} pct={pct} tone={tone} />
                     </TableCell>
                     <TableCell className="pe-4 text-right font-mono tabular-nums">
                       ${p.price.toFixed(2)}
@@ -126,6 +120,38 @@ export function TableInventoryShowcasePage() {
           </Table>
         </div>
       </div>
+    </div>
+  );
+}
+
+function StockMeter({
+  p,
+  pct,
+  tone,
+}: {
+  p: Product;
+  pct: number;
+  tone: ReturnType<typeof stockTone>;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+      <div
+        role="meter"
+        aria-label={`${p.name} stock`}
+        aria-valuenow={p.stock}
+        aria-valuemin={0}
+        aria-valuemax={p.capacity}
+        className="h-1.5 w-20 overflow-hidden rounded-full bg-muted lg:w-32"
+      >
+        <div className={"h-full " + tone.barCls} style={{ width: `${pct}%` }} />
+      </div>
+      <span className="font-mono text-xs tabular-nums">
+        {p.stock}
+        <span className="text-muted-foreground/60">/{p.capacity}</span>
+      </span>
+      <Badge variant="outline" size="sm" className={tone.cls}>
+        {tone.label}
+      </Badge>
     </div>
   );
 }

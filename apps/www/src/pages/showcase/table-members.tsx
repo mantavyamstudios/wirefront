@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   EllipsisIcon,
   MailIcon,
@@ -10,8 +11,12 @@ import { Badge } from "@orbit/ui/badge";
 import { Button } from "@orbit/ui/button";
 import {
   Menu,
+  MenuGroup,
+  MenuGroupLabel,
   MenuItem,
   MenuPopup,
+  MenuRadioGroup,
+  MenuRadioItem,
   MenuSeparator,
   MenuTrigger,
 } from "@orbit/ui/menu";
@@ -63,117 +68,160 @@ const MEMBERS: Member[] = [
 
 export function TableMembersShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
         <header className="mb-6 flex items-end justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <h1 className="font-heading text-xl">Members</h1>
             <p className="text-muted-foreground text-sm">
               6 people · 2 pending invites
             </p>
           </div>
-          <Button size="sm">
+          <Button size="sm" className="pointer-coarse:h-10">
             <UserPlusIcon />
             Invite
           </Button>
         </header>
 
+        {/*
+          Priority columns: phones see Member + actions (team, role and 2FA move
+          under the name; role is editable from the actions menu). Role select
+          returns at sm, Team/Last active at md, 2FA at lg.
+        */}
         <div className="rounded-xl border bg-card shadow-xs/5">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="ps-4">Member</TableHead>
-                <TableHead>Team</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>2FA</TableHead>
-                <TableHead>Last active</TableHead>
-                <TableHead className="pe-4 w-px" />
+                <TableHead className="max-md:hidden">Team</TableHead>
+                <TableHead className="max-sm:hidden">Role</TableHead>
+                <TableHead className="max-lg:hidden">2FA</TableHead>
+                <TableHead className="max-md:hidden">Last active</TableHead>
+                <TableHead className="pe-4 w-px">
+                  <span className="sr-only">Actions</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {MEMBERS.map((m) => (
-                <TableRow key={m.email}>
-                  <TableCell className="ps-4">
-                    <div className="flex items-center gap-3">
-                      <Avatar className={"size-8 " + m.tone}>
-                        <AvatarFallback className="bg-transparent font-medium text-[11px]">
-                          {m.initials}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{m.name}</span>
-                          {m.pending ? (
-                            <Badge variant="outline" size="sm" className="font-mono text-[9px] uppercase tracking-wider">
-                              pending
-                            </Badge>
-                          ) : null}
-                        </div>
-                        <div className="text-muted-foreground text-xs">{m.email}</div>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">{m.team}</TableCell>
-                  <TableCell>
-                    {m.role === "owner" ? (
-                      <Badge variant="outline" className="gap-1">
-                        <ShieldIcon className="size-3" />
-                        Owner
-                      </Badge>
-                    ) : (
-                      <Select items={ROLES} defaultValue={m.role}>
-                        <SelectTrigger className="h-8 w-32 text-sm" size="sm">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectPopup>
-                          {ROLES.map((r) => (
-                            <SelectItem key={r.value} value={r.value}>
-                              {r.label}
-                            </SelectItem>
-                          ))}
-                        </SelectPopup>
-                      </Select>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="inline-flex items-center gap-1.5">
-                      <span
-                        className={
-                          "size-1.5 rounded-full " +
-                          (m.twoFactor ? "bg-emerald-500" : "bg-muted-foreground/40")
-                        }
-                      />
-                      <span className="text-muted-foreground text-xs">
-                        {m.twoFactor ? "Enabled" : "Off"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground tabular-nums">{m.active}</TableCell>
-                  <TableCell className="pe-4">
-                    <Menu>
-                      <MenuTrigger
-                        render={<Button variant="ghost" size="icon" aria-label={`Actions for ${m.name}`} />}
-                      >
-                        <EllipsisIcon />
-                      </MenuTrigger>
-                      <MenuPopup align="end">
-                        <MenuItem>
-                          <MailIcon /> Send email
-                        </MenuItem>
-                        <MenuItem>Transfer ownership</MenuItem>
-                        <MenuSeparator />
-                        <MenuItem variant="destructive">
-                          <TrashIcon /> Remove
-                        </MenuItem>
-                      </MenuPopup>
-                    </Menu>
-                  </TableCell>
-                </TableRow>
+                <MemberRow key={m.email} m={m} />
               ))}
             </TableBody>
           </Table>
         </div>
       </div>
     </div>
+  );
+}
+
+function MemberRow({ m }: { m: Member }) {
+  const [role, setRole] = useState<string>(m.role);
+  const roleLabel = ROLES.find((r) => r.value === role)?.label ?? "Owner";
+  return (
+    <TableRow>
+      <TableCell className="w-full max-w-0 ps-4 sm:w-auto sm:max-w-none">
+        <div className="flex items-center gap-3">
+          <Avatar className={"size-8 shrink-0 " + m.tone}>
+            <AvatarFallback className="bg-transparent font-medium text-[11px]">
+              {m.initials}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="truncate font-medium">{m.name}</span>
+              {m.pending ? (
+                <Badge variant="outline" size="sm" className="font-mono text-[10px] uppercase tracking-wider">
+                  pending
+                </Badge>
+              ) : null}
+            </div>
+            <div className="truncate text-muted-foreground text-xs">{m.email}</div>
+            <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-muted-foreground text-xs lg:hidden">
+              <span className="sm:hidden">{m.role === "owner" ? "Owner" : roleLabel}</span>
+              <span className="md:hidden">{m.team}</span>
+              <span className="inline-flex items-center gap-1">
+                <span
+                  className={
+                    "size-1.5 rounded-full " +
+                    (m.twoFactor ? "bg-emerald-500" : "bg-muted-foreground/40")
+                  }
+                />
+                2FA {m.twoFactor ? "on" : "off"}
+              </span>
+            </div>
+          </div>
+        </div>
+      </TableCell>
+      <TableCell className="text-muted-foreground max-md:hidden">{m.team}</TableCell>
+      <TableCell className="max-sm:hidden">
+        {m.role === "owner" ? (
+          <Badge variant="outline" className="gap-1">
+            <ShieldIcon className="size-3" />
+            Owner
+          </Badge>
+        ) : (
+          <Select items={ROLES} value={role} onValueChange={(v) => setRole(v as string)}>
+            <SelectTrigger aria-label={`Role for ${m.name}`} className="h-8 w-32 text-sm pointer-coarse:h-10" size="sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectPopup>
+              {ROLES.map((r) => (
+                <SelectItem key={r.value} value={r.value}>
+                  {r.label}
+                </SelectItem>
+              ))}
+            </SelectPopup>
+          </Select>
+        )}
+      </TableCell>
+      <TableCell className="max-lg:hidden">
+        <div className="inline-flex items-center gap-1.5">
+          <span
+            className={
+              "size-1.5 rounded-full " +
+              (m.twoFactor ? "bg-emerald-500" : "bg-muted-foreground/40")
+            }
+          />
+          <span className="text-muted-foreground text-xs">
+            {m.twoFactor ? "Enabled" : "Off"}
+          </span>
+        </div>
+      </TableCell>
+      <TableCell className="text-muted-foreground tabular-nums max-md:hidden">{m.active}</TableCell>
+      <TableCell className="pe-4">
+        <Menu>
+          <MenuTrigger
+            render={<Button variant="ghost" size="icon" aria-label={`Actions for ${m.name}`} className="pointer-coarse:size-11" />}
+          >
+            <EllipsisIcon />
+          </MenuTrigger>
+          <MenuPopup align="end">
+            {m.role !== "owner" ? (
+              <>
+                <MenuGroup>
+                  <MenuGroupLabel>Role</MenuGroupLabel>
+                  <MenuRadioGroup value={role} onValueChange={(v) => setRole(v as string)}>
+                    {ROLES.map((r) => (
+                      <MenuRadioItem key={r.value} value={r.value}>
+                        {r.label}
+                      </MenuRadioItem>
+                    ))}
+                  </MenuRadioGroup>
+                </MenuGroup>
+                <MenuSeparator />
+              </>
+            ) : null}
+            <MenuItem>
+              <MailIcon /> Send email
+            </MenuItem>
+            <MenuItem>Transfer ownership</MenuItem>
+            <MenuSeparator />
+            <MenuItem variant="destructive">
+              <TrashIcon /> Remove
+            </MenuItem>
+          </MenuPopup>
+        </Menu>
+      </TableCell>
+    </TableRow>
   );
 }

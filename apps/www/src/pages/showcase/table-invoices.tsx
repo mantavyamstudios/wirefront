@@ -60,81 +60,98 @@ const total = INVOICES.reduce((acc, inv) => acc + (inv.status === "void" ? 0 : i
 
 export function TableInvoicesShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
-        <header className="mb-6 flex items-end justify-between gap-4">
+        <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <h1 className="font-heading text-xl">Invoices</h1>
             <p className="text-muted-foreground text-sm">
               {INVOICES.length} of 142 · April 2026
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="outline">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button size="sm" variant="outline" aria-label="Filter" className="pointer-coarse:h-10">
               <FilterIcon />
-              Filter
+              <span className="max-sm:sr-only">Filter</span>
             </Button>
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="outline" aria-label="Export" className="pointer-coarse:h-10">
               <ArrowDownToLineIcon />
-              Export
+              <span className="max-sm:sr-only">Export</span>
             </Button>
-            <Button size="sm">
+            <Button size="sm" className="pointer-coarse:h-10">
               <PlusIcon />
               New invoice
             </Button>
           </div>
         </header>
 
+        {/*
+          Priority columns: phones see Customer + Amount (invoice no., due date
+          and status move into those cells); Invoice/Status return at sm,
+          Issued/Due at md.
+        */}
         <div className="rounded-xl border bg-card shadow-xs/5">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="ps-4">Invoice</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Issued</TableHead>
-                <TableHead>Due</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead className="ps-4 max-sm:hidden">Invoice</TableHead>
+                <TableHead className="max-sm:ps-4">Customer</TableHead>
+                <TableHead className="max-md:hidden">Issued</TableHead>
+                <TableHead className="max-md:hidden">Due</TableHead>
+                <TableHead className="max-sm:hidden">Status</TableHead>
                 <TableHead className="pe-4 text-right">Amount</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {INVOICES.map((inv) => {
                 const s = STATUS[inv.status];
+                const badge = (
+                  <Badge variant="outline" className={"gap-1.5 " + s.className}>
+                    <span className={"size-1.5 rounded-full " + s.dot} />
+                    {s.label}
+                  </Badge>
+                );
                 return (
                   <TableRow key={inv.number}>
-                    <TableCell className="ps-4 font-mono text-sm">{inv.number}</TableCell>
-                    <TableCell>
-                      <div className="font-medium">{inv.customer}</div>
-                      <div className="text-muted-foreground text-xs">{inv.email}</div>
+                    <TableCell className="ps-4 font-mono text-sm max-sm:hidden">{inv.number}</TableCell>
+                    <TableCell className="w-full max-w-0 max-sm:ps-4 sm:w-auto sm:max-w-none">
+                      <div className="truncate font-medium">{inv.customer}</div>
+                      <div className="truncate text-muted-foreground text-xs">{inv.email}</div>
+                      <div className="mt-0.5 font-mono text-[11px] text-muted-foreground md:hidden">
+                        <span className="sm:hidden">{inv.number} · </span>due {inv.due}
+                      </div>
                     </TableCell>
-                    <TableCell className="text-muted-foreground">{inv.issued}</TableCell>
-                    <TableCell className="text-muted-foreground">{inv.due}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={"gap-1.5 " + s.className}>
-                        <span className={"size-1.5 rounded-full " + s.dot} />
-                        {s.label}
-                      </Badge>
-                    </TableCell>
+                    <TableCell className="text-muted-foreground max-md:hidden">{inv.issued}</TableCell>
+                    <TableCell className="text-muted-foreground max-md:hidden">{inv.due}</TableCell>
+                    <TableCell className="max-sm:hidden">{badge}</TableCell>
                     <TableCell className="pe-4 text-right font-mono tabular-nums">
                       {inv.status === "void" ? (
                         <span className="text-muted-foreground line-through">${inv.amount.toLocaleString()}</span>
                       ) : (
                         <>${inv.amount.toLocaleString()}.00</>
                       )}
+                      <div className="mt-1 flex justify-end font-sans sm:hidden">{badge}</div>
                     </TableCell>
                   </TableRow>
                 );
               })}
             </TableBody>
             <TableFooter>
-              <TableRow>
-                <TableCell className="ps-4" colSpan={5}>
-                  Outstanding (excludes voids)
-                </TableCell>
-                <TableCell className="pe-4 text-right font-mono tabular-nums">
-                  ${total.toLocaleString()}.00
-                </TableCell>
-              </TableRow>
+              {/* One footer row per breakpoint so colSpan matches the visible columns. */}
+              {([
+                [1, "sm:hidden"],
+                [3, "max-sm:hidden md:hidden"],
+                [5, "max-md:hidden"],
+              ] as const).map(([span, cls]) => (
+                <TableRow key={span} className={cls}>
+                  <TableCell className="ps-4" colSpan={span}>
+                    Outstanding <span className="max-sm:hidden">(excludes voids)</span>
+                  </TableCell>
+                  <TableCell className="pe-4 text-right font-mono tabular-nums">
+                    ${total.toLocaleString()}.00
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableFooter>
           </Table>
         </div>

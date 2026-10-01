@@ -1,5 +1,6 @@
 import {
   CopyIcon,
+  EllipsisIcon,
   EyeIcon,
   KeyIcon,
   PlusIcon,
@@ -44,10 +45,10 @@ const KEYS: ApiKey[] = [
 
 export function TableApiKeysShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
         <header className="mb-2 flex items-end justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <h1 className="flex items-center gap-2 font-heading text-xl">
               <KeyIcon className="size-5 text-muted-foreground" />
               API keys
@@ -56,7 +57,7 @@ export function TableApiKeysShowcasePage() {
               Server-side keys never appear in client bundles.
             </p>
           </div>
-          <Button size="sm">
+          <Button size="sm" className="shrink-0 pointer-coarse:h-10">
             <PlusIcon />
             New key
           </Button>
@@ -66,29 +67,35 @@ export function TableApiKeysShowcasePage() {
           Keep these keys secret — they grant full API access. Rotate any key suspected of being exposed.
         </p>
 
+        {/*
+          Priority columns: phones see Name (masked key + last used folded in)
+          and actions; Key returns at sm, Last used at md, Created and Scopes at lg.
+        */}
         <div className="rounded-xl border bg-card shadow-xs/5">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="ps-4">Name</TableHead>
-                <TableHead>Key</TableHead>
-                <TableHead>Scopes</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Last used</TableHead>
-                <TableHead className="pe-4 w-px" />
+                <TableHead className="max-sm:hidden">Key</TableHead>
+                <TableHead className="max-lg:hidden">Scopes</TableHead>
+                <TableHead className="max-lg:hidden">Created</TableHead>
+                <TableHead className="max-md:hidden">Last used</TableHead>
+                <TableHead className="pe-4 w-px">
+                  <span className="sr-only">Actions</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {KEYS.map((k) => (
                 <TableRow key={k.prefix}>
-                  <TableCell className="ps-4">
+                  <TableCell className="w-full max-w-0 ps-4 sm:w-auto sm:max-w-none">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">{k.name}</span>
+                      <span className="truncate font-medium">{k.name}</span>
                       <Badge
                         variant="outline"
                         size="sm"
                         className={
-                          "font-mono text-[9px] uppercase " +
+                          "shrink-0 font-mono text-[10px] uppercase " +
                           (k.env === "live"
                             ? "border-emerald-500/30 text-emerald-700 dark:text-emerald-400"
                             : "border-violet-500/30 text-violet-700 dark:text-violet-400")
@@ -102,29 +109,17 @@ export function TableApiKeysShowcasePage() {
                         Expires {k.expires}
                       </div>
                     ) : null}
-                  </TableCell>
-                  <TableCell>
-                    <div className="inline-flex items-center gap-1 rounded-md border bg-background px-2 py-1 font-mono text-xs">
-                      <span className="text-muted-foreground">{k.prefix}</span>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="-mr-1 size-5"
-                        aria-label="Reveal key"
-                      >
-                        <EyeIcon className="!size-3" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="size-5"
-                        aria-label="Copy key"
-                      >
-                        <CopyIcon className="!size-3" />
-                      </Button>
+                    <div className="mt-1.5 sm:hidden">
+                      <KeyPill k={k} />
+                    </div>
+                    <div className="mt-1 text-muted-foreground text-xs md:hidden">
+                      Last used {k.lastUsed.toLowerCase()}
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="max-sm:hidden">
+                    <KeyPill k={k} />
+                  </TableCell>
+                  <TableCell className="max-lg:hidden">
                     <div className="flex flex-wrap gap-1">
                       {k.scopes.map((s) => (
                         <Badge
@@ -138,16 +133,16 @@ export function TableApiKeysShowcasePage() {
                       ))}
                     </div>
                   </TableCell>
-                  <TableCell className="text-muted-foreground tabular-nums">
+                  <TableCell className="text-muted-foreground tabular-nums max-lg:hidden">
                     {k.created}
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{k.lastUsed}</TableCell>
+                  <TableCell className="text-muted-foreground max-md:hidden">{k.lastUsed}</TableCell>
                   <TableCell className="pe-4">
                     <Menu>
                       <MenuTrigger
-                        render={<Button variant="ghost" size="icon" aria-label={`Actions for ${k.name}`} />}
+                        render={<Button variant="ghost" size="icon" aria-label={`Actions for ${k.name}`} className="pointer-coarse:size-11" />}
                       >
-                        <RotateCwIcon />
+                        <EllipsisIcon />
                       </MenuTrigger>
                       <MenuPopup align="end">
                         <MenuItem>
@@ -167,6 +162,30 @@ export function TableApiKeysShowcasePage() {
           </Table>
         </div>
       </div>
+    </div>
+  );
+}
+
+function KeyPill({ k }: { k: (typeof KEYS)[number] }) {
+  return (
+    <div className="inline-flex max-w-full items-center gap-1 rounded-md border bg-background px-2 py-1 font-mono text-xs">
+      <span className="truncate text-muted-foreground">{k.prefix}</span>
+      <Button
+        size="icon"
+        variant="ghost"
+        className="-mr-1 size-6 shrink-0 pointer-coarse:size-9"
+        aria-label={`Reveal ${k.name} key`}
+      >
+        <EyeIcon className="!size-3" />
+      </Button>
+      <Button
+        size="icon"
+        variant="ghost"
+        className="size-6 shrink-0 pointer-coarse:size-9"
+        aria-label={`Copy ${k.name} key`}
+      >
+        <CopyIcon className="!size-3" />
+      </Button>
     </div>
   );
 }
