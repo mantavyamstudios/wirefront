@@ -20,6 +20,7 @@ import {
   InputGroupInput,
 } from "@orbit/ui/input-group";
 import { Label } from "@orbit/ui/label";
+import { Sheet, SheetClose, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
 import { Slider } from "@orbit/ui/slider";
 import { Switch } from "@orbit/ui/switch";
 
@@ -173,233 +174,265 @@ export function FilterSidebarShowcasePage() {
     state.search.trim() === "" ||
     label.toLowerCase().includes(state.search.trim().toLowerCase());
 
+  // Same panel docked from lg up, and in an off-canvas sheet below that.
+  const renderPanel = (inSheet: boolean) => (
+    <div
+      className={
+        inSheet
+          ? "flex h-full min-h-0 flex-col"
+          : "flex h-full flex-col rounded-xl border bg-card shadow-xs/5"
+      }
+    >
+      <header className="flex items-center justify-between border-b px-4 py-3">
+        <div className="flex items-center gap-2">
+          <SlidersHorizontalIcon className="size-4 text-muted-foreground" />
+          <h2 className="font-medium text-sm">Filters</h2>
+          {activeCount > 0 ? (
+            <Badge size="sm" variant="secondary" className="font-mono text-[10px]">
+              {activeCount}
+            </Badge>
+          ) : null}
+        </div>
+        <Button
+          size="xs"
+          variant="ghost"
+          className="text-muted-foreground"
+          onClick={reset}
+          disabled={activeCount === 0}
+        >
+          <RotateCcwIcon />
+          Reset
+        </Button>
+      </header>
+
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="mb-4">
+          <InputGroup>
+            <InputGroupAddon>
+              <SearchIcon className="size-4 text-muted-foreground" />
+            </InputGroupAddon>
+            <InputGroupInput
+              placeholder="Search filters…"
+              className="h-8 text-sm"
+              value={state.search}
+              onChange={(e) =>
+                setState((s) => ({ ...s, search: e.target.value }))
+              }
+              nativeInput
+            />
+          </InputGroup>
+        </div>
+
+        {filtersMatch("Category") ? (
+          <Section
+            title="Category"
+            badge={state.categories.length || undefined}
+          >
+            <CheckboxGroup
+              aria-label="Category"
+              value={state.categories}
+              onValueChange={(v) =>
+                setState((s) => ({ ...s, categories: v as CategoryVal[] }))
+              }
+              className="flex flex-col gap-2"
+            >
+              {CATEGORIES.map((c) => (
+                <Label
+                  key={c.value}
+                  className="flex cursor-pointer items-center gap-2 text-sm"
+                >
+                  <Checkbox value={c.value} />
+                  <span className="flex-1">{c.label}</span>
+                  <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+                    {counts.cat[c.value]}
+                  </span>
+                </Label>
+              ))}
+            </CheckboxGroup>
+          </Section>
+        ) : null}
+
+        {filtersMatch("Price") ? (
+          <Section title="Price">
+            <div className="px-1 pt-1">
+              <Slider
+                value={state.priceRange}
+                min={0}
+                max={200}
+                step={2}
+                onValueChange={(v) => {
+                  const arr = v as number[];
+                  setState((s) => ({
+                    ...s,
+                    priceRange: [arr[0] ?? 0, arr[1] ?? 200],
+                  }));
+                }}
+              />
+              <div className="mt-3 flex items-center justify-between text-muted-foreground text-xs tabular-nums">
+                <span className="font-mono text-foreground">
+                  ${state.priceRange[0]} – ${state.priceRange[1]}
+                </span>
+                <span className="text-muted-foreground/60">$0 – $200</span>
+              </div>
+            </div>
+          </Section>
+        ) : null}
+
+        {filtersMatch("Color") ? (
+          <Section
+            title="Color"
+            badge={state.colors.length || undefined}
+          >
+            <CheckboxGroup
+              aria-label="Color"
+              value={state.colors}
+              onValueChange={(v) =>
+                setState((s) => ({ ...s, colors: v as ColorVal[] }))
+              }
+              className="grid grid-cols-3 gap-1.5"
+            >
+              {COLORS.map((c) => (
+                <Label
+                  key={c.value}
+                  className="flex cursor-pointer items-center gap-1.5 rounded-md border p-1.5 text-xs hover:bg-accent has-checked:border-foreground/30 has-checked:bg-foreground/5"
+                >
+                  <Checkbox value={c.value} />
+                  <span
+                    className={
+                      "size-3 rounded-full ring-1 ring-border " + c.color
+                    }
+                  />
+                  {c.label}
+                </Label>
+              ))}
+            </CheckboxGroup>
+          </Section>
+        ) : null}
+
+        {filtersMatch("Rating") ? (
+          <Section
+            title="Rating"
+            badge={state.ratingMin > 0 ? 1 : undefined}
+          >
+            <CheckboxGroup
+              aria-label="Rating"
+              value={
+                state.ratingMin > 0
+                  ? [MIN_TO_RATING_VALUE[state.ratingMin] ?? ""]
+                  : []
+              }
+              onValueChange={(v) => {
+                const arr = v as string[];
+                const last = arr[arr.length - 1];
+                const min = last ? RATING_VALUE_TO_MIN[last] ?? 0 : 0;
+                setState((s) => ({ ...s, ratingMin: min }));
+              }}
+              className="flex flex-col gap-2"
+            >
+              {RATINGS.map((r) => (
+                <Label
+                  key={r.value}
+                  className="flex cursor-pointer items-center gap-2 text-sm"
+                >
+                  <Checkbox value={r.value} />
+                  <span className="flex-1">
+                    <span className="font-mono text-amber-500">★</span>{" "}
+                    {r.label}
+                  </span>
+                  <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+                    {counts.rat[r.value]}
+                  </span>
+                </Label>
+              ))}
+            </CheckboxGroup>
+          </Section>
+        ) : null}
+
+        {filtersMatch("More options") ? (
+          <Section title="More options">
+            <ToggleRow
+              label="In stock only"
+              checked={state.inStock}
+              onChange={(v) =>
+                setState((s) => ({ ...s, inStock: v }))
+              }
+            />
+            <ToggleRow
+              label="On sale"
+              checked={state.onSale}
+              onChange={(v) => setState((s) => ({ ...s, onSale: v }))}
+            />
+            <ToggleRow
+              label="Free shipping"
+              checked={state.freeShipping}
+              onChange={(v) =>
+                setState((s) => ({ ...s, freeShipping: v }))
+              }
+            />
+            <ToggleRow
+              label="New arrivals"
+              checked={state.newArrival}
+              onChange={(v) =>
+                setState((s) => ({ ...s, newArrival: v }))
+              }
+            />
+          </Section>
+        ) : null}
+      </div>
+
+      <footer className="flex items-center gap-2 border-t bg-background p-3">
+        <Button
+          size="sm"
+          variant="ghost"
+          className="flex-1"
+          onClick={reset}
+          disabled={activeCount === 0}
+        >
+          Cancel
+        </Button>
+        {inSheet ? (
+          <SheetClose render={<Button size="sm" className="flex-1" />}>
+            Show {filtered.length} result{filtered.length === 1 ? "" : "s"}
+          </SheetClose>
+        ) : (
+          <Button size="sm" className="flex-1">
+            Show {filtered.length} result{filtered.length === 1 ? "" : "s"}
+          </Button>
+        )}
+      </footer>
+    </div>
+  );
+
   return (
     <div className="min-h-svh bg-background">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-6 py-12 lg:grid-cols-[280px_1fr]">
-        <aside className="lg:sticky lg:top-12 lg:h-[calc(100svh-6rem)]">
-          <div className="flex h-full flex-col rounded-xl border bg-card shadow-xs/5">
-            <header className="flex items-center justify-between border-b px-4 py-3">
-              <div className="flex items-center gap-2">
-                <SlidersHorizontalIcon className="size-4 text-muted-foreground" />
-                <h2 className="font-medium text-sm">Filters</h2>
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 sm:py-12 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <aside className="sticky top-12 hidden h-[calc(100svh-6rem)] lg:block">
+          {renderPanel(false)}
+        </aside>
+
+        <section>
+          <header className="mb-6 flex items-end justify-between gap-3">
+            <div className="min-w-0">
+              <h1 className="font-heading text-xl">Filter sidebar</h1>
+              <p aria-live="polite" className="text-muted-foreground text-sm">
+                Showing {filtered.length} of {PRODUCTS.length} products.
+              </p>
+            </div>
+            <Sheet>
+              <SheetTrigger render={<Button size="sm" variant="outline" className="shrink-0 lg:hidden" />}>
+                <SlidersHorizontalIcon />
+                Filters
                 {activeCount > 0 ? (
                   <Badge size="sm" variant="secondary" className="font-mono text-[10px]">
                     {activeCount}
                   </Badge>
                 ) : null}
-              </div>
-              <Button
-                size="xs"
-                variant="ghost"
-                className="text-muted-foreground"
-                onClick={reset}
-                disabled={activeCount === 0}
-              >
-                <RotateCcwIcon />
-                Reset
-              </Button>
-            </header>
-
-            <div className="flex-1 overflow-y-auto p-4">
-              <div className="mb-4">
-                <InputGroup>
-                  <InputGroupAddon>
-                    <SearchIcon className="size-4 text-muted-foreground" />
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    placeholder="Search filters…"
-                    className="h-8 text-sm"
-                    value={state.search}
-                    onChange={(e) =>
-                      setState((s) => ({ ...s, search: e.target.value }))
-                    }
-                    nativeInput
-                  />
-                </InputGroup>
-              </div>
-
-              {filtersMatch("Category") ? (
-                <Section
-                  title="Category"
-                  badge={state.categories.length || undefined}
-                >
-                  <CheckboxGroup
-                    aria-label="Category"
-                    value={state.categories}
-                    onValueChange={(v) =>
-                      setState((s) => ({ ...s, categories: v as CategoryVal[] }))
-                    }
-                    className="flex flex-col gap-2"
-                  >
-                    {CATEGORIES.map((c) => (
-                      <Label
-                        key={c.value}
-                        className="flex cursor-pointer items-center gap-2 text-sm"
-                      >
-                        <Checkbox value={c.value} />
-                        <span className="flex-1">{c.label}</span>
-                        <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
-                          {counts.cat[c.value]}
-                        </span>
-                      </Label>
-                    ))}
-                  </CheckboxGroup>
-                </Section>
-              ) : null}
-
-              {filtersMatch("Price") ? (
-                <Section title="Price">
-                  <div className="px-1 pt-1">
-                    <Slider
-                      value={state.priceRange}
-                      min={0}
-                      max={200}
-                      step={2}
-                      onValueChange={(v) => {
-                        const arr = v as number[];
-                        setState((s) => ({
-                          ...s,
-                          priceRange: [arr[0] ?? 0, arr[1] ?? 200],
-                        }));
-                      }}
-                    />
-                    <div className="mt-3 flex items-center justify-between text-muted-foreground text-xs tabular-nums">
-                      <span className="font-mono text-foreground">
-                        ${state.priceRange[0]} – ${state.priceRange[1]}
-                      </span>
-                      <span className="text-muted-foreground/60">$0 – $200</span>
-                    </div>
-                  </div>
-                </Section>
-              ) : null}
-
-              {filtersMatch("Color") ? (
-                <Section
-                  title="Color"
-                  badge={state.colors.length || undefined}
-                >
-                  <CheckboxGroup
-                    aria-label="Color"
-                    value={state.colors}
-                    onValueChange={(v) =>
-                      setState((s) => ({ ...s, colors: v as ColorVal[] }))
-                    }
-                    className="grid grid-cols-3 gap-1.5"
-                  >
-                    {COLORS.map((c) => (
-                      <Label
-                        key={c.value}
-                        className="flex cursor-pointer items-center gap-1.5 rounded-md border p-1.5 text-xs hover:bg-accent has-checked:border-foreground/30 has-checked:bg-foreground/5"
-                      >
-                        <Checkbox value={c.value} />
-                        <span
-                          className={
-                            "size-3 rounded-full ring-1 ring-border " + c.color
-                          }
-                        />
-                        {c.label}
-                      </Label>
-                    ))}
-                  </CheckboxGroup>
-                </Section>
-              ) : null}
-
-              {filtersMatch("Rating") ? (
-                <Section
-                  title="Rating"
-                  badge={state.ratingMin > 0 ? 1 : undefined}
-                >
-                  <CheckboxGroup
-                    aria-label="Rating"
-                    value={
-                      state.ratingMin > 0
-                        ? [MIN_TO_RATING_VALUE[state.ratingMin] ?? ""]
-                        : []
-                    }
-                    onValueChange={(v) => {
-                      const arr = v as string[];
-                      const last = arr[arr.length - 1];
-                      const min = last ? RATING_VALUE_TO_MIN[last] ?? 0 : 0;
-                      setState((s) => ({ ...s, ratingMin: min }));
-                    }}
-                    className="flex flex-col gap-2"
-                  >
-                    {RATINGS.map((r) => (
-                      <Label
-                        key={r.value}
-                        className="flex cursor-pointer items-center gap-2 text-sm"
-                      >
-                        <Checkbox value={r.value} />
-                        <span className="flex-1">
-                          <span className="font-mono text-amber-500">★</span>{" "}
-                          {r.label}
-                        </span>
-                        <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
-                          {counts.rat[r.value]}
-                        </span>
-                      </Label>
-                    ))}
-                  </CheckboxGroup>
-                </Section>
-              ) : null}
-
-              {filtersMatch("More options") ? (
-                <Section title="More options">
-                  <ToggleRow
-                    label="In stock only"
-                    checked={state.inStock}
-                    onChange={(v) =>
-                      setState((s) => ({ ...s, inStock: v }))
-                    }
-                  />
-                  <ToggleRow
-                    label="On sale"
-                    checked={state.onSale}
-                    onChange={(v) => setState((s) => ({ ...s, onSale: v }))}
-                  />
-                  <ToggleRow
-                    label="Free shipping"
-                    checked={state.freeShipping}
-                    onChange={(v) =>
-                      setState((s) => ({ ...s, freeShipping: v }))
-                    }
-                  />
-                  <ToggleRow
-                    label="New arrivals"
-                    checked={state.newArrival}
-                    onChange={(v) =>
-                      setState((s) => ({ ...s, newArrival: v }))
-                    }
-                  />
-                </Section>
-              ) : null}
-            </div>
-
-            <footer className="flex items-center gap-2 border-t bg-background p-3">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="flex-1"
-                onClick={reset}
-                disabled={activeCount === 0}
-              >
-                Cancel
-              </Button>
-              <Button size="sm" className="flex-1">
-                Show {filtered.length} result{filtered.length === 1 ? "" : "s"}
-              </Button>
-            </footer>
-          </div>
-        </aside>
-
-        <section>
-          <header className="mb-6 flex items-end justify-between">
-            <div>
-              <h1 className="font-heading text-xl">Filter sidebar</h1>
-              <p className="text-muted-foreground text-sm">
-                Showing {filtered.length} of {PRODUCTS.length} products.
-              </p>
-            </div>
+              </SheetTrigger>
+              <SheetPopup side="left" showCloseButton={false} className="max-w-[340px] bg-card pb-[env(safe-area-inset-bottom)]">
+                <SheetTitle className="sr-only">Filters</SheetTitle>
+                {renderPanel(true)}
+              </SheetPopup>
+            </Sheet>
           </header>
           <ProductGrid products={filtered} onReset={reset} />
         </section>
@@ -447,7 +480,7 @@ function ToggleRow({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <Label className="flex cursor-pointer items-center justify-between py-1.5 text-sm">
+    <Label className="flex cursor-pointer items-center justify-between py-1.5 text-sm pointer-coarse:min-h-11">
       <span>{label}</span>
       <Switch checked={checked} onCheckedChange={(v) => onChange(Boolean(v))} />
     </Label>
@@ -475,7 +508,7 @@ function ProductGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3">
       {products.map((p) => (
         <ProductCard key={p.id} product={p} />
       ))}
@@ -488,9 +521,9 @@ function ProductCard({ product }: { product: Product }) {
     .map((c) => COLORS.find((m) => m.value === c))
     .filter(Boolean) as { value: ColorVal; label: string; color: string }[];
   return (
-    <div className="rounded-xl border bg-card p-3 shadow-xs/5">
+    <div className="min-w-0 rounded-xl border bg-card p-2 shadow-xs/5 sm:p-3">
       <div
-        className="relative h-28 overflow-hidden rounded-lg"
+        className="relative aspect-[4/3] overflow-hidden rounded-lg sm:aspect-auto sm:h-28"
         style={{
           background: `linear-gradient(135deg, ${swatchHex(product.colors[0])} 0%, ${swatchHex(product.colors[1] ?? product.colors[0])} 100%)`,
         }}
@@ -512,9 +545,9 @@ function ProductCard({ product }: { product: Product }) {
           </Badge>
         ) : null}
       </div>
-      <div className="mt-2 flex items-center justify-between">
-        <span className="truncate font-medium text-sm">{product.name}</span>
-        <span className="font-mono text-foreground text-sm tabular-nums">
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <span className="min-w-0 truncate font-medium text-sm">{product.name}</span>
+        <span className="shrink-0 font-mono text-foreground text-sm tabular-nums">
           ${product.price}
         </span>
       </div>

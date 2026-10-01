@@ -137,7 +137,7 @@ export function FilterFacetedShowcasePage() {
   };
 
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-4xl">
         <header className="mb-6">
           <h1 className="font-heading text-xl">Faceted filters</h1>
@@ -276,7 +276,7 @@ export function FilterFacetedShowcasePage() {
 
           <Separator className="my-3" />
 
-          <div className="flex items-center justify-between text-muted-foreground text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-muted-foreground text-xs">
             <span>
               <span className="text-foreground">
                 {totalSelected} filter{totalSelected === 1 ? "" : "s"}
@@ -335,6 +335,12 @@ function FacetTrigger({
           <Button
             size="sm"
             variant="outline"
+            // The selected values are only shown inline from lg; announce them always.
+            aria-label={
+              count > 0
+                ? `${label}: ${selected.map((s) => labelFor(s) ?? s).join(", ")}`
+                : `Filter by ${label.toLowerCase()}`
+            }
             className={
               count > 0
                 ? "border-foreground/20 bg-foreground/5"
@@ -372,7 +378,7 @@ function FacetTrigger({
           </Button>
         }
       />
-      <PopoverPopup className="w-64 p-0">
+      <PopoverPopup className="w-[min(16rem,calc(100vw-2rem))] p-0">
         <div className="flex flex-col">
           <FacetSearch placeholder={`Filter ${label.toLowerCase()}…`} />
           <Separator />
@@ -405,7 +411,7 @@ function FacetSearch({ placeholder }: { placeholder: string }) {
         <InputGroupAddon>
           <SearchIcon className="size-3.5 text-muted-foreground" />
         </InputGroupAddon>
-        <InputGroupInput placeholder={placeholder} className="h-8 text-sm" />
+        <InputGroupInput placeholder={placeholder} aria-label={placeholder} className="h-8 text-sm" />
       </InputGroup>
     </div>
   );
@@ -425,7 +431,7 @@ function FacetCheckboxList({
       aria-label="Filter options"
       value={value}
       onValueChange={onValueChange}
-      className="flex max-h-72 flex-col overflow-y-auto p-1"
+      className="flex max-h-[min(18rem,50svh)] flex-col overflow-y-auto p-1"
     >
       {children}
     </CheckboxGroup>
@@ -444,7 +450,7 @@ function FacetRow({
   leading?: React.ReactNode;
 }) {
   return (
-    <Label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent">
+    <Label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent pointer-coarse:min-h-11">
       <Checkbox value={value} />
       {leading ? (
         <span className="flex size-5 items-center justify-center">

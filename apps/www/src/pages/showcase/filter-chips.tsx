@@ -145,7 +145,7 @@ export function FilterChipsShowcasePage() {
   };
 
   return (
-    <div className="min-h-svh bg-background px-6 py-12">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
         <header className="mb-6">
           <h1 className="font-heading text-xl">Active filter chips</h1>
@@ -154,9 +154,9 @@ export function FilterChipsShowcasePage() {
           </p>
         </header>
 
-        <div className="flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-xs/5">
+        <div className="flex flex-col gap-3 rounded-xl border bg-card p-3 shadow-xs/5 sm:p-4">
           <div className="flex flex-wrap items-center gap-2">
-            <InputGroup className="w-72">
+            <InputGroup className="w-full sm:w-72">
               <InputGroupAddon>
                 <SearchIcon className="size-4 text-muted-foreground" />
               </InputGroupAddon>
@@ -167,8 +167,8 @@ export function FilterChipsShowcasePage() {
                 nativeInput
               />
             </InputGroup>
-            <Separator orientation="vertical" className="mx-1 h-6" />
-            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
+            <Separator orientation="vertical" className="mx-1 h-6 max-sm:hidden" />
+            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider max-sm:hidden">
               Filters
             </span>
             <AddFilterPopover
@@ -288,8 +288,8 @@ export function FilterChipsShowcasePage() {
 
           <Separator />
 
-          <div className="flex items-center justify-between text-muted-foreground text-xs">
-            <span>
+          <div className="flex flex-wrap items-center justify-between gap-2 text-muted-foreground text-xs">
+            <span aria-live="polite">
               <span className="font-medium text-foreground">
                 {filtered.length} customer{filtered.length === 1 ? "" : "s"}
               </span>{" "}
@@ -393,7 +393,7 @@ function ChipShell({
   return (
     <div
       className={
-        "inline-flex items-center divide-x divide-border overflow-hidden rounded-md border text-xs " +
+        "inline-flex max-w-full items-center divide-x divide-border overflow-hidden rounded-md border text-xs " +
         toneClass
       }
     >
@@ -406,7 +406,8 @@ function ChipShell({
           render={
             <button
               type="button"
-              className="flex cursor-pointer items-center gap-1 px-2 py-1 hover:bg-accent/60"
+              aria-label={`Edit ${field}: ${values.join(", ")}`}
+              className="flex min-h-7 min-w-0 cursor-pointer items-center gap-1 px-2 py-1 hover:bg-accent/60 pointer-coarse:min-h-10"
             >
               {values.length > 1 ? (
                 <span className="font-medium">
@@ -423,13 +424,13 @@ function ChipShell({
             </button>
           }
         />
-        <PopoverPopup className="w-56 p-2">{editor}</PopoverPopup>
+        <PopoverPopup className="w-[min(14rem,calc(100vw-2rem))] p-2">{editor}</PopoverPopup>
       </Popover>
       <button
         type="button"
         aria-label={`Remove ${field} filter`}
         onClick={onRemove}
-        className="flex items-center px-1.5 py-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+        className="flex min-h-7 min-w-7 items-center justify-center px-1.5 py-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive pointer-coarse:min-h-10 pointer-coarse:min-w-10"
       >
         <XIcon className="size-3" />
       </button>
@@ -651,7 +652,7 @@ function CustomerList({ customers }: { customers: Customer[] }) {
         >
           <span
             className={
-              "size-1.5 rounded-full " +
+              "size-1.5 shrink-0 rounded-full " +
               (c.status === "active"
                 ? "bg-emerald-500"
                 : c.status === "trial"
@@ -661,25 +662,29 @@ function CustomerList({ customers }: { customers: Customer[] }) {
                     : "bg-muted-foreground/40")
             }
           />
+          {/* Below sm, status/MRR/last seen stack on the right instead of three fixed columns. */}
           <div className="min-w-0 flex-1">
-            <div className="font-medium text-sm">{c.name}</div>
-            <div className="font-mono text-[11px] text-muted-foreground">
+            <div className="truncate font-medium text-sm">{c.name}</div>
+            <div className="truncate font-mono text-[11px] text-muted-foreground">
               {c.country} · {c.plan} · {c.tags.join(", ")}
             </div>
           </div>
           <Badge
             variant="outline"
             size="sm"
-            className="font-mono text-[10px] uppercase"
+            className="font-mono text-[10px] uppercase max-sm:hidden"
           >
             {c.status}
           </Badge>
-          <span className="w-20 text-right font-mono text-foreground text-xs tabular-nums">
-            ${c.mrr.toLocaleString()}
-          </span>
-          <span className="w-16 text-right font-mono text-[11px] text-muted-foreground tabular-nums">
-            {c.lastSeenDays}d
-          </span>
+          <div className="shrink-0 text-right sm:contents">
+            <span className="block font-mono text-foreground text-xs tabular-nums sm:w-20">
+              ${c.mrr.toLocaleString()}
+            </span>
+            <span className="block font-mono text-[11px] text-muted-foreground tabular-nums sm:w-16 sm:text-right">
+              <span className="sm:hidden">{c.status} · </span>
+              {c.lastSeenDays}d
+            </span>
+          </div>
         </li>
       ))}
     </ul>

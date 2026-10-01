@@ -24,6 +24,16 @@ import {
   SelectValue,
 } from "@orbit/ui/select";
 import { Separator } from "@orbit/ui/separator";
+import {
+  Sheet,
+  SheetClose,
+  SheetFooter,
+  SheetHeader,
+  SheetPanel,
+  SheetPopup,
+  SheetTitle,
+  SheetTrigger,
+} from "@orbit/ui/sheet";
 import { ToggleGroup, ToggleGroupItem } from "@orbit/ui/toggle-group";
 
 type Status = "active" | "paused" | "archived";
@@ -119,41 +129,16 @@ export function FilterToolbarShowcasePage() {
     setRange(INITIAL.range);
   };
 
-  return (
-    <div className="min-h-svh bg-background px-6 py-12">
-      <div className="mx-auto max-w-5xl">
-        <header className="mb-6">
-          <h1 className="font-heading text-xl">Toolbar filters</h1>
-          <p className="text-muted-foreground text-sm">
-            One row · search, scoped selects, date range, density toggle.
-          </p>
-        </header>
-
-        <div className="flex flex-col gap-3 rounded-xl border bg-card p-3 shadow-xs/5">
-          <div className="flex flex-wrap items-center gap-2">
-            <InputGroup className="w-64">
-              <InputGroupAddon>
-                <SearchIcon className="size-4 text-muted-foreground" />
-              </InputGroupAddon>
-              <InputGroupInput
-                placeholder="Search projects…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                nativeInput
-              />
-              <InputGroupAddon align="inline-end">
-                <Kbd>/</Kbd>
-              </InputGroupAddon>
-            </InputGroup>
-
-            <Separator orientation="vertical" className="mx-1 h-6" />
-
+  // The same filter controls render inline from md up and inside a bottom
+  // sheet on phones; `stacked` makes each control full-width.
+  const filterFields = (stacked: boolean) => (
+    <>
             <Select
               items={STATUSES}
               value={status}
               onValueChange={(v) => setStatus(v ?? "all")}
             >
-              <SelectTrigger className="w-36" size="sm">
+              <SelectTrigger aria-label="Status" className={stacked ? "w-full" : "w-36"} size={stacked ? "default" : "sm"}>
                 <SelectValue />
               </SelectTrigger>
               <SelectPopup>
@@ -170,7 +155,7 @@ export function FilterToolbarShowcasePage() {
               value={owner}
               onValueChange={(v) => setOwner(v ?? "anyone")}
             >
-              <SelectTrigger className="w-32" size="sm">
+              <SelectTrigger aria-label="Owner" className={stacked ? "w-full" : "w-32"} size={stacked ? "default" : "sm"}>
                 <SelectValue />
               </SelectTrigger>
               <SelectPopup>
@@ -187,7 +172,7 @@ export function FilterToolbarShowcasePage() {
               value={range}
               onValueChange={(v) => setRange(v ?? "any")}
             >
-              <SelectTrigger className="w-44" size="sm">
+              <SelectTrigger aria-label="Last active" className={stacked ? "w-full" : "w-44"} size={stacked ? "default" : "sm"}>
                 <CalendarIcon className="text-muted-foreground" />
                 <SelectValue />
               </SelectTrigger>
@@ -200,7 +185,41 @@ export function FilterToolbarShowcasePage() {
               </SelectPopup>
             </Select>
 
-            <Button size="sm" variant="ghost" disabled>
+    </>
+  );
+
+  return (
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
+      <div className="mx-auto max-w-5xl">
+        <header className="mb-6">
+          <h1 className="font-heading text-xl">Toolbar filters</h1>
+          <p className="text-muted-foreground text-sm">
+            One row · search, scoped selects, date range, density toggle.
+          </p>
+        </header>
+
+        <div className="flex flex-col gap-3 rounded-xl border bg-card p-3 shadow-xs/5">
+          <div className="flex flex-wrap items-center gap-2">
+            <InputGroup className="min-w-0 flex-1 md:w-64 md:flex-none">
+              <InputGroupAddon>
+                <SearchIcon className="size-4 text-muted-foreground" />
+              </InputGroupAddon>
+              <InputGroupInput
+                placeholder="Search projects…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                nativeInput
+              />
+              <InputGroupAddon align="inline-end" className="pointer-coarse:hidden">
+                <Kbd>/</Kbd>
+              </InputGroupAddon>
+            </InputGroup>
+
+            <Separator orientation="vertical" className="mx-1 h-6 max-md:hidden" />
+
+            <div className="contents max-md:hidden">
+              {filterFields(false)}
+              <Button size="sm" variant="ghost" disabled>
               <ListFilterIcon />
               More filters
               <Badge variant="outline" size="sm" className="ml-1 font-mono">
@@ -208,7 +227,38 @@ export function FilterToolbarShowcasePage() {
               </Badge>
             </Button>
 
-            <div className="ms-auto flex items-center gap-2">
+            </div>
+
+            {/* Phones: one "Filters" button opens the same controls in a sheet. */}
+            <Sheet>
+              <SheetTrigger
+                render={<Button size="sm" variant="outline" className="md:hidden pointer-coarse:h-10" />}
+              >
+                <ListFilterIcon />
+                Filters
+                {activeCount > 0 ? (
+                  <Badge variant="secondary" size="sm" className="ml-1 font-mono">
+                    {activeCount}
+                  </Badge>
+                ) : null}
+              </SheetTrigger>
+              <SheetPopup side="bottom" className="pb-[env(safe-area-inset-bottom)]">
+                <SheetHeader>
+                  <SheetTitle>Filters</SheetTitle>
+                </SheetHeader>
+                <SheetPanel className="flex flex-col gap-3">{filterFields(true)}</SheetPanel>
+                <SheetFooter>
+                  <Button variant="ghost" onClick={reset} disabled={activeCount === 0}>
+                    Clear
+                  </Button>
+                  <SheetClose render={<Button />}>
+                    Show {filtered.length} result{filtered.length === 1 ? "" : "s"}
+                  </SheetClose>
+                </SheetFooter>
+              </SheetPopup>
+            </Sheet>
+
+            <div className="ms-auto flex items-center gap-2 max-sm:hidden">
               <ToggleGroup
                 value={[density]}
                 onValueChange={(v) => {
@@ -232,7 +282,7 @@ export function FilterToolbarShowcasePage() {
 
           <Separator />
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="text-muted-foreground text-xs">Saved view:</span>
             <Button size="xs" variant="secondary" className="font-mono">
               Q2 — Active
@@ -240,7 +290,7 @@ export function FilterToolbarShowcasePage() {
             <Button size="xs" variant="ghost" className="text-muted-foreground">
               + New view
             </Button>
-            <span className="ms-auto inline-flex items-center gap-1.5 text-muted-foreground text-xs">
+            <span aria-live="polite" className="inline-flex w-full items-center gap-1.5 text-muted-foreground text-xs sm:ms-auto sm:w-auto">
               <span
                 className={
                   "size-1.5 rounded-full " +
@@ -255,7 +305,7 @@ export function FilterToolbarShowcasePage() {
                   size="xs"
                   variant="ghost"
                   onClick={reset}
-                  className="-mr-2 h-6 px-1.5 text-muted-foreground"
+                  className="-mr-2 h-6 px-1.5 text-muted-foreground max-sm:ms-auto pointer-coarse:h-9"
                 >
                   <XIcon /> Clear ({activeCount})
                 </Button>
