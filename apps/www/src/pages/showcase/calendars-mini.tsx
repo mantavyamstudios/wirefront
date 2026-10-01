@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 const DAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
@@ -23,9 +24,9 @@ export function CalendarsMiniShowcasePage() {
   const rows = Math.ceil(cells / 7);
 
   return (
-    <div className="grid min-h-svh place-items-center bg-background p-8">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="w-72 rounded-xl border border-border bg-background p-4 shadow-sm">
+    <div className="grid min-h-svh place-items-center bg-background p-4 sm:p-8">
+      <div className="grid w-full max-w-80 grid-cols-1 gap-6 md:w-auto md:max-w-none md:grid-cols-2 md:items-start">
+        <div className="w-full rounded-xl md:w-72 border border-border bg-background p-4 shadow-sm">
           <Header />
           <Days />
           <Grid offset={offset} total={total} rows={rows} />
@@ -33,7 +34,7 @@ export function CalendarsMiniShowcasePage() {
             <span>4 events today</span>
             <button
               type="button"
-              className="hover:text-foreground"
+              className="-mr-2 min-h-8 rounded px-2 hover:text-foreground pointer-coarse:min-h-10"
             >
               Open →
             </button>
@@ -41,7 +42,7 @@ export function CalendarsMiniShowcasePage() {
         </div>
 
         {/* Embedded with selected day expanded */}
-        <div className="w-80 rounded-xl border border-border bg-background p-4 shadow-sm">
+        <div className="w-full rounded-xl md:w-80 border border-border bg-background p-4 shadow-sm">
           <Header />
           <Days />
           <Grid offset={offset} total={total} rows={rows} />
@@ -79,13 +80,15 @@ function Header() {
       <div className="flex items-center gap-1">
         <button
           type="button"
-          className="grid size-6 place-items-center rounded text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
+          aria-label="Previous month"
+          className="grid size-7 place-items-center rounded text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
         >
           <ChevronLeftIcon className="size-3" />
         </button>
         <button
           type="button"
-          className="grid size-6 place-items-center rounded text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
+          aria-label="Next month"
+          className="grid size-7 place-items-center rounded text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
         >
           <ChevronRightIcon className="size-3" />
         </button>
@@ -100,7 +103,7 @@ function Days() {
       {DAYS.map((d) => (
         <div
           key={d}
-          className="text-center font-mono text-[9px] text-muted-foreground uppercase"
+          className="text-center font-mono text-[10px] text-muted-foreground uppercase"
         >
           {d}
         </div>
@@ -118,6 +121,7 @@ function Grid({
   total: number;
   rows: number;
 }) {
+  const [selected, setSelected] = useState(26);
   return (
     <div className="mt-2 grid grid-cols-7 gap-1">
       {Array.from({ length: rows * 7 }).map((_, i) => {
@@ -125,26 +129,34 @@ function Grid({
         const out = day < 1 || day > total;
         const today = day === 26;
         const evt = !out ? EVENTS_BY_DAY[day] : undefined;
+        if (out) return <span key={i} aria-hidden className="h-9" />;
+        const count = evt?.count ?? 0;
         return (
           <button
             key={i}
             type="button"
-            className="relative grid h-9 place-items-center rounded-md font-mono text-xs hover:bg-foreground/[0.05]"
+            onClick={() => setSelected(day)}
+            aria-pressed={selected === day}
+            aria-current={today ? "date" : undefined}
+            aria-label={`April ${day}${count ? `, ${count} event${count > 1 ? "s" : ""}` : ""}`}
+            className="relative grid h-9 place-items-center rounded-md font-mono text-xs hover:bg-foreground/[0.05] pointer-coarse:h-10"
           >
-            {!out ? (
+            {(
               <>
                 <span
                   className={
                     "grid size-7 place-items-center rounded-full " +
                     (today
                       ? "bg-foreground text-background"
-                      : "text-foreground/85")
+                      : selected === day
+                        ? "ring-1 ring-foreground/40"
+                        : "text-foreground/85")
                   }
                 >
                   {day}
                 </span>
                 {evt ? (
-                  <span className="absolute bottom-1 flex gap-0.5">
+                  <span aria-hidden className="absolute bottom-1 flex gap-0.5">
                     {evt.tones.slice(0, 3).map((t, ti) => (
                       <span
                         key={ti}
@@ -154,7 +166,7 @@ function Grid({
                   </span>
                 ) : null}
               </>
-            ) : null}
+            )}
           </button>
         );
       })}

@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@orbit/ui/avatar";
 import { Button } from "@orbit/ui/button";
 import { Input } from "@orbit/ui/input";
@@ -56,16 +56,120 @@ const MONTHS_SHORT = [
 
 const WEEKDAY_LABELS = ["Mon", "Wed", "Fri"];
 
+// ── Sample data ──────────────────────────────────────────────────────────────
+// The screen renders a deterministic, seeded year by default so it works
+// offline, during SSR and without GitHub's 60 req/h unauthenticated limit.
+// Loading a username opts in to the live APIs. In an app, pass real data in
+// from a loader instead.
+const SAMPLE_END = Date.UTC(2026, 8, 26); // Sat, Sep 26 2026
+const DAY_MS = 86_400_000;
+
+function mulberry32(seed: number) {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function sampleData(login: string): {
+  contributions: Contributions;
+  profile: Profile;
+  events: GhEvent[];
+} {
+  let h = 0;
+  for (const ch of login) h = (h * 31 + ch.charCodeAt(0)) | 0;
+  const rand = mulberry32(h);
+  const levels: Day["contributionLevel"][] = [
+    "NONE",
+    "FIRST_QUARTILE",
+    "SECOND_QUARTILE",
+    "THIRD_QUARTILE",
+    "FOURTH_QUARTILE",
+  ];
+  const start = SAMPLE_END - (52 * 7 + 6) * DAY_MS; // a Sunday, 53 weeks back
+  const weeks: Day[][] = [];
+  let total = 0;
+  for (let w = 0; w < 53; w++) {
+    const week: Day[] = [];
+    for (let d = 0; d < 7; d++) {
+      const t = start + (w * 7 + d) * DAY_MS;
+      const weekend = d === 0 || d === 6;
+      const r = rand();
+      const count =
+        r < (weekend ? 0.6 : 0.18) ? 0 : Math.round(rand() * (weekend ? 4 : 14));
+      total += count;
+      week.push({
+        date: new Date(t).toISOString().slice(0, 10),
+        contributionCount: count,
+        contributionLevel: levels[count === 0 ? 0 : Math.min(4, Math.ceil(count / 3.5))]!,
+      });
+    }
+    weeks.push(week);
+  }
+  const repos = ["acme/web", "acme/api", "orbit/ui"];
+  const messages = [
+    "fix(table): keep sticky column opaque",
+    "feat(audit): persist 1y retention",
+    "chore: bump @orbit/ui",
+    "refactor(calendar): single scroll container",
+    "docs: responsive audit notes",
+    "test(api): cover rate-limit headers",
+  ];
+  const events: GhEvent[] = messages.map((m, i) => ({
+    id: String(i),
+    type: "PushEvent",
+    created_at: new Date(SAMPLE_END + 12 * 3_600_000 - (i * 7 + 2) * 3_600_000).toISOString(),
+    repo: { name: repos[i % repos.length]! },
+    payload: {
+      commits: [
+        {
+          sha: Math.floor(rand() * 0xffffffff).toString(16).padStart(8, "0") + "c0ffee",
+          message: m,
+          url: "",
+        },
+      ],
+    },
+  }));
+  return {
+    contributions: { contributions: weeks, totalContributions: total },
+    profile: {
+      login,
+      name: "Sample developer",
+      avatar_url: "",
+      bio: "Seeded sample data — load a GitHub username to fetch live contributions.",
+      public_repos: 42,
+      followers: 318,
+      html_url: `https://github.com/${login}`,
+    },
+    events,
+  };
+}
+
 export function CalendarsYearHeatmapShowcasePage() {
+  const sample = useMemo(() => sampleData(DEFAULT_USERNAME), []);
   const [input, setInput] = useState(DEFAULT_USERNAME);
-  const [username, setUsername] = useState(DEFAULT_USERNAME);
-  const [data, setData] = useState<Contributions | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [events, setEvents] = useState<GhEvent[] | null>(null);
+  // null = show the seeded sample; a string = fetch that user live.
+  const [username, setUsername] = useState<string | null>(null);
+  const [data, setData] = useState<Contributions | null>(sample.contributions);
+  const [profile, setProfile] = useState<Profile | null>(sample.profile);
+  const [events, setEvents] = useState<GhEvent[] | null>(sample.events);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [asOf, setAsOf] = useState(SAMPLE_END);
+  const [activeDay, setActiveDay] = useState<Day | null>(null);
+  const gridScrollRef = useRef<HTMLDivElement | null>(null);
+
+  // On narrow screens start the 53-week grid at the most recent weeks.
+  useEffect(() => {
+    const el = gridScrollRef.current;
+    if (el) el.scrollLeft = el.scrollWidth;
+  }, [data]);
 
   useEffect(() => {
+    if (username == null) return;
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -91,6 +195,7 @@ export function CalendarsYearHeatmapShowcasePage() {
     ])
       .then(([c, p, e]) => {
         if (cancelled) return;
+        setAsOf(Date.now());
         setData(c);
         setProfile(p);
         setEvents(e);
@@ -113,7 +218,7 @@ export function CalendarsYearHeatmapShowcasePage() {
     if (next && next !== username) setUsername(next);
   }
 
-  const stats = useMemo(() => (data ? deriveStats(data) : null), [data]);
+  const stats = useMemo(() => (data ? deriveStats(data, asOf) : null), [data, asOf]);
   const months = useMemo(() => (data ? deriveMonths(data) : []), [data]);
   const recentCommits = useMemo(
     () => (events ? deriveRecentCommits(events) : []),
@@ -121,44 +226,45 @@ export function CalendarsYearHeatmapShowcasePage() {
   );
 
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
-          GitHub · last 12 months
+          GitHub · last 12 months{username == null ? " · sample data" : ""}
         </div>
 
         <form onSubmit={onSubmit} className="mt-3 flex items-center gap-2">
-          <div className="relative flex-1 max-w-xs">
+          <div className="relative min-w-0 flex-1 sm:max-w-xs">
             <span className="-translate-y-1/2 absolute top-1/2 left-3 text-muted-foreground">
               @
             </span>
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              aria-label="GitHub username"
               placeholder="github username"
               className="pl-7"
               spellCheck={false}
               autoComplete="off"
             />
           </div>
-          <Button type="submit" variant="outline" disabled={loading}>
-            {loading ? "Loading…" : "Load"}
+          <Button type="submit" variant="outline" disabled={loading} className="shrink-0">
+            {loading ? "Loading…" : "Load live"}
           </Button>
         </form>
 
         <div className="mt-6 flex items-start gap-4">
-          <Avatar className="size-14">
-            {profile && (
+          <Avatar className="size-12 shrink-0 sm:size-14">
+            {profile?.avatar_url && (
               <AvatarImage src={profile.avatar_url} alt={profile.login} />
             )}
             <AvatarFallback>
-              {username.slice(0, 2).toUpperCase()}
+              {(username ?? DEFAULT_USERNAME).slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
             {profile ? (
               <>
-                <h1 className="font-heading text-2xl">
+                <h1 className="break-words font-heading text-2xl">
                   {profile.name ?? profile.login}
                 </h1>
                 <a
@@ -174,7 +280,7 @@ export function CalendarsYearHeatmapShowcasePage() {
                     {profile.bio}
                   </p>
                 )}
-                <div className="mt-2 flex gap-4 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
                   <span>
                     <span className="text-foreground">
                       {profile.public_repos}
@@ -207,7 +313,7 @@ export function CalendarsYearHeatmapShowcasePage() {
             <h2 className="font-heading text-xl">
               {data.totalContributions.toLocaleString()} contributions
               {stats && (
-                <span className="ml-2 font-sans text-muted-foreground text-sm">
+                <span className="block font-sans text-muted-foreground text-sm sm:ml-2 sm:inline">
                   · active {stats.activeDays} days · longest{" "}
                   <span className="text-foreground">
                     {stats.longestStreak} days
@@ -224,13 +330,19 @@ export function CalendarsYearHeatmapShowcasePage() {
           )}
         </div>
 
-        <div className="mt-4 overflow-x-auto rounded-xl border border-border/60 bg-background/40 p-5">
-          <div className="grid grid-cols-[28px_1fr] gap-2">
+        <div className="mt-4 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-5">
+          <div
+            ref={gridScrollRef}
+            tabIndex={0}
+            aria-label="Contribution calendar"
+            className="overflow-x-auto overscroll-x-contain pb-1"
+          >
+          <div className="grid w-max grid-cols-[28px_auto] gap-2">
             <div className="flex flex-col gap-[3px] pt-5">
               {[0, 1, 2, 3, 4, 5, 6].map((d) => (
                 <span
                   key={d}
-                  className="flex h-3 items-center font-mono text-[9px] text-muted-foreground"
+                  className="flex h-3 items-center font-mono text-[10px] text-muted-foreground"
                 >
                   {d % 2 === 0 && d <= 4 ? WEEKDAY_LABELS[d / 2] : ""}
                 </span>
@@ -253,7 +365,18 @@ export function CalendarsYearHeatmapShowcasePage() {
                   ))}
               </div>
 
-              <div className="mt-1 flex gap-[3px]">
+              {/* Hover (mouse) or tap (touch) a day to read it in the footer. */}
+              <div
+                className="mt-1 flex gap-[3px]"
+                onPointerOver={(ev) => {
+                  const d = (ev.target as HTMLElement).dataset.date;
+                  if (d && data) setActiveDay(findDay(data, d));
+                }}
+                onClick={(ev) => {
+                  const d = (ev.target as HTMLElement).dataset.date;
+                  if (d && data) setActiveDay(findDay(data, d));
+                }}
+              >
                 {data
                   ? data.contributions.map((week, wi) => (
                       <div key={wi} className="flex flex-col gap-[3px]">
@@ -267,7 +390,7 @@ export function CalendarsYearHeatmapShowcasePage() {
                         {Array.from({ length: 7 }).map((__, di) => (
                           <span
                             key={di}
-                            className="size-3 animate-pulse rounded-sm bg-foreground/[0.06]"
+                            className="size-3 rounded-sm bg-foreground/[0.06] motion-safe:animate-pulse"
                           />
                         ))}
                       </div>
@@ -276,8 +399,21 @@ export function CalendarsYearHeatmapShowcasePage() {
             </div>
           </div>
 
-          <div className="mt-4 flex items-center justify-between font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
-            <span>Hover a day to see the date</span>
+          </div>
+
+          <div className="mt-4 flex flex-col gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:flex-row sm:items-center sm:justify-between sm:tracking-[0.25em]">
+            <span aria-live="polite" className="min-h-4">
+              {activeDay ? (
+                <span className="text-foreground">
+                  {activeDay.contributionCount} on {formatLong(activeDay.date)}
+                </span>
+              ) : (
+                <>
+                  <span className="pointer-coarse:hidden">Hover</span>
+                  <span className="hidden pointer-coarse:inline">Tap</span> a day to see the date
+                </>
+              )}
+            </span>
             <div className="flex items-center gap-2">
               <span>Less</span>
               <div className="flex gap-[3px]">
@@ -303,7 +439,7 @@ export function CalendarsYearHeatmapShowcasePage() {
         </div>
 
         {stats && data && (
-          <div className="mt-5 grid grid-cols-3 gap-3">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 [&>*:last-child]:max-sm:col-span-2">
             <Stat
               label="Most active day"
               value={stats.mostActive ? formatShort(stats.mostActive.date) : "—"}
@@ -357,12 +493,12 @@ export function CalendarsYearHeatmapShowcasePage() {
                       className="block px-4 py-3 transition-colors hover:bg-foreground/[0.02]"
                     >
                       <div className="truncate text-sm">{c.message}</div>
-                      <div className="mt-1 flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                      <div className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                         <span className="text-foreground">{c.repo}</span>
                         <span>·</span>
                         <span>{c.sha.slice(0, 7)}</span>
                         <span>·</span>
-                        <span>{relativeTime(c.created_at)}</span>
+                        <span>{relativeTime(c.created_at, asOf)}</span>
                       </div>
                     </a>
                   ))}
@@ -373,10 +509,16 @@ export function CalendarsYearHeatmapShowcasePage() {
   );
 }
 
+function findDay(data: Contributions, date: string) {
+  for (const w of data.contributions) for (const d of w) if (d.date === date) return d;
+  return null;
+}
+
 function Cell({ day }: { day: Day }) {
   const title = `${day.contributionCount} on ${formatLong(day.date)}`;
   return (
     <span
+      data-date={day.date}
       title={title}
       className="size-3 rounded-sm"
       style={{ backgroundColor: levelColor(day.contributionLevel) }}
@@ -420,7 +562,7 @@ function Stat({
   );
 }
 
-function deriveStats(data: Contributions) {
+function deriveStats(data: Contributions, asOf: number) {
   const flat = data.contributions.flat();
   const sorted = [...flat].sort((a, b) => a.date.localeCompare(b.date));
   const activeDays = flat.filter((d) => d.contributionCount > 0).length;
@@ -435,7 +577,7 @@ function deriveStats(data: Contributions) {
   }
 
   // Streaks (counted on calendar days, ignoring future days)
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date(asOf).toISOString().slice(0, 10);
   const past = sorted.filter((d) => d.date <= today);
 
   let longestStreak = 0;
@@ -491,7 +633,7 @@ function deriveMonths(data: Contributions) {
   data.contributions.forEach((week, wi) => {
     if (week.length === 0) return;
     const firstDate = new Date(week[0].date);
-    const month = firstDate.getMonth();
+    const month = firstDate.getUTCMonth();
     if (month !== lastMonth) {
       out.push({ label: MONTHS_SHORT[month], weekIndex: wi });
       lastMonth = month;
@@ -524,7 +666,9 @@ function deriveRecentCommits(events: GhEvent[]): FlatCommit[] {
 }
 
 function formatLong(iso: string) {
-  return new Date(iso).toLocaleDateString(undefined, {
+  // Fixed locale + UTC so server and client render identical strings.
+  return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: "UTC",
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -533,15 +677,15 @@ function formatLong(iso: string) {
 }
 
 function formatShort(iso: string) {
-  return new Date(iso).toLocaleDateString(undefined, {
+  return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: "UTC",
     month: "short",
     day: "numeric",
   });
 }
 
-function relativeTime(iso: string) {
+function relativeTime(iso: string, now: number) {
   const then = new Date(iso).getTime();
-  const now = Date.now();
   const s = Math.max(1, Math.floor((now - then) / 1000));
   if (s < 60) return `${s}s ago`;
   const m = Math.floor(s / 60);

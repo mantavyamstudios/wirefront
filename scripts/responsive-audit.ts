@@ -110,6 +110,17 @@ const MEASURE = `(() => {
     (e) => !e.closest("script,style") && visible(e),
   );
 
+  const wraps = (root) => {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const range = document.createRange();
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      if (!n.textContent.trim()) continue;
+      range.selectNodeContents(n);
+      const tops = new Set([...range.getClientRects()].map((q) => Math.round(q.top)));
+      if (tops.size > 1) return true;
+    }
+    return false;
+  };
   const offenders = [], clipped = [], vclipped = [], hscroll = [], squeezed = [];
   let textEls = 0, tiny = 0;
   for (const el of all) {
@@ -130,7 +141,9 @@ const MEASURE = `(() => {
       vclipped.push({ el: desc(el), clientH: el.clientHeight, scrollH: el.scrollHeight });
     }
     const t = (el.innerText || "").trim();
-    if (r.width < 90 && r.height > 80 && t.length > 60 && el.children.length < 30) {
+    // Squeezed = a narrow, tall box whose text actually wraps. A stack of short
+    // single-line labels (e.g. a calendar hour rail) isn't squeezed.
+    if (r.width < 90 && r.height > 80 && t.length > 60 && el.children.length < 30 && wraps(el)) {
       squeezed.push({ el: desc(el), w: Math.round(r.width), h: Math.round(r.height) });
     }
     if ([...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) {

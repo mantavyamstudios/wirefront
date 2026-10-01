@@ -152,7 +152,6 @@ export const SOURCE_FILES: Partial<
     agenda: "calendars-agenda",
     "date-range": "calendars-date-range",
     timezone: "calendars-timezone",
-    availability: "calendars-availability",
     mini: "calendars-mini",
     "year-heatmap": "calendars-year-heatmap",
     recurring: "calendars-recurring",

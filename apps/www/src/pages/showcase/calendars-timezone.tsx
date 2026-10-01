@@ -68,12 +68,23 @@ export function CalendarsTimezoneShowcasePage() {
   const [zones, setZones] = useState<Zone[]>(DEFAULT_ZONES);
   const [start, setStart] = useState(13);
   const [duration, setDuration] = useState(3);
-  const [now, setNow] = useState(() => new Date());
+  // The clock starts after mount so server and client render the same markup.
+  const [now, setNow] = useState<Date | null>(null);
   const [bestPulse, setBestPulse] = useState(false);
 
   useEffect(() => {
+    setNow(new Date());
     const t = window.setInterval(() => setNow(new Date()), 30_000);
     return () => window.clearInterval(t);
+  }, []);
+
+  // Header and rows share one horizontal scroller; bring the window into view
+  // on narrow screens where the 24h track doesn't fit.
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (el) el.scrollLeft = Math.max(0, start * HOUR_W - HOUR_W);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -193,12 +204,12 @@ export function CalendarsTimezoneShowcasePage() {
     setZones((prev) => prev.filter((z) => z.name !== name));
 
   return (
-    <div className="min-h-svh bg-background px-10 py-10 text-foreground">
+    <div className="min-h-svh bg-background px-4 py-6 text-foreground sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">
-        <div className="flex items-end justify-between gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
-              {fmtDate(now)} · sliding window
+              {now ? fmtDate(now) : "Today"} · sliding window
             </div>
             <h1 className="mt-1 font-heading text-2xl">Find a meeting time</h1>
             <p className="mt-1 text-muted-foreground text-sm">
@@ -212,7 +223,7 @@ export function CalendarsTimezoneShowcasePage() {
             size="sm"
             onClick={findBest}
             disabled={zones.length === 0}
-            className={bestPulse ? "ring-2 ring-emerald-500/40" : ""}
+            className={"self-start sm:self-auto " + (bestPulse ? "ring-2 ring-emerald-500/40" : "")}
           >
             <SparklesIcon />
             Find best
@@ -220,9 +231,20 @@ export function CalendarsTimezoneShowcasePage() {
         </div>
 
         <div className="mt-6 overflow-hidden rounded-xl border border-border/60 bg-background/40">
-          <div className="grid grid-cols-[220px_1fr]">
-            <div className="border-border/40 border-r" />
-            <div className="overflow-x-auto">
+          {/* One scroller for the hour ruler and every row, with the zone column
+              pinned — previously only the ruler scrolled. */}
+          <div
+            ref={scrollerRef}
+            tabIndex={0}
+            aria-label="Timezone hours"
+            className="overflow-x-auto overscroll-x-contain"
+          >
+          <div className="min-w-max">
+          <div className="grid grid-cols-[136px_auto] sm:grid-cols-[220px_auto]">
+            <div className="sticky left-0 z-20 flex items-center border-border/40 border-r border-b bg-background px-2.5 font-mono text-[10px] text-foreground/80 tracking-[0.1em] sm:px-3">
+              {String(start).padStart(2, "0")}:00–{String(start + duration).padStart(2, "0")}:00 · {duration}h
+            </div>
+            <div>
               <div
                 className="relative grid border-border/40 border-b"
                 style={{
@@ -253,30 +275,32 @@ export function CalendarsTimezoneShowcasePage() {
               return (
                 <li
                   key={z.name}
-                  className="group grid grid-cols-[220px_1fr] border-border/40 border-b last:border-b-0"
+                  className="group grid grid-cols-[136px_auto] border-border/40 border-b last:border-b-0 sm:grid-cols-[220px_auto]"
                 >
-                  <div className="flex items-center gap-2 border-border/40 border-r px-3 py-2.5">
-                    <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06] font-mono text-[10px]">
+                  <div className="sticky left-0 z-20 flex items-center gap-2 border-border/40 border-r bg-background px-2.5 py-2 sm:px-3 sm:py-2.5">
+                    <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06] font-mono text-[10px] max-lg:hidden">
                       {z.name}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm">{z.city}</div>
-                      <div className="font-mono text-[10px] text-muted-foreground">
-                        {liveTime(now, z.iana)}
+                      <div className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
+                        <VerdictPill tone={v.tone} compact />
+                        {now ? liveTime(now, z.iana) : "--:--"}
                       </div>
                     </div>
-                    <VerdictPill tone={v.tone} />
+                    <span className="max-sm:hidden">
+                      <VerdictPill tone={v.tone} />
+                    </span>
                     <button
                       type="button"
                       onClick={() => removeZone(z.name)}
                       aria-label={`Remove ${z.city}`}
-                      className="inline-flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground/50 opacity-0 transition-all hover:bg-foreground/[0.06] hover:text-destructive group-hover:opacity-100"
+                      className="inline-flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground/50 opacity-0 transition-all hover:bg-foreground/[0.06] hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
                     >
                       <XIcon className="size-3" />
                     </button>
                   </div>
                   <div
-                    className="overflow-hidden"
                     onPointerMove={onDragMove}
                     onPointerUp={onDragEnd}
                     onPointerCancel={onDragEnd}
@@ -337,7 +361,8 @@ export function CalendarsTimezoneShowcasePage() {
                       <div
                         onPointerDown={beginDrag("move")}
                         className={
-                          "absolute top-1 bottom-1 select-none rounded-md border-2 transition-all " +
+                          // touch-none: dragging the window must not scroll the grid.
+                          "absolute top-1 bottom-1 touch-none select-none rounded-md border-2 transition-all " +
                           (v.tone === "asleep"
                             ? "border-rose-500/70 bg-rose-500/[0.08]"
                             : v.tone === "edge"
@@ -353,19 +378,12 @@ export function CalendarsTimezoneShowcasePage() {
                       >
                         <div
                           onPointerDown={beginDrag("left")}
-                          className="absolute top-0 bottom-0 left-0 w-1.5 cursor-ew-resize rounded-l-md bg-foreground/20 transition-colors hover:bg-foreground/40"
+                          className="absolute top-0 bottom-0 left-0 w-1.5 cursor-ew-resize pointer-coarse:w-3 rounded-l-md bg-foreground/20 transition-colors hover:bg-foreground/40"
                         />
                         <div
                           onPointerDown={beginDrag("right")}
-                          className="absolute top-0 bottom-0 right-0 w-1.5 cursor-ew-resize rounded-r-md bg-foreground/20 transition-colors hover:bg-foreground/40"
+                          className="absolute top-0 bottom-0 right-0 w-1.5 cursor-ew-resize pointer-coarse:w-3 rounded-r-md bg-foreground/20 transition-colors hover:bg-foreground/40"
                         />
-                        {zi === 0 ? (
-                          <div className="-top-5 absolute right-0 left-0 truncate text-center font-mono text-[10px] text-foreground/80 uppercase tracking-[0.2em]">
-                            {String(start).padStart(2, "0")}:00 –{" "}
-                            {String(start + duration).padStart(2, "0")}:00 ·{" "}
-                            {duration}h
-                          </div>
-                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -378,8 +396,10 @@ export function CalendarsTimezoneShowcasePage() {
               </li>
             ) : null}
           </ul>
+          </div>
+          </div>
 
-          <div className="flex items-center justify-between gap-3 border-border/40 border-t px-3 py-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-border/40 border-t px-3 py-2.5">
             <ZonePicker available={available} onAdd={addZone} />
             <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
               {zones.length} zone{zones.length === 1 ? "" : "s"} ·{" "}
@@ -392,7 +412,7 @@ export function CalendarsTimezoneShowcasePage() {
               <GlobeIcon className="size-3" />
               24h · home: NY · live clock
             </span>
-            <span className="flex items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+            <span className="flex flex-wrap items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
               <span className="flex items-center gap-1.5">
                 <span className="size-2.5 rounded bg-amber-500/40" /> morning
               </span>
@@ -426,7 +446,7 @@ export function CalendarsTimezoneShowcasePage() {
                   setDuration(p.duration);
                 }}
                 className={
-                  "rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors " +
+                  "min-h-8 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors pointer-coarse:min-h-10 " +
                   (active
                     ? "border-foreground bg-foreground text-background"
                     : "border-border/60 text-muted-foreground hover:border-border hover:text-foreground")
@@ -552,7 +572,13 @@ function findBestStart(zones: Zone[], duration: number): number {
   return bestStart;
 }
 
-function VerdictPill({ tone }: { tone: "ok" | "edge" | "asleep" }) {
+function VerdictPill({
+  tone,
+  compact,
+}: {
+  tone: "ok" | "edge" | "asleep";
+  compact?: boolean;
+}) {
   const cfg = {
     ok: {
       Icon: CheckCircle2Icon,
@@ -570,10 +596,18 @@ function VerdictPill({ tone }: { tone: "ok" | "edge" | "asleep" }) {
       className: "bg-rose-500/15 text-rose-700 dark:text-rose-400",
     },
   }[tone];
+  // Compact: icon-only, shown under the city on phones.
+  if (compact)
+    return (
+      <span className={"inline-grid size-3.5 place-items-center rounded-full sm:hidden " + cfg.className}>
+        <cfg.Icon aria-hidden className="size-2.5" />
+        <span className="sr-only">{cfg.label}</span>
+      </span>
+    );
   return (
     <span
       className={
-        "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] " +
+        "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em] " +
         cfg.className
       }
     >

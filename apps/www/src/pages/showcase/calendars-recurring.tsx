@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import {
   CalendarIcon,
   ChevronLeftIcon,
@@ -320,9 +320,9 @@ export function CalendarsRecurringShowcasePage() {
   const apply = (patch: Partial<Rule>) => setRule((r) => ({ ...r, ...patch }));
 
   return (
-    <div className="min-h-svh bg-muted/30 px-6 py-8">
+    <div className="min-h-svh bg-muted/30 px-3 py-6 sm:px-6 sm:py-8">
       <div className="mx-auto max-w-5xl space-y-4">
-        <div className="flex items-center justify-between px-1">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-1">
           <div className="flex items-center gap-2">
             <RepeatIcon className="size-4 text-muted-foreground" />
             <h1 className="font-heading text-lg">Recurrence</h1>
@@ -352,7 +352,7 @@ export function CalendarsRecurringShowcasePage() {
               setMonthOffset={setMonthOffset}
             />
           </div>
-          <div className="flex items-center justify-between border-border/60 border-t bg-muted/20 px-5 py-3">
+          <div className="flex flex-col gap-3 border-border/60 border-t bg-muted/20 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
             <span className="font-mono text-[11px] text-muted-foreground">
               Starts {START.toLocaleDateString("en-US", {
                 weekday: "short",
@@ -361,7 +361,7 @@ export function CalendarsRecurringShowcasePage() {
                 year: "numeric",
               })}
             </span>
-            <div className="flex items-center gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
               <Button variant="ghost" type="button">
                 Cancel
               </Button>
@@ -382,12 +382,13 @@ function Templates({
   onPick: (rule: Partial<Rule>) => void;
 }) {
   return (
-    <div className="flex items-center gap-2 overflow-x-auto border-border/60 border-b bg-background px-5 py-3">
+    // One scrolling row of chips (no wrap) so presets never push the editor down.
+    <div className="flex items-center gap-2 overflow-x-auto overscroll-x-contain border-border/60 border-b bg-background px-4 py-3 [scrollbar-width:thin] sm:px-5">
       <span className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
         <SparklesIcon className="size-3" />
         Presets
       </span>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex gap-1.5">
         {TEMPLATES.map((t) => {
           const built = buildRrule({ ...DEFAULT_RULE, ...t.rule }).raw;
           const isActive = built === current;
@@ -396,8 +397,9 @@ function Templates({
               key={t.label}
               type="button"
               onClick={() => onPick(t.rule)}
+              aria-pressed={isActive}
               className={
-                "rounded-md border px-2.5 py-0.5 text-[12px] transition-colors " +
+                "min-h-7 shrink-0 whitespace-nowrap rounded-md border px-2.5 py-0.5 text-[12px] transition-colors pointer-coarse:min-h-9 " +
                 (isActive
                   ? "border-foreground bg-foreground text-background"
                   : "border-border bg-background text-foreground/80 hover:border-foreground/40 hover:bg-muted/40")
@@ -421,16 +423,17 @@ function Editor({
 }) {
   const FREQS: Freq[] = ["DAILY", "WEEKLY", "MONTHLY", "YEARLY"];
   return (
-    <div className="space-y-5 px-5 py-5">
+    <div className="min-w-0 space-y-5 px-4 py-5 sm:px-5">
       <Row label="FREQ">
-        <div className="flex items-center rounded-md border border-border/70 bg-background p-0.5">
+        <div className="grid grid-cols-4 rounded-md border border-border/70 bg-background p-0.5 sm:inline-flex sm:items-center">
           {FREQS.map((f) => (
             <button
               key={f}
               type="button"
+              aria-pressed={rule.freq === f}
               onClick={() => apply({ freq: f })}
               className={
-                "rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] " +
+                "min-h-8 rounded px-1.5 py-1 font-mono text-[11px] uppercase tracking-[0.05em] sm:px-2.5 sm:tracking-[0.15em] pointer-coarse:min-h-10 " +
                 (rule.freq === f
                   ? "bg-foreground/[0.08] text-foreground"
                   : "text-muted-foreground hover:text-foreground")
@@ -465,7 +468,7 @@ function Editor({
 
       {rule.freq === "WEEKLY" && (
         <Row label="BYDAY">
-          <div className="flex items-center gap-1">
+          <div className="flex flex-wrap items-center gap-1">
             {WEEKDAYS_DISPLAY.map((d) => {
               const active = rule.byday.includes(d.key);
               return (
@@ -480,7 +483,7 @@ function Editor({
                     })
                   }
                   className={
-                    "grid size-8 place-items-center rounded-md font-mono text-xs transition-colors " +
+                    "grid size-9 place-items-center rounded-md font-mono text-xs transition-colors sm:size-8 pointer-coarse:size-10 " +
                     (active
                       ? "bg-foreground text-background"
                       : "border border-border/70 text-foreground/85 hover:border-foreground/40")
@@ -497,12 +500,12 @@ function Editor({
       {rule.freq === "MONTHLY" && (
         <>
           <Row label="ON">
-            <div className="flex items-center rounded-md border border-border/70 bg-background p-0.5">
+            <div className="inline-flex max-w-full flex-wrap items-center rounded-md border border-border/70 bg-background p-0.5">
               <button
                 type="button"
                 onClick={() => apply({ monthlyMode: "day" })}
                 className={
-                  "rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] " +
+                  "min-h-8 rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] pointer-coarse:min-h-10 " +
                   (rule.monthlyMode === "day"
                     ? "bg-foreground/[0.08] text-foreground"
                     : "text-muted-foreground hover:text-foreground")
@@ -514,7 +517,7 @@ function Editor({
                 type="button"
                 onClick={() => apply({ monthlyMode: "weekday" })}
                 className={
-                  "rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] " +
+                  "min-h-8 rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] pointer-coarse:min-h-10 " +
                   (rule.monthlyMode === "weekday"
                     ? "bg-foreground/[0.08] text-foreground"
                     : "text-muted-foreground hover:text-foreground")
@@ -537,14 +540,14 @@ function Editor({
           {rule.monthlyMode === "weekday" && (
             <>
               <Row label="BYSETPOS">
-                <div className="flex items-center rounded-md border border-border/70 bg-background p-0.5">
+                <div className="inline-flex max-w-full flex-wrap items-center rounded-md border border-border/70 bg-background p-0.5">
                   {POSITIONS.map((p) => (
                     <button
                       key={p.value}
                       type="button"
                       onClick={() => apply({ bysetpos: p.value })}
                       className={
-                        "rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] " +
+                        "min-h-8 rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] pointer-coarse:min-h-10 " +
                         (rule.bysetpos === p.value
                           ? "bg-foreground/[0.08] text-foreground"
                           : "text-muted-foreground hover:text-foreground")
@@ -556,7 +559,7 @@ function Editor({
                 </div>
               </Row>
               <Row label="BYDAY">
-                <div className="flex items-center gap-1">
+                <div className="flex flex-wrap items-center gap-1">
                   {WEEKDAYS_DISPLAY.map((d) => {
                     const active = rule.bydayPositional.includes(d.key);
                     return (
@@ -571,7 +574,7 @@ function Editor({
                           })
                         }
                         className={
-                          "grid size-8 place-items-center rounded-md font-mono text-xs transition-colors " +
+                          "grid size-9 place-items-center rounded-md font-mono text-xs transition-colors sm:size-8 pointer-coarse:size-10 " +
                           (active
                             ? "bg-foreground text-background"
                             : "border border-border/70 text-foreground/85 hover:border-foreground/40")
@@ -652,12 +655,16 @@ function Row({
   label: string;
   children: React.ReactNode;
 }) {
+  const id = useId();
   return (
-    <div className="grid grid-cols-[110px_1fr] items-start gap-3">
-      <label className="pt-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+    // Label above the control on phones, beside it from sm.
+    <div className="grid grid-cols-1 items-start gap-1.5 sm:grid-cols-[110px_minmax(0,1fr)] sm:gap-3">
+      <div id={id} className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:pt-1.5">
         {label}
-      </label>
-      <div className="min-w-0">{children}</div>
+      </div>
+      <div role="group" aria-labelledby={id} className="min-w-0">
+        {children}
+      </div>
     </div>
   );
 }
@@ -674,9 +681,10 @@ function EndOption({
   trailing?: React.ReactNode;
 }) {
   return (
-    <label className="flex items-center gap-2 text-sm">
+    <label className="flex min-h-9 flex-wrap items-center gap-2 text-sm">
       <input
         type="radio"
+        name="recurrence-end"
         checked={checked}
         onChange={onSelect}
         className="size-3.5"
@@ -711,8 +719,9 @@ function DayOfMonthGrid({
               key={n}
               type="button"
               onClick={() => toggle(n)}
+              aria-pressed={active}
               className={
-                "grid h-7 place-items-center rounded font-mono text-[11px] tabular-nums " +
+                "grid h-8 place-items-center rounded font-mono text-[11px] tabular-nums sm:h-7 pointer-coarse:h-9 " +
                 (active
                   ? "bg-foreground text-background"
                   : "border border-border/60 text-foreground/80 hover:border-foreground/40")
@@ -726,7 +735,7 @@ function DayOfMonthGrid({
           type="button"
           onClick={() => toggle(-1)}
           className={
-            "col-span-3 grid h-7 place-items-center rounded font-mono text-[10px] uppercase tracking-[0.2em] " +
+            "col-span-3 grid h-8 place-items-center sm:h-7 pointer-coarse:h-9 rounded font-mono text-[10px] uppercase tracking-[0.2em] " +
             (selected.includes(-1)
               ? "bg-foreground text-background"
               : "border border-border/60 text-foreground/80 hover:border-foreground/40")
@@ -758,7 +767,7 @@ function Preview({
   setMonthOffset: (n: number) => void;
 }) {
   return (
-    <div className="space-y-5 bg-muted/10 px-5 py-5">
+    <div className="min-w-0 space-y-5 bg-muted/10 px-4 py-5 sm:px-5">
       <div>
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           RRULE

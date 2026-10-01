@@ -48,11 +48,13 @@ const DAYS = [
   { label: "Fri", num: 30 },
 ];
 
+// Five equal day columns from sm up. On phones the grid scrolls horizontally,
+// two days per screen with scroll-snap, while the hour rail stays pinned.
 export function CalendarsWeekShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-8 py-8">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Apr 26 – May 2 · Week 17
@@ -62,19 +64,21 @@ export function CalendarsWeekShowcasePage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="grid size-8 place-items-center rounded-md border border-border/60 hover:bg-foreground/[0.04]"
+              aria-label="Previous week"
+              className="grid size-8 place-items-center rounded-md border border-border/60 hover:bg-foreground/[0.04] pointer-coarse:size-10"
             >
               <ChevronLeftIcon className="size-3.5" />
             </button>
             <button
               type="button"
-              className="rounded-md border border-border/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em]"
+              className="min-h-8 rounded-md border border-border/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] pointer-coarse:min-h-10"
             >
               Today
             </button>
             <button
               type="button"
-              className="grid size-8 place-items-center rounded-md border border-border/60 hover:bg-foreground/[0.04]"
+              aria-label="Next week"
+              className="grid size-8 place-items-center rounded-md border border-border/60 hover:bg-foreground/[0.04] pointer-coarse:size-10"
             >
               <ChevronRightIcon className="size-3.5" />
             </button>
@@ -82,13 +86,18 @@ export function CalendarsWeekShowcasePage() {
         </div>
 
         <div className="mt-6 overflow-hidden rounded-xl border border-border/60 bg-background/40">
+          <div
+            tabIndex={0}
+            aria-label="Week schedule"
+            className="@container snap-x snap-mandatory scroll-pl-12 overflow-x-auto overscroll-x-contain sm:overflow-visible"
+          >
           {/* Day headers */}
-          <div className="grid grid-cols-[64px_repeat(5,1fr)] border-border/40 border-b">
-            <div className="border-border/40 border-r" />
+          <div className="grid grid-cols-[48px_repeat(5,minmax(calc((100cqw_-_48px)/2),1fr))] sm:grid-cols-[64px_repeat(5,minmax(0,1fr))] border-border/40 border-b">
+            <div className="sticky left-0 z-20 border-border/40 border-r bg-background" />
             {DAYS.map((d) => (
               <div
                 key={d.label}
-                className="border-border/40 px-3 py-3 last:border-r-0 sm:border-r"
+                className="snap-start border-border/40 border-r px-3 py-3 last:border-r-0"
               >
                 <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                   {d.label}
@@ -106,13 +115,13 @@ export function CalendarsWeekShowcasePage() {
           </div>
 
           {/* Grid */}
-          <div className="grid grid-cols-[64px_repeat(5,1fr)]">
+          <div className="grid grid-cols-[48px_repeat(5,minmax(calc((100cqw_-_48px)/2),1fr))] sm:grid-cols-[64px_repeat(5,minmax(0,1fr))]">
             {/* Hour rail */}
-            <div className="border-border/40 border-r">
+            <div className="sticky left-0 z-20 border-border/40 border-r bg-background">
               {HOURS.map((h) => (
                 <div
                   key={h}
-                  className="flex items-start justify-end px-2 py-1 font-mono text-[10px] text-muted-foreground"
+                  className="flex items-start justify-end px-1.5 py-1 font-mono text-[10px] text-muted-foreground sm:px-2"
                   style={{ height: HOUR_PX }}
                 >
                   {String(h).padStart(2, "0")}:00
@@ -124,7 +133,7 @@ export function CalendarsWeekShowcasePage() {
             {DAYS.map((d, di) => (
               <div
                 key={d.label}
-                className="relative border-border/40 last:border-r-0 sm:border-r"
+                className="relative snap-start border-border/40 border-r last:border-r-0"
                 style={{ height: HOURS.length * HOUR_PX }}
               >
                 {/* Hour grid lines */}
@@ -170,7 +179,7 @@ export function CalendarsWeekShowcasePage() {
                       <div className="truncate text-[11px] font-medium leading-tight">
                         {e.title}
                       </div>
-                      <div className="font-mono text-[9px] opacity-70">
+                      <div className="truncate font-mono text-[10px] opacity-70">
                         {formatTime(e.start)}–{formatTime(e.start + e.duration)}
                         {e.attendees ? ` · ${e.attendees}` : ""}
                       </div>
@@ -179,6 +188,7 @@ export function CalendarsWeekShowcasePage() {
                 })}
               </div>
             ))}
+          </div>
           </div>
         </div>
       </div>

@@ -142,7 +142,9 @@ SEED_TEAM.forEach((m) => {
 const SEED_HOLIDAYS: Holiday[] = [{ day: 19, label: "Memorial Day" }];
 
 const DAYS_TOTAL = 31;
-const DAY_W = 24;
+// Day cell width comes from a CSS variable so touch screens get 36px cells.
+const dw = (n: number, extra = 0) =>
+  `calc(var(--day-w) * ${n}${extra ? ` + ${extra}px` : ""})`;
 
 export function CalendarsHolidaysShowcasePage() {
   const [team, setTeam] = useState<Member[]>(SEED_TEAM);
@@ -252,9 +254,9 @@ export function CalendarsHolidaysShowcasePage() {
       : `${overlapDays.length} day${overlapDays.length === 1 ? "" : "s"} with 2+ out · ${totalOut} total day${totalOut === 1 ? "" : "s"} off · ${holidays.length} holiday${holidays.length === 1 ? "" : "s"}`;
 
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 [--day-w:24px] sm:px-6 sm:py-8 lg:px-10 lg:py-10 pointer-coarse:[--day-w:36px]">
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Acme team · May 2026
@@ -262,7 +264,7 @@ export function CalendarsHolidaysShowcasePage() {
             <h1 className="mt-1 font-heading text-2xl">Holidays & PTO</h1>
             <p className="mt-1 text-muted-foreground text-sm">{headline}</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               type="button"
               variant="outline"
@@ -271,14 +273,19 @@ export function CalendarsHolidaysShowcasePage() {
               disabled={team.length === 0}
             >
               <SparklesIcon />
-              Find clearest week
+              <span className="sm:hidden">Clearest week</span>
+              <span className="max-sm:hidden">Find clearest week</span>
             </Button>
             <AddMemberPopover onAdd={addMember} />
           </div>
         </div>
 
-        <div className="mt-5 inline-flex items-center gap-1 rounded-md border border-border/60 bg-background/40 p-0.5 font-mono text-[10px] uppercase tracking-[0.2em]">
-          <span className="px-2 text-muted-foreground">Click adds:</span>
+        <div
+          role="group"
+          aria-label="Block type to add"
+          className="mt-5 inline-flex max-w-full flex-wrap items-center gap-1 rounded-md border border-border/60 bg-background/40 p-0.5 font-mono text-[10px] uppercase tracking-[0.2em]"
+        >
+          <span className="px-2 text-muted-foreground">Tap adds:</span>
           {BLOCK_TYPES.map((b) => (
             <button
               key={b.id}
@@ -286,7 +293,7 @@ export function CalendarsHolidaysShowcasePage() {
               onClick={() => setActiveType(b.id)}
               aria-pressed={activeType === b.id}
               className={
-                "rounded px-2 py-1 transition-colors " +
+                "min-h-7 rounded px-2 py-1 transition-colors pointer-coarse:min-h-9 " +
                 (activeType === b.id
                   ? "bg-foreground text-background"
                   : "text-muted-foreground hover:text-foreground")
@@ -295,18 +302,26 @@ export function CalendarsHolidaysShowcasePage() {
               {b.label}
             </button>
           ))}
-          <span className="px-2 text-muted-foreground/70">
+          <span className="px-2 text-muted-foreground/70 max-sm:hidden">
             · click again to remove
           </span>
         </div>
 
         <div className="mt-4 overflow-hidden rounded-xl border border-border/60 bg-background/40">
-          <div className="grid grid-cols-[220px_1fr] border-border/40 border-b bg-background">
-            <div className="border-border/40 border-r px-4 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+          {/* One scroller for the day header, holiday strip and every member row,
+              with the member column pinned — previously only the header scrolled. */}
+          <div
+            tabIndex={0}
+            aria-label="Team calendar, May 2026"
+            className="overflow-x-auto overscroll-x-contain"
+          >
+          <div className="min-w-max">
+          <div className="grid grid-cols-[148px_auto] border-border/40 border-b bg-background sm:grid-cols-[220px_auto]">
+            <div className="sticky left-0 z-20 border-border/40 border-r bg-background px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4">
               Member · {team.length}
             </div>
-            <div className="overflow-x-auto">
-              <div className="relative flex" style={{ width: DAYS_TOTAL * DAY_W }}>
+            <div>
+              <div className="relative flex" style={{ width: dw(DAYS_TOTAL) }}>
                 {Array.from({ length: DAYS_TOTAL }).map((_, i) => {
                   const day = i + 1;
                   const overlap = overlapDays.includes(day);
@@ -326,7 +341,7 @@ export function CalendarsHolidaysShowcasePage() {
                               ? "bg-foreground/[0.02] text-muted-foreground"
                               : "text-foreground/85")
                       }
-                      style={{ width: DAY_W }}
+                      style={{ width: dw(1) }}
                     >
                       {day}
                       {overlap ? <CircleAlertIcon className="mt-0.5 size-2.5" /> : null}
@@ -338,12 +353,12 @@ export function CalendarsHolidaysShowcasePage() {
           </div>
 
           {/* Holiday strip */}
-          <div className="grid grid-cols-[220px_1fr] border-border/40 border-b bg-amber-500/[0.04]">
-            <div className="flex items-center gap-2 border-border/40 border-r px-4 py-2 font-mono text-[10px] text-amber-700 uppercase tracking-[0.25em] dark:text-amber-400">
-              Public holidays
+          <div className="grid grid-cols-[148px_auto] border-border/40 border-b bg-amber-500/[0.04] sm:grid-cols-[220px_auto]">
+            <div className="sticky left-0 z-20 flex items-center gap-2 border-border/40 border-r bg-background px-3 py-2 font-mono text-[10px] text-amber-700 uppercase tracking-[0.2em] sm:px-4 sm:tracking-[0.25em] dark:text-amber-400">
+              Holidays
             </div>
-            <div className="relative h-9 overflow-hidden">
-              <div className="relative flex h-full" style={{ width: DAYS_TOTAL * DAY_W }}>
+            <div className="relative h-9">
+              <div className="relative flex h-full" style={{ width: dw(DAYS_TOTAL) }}>
                 {Array.from({ length: DAYS_TOTAL }).map((_, i) => {
                   const day = i + 1;
                   const isHoliday = holidays.some((h) => h.day === day);
@@ -359,7 +374,7 @@ export function CalendarsHolidaysShowcasePage() {
                           ? "bg-amber-500/30 hover:bg-amber-500/40"
                           : "hover:bg-amber-500/10")
                       }
-                      style={{ width: DAY_W }}
+                      style={{ width: dw(1) }}
                     />
                   );
                 })}
@@ -371,8 +386,8 @@ export function CalendarsHolidaysShowcasePage() {
                       TONE.holiday
                     }
                     style={{
-                      left: (h.day - 1) * DAY_W + 1,
-                      width: DAY_W - 2,
+                      left: dw(h.day - 1, 1),
+                      width: dw(1, -2),
                     }}
                   >
                     {h.label[0]}
@@ -391,12 +406,12 @@ export function CalendarsHolidaysShowcasePage() {
             segmentsByMember.map(({ member: m, segments }) => (
               <div
                 key={m.id}
-                className="group grid grid-cols-[220px_1fr] border-border/40 border-b last:border-b-0"
+                className="group grid grid-cols-[148px_auto] border-border/40 border-b last:border-b-0 sm:grid-cols-[220px_auto]"
               >
-                <div className="flex items-center gap-2.5 border-border/40 border-r px-4 py-3">
+                <div className="sticky left-0 z-20 flex items-center gap-2 border-border/40 border-r bg-background px-3 py-3 sm:gap-2.5 sm:px-4">
                   <Avatar
                     className={
-                      "size-7 " +
+                      "size-7 shrink-0 max-sm:hidden " +
                       (((m as Member & { tone?: string }).tone) ?? autoTone(m.name))
                     }
                   >
@@ -414,13 +429,13 @@ export function CalendarsHolidaysShowcasePage() {
                     type="button"
                     onClick={() => removeMember(m.id)}
                     aria-label={`Remove ${m.name}`}
-                    className="rounded-md p-1 text-muted-foreground/40 opacity-0 transition-all group-hover:opacity-100 hover:bg-foreground/[0.05] hover:text-destructive"
+                    className="grid size-6 shrink-0 place-items-center rounded-md text-muted-foreground/40 opacity-0 transition-all hover:bg-foreground/[0.05] hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
                   >
                     <TrashIcon className="size-3.5" />
                   </button>
                 </div>
-                <div className="relative h-12 overflow-hidden">
-                  <div className="relative h-full flex" style={{ width: DAYS_TOTAL * DAY_W }}>
+                <div className="relative h-12">
+                  <div className="relative h-full flex" style={{ width: dw(DAYS_TOTAL) }}>
                     {Array.from({ length: DAYS_TOTAL }).map((_, i) => {
                       const day = i + 1;
                       const isWeekend = (i + 5) % 7 < 2;
@@ -441,7 +456,7 @@ export function CalendarsHolidaysShowcasePage() {
                               ? "bg-foreground/[0.02] hover:bg-foreground/[0.05]"
                               : "hover:bg-foreground/[0.04]")
                           }
-                          style={{ width: DAY_W }}
+                          style={{ width: dw(1) }}
                         />
                       );
                     })}
@@ -453,8 +468,8 @@ export function CalendarsHolidaysShowcasePage() {
                           TONE[seg.type]
                         }
                         style={{
-                          left: (seg.start - 1) * DAY_W + 1,
-                          width: seg.span * DAY_W - 2,
+                          left: dw(seg.start - 1, 1),
+                          width: dw(seg.span, -2),
                         }}
                       >
                         {seg.span > 2 ? (
@@ -469,14 +484,16 @@ export function CalendarsHolidaysShowcasePage() {
               </div>
             ))
           )}
+          </div>
+          </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+        <div className="mt-4 flex flex-wrap items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
           <Legend tone="vacation" label="Vacation" />
           <Legend tone="sick" label="Sick" />
           <Legend tone="remote" label="Remote" />
           <Legend tone="holiday" label="Holiday" />
-          <span className="ml-auto">
+          <span className="sm:ml-auto">
             Click a cell to toggle · ⚠ shows when 2+ are out
           </span>
         </div>

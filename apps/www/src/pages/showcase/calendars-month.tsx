@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon } from "lucide-react";
 
 interface Event {
@@ -34,67 +35,88 @@ const TONE: Record<Event["tone"], string> = {
   sky: "bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30",
 };
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DOT: Record<Event["tone"], string> = {
+  indigo: "bg-indigo-500",
+  teal: "bg-teal-500",
+  amber: "bg-amber-500",
+  rose: "bg-rose-500",
+  violet: "bg-violet-500",
+  sky: "bg-sky-500",
+};
 
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const VIEWS = ["Day", "Week", "Month"] as const;
+
+// Multi-day events show on every day they cover.
+function eventsOn(day: number) {
+  return EVENTS.filter((e) => day >= e.day && day < e.day + (e.span ?? 1));
+}
+
+// Month grid with chips from sm up. On phones the cells shrink to a date + dots
+// and tapping a day lists its events below the grid (Google/Fantastical-style).
 export function CalendarsMonthShowcasePage() {
   // April 2026 — starts on Wed (day 1)
   const offset = 2; // days before April 1 (Mon=0, Tue=1, Wed=2)
   const totalDays = 30;
   const cells = offset + totalDays;
   const rows = Math.ceil(cells / 7);
+  const TODAY = 26;
+  const [selected, setSelected] = useState(TODAY);
+  const [view, setView] = useState<(typeof VIEWS)[number]>("Month");
+  const selectedEvents = eventsOn(selected);
 
   return (
-    <div className="min-h-svh bg-background px-8 py-8">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
               Calendar · personal
             </div>
             <h1 className="mt-1 font-heading text-2xl">April 2026</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              className="grid size-8 place-items-center rounded-md border border-border/60 hover:bg-foreground/[0.04]"
+              aria-label="Previous month"
+              className="grid size-8 place-items-center rounded-md border border-border/60 hover:bg-foreground/[0.04] pointer-coarse:size-10"
             >
               <ChevronLeftIcon className="size-3.5" />
             </button>
             <button
               type="button"
-              className="rounded-md border border-border/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em]"
+              onClick={() => setSelected(TODAY)}
+              className="min-h-8 rounded-md border border-border/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] pointer-coarse:min-h-10"
             >
               Today
             </button>
             <button
               type="button"
-              className="grid size-8 place-items-center rounded-md border border-border/60 hover:bg-foreground/[0.04]"
+              aria-label="Next month"
+              className="grid size-8 place-items-center rounded-md border border-border/60 hover:bg-foreground/[0.04] pointer-coarse:size-10"
             >
               <ChevronRightIcon className="size-3.5" />
             </button>
-            <div className="ml-2 flex items-center rounded-md border border-border/60 p-0.5 font-mono text-[10px] uppercase tracking-[0.2em]">
-              <button
-                type="button"
-                className="rounded px-2 py-1 text-muted-foreground hover:text-foreground"
-              >
-                Day
-              </button>
-              <button
-                type="button"
-                className="rounded px-2 py-1 text-muted-foreground hover:text-foreground"
-              >
-                Week
-              </button>
-              <button
-                type="button"
-                className="rounded bg-foreground/[0.08] px-2 py-1"
-              >
-                Month
-              </button>
+            <div
+              role="group"
+              aria-label="Calendar view"
+              className="ml-auto flex items-center rounded-md border border-border/60 p-0.5 font-mono text-[10px] uppercase tracking-[0.2em] sm:ml-2"
+            >
+              {VIEWS.map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  aria-pressed={view === v}
+                  onClick={() => setView(v)}
+                  className="min-h-7 rounded px-2.5 py-1 text-muted-foreground hover:text-foreground aria-pressed:bg-foreground/[0.08] aria-pressed:text-foreground pointer-coarse:min-h-9"
+                >
+                  {v}
+                </button>
+              ))}
             </div>
             <button
               type="button"
-              className="ml-2 inline-flex items-center gap-1 rounded-md bg-foreground px-3 py-1.5 font-mono text-[11px] text-background uppercase tracking-[0.2em]"
+              className="ml-2 inline-flex min-h-8 items-center gap-1 rounded-md bg-foreground px-3 py-1.5 font-mono text-[11px] text-background uppercase tracking-[0.2em] max-sm:hidden"
             >
               <PlusIcon className="size-3" />
               Event
@@ -107,70 +129,125 @@ export function CalendarsMonthShowcasePage() {
             {DAYS.map((d) => (
               <div
                 key={d}
-                className="px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]"
+                className="px-1 py-2 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:px-3 sm:text-left sm:tracking-[0.25em]"
               >
-                {d}
+                <span aria-hidden className="sm:hidden">{d[0]}</span>
+                <span className="max-sm:sr-only">{d}</span>
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-7 grid-rows-5">
+          <div className="grid grid-cols-7">
             {Array.from({ length: rows * 7 }).map((_, i) => {
               const day = i - offset + 1;
               const out = day < 1 || day > totalDays;
-              const today = day === 26;
-              const dayEvents = EVENTS.filter((e) => e.day === day).slice(0, 3);
-              const overflow = EVENTS.filter((e) => e.day === day).length - 3;
+              const isToday = day === TODAY;
+              const isSelected = day === selected;
+              const all = out ? [] : eventsOn(day);
+              const dayEvents = all.slice(0, 3);
+              const overflow = all.length - 3;
+              const col = i % 7;
               return (
                 <div
                   key={i}
                   className={
-                    "min-h-[110px] border-border/40 border-r border-b p-1.5 last-of-type:border-r-0 " +
+                    "min-h-14 border-border/40 border-b sm:min-h-[110px] " +
+                    (col < 6 ? "border-r " : "") +
                     (out ? "bg-muted/20" : "")
                   }
                 >
                   {!out ? (
-                    <>
-                      <div
+                    <button
+                      type="button"
+                      onClick={() => setSelected(day)}
+                      aria-pressed={isSelected}
+                      aria-label={`April ${day}${all.length ? `, ${all.length} event${all.length > 1 ? "s" : ""}` : ""}`}
+                      aria-current={isToday ? "date" : undefined}
+                      className={
+                        "flex h-full w-full flex-col items-center gap-1 p-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:items-stretch sm:p-1.5 " +
+                        (isSelected ? "max-sm:bg-foreground/[0.05] sm:bg-foreground/[0.02]" : "hover:bg-foreground/[0.02]")
+                      }
+                    >
+                      <span
                         className={
-                          "mb-1 flex size-7 items-center justify-center rounded-full font-mono text-[12px] " +
-                          (today
+                          "flex size-7 items-center justify-center rounded-full font-mono text-[12px] " +
+                          (isToday
                             ? "bg-foreground text-background"
-                            : "text-foreground/80")
+                            : isSelected
+                              ? "ring-1 ring-foreground/40"
+                              : "text-foreground/80")
                         }
                       >
                         {day}
-                      </div>
-                      <div className="flex flex-col gap-0.5">
+                      </span>
+                      {/* Phones: one dot per event (max 3). */}
+                      {all.length ? (
+                        <span aria-hidden className="flex gap-0.5 sm:hidden">
+                          {dayEvents.map((e, ei) => (
+                            <span key={ei} className={"size-1.5 rounded-full " + DOT[e.tone]} />
+                          ))}
+                        </span>
+                      ) : null}
+                      <span aria-hidden className="flex flex-col gap-0.5 max-sm:hidden">
                         {dayEvents.map((e, ei) => (
-                          <div
+                          <span
                             key={ei}
                             className={
-                              "truncate rounded border px-1.5 py-0.5 text-[10px] leading-tight " +
+                              "truncate rounded border px-1.5 py-0.5 text-[11px] leading-tight " +
                               TONE[e.tone]
-                            }
-                            style={
-                              e.span
-                                ? { gridColumn: `span ${e.span}` }
-                                : undefined
                             }
                           >
                             {e.title}
-                          </div>
+                          </span>
                         ))}
                         {overflow > 0 ? (
-                          <div className="px-1 font-mono text-[10px] text-muted-foreground">
+                          <span className="px-1 font-mono text-[10px] text-muted-foreground">
                             +{overflow} more
-                          </div>
+                          </span>
                         ) : null}
-                      </div>
-                    </>
+                      </span>
+                    </button>
                   ) : null}
                 </div>
               );
             })}
           </div>
         </div>
+
+        {/* Selected-day agenda (phones only — chips already show this on wider screens). */}
+        <section aria-live="polite" className="mt-5 sm:hidden">
+          <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+            {DAYS[(selected - 1 + offset) % 7]}, April {selected}
+          </h2>
+          {selectedEvents.length ? (
+            <ul className="mt-2 flex flex-col gap-2">
+              {selectedEvents.map((e, i) => (
+                <li
+                  key={i}
+                  className={"rounded-lg border px-3 py-2.5 text-sm " + TONE[e.tone]}
+                >
+                  {e.title}
+                  {e.span && e.span > 1 ? (
+                    <span className="ml-2 font-mono text-[11px] opacity-70">
+                      {e.span} days
+                    </span>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-muted-foreground text-sm">No events.</p>
+          )}
+        </section>
       </div>
+
+      {/* New event FAB on phones, clear of the home indicator. */}
+      <button
+        type="button"
+        aria-label="New event"
+        className="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] grid size-14 place-items-center rounded-full bg-foreground text-background shadow-lg sm:hidden"
+      >
+        <PlusIcon className="size-5" />
+      </button>
     </div>
   );
 }

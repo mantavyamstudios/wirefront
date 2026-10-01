@@ -44,12 +44,12 @@ const TONE_BG: Record<NonNullable<Slot["tone"]>, string> = {
 
 export function CalendarsAgendaShowcasePage() {
   return (
-    <div className="min-h-svh bg-background px-10 py-10">
+    <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-2xl">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Sat, Apr 26 · agenda
         </div>
-        <h1 className="mt-1 font-heading text-3xl tracking-tight">
+        <h1 className="mt-1 font-heading text-2xl tracking-tight sm:text-3xl">
           Today and tomorrow
         </h1>
         <p className="mt-1 text-muted-foreground text-sm">
@@ -74,7 +74,7 @@ function Section({
 }) {
   return (
     <section className="mt-8">
-      <div className="mb-2 flex items-end justify-between">
+      <div className="mb-2 flex items-end justify-between gap-3">
         <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           {label}
         </span>
@@ -101,25 +101,27 @@ function Section({
           ) : (
             <li
               key={i}
-              className="grid grid-cols-[80px_1fr] gap-3 rounded-xl border border-border/60 bg-background/40 px-3 py-3 transition-colors hover:bg-background/60"
+              className="grid grid-cols-[48px_minmax(0,1fr)] gap-3 rounded-xl sm:grid-cols-[80px_minmax(0,1fr)] border border-border/60 bg-background/40 px-3 py-3 transition-colors hover:bg-background/60"
             >
               <div className="font-mono text-[11px]">
                 <div className="text-foreground">{s.start}</div>
                 <div className="text-muted-foreground">{s.end}</div>
               </div>
-              <div className="flex items-center gap-3">
+              {/* Attendees sit beside the text from sm, under it on phones. */}
+              <div className="grid grid-cols-[4px_minmax(0,1fr)] items-center gap-x-3 gap-y-2 sm:grid-cols-[4px_minmax(0,1fr)_auto]">
                 <span
-                  className={"h-12 w-1 shrink-0 rounded-full " + TONE_BG[s.tone ?? "indigo"]}
+                  aria-hidden
+                  className={"row-span-2 h-full min-h-12 w-1 self-stretch rounded-full sm:row-span-1 " + TONE_BG[s.tone ?? "indigo"]}
                 />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm">{s.title}</div>
                   <div className="mt-0.5 flex items-center gap-2 font-mono text-[10px] text-muted-foreground">
                     {s.location?.startsWith("Zoom") ? (
-                      <VideoIcon className="size-3" />
+                      <VideoIcon className="size-3 shrink-0" />
                     ) : (
-                      <MapPinIcon className="size-3" />
+                      <MapPinIcon className="size-3 shrink-0" />
                     )}
-                    <span>{s.location}</span>
+                    <span className="min-w-0 truncate">{s.location}</span>
                   </div>
                   {s.detail ? (
                     <div className="mt-1 text-muted-foreground text-xs">
@@ -127,19 +129,22 @@ function Section({
                     </div>
                   ) : null}
                 </div>
-                <div className="flex items-center -space-x-1.5">
+                <div
+                  aria-label={s.attendees?.length ? `${s.attendees.length} attendees` : undefined}
+                  className="flex items-center -space-x-1.5 empty:hidden"
+                >
                   {s.attendees?.slice(0, 4).map((a) => (
                     <Avatar
                       key={a}
                       className="size-6 border-2 border-background"
                     >
-                      <AvatarFallback className="text-[9px]">
+                      <AvatarFallback className="text-[10px]">
                         {a}
                       </AvatarFallback>
                     </Avatar>
                   ))}
                   {(s.attendees?.length ?? 0) > 4 ? (
-                    <span className="grid size-6 place-items-center rounded-full border-2 border-background bg-foreground/[0.06] font-mono text-[9px]">
+                    <span className="grid size-6 place-items-center rounded-full border-2 border-background bg-foreground/[0.06] font-mono text-[10px]">
                       +{(s.attendees?.length ?? 0) - 4}
                     </span>
                   ) : null}
