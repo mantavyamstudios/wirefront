@@ -55,8 +55,9 @@ export function ChartsScatterShowcasePage() {
           Bubble size = MRR. Bottom-left quadrant flags churn risk.
         </p>
 
-        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-6">
-          <ChartContainer className="h-96">
+        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-6">
+          {/* Point labels collide with bubbles on narrow charts; tooltips carry them there. */}
+          <ChartContainer className="h-72 sm:h-96 max-sm:[&_.recharts-label-list]:hidden">
             <ScatterChart margin={{ top: 16, right: 24, left: 0, bottom: 8 }}>
               <ChartGrid vertical />
               <ChartAxis
@@ -128,7 +129,7 @@ export function ChartsScatterShowcasePage() {
             </ScatterChart>
           </ChartContainer>
 
-          <div className="mt-3 flex items-center justify-between font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:tracking-[0.25em]">
             <span>← satisfaction (NPS proxy) →</span>
             <span>3 outliers flagged</span>
           </div>

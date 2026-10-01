@@ -30,14 +30,15 @@ export function ChartsFunnelShowcasePage() {
             const carry = i > 0 ? (s.count / STAGES[i - 1].count) * 100 : 100;
             return (
               <div key={s.name} className="relative">
-                <div className="grid grid-cols-[200px_1fr_120px] items-center gap-4 py-3">
-                  <div>
+                {/* Phones: label + count on one row, bar full-width below. sm+: three columns. */}
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 py-3 sm:grid-cols-[minmax(0,180px)_minmax(0,1fr)_110px] md:grid-cols-[200px_minmax(0,1fr)_120px]">
+                  <div className="min-w-0">
                     <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                       {s.kind}
                     </div>
                     <div className="text-sm">{s.name}</div>
                   </div>
-                  <div className="relative h-12">
+                  <div className="relative col-span-2 row-start-2 h-10 sm:col-span-1 sm:row-start-auto sm:h-12">
                     <div className="absolute inset-0 rounded-md bg-background" />
                     <div
                       className="absolute inset-y-0 left-0 rounded-md transition-all"
@@ -53,7 +54,7 @@ export function ChartsFunnelShowcasePage() {
                       </span>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right max-sm:col-start-2 max-sm:row-start-1">
                     <div className="font-heading text-lg tabular-nums">
                       {s.count.toLocaleString()}
                     </div>
@@ -69,7 +70,7 @@ export function ChartsFunnelShowcasePage() {
                   </div>
                 </div>
                 {i > 0 ? (
-                  <div className="absolute -top-3 left-[208px] inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 font-mono text-[10px] text-rose-600 ring-1 ring-rose-500/20 dark:text-rose-400">
+                  <div className="absolute -top-3 right-0 inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 font-mono text-[10px] text-rose-600 ring-1 ring-rose-500/20 sm:right-auto sm:left-[196px] md:left-[216px] dark:text-rose-400">
                     <ArrowDownRightIcon className="size-3" />
                     -{drop.toFixed(1)}%{" "}
                     <span className="text-muted-foreground">
@@ -82,7 +83,7 @@ export function ChartsFunnelShowcasePage() {
           })}
         </div>
 
-        <div className="mt-6 grid grid-cols-3 gap-3">
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Stat label="Visit → signup" value="25.9%" tone="emerald" />
           <Stat label="Signup → activate" value="33.7%" tone="amber" />
           <Stat label="Activate → invite" value="44.3%" tone="emerald" />

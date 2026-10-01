@@ -20,7 +20,7 @@ export function ChartsDonutShowcasePage() {
         </div>
         <h1 className="mt-1 font-heading text-2xl">Where revenue comes from</h1>
 
-        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-6">
+        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-6">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr]">
             <div className="relative grid place-items-center">
               <ChartContainer className="h-56 w-56">
@@ -65,9 +65,9 @@ export function ChartsDonutShowcasePage() {
                     className="size-3 shrink-0 rounded"
                     style={{ backgroundColor: s.color }}
                   />
-                  <div className="flex-1">
-                    <div className="flex items-baseline justify-between">
-                      <span className="text-sm">{s.name}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <span className="truncate text-sm">{s.name}</span>
                       <span className="font-mono text-muted-foreground text-xs tabular-nums">
                         {s.value.toFixed(1)}%
                       </span>
@@ -82,7 +82,7 @@ export function ChartsDonutShowcasePage() {
                       />
                     </div>
                   </div>
-                  <span className="w-16 text-right font-mono text-foreground text-xs tabular-nums">
+                  <span className="shrink-0 text-right font-mono text-foreground text-xs tabular-nums sm:w-20">
                     ${(s.value * 18400).toLocaleString()}
                   </span>
                 </li>

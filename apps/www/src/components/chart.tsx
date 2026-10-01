@@ -109,6 +109,8 @@ export function ChartAxis({
   orientation,
   interval,
   padding,
+  angle,
+  height,
 }: {
   axis?: "x" | "y";
   dataKey?: string;
@@ -123,6 +125,9 @@ export function ChartAxis({
   orientation?: "top" | "bottom" | "left" | "right";
   interval?: number | "preserveStart" | "preserveEnd" | "preserveStartEnd";
   padding?: { left?: number; right?: number; top?: number; bottom?: number };
+  /** X axis only: rotate tick labels (e.g. -40 on narrow charts) and reserve `height` for them. */
+  angle?: number;
+  height?: number;
 }) {
   // Tick metrics are passed explicitly so Recharts measures labels the way
   // they are styled (10px mono, tracked). Without this, CSS letter-spacing
@@ -166,6 +171,9 @@ export function ChartAxis({
     <XAxis
       {...common}
       width={width}
+      angle={angle}
+      height={height}
+      textAnchor={angle ? "end" : undefined}
       interval={interval ?? "preserveStartEnd"}
       orientation={o}
     />

@@ -33,13 +33,14 @@ export function ChartsLineMultiShowcasePage() {
         </div>
         <h1 className="mt-1 font-heading text-2xl">DAU by platform</h1>
 
-        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-6">
-          <div className="flex items-center gap-3">
+        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-6">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {SERIES.map((s) => (
               <button
                 key={s.key}
                 type="button"
-                className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-background/40 px-2 py-1 text-xs"
+                aria-pressed="true"
+                className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-background/40 px-2 py-1 text-xs pointer-coarse:min-h-10"
               >
                 <span
                   className="size-2 rounded-sm"
@@ -51,29 +52,24 @@ export function ChartsLineMultiShowcasePage() {
                 </span>
               </button>
             ))}
-            <div className="ml-auto flex items-center gap-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
-              <button
-                type="button"
-                className="rounded px-2 py-1 hover:bg-foreground/[0.05]"
-              >
-                7d
-              </button>
-              <button
-                type="button"
-                className="rounded bg-foreground/[0.08] px-2 py-1"
-              >
-                30d
-              </button>
-              <button
-                type="button"
-                className="rounded px-2 py-1 hover:bg-foreground/[0.05]"
-              >
-                90d
-              </button>
+            <div role="tablist" aria-label="Range" className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] max-sm:w-full sm:ml-auto">
+              {["7d", "30d", "90d"].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  role="tab"
+                  aria-selected={r === "30d"}
+                  className={`min-h-7 rounded px-2.5 py-1 pointer-coarse:min-h-10 ${
+                    r === "30d" ? "bg-foreground/[0.08] text-foreground" : "hover:bg-foreground/[0.05]"
+                  }`}
+                >
+                  {r}
+                </button>
+              ))}
             </div>
           </div>
 
-          <ChartContainer className="mt-4 h-72">
+          <ChartContainer className="mt-4 h-56 sm:h-72">
             <LineChart data={DATA} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
               <ChartGrid />
               <ChartAxis dataKey="day" />

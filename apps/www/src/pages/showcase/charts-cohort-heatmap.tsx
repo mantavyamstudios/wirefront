@@ -33,11 +33,13 @@ export function ChartsCohortHeatmapShowcasePage() {
           months.
         </p>
 
-        <div className="mt-6 overflow-x-auto rounded-xl border border-border/60 bg-background/40 p-5">
+        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-3 sm:p-5">
+          {/* Only the grid scrolls; the cohort column stays pinned while it does. */}
+          <div className="overflow-x-auto">
           <table className="w-full border-separate border-spacing-1 text-xs">
             <thead>
               <tr>
-                <th className="px-2 py-1 text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                <th className="sticky left-0 z-10 bg-background px-2 py-1 text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                   Cohort
                 </th>
                 <th className="px-2 py-1 text-right font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
@@ -46,7 +48,7 @@ export function ChartsCohortHeatmapShowcasePage() {
                 {Array.from({ length: months }).map((_, i) => (
                   <th
                     key={i}
-                    className="w-12 px-1 py-1 text-center font-mono text-[10px] text-muted-foreground"
+                    className="w-12 min-w-10 px-1 py-1 text-center font-mono text-[10px] text-muted-foreground"
                   >
                     M{i}
                   </th>
@@ -58,9 +60,9 @@ export function ChartsCohortHeatmapShowcasePage() {
                 const available = months - ci;
                 return (
                   <tr key={c.label}>
-                    <td className="whitespace-nowrap px-2 py-1 text-muted-foreground">
+                    <th scope="row" className="sticky left-0 z-10 whitespace-nowrap bg-background px-2 py-1 text-left font-normal text-muted-foreground">
                       {c.label}
-                    </td>
+                    </th>
                     <td className="px-2 py-1 text-right font-mono text-muted-foreground">
                       {c.size}
                     </td>
@@ -74,7 +76,7 @@ export function ChartsCohortHeatmapShowcasePage() {
                           {past ? (
                             <div className="h-7 w-full rounded bg-background" />
                           ) : (
-                            <Cell value={v ?? 0} highlight={mi === 0} />
+                            <Cell value={v ?? 0} highlight={mi === 0} label={`${c.label}, month ${mi}`} />
                           )}
                         </td>
                       );
@@ -84,6 +86,7 @@ export function ChartsCohortHeatmapShowcasePage() {
               })}
             </tbody>
           </table>
+          </div>
 
           {/* Legend */}
           <div className="mt-5 flex items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
@@ -104,10 +107,12 @@ export function ChartsCohortHeatmapShowcasePage() {
   );
 }
 
-function Cell({ value, highlight }: { value: number; highlight?: boolean }) {
+function Cell({ value, highlight, label }: { value: number; highlight?: boolean; label: string }) {
   const intensity = value / 100;
   return (
     <div
+      title={`${label}: ${value.toFixed(0)}% retained`}
+      aria-label={`${label}: ${value.toFixed(0)}% retained`}
       className={
         "grid h-7 place-items-center rounded font-mono text-[10px] transition-transform hover:scale-[1.04] " +
         (highlight ? "ring-1 ring-foreground/20" : "")

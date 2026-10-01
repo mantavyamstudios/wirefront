@@ -1,3 +1,4 @@
+import { useMediaQuery } from "@orbit/ui/hooks/use-media-query";
 import { Bar, BarChart, Cell, LabelList } from "recharts";
 import {
   ChartAxis,
@@ -72,6 +73,7 @@ function buildBars(): Bar[] {
 const BARS = buildBars();
 
 export function ChartsWaterfallShowcasePage() {
+  const isPhone = useMediaQuery("max-sm");
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">
@@ -80,8 +82,8 @@ export function ChartsWaterfallShowcasePage() {
         </div>
         <h1 className="mt-1 font-heading text-2xl">Net retention waterfall</h1>
 
-        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-6">
-          <div className="mb-3 flex items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-6">
+          <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:tracking-[0.25em]">
             <span className="flex items-center gap-1.5">
               <span className="size-2.5 rounded-sm bg-foreground/70" />
               start / end
@@ -94,15 +96,21 @@ export function ChartsWaterfallShowcasePage() {
               <span className="size-2.5 rounded-sm bg-rose-500" />
               loss
             </span>
-            <span className="ml-auto text-foreground">
+            <span className="text-foreground sm:ml-auto">
               NRR <span className="font-mono">125.2%</span>
             </span>
           </div>
 
-          <ChartContainer className="h-80">
+          {/* Phones: every category label, angled; value labels hidden (tooltips carry them). */}
+          <ChartContainer className="h-72 sm:h-80 max-sm:[&_.recharts-label-list]:hidden">
             <BarChart data={BARS} margin={{ top: 24, right: 8, left: 0, bottom: 0 }}>
               <ChartGrid />
-              <ChartAxis dataKey="label" />
+              <ChartAxis
+                dataKey="label"
+                interval={isPhone ? 0 : undefined}
+                angle={isPhone ? -40 : undefined}
+                height={isPhone ? 64 : undefined}
+              />
               <ChartAxis axis="y" />
               <ChartTooltip />
               <Bar dataKey="base" stackId="w" fill="transparent" />

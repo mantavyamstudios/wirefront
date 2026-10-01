@@ -29,9 +29,9 @@ export function ChartsBarGroupedShowcasePage() {
         </div>
         <h1 className="mt-1 font-heading text-2xl">Year-over-year</h1>
 
-        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
               {SERIES.map((s) => (
                 <span
                   key={s.key}
@@ -50,7 +50,7 @@ export function ChartsBarGroupedShowcasePage() {
             </span>
           </div>
 
-          <ChartContainer className="mt-4 h-72">
+          <ChartContainer className="mt-4 h-56 sm:h-72">
             <BarChart data={DATA} margin={{ top: 16, right: 8, left: 0, bottom: 0 }}>
               <ChartGrid />
               <ChartAxis dataKey="quarter" />
