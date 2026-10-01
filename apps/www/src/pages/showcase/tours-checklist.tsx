@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -61,6 +61,11 @@ const SEED: Task[] = [
 export function ToursChecklistShowcasePage() {
   const [tasks, setTasks] = useState(SEED);
   const [open, setOpen] = useState(true);
+  // Phones start with the checklist collapsed to a pill so it doesn't cover
+  // the page; it opens as a bottom sheet. (Decided after mount — SSR-safe.)
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 639px)").matches) setOpen(false);
+  }, []);
 
   const done = tasks.filter((t) => t.done).length;
   const total = tasks.length;
@@ -70,14 +75,19 @@ export function ToursChecklistShowcasePage() {
     setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
 
   return (
-    <div className="relative min-h-svh overflow-hidden bg-background text-foreground">
+    <div className="relative min-h-svh bg-background text-foreground">
       <FakeApp />
 
-      <div className="absolute right-6 bottom-6 z-50 w-96 rounded-xl border border-border/70 bg-background shadow-2xl">
+      <section
+        aria-label="Setup checklist"
+        className="fixed inset-x-0 bottom-0 z-50 flex max-h-[75svh] flex-col rounded-t-2xl border border-border/70 bg-background pb-[env(safe-area-inset-bottom)] shadow-2xl sm:inset-x-auto sm:right-6 sm:bottom-6 sm:max-h-[calc(100svh-3rem)] sm:w-96 sm:rounded-xl sm:pb-0"
+      >
         <button
           type="button"
+          aria-expanded={open}
+          aria-controls="setup-checklist"
           onClick={() => setOpen((o) => !o)}
-          className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-foreground/[0.02]"
+          className="flex w-full shrink-0 items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-foreground/[0.02]"
         >
           <div>
             <div className="font-medium text-sm">Get set up</div>
@@ -87,7 +97,7 @@ export function ToursChecklistShowcasePage() {
           </div>
           <div className="flex items-center gap-3">
             <div className="relative size-9">
-              <svg viewBox="0 0 36 36" className="size-9 -rotate-90">
+              <svg aria-hidden viewBox="0 0 36 36" className="size-9 -rotate-90">
                 <circle
                   cx="18"
                   cy="18"
@@ -107,28 +117,31 @@ export function ToursChecklistShowcasePage() {
                   strokeLinecap="round"
                 />
               </svg>
-              <span className="absolute inset-0 flex items-center justify-center font-mono text-[10px]">
+              <span aria-hidden className="absolute inset-0 flex items-center justify-center font-mono text-[10px]">
                 {Math.round(pct)}%
               </span>
             </div>
             {open ? (
-              <ChevronDownIcon className="size-4 opacity-60" />
+              <ChevronDownIcon aria-hidden className="size-4 opacity-60" />
             ) : (
-              <ChevronUpIcon className="size-4 opacity-60" />
+              <ChevronUpIcon aria-hidden className="size-4 opacity-60" />
             )}
           </div>
         </button>
 
         {open ? (
-          <ul className="divide-y divide-border/50 border-t border-border/60">
+          <ul id="setup-checklist" className="divide-y divide-border/50 overflow-y-auto overscroll-contain border-border/60 border-t">
             {tasks.map((t) => (
               <li key={t.id}>
                 <button
                   type="button"
+                  role="checkbox"
+                  aria-checked={t.done}
                   onClick={() => toggle(t.id)}
                   className="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-foreground/[0.02]"
                 >
                   <span
+                    aria-hidden
                     className={`flex size-6 shrink-0 items-center justify-center rounded-full transition-colors ${
                       t.done
                         ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
@@ -151,7 +164,7 @@ export function ToursChecklistShowcasePage() {
                       {t.description}
                     </p>
                   </div>
-                  <t.Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground/60" />
+                  <t.Icon aria-hidden className="mt-0.5 size-4 shrink-0 text-muted-foreground/60" />
                 </button>
               </li>
             ))}
@@ -165,30 +178,30 @@ export function ToursChecklistShowcasePage() {
             ) : null}
           </ul>
         ) : null}
-      </div>
+      </section>
     </div>
   );
 }
 
 function FakeApp() {
   return (
-    <div className="absolute inset-0 grid grid-cols-[220px_1fr]">
-      <aside className="border-r border-border/60 bg-foreground/[0.02] p-4 space-y-2">
+    <div className="grid min-h-svh grid-cols-1 md:grid-cols-[220px_1fr]">
+      <aside className="space-y-2 border-border/60 border-r bg-foreground/[0.02] p-4 max-md:hidden">
         <div className="h-3 w-28 rounded bg-foreground/15" />
         <div className="mt-3 h-2 w-32 rounded bg-foreground/10" />
         <div className="h-2 w-28 rounded bg-foreground/10" />
         <div className="h-2 w-30 rounded bg-foreground/10" />
       </aside>
-      <main className="p-10">
+      <main className="min-w-0 p-4 pb-32 sm:p-6 lg:p-10">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Welcome
         </div>
-        <h1 className="mt-1 font-heading text-3xl">First steps</h1>
+        <h1 className="mt-1 font-heading text-2xl sm:text-3xl">First steps</h1>
         <p className="mt-2 max-w-md text-muted-foreground text-sm">
-          Your onboarding checklist sits in the bottom right. Tick it off as you
+          Your onboarding checklist stays docked at the bottom of the screen. Tick it off as you
           explore.
         </p>
-        <div className="mt-8 grid grid-cols-2 gap-3">
+        <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
