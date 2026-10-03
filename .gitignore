@@ -49,3 +49,6 @@ apps/www/public/r/
 
 # Responsive audit output (run `npm run audit:responsive`)
 .audit/
+
+# Responsive audit notes (kept local, not contributed upstream)
+docs/
