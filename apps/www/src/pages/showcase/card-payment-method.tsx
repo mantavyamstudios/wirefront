@@ -27,7 +27,7 @@ const METHODS: PaymentMethod[] = [
     brand: "visa",
     last4: "4242",
     exp: "08/27",
-    holder: "Mantavyam",
+    holder: "Sean",
     primary: true,
   },
   {
@@ -35,7 +35,7 @@ const METHODS: PaymentMethod[] = [
     brand: "mastercard",
     last4: "8211",
     exp: "11/26",
-    holder: "Mantavyam",
+    holder: "Sean",
     primary: false,
   },
 ];

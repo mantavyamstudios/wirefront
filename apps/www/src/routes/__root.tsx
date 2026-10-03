@@ -14,8 +14,8 @@ import {
 
 const ORBIT_THEME_HEAD_SCRIPT = `!function(){try{var k=${JSON.stringify(ORBIT_THEME_STORAGE_KEY)};var p=localStorage.getItem(k);if(p!=="light"&&p!=="dark"&&p!=="system")p="system";var dark=p==="dark"||(p==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);}catch(e){}}();`
 
-const SITE_URL = 'https://ui.mantavyam.com'
-const SITE_NAME = "Mantavyam's scatch pad"
+const SITE_URL = 'https://devl.dev'
+const SITE_NAME = "Sean's scratch pad"
 const SITE_TITLE = 'devl.dev — UI experiments built on coss-ui'
 const SITE_DESCRIPTION =
   "Two years of UI experiments. 159+ components built on coss-ui, all on the shadcn registry. Press 'c' on any design to copy the source."
@@ -30,7 +30,7 @@ export const Route = createRootRoute({
       { name: 'theme-color', content: '#0a0a0a' },
       { title: SITE_TITLE },
       { name: 'description', content: SITE_DESCRIPTION },
-      { name: 'author', content: 'Mantavyam' },
+      { name: 'author', content: 'Sean' },
 
       // Open Graph
       { property: 'og:type', content: 'website' },

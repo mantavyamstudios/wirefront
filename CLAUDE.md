@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Mantavyam's scatch pad — a place to play with UI ideas built on `@orbit/ui` (coss-ui) primitives.
+Sean's scatch pad — a place to play with UI ideas built on `@orbit/ui` (coss-ui) primitives.
 
 ## Layout
 

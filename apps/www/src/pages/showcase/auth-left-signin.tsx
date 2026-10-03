@@ -46,7 +46,7 @@ function BrandRow() {
     <div className="flex items-center gap-2">
       <BrandMark />
       <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.3em]">
-        Mantavyam's scatch pad
+        Sean's scatch pad
       </span>
     </div>
   );

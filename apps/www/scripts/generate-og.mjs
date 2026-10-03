@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
 
 const TITLE = 'devl.dev'
-const TAGLINE = "Mantavyam's scatch pad"
+const TAGLINE = "Sean's scatch pad"
 const SUBTITLE = 'UI experiments built on coss-ui'
 const STATS = ['159+ components', 'shadcn registry', "press 'c' to copy"]
 

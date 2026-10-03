@@ -359,7 +359,7 @@ function ProfileView() {
           <AvatarFallback className="text-lg">SB</AvatarFallback>
         </Avatar>
         <div className="text-center">
-          <p className="font-heading text-base">Mantavyam</p>
+          <p className="font-heading text-base">Sean</p>
           <p className="text-xs text-muted-foreground">
             Product designer · Brooklyn
           </p>

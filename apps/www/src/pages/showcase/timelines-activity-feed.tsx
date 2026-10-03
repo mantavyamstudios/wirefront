@@ -63,7 +63,7 @@ const YESTERDAY: Event[] = [
     time: "Yesterday",
   },
   {
-    who: "Mantavyam",
+    who: "Sean",
     initials: "SB",
     what: "invited 8 members to",
     context: "Marketing workspace",

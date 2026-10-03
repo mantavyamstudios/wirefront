@@ -222,7 +222,7 @@ function RailContent({
           S
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate font-medium text-sm">Mantavyam</div>
+          <div className="truncate font-medium text-sm">Sean</div>
           <div className="flex items-center gap-1.5 truncate text-muted-foreground text-xs">
             <span className="size-1.5 rounded-full bg-emerald-500" />
             Online

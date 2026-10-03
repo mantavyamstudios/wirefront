@@ -53,7 +53,7 @@ export function SettingsProfileShowcasePage() {
           <Field label="Display name" htmlFor="p-name">
             <Input
               id="p-name"
-              defaultValue="Mantavyam"
+              defaultValue="Sean"
               onChange={() => setDirty(true)}
               nativeInput
             />

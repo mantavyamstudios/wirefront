@@ -26,10 +26,10 @@ export const Route = createFileRoute("/c/$category/$design")({
     const category = getCategory(params.category as CategorySlug);
     const design = category?.designs.find((d) => d.slug === params.design);
     if (!category || !design) return {};
-    const url = `https://ui.mantavyam.com/c/${params.category}/${params.design}`;
+    const url = `https://devl.dev/c/${params.category}/${params.design}`;
     const title = `${design.title} · ${category.title} — devl.dev`;
     const description = design.blurb;
-    const image = `https://ui.mantavyam.com/previews/${params.category}__${params.design}--dark.png`;
+    const image = `https://devl.dev/previews/${params.category}__${params.design}--dark.png`;
     return {
       meta: [
         { title },

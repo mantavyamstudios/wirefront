@@ -269,7 +269,7 @@ function SidebarNav({
           <AvatarFallback>SB</AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
-          <div className="truncate font-medium text-sm">Mantavyam</div>
+          <div className="truncate font-medium text-sm">Sean</div>
           <div className="truncate text-muted-foreground text-xs">
             sean@cal.com
           </div>

@@ -114,7 +114,7 @@ export function LandingPage() {
           <div className="flex items-center gap-2 text-sm">
             <span className="inline-block h-2 w-2 rounded-full bg-foreground" />
             <span className="tracking-[0.2em] uppercase">
-              Mantavyam's scatch pad
+              Sean's scatch pad
             </span>
             <span className="ml-3 hidden font-mono text-[10px] text-muted-foreground tracking-[0.2em] sm:inline">
               {totalFiles.toString().padStart(2, "0")} FILES ·{" "}

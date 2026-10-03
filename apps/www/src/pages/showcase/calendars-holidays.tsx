@@ -121,7 +121,7 @@ const SEED_TEAM: Member[] = [
   },
   {
     id: "m5",
-    name: "Mantavyam",
+    name: "Sean",
     initials: "SB",
     role: "Marketing",
     days: expand(11, 2, "remote"),

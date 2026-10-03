@@ -78,7 +78,7 @@ function FormCard() {
           <Label htmlFor="ent-name">Name</Label>
           <Input
             id="ent-name"
-            placeholder="Mantavyam"
+            placeholder="Sean"
             autoComplete="name"
             nativeInput
           />

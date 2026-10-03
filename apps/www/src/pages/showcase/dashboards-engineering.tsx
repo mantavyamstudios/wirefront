@@ -44,7 +44,7 @@ const CONTRIBUTORS = [
   { name: "James Lin", initials: "JL", merged: 15, reviewed: 36, leadTime: "2h 04m" },
   { name: "Riya Patel", initials: "RP", merged: 12, reviewed: 28, leadTime: "1h 58m" },
   { name: "Dani Kim", initials: "DK", merged: 11, reviewed: 22, leadTime: "3h 12m" },
-  { name: "Mantavyam", initials: "SB", merged: 9, reviewed: 18, leadTime: "2h 36m" },
+  { name: "Sean", initials: "SB", merged: 9, reviewed: 18, leadTime: "2h 36m" },
 ];
 
 const CI_HEALTH = {
