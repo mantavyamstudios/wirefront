@@ -94,7 +94,7 @@ export function ProfileHeroShowcasePage() {
           <Tag color="rose">design-systems</Tag>
         </div>
 
-        {/* Stats sit above the tabs on phones; the tab strip scrolls sideways. */}
+        {/* Stats sit above the tabs on phones; tabs wrap so none are hidden. */}
         <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground text-xs md:hidden">
           {STATS.map((s) => (
             <span key={s.label}>
@@ -107,7 +107,7 @@ export function ProfileHeroShowcasePage() {
           <div
             role="tablist"
             aria-label="Profile sections"
-            className="-mx-4 flex min-w-0 flex-1 snap-x gap-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:gap-5 sm:px-0"
+            className="flex min-w-0 flex-1 flex-wrap gap-x-4 sm:gap-x-5"
           >
           {TABS.map((t, i) => (
             <button
@@ -116,7 +116,7 @@ export function ProfileHeroShowcasePage() {
               role="tab"
               aria-selected={i === 0}
               className={
-                "shrink-0 snap-start whitespace-nowrap border-b-2 px-1 py-3 text-sm transition-colors " +
+                "whitespace-nowrap border-b-2 px-1 py-3 text-sm transition-colors " +
                 (i === 0
                   ? "border-foreground text-foreground"
                   : "border-transparent text-muted-foreground hover:text-foreground")

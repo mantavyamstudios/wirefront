@@ -23,6 +23,12 @@ const RECOVERY = [
   "TRC-J21-AZ4",
 ];
 
+// Placeholder setup key for the showcase — not a real credential. In an app
+// this comes from your server when 2FA enrolment starts.
+const DEMO_SETUP_KEY = ["H7K3", "9F2N", "P8L4", "RTYQ"];
+const otpauthUrl = (key: string) =>
+  `otpauth://totp/Orbit:you@example.com?${new URLSearchParams({ secret: key, issuer: "Orbit" })}`;
+
 export function ModalsTwoFactorShowcasePage() {
   return (
     // Real Dialog; bottom sheet with a scrolling body on phones. Scanning a
@@ -70,14 +76,14 @@ export function ModalsTwoFactorShowcasePage() {
                 </div>
                 <Button
                   className="mt-3 w-full sm:hidden"
-                  render={<a href="otpauth://totp/Orbit:you@example.com?secret=H7K39F2NP8L4RTYQ&issuer=Orbit" />}
+                  render={<a href={otpauthUrl(DEMO_SETUP_KEY.join(""))} />}
                 >
                   <ExternalLinkIcon />
                   Open authenticator app
                 </Button>
                 <div className="mt-3 flex items-center gap-2 rounded-md border border-border/60 bg-background py-1 pr-1 pl-3">
                   <code className="min-w-0 flex-1 break-all font-mono text-sm">
-                    H7K3 9F2N P8L4 RTYQ
+                    {DEMO_SETUP_KEY.join(" ")}
                   </code>
                   <button
                     type="button"

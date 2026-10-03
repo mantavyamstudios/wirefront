@@ -61,7 +61,7 @@ export function CalendarsDateRangeShowcasePage() {
           <div className="px-1 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] md:px-2">
             Quick range
           </div>
-          <ul className="-mx-3 mt-1 flex gap-1.5 overflow-x-auto px-3 pb-1 [scrollbar-width:none] md:mx-0 md:flex-col md:gap-0.5 md:overflow-visible md:px-0 md:pb-0">
+          <ul className="mt-1 flex flex-wrap gap-1.5 md:flex-col md:flex-nowrap md:gap-0.5">
             {PRESETS.map((p) => {
               const active = p === preset;
               return (
@@ -73,7 +73,7 @@ export function CalendarsDateRangeShowcasePage() {
                     className={
                       "min-h-8 w-full whitespace-nowrap rounded-full border px-3 py-1.5 text-left text-sm pointer-coarse:min-h-10 md:rounded-md md:border-0 md:px-2 md:pointer-coarse:min-h-8 " +
                       (active
-                        ? "border-foreground/20 bg-foreground/[0.06] text-foreground"
+                        ? "border-foreground bg-foreground text-background"
                         : "border-border/60 text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground")
                     }
                   >

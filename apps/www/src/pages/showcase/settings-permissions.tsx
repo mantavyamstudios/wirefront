@@ -216,12 +216,13 @@ export function SettingsPermissionsShowcasePage() {
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
               Roles
             </div>
-            {/* Horizontal, scrollable role cards below lg; a vertical list beside the matrix from lg. */}
-            <ul className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:px-0 lg:pb-0">
+            {/* Every role visible at once: one column on phones, two from sm, a
+                vertical list beside the matrix from lg. */}
+            <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1 lg:gap-1">
               {ROLES.map((role) => {
                 const isActive = role.id === activeRole;
                 return (
-                  <li key={role.id} className="w-52 shrink-0 lg:w-auto">
+                  <li key={role.id} className="min-w-0">
                     <button
                       type="button"
                       aria-pressed={isActive}
@@ -233,9 +234,9 @@ export function SettingsPermissionsShowcasePage() {
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
+                        <div className="flex min-w-0 items-center gap-2">
                           <span
-                            className={`inline-flex size-5 items-center justify-center rounded ${role.tone}`}
+                            className={`inline-flex size-5 shrink-0 items-center justify-center rounded ${role.tone}`}
                           >
                             <ShieldIcon className="size-3" />
                           </span>
@@ -390,13 +391,21 @@ function GroupRows({
 }) {
   return (
     <>
-      <tr className="border-b border-border/40 bg-foreground/[0.025]">
-        <td
-          colSpan={ROLES.length + 1}
-          className="sticky left-0 bg-background px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4"
+      {/* Section label lives in its own pinned cell (a full-width colSpan cell
+          can't stick), so it stays put while the role columns scroll. */}
+      <tr className="border-b border-border/40">
+        <th
+          scope="colgroup"
+          colSpan={1}
+          className="sticky left-0 z-10 bg-[color-mix(in_srgb,var(--background),var(--foreground)_2.5%)] px-3 py-2 text-left font-mono font-normal text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4"
         >
           {group.label}
-        </td>
+        </th>
+        <td
+          aria-hidden
+          colSpan={ROLES.length}
+          className="bg-[color-mix(in_srgb,var(--background),var(--foreground)_2.5%)]"
+        />
       </tr>
       {group.capabilities.map((cap, ci) => {
         const isLastRow = isLast && ci === group.capabilities.length - 1;

@@ -91,9 +91,10 @@ export function ProfileCompactCardShowcasePage() {
           {MEMBERS.map((m) => (
             <li
               key={m.email}
-              // Phones: avatar · name/role/status · permission · menu. The role
-              // column only appears from md, where there's room for it.
-              className="grid grid-cols-[40px_minmax(0,1fr)_auto_auto] items-center gap-2 rounded-xl border border-border bg-background px-3 py-3 shadow-sm transition-colors hover:bg-background/95 sm:gap-3 sm:px-4 md:grid-cols-[44px_minmax(0,1fr)_140px_120px_auto]"
+              // Phones: avatar · name/role/status · permission · menu. The
+              // permission column has a fixed width so every row lines up;
+              // the role column only appears from md.
+              className="grid grid-cols-[40px_minmax(0,1fr)_5.75rem_auto] items-center gap-2 rounded-xl border border-border bg-background px-3 py-3 shadow-sm transition-colors hover:bg-background/95 sm:gap-3 sm:px-4 md:grid-cols-[44px_minmax(0,1fr)_140px_120px_auto]"
             >
               <div className="relative">
                 <Avatar className="size-10">

@@ -321,7 +321,7 @@ export function CalendarsRecurringShowcasePage() {
 
   return (
     <div className="min-h-svh bg-muted/30 px-3 py-6 sm:px-6 sm:py-8">
-      <div className="mx-auto max-w-5xl space-y-4">
+      <div className="mx-auto max-w-6xl space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2 px-1">
           <div className="flex items-center gap-2">
             <RepeatIcon className="size-4 text-muted-foreground" />
@@ -333,13 +333,23 @@ export function CalendarsRecurringShowcasePage() {
         </div>
 
         <div className="overflow-hidden rounded-xl border border-border bg-background shadow-sm">
-          <Templates
-            current={built.raw}
-            onPick={(t) =>
-              setRule((r) => ({ ...DEFAULT_RULE, ...r, ...t }))
-            }
-          />
-          <div className="grid grid-cols-1 divide-y divide-border/60 lg:grid-cols-2 lg:divide-x lg:divide-y-0">
+          {/* The answer first: what this rule means, in words. */}
+          <div aria-live="polite" className="border-border/60 border-b px-4 py-3 sm:px-5">
+            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+              Repeats
+            </div>
+            <p className="mt-0.5 text-balance font-heading text-base sm:text-lg">{description}</p>
+          </div>
+          {/* Phones: presets (wrapping chips) → editor → preview.
+              md: presets rail | editor, preview under the editor.
+              xl: presets rail | editor | preview. */}
+          <div className="grid grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] xl:grid-cols-[200px_minmax(0,1fr)_minmax(0,1fr)]">
+            <Templates
+              current={built.raw}
+              onPick={(t) =>
+                setRule((r) => ({ ...DEFAULT_RULE, ...r, ...t }))
+              }
+            />
             <Editor rule={rule} apply={apply} />
             <Preview
               rule={rule}
@@ -382,13 +392,17 @@ function Templates({
   onPick: (rule: Partial<Rule>) => void;
 }) {
   return (
-    // One scrolling row of chips (no wrap) so presets never push the editor down.
-    <div className="flex items-center gap-2 overflow-x-auto overscroll-x-contain border-border/60 border-b bg-background px-4 py-3 [scrollbar-width:thin] sm:px-5">
-      <span className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-        <SparklesIcon className="size-3" />
+    // Like the date-range picker's quick ranges: wrapping chips on phones, a
+    // vertical list beside the editor from md. Every preset stays visible.
+    <aside className="border-border/60 border-b bg-background p-3 md:row-span-2 md:border-r md:border-b-0 xl:row-span-1">
+      <span
+        id="recurrence-presets"
+        className="flex items-center gap-1.5 px-1 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] md:px-2"
+      >
+        <SparklesIcon aria-hidden className="size-3 shrink-0" />
         Presets
       </span>
-      <div className="flex gap-1.5">
+      <div role="group" aria-labelledby="recurrence-presets" className="mt-1 flex min-w-0 flex-wrap gap-1.5 md:flex-col md:gap-0.5">
         {TEMPLATES.map((t) => {
           const built = buildRrule({ ...DEFAULT_RULE, ...t.rule }).raw;
           const isActive = built === current;
@@ -399,10 +413,10 @@ function Templates({
               onClick={() => onPick(t.rule)}
               aria-pressed={isActive}
               className={
-                "min-h-7 shrink-0 whitespace-nowrap rounded-md border px-2.5 py-0.5 text-[12px] transition-colors pointer-coarse:min-h-9 " +
+                "min-h-8 whitespace-nowrap rounded-full border px-3 py-1 text-left text-sm transition-colors pointer-coarse:min-h-10 md:w-full md:rounded-md md:px-2 " +
                 (isActive
                   ? "border-foreground bg-foreground text-background"
-                  : "border-border bg-background text-foreground/80 hover:border-foreground/40 hover:bg-muted/40")
+                  : "border-border/70 bg-background text-foreground/80 hover:border-foreground/40 md:border-transparent md:hover:bg-muted/50")
               }
             >
               {t.label}
@@ -410,9 +424,14 @@ function Templates({
           );
         })}
       </div>
-    </div>
+    </aside>
   );
 }
+
+// Shared look for every single-choice option in the editor: distinct bordered
+// buttons, black (inverted in dark mode) when selected.
+const OPTION =
+  "min-h-9 rounded-md border px-2 font-mono text-[11px] uppercase tracking-[0.12em] transition-colors pointer-coarse:min-h-10 aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background border-border/70 bg-background text-foreground/80 hover:border-foreground/40";
 
 function Editor({
   rule,
@@ -422,22 +441,18 @@ function Editor({
   apply: (patch: Partial<Rule>) => void;
 }) {
   const FREQS: Freq[] = ["DAILY", "WEEKLY", "MONTHLY", "YEARLY"];
+  const unit = { DAILY: "day", WEEKLY: "week", MONTHLY: "month", YEARLY: "year" }[rule.freq];
   return (
     <div className="min-w-0 space-y-5 px-4 py-5 sm:px-5">
       <Row label="FREQ">
-        <div className="grid grid-cols-4 rounded-md border border-border/70 bg-background p-0.5 sm:inline-flex sm:items-center">
+        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
           {FREQS.map((f) => (
             <button
               key={f}
               type="button"
               aria-pressed={rule.freq === f}
               onClick={() => apply({ freq: f })}
-              className={
-                "min-h-8 rounded px-1.5 py-1 font-mono text-[11px] uppercase tracking-[0.05em] sm:px-2.5 sm:tracking-[0.15em] pointer-coarse:min-h-10 " +
-                (rule.freq === f
-                  ? "bg-foreground/[0.08] text-foreground"
-                  : "text-muted-foreground hover:text-foreground")
-              }
+              className={OPTION}
             >
               {f}
             </button>
@@ -447,8 +462,10 @@ function Editor({
 
       <Row label="INTERVAL">
         <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-sm">Every</span>
           <Input
             type="number"
+            aria-label="Interval"
             value={rule.interval}
             onChange={(e) =>
               apply({ interval: Math.max(1, Number(e.target.value || 1)) })
@@ -457,71 +474,43 @@ function Editor({
             min={1}
           />
           <span className="text-muted-foreground text-sm">
-            {rule.freq === "DAILY" && (rule.interval > 1 ? "days" : "day")}
-            {rule.freq === "WEEKLY" && (rule.interval > 1 ? "weeks" : "week")}
-            {rule.freq === "MONTHLY" &&
-              (rule.interval > 1 ? "months" : "month")}
-            {rule.freq === "YEARLY" && (rule.interval > 1 ? "years" : "year")}
+            {rule.interval > 1 ? `${unit}s` : unit}
           </span>
         </div>
       </Row>
 
       {rule.freq === "WEEKLY" && (
         <Row label="BYDAY">
-          <div className="flex flex-wrap items-center gap-1">
-            {WEEKDAYS_DISPLAY.map((d) => {
-              const active = rule.byday.includes(d.key);
-              return (
-                <button
-                  key={d.key}
-                  type="button"
-                  onClick={() =>
-                    apply({
-                      byday: active
-                        ? rule.byday.filter((x) => x !== d.key)
-                        : [...rule.byday, d.key],
-                    })
-                  }
-                  className={
-                    "grid size-9 place-items-center rounded-md font-mono text-xs transition-colors sm:size-8 pointer-coarse:size-10 " +
-                    (active
-                      ? "bg-foreground text-background"
-                      : "border border-border/70 text-foreground/85 hover:border-foreground/40")
-                  }
-                >
-                  {d.short}
-                </button>
-              );
-            })}
-          </div>
+          <WeekdayPicker
+            selected={rule.byday}
+            onToggle={(k) =>
+              apply({
+                byday: rule.byday.includes(k)
+                  ? rule.byday.filter((x) => x !== k)
+                  : [...rule.byday, k],
+              })
+            }
+          />
         </Row>
       )}
 
       {rule.freq === "MONTHLY" && (
         <>
           <Row label="ON">
-            <div className="inline-flex max-w-full flex-wrap items-center rounded-md border border-border/70 bg-background p-0.5">
+            <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
               <button
                 type="button"
+                aria-pressed={rule.monthlyMode === "day"}
                 onClick={() => apply({ monthlyMode: "day" })}
-                className={
-                  "min-h-8 rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] pointer-coarse:min-h-10 " +
-                  (rule.monthlyMode === "day"
-                    ? "bg-foreground/[0.08] text-foreground"
-                    : "text-muted-foreground hover:text-foreground")
-                }
+                className={OPTION}
               >
                 Day of month
               </button>
               <button
                 type="button"
+                aria-pressed={rule.monthlyMode === "weekday"}
                 onClick={() => apply({ monthlyMode: "weekday" })}
-                className={
-                  "min-h-8 rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] pointer-coarse:min-h-10 " +
-                  (rule.monthlyMode === "weekday"
-                    ? "bg-foreground/[0.08] text-foreground"
-                    : "text-muted-foreground hover:text-foreground")
-                }
+                className={OPTION}
               >
                 Position + day
               </button>
@@ -540,18 +529,14 @@ function Editor({
           {rule.monthlyMode === "weekday" && (
             <>
               <Row label="BYSETPOS">
-                <div className="inline-flex max-w-full flex-wrap items-center rounded-md border border-border/70 bg-background p-0.5">
+                <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-5">
                   {POSITIONS.map((p) => (
                     <button
                       key={p.value}
                       type="button"
+                      aria-pressed={rule.bysetpos === p.value}
                       onClick={() => apply({ bysetpos: p.value })}
-                      className={
-                        "min-h-8 rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] pointer-coarse:min-h-10 " +
-                        (rule.bysetpos === p.value
-                          ? "bg-foreground/[0.08] text-foreground"
-                          : "text-muted-foreground hover:text-foreground")
-                      }
+                      className={OPTION}
                     >
                       {p.label}
                     </button>
@@ -559,32 +544,16 @@ function Editor({
                 </div>
               </Row>
               <Row label="BYDAY">
-                <div className="flex flex-wrap items-center gap-1">
-                  {WEEKDAYS_DISPLAY.map((d) => {
-                    const active = rule.bydayPositional.includes(d.key);
-                    return (
-                      <button
-                        key={d.key}
-                        type="button"
-                        onClick={() =>
-                          apply({
-                            bydayPositional: active
-                              ? rule.bydayPositional.filter((x) => x !== d.key)
-                              : [...rule.bydayPositional, d.key],
-                          })
-                        }
-                        className={
-                          "grid size-9 place-items-center rounded-md font-mono text-xs transition-colors sm:size-8 pointer-coarse:size-10 " +
-                          (active
-                            ? "bg-foreground text-background"
-                            : "border border-border/70 text-foreground/85 hover:border-foreground/40")
-                        }
-                      >
-                        {d.short}
-                      </button>
-                    );
-                  })}
-                </div>
+                <WeekdayPicker
+                  selected={rule.bydayPositional}
+                  onToggle={(k) =>
+                    apply({
+                      bydayPositional: rule.bydayPositional.includes(k)
+                        ? rule.bydayPositional.filter((x) => x !== k)
+                        : [...rule.bydayPositional, k],
+                    })
+                  }
+                />
               </Row>
             </>
           )}
@@ -592,7 +561,7 @@ function Editor({
       )}
 
       <Row label="ENDS">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1.5">
           <EndOption
             label="Never"
             checked={rule.end.type === "never"}
@@ -608,7 +577,7 @@ function Editor({
               rule.end.type === "until" ? (
                 <button
                   type="button"
-                  className="ml-auto inline-flex items-center gap-2 rounded-md border border-border/70 bg-background px-2 py-1 font-mono text-[11px]"
+                  className="ml-auto inline-flex min-h-8 items-center gap-2 rounded-md border border-border/70 bg-background px-2 font-mono text-[11px]"
                 >
                   <CalendarIcon className="size-3 opacity-60" />
                   {new Date(rule.end.date).toLocaleDateString("en-US", {
@@ -628,6 +597,7 @@ function Editor({
               rule.end.type === "count" ? (
                 <Input
                   type="number"
+                  aria-label="Number of occurrences"
                   value={rule.end.count}
                   onChange={(e) =>
                     apply({
@@ -648,6 +618,37 @@ function Editor({
   );
 }
 
+// Seven equal cells across the full answer width (same pattern as the
+// localization week strip): weekday initial, full name for screen readers.
+function WeekdayPicker({
+  selected,
+  onToggle,
+}: {
+  selected: WeekDay[];
+  onToggle: (k: WeekDay) => void;
+}) {
+  return (
+    <div className="grid grid-cols-7 gap-1">
+      {WEEKDAYS_DISPLAY.map((d) => {
+        const active = selected.includes(d.key);
+        return (
+          <button
+            key={d.key}
+            type="button"
+            aria-pressed={active}
+            aria-label={DAY_NAME[d.key]}
+            onClick={() => onToggle(d.key)}
+            className="flex h-11 min-w-0 flex-col items-center justify-center rounded-md border border-border/70 bg-background font-mono text-xs transition-colors hover:border-foreground/40 aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background"
+          >
+            <span className="sm:hidden">{d.short}</span>
+            <span className="max-sm:hidden">{DAY_NAME[d.key]}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function Row({
   label,
   children,
@@ -657,9 +658,10 @@ function Row({
 }) {
   const id = useId();
   return (
-    // Label above the control on phones, beside it from sm.
-    <div className="grid grid-cols-1 items-start gap-1.5 sm:grid-cols-[110px_minmax(0,1fr)] sm:gap-3">
-      <div id={id} className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:pt-1.5">
+    // Question on the left, answer on the right at every width. Answers that
+    // don't fit wrap within their own column instead of moving under the label.
+    <div className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[110px_minmax(0,1fr)]">
+      <div id={id} className="break-all pt-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.1em] sm:tracking-[0.25em]">
         {label}
       </div>
       <div role="group" aria-labelledby={id} className="min-w-0">
@@ -681,13 +683,13 @@ function EndOption({
   trailing?: React.ReactNode;
 }) {
   return (
-    <label className="flex min-h-9 flex-wrap items-center gap-2 text-sm">
+    <label className="flex min-h-11 cursor-pointer flex-wrap items-center gap-2 rounded-md border border-border/70 bg-background px-3 py-1.5 text-sm transition-colors hover:border-foreground/40 has-checked:border-foreground">
       <input
         type="radio"
         name="recurrence-end"
         checked={checked}
         onChange={onSelect}
-        className="size-3.5"
+        className="size-3.5 accent-foreground"
       />
       <span>{label}</span>
       {trailing}
@@ -767,12 +769,12 @@ function Preview({
   setMonthOffset: (n: number) => void;
 }) {
   return (
-    <div className="min-w-0 space-y-5 bg-muted/10 px-4 py-5 sm:px-5">
+    <div className="min-w-0 space-y-5 border-border/60 bg-muted/10 px-4 py-5 max-xl:border-t sm:px-5 md:col-start-2 xl:col-start-3 xl:row-start-1 xl:border-l">
       <div>
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           RRULE
         </div>
-        <div className="mt-1.5 overflow-x-auto rounded-lg border border-border/60 bg-background px-3 py-2.5 font-mono text-[12px] leading-relaxed">
+        <div className="mt-1.5 break-all rounded-lg border border-border/60 bg-background px-3 py-2.5 font-mono text-[12px] leading-relaxed">
           <span className="text-muted-foreground">RRULE:</span>
           {tokens.map((t, i) => (
             <span key={i}>
@@ -785,7 +787,6 @@ function Preview({
             </span>
           ))}
         </div>
-        <p className="mt-2 text-[13px] text-foreground/80">{description}</p>
       </div>
 
       <MiniCalendar

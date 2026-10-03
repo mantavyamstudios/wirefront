@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMediaQuery } from "@orbit/ui/hooks/use-media-query";
 import {
   BellRingIcon,
   BoldIcon,
@@ -149,31 +150,39 @@ const MESSAGES_BOTTOM: Message[] = [
 export function LayoutsThreePaneShowcasePage() {
   const [activeWorkspace, setActiveWorkspace] = useState(WORKSPACES[0].id);
   const [activeChannel, setActiveChannel] = useState("design");
-  // Below md the channel list and the conversation are separate views.
-  const [mobileView, setMobileView] = useState<"channels" | "conversation">("channels");
+  // Phones (< md) use Discord's drawer model: the rail + channel list slide over
+  // the conversation, leaving ~22% of it visible (dimmed) on the right. Picking
+  // a channel closes the channel list; the rail stays beside the conversation.
+  const [drawerOpen, setDrawerOpen] = useState(true);
+  const isPhone = useMediaQuery("max-md");
+  const channelsHidden = isPhone && !drawerOpen;
+  const conversationCovered = isPhone && drawerOpen;
 
   const channel = CHANNELS.find((c) => c.slug === activeChannel) ?? CHANNELS[1];
   const workspace = WORKSPACES.find((w) => w.id === activeWorkspace) ?? WORKSPACES[0];
 
   return (
-    <div className="min-h-svh bg-background text-foreground md:grid md:grid-cols-[240px_minmax(0,1fr)] lg:grid-cols-[64px_240px_minmax(0,1fr)]">
-      {/* Workspace rail: lg+ only. Below lg it becomes a horizontal strip. */}
-      <aside className="sticky top-0 hidden h-svh flex-col items-center gap-2 border-r border-border/60 bg-foreground/[0.02] py-3 lg:flex">
+    <div className="min-h-svh bg-background text-foreground md:grid md:grid-cols-[64px_240px_minmax(0,1fr)]">
+      {/* Workspace rail: always visible. Pinned to the left edge on phones. */}
+      <aside className="fixed inset-y-0 left-0 z-40 flex w-16 flex-col items-center gap-2 border-border/60 border-r bg-background py-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:sticky md:top-0 md:z-auto md:h-svh md:w-auto md:bg-foreground/[0.02] md:pt-3">
         {WORKSPACES.map((w) => {
           const isActive = activeWorkspace === w.id;
           return (
-            <div key={w.id} className="relative">
+            <div key={w.id} className="relative flex w-full justify-center">
               <button
                 type="button"
-                onClick={() => setActiveWorkspace(w.id)}
+                onClick={() => {
+                  setActiveWorkspace(w.id);
+                  setDrawerOpen(true);
+                }}
                 aria-current={isActive ? "true" : undefined}
-                className={`flex size-9 items-center justify-center rounded-lg font-medium text-[12px] text-foreground/85 transition-transform hover:scale-105 ${w.color}`}
+                className={`flex size-9 items-center justify-center rounded-lg font-medium text-[12px] text-foreground/85 transition-transform hover:scale-105 pointer-coarse:size-11 ${w.color}`}
                 aria-label={w.name}
               >
                 {w.letter}
               </button>
               {isActive ? (
-                <span className="-translate-y-1/2 absolute top-1/2 -left-3 h-5 w-1 rounded-r bg-foreground" />
+                <span aria-hidden className="-translate-y-1/2 absolute top-1/2 left-0 h-5 w-1 rounded-r bg-foreground" />
               ) : null}
             </div>
           );
@@ -211,39 +220,24 @@ export function LayoutsThreePaneShowcasePage() {
         </div>
       </aside>
 
+      {/* Scrim over the visible strip of conversation while the drawer is open. */}
+      <button
+        type="button"
+        aria-label="Close channel list"
+        tabIndex={-1}
+        onClick={() => setDrawerOpen(false)}
+        className={`fixed inset-0 z-30 bg-black/45 transition-opacity duration-200 md:hidden ${
+          drawerOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+
       <aside
-        className={`flex min-h-svh flex-col border-border/60 bg-foreground/[0.015] md:sticky md:top-0 md:h-svh md:min-h-0 md:border-r ${
-          mobileView === "conversation" ? "max-md:hidden" : ""
+        aria-label="Channels"
+        inert={channelsHidden || undefined}
+        className={`flex flex-col border-border/60 bg-background max-md:fixed max-md:inset-y-0 max-md:left-16 max-md:z-40 max-md:w-[calc(78vw-4rem)] max-md:max-w-[300px] max-md:pt-[env(safe-area-inset-top)] max-md:shadow-2xl max-md:transition-[translate,opacity] max-md:duration-200 motion-reduce:transition-none md:sticky md:top-0 md:h-svh md:border-r md:bg-foreground/[0.015] ${
+          drawerOpen ? "" : "max-md:pointer-events-none max-md:-translate-x-full max-md:opacity-0"
         }`}
       >
-        {/* Workspace strip replaces the rail below lg */}
-        <div className="flex items-center gap-2 overflow-x-auto border-b border-border/60 px-3 py-2 lg:hidden">
-          {WORKSPACES.map((w) => {
-            const isActive = activeWorkspace === w.id;
-            return (
-              <button
-                key={w.id}
-                type="button"
-                onClick={() => setActiveWorkspace(w.id)}
-                aria-label={w.name}
-                aria-current={isActive ? "true" : undefined}
-                className={`flex size-9 shrink-0 items-center justify-center rounded-lg font-medium text-[12px] text-foreground/85 pointer-coarse:size-11 ${w.color} ${
-                  isActive ? "ring-2 ring-foreground ring-offset-2 ring-offset-background" : ""
-                }`}
-              >
-                {w.letter}
-              </button>
-            );
-          })}
-          <button
-            type="button"
-            aria-label="Add workspace"
-            className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-dashed border-border/70 text-muted-foreground pointer-coarse:size-11"
-          >
-            <PlusIcon className="size-4" />
-          </button>
-        </div>
-
         <div className="border-b border-border/60 px-3 py-3">
           <button
             type="button"
@@ -267,12 +261,12 @@ export function LayoutsThreePaneShowcasePage() {
                     type="button"
                     onClick={() => {
                       setActiveChannel(c.slug);
-                      setMobileView("conversation");
+                      setDrawerOpen(false);
                     }}
                     aria-current={isActive ? "page" : undefined}
                     className={`flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-sm transition-colors pointer-coarse:min-h-11 ${
                       isActive
-                        ? "md:bg-foreground/[0.08] text-foreground"
+                        ? "bg-foreground/[0.08] text-foreground"
                         : c.unread
                           ? "font-medium text-foreground hover:bg-foreground/[0.04]"
                           : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
@@ -350,15 +344,15 @@ export function LayoutsThreePaneShowcasePage() {
       </aside>
 
       <main
-        className={`flex min-h-svh min-w-0 flex-col md:h-svh ${
-          mobileView === "channels" ? "max-md:hidden" : ""
-        }`}
+        inert={conversationCovered || undefined}
+        className="flex min-h-svh min-w-0 flex-col max-md:pl-16 md:h-svh"
       >
         <header className="sticky top-0 z-10 flex items-center gap-2 border-b border-border/60 bg-background/95 px-2 py-2 backdrop-blur sm:gap-3 md:static md:px-5 md:py-3">
           <button
             type="button"
-            onClick={() => setMobileView("channels")}
-            aria-label="Back to channels"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Show channel list"
+            aria-expanded={drawerOpen}
             className="flex size-11 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground md:hidden"
           >
             <ChevronLeftIcon className="size-5" />

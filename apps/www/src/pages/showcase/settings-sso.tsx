@@ -170,8 +170,8 @@ export function SettingsSsoShowcasePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-[220px_1fr]">
             {/* Step rail */}
-            {/* Below md: a compact horizontal stepper (numbers + current title). */}
-            <ol className="flex gap-1 overflow-x-auto border-border/60 border-b px-3 py-2 md:flex-col md:overflow-visible md:border-r md:border-b-0 md:py-5">
+            {/* Below md: a compact stepper that wraps, so every step stays visible. */}
+            <ol className="flex flex-wrap gap-1 border-border/60 border-b px-3 py-2 md:flex-col md:flex-nowrap md:border-r md:border-b-0 md:py-5">
               {STEPS.map((s) => {
                 const isCurrent = s.id === currentStep;
                 const isComplete = s.id < maxReached;

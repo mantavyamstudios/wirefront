@@ -353,20 +353,20 @@ export function TableLogsShowcasePage() {
         </header>
 
         {/*
-          Priority columns: phones see Message only (time, level, service and
-          request fold into its meta line); Time, Level and ms return at sm,
-          Service at md, Request at lg.
+          A real table at every width: same columns, uniform single-line rows.
+          Below lg it scrolls sideways inside its card (the page itself never
+          does); Time stays pinned so each row keeps its timestamp.
         */}
         <div className="overflow-hidden rounded-xl border bg-card font-mono shadow-xs/5">
-          <Table className="text-xs">
+          <Table className="min-w-[860px] text-xs">
             <TableHeader>
               <TableRow className="border-b bg-background">
-                <TableHead className="ps-4 text-[10px] uppercase tracking-wider max-sm:hidden">Time</TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider max-sm:hidden">Lvl</TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider max-md:hidden">Service</TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider max-lg:hidden">Request</TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider max-sm:px-4">Message</TableHead>
-                <TableHead className="pe-4 text-right text-[10px] uppercase tracking-wider max-sm:hidden">ms</TableHead>
+                <TableHead className="sticky left-0 z-10 bg-background ps-4 text-[10px] uppercase tracking-wider">Time</TableHead>
+                <TableHead className="text-[10px] uppercase tracking-wider">Lvl</TableHead>
+                <TableHead className="text-[10px] uppercase tracking-wider">Service</TableHead>
+                <TableHead className="text-[10px] uppercase tracking-wider">Request</TableHead>
+                <TableHead className="text-[10px] uppercase tracking-wider">Message</TableHead>
+                <TableHead className="pe-4 text-right text-[10px] uppercase tracking-wider">ms</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -387,7 +387,7 @@ export function TableLogsShowcasePage() {
                     aria-label={`${e.severity} ${e.ts} ${e.message} — open details`}
                     data-active={active}
                     className={
-                      "cursor-pointer transition-colors " +
+                      "group cursor-pointer transition-colors " +
                       (active
                         ? "bg-foreground/[0.06]"
                         : e.severity === "error"
@@ -395,8 +395,20 @@ export function TableLogsShowcasePage() {
                           : "hover:bg-foreground/[0.03]")
                     }
                   >
-                    <TableCell className="ps-4 text-muted-foreground tabular-nums max-sm:hidden">{e.ts}</TableCell>
-                    <TableCell className="max-sm:hidden">
+                    {/* Pinned cell is opaque, so it mixes the row tint into the card colour. */}
+                    <TableCell
+                      className={
+                        "sticky left-0 z-10 ps-4 text-muted-foreground tabular-nums transition-colors " +
+                        (active
+                          ? "bg-[color-mix(in_srgb,var(--card),var(--foreground)_6%)]"
+                          : e.severity === "error"
+                            ? "bg-[color-mix(in_srgb,var(--card),var(--destructive)_4%)] group-hover:bg-[color-mix(in_srgb,var(--card),var(--destructive)_8%)]"
+                            : "bg-card group-hover:bg-[color-mix(in_srgb,var(--card),var(--foreground)_3%)]")
+                      }
+                    >
+                      {e.ts}
+                    </TableCell>
+                    <TableCell>
                       <span className="inline-flex items-center gap-1.5">
                         <span className={"size-1.5 rounded-full " + s.dot} />
                         <span className={"text-[10px] uppercase tracking-wider " + s.label}>
@@ -404,10 +416,10 @@ export function TableLogsShowcasePage() {
                         </span>
                       </span>
                     </TableCell>
-                    <TableCell className="text-muted-foreground max-md:hidden">{e.service}</TableCell>
-                    <TableCell className="text-muted-foreground max-lg:hidden">{e.request}</TableCell>
-                    <TableCell className="w-full max-w-0 max-sm:whitespace-normal max-sm:px-4">
-                      <span className="flex items-start gap-2 sm:items-center">
+                    <TableCell className="text-muted-foreground">{e.service}</TableCell>
+                    <TableCell className="text-muted-foreground">{e.request}</TableCell>
+                    <TableCell className="w-full max-w-0">
+                      <span className="flex items-center gap-2">
                         {e.severity === "error" ? (
                           <CircleAlertIcon className="size-3.5 shrink-0 text-destructive" />
                         ) : e.severity === "warn" ? (
@@ -415,15 +427,7 @@ export function TableLogsShowcasePage() {
                         ) : e.severity === "info" ? (
                           <InfoIcon className="size-3.5 shrink-0 text-sky-500/70" />
                         ) : null}
-                        <span className="min-w-0">
-                          <span className="line-clamp-2 sm:line-clamp-none sm:block sm:truncate">{e.message}</span>
-                          <span className="mt-0.5 block text-[11px] text-muted-foreground md:hidden">
-                            <span className="tabular-nums sm:hidden">{e.ts} · </span>
-                            <span className={"uppercase sm:hidden " + s.label}>{e.severity} · </span>
-                            {e.service}
-                            <span className="lg:hidden"> · {e.request}</span>
-                          </span>
-                        </span>
+                        <span className="min-w-0 truncate">{e.message}</span>
                         {e.status ? (
                           <Badge
                             variant="outline"
@@ -440,7 +444,7 @@ export function TableLogsShowcasePage() {
                         ) : null}
                       </span>
                     </TableCell>
-                    <TableCell className="pe-4 text-right text-muted-foreground tabular-nums max-sm:hidden">
+                    <TableCell className="pe-4 text-right text-muted-foreground tabular-nums">
                       {e.duration ?? ""}
                     </TableCell>
                   </TableRow>

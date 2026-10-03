@@ -216,7 +216,7 @@ function BreakdownCard({
 
 function RangePicker() {
   return (
-    <div className="flex max-w-full items-center overflow-x-auto rounded-md border border-border/70 bg-background/40 font-mono text-xs text-muted-foreground [&>button]:shrink-0 [&>button]:whitespace-nowrap pointer-coarse:[&>button]:min-h-10">
+    <div className="inline-flex max-w-full flex-wrap items-center rounded-md border border-border/70 bg-background/40 font-mono text-xs text-muted-foreground [&>button]:whitespace-nowrap pointer-coarse:[&>button]:min-h-10">
       <button
         type="button"
         className="px-2.5 py-1.5 transition-colors hover:text-foreground"
@@ -226,7 +226,7 @@ function RangePicker() {
       <button
         type="button"
         aria-pressed="true"
-        className="bg-foreground/[0.06] px-2.5 py-1.5 text-foreground"
+        className="bg-foreground px-2.5 py-1.5 text-background"
       >
         30d
       </button>

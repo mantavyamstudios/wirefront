@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   CreditCardIcon,
   KeyIcon,
@@ -9,7 +9,16 @@ import {
   UploadIcon,
   UsersIcon,
 } from "lucide-react";
+import { ChevronsUpDownIcon } from "lucide-react";
 import { Button } from "@orbit/ui/button";
+import {
+  Menu,
+  MenuPopup,
+  MenuRadioGroup,
+  MenuRadioItem,
+  MenuSeparator,
+  MenuTrigger,
+} from "@orbit/ui/menu";
 import { Input } from "@orbit/ui/input";
 import { Label } from "@orbit/ui/label";
 import { Separator } from "@orbit/ui/separator";
@@ -22,48 +31,102 @@ const NAV = [
   { icon: KeyIcon, label: "API keys" },
   { icon: PuzzleIcon, label: "Integrations" },
   { icon: ScrollTextIcon, label: "Audit log" },
-];
+  { icon: ShieldAlertIcon, label: "Danger zone", danger: true },
+] as const;
+
+type SectionLabel = (typeof NAV)[number]["label"];
 
 export function FormsWorkspaceSettingsShowcasePage() {
   const [name, setName] = useState("Acme inc.");
   const [slug, setSlug] = useState("acme");
   const [dirty, setDirty] = useState(false);
+  const [section, setSection] = useState<SectionLabel>("General");
+  const current = NAV.find((n) => n.label === section)!;
+  const CurrentIcon = current.icon;
 
   return (
     <div className="min-h-svh bg-background text-foreground">
       <div className="mx-auto min-h-svh max-w-5xl md:grid md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[220px_minmax(0,1fr)]">
-        {/* Mobile: sticky, horizontally scrollable section tabs. md+: side nav. */}
-        <aside className="sticky top-0 z-20 border-b border-border/60 bg-background/95 px-4 py-2 backdrop-blur md:static md:border-r md:border-b-0 md:bg-transparent md:py-8 md:backdrop-blur-none">
-          <div className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em] md:block">
+        {/* Phones: one sticky section switcher (current section + a menu of
+            all sections) instead of a wall of chips. md+: the side nav. */}
+        <div className="sticky top-0 z-20 border-border/60 border-b bg-background/95 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
+          <Menu>
+            <MenuTrigger
+              aria-label={`Settings section: ${section}`}
+              className="flex min-h-11 w-full items-center gap-3 rounded-lg border border-border/60 bg-card px-3 text-left"
+            >
+              <CurrentIcon
+                className={`size-4 shrink-0 ${"danger" in current ? "text-destructive" : "opacity-70"}`}
+              />
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                  {name}
+                </span>
+                <span className="block truncate text-sm">{section}</span>
+              </span>
+              <ChevronsUpDownIcon className="size-4 shrink-0 opacity-60" />
+            </MenuTrigger>
+            <MenuPopup align="start" className="w-(--anchor-width)">
+              <MenuRadioGroup
+                value={section}
+                onValueChange={(v) => setSection(v as SectionLabel)}
+              >
+                {NAV.map(({ icon: Icon, label, ...rest }) => (
+                  <Fragment key={label}>
+                    {"danger" in rest ? <MenuSeparator /> : null}
+                    <MenuRadioItem
+                      value={label}
+                      closeOnClick
+                      className={
+                        "danger" in rest ? "text-destructive" : undefined
+                      }
+                    >
+                      <span className="flex items-center gap-2">
+                        <Icon className="opacity-70" />
+                        {label}
+                      </span>
+                    </MenuRadioItem>
+                  </Fragment>
+                ))}
+              </MenuRadioGroup>
+            </MenuPopup>
+          </Menu>
+        </div>
+
+        <aside className="hidden border-border/60 border-r py-8 md:block md:px-4">
+          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Workspace
           </div>
-          <div className="mt-1 hidden truncate font-heading text-lg md:block">{name}</div>
-          <ul aria-label="Settings sections" className="-mx-4 flex gap-1 overflow-x-auto px-4 md:mx-0 md:mt-6 md:flex-col md:gap-0.5 md:overflow-visible md:px-0">
-            {NAV.map(({ icon: Icon, label, active }) => (
-              <li key={label} className="shrink-0">
-                <button
-                  type="button"
-                  aria-current={active ? "page" : undefined}
-                  className={`flex w-full items-center gap-2 whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm transition-colors pointer-coarse:min-h-11 ${
-                    active
-                      ? "bg-foreground/[0.06] text-foreground"
-                      : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"
-                  }`}
-                >
-                  <Icon className="size-4 opacity-70" />
-                  {label}
-                </button>
-              </li>
-            ))}
-            <li className="shrink-0 md:mt-3">
-              <button
-                type="button"
-                className="flex w-full items-center gap-2 whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm text-destructive transition-colors hover:bg-destructive/[0.06] pointer-coarse:min-h-11"
-              >
-                <ShieldAlertIcon className="size-4 opacity-70" />
-                Danger zone
-              </button>
-            </li>
+          <div className="mt-1 truncate font-heading text-lg">{name}</div>
+          <ul
+            aria-label="Settings sections"
+            className="mt-6 flex flex-col gap-0.5"
+          >
+            {NAV.map(({ icon: Icon, label, ...rest }) => {
+              const active = label === section;
+              const danger = "danger" in rest;
+              return (
+                <li key={label} className={danger ? "mt-3" : undefined}>
+                  <button
+                    type="button"
+                    onClick={() => setSection(label)}
+                    aria-current={active ? "page" : undefined}
+                    className={`flex w-full items-center gap-2 whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm transition-colors pointer-coarse:min-h-11 ${
+                      danger
+                        ? active
+                          ? "bg-destructive/[0.08] text-destructive"
+                          : "text-destructive hover:bg-destructive/[0.06]"
+                        : active
+                          ? "bg-foreground/[0.06] text-foreground"
+                          : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="size-4 opacity-70" />
+                    {label}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </aside>
 
@@ -71,119 +134,134 @@ export function FormsWorkspaceSettingsShowcasePage() {
           <header className="flex flex-wrap items-end justify-between gap-3 border-b border-border/60 pb-6">
             <div>
               <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
-                Settings · General
+                Settings · {section}
               </div>
-              <h1 className="mt-1 font-heading text-2xl">General</h1>
+              <h1 className="mt-1 font-heading text-2xl">{section}</h1>
               <p className="mt-1 text-muted-foreground text-sm">
-                Workspace identity, region, and default behaviours.
+                {section === "General"
+                  ? "Workspace identity, region, and default behaviours."
+                  : `Manage ${section.toLowerCase()} for this workspace.`}
               </p>
             </div>
           </header>
 
-          <Section title="Identity" hint="Visible to anyone with access.">
-            <div className="flex items-center gap-4">
-              <div className="size-14 shrink-0 rounded-lg bg-gradient-to-br from-primary/40 to-primary/10 ring-1 ring-border/60" />
-              <div className="flex-1">
-                <Button size="sm" variant="outline" type="button">
-                  <UploadIcon />
-                  Upload avatar
-                </Button>
-                <p className="mt-1.5 text-muted-foreground text-xs">
-                  PNG or SVG, 1024×1024 max.
-                </p>
-              </div>
-            </div>
+          {section === "General" ? (
+            <>
+              <Section title="Identity" hint="Visible to anyone with access.">
+                <div className="flex items-center gap-4">
+                  <div className="size-14 shrink-0 rounded-lg bg-gradient-to-br from-primary/40 to-primary/10 ring-1 ring-border/60" />
+                  <div className="flex-1">
+                    <Button size="sm" variant="outline" type="button">
+                      <UploadIcon />
+                      Upload avatar
+                    </Button>
+                    <p className="mt-1.5 text-muted-foreground text-xs">
+                      PNG or SVG, 1024×1024 max.
+                    </p>
+                  </div>
+                </div>
 
-            <Field label="Name" htmlFor="ws-name">
-              <Input
-                id="ws-name"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setDirty(true);
-                }}
-                nativeInput
-              />
-            </Field>
+                <Field label="Name" htmlFor="ws-name">
+                  <Input
+                    id="ws-name"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      setDirty(true);
+                    }}
+                    nativeInput
+                  />
+                </Field>
 
-            <Field label="Slug" htmlFor="ws-slug" hint="Used in URLs.">
-              <div className="flex h-9 items-center gap-1 rounded-lg border border-input bg-background px-3 font-mono text-sm focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/24 pointer-coarse:h-11">
-                <span className="shrink-0 text-muted-foreground">orbit.so/</span>
-                <input
-                  id="ws-slug"
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  spellCheck={false}
-                  value={slug}
-                  onChange={(e) => {
-                    setSlug(e.target.value);
-                    setDirty(true);
-                  }}
-                  className="min-w-0 flex-1 bg-transparent outline-none"
+                <Field label="Slug" htmlFor="ws-slug" hint="Used in URLs.">
+                  <div className="flex h-9 items-center gap-1 rounded-lg border border-input bg-background px-3 font-mono text-sm focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/24 pointer-coarse:h-11">
+                    <span className="shrink-0 text-muted-foreground">
+                      orbit.so/
+                    </span>
+                    <input
+                      id="ws-slug"
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      value={slug}
+                      onChange={(e) => {
+                        setSlug(e.target.value);
+                        setDirty(true);
+                      }}
+                      className="min-w-0 flex-1 bg-transparent outline-none"
+                    />
+                  </div>
+                </Field>
+              </Section>
+
+              <Separator className="my-10" />
+
+              <Section
+                title="Region"
+                hint="Defaults applied to new members and exports."
+              >
+                <Field label="Timezone" htmlFor="ws-tz">
+                  <NativeSelect
+                    id="ws-tz"
+                    defaultValue="utc-5"
+                    onChange={() => setDirty(true)}
+                  >
+                    <option value="utc-8">Pacific (UTC−8)</option>
+                    <option value="utc-5">Eastern (UTC−5)</option>
+                    <option value="utc">UTC</option>
+                    <option value="utc+1">Central European (UTC+1)</option>
+                    <option value="utc+9">Japan (UTC+9)</option>
+                  </NativeSelect>
+                </Field>
+                <Field label="Date format" htmlFor="ws-fmt">
+                  <NativeSelect
+                    id="ws-fmt"
+                    defaultValue="ymd"
+                    onChange={() => setDirty(true)}
+                  >
+                    <option value="ymd">YYYY-MM-DD</option>
+                    <option value="dmy">DD/MM/YYYY</option>
+                    <option value="mdy">MM/DD/YYYY</option>
+                  </NativeSelect>
+                </Field>
+              </Section>
+
+              <Separator className="my-10" />
+
+              <Section title="Defaults">
+                <SwitchRow
+                  title="Public sign-up"
+                  description="Anyone with a workspace email can request access."
+                  defaultChecked
+                  onChange={() => setDirty(true)}
                 />
-              </div>
-            </Field>
-          </Section>
-
-          <Separator className="my-10" />
-
-          <Section
-            title="Region"
-            hint="Defaults applied to new members and exports."
-          >
-            <Field label="Timezone" htmlFor="ws-tz">
-              <NativeSelect
-                id="ws-tz"
-                defaultValue="utc-5"
-                onChange={() => setDirty(true)}
-              >
-                <option value="utc-8">Pacific (UTC−8)</option>
-                <option value="utc-5">Eastern (UTC−5)</option>
-                <option value="utc">UTC</option>
-                <option value="utc+1">Central European (UTC+1)</option>
-                <option value="utc+9">Japan (UTC+9)</option>
-              </NativeSelect>
-            </Field>
-            <Field label="Date format" htmlFor="ws-fmt">
-              <NativeSelect
-                id="ws-fmt"
-                defaultValue="ymd"
-                onChange={() => setDirty(true)}
-              >
-                <option value="ymd">YYYY-MM-DD</option>
-                <option value="dmy">DD/MM/YYYY</option>
-                <option value="mdy">MM/DD/YYYY</option>
-              </NativeSelect>
-            </Field>
-          </Section>
-
-          <Separator className="my-10" />
-
-          <Section title="Defaults">
-            <SwitchRow
-              title="Public sign-up"
-              description="Anyone with a workspace email can request access."
-              defaultChecked
-              onChange={() => setDirty(true)}
-            />
-            <SwitchRow
-              title="Two-factor for admins"
-              description="Require a second factor for owner and admin roles."
-              defaultChecked
-              onChange={() => setDirty(true)}
-            />
-            <SwitchRow
-              title="Show project IDs"
-              description="Display the short ID next to project names everywhere."
-              onChange={() => setDirty(true)}
-            />
-          </Section>
+                <SwitchRow
+                  title="Two-factor for admins"
+                  description="Require a second factor for owner and admin roles."
+                  defaultChecked
+                  onChange={() => setDirty(true)}
+                />
+                <SwitchRow
+                  title="Show project IDs"
+                  description="Display the short ID next to project names everywhere."
+                  onChange={() => setDirty(true)}
+                />
+              </Section>
+            </>
+          ) : (
+            <p className="py-16 text-center text-muted-foreground text-sm">
+              {section} settings aren't part of this showcase — only General is.
+            </p>
+          )}
         </main>
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-background/85 pb-[env(safe-area-inset-bottom)] backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-10">
-          <div role="status" className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">
+          <div
+            role="status"
+            className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]"
+          >
             {dirty ? "Unsaved changes" : "All saved"}
           </div>
           <div className="flex items-center gap-2">
@@ -197,7 +275,12 @@ export function FormsWorkspaceSettingsShowcasePage() {
             >
               Discard
             </Button>
-            <Button size="sm" type="button" disabled={!dirty} className="pointer-coarse:h-11">
+            <Button
+              size="sm"
+              type="button"
+              disabled={!dirty}
+              className="pointer-coarse:h-11"
+            >
               Save changes
             </Button>
           </div>
@@ -246,9 +329,7 @@ function Field({
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={htmlFor}>{label}</Label>
       {children}
-      {hint ? (
-        <p className="text-muted-foreground text-xs">{hint}</p>
-      ) : null}
+      {hint ? <p className="text-muted-foreground text-xs">{hint}</p> : null}
     </div>
   );
 }

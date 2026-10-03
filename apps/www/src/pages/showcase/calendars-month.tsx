@@ -108,7 +108,7 @@ export function CalendarsMonthShowcasePage() {
                   type="button"
                   aria-pressed={view === v}
                   onClick={() => setView(v)}
-                  className="min-h-7 rounded px-2.5 py-1 text-muted-foreground hover:text-foreground aria-pressed:bg-foreground/[0.08] aria-pressed:text-foreground pointer-coarse:min-h-9"
+                  className="min-h-7 rounded px-2.5 py-1 text-muted-foreground hover:text-foreground aria-pressed:bg-foreground aria-pressed:text-background pointer-coarse:min-h-9"
                 >
                   {v}
                 </button>

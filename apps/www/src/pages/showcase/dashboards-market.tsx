@@ -144,7 +144,7 @@ function FeaturedPane() {
               aria-pressed={r === "1D"}
               className={`min-h-7 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.15em] pointer-coarse:min-h-10 pointer-coarse:px-2.5 ${
                 r === "1D"
-                  ? "bg-foreground/[0.06] text-foreground"
+                  ? "bg-foreground text-background"
                   : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
               }`}
             >

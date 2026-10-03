@@ -41,12 +41,12 @@ export function ThreadsComposeRichShowcasePage() {
         </p>
 
         <div className="mt-8 rounded-xl border sm:mt-10 border-border/60 bg-background/40 p-3 shadow-sm focus-within:border-foreground/40">
-          {/* The toolbar scrolls sideways on narrow screens instead of overflowing. */}
+          {/* The toolbar wraps onto a second line on narrow screens so every tool stays visible. */}
           <div className="flex items-center justify-between gap-2 border-border/40 border-b pb-2">
             <div
               role="toolbar"
               aria-label="Formatting"
-              className="-mx-1 flex min-w-0 items-center gap-0.5 overflow-x-auto overscroll-x-contain px-1 [scrollbar-width:none]"
+              className="flex min-w-0 flex-wrap items-center gap-0.5"
             >
               {TOOLS.map((t, i) => (
                 <button

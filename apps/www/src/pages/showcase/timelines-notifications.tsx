@@ -127,7 +127,7 @@ export function TimelinesNotificationsShowcasePage() {
                 type="button"
                 aria-pressed={filter === f.id}
                 onClick={() => setFilter(f.id)}
-                className="min-h-8 rounded-md px-3 text-muted-foreground text-sm hover:bg-foreground/[0.03] hover:text-foreground aria-pressed:bg-foreground/[0.06] aria-pressed:text-foreground pointer-coarse:min-h-10 sm:text-xs"
+                className="min-h-8 rounded-md px-3 text-muted-foreground text-sm hover:bg-foreground/[0.03] hover:text-foreground aria-pressed:bg-foreground aria-pressed:text-background pointer-coarse:min-h-10 sm:text-xs"
               >
                 {f.label}
               </button>

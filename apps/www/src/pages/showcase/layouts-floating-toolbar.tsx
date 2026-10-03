@@ -258,7 +258,7 @@ export function LayoutsFloatingToolbarShowcasePage() {
           onPointerDown={(e) => e.preventDefault()}
           style={pos ? { top: pos.top, left: pos.left } : { top: 0, left: 0 }}
           data-placement={pos?.placement}
-          className={`fixed z-50 inline-flex max-w-[calc(100vw-16px)] items-center gap-1 overflow-x-auto rounded-full border border-border bg-card px-1 py-1 shadow-lg transition-opacity duration-150 ${pos ? "opacity-100" : "pointer-events-none opacity-0"}`}
+          className={`fixed z-50 inline-flex max-w-[calc(100vw-16px)] flex-wrap items-center justify-center gap-1 rounded-2xl border sm:rounded-full border-border bg-card px-1 py-1 shadow-lg transition-opacity duration-150 ${pos ? "opacity-100" : "pointer-events-none opacity-0"}`}
         >
           <ToolbarButton label="Bold">
             <BoldIcon />

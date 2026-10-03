@@ -207,7 +207,7 @@ function RangeButton({ label, active }: { label: string; active?: boolean }) {
       aria-pressed={active}
       className={`rounded-md px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] pointer-coarse:min-h-10 ${
         active
-          ? "bg-foreground/[0.06] text-foreground"
+          ? "bg-foreground text-background"
           : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
       }`}
     >

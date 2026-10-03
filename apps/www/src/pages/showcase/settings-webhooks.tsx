@@ -261,74 +261,75 @@ export function SettingsWebhooksShowcasePage() {
           </div>
         </header>
 
-        {/* Signing secret row */}
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card px-4 py-3 shadow-xs/5">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+        {/* Signing secret: label + Rotate on top, the secret field spans the
+            card's full width, explanation underneath. */}
+        <div className="mb-6 rounded-xl border bg-card px-4 py-3 shadow-xs/5">
+          <div className="flex items-center justify-between gap-3">
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
               Signing secret
             </div>
-            <div className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md border bg-background px-2 py-1 font-mono text-xs">
-              <span className="min-w-0 truncate text-foreground/85">
-                {revealed ? SECRET_REAL : SECRET_MASKED}
-              </span>
-              <Button
-                size="icon"
-                variant="ghost"
-                className="-mr-1 size-6 shrink-0 pointer-coarse:size-9"
-                aria-label={revealed ? "Hide signing secret" : "Reveal signing secret"}
-                onClick={() => setRevealed((v) => !v)}
-              >
-                {revealed ? (
-                  <EyeOffIcon className="!size-3" />
-                ) : (
-                  <EyeIcon className="!size-3" />
-                )}
-              </Button>
-              <Button
-                size="icon"
-                variant="ghost"
-                className="size-6 shrink-0 pointer-coarse:size-9"
-                aria-label="Copy signing secret"
-                onClick={() => {
-                  try {
-                    void navigator.clipboard.writeText(SECRET_REAL);
-                  } catch {
-                    /* ignore */
-                  }
-                  setCopiedSecret(true);
-                  window.setTimeout(() => setCopiedSecret(false), 1200);
-                }}
-              >
-                {copiedSecret ? (
-                  <CheckIcon className="!size-3 text-emerald-500" />
-                ) : (
-                  <CopyIcon className="!size-3" />
-                )}
-              </Button>
-            </div>
-            <span className="text-muted-foreground text-xs">
-              Used to verify the <code className="font-mono">Orbit-Signature</code> header.
-            </span>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <button
+                    type="button"
+                    className="inline-flex min-h-8 items-center gap-1 text-amber-700 text-xs underline-offset-4 hover:underline pointer-coarse:min-h-10 dark:text-amber-400"
+                  >
+                    <TriangleAlertIcon className="size-3.5" />
+                    Rotate
+                  </button>
+                }
+              />
+              <TooltipPopup side="top" className="max-w-[260px] p-2 text-left">
+                <p className="font-medium text-foreground">Rotate signing secret</p>
+                <p className="mt-0.5 text-muted-foreground">
+                  The previous secret stays valid for 24 hours so you can roll deploys.
+                </p>
+              </TooltipPopup>
+            </Tooltip>
           </div>
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-1 text-amber-700 text-xs underline-offset-4 hover:underline dark:text-amber-400"
-                >
-                  <TriangleAlertIcon className="size-3.5" />
-                  Rotate
-                </button>
-              }
-            />
-            <TooltipPopup side="top" className="max-w-[260px] p-2 text-left">
-              <p className="font-medium text-foreground">Rotate signing secret</p>
-              <p className="mt-0.5 text-muted-foreground">
-                The previous secret stays valid for 24 hours so you can roll deploys.
-              </p>
-            </TooltipPopup>
-          </Tooltip>
+          <div className="mt-2 flex w-full min-w-0 items-center gap-1 rounded-md border bg-background py-1 pr-1 pl-2.5 font-mono text-xs">
+            <span className="min-w-0 flex-1 truncate text-foreground/85">
+              {revealed ? SECRET_REAL : SECRET_MASKED}
+            </span>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="size-7 shrink-0 pointer-coarse:size-9"
+              aria-label={revealed ? "Hide signing secret" : "Reveal signing secret"}
+              onClick={() => setRevealed((v) => !v)}
+            >
+              {revealed ? (
+                <EyeOffIcon className="!size-3" />
+              ) : (
+                <EyeIcon className="!size-3" />
+              )}
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="-mr-1 size-7 shrink-0 pointer-coarse:size-9"
+              aria-label="Copy signing secret"
+              onClick={() => {
+                try {
+                  void navigator.clipboard.writeText(SECRET_REAL);
+                } catch {
+                  /* ignore */
+                }
+                setCopiedSecret(true);
+                window.setTimeout(() => setCopiedSecret(false), 1200);
+              }}
+            >
+              {copiedSecret ? (
+                <CheckIcon className="!size-3 text-emerald-500" />
+              ) : (
+                <CopyIcon className="!size-3" />
+              )}
+            </Button>
+          </div>
+          <p className="mt-2 text-muted-foreground text-xs">
+            Used to verify the <code className="font-mono">Orbit-Signature</code> header.
+          </p>
         </div>
 
         {/* Endpoints table */}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRightIcon, PlusIcon, XIcon } from "lucide-react";
 import { Button } from "@orbit/ui/button";
 import { PopoverPrimitive as Popover } from "@orbit/ui/popover";
@@ -54,6 +54,16 @@ const STEPS: Step[] = [
 export function ToursArrowTooltipShowcasePage() {
   const [step, setStep] = useState<number | null>(0);
   const current = step == null ? null : STEPS[step]!;
+  // The real element for this step. Passing the element itself (not a lookup
+  // function) makes Base UI re-run placement on every step, so the side —
+  // and the arrow's edge — flip to whatever fits next to the new target.
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!current) return setAnchor(null);
+    const el = document.querySelector<HTMLElement>(`[data-tour="${current.target}"]`);
+    el?.scrollIntoView({ block: "nearest", inline: "nearest" });
+    setAnchor(el);
+  }, [current]);
 
   return (
     <div className="relative min-h-svh bg-background text-foreground">
@@ -63,7 +73,7 @@ export function ToursArrowTooltipShowcasePage() {
       />
 
       <Popover.Root
-        open={current != null}
+        open={current != null && anchor != null}
         modal={false}
         onOpenChange={(open, details) => {
           // A tour shouldn't vanish on a stray tap outside; Esc still closes.
@@ -72,11 +82,9 @@ export function ToursArrowTooltipShowcasePage() {
       >
         <Popover.Portal>
           <Popover.Positioner
-            anchor={() =>
-              current ? document.querySelector(`[data-tour="${current.target}"]`) : null
-            }
+            anchor={anchor}
             side="right"
-            align="start"
+            align="center"
             sideOffset={12}
             collisionPadding={16}
             collisionAvoidance={{ side: "flip", align: "shift", fallbackAxisSide: "end" }}
@@ -86,7 +94,10 @@ export function ToursArrowTooltipShowcasePage() {
               initialFocus={false}
               className="w-[min(18rem,calc(100vw-2rem))] rounded-lg bg-foreground p-4 text-background shadow-2xl outline-none motion-safe:transition-[opacity,scale] data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0"
             >
-              <Popover.Arrow className="size-3 rotate-45 bg-foreground data-[side=bottom]:-top-1.5 data-[side=left]:-right-1.5 data-[side=right]:-left-1.5 data-[side=top]:-bottom-1.5" />
+              {/* Base UI places the arrow along the edge facing the target (and
+                  keeps it aimed at the target when the popup shifts); data-side
+                  picks which of the four edges it sits on. */}
+              <Popover.Arrow className="size-3 rotate-45 rounded-[2px] bg-foreground data-[side=bottom]:-top-1.5 data-[side=left]:-right-1.5 data-[side=right]:-left-1.5 data-[side=top]:-bottom-1.5" />
               {current ? (
                 <>
                   <div className="flex items-start justify-between gap-3">

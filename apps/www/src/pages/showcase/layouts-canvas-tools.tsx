@@ -741,7 +741,7 @@ function ToolsPalette({
   onChangeTool: (t: Tool) => void;
   mobileExtra?: React.ReactNode;
 }) {
-  // Vertical palette top-left on md+; a horizontal, scrollable bottom bar on
+  // Vertical palette top-left on md+; a horizontal bottom bar (wraps if needed) on
   // phones (thumb reach, and it keeps the top free for zoom/collab).
   return (
     <div
@@ -749,7 +749,7 @@ function ToolsPalette({
       aria-label="Tools"
       className="absolute bottom-[calc(0.75rem+env(safe-area-inset-bottom))] left-1/2 z-10 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 rounded-xl border border-border bg-card/85 p-1 shadow-lg backdrop-blur md:top-3 md:bottom-auto md:left-3 md:translate-x-0"
     >
-      <div className="flex min-w-0 flex-row gap-0.5 overflow-x-auto md:flex-col md:overflow-visible">
+      <div className="flex min-w-0 flex-row flex-wrap justify-center gap-0.5 md:flex-col md:flex-nowrap">
       {TOOLS.map((t) => {
         const Icon = t.icon;
         const isActive = tool === t.id;
