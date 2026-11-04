@@ -18,6 +18,7 @@
     "./particle-field": "./src/components/particle-field.tsx",
     "./orbit-avatar": "./src/components/orbit-avatar.tsx",
     "./orbit-avatar-field": "./src/components/orbit-avatar-field.tsx",
+    "./themes": "./src/themes/index.ts",
     "./*": "./src/components/ui/*.tsx"
   },
   "scripts": {

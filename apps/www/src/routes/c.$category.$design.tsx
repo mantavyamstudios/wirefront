@@ -1,10 +1,16 @@
-import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
-import { Kbd } from "@orbit/ui/kbd";
+import { useEffect, useRef, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTheme } from "@orbit/ui/theme-provider";
 import { CATEGORIES, getCategory, type CategorySlug } from "@/lib/designs";
 import { getShowcase } from "@/pages/showcase/registry";
-import { CodeViewer } from "@/pages/showcase/_code-viewer";
+import { AnimatePresence } from "motion/react";
+import { CodeStage } from "@/pages/showcase/_code-viewer";
+import {
+  type Device,
+  DeviceStage,
+  InteractionPanel,
+  type ThemeSyncMessage,
+} from "@/components/interaction-panel";
 import { DesignNotFound } from "@/pages/design-not-found";
 
 interface DesignSearch {
@@ -112,16 +118,58 @@ function DesignRoute() {
   const { preview } = Route.useSearch();
   const isPreview = preview === "1" || preview === "true";
   const navigate = useNavigate();
-  const router = useRouter();
-  const { toggleLightDark } = useTheme();
+  const { toggleLightDark, setPreference, setPalette } = useTheme();
   const found = getCategory(category);
   const [codeOpen, setCodeOpen] = useState(false);
+  const [device, setDevice] = useState<Device>("desktop");
+  const [replays, setReplays] = useState(0);
+  const [landscape, setLandscape] = useState(false);
+  // Keep the in-page design mounted until the device frame has loaded, so
+  // switching away from desktop never flashes an empty page.
+  const [stageReady, setStageReady] = useState(false);
+  useEffect(() => {
+    if (device === "desktop") setStageReady(false);
+  }, [device]);
+  const [panelHidden, setPanelHidden] = usePanelHidden();
+
+  // Device-width previews run this route in an iframe with ?preview=1; follow
+  // the parent's theme and palette as they change.
+  useEffect(() => {
+    if (!isPreview) return;
+    const onMessage = (e: MessageEvent<ThemeSyncMessage>) => {
+      if (e.origin !== window.location.origin || e.data?.type !== "wirefront:theme") return;
+      setPreference(e.data.theme);
+      setPalette(e.data.palette as Parameters<typeof setPalette>[0]);
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [isPreview, setPreference, setPalette]);
+
+  const goTo = (next: DesignTarget | null) => {
+    if (!next) return;
+    void navigate({
+      to: "/c/$category/$design",
+      params: { category: next.category, design: next.design },
+    });
+  };
+  // Esc / Back always lands on the index; ← → handle previous and next.
+  const goBack = () => {
+    void navigate({ to: "/" });
+  };
+  const browse = (delta: 1 | -1) => goTo(siblingDesign({ category, design }, delta));
+  const group = (delta: 1 | -1) => goTo(siblingCategory({ category, design }, delta));
+  const random = () => goTo(pickRandomDesign({ category, design }));
+
+  // Latest handlers for the keydown listener without re-binding it every render.
+  const actions = useRef({ goBack, browse, group, random });
+  actions.current = { goBack, browse, group, random };
 
   useEffect(() => {
     if (isPreview || !found) return;
     const handler = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (isTypingTarget()) return;
+      const a = actions.current;
 
       if (e.key === "Escape") {
         e.preventDefault();
@@ -129,52 +177,24 @@ function DesignRoute() {
           setCodeOpen(false);
           return;
         }
-        if (window.history.length > 1) {
-          router.history.back();
-        } else {
-          void navigate({ to: "/" });
-        }
+        a.goBack();
         return;
       }
       // Other hotkeys are suppressed while the code viewer is open.
       if (codeOpen) return;
       if ((e.key === "r" || e.key === "R") && !e.shiftKey) {
         e.preventDefault();
-        const next = pickRandomDesign({ category, design });
-        if (next) {
-          void navigate({
-            to: "/c/$category/$design",
-            params: { category: next.category, design: next.design },
-          });
-        }
+        a.random();
         return;
       }
       if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
         e.preventDefault();
-        const next = siblingDesign(
-          { category, design },
-          e.key === "ArrowRight" ? 1 : -1,
-        );
-        if (next) {
-          void navigate({
-            to: "/c/$category/$design",
-            params: { category: next.category, design: next.design },
-          });
-        }
+        a.browse(e.key === "ArrowRight" ? 1 : -1);
         return;
       }
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
-        const next = siblingCategory(
-          { category, design },
-          e.key === "ArrowDown" ? 1 : -1,
-        );
-        if (next) {
-          void navigate({
-            to: "/c/$category/$design",
-            params: { category: next.category, design: next.design },
-          });
-        }
+        a.group(e.key === "ArrowDown" ? 1 : -1);
         return;
       }
       if ((e.key === "t" || e.key === "T") && !e.shiftKey) {
@@ -185,13 +205,23 @@ function DesignRoute() {
       if (e.key === "c" || e.key === "C") {
         e.preventDefault();
         setCodeOpen(true);
+        return;
+      }
+      if ((e.key === "o" || e.key === "O") && !e.shiftKey) {
+        e.preventDefault();
+        setLandscape((v) => !v);
+        return;
+      }
+      if ((e.key === "h" || e.key === "H") && !e.shiftKey) {
+        e.preventDefault();
+        setPanelHidden((v) => !v);
       }
     };
     window.addEventListener("keydown", handler);
     return () => {
       window.removeEventListener("keydown", handler);
     };
-  }, [isPreview, found, category, design, navigate, toggleLightDark, codeOpen]);
+  }, [isPreview, found, toggleLightDark, codeOpen, setPanelHidden]);
 
   if (!found) return <DesignNotFound category={category} />;
   const meta = found.designs.find((d) => d.slug === design);
@@ -200,57 +230,78 @@ function DesignRoute() {
     return <DesignNotFound category={category} design={design} />;
   }
 
+  if (isPreview) {
+    return (
+      <div className="relative min-h-svh bg-background text-foreground">
+        <Showcase />
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-svh bg-background text-foreground">
-      {isPreview ? null : <ShortcutHints />}
-      <Showcase />
-      {isPreview ? null : (
-        <CodeViewer
-          open={codeOpen}
-          onOpenChange={setCodeOpen}
-          category={found.slug as CategorySlug}
-          design={design}
-          title={meta.title}
-        />
-      )}
+      {(device === "desktop" || !stageReady) && <Showcase key={replays} />}
+      <AnimatePresence>
+        {device !== "desktop" && (
+          <DeviceStage
+            device={device}
+            landscape={landscape}
+            key="device-stage"
+            onReady={() => setStageReady(true)}
+            reloadKey={replays}
+            src={`/c/${category}/${design}?preview=1`}
+          />
+        )}
+      </AnimatePresence>
+      <InteractionPanel
+        codeOpen={codeOpen}
+        device={device}
+        hidden={panelHidden}
+        onCodeOpenChange={setCodeOpen}
+        onDeviceChange={setDevice}
+        onReplay={() => setReplays((n) => n + 1)}
+        landscape={landscape}
+        onLandscapeChange={setLandscape}
+        onBack={goBack}
+        onBrowse={browse}
+        onGroup={group}
+        onRandom={random}
+      />
+      <AnimatePresence>
+        {codeOpen && (
+          <CodeStage
+            category={found.slug as CategorySlug}
+            design={design}
+            key="code"
+            title={meta.title}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-function ShortcutHints() {
-  return (
-    // Keyboard-only hints: hidden on small screens and touch devices, where
-    // they'd cover the design and can't be used anyway.
-    <div className="fixed bottom-4 right-4 z-50 hidden flex-col items-end gap-2 md:flex pointer-coarse:hidden">
-      <div className="flex items-center gap-3 rounded-md border border-border/70 bg-background/70 px-3 py-1.5 font-mono text-[10px] text-muted-foreground backdrop-blur">
-        <span className="flex items-center gap-1.5">
-          <Kbd>esc</Kbd> back
-        </span>
-        <span className="text-muted-foreground/40">·</span>
-        <span className="flex items-center gap-1">
-          <Kbd>←</Kbd>
-          <Kbd>→</Kbd>
-          <span className="ml-0.5">browse</span>
-        </span>
-        <span className="text-muted-foreground/40">·</span>
-        <span className="flex items-center gap-1">
-          <Kbd>↑</Kbd>
-          <Kbd>↓</Kbd>
-          <span className="ml-0.5">group</span>
-        </span>
-        <span className="text-muted-foreground/40">·</span>
-        <span className="flex items-center gap-1.5">
-          <Kbd>r</Kbd> random
-        </span>
-        <span className="text-muted-foreground/40">·</span>
-        <span className="flex items-center gap-1.5">
-          <Kbd>t</Kbd> theme
-        </span>
-        <span className="text-muted-foreground/40">·</span>
-        <span className="flex items-center gap-1.5">
-          <Kbd>c</Kbd> code
-        </span>
-      </div>
-    </div>
-  );
+const PANEL_HIDDEN_KEY = "wirefront-panel-hidden";
+
+function usePanelHidden() {
+  const [hidden, setHidden] = useState(false);
+  useEffect(() => {
+    try {
+      setHidden(localStorage.getItem(PANEL_HIDDEN_KEY) === "1");
+    } catch {
+      /* ignore */
+    }
+  }, []);
+  const update = (next: boolean | ((prev: boolean) => boolean)) => {
+    setHidden((prev) => {
+      const value = typeof next === "function" ? next(prev) : next;
+      try {
+        localStorage.setItem(PANEL_HIDDEN_KEY, value ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+      return value;
+    });
+  };
+  return [hidden, update] as const;
 }

@@ -30,6 +30,7 @@ const OUT_DIR = resolve(ROOT, "apps/www/public/r");
 // to surface as a npm dependency.
 const TRACKED_NPM_DEPS = new Set([
   "lucide-react",
+  "motion",
   "react-day-picker",
 ]);
 
@@ -224,7 +225,10 @@ function rewriteLibraryFile(absPath: string, source: string): {
   const importRe = /from\s+["']([^"']+)["']/g;
   for (const m of out.matchAll(importRe)) {
     const spec = m[1]!;
-    if (TRACKED_NPM_DEPS.has(spec)) npmDeps.add(spec);
+    // Match on the package name so subpath imports (motion/react) count too.
+    const parts = spec.split("/");
+    const pkg = spec.startsWith("@") ? parts.slice(0, 2).join("/") : parts[0]!;
+    if (TRACKED_NPM_DEPS.has(pkg)) npmDeps.add(pkg);
   }
 
   return { rewritten: out, follow, registryDeps, npmDeps };
@@ -300,7 +304,9 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
     const importRe = /from\s+["']([^"']+)["']/g;
     for (const m of raw.matchAll(importRe)) {
       const spec = m[1]!;
-      if (TRACKED_NPM_DEPS.has(spec)) npmDeps.add(spec);
+      const parts = spec.split("/");
+      const pkg = spec.startsWith("@") ? parts.slice(0, 2).join("/") : parts[0]!;
+      if (TRACKED_NPM_DEPS.has(pkg)) npmDeps.add(pkg);
     }
 
     showcaseFiles.push({ name: fname, content: rewriteShowcaseImports(raw) });

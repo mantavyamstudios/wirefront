@@ -1,3 +1,5 @@
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import type * as React from "react";
 import { cn } from "../../lib/utils";
 
@@ -6,26 +8,35 @@ export type TableVariant = "default" | "card";
 export function Table({
   className,
   variant = "default",
+  render,
   ...props
 }: React.ComponentProps<"table"> & {
   variant?: TableVariant;
+  // Optional: swap the scroll container element (used by ported devl.dev screens).
+  render?: useRender.ComponentProps<"div">["render"];
 }): React.ReactElement {
-  return (
-    <div
-      className="relative w-full overflow-x-auto"
-      data-slot="table-container"
-      data-variant={variant}
-    >
-      <table
-        className={cn(
-          "w-full caption-bottom in-data-[variant=card]:border-separate in-data-[variant=card]:border-spacing-0 text-sm",
-          className,
-        )}
-        data-slot="table"
-        {...props}
-      />
-    </div>
-  );
+  return useRender({
+    defaultTagName: "div",
+    props: mergeProps<"div">(
+      {
+        children: (
+          <table
+            className={cn(
+              "w-full caption-bottom in-data-[variant=card]:border-separate in-data-[variant=card]:border-spacing-0 text-sm",
+              className,
+            )}
+            data-slot="table"
+            {...props}
+          />
+        ),
+        className: "relative w-full overflow-x-auto",
+        "data-slot": "table-container",
+        "data-variant": variant,
+      } as useRender.ElementProps<"div">,
+      {},
+    ),
+    render,
+  });
 }
 
 export function TableHeader({

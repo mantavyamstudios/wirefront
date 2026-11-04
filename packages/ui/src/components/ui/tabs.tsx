@@ -1,10 +1,18 @@
 "use client";
 
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
-import type React from "react";
+import * as React from "react";
 import { cn } from "../../lib/utils";
+import {
+  type SegmentedControlSize,
+  segmentedControlItemSizeClassNames,
+} from "./segmented-control";
 
 export type TabsVariant = "default" | "underline";
+export type TabsSize = SegmentedControlSize;
+
+// Unset keeps the original tab sizing; ported devl.dev screens pass `size`.
+const TabsListContext = React.createContext<TabsSize | undefined>(undefined);
 
 export function Tabs({
   className,
@@ -24,11 +32,13 @@ export function Tabs({
 
 export function TabsList({
   variant = "default",
+  size,
   className,
   children,
   ...props
 }: TabsPrimitive.List.Props & {
   variant?: TabsVariant;
+  size?: TabsSize;
 }): React.ReactElement {
   return (
     <TabsPrimitive.List
@@ -41,9 +51,10 @@ export function TabsList({
         className,
       )}
       data-slot="tabs-list"
+      data-size={size}
       {...props}
     >
-      {children}
+      <TabsListContext.Provider value={size}>{children}</TabsListContext.Provider>
       <TabsPrimitive.Indicator
         className={cn(
           "absolute bottom-0 left-0 h-(--active-tab-height) w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-(--active-tab-bottom) transition-[width,translate] duration-200 ease-in-out",
@@ -59,14 +70,19 @@ export function TabsList({
 
 export function TabsTab({
   className,
+  size,
   ...props
-}: TabsPrimitive.Tab.Props): React.ReactElement {
+}: TabsPrimitive.Tab.Props & { size?: TabsSize }): React.ReactElement {
+  const contextSize = React.useContext(TabsListContext);
+  const resolvedSize = size ?? contextSize;
   return (
     <TabsPrimitive.Tab
       className={cn(
         "relative flex h-9 shrink-0 grow cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-transparent px-[calc(--spacing(2.5)-1px)] font-medium text-base outline-none transition-[color,background-color,box-shadow] hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring data-disabled:pointer-events-none data-[orientation=vertical]:w-full data-[orientation=vertical]:justify-start data-active:text-foreground data-disabled:opacity-64 sm:h-8 sm:text-sm [&_svg:not([class*='size-'])]:size-4.5 sm:[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:-mx-0.5 [&_svg]:shrink-0",
+        resolvedSize && segmentedControlItemSizeClassNames[resolvedSize],
         className,
       )}
+      data-size={resolvedSize}
       data-slot="tabs-tab"
       {...props}
     />

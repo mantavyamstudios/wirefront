@@ -15,8 +15,11 @@
  *   SNAPSHOT_BASE_URL       default http://localhost:4000
  *   SNAPSHOT_CONCURRENCY    default 4   (set to 1 to debug; 8 if your
  *                                       dev server can take it)
+ *   SNAPSHOT_ONLY_MISSING   set to 1 to skip designs that already have
+ *                           a PNG for that mode (e.g. after adding new ones)
  */
 import { chromium } from "playwright";
+import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 
@@ -26,6 +29,7 @@ const CONCURRENCY = Math.max(
   Number.parseInt(process.env.SNAPSHOT_CONCURRENCY ?? "4", 10) || 4,
 );
 const OUT_DIR = resolve(process.cwd(), "apps/www/public/previews");
+const ONLY_MISSING = process.env.SNAPSHOT_ONLY_MISSING === "1";
 const VIEWPORT = { width: 1440, height: 900 };
 const SETTLE_MS = 900;
 const MODES = ["light", "dark"] as const;
@@ -187,6 +191,12 @@ async function main(): Promise<void> {
       const match = /^\/c\/([^/]+)\/([^/]+)$/.exec(path);
       if (!match) continue;
       const [, category, design] = match;
+      if (
+        ONLY_MISSING &&
+        existsSync(resolve(OUT_DIR, `${category}__${design}--${mode}.png`))
+      ) {
+        continue;
+      }
       queue.push({ mode, path, category: category!, design: design! });
     }
   }

@@ -1160,3 +1160,174 @@ export function WireframeThreads({ className }: IconProps) {
   );
 }
 
+
+export function WireframeAI({ className }: IconProps) {
+  return (
+    <svg {...SVG_PROPS} className={className}>
+      <Frame>
+        {/* Chat history */}
+        <rect x="1" y="7" width="18" height="52.5" fill="currentColor" className="opacity-[0.04]" />
+        <line x1="19" y1="7" x2="19" y2="59.5" className="opacity-40" />
+        {[12, 17, 22, 27, 32].map((y) => (
+          <rect key={y} x="4" y={y} width={y === 12 ? 12 : 10} height="1" rx="0.3" fill="currentColor" className={y === 12 ? "opacity-60" : "opacity-30"} />
+        ))}
+
+        {/* Orb */}
+        <circle cx="49" cy="20" r="5" fill="currentColor" className="opacity-15" />
+        <circle cx="49" cy="20" r="3" fill="currentColor" className="opacity-50" />
+        <rect x="38" y="28.5" width="22" height="1.2" rx="0.4" fill="currentColor" className="opacity-60" />
+        <rect x="41" y="31" width="16" height="0.9" rx="0.3" fill="currentColor" className="opacity-30" />
+
+        {/* Suggestions */}
+        {[25, 40, 55].map((x) => (
+          <rect key={x} x={x} y="36" width="13" height="6" rx="1" className="opacity-30" />
+        ))}
+
+        {/* Prompt bar */}
+        <rect x="25" y="47" width="48" height="8" rx="2" fill="currentColor" className="opacity-[0.05]" />
+        <rect x="25" y="47" width="48" height="8" rx="2" className="opacity-40" />
+        <rect x="28" y="50.5" width="18" height="0.9" rx="0.3" fill="currentColor" className="opacity-30" />
+        <circle cx="69" cy="51" r="2" fill="currentColor" className="opacity-80" />
+      </Frame>
+    </svg>
+  );
+}
+
+export function WireframeDevTools({ className }: IconProps) {
+  return (
+    <svg {...SVG_PROPS} className={className}>
+      <Frame>
+        {/* File tree */}
+        <rect x="1" y="7" width="20" height="52.5" fill="currentColor" className="opacity-[0.04]" />
+        <line x1="21" y1="7" x2="21" y2="59.5" className="opacity-40" />
+        {[11, 15, 19, 23, 27, 31].map((y, i) => (
+          <rect key={y} x={i % 3 === 0 ? 4 : 7} y={y} width={i % 3 === 0 ? 12 : 10} height="0.9" rx="0.3" fill="currentColor" className={i === 2 ? "opacity-70" : "opacity-35"} />
+        ))}
+
+        {/* Diff */}
+        {[11, 14, 17, 20, 23, 26, 29, 32, 35, 38].map((y, i) => {
+          const kind = i === 3 || i === 4 ? "del" : i === 5 || i === 6 || i === 7 ? "add" : "ctx";
+          return (
+            <g key={y}>
+              {kind !== "ctx" && (
+                <rect x="24" y={y - 1} width="52" height="2.6" fill="currentColor" className={kind === "add" ? "opacity-[0.10]" : "opacity-[0.06]"} />
+              )}
+              <rect x="25" y={y} width="3" height="0.7" rx="0.2" fill="currentColor" className="opacity-20" />
+              <rect x="31" y={y} width={18 + ((i * 7) % 20)} height="0.8" rx="0.2" fill="currentColor" className={kind === "ctx" ? "opacity-30" : "opacity-55"} />
+            </g>
+          );
+        })}
+
+        {/* Inline comment */}
+        <rect x="31" y="42" width="40" height="13" rx="1" className="opacity-35" />
+        <circle cx="35" cy="46" r="1.4" fill="currentColor" className="opacity-55" />
+        <rect x="38" y="45.5" width="20" height="0.9" rx="0.3" fill="currentColor" className="opacity-40" />
+        <rect x="38" y="48" width="28" height="0.8" rx="0.2" fill="currentColor" className="opacity-25" />
+        <rect x="61" y="51" width="7" height="2.5" rx="0.4" fill="currentColor" className="opacity-80" />
+      </Frame>
+    </svg>
+  );
+}
+
+export function WireframeApps({ className }: IconProps) {
+  return (
+    <svg {...SVG_PROPS} className={className}>
+      <Frame>
+        {/* Rail */}
+        <rect x="1" y="7" width="7" height="52.5" fill="currentColor" className="opacity-[0.06]" />
+        {[11, 16, 21, 26].map((y) => (
+          <rect key={y} x="2.5" y={y} width="4" height="3" rx="0.8" fill="currentColor" className={y === 11 ? "opacity-70" : "opacity-30"} />
+        ))}
+
+        {/* Message list */}
+        <line x1="30" y1="7" x2="30" y2="59.5" className="opacity-40" />
+        {[10, 18, 26, 34, 42, 50].map((y) => (
+          <g key={y}>
+            {y === 18 && <rect x="8.5" y={y - 1.5} width="21" height="7.5" fill="currentColor" className="opacity-[0.07]" />}
+            <circle cx="12" cy={y + 1.5} r="1.5" fill="currentColor" className="opacity-50" />
+            <rect x="15" y={y} width="10" height="0.9" rx="0.3" fill="currentColor" className="opacity-55" />
+            <rect x="15" y={y + 2.2} width="13" height="0.7" rx="0.2" fill="currentColor" className="opacity-25" />
+          </g>
+        ))}
+
+        {/* Reading pane */}
+        <rect x="34" y="11" width="26" height="1.4" rx="0.4" fill="currentColor" className="opacity-65" />
+        <circle cx="35.5" cy="17" r="1.5" fill="currentColor" className="opacity-50" />
+        <rect x="38.5" y="16.5" width="14" height="0.9" rx="0.3" fill="currentColor" className="opacity-40" />
+        {[23, 26, 29, 32, 35, 38].map((y, i) => (
+          <rect key={y} x="34" y={y} width={i === 5 ? 22 : 40} height="0.8" rx="0.2" fill="currentColor" className="opacity-30" />
+        ))}
+        <rect x="34" y="47" width="42" height="9" rx="1" className="opacity-35" />
+        <rect x="68" y="51.5" width="6" height="2.5" rx="0.4" fill="currentColor" className="opacity-80" />
+      </Frame>
+    </svg>
+  );
+}
+
+export function WireframePersonal({ className }: IconProps) {
+  return (
+    <svg {...SVG_PROPS} className={className}>
+      <Frame>
+        {/* Balance */}
+        <rect x="5" y="11" width="14" height="0.9" rx="0.3" fill="currentColor" className="opacity-35" />
+        <rect x="5" y="14" width="28" height="3" rx="0.6" fill="currentColor" className="opacity-75" />
+        <polyline points="5,32 13,28 21,30 29,23 37,25 45,19" className="opacity-55" />
+        <line x1="5" y1="34" x2="45" y2="34" className="opacity-20" />
+
+        {/* Habit rings */}
+        {[56, 67].map((cx) => (
+          <g key={cx}>
+            <circle cx={cx} cy="18" r="4.5" className="opacity-20" />
+            <path d={`M ${cx} 13.5 A 4.5 4.5 0 1 1 ${cx - 4.3} 19.3`} className="opacity-70" />
+          </g>
+        ))}
+        <rect x="52" y="26" width="20" height="0.9" rx="0.3" fill="currentColor" className="opacity-30" />
+
+        {/* Now playing */}
+        <rect x="5" y="40" width="70" height="15" rx="1.5" fill="currentColor" className="opacity-[0.05]" />
+        <rect x="5" y="40" width="70" height="15" rx="1.5" className="opacity-35" />
+        <rect x="8" y="43" width="9" height="9" rx="1" fill="currentColor" className="opacity-40" />
+        <rect x="20" y="44" width="16" height="1" rx="0.3" fill="currentColor" className="opacity-60" />
+        <rect x="20" y="46.5" width="10" height="0.8" rx="0.2" fill="currentColor" className="opacity-30" />
+        {Array.from({ length: 14 }, (_, i) => (
+          <rect key={i} x={40 + i * 2.3} y={49 - ((i * 5) % 4)} width="1.2" height={2 + ((i * 5) % 4) * 1.3} rx="0.3" fill="currentColor" className={i < 6 ? "opacity-70" : "opacity-25"} />
+        ))}
+      </Frame>
+    </svg>
+  );
+}
+
+export function WireframeCommerce({ className }: IconProps) {
+  return (
+    <svg {...SVG_PROPS} className={className}>
+      <Frame>
+        {/* Steps */}
+        {[11, 26, 41].map((y, i) => (
+          <g key={y}>
+            <circle cx="7" cy={y + 2} r="2" fill="currentColor" className={i < 2 ? "opacity-70" : "opacity-20"} />
+            <rect x="11" y={y} width="34" height={i === 2 ? 14 : 9} rx="1" className="opacity-30" />
+            <rect x="13" y={y + 2} width="12" height="1" rx="0.3" fill="currentColor" className="opacity-55" />
+            <rect x="13" y={y + 4.5} width="24" height="0.8" rx="0.2" fill="currentColor" className="opacity-25" />
+          </g>
+        ))}
+        <rect x="13" y="50" width="30" height="3" rx="0.5" fill="currentColor" className="opacity-80" />
+
+        {/* Order summary */}
+        <rect x="50" y="11" width="26" height="44" rx="1" fill="currentColor" className="opacity-[0.04]" />
+        <rect x="50" y="11" width="26" height="44" rx="1" className="opacity-30" />
+        {[15, 22, 29].map((y) => (
+          <g key={y}>
+            <rect x="53" y={y} width="5" height="5" rx="0.6" fill="currentColor" className="opacity-30" />
+            <rect x="60" y={y + 1} width="9" height="0.9" rx="0.3" fill="currentColor" className="opacity-50" />
+            <rect x="60" y={y + 3} width="6" height="0.7" rx="0.2" fill="currentColor" className="opacity-25" />
+          </g>
+        ))}
+        <line x1="53" y1="38" x2="73" y2="38" className="opacity-25" />
+        <rect x="53" y="41" width="8" height="0.9" rx="0.3" fill="currentColor" className="opacity-35" />
+        <rect x="66" y="41" width="7" height="0.9" rx="0.3" fill="currentColor" className="opacity-35" />
+        <rect x="53" y="45" width="9" height="1.4" rx="0.4" fill="currentColor" className="opacity-65" />
+        <rect x="64" y="45" width="9" height="1.4" rx="0.4" fill="currentColor" className="opacity-65" />
+      </Frame>
+    </svg>
+  );
+}

@@ -22,6 +22,11 @@ export const SOURCE_FILES: Partial<
     "reset-password": "auth-reset-password",
     "two-factor": "auth-two-factor",
     "magic-link-sent": "auth-magic-link-sent",
+    "sign-in": "auth-sign-in",
+    "sign-up": "auth-sign-up",
+    "forgot-password": "auth-forgot-password",
+    "verify-email": "auth-verify-email",
+    "first-run": "auth-first-run",
   },
   "empty-states": {
     "inbox-zero": "empty-inbox-zero",
@@ -63,6 +68,7 @@ export const SOURCE_FILES: Partial<
     issues: "table-issues",
     transactions: "table-transactions",
     "audit-log": "table-audit-log",
+    "admin-users": "table-admin-users",
   },
   filters: {
     toolbar: "filter-toolbar",
@@ -83,6 +89,9 @@ export const SOURCE_FILES: Partial<
     "floating-toolbar": "layouts-floating-toolbar",
     "canvas-tools": "layouts-canvas-tools",
     "bottom-nav": "layouts-bottom-nav",
+    "inset-shell": "layouts-inset-shell",
+    "hairline-shell": "layouts-hairline-shell",
+    "split-shell": "layouts-split-shell",
   },
   dashboards: {
     "metrics-overview": "dashboards-metrics-overview",
@@ -94,6 +103,9 @@ export const SOURCE_FILES: Partial<
     engineering: "dashboards-engineering",
     support: "dashboards-support",
     market: "dashboards-market",
+    "revenue-overview": "dashboards-revenue-overview",
+    "status-console": "dashboards-status-console",
+    "pipeline-today": "dashboards-pipeline-today",
   },
   settings: {
     profile: "settings-profile",
@@ -108,6 +120,14 @@ export const SOURCE_FILES: Partial<
     privacy: "settings-privacy",
     developer: "settings-developer",
     sso: "settings-sso",
+    "appearance-settings": "settings-appearance-settings",
+    "profile-settings": "settings-profile-settings",
+    "security-settings": "settings-security-settings",
+    "developer-settings": "settings-developer-settings",
+    "notification-settings": "settings-notification-settings",
+    "team-roles": "settings-team-roles",
+    "settings-and-plans": "settings-settings-and-plans",
+    "connectors": "settings-connectors",
   },
   modals: {
     "confirm-delete": "modals-confirm-delete",
@@ -156,6 +176,7 @@ export const SOURCE_FILES: Partial<
     "year-heatmap": "calendars-year-heatmap",
     recurring: "calendars-recurring",
     holidays: "calendars-holidays",
+    "calendar-week": "calendars-calendar-week",
   },
   profile: {
     hero: "profile-hero",
@@ -168,6 +189,7 @@ export const SOURCE_FILES: Partial<
     "presence-rail": "profile-presence-rail",
     introductions: "profile-introductions",
     credentials: "profile-credentials",
+    "social-profile": "profile-social-profile",
   },
   toasts: {
     success: "toasts-success",
@@ -200,6 +222,36 @@ export const SOURCE_FILES: Partial<
     "mention-popover": "threads-mention-popover",
     resolved: "threads-resolved",
     "compose-rich": "threads-compose-rich",
+  },
+  ai: {
+    "assistant-start": "ai-assistant-start",
+    "conductor": "ai-conductor",
+    "run-replay": "ai-run-replay",
+    "prompt-test-bench": "ai-prompt-test-bench",
+    "co-writing-doc": "ai-co-writing-doc",
+  },
+  "dev-tools": {
+    "code-review": "devtools-code-review",
+    "docs-site": "devtools-docs-site",
+    "issue-tracker": "devtools-issue-tracker",
+  },
+  apps: {
+    "mail": "apps-mail",
+    "team-chat": "apps-team-chat",
+    "video-call": "apps-video-call",
+    "notes": "apps-notes",
+    "drive": "apps-drive",
+    "folder-view": "apps-folder-view",
+    "help-centre": "apps-help-centre",
+  },
+  personal: {
+    "money": "personal-money",
+    "habits": "personal-habits",
+    "music-player": "personal-music-player",
+  },
+  commerce: {
+    "checkout": "commerce-checkout",
+    "delivery-tracker": "commerce-delivery-tracker",
   },
 };
 

@@ -1,5 +1,10 @@
 import type { ComponentType } from "react";
 import {
+  WireframeAI,
+  WireframeApps,
+  WireframeCommerce,
+  WireframeDevTools,
+  WireframePersonal,
   WireframeAuth,
   WireframeCalendars,
   WireframeCard,
@@ -38,7 +43,12 @@ export type CategorySlug =
   | "toasts"
   | "pricing"
   | "tours"
-  | "threads";
+  | "threads"
+  | "ai"
+  | "dev-tools"
+  | "apps"
+  | "personal"
+  | "commerce";
 
 export type DesignStatus = "new" | "wip";
 
@@ -123,6 +133,24 @@ export const CATEGORIES: Category[] = [
         slug: "bottom-nav",
         title: "Bottom nav",
         blurb: "Mobile shell inside a phone-frame mock with a 5-tab bottom bar.",
+      },
+      {
+        slug: "inset-shell",
+        title: "Inset Shell",
+        blurb: "The frame an app lives in: a sidebar with workspace switcher, nav, colour-dotted projects and an account menu that folds down to an icon rail, beside a rounded inset page with live breadcrumbs and a floating drawer on phones.",
+        status: "new",
+      },
+      {
+        slug: "hairline-shell",
+        title: "Hairline Shell",
+        blurb: "An app frame drawn edge to edge on single hairlines, with header and footer rules running straight across, a marker that slides along the edge to the current page and a dense issue list you can walk with J and K.",
+        status: "new",
+      },
+      {
+        slug: "split-shell",
+        title: "Split Shell",
+        blurb: "A frame for working with an agent: tasks on the left, its thread in the middle, and a work panel you can drag or nudge with arrow keys to watch its tool calls tick by, the page it's reading and the sources it will cite.",
+        status: "new",
       },
     ],
   },
@@ -232,6 +260,36 @@ export const CATEGORIES: Category[] = [
         title: "Magic link sent",
         blurb: "Animated envelope confirmation with Open Gmail and resend countdown.",
       },
+      {
+        slug: "sign-in",
+        title: "Sign In",
+        blurb: "A minimal centred sign-in: passkey and single sign-on side by side, email and password with a show toggle, a gentle shake when the password is wrong and a check when you’re in.",
+        status: "new",
+      },
+      {
+        slug: "sign-up",
+        title: "Sign Up",
+        blurb: "A minimal centred sign-up: name, work email and a password whose length hint ticks green as you type, with inline errors and the terms in one quiet line.",
+        status: "new",
+      },
+      {
+        slug: "forgot-password",
+        title: "Forgot Password",
+        blurb: "Ask for a reset link, then a confirmation with the address it went to, a resend countdown and a way back to sign in.",
+        status: "new",
+      },
+      {
+        slug: "verify-email",
+        title: "Verify Email",
+        blurb: "The 6-digit code step: a centred code field split 3 + 3, a shake when the code is wrong, a resend timer that counts down and a mail icon that turns into a check.",
+        status: "new",
+      },
+      {
+        slug: "first-run",
+        title: "First Run",
+        blurb: "A four-step setup for a brand-new AI workspace, with a springy stepper, tools that connect right where they sit, invites as chips, a live preview of your first agent and a calm summary you can jump back from.",
+        status: "new",
+      },
     ],
   },
   {
@@ -290,6 +348,24 @@ export const CATEGORIES: Category[] = [
         blurb: "Featured ticker chart, watchlist with row sparklines, allocation.",
         status: "wip",
       },
+      {
+        slug: "revenue-overview",
+        title: "Revenue Story",
+        blurb: "A store's revenue told as a story: one big annotated line you can scrub day by day against last period, a plain-sentence summary whose numbers roll, a range switch that morphs the line and moves its notes, and a ranked strip of where the money came from.",
+        status: "new",
+      },
+      {
+        slug: "status-console",
+        title: "Status Console",
+        blurb: "An ops console where an incident plays out live: services with ticking p95 sparklines, a timeline that moves from investigating to resolved, the fix rolling out in recent deploys, and an on-call card you can page from the keyboard.",
+        status: "new",
+      },
+      {
+        slug: "pipeline-today",
+        title: "Pipeline Today",
+        blurb: "A salesperson's morning view: drag deals between stages (or move them with the keyboard) while each column's weighted value and the forecast roll live, and a Focus rail tells you who to act on and why, with one-click email, call and snooze that update the deal.",
+        status: "new",
+      },
     ],
   },
   {
@@ -344,6 +420,12 @@ export const CATEGORIES: Category[] = [
         slug: "audit-log",
         title: "Audit log",
         blurb: "Audit trail with active filter chips and a clear-all action.",
+      },
+      {
+        slug: "admin-users",
+        title: "Admin Users",
+        blurb: "A members admin with seat and 2FA stats, role and status filters, a sortable table you can bulk-edit, an invite dialog that checks emails as chips, and a drawer with each person's devices and activity.",
+        status: "new",
       },
     ],
   },
@@ -504,6 +586,54 @@ export const CATEGORIES: Category[] = [
         title: "Single sign-on",
         blurb: "IdP picker with a 4-step setup wizard and attribute mapping.",
         status: "wip",
+      },
+      {
+        slug: "appearance-settings",
+        title: "Appearance Settings",
+        blurb: "Theme cards with miniature previews above a compact live app that re-themes with a circular wipe, eases into your accent colour and glides between densities as you change them.",
+        status: "new",
+      },
+      {
+        slug: "profile-settings",
+        title: "Profile Settings",
+        blurb: "Edit your profile: crop a generated photo in a small dialog, claim a username with a live availability check and suggestions, see your local time on a tiny clock, and save from a bar that springs up when something changes.",
+        status: "new",
+      },
+      {
+        slug: "security-settings",
+        title: "Security Settings",
+        blurb: "Password, two-factor, passkeys and sessions in grouped rows: a tiny ring counts recommended steps, passkeys are added inline while your device confirms, and signed-out sessions slide off the table one after another.",
+        status: "new",
+      },
+      {
+        slug: "developer-settings",
+        title: "API Keys & Webhooks",
+        blurb: "Scoped API keys with a show-once secret, roll and revoke, plus webhook endpoints with event picking, a signing secret and a deliveries log where failed sends retry and flip to 200.",
+        status: "new",
+      },
+      {
+        slug: "notification-settings",
+        title: "Notification Settings",
+        blurb: "Channels you can open and tune, per-event email, push and chat toggles grouped under section switches, quiet hours on a small 24-hour track, and a digest line whose item count rolls as you change things.",
+        status: "new",
+      },
+      {
+        slug: "team-roles",
+        title: "Members & Roles",
+        blurb: "Invite people, manage members and pending invites, and tune a role-by-permission matrix with a locked owner column, live head counts and a duplicate-to-customise role.",
+        status: "new",
+      },
+      {
+        slug: "settings-and-plans",
+        title: "Settings & Plans",
+        blurb: "Workspace, members, API keys and billing in one calm settings screen: grouped rows, an unsaved-changes bar that springs up, invites and role changes, keys shown once, and usage bars that fill when you open Billing.",
+        status: "new",
+      },
+      {
+        slug: "connectors",
+        title: "Connectors",
+        blurb: "Browse every app your product plugs into, grouped by category in tidy two-up cards, with a sticky search, filters that glide, connect buttons that spin and settle into a quiet connected state, and a slide-over for permissions and settings.",
+        status: "new",
       },
     ],
   },
@@ -803,6 +933,12 @@ export const CATEGORIES: Category[] = [
         title: "Holidays & PTO",
         blurb: "Team-wide PTO calendar with overlap warnings.",
       },
+      {
+        slug: "calendar-week",
+        title: "Calendar Week",
+        blurb: "A week calendar you can push around: drag events to move or stretch them on a 15-minute snap, drag empty time to create one, nudge with the arrow keys, and watch the now line creep down the day.",
+        status: "new",
+      },
     ],
   },
   {
@@ -864,6 +1000,12 @@ export const CATEGORIES: Category[] = [
         title: "Security credentials",
         blurb: "Sessions list with device icons and revoke action.",
       },
+      {
+        slug: "social-profile",
+        title: "Profile",
+        blurb: "A social profile with a painted cover, a Follow button that pinches off a notification bell like a droplet, followers that roll up, and posts, replies and a media grid that opens into a lightbox.",
+        status: "new",
+      },
     ],
   },
   {
@@ -920,6 +1062,166 @@ export const CATEGORIES: Category[] = [
       { slug: "mention-popover", title: "@mention popover", blurb: "Typeahead member list under an active mention." },
       { slug: "resolved", title: "Resolved thread", blurb: "Collapsed resolved state with reopen action." },
       { slug: "compose-rich", title: "Rich composer", blurb: "Reply box with formatting toolbar and attach." },
+    ],
+  },
+  {
+    slug: "ai",
+    title: "AI & Agents",
+    blurb: "Assistant home, agent runs, prompt evals, co-writing.",
+    Icon: WireframeAI,
+    designs: [
+      {
+        slug: "assistant-start",
+        title: "Assistant Start",
+        blurb: "The first screen of an AI assistant, with chats and projects down the side, a gooey orb that says hello and a prompt box that gathers tools and connected apps as context, then glides down into the conversation when you send.",
+        status: "new",
+      },
+      {
+        slug: "conductor",
+        title: "Conductor",
+        blurb: "Chat with a lead agent while it works: it streams its replies, hands tasks to helpers whose progress ticks along in a side panel and writes what it learns straight into a launch brief you can edit beside the chat.",
+        status: "new",
+      },
+      {
+        slug: "run-replay",
+        title: "Run Replay",
+        blurb: "Watch an agent work a task from start to finish: plan steps tick off, tool calls stream into a log, it stops to ask before sending anything, and the draft it's writing fills in beside it.",
+        status: "new",
+      },
+      {
+        slug: "prompt-test-bench",
+        title: "Prompt Test Bench",
+        blurb: "Check a prompt before it ships, with pass rate by version against the bar it has to clear, a unified or side-by-side diff of what changed, and test cases that re-run live from queued to a rolling score.",
+        status: "new",
+      },
+      {
+        slug: "co-writing-doc",
+        title: "Co-writing Doc",
+        blurb: "A document where AI agents write alongside you: coloured cursors with name tags glide between words, an agent types its suggestion letter by letter for you to accept or reject, and comments sit in the margin next to the lines they're about.",
+        status: "new",
+      },
+    ],
+  },
+  {
+    slug: "dev-tools",
+    title: "Dev tools",
+    blurb: "Code review, docs sites, keyboard-driven issue tracking.",
+    Icon: WireframeDevTools,
+    designs: [
+      {
+        slug: "code-review",
+        title: "Code Review",
+        blurb: "A pull request review with a file tree, split or unified diffs with word-level highlights, inline threads you can reply to and resolve, Viewed checkboxes that fold files away, and an approve or request-changes panel.",
+        status: "new",
+      },
+      {
+        slug: "docs-site",
+        title: "Docs Site",
+        blurb: "A documentation site with a top nav, collapsible sidebar, code samples whose language choice follows you across the page, a table of contents that tracks your scroll, ⌘K search over pages and headings, and prev and next cards.",
+        status: "new",
+      },
+      {
+        slug: "issue-tracker",
+        title: "Issue Tracker",
+        blurb: "An issue list you drive with your hands on the keys: J and K to move, S, P, A and L to change status, priority, assignee and labels, X to multi-select, ⌘K for everything else, and rows glide to their new group when they change.",
+        status: "new",
+      },
+    ],
+  },
+  {
+    slug: "apps",
+    title: "Apps",
+    blurb: "Full product screens: mail, chat, calls, notes, drive, help.",
+    Icon: WireframeApps,
+    designs: [
+      {
+        slug: "mail",
+        title: "Mail",
+        blurb: "A three-pane mail client you can run from the keyboard: J and K walk the threads, E archives with an undo, R drops you into a quick reply, and the reading pane slides over the list on phones.",
+        status: "new",
+      },
+      {
+        slug: "team-chat",
+        title: "Team Chat",
+        blurb: "Channels and DMs with grouped messages, reactions that roll their counts, and threads that open in a side panel; send something and a teammate starts typing back.",
+        status: "new",
+      },
+      {
+        slug: "video-call",
+        title: "Video Call",
+        blurb: "A video call where the grid reflows as people drop in and out, whoever is talking gets a soft ring and a pulse, reactions float up the stage, and chat and people slide in beside it.",
+        status: "new",
+      },
+      {
+        slug: "notes",
+        title: "Notes",
+        blurb: "A notes app with folders, pinned notes that glide to the top, search that highlights matches as you type, and an editor where typing “[] ”, “- ” or “# ” turns a line into a checklist, bullet or heading.",
+        status: "new",
+      },
+      {
+        slug: "drive",
+        title: "Drive",
+        blurb: "A cloud drive home with a sidebar of places and quick access, start-from-template cards, and folders that glide between a card grid and a tidy table when you switch views, with search, sort and stars.",
+        status: "new",
+      },
+      {
+        slug: "folder-view",
+        title: "Folder View",
+        blurb: "One folder opened inside a drive, with a folder tree in the sidebar, type filters with counts, a grid of file cards with little drawn previews or a dense table, a bulk bar that rises with a rolling count when you pick a few, and ghost files fanning out of an empty sub-folder.",
+        status: "new",
+      },
+      {
+        slug: "help-centre",
+        title: "Help Centre",
+        blurb: "A support site with a search that suggests articles as you type, topic cards, readable articles with a table of contents that follows you, and a feedback form that asks what went wrong.",
+        status: "new",
+      },
+    ],
+  },
+  {
+    slug: "personal",
+    title: "Personal",
+    blurb: "Consumer screens: money, habits, music.",
+    Icon: WireframePersonal,
+    designs: [
+      {
+        slug: "money",
+        title: "Money",
+        blurb: "A personal finance home: the balance rolls digit by digit as you switch accounts or pay a bill, the payment lands in your transactions, spending donut and budgets at once, and each budget shows if you’re spending ahead of pace.",
+        status: "new",
+      },
+      {
+        slug: "habits",
+        title: "Habits",
+        blurb: "A habit tracker that makes ticking things off feel good: checks fill and draw in a beat, counted habits fill like a glass, streaks roll up, and a week grid lets you patch the days you forgot to log.",
+        status: "new",
+      },
+      {
+        slug: "music-player",
+        title: "Music Player",
+        blurb: "A music app with gradient cover art that glows into the room, a waveform you can scrub, a drag-to-reorder queue and lyrics that follow the song line by line.",
+        status: "new",
+      },
+    ],
+  },
+  {
+    slug: "commerce",
+    title: "Commerce",
+    blurb: "Checkout and live order tracking.",
+    Icon: WireframeCommerce,
+    designs: [
+      {
+        slug: "checkout",
+        title: "Checkout",
+        blurb: "A one-page checkout that folds each finished step into a one-line summary: inline validation that clears as you type, delivery choices that re-total the order, a card that flips when you reach the CVC, and a calm confirmation.",
+        status: "new",
+      },
+      {
+        slug: "delivery-tracker",
+        title: "Delivery Tracker",
+        blurb: "Live order tracking on a hand-drawn city map: the courier rides the route as the ETA counts down, you can zoom in to follow them, message with quick replies, and rate and tip once it lands.",
+        status: "new",
+      },
     ],
   },
 ];
