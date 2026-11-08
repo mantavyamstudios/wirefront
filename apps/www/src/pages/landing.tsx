@@ -22,6 +22,7 @@ import {
   CommandList,
 } from "@orbit/ui/command";
 import { ThemeToggle } from "@orbit/ui/theme-toggle";
+import { MantavyamMark } from "@/components/mantavyam-mark";
 import { LINKS } from "@/lib/site";
 import {
   CATEGORIES,
@@ -110,7 +111,16 @@ export function LandingPage() {
       <header className="relative z-30 border-border/60 border-b bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-[1600px] items-center justify-between gap-3 px-6 md:px-10">
           <div className="flex items-center gap-2 text-sm">
-            <span className="inline-block h-2 w-2 rounded-full bg-foreground" />
+            <a
+              aria-label="Mantavyam Studios"
+              className="inline-flex text-foreground transition-opacity hover:opacity-70"
+              href={LINKS.website}
+              rel="noreferrer"
+              target="_blank"
+              title="Mantavyam Studios"
+            >
+              <MantavyamMark className="h-3.5 w-auto" />
+            </a>
             <span className="tracking-[0.2em] uppercase">
               Wirefront
             </span>

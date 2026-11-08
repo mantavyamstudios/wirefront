@@ -22,6 +22,7 @@ import {
 const ORBIT_THEME_HEAD_SCRIPT = `!function(){try{var k=${JSON.stringify(ORBIT_THEME_STORAGE_KEY)};var p=localStorage.getItem(k);if(p!=="light"&&p!=="dark"&&p!=="system")p="system";var dark=p==="dark"||(p==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);}catch(e){}}();`
 
 const OG_IMAGE = `${SITE_URL}/og.png`
+const ICON_VERSION = '2'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -53,7 +54,11 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
-      { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      // ?v= busts browser favicon caches; bump it when the icons change.
+      { rel: 'icon', href: `/favicon.ico?v=${ICON_VERSION}`, sizes: '32x32' },
+      { rel: 'icon', type: 'image/svg+xml', href: `/favicon.svg?v=${ICON_VERSION}` },
+      { rel: 'apple-touch-icon', href: `/apple-touch-icon.png?v=${ICON_VERSION}` },
+      { rel: 'manifest', href: `/site.webmanifest?v=${ICON_VERSION}` },
       { rel: 'canonical', href: `${SITE_URL}/` },
     ],
   }),

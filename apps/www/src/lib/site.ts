@@ -4,7 +4,7 @@
 export const SITE_URL = (import.meta.env.VITE_SITE_URL ?? "").replace(/\/$/, "");
 
 export const SITE_NAME = "Wirefront";
-export const SITE_TITLE = "Wirefront — production-ready UI screens built on coss-ui";
+export const SITE_TITLE = "Wirefront - Production Ready UI Screens Wiring";
 export const SITE_DESCRIPTION =
   "200 responsive UI screens built on coss-ui, all on the shadcn registry. Press 'c' on any design to see and copy the source.";
 export const SITE_AUTHOR = "Mantavyam Studios";
