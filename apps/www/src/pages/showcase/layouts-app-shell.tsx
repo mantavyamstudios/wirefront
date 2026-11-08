@@ -108,7 +108,7 @@ export function LayoutsAppShellShowcasePage() {
           </Button>
           <div className="relative">
             <Avatar className="size-7">
-              <AvatarFallback>SB</AvatarFallback>
+              <AvatarFallback>MS</AvatarFallback>
             </Avatar>
             <span className="absolute right-0 bottom-0 size-2 rounded-full bg-emerald-500 ring-2 ring-background" />
           </div>
@@ -266,12 +266,12 @@ function SidebarNav({
         className="flex items-center gap-2 border-t border-border/60 px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] text-left transition-colors hover:bg-foreground/[0.03]"
       >
         <Avatar className="size-7">
-          <AvatarFallback>SB</AvatarFallback>
+          <AvatarFallback>MS</AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
-          <div className="truncate font-medium text-sm">Sean</div>
+          <div className="truncate font-medium text-sm">Mantavyam</div>
           <div className="truncate text-muted-foreground text-xs">
-            sean@cal.com
+            hello@mantavyam.com
           </div>
         </div>
         <ChevronUpIcon className="size-3.5 opacity-60" />

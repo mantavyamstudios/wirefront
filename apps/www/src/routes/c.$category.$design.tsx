@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTheme } from "@orbit/ui/theme-provider";
 import { CATEGORIES, getCategory, type CategorySlug } from "@/lib/designs";
 import { getShowcase } from "@/pages/showcase/registry";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { AnimatePresence } from "motion/react";
 import { CodeStage } from "@/pages/showcase/_code-viewer";
 import {
@@ -32,10 +33,10 @@ export const Route = createFileRoute("/c/$category/$design")({
     const category = getCategory(params.category as CategorySlug);
     const design = category?.designs.find((d) => d.slug === params.design);
     if (!category || !design) return {};
-    const url = `https://devl.dev/c/${params.category}/${params.design}`;
-    const title = `${design.title} · ${category.title} — devl.dev`;
+    const url = `${SITE_URL}/c/${params.category}/${params.design}`;
+    const title = `${design.title} · ${category.title} — ${SITE_NAME}`;
     const description = design.blurb;
-    const image = `https://devl.dev/previews/${params.category}__${params.design}--dark.png`;
+    const image = `${SITE_URL}/previews/${params.category}__${params.design}--dark.png`;
     return {
       meta: [
         { title },

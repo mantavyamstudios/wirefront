@@ -20,7 +20,7 @@ const SEED: { id: string; title: string; description: string; data: RichData }[]
   {
     id: "reply",
     title: "Riya replied",
-    description: "@sean — same — let's pair on the bouncing invites tomorrow morning.",
+    description: "@mantavyam — same — let's pair on the bouncing invites tomorrow morning.",
     data: {
       Icon: MessageCircleIcon,
       badgeTone: "bg-sky-500/15 text-sky-600 dark:text-sky-400",

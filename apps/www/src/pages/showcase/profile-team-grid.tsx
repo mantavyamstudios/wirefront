@@ -35,7 +35,7 @@ const DEPARTMENTS: Department[] = [
     count: 2,
     members: [
       { name: "Dani Kim", initials: "DK", role: "Lead Designer", city: "Berlin, DE", status: "online", pronouns: "she/her", bio: "Product surfaces, motion, type." },
-      { name: "Sean", initials: "SB", role: "Brand", city: "San Francisco, CA", status: "online", pronouns: "he/him", bio: "Words, voice, sometimes paint." },
+      { name: "Mantavyam", initials: "MS", role: "Brand", city: "San Francisco, CA", status: "online", pronouns: "he/him", bio: "Words, voice, sometimes paint." },
     ],
   },
 ];

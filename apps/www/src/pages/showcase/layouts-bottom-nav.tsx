@@ -356,10 +356,10 @@ function ProfileView() {
     <div className="flex flex-col gap-5">
       <div className="flex flex-col items-center gap-2 pt-2">
         <Avatar className="size-20">
-          <AvatarFallback className="text-lg">SB</AvatarFallback>
+          <AvatarFallback className="text-lg">MS</AvatarFallback>
         </Avatar>
         <div className="text-center">
-          <p className="font-heading text-base">Sean</p>
+          <p className="font-heading text-base">Mantavyam</p>
           <p className="text-xs text-muted-foreground">
             Product designer · Brooklyn
           </p>

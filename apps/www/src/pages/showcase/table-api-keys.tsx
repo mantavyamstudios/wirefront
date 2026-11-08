@@ -42,7 +42,7 @@ const KEYS: ApiKey[] = [
   { name: "Production server", prefix: "sk_live_8f4ad…91c2", scopes: ["read", "write"], created: "Jan 12, 2026", lastUsed: "2 minutes ago", env: "live" },
   { name: "Webhook receiver", prefix: "sk_live_220bc…77fd", scopes: ["events.write"], created: "Mar 03, 2026", lastUsed: "14 hours ago", env: "live", expires: "Jul 03, 2026" },
   { name: "CI / Vercel", prefix: "sk_live_e1d12…3a04", scopes: ["read"], created: "Mar 28, 2026", lastUsed: "3 days ago", env: "live" },
-  { name: "Local dev — Sean", prefix: "sk_test_aabc8…1d44", scopes: ["read", "write", "admin"], created: "Apr 18, 2026", lastUsed: "Just now", env: "test" },
+  { name: "Local dev — Mantavyam", prefix: "sk_test_aabc8…1d44", scopes: ["read", "write", "admin"], created: "Apr 18, 2026", lastUsed: "Just now", env: "test" },
   { name: "Mobile staging", prefix: "sk_test_44910…f2bc", scopes: ["read"], created: "Apr 02, 2026", lastUsed: "Never", env: "test" },
 ];
 

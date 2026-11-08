@@ -23,15 +23,15 @@ const TODAY: Slot[] = [
   { type: "gap", gap: { reason: "Coffee + inbox", minutes: 30, Icon: CoffeeIcon } },
   { type: "event", start: "09:30", end: "10:30", title: "1:1 with Maya", location: "Studio · 4F window", tone: "amber", attendees: ["MO"] },
   { type: "gap", gap: { reason: "Travel", minutes: 20, Icon: CarIcon } },
-  { type: "event", start: "10:50", end: "11:50", title: "BigCorp customer call", location: "Off-site · Soho House", tone: "teal", attendees: ["JL", "SB"], detail: "Renewal discussion · v3.4 walkthrough" },
-  { type: "event", start: "13:00", end: "14:30", title: "Design crit", location: "Zoom + Studio", tone: "rose", attendees: ["DK", "JL", "RP", "MO", "SB"], detail: "Onboarding particle field & inset login" },
+  { type: "event", start: "10:50", end: "11:50", title: "BigCorp customer call", location: "Off-site · Soho House", tone: "teal", attendees: ["JL", "MS"], detail: "Renewal discussion · v3.4 walkthrough" },
+  { type: "event", start: "13:00", end: "14:30", title: "Design crit", location: "Zoom + Studio", tone: "rose", attendees: ["DK", "JL", "RP", "MO", "MS"], detail: "Onboarding particle field & inset login" },
   { type: "event", start: "16:00", end: "16:30", title: "Audit log review", location: "Workspace #design", tone: "violet", attendees: ["MO", "JL"] },
 ];
 
 const TOMORROW: Slot[] = [
-  { type: "event", start: "09:00", end: "10:00", title: "Q2 roadmap planning", location: "Studio", tone: "violet", attendees: ["MO", "JL", "RP", "SB"] },
+  { type: "event", start: "09:00", end: "10:00", title: "Q2 roadmap planning", location: "Studio", tone: "violet", attendees: ["MO", "JL", "RP", "MS"] },
   { type: "event", start: "11:00", end: "12:00", title: "Sales review", location: "Zoom", tone: "teal", attendees: ["AT"] },
-  { type: "event", start: "15:00", end: "16:30", title: "Sprint demo", location: "All-hands", tone: "rose", attendees: ["MO", "JL", "RP", "DK", "SB", "AT"] },
+  { type: "event", start: "15:00", end: "16:30", title: "Sprint demo", location: "All-hands", tone: "rose", attendees: ["MO", "JL", "RP", "DK", "MS", "AT"] },
 ];
 
 const TONE_BG: Record<NonNullable<Slot["tone"]>, string> = {

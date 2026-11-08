@@ -9,10 +9,11 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
 
-const TITLE = 'devl.dev'
-const TAGLINE = "Sean's scatch pad"
-const SUBTITLE = 'UI experiments built on coss-ui'
-const STATS = ['159+ components', 'shadcn registry', "press 'c' to copy"]
+const TITLE = 'Wirefront'
+const TAGLINE = 'Mantavyam Studios'
+const DOMAIN = 'mantavyam.com'
+const SUBTITLE = 'Production-ready UI screens built on coss-ui'
+const STATS = ['200 screens', 'shadcn registry', "press 'c' to copy"]
 
 const [geistRegular, geistSemibold, logoBytes] = await Promise.all([
   readFile(resolve(root, 'public/fonts/Geist-Regular.ttf')),
@@ -110,7 +111,7 @@ const tree = h(
           color: 'rgba(255,255,255,0.55)',
         },
       },
-      'devl.dev',
+      DOMAIN,
     ),
   ),
 

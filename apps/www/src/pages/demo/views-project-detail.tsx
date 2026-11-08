@@ -244,7 +244,7 @@ function Activity() {
     { Icon: MessageCircleIcon, who: "Riya", what: "commented", target: "audit log thread", time: "21m" },
     { Icon: CheckCircle2Icon, who: "Dani", what: "closed", target: "ENG-114 — empty inbox icon", time: "1h" },
     { Icon: EyeIcon, who: "Alex", what: "approved", target: "release 0.4.2", time: "2h" },
-    { Icon: CalendarIcon, who: "Sean", what: "scheduled", target: "Q3 budget review · Friday", time: "yesterday" },
+    { Icon: CalendarIcon, who: "Mantavyam", what: "scheduled", target: "Q3 budget review · Friday", time: "yesterday" },
   ];
   return (
     <div className="rounded-xl border border-border/60 bg-background/40 p-5">

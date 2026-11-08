@@ -18,7 +18,7 @@ export function EmptyFirstProjectShowcasePage() {
           <div className="flex items-center gap-2 font-mono text-xs">
             <span className="inline-block h-2 w-2 rounded-full bg-foreground" />
             <span className="tracking-[0.2em] uppercase">Workspace</span>
-            <span className="text-muted-foreground">/ sean</span>
+            <span className="text-muted-foreground">/ mantavyam</span>
           </div>
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Day 1

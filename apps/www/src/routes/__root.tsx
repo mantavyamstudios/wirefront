@@ -11,14 +11,16 @@ import {
   ORBIT_THEME_STORAGE_KEY,
   ThemeProvider,
 } from '@orbit/ui/theme-provider'
+import {
+  SITE_AUTHOR,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+} from '@/lib/site'
 
 const ORBIT_THEME_HEAD_SCRIPT = `!function(){try{var k=${JSON.stringify(ORBIT_THEME_STORAGE_KEY)};var p=localStorage.getItem(k);if(p!=="light"&&p!=="dark"&&p!=="system")p="system";var dark=p==="dark"||(p==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);}catch(e){}}();`
 
-const SITE_URL = 'https://devl.dev'
-const SITE_NAME = "Sean's scratch pad"
-const SITE_TITLE = 'devl.dev — UI experiments built on coss-ui'
-const SITE_DESCRIPTION =
-  "Two years of UI experiments. 159+ components built on coss-ui, all on the shadcn registry. Press 'c' on any design to copy the source."
 const OG_IMAGE = `${SITE_URL}/og.png`
 
 export const Route = createRootRoute({
@@ -30,14 +32,14 @@ export const Route = createRootRoute({
       { name: 'theme-color', content: '#0a0a0a' },
       { title: SITE_TITLE },
       { name: 'description', content: SITE_DESCRIPTION },
-      { name: 'author', content: 'Sean' },
+      { name: 'author', content: SITE_AUTHOR },
 
       // Open Graph
       { property: 'og:type', content: 'website' },
       { property: 'og:site_name', content: SITE_NAME },
       { property: 'og:title', content: SITE_TITLE },
       { property: 'og:description', content: SITE_DESCRIPTION },
-      { property: 'og:url', content: SITE_URL },
+      { property: 'og:url', content: `${SITE_URL}/` },
       { property: 'og:image', content: OG_IMAGE },
       { property: 'og:image:width', content: '1200' },
       { property: 'og:image:height', content: '630' },
@@ -48,12 +50,11 @@ export const Route = createRootRoute({
       { name: 'twitter:title', content: SITE_TITLE },
       { name: 'twitter:description', content: SITE_DESCRIPTION },
       { name: 'twitter:image', content: OG_IMAGE },
-      { name: 'twitter:creator', content: '@seanbrydon13' },
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
       { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-      { rel: 'canonical', href: SITE_URL },
+      { rel: 'canonical', href: `${SITE_URL}/` },
     ],
   }),
   component: RootComponent,

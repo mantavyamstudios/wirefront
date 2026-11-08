@@ -61,7 +61,7 @@ const EARLIER: Notif[] = [
     who: "Workspace",
     initials: "WS",
     what: "billing settings were updated by",
-    context: "Sean",
+    context: "Mantavyam",
     time: "2d",
     Icon: SettingsIcon,
   },

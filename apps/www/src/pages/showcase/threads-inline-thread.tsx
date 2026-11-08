@@ -36,7 +36,7 @@ export function ThreadsInlineThreadShowcasePage() {
   const add = (body: string) =>
     setComments((c) => [
       ...c,
-      { initials: "SB", tone: "bg-violet-500/85 text-white", name: "You", time: "now", body },
+      { initials: "MS", tone: "bg-violet-500/85 text-white", name: "You", time: "now", body },
     ]);
 
   return (

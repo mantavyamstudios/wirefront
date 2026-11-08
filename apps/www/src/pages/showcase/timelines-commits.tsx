@@ -24,7 +24,7 @@ const COMMITS: Commit[] = [
   { hash: "7f10b5e", parents: ["4d99a0c"], lane: 1, author: "James", initials: "JL", message: "wip(table): wire export action menu", scope: "tables", time: "5h ago", filesChanged: 4, additions: 78, deletions: 22 },
   { hash: "4d99a0c", parents: ["2b10f7c"], lane: 0, author: "Riya", initials: "RP", message: "chore: bump @orbit/ui to 0.8.2", scope: "deps", time: "8h ago", filesChanged: 2, additions: 1, deletions: 1 },
   { hash: "9c8e3f1", parents: ["2b10f7c"], lane: 2, author: "Dani", initials: "DK", message: "design(palette): tighter ⌘K row spacing", scope: "command", time: "yesterday", filesChanged: 1, additions: 12, deletions: 8 },
-  { hash: "2b10f7c", parents: [], lane: 0, author: "Sean", initials: "SB", message: "release v3.4", scope: "release", time: "yesterday", filesChanged: 1, additions: 2, deletions: 2, tag: "v3.4" },
+  { hash: "2b10f7c", parents: [], lane: 0, author: "Mantavyam", initials: "MS", message: "release v3.4", scope: "release", time: "yesterday", filesChanged: 1, additions: 2, deletions: 2, tag: "v3.4" },
 ];
 
 const LANE_COLORS = ["#6366f1", "#14b8a6", "#f472b6"];

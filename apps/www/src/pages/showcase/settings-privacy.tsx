@@ -168,7 +168,7 @@ export function SettingsPrivacyShowcasePage() {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-muted-foreground text-xs">
                   We'll prepare the archive and email{" "}
-                  <span className="font-mono">sean@cal.com</span> when it's
+                  <span className="font-mono">hello@mantavyam.com</span> when it's
                   ready.
                 </p>
                 <Button

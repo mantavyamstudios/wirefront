@@ -271,7 +271,7 @@ const SEED_PROJECTS: Project[] = [
 ];
 
 const SEED_MEMBERS: Member[] = [
-  { id: "m0", name: "Sean", email: "sean@cal.com", role: "owner", status: "online", initials: "SB", tone: "bg-foreground text-background", lastActive: "now" },
+  { id: "m0", name: "Mantavyam", email: "hello@mantavyam.com", role: "owner", status: "online", initials: "MS", tone: "bg-foreground text-background", lastActive: "now" },
   { id: "m1", name: "Maya Okafor", email: "maya@acme.com", role: "admin", status: "online", initials: "MO", tone: TONES[0]!, lastActive: "2m ago" },
   { id: "m2", name: "James Lin", email: "james@acme.com", role: "member", status: "online", initials: "JL", tone: TONES[1]!, lastActive: "12m ago" },
   { id: "m3", name: "Riya Patel", email: "riya@acme.com", role: "member", status: "away", initials: "RP", tone: TONES[2]!, lastActive: "1h ago" },

@@ -23,7 +23,7 @@ function LoginForm() {
     <>
       <div className="absolute top-4 left-4 flex max-w-[calc(100%-5rem)] items-center gap-2 font-mono text-sm sm:top-6 sm:left-6 lg:hidden">
         <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-foreground" />
-        <span className="truncate tracking-[0.12em] uppercase sm:tracking-[0.2em]">Sean's scatch pad</span>
+        <span className="truncate tracking-[0.12em] uppercase sm:tracking-[0.2em]">Wirefront</span>
       </div>
 
       <div className="w-full max-w-lg">

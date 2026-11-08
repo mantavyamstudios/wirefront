@@ -166,7 +166,7 @@ const TIMELINE: TimelineItem[] = [
     kind: "status",
     time: "2m ago",
     label: "marked ready for review",
-    who: "Sean",
+    who: "Mantavyam",
   },
 ];
 
@@ -204,9 +204,9 @@ export function TimelinesPullRequestShowcasePage() {
                 Open
               </span>
               <Avatar className="size-5">
-                <AvatarFallback className="text-[10px]">SB</AvatarFallback>
+                <AvatarFallback className="text-[10px]">MS</AvatarFallback>
               </Avatar>
-              <span className="text-foreground">Sean</span>
+              <span className="text-foreground">Mantavyam</span>
               <span>wants to merge 3 commits into</span>
               <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[11px] text-foreground">
                 main
@@ -459,7 +459,7 @@ function Description({
     <div className="rounded-xl border border-border/60 bg-background/40 p-5">
       <div className="flex items-start gap-3">
         <Avatar className="size-7">
-          <AvatarFallback className="text-[10px]">SB</AvatarFallback>
+          <AvatarFallback className="text-[10px]">MS</AvatarFallback>
         </Avatar>
         <div className="flex-1 text-sm">
           <p>

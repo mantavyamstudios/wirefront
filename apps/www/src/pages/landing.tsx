@@ -3,14 +3,11 @@ import type { ComponentType } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowRightIcon,
-  ArrowUpRightIcon,
   CornerDownLeftIcon,
   LayoutGridIcon,
   Rows3Icon,
   SearchIcon,
   ShuffleIcon,
-  SparklesIcon,
-  XIcon,
 } from "lucide-react";
 import { AmbientGrain } from "@orbit/ui/ambient-grain";
 import {
@@ -25,6 +22,7 @@ import {
   CommandList,
 } from "@orbit/ui/command";
 import { ThemeToggle } from "@orbit/ui/theme-toggle";
+import { LINKS } from "@/lib/site";
 import {
   CATEGORIES,
   type Category,
@@ -114,7 +112,7 @@ export function LandingPage() {
           <div className="flex items-center gap-2 text-sm">
             <span className="inline-block h-2 w-2 rounded-full bg-foreground" />
             <span className="tracking-[0.2em] uppercase">
-              Sean's scatch pad
+              Wirefront
             </span>
             <span className="ml-3 hidden font-mono text-[10px] text-muted-foreground tracking-[0.2em] sm:inline">
               {totalFiles.toString().padStart(2, "0")} FILES ·{" "}
@@ -144,7 +142,7 @@ export function LandingPage() {
               <ShuffleIcon className="size-4" />
             </button>
             <a
-              href="https://github.com/sean-brydon/devl.dev"
+              href={LINKS.repo}
               target="_blank"
               rel="noreferrer"
               aria-label="GitHub repository"
@@ -166,38 +164,12 @@ export function LandingPage() {
           Designs.
         </h1>
         <p className="mt-3 max-w-xl text-muted-foreground text-sm leading-relaxed">
-          {totalFiles} design experiments, two years deep. Built on coss-ui —
+          {totalFiles} screen designs, built on coss-ui —
           with raw CSS, shaders, weird SVGs, and the odd canvas thrown in.
           Scroll, or press{" "}
           <kbd className="rounded border border-border/60 bg-background/80 px-1 py-0.5 font-mono text-[10px]">⌘K</kbd>{" "}
           to jump in.
         </p>
-        <div className="mt-6 grid grid-cols-1 gap-3 md:max-w-5xl md:grid-cols-3">
-          <PromoCard
-            href="https://coss.com/ui"
-            kicker="component library"
-            title="coss-ui"
-            blurb="The library every design here is built on. Tailwind v4 + Base UI, accessible, copy-paste."
-            cta="Browse components"
-            accent="indigo"
-          />
-          <PromoCard
-            href="https://wereorbit.com"
-            kicker="starter kit"
-            title="Orbit"
-            blurb="The full stack wired up — auth, billing, emails, the works. Skip the boring week."
-            cta="Try the starter"
-            accent="amber"
-          />
-          <PromoCard
-            href="https://cal.com"
-            kicker="scheduling"
-            title="Cal.com"
-            blurb="Scheduling infrastructure for teams. The day job — book meetings without the back-and-forth."
-            cta="Book a time"
-            accent="sky"
-          />
-        </div>
       </section>
 
       <div className="relative z-10 border-border/60 border-t bg-foreground/[0.02] pt-2 pb-24">
@@ -214,90 +186,6 @@ export function LandingPage() {
         entries={allEntries}
       />
 
-      <FloatingPromo />
-    </div>
-  );
-}
-
-const PROMO_DISMISSED_KEY = "orbit-promo-dismissed-v1";
-const PROMO_DELAY_MS = 15000;
-
-function FloatingPromo() {
-  const [mounted, setMounted] = useState(false);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.localStorage.getItem(PROMO_DISMISSED_KEY)) return;
-    const t = window.setTimeout(() => {
-      setMounted(true);
-      // Next frame so the entrance transition runs.
-      requestAnimationFrame(() => setVisible(true));
-    }, PROMO_DELAY_MS);
-    return () => window.clearTimeout(t);
-  }, []);
-
-  function dismiss() {
-    setVisible(false);
-    window.setTimeout(() => {
-      setMounted(false);
-      window.localStorage.setItem(PROMO_DISMISSED_KEY, "1");
-    }, 200);
-  }
-
-  if (!mounted) return null;
-
-  return (
-    <div
-      className={`fixed right-4 bottom-4 z-40 w-[340px] transition-all duration-300 ease-out ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-      }`}
-    >
-      <div className="relative overflow-hidden rounded-xl border border-border/70 bg-background/95 p-4 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.4)] backdrop-blur">
-        <div className="pointer-events-none absolute -top-12 -right-12 size-40 rounded-full bg-gradient-to-br from-amber-500/20 via-amber-500/5 to-transparent blur-2xl" />
-        <button
-          type="button"
-          onClick={dismiss}
-          aria-label="Dismiss"
-          className="absolute top-2 right-2 inline-flex size-6 items-center justify-center rounded-md text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
-        >
-          <XIcon className="size-3.5" />
-        </button>
-        <div className="relative">
-          <div className="flex items-center gap-1.5">
-            <SparklesIcon className="size-3 text-amber-500" />
-            <span className="font-mono text-[10px] text-amber-600 uppercase tracking-[0.25em] dark:text-amber-300">
-              Starter kit
-            </span>
-          </div>
-          <div className="mt-2 font-heading text-base leading-snug">
-            Like what you see?
-          </div>
-          <p className="mt-1 text-muted-foreground text-[13px] leading-relaxed">
-            Ship your own with{" "}
-            <span className="text-foreground">Orbit</span> — auth, billing,
-            emails, the polish. All wired up.
-          </p>
-          <div className="mt-3 flex items-center justify-between">
-            <a
-              href="https://wereorbit.com"
-              target="_blank"
-              rel="noreferrer"
-              className="group inline-flex items-center gap-1.5 rounded-md bg-foreground px-2.5 py-1.5 font-mono text-[11px] text-background uppercase tracking-[0.2em] hover:bg-foreground/90"
-            >
-              Try Orbit
-              <ArrowUpRightIcon className="size-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </a>
-            <button
-              type="button"
-              onClick={dismiss}
-              className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground"
-            >
-              not now
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -426,76 +314,6 @@ function DesignTile({
         </div>
       </Link>
     </li>
-  );
-}
-
-function PromoCard({
-  href,
-  kicker,
-  title,
-  blurb,
-  cta,
-  accent,
-}: {
-  href: string;
-  kicker: string;
-  title: string;
-  blurb: string;
-  cta: string;
-  accent: "indigo" | "amber" | "sky";
-}) {
-  const accentCls =
-    accent === "indigo"
-      ? {
-          glow: "from-indigo-500/20 via-indigo-500/5 to-transparent",
-          dot: "bg-indigo-500",
-          border: "group-hover:border-indigo-500/40",
-          label: "text-indigo-600 dark:text-indigo-300",
-        }
-      : accent === "amber"
-        ? {
-            glow: "from-amber-500/20 via-amber-500/5 to-transparent",
-            dot: "bg-amber-500",
-            border: "group-hover:border-amber-500/40",
-            label: "text-amber-600 dark:text-amber-300",
-          }
-        : {
-            glow: "from-sky-500/20 via-sky-500/5 to-transparent",
-            dot: "bg-sky-500",
-            border: "group-hover:border-sky-500/40",
-            label: "text-sky-600 dark:text-sky-300",
-          };
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className={`group relative overflow-hidden rounded-xl border border-border/60 bg-background/40 p-5 transition-all hover:-translate-y-0.5 hover:bg-background/70 ${accentCls.border}`}
-    >
-      <div
-        className={`pointer-events-none absolute -top-16 -right-16 size-48 rounded-full bg-gradient-to-br opacity-60 blur-2xl ${accentCls.glow}`}
-      />
-      <div className="relative">
-        <div className="flex items-center gap-2">
-          <span className={`size-1.5 rounded-full ${accentCls.dot}`} />
-          <span
-            className={`font-mono text-[10px] uppercase tracking-[0.25em] ${accentCls.label}`}
-          >
-            {kicker}
-          </span>
-        </div>
-        <div className="mt-2 font-heading text-2xl tracking-tight">
-          {title}
-        </div>
-        <p className="mt-1.5 text-muted-foreground text-sm leading-relaxed">
-          {blurb}
-        </p>
-        <div className="mt-4 inline-flex items-center gap-1.5 font-mono text-[11px] text-foreground uppercase tracking-[0.2em]">
-          {cta}
-          <ArrowUpRightIcon className="size-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-        </div>
-      </div>
-    </a>
   );
 }
 

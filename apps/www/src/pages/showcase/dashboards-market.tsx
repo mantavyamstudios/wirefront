@@ -71,7 +71,7 @@ export function DashboardsMarketShowcasePage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
-              Portfolio · sean's index
+              Portfolio · mantavyam's index
             </div>
             <h1 className="mt-1 font-heading text-2xl">Markets</h1>
           </div>

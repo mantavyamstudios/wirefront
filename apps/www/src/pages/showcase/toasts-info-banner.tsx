@@ -75,7 +75,7 @@ function FakeAppBody() {
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Overview
         </div>
-        <h1 className="mt-1 font-heading text-2xl sm:text-3xl">Welcome back, Sean</h1>
+        <h1 className="mt-1 font-heading text-2xl sm:text-3xl">Welcome back, Mantavyam</h1>
         <p className="mt-2 max-w-md text-muted-foreground text-sm">
           A typical landing pane sits underneath. The banner is sticky and
           adapts to the scroll position.

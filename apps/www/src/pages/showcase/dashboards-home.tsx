@@ -39,7 +39,7 @@ export function DashboardsHomeShowcasePage() {
             Saturday, Apr 26
           </div>
           <h1 className="mt-1 font-heading text-3xl tracking-tight sm:text-4xl">
-            Good morning, Sean.
+            Good morning, Mantavyam.
           </h1>
           <p className="mt-2 max-w-xl text-muted-foreground text-sm">
             5 things on your plate today. The first one is small — start there.

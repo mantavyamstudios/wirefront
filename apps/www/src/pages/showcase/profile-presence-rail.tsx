@@ -13,7 +13,7 @@ interface Person {
 const ONLINE: Person[] = [
   { name: "Maya Okafor", initials: "MO", status: "online", activity: "Audit log · main", Icon: undefined },
   { name: "Dani Kim", initials: "DK", status: "online", activity: "Figma · design tokens v3" },
-  { name: "Sean", initials: "SB", status: "online", activity: "Listening to Bonobo", Icon: MusicIcon },
+  { name: "Mantavyam", initials: "MS", status: "online", activity: "Listening to Bonobo", Icon: MusicIcon },
 ];
 
 const IDLE: Person[] = [
@@ -117,10 +117,10 @@ function Rail() {
       <div className="border-border/60 border-t bg-background px-4 py-2.5">
         <div className="flex items-center gap-2">
           <Avatar className="size-7">
-            <AvatarFallback className="text-[10px]">SB</AvatarFallback>
+            <AvatarFallback className="text-[10px]">MS</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <div className="text-sm">Sean</div>
+            <div className="text-sm">Mantavyam</div>
             <div className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
               online
             </div>

@@ -79,7 +79,7 @@ const ENTRIES: Entry[] = [
       { label: "method", value: "GET" },
       { label: "path", value: "/v1/projects" },
       { label: "workspace_id", value: "ws_acme" },
-      { label: "actor", value: "user_sean" },
+      { label: "actor", value: "user_mantavyam" },
       { label: "ip", value: "203.0.113.42" },
     ],
     timing: [
@@ -111,7 +111,7 @@ const ENTRIES: Entry[] = [
       { label: "method", value: "GET" },
       { label: "path", value: "/v1/projects/atlas/members" },
       { label: "workspace_id", value: "ws_acme" },
-      { label: "actor", value: "user_sean" },
+      { label: "actor", value: "user_mantavyam" },
     ],
     timing: [
       { label: "queue", ms: 2, share: 5 },

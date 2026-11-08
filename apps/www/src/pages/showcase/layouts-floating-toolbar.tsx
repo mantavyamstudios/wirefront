@@ -133,7 +133,7 @@ export function LayoutsFloatingToolbarShowcasePage() {
     <div className="min-h-svh bg-background text-foreground">
       <header className="flex items-center justify-between gap-3 border-b border-border/60 px-4 py-3 sm:px-6">
         <div className="font-mono text-muted-foreground text-xs">
-          Untitled · sean's pad
+          Untitled · mantavyam's pad
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm">

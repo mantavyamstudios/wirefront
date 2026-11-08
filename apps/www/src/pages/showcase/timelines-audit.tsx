@@ -69,8 +69,8 @@ const EVENTS: Event[] = [
     time: "3h ago",
   },
   {
-    actor: "Sean",
-    initials: "SB",
+    actor: "Mantavyam",
+    initials: "MS",
     action: "invited",
     target: "8 new members to Marketing",
     Icon: UserPlusIcon,

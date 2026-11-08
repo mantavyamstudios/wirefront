@@ -121,7 +121,7 @@ export function TimelinesPrOpsConsoleShowcasePage() {
             tone="warn"
             icon={<GitMergeIcon className="size-4" />}
             title="This branch is out-of-date with the base branch"
-            body="Merge the latest changes from main into this branch. The merge commit will be associated with sean@cal.com."
+            body="Merge the latest changes from main into this branch. The merge commit will be associated with hello@mantavyam.com."
             action={
               <SplitButton primary="Update branch" />
             }
@@ -176,7 +176,7 @@ function PrTitle() {
             Draft
           </span>
           <span>
-            <strong className="text-foreground">sean</strong> wants to merge{" "}
+            <strong className="text-foreground">mantavyam</strong> wants to merge{" "}
             <strong className="text-foreground">14 commits</strong> into
           </span>
           <BranchPill>main</BranchPill>

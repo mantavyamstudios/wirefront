@@ -32,7 +32,7 @@ const PEOPLE: Person[] = [
   { name: "Maya Okafor", role: "Staff Engineer", initials: "MO", email: "maya@acme.dev", status: "online" },
   { name: "Nadia Costa", role: "Product Manager", initials: "NC", email: "nadia@acme.dev", status: "away" },
   { name: "Riya Patel", role: "Engineer · Billing", initials: "RP", email: "riya@acme.dev", status: "away" },
-  { name: "Sean", role: "Brand", initials: "SB", email: "sean@acme.dev", status: "online" },
+  { name: "Mantavyam", role: "Brand", initials: "MS", email: "hello@mantavyam.com", status: "online" },
 ];
 
 const STATUS_DOT: Record<Person["status"], string> = {

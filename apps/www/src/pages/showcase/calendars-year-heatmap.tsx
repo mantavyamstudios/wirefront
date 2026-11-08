@@ -4,7 +4,7 @@ import { Button } from "@orbit/ui/button";
 import { Input } from "@orbit/ui/input";
 import { Skeleton } from "@orbit/ui/skeleton";
 
-const DEFAULT_USERNAME = "sean-brydon";
+const DEFAULT_USERNAME = "mantavyam";
 
 type Day = {
   date: string;

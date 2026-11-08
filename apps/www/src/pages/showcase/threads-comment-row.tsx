@@ -55,7 +55,7 @@ const COMMENTS: Comment[] = [
     time: "47m ago",
     body: (
       <>
-        Tagging <Mention>@sean</Mention> — heads up, this rolls in tonight if we
+        Tagging <Mention>@mantavyam</Mention> — heads up, this rolls in tonight if we
         get a thumbs up from review.
       </>
     ),

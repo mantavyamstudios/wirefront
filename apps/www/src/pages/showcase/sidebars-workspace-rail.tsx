@@ -219,10 +219,10 @@ function RailContent({
 
       <div className="flex items-center gap-2 border-t border-border/60 px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
         <div className="flex size-7 items-center justify-center rounded-full bg-foreground font-medium text-[11px] text-background">
-          S
+          M
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate font-medium text-sm">Sean</div>
+          <div className="truncate font-medium text-sm">Mantavyam</div>
           <div className="flex items-center gap-1.5 truncate text-muted-foreground text-xs">
             <span className="size-1.5 rounded-full bg-emerald-500" />
             Online

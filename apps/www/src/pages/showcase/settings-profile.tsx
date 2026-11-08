@@ -53,7 +53,7 @@ export function SettingsProfileShowcasePage() {
           <Field label="Display name" htmlFor="p-name">
             <Input
               id="p-name"
-              defaultValue="Sean"
+              defaultValue="Mantavyam"
               onChange={() => setDirty(true)}
               nativeInput
             />
@@ -63,7 +63,7 @@ export function SettingsProfileShowcasePage() {
               <AtSignIcon className="size-3.5 opacity-60" />
               <input
                 id="p-handle"
-                defaultValue="seancassiere"
+                defaultValue="mantavyam"
                 onChange={() => setDirty(true)}
                 className="flex-1 bg-transparent outline-none"
               />
@@ -94,7 +94,7 @@ export function SettingsProfileShowcasePage() {
             <Input
               id="p-email"
               type="email"
-              defaultValue="sean@cal.com"
+              defaultValue="hello@mantavyam.com"
               readOnly
               nativeInput
             />
