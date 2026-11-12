@@ -86,7 +86,7 @@ export function AuthMagicLinkSentShowcasePage() {
           </p>
 
           <div className="mt-7 flex w-full flex-col gap-2">
-            <Button
+            <Button nativeButton={false}
               variant="outline"
               size="lg"
               className="w-full"

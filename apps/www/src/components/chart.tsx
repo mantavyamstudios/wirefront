@@ -70,7 +70,9 @@ export function ChartContainer({
     <div
       className={`${className} text-foreground [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:font-mono [&_.recharts-cartesian-axis-tick_text]:text-[10px] [&_.recharts-cartesian-axis-tick_text]:uppercase [&_.recharts-xAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.2em] [&_.recharts-yAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.05em] [&_.recharts-cartesian-grid-bg]:fill-transparent [&_.recharts-cartesian-grid_line]:stroke-border [&_.recharts-polar-grid_line]:stroke-border [&_.recharts-polar-angle-axis-tick_text]:fill-muted-foreground [&_.recharts-polar-angle-axis-tick_text]:font-mono [&_.recharts-polar-angle-axis-tick_text]:text-[10px]`}
     >
-      <ResponsiveContainer width="100%" height="100%">
+      {/* Start at a valid size: the default -1x-1 makes Recharts warn on the
+          render before the container has been measured. */}
+      <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
         {children as React.ReactElement}
       </ResponsiveContainer>
     </div>

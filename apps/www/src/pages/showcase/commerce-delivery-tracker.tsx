@@ -653,7 +653,7 @@ export function DeliveryTracker({
                       >
                         <MessageCircleIcon />
                       </Button>
-                      <Button
+                      <Button nativeButton={false}
                         aria-label={`Call ${first}`}
                         className={cn("rounded-full", press)}
                         render={<a href={`tel:${courier.phone}`} />}

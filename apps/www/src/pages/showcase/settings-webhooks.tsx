@@ -244,7 +244,7 @@ export function SettingsWebhooksShowcasePage() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Button
+            <Button nativeButton={false}
               variant="ghost"
               size="sm"
               render={<a href="#docs" />}

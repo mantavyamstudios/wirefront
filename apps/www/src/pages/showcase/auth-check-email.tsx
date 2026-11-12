@@ -58,7 +58,7 @@ export function AuthCheckEmail({ illustration }: { illustration: string }) {
 
         <div className="mt-7 flex flex-col gap-2">
           {/* On phones this opens the default mail app. */}
-          <Button size="lg" render={<a href="mailto:" />}>
+          <Button nativeButton={false} size="lg" render={<a href="mailto:" />}>
             <MailIcon />
             Open mail app
           </Button>

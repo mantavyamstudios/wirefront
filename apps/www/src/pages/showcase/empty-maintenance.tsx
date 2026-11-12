@@ -67,7 +67,7 @@ export function EmptyMaintenanceShowcasePage() {
           <Button variant="outline" size="sm">
             Subscribe to updates
           </Button>
-          <Button
+          <Button nativeButton={false}
             variant="ghost"
             size="sm"
             render={

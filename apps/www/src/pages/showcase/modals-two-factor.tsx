@@ -69,7 +69,7 @@ export function ModalsTwoFactorShowcasePage() {
                     this secret manually.
                   </span>
                 </div>
-                <Button
+                <Button nativeButton={false}
                   className="mt-3 w-full sm:hidden"
                   render={<a href={otpauthUrl(DEMO_SETUP_KEY.join(""))} />}
                 >

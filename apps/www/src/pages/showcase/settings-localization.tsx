@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   CheckIcon,
   ClockIcon,
@@ -117,7 +117,11 @@ export function SettingsLocalizationShowcasePage() {
   const [currency, setCurrency] = useState("USD");
   const [numberFormat, setNumberFormat] = useState<NumberFormatId>("us");
 
-  const previewDate = useMemo(() => new Date(), []);
+  // "Now" differs between the server render and the browser, so render a fixed
+  // sample first (09:30 UTC is the same calendar day in every time zone) and
+  // switch to the real time once mounted. Keeps hydration deterministic.
+  const [previewDate, setPreviewDate] = useState(() => new Date("2026-04-14T09:30:00Z"));
+  useEffect(() => setPreviewDate(new Date()), []);
 
   const formattedDate = useMemo(
     () => formatDate(previewDate, dateFormat, timezone),

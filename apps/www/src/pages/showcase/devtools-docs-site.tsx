@@ -943,7 +943,7 @@ export function DocsSite({
               <Kbd className="hidden @xl:inline-flex">⌘K</Kbd>
             </button>
             {dashboardHref && (
-              <Button className="hidden @2xl:inline-flex" render={<a href={dashboardHref} rel="noreferrer" target="_blank" />} size="sm" variant="outline">
+              <Button nativeButton={false} className="hidden @2xl:inline-flex" render={<a href={dashboardHref} rel="noreferrer" target="_blank" />} size="sm" variant="outline">
                 Dashboard
               </Button>
             )}
