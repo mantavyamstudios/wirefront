@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Roadmap
+    url: https://github.com/mantavyamstudios/wirefront/wiki/Roadmap
+    about: Check whether your idea is already planned.
+  - name: Report a security vulnerability
+    url: https://github.com/mantavyamstudios/wirefront/security/advisories/new
+    about: Please report security problems privately, not as an issue.

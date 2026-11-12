@@ -1,0 +1,21 @@
+name: Screen request
+description: Suggest a new screen or a missing state, action or variant on an existing one.
+labels: [enhancement, screens]
+body:
+  - type: textarea
+    id: screen
+    attributes:
+      label: The screen
+      description: What is it for, and which category does it belong in? Link an existing screen if this extends one.
+    validations:
+      required: true
+  - type: textarea
+    id: wiring
+    attributes:
+      label: Data and actions
+      description: What data does it show, and what actions call the backend (create, update, delete, search…)?
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Screenshots or links to similar screens.
