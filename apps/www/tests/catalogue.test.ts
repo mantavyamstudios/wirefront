@@ -73,7 +73,8 @@ describe("catalogue", () => {
     );
     const orphans = readdirSync(SHOWCASE_DIR)
       .filter((f) => f.endsWith(".tsx") && !f.startsWith("_") && f !== "registry.tsx")
-      .map((f) => f.replace(/\.tsx$/, ""))
+      // <file>.showcase.tsx is the showcase companion of a mapped <file>.tsx.
+      .map((f) => f.replace(/(\.showcase)?\.tsx$/, ""))
       .filter((f) => !mapped.has(f) && !imported.has(f));
     expect(orphans).toEqual([]);
   });

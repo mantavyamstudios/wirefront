@@ -4,9 +4,6 @@ import type { ReactNode, RefObject } from "react";
 import { createContext, useContext, useRef } from "react";
 import { ParticleField } from "@wirefront/ui/particle-field";
 import { AuthSplitLayout } from "@wirefront/ui/auth-split-layout";
-import welcomeSrc from "@/assets/figures/welcome.png";
-import teamSrc from "@/assets/figures/team.png";
-import clustersSrc from "@/assets/figures/clusters.png";
 
 type ImpulseRef = RefObject<number>;
 const TypingImpulseContext = createContext<ImpulseRef | null>(null);
@@ -19,21 +16,17 @@ export function useAuthTypingImpulse(): ImpulseRef {
 
 type Variant = "welcome" | "request-access" | "onboarding";
 
-const FIGURES: Record<Variant, string> = {
-  welcome: welcomeSrc,
-  "request-access": teamSrc,
-  onboarding: clustersSrc,
-};
-
 export function AuthShell({
   children,
+  illustration,
   variant = "welcome",
 }: {
   children: ReactNode;
+  /** Image the particle field is drawn from (any URL or imported asset). */
+  illustration: string;
   variant?: Variant;
 }) {
   const typingImpulseRef = useRef(0);
-  const src = FIGURES[variant];
   return (
     <TypingImpulseContext.Provider value={typingImpulseRef}>
       <AuthSplitLayout
@@ -41,7 +34,7 @@ export function AuthShell({
         left={
           <>
             <ParticleField
-              src={src}
+              src={illustration}
               sampleStep={3}
               threshold={34}
               dotSize={1}

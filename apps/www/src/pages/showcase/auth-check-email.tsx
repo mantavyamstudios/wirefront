@@ -12,7 +12,7 @@ import { AuthShell } from "./auth-shell";
 
 const RESEND_SECONDS = 30;
 
-export function AuthCheckEmailShowcasePage() {
+export function AuthCheckEmail({ illustration }: { illustration: string }) {
   const email = "you@example.com";
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const [resendCount, setResendCount] = useState(0);
@@ -34,7 +34,7 @@ export function AuthCheckEmailShowcasePage() {
   };
 
   return (
-    <AuthShell variant="welcome">
+    <AuthShell variant="welcome" illustration={illustration}>
       <div className="w-full max-w-lg">
         <div className="inline-flex size-11 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
           <CheckCircle2Icon className="size-5" />

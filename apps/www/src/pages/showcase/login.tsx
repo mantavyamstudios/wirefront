@@ -12,9 +12,9 @@ import {
 } from "@wirefront/ui/particle-field";
 import { AuthShell, useAuthTypingImpulse } from "./auth-shell";
 
-export function LoginShowcasePage() {
+export function Login({ illustration }: { illustration: string }) {
   return (
-    <AuthShell variant="welcome">
+    <AuthShell variant="welcome" illustration={illustration}>
       <LoginForm />
     </AuthShell>
   );

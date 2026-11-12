@@ -30,7 +30,11 @@ function buildShowcases(): Partial<Record<CategorySlug, Showcase>> {
     if (!designs) continue;
     const entry: Showcase = {};
     for (const [designSlug, filename] of Object.entries(designs)) {
-      const component = pickShowcase(MODULES[`./${filename}.tsx`]);
+      // A sibling <file>.showcase.tsx holds showcase-only wiring (demo
+      // assets, fixtures) that the registry doesn't ship; prefer it.
+      const component =
+        pickShowcase(MODULES[`./${filename}.showcase.tsx`]) ??
+        pickShowcase(MODULES[`./${filename}.tsx`]);
       if (component) entry[designSlug] = component;
     }
     out[category] = entry;

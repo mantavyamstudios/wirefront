@@ -2,9 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { useRef } from "react";
 import { ParticleField } from "@wirefront/ui/particle-field";
-import emptyRoomSrc from "@/assets/figures/empty-room.png";
 
-export function WaitlistShowcasePage() {
+export function Waitlist({ illustration }: { illustration: string }) {
   const typingImpulse = useRef(0);
   return (
     // min-h-dvh + in-flow copy: the page can grow (landscape phones, zoom)
@@ -12,7 +11,7 @@ export function WaitlistShowcasePage() {
     <div className="relative flex min-h-dvh w-full flex-col justify-end overflow-hidden bg-background">
       <div className="absolute inset-0">
       <ParticleField
-        src={emptyRoomSrc}
+        src={illustration}
         sampleStep={3}
         threshold={38}
         dotSize={0.95}

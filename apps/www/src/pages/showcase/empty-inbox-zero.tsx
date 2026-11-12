@@ -4,9 +4,8 @@ import { useRef } from "react";
 import { CheckCheckIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
 import { ParticleField } from "@wirefront/ui/particle-field";
-import dustyFieldSrc from "@/assets/figures/dusty-field.png";
 
-export function EmptyInboxZeroShowcasePage() {
+export function EmptyInboxZero({ illustration }: { illustration: string }) {
   const typingImpulse = useRef(0);
   return (
     // min-h-dvh + in-flow content: grows instead of clipping in landscape;
@@ -14,7 +13,7 @@ export function EmptyInboxZeroShowcasePage() {
     <div className="relative flex min-h-dvh w-full flex-col overflow-hidden bg-background">
       <div className="absolute inset-0">
       <ParticleField
-        src={dustyFieldSrc}
+        src={illustration}
         sampleStep={2}
         threshold={48}
         dotSize={0.9}

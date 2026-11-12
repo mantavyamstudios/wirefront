@@ -12,9 +12,9 @@ import { AuthShell, useAuthTypingImpulse } from "./auth-shell";
 
 const STEPS = ["Workspace", "Invite", "Ready"] as const;
 
-export function OnboardingShowcasePage() {
+export function Onboarding({ illustration }: { illustration: string }) {
   return (
-    <AuthShell variant="onboarding">
+    <AuthShell variant="onboarding" illustration={illustration}>
       <OnboardingFlow />
     </AuthShell>
   );
