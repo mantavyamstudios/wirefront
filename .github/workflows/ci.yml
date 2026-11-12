@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Typecheck, licence headers, tests, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run spdx:check
+      - run: npm test
+      - run: npm run build
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  responsive:
+    name: Responsive audit
+    runs-on: ubuntu-latest
+    needs: checks
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Start the dev server
+        run: |
+          npm run dev:www > dev.log 2>&1 &
+          for i in $(seq 1 90); do
+            curl -sf http://localhost:4000 > /dev/null && exit 0
+            sleep 2
+          done
+          echo "Dev server did not start within 3 minutes"; cat dev.log; exit 1
+      - run: npm run audit:responsive -- --strict
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: responsive-report
+          path: .audit/responsive/report.json
+          if-no-files-found: warn
