@@ -654,6 +654,9 @@ export function CodeReview({
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set(["docs/webhooks/retries.md"]));
   const [split, setSplit] = useState(true);
   const [narrow, setNarrow] = useState(false);
+  // Until the first measurement, CSS decides whether the tree shows (it's
+  // hidden below 900px), so phones never paint a sidebar-crushed diff.
+  const [measured, setMeasured] = useState(false);
   const [treeOpen, setTreeOpen] = useState(true);
   const [activeFile, setActiveFile] = useState(files[0]?.path ?? "");
   const [composer, setComposer] = useState<{ file: string; line: number; side: "new" | "old" } | null>(null);
@@ -674,6 +677,7 @@ export function CodeReview({
     const ro = new ResizeObserver(([e]) => {
       const isNarrow = e.contentRect.width < 900;
       setNarrow(isNarrow);
+      setMeasured(true);
       if (first && isNarrow) setTreeOpen(false);
       first = false;
     });
@@ -1039,6 +1043,7 @@ export function CodeReview({
                 aria-label="Changed files"
                 className={cn(
                   "flex shrink-0 flex-col overflow-hidden bg-sidebar",
+                  !measured && "hidden @[900px]:flex",
                   narrow ? "absolute inset-y-0 left-0 z-30 w-[272px] max-w-[85%] border-e shadow-lg/10" : "border-e",
                 )}
                 exit={narrow ? { x: "-100%", opacity: 1 } : { width: 0, opacity: 0 }}
