@@ -220,11 +220,9 @@ function buildQueue(args: ReturnType<typeof parseArgs>): Task[] {
     if (args.categories && !args.categories.includes(category)) continue;
     for (const [design, filename] of Object.entries(designs)) {
       if (args.designs && !args.designs.includes(`${category}/${design}`)) continue;
-      if (!existsSync(resolve(SHOWCASE_DIR, `${filename}.tsx`))) {
-        console.warn(
-          `[audit] skipping ${category}/${design}: ${filename}.tsx is mapped in source-files.ts but doesn't exist`,
-        );
-        continue;
+      // A flat screen is <file>.tsx; a ready-to-wire screen is a <file>/ folder.
+      if (!existsSync(resolve(SHOWCASE_DIR, `${filename}.tsx`)) && !existsSync(resolve(SHOWCASE_DIR, filename, "view.tsx"))) {
+        throw new Error(`[audit] ${category}/${design}: neither ${filename}.tsx nor ${filename}/view.tsx exists`);
       }
       tasks.push({ category, design });
     }

@@ -16,16 +16,22 @@
  *   SIGKILL after 5s). It also runs on exit, Ctrl-C, SIGTERM and uncaught
  *   errors, so an interrupted check still cleans up.
  *
+ * - Observable: the server's output is kept in .test-status/server-<label>.log,
+ *   and any dependency optimisation or reload after warm-up raises an
+ *   [alert], so a page that fails mid-check can be traced to the server.
+ *
  * Set APP_URL to test an already running server instead (nothing is started
  * or stopped then).
  */
 import { type ChildProcess, spawn } from "node:child_process";
+import { appendFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { chromium } from "playwright";
 import { createServer } from "node:net";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const WWW = resolve(dirname(fileURLToPath(import.meta.url)), "../../apps/www");
+const STATUS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "../../.test-status");
 const START_LIMIT_MS = 120_000;
 const WARMUP_LIMIT_MS = 180_000;
 const WARMUP_QUIET_MS = 3_000;
@@ -140,8 +146,20 @@ export async function startAppServer(label: string): Promise<AppServer> {
   });
   live.add(child);
   let log = "";
+  let warm = false;
+  mkdirSync(STATUS_DIR, { recursive: true });
+  const logFile = resolve(STATUS_DIR, `server-${label}.log`);
+  writeFileSync(logFile, "");
   const keep = (d: Buffer) => {
-    log = (log + d.toString()).slice(-20_000);
+    const text = d.toString();
+    log = (log + text).slice(-20_000);
+    appendFileSync(logFile, text);
+    if (!warm) return;
+    for (const line of text.split("\n")) {
+      if (/optimiz|reloading|page reload/i.test(line)) {
+        console.log(`[alert] ${label}: dev server after warm-up: ${line.trim()} (pages open now may reload; log: ${logFile})`);
+      }
+    }
   };
   child.stdout?.on("data", keep);
   child.stderr?.on("data", keep);
@@ -167,6 +185,7 @@ export async function startAppServer(label: string): Promise<AppServer> {
     if (await reachable(url)) {
       try {
         await warmUp(url, () => log);
+        warm = true;
       } catch (err) {
         await stop();
         throw err;
