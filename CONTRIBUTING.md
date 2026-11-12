@@ -27,10 +27,11 @@ Requires Node 24 and npm 10 or later.
 | `npm run typecheck` | TypeScript across all workspaces and the tests |
 | `npm test` | Catalogue integrity, panel navigation, server render of every screen, registry installability, licence headers |
 | `npm run spdx:check` | Every source file has its licence header (`npm run spdx` adds missing ones) |
-| `npm run lint` | Biome lint rules, including accessibility |
+| `npm run lint` | Biome lint rules, including accessibility (full report) |
+| `npm run lint:gate` | No new lint problems: existing ones are recorded per file in `lint-baseline.json` and may only go down. After fixing some, run `npm run lint:baseline` and commit the file |
 | `npm run audit:responsive` | Every screen at 375 / 768 / 1024 / 1440px (needs `npm run dev` running) |
 
-`git push` runs the pre-push hook: typecheck, licence headers and tests. If it fails, fix the cause rather than skipping the hook; CI runs the same checks on every pull request.
+`git push` runs the pre-push hook: typecheck, licence headers, the lint gate and tests. If it fails, fix the cause rather than skipping the hook; CI runs the same checks on every pull request.
 
 ## Adding or changing a screen
 

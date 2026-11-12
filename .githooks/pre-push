@@ -12,6 +12,9 @@ npm run -s typecheck
 echo "▸ pre-push: licence headers"
 npm run -s spdx:check
 
+echo "▸ pre-push: lint (no new problems)"
+npm run -s lint:gate
+
 echo "▸ pre-push: tests"
 npm run -s test
 

@@ -1,0 +1,676 @@
+{
+  "apps/www/src/components/chart.tsx": {
+    "lint/style/noNonNullAssertion": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/components/interaction-panel.tsx": {
+    "lint/a11y/useSemanticElements": 2
+  },
+  "apps/www/src/components/wireframe-icons.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 23,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/demo/app.tsx": {
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/demo/overlays-extra.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/demo/overlays.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 1,
+    "lint/style/noNonNullAssertion": 2,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/demo/sidebar.tsx": {
+    "lint/style/noNonNullAssertion": 2
+  },
+  "apps/www/src/pages/demo/store.tsx": {
+    "lint/style/noNonNullAssertion": 10
+  },
+  "apps/www/src/pages/demo/topbar.tsx": {
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/demo/views-inbox.tsx": {
+    "lint/a11y/useKeyWithClickEvents": 1
+  },
+  "apps/www/src/pages/demo/views-project-detail.tsx": {
+    "lint/correctness/noUnusedVariables": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/demo/views-settings.tsx": {
+    "lint/style/noNonNullAssertion": 3
+  },
+  "apps/www/src/pages/demo/views.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 1,
+    "lint/a11y/useKeyWithClickEvents": 1,
+    "lint/style/noNonNullAssertion": 2,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/landing.tsx": {
+    "lint/a11y/useSemanticElements": 1,
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/showcase/_code-viewer.tsx": {
+    "lint/a11y/noNoninteractiveTabindex": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/ai-assistant-start.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/correctness/useExhaustiveDependencies": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/ai-co-writing-doc.tsx": {
+    "lint/a11y/noAutofocus": 1,
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/correctness/useExhaustiveDependencies": 1
+  },
+  "apps/www/src/pages/showcase/ai-conductor.tsx": {
+    "lint/a11y/useSemanticElements": 1,
+    "lint/complexity/useOptionalChain": 1,
+    "lint/correctness/noUnsafeOptionalChaining": 1,
+    "lint/correctness/useExhaustiveDependencies": 1
+  },
+  "apps/www/src/pages/showcase/ai-prompt-test-bench.tsx": {
+    "lint/a11y/noNoninteractiveTabindex": 1,
+    "lint/a11y/useSemanticElements": 3,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/ai-run-replay.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1,
+    "lint/correctness/useExhaustiveDependencies": 1
+  },
+  "apps/www/src/pages/showcase/apps-drive.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/apps-folder-view.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useSemanticElements": 4,
+    "lint/suspicious/noArrayIndexKey": 5
+  },
+  "apps/www/src/pages/showcase/apps-help-centre.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1,
+    "lint/a11y/noNoninteractiveElementToInteractiveRole": 2,
+    "lint/a11y/noStaticElementInteractions": 2,
+    "lint/a11y/useFocusableInteractive": 1,
+    "lint/correctness/useExhaustiveDependencies": 1,
+    "lint/suspicious/noArrayIndexKey": 6
+  },
+  "apps/www/src/pages/showcase/apps-mail.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useSemanticElements": 1
+  },
+  "apps/www/src/pages/showcase/apps-notes.tsx": {
+    "lint/a11y/useSemanticElements": 1,
+    "lint/correctness/noUnusedImports": 1,
+    "lint/correctness/useExhaustiveDependencies": 1
+  },
+  "apps/www/src/pages/showcase/apps-team-chat.tsx": {
+    "lint/a11y/noAutofocus": 2,
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useKeyWithClickEvents": 1,
+    "lint/a11y/useSemanticElements": 3,
+    "lint/correctness/useExhaustiveDependencies": 4,
+    "lint/suspicious/noArrayIndexKey": 5,
+    "lint/suspicious/useIterableCallbackReturn": 1
+  },
+  "apps/www/src/pages/showcase/apps-video-call.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useSemanticElements": 2,
+    "lint/correctness/useExhaustiveDependencies": 8
+  },
+  "apps/www/src/pages/showcase/auth-centered-signin.tsx": {
+    "lint/a11y/useValidAnchor": 2
+  },
+  "apps/www/src/pages/showcase/auth-centered-signup.tsx": {
+    "lint/a11y/useValidAnchor": 3
+  },
+  "apps/www/src/pages/showcase/auth-check-email.tsx": {
+    "lint/a11y/useValidAnchor": 2
+  },
+  "apps/www/src/pages/showcase/auth-first-run.tsx": {
+    "lint/a11y/useSemanticElements": 3,
+    "lint/correctness/noUnusedVariables": 2,
+    "lint/suspicious/useIterableCallbackReturn": 1
+  },
+  "apps/www/src/pages/showcase/auth-glass-signup.tsx": {
+    "lint/a11y/useValidAnchor": 1
+  },
+  "apps/www/src/pages/showcase/auth-left-signin.tsx": {
+    "lint/a11y/useValidAnchor": 2
+  },
+  "apps/www/src/pages/showcase/auth-otp-verify.tsx": {
+    "lint/a11y/useValidAnchor": 2
+  },
+  "apps/www/src/pages/showcase/auth-reset-password.tsx": {
+    "lint/a11y/useValidAnchor": 2
+  },
+  "apps/www/src/pages/showcase/auth-right-signin.tsx": {
+    "lint/a11y/useValidAnchor": 2
+  },
+  "apps/www/src/pages/showcase/auth-two-factor.tsx": {
+    "lint/a11y/useValidAnchor": 1
+  },
+  "apps/www/src/pages/showcase/auth-verify-email.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/calendars-agenda.tsx": {
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/calendars-calendar-week.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useSemanticElements": 2,
+    "lint/correctness/useExhaustiveDependencies": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/calendars-date-range.tsx": {
+    "lint/a11y/useSemanticElements": 1
+  },
+  "apps/www/src/pages/showcase/calendars-holidays.tsx": {
+    "lint/a11y/noNoninteractiveTabindex": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/correctness/noUnusedVariables": 1,
+    "lint/style/noNonNullAssertion": 2,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/calendars-mini.tsx": {
+    "lint/suspicious/noArrayIndexKey": 3
+  },
+  "apps/www/src/pages/showcase/calendars-month.tsx": {
+    "lint/a11y/useSemanticElements": 1,
+    "lint/suspicious/noArrayIndexKey": 4
+  },
+  "apps/www/src/pages/showcase/calendars-recurring.tsx": {
+    "lint/a11y/useSemanticElements": 2,
+    "lint/correctness/noUnusedFunctionParameters": 2,
+    "lint/suspicious/noArrayIndexKey": 5
+  },
+  "apps/www/src/pages/showcase/calendars-timezone.tsx": {
+    "lint/a11y/noAutofocus": 1,
+    "lint/a11y/noNoninteractiveTabindex": 1,
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/a11y/useKeyWithClickEvents": 1,
+    "lint/correctness/useExhaustiveDependencies": 1,
+    "lint/style/noNonNullAssertion": 1,
+    "lint/suspicious/noArrayIndexKey": 3
+  },
+  "apps/www/src/pages/showcase/calendars-week.tsx": {
+    "lint/a11y/noNoninteractiveTabindex": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/calendars-year-heatmap.tsx": {
+    "lint/a11y/noNoninteractiveTabindex": 1,
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/a11y/useKeyWithClickEvents": 1,
+    "lint/correctness/useExhaustiveDependencies": 1,
+    "lint/style/noNonNullAssertion": 2,
+    "lint/suspicious/noArrayIndexKey": 4
+  },
+  "apps/www/src/pages/showcase/card-media.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/card-task.tsx": {
+    "lint/correctness/noUnusedImports": 1
+  },
+  "apps/www/src/pages/showcase/charts-bar-grouped.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/charts-cohort-heatmap.tsx": {
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/charts-scatter.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/charts-waterfall.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1,
+    "lint/suspicious/noRedeclare": 1
+  },
+  "apps/www/src/pages/showcase/commerce-checkout.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 2,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/commerce-delivery-tracker.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/correctness/useExhaustiveDependencies": 2
+  },
+  "apps/www/src/pages/showcase/dashboards-analytics.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/dashboards-engineering.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 1
+  },
+  "apps/www/src/pages/showcase/dashboards-market.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 2,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/dashboards-metrics-overview.tsx": {
+    "lint/style/noNonNullAssertion": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/dashboards-pipeline-today.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useSemanticElements": 5,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/dashboards-revenue-overview.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/noSvgWithoutTitle": 1,
+    "lint/correctness/useExhaustiveDependencies": 3,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/dashboards-revenue.tsx": {
+    "lint/a11y/useSemanticElements": 1,
+    "lint/a11y/useValidAnchor": 1
+  },
+  "apps/www/src/pages/showcase/dashboards-services.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 1
+  },
+  "apps/www/src/pages/showcase/dashboards-status-console.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/correctness/useExhaustiveDependencies": 1,
+    "lint/suspicious/noArrayIndexKey": 1,
+    "lint/suspicious/useIterableCallbackReturn": 1
+  },
+  "apps/www/src/pages/showcase/dashboards-support.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 1,
+    "lint/a11y/useValidAnchor": 1,
+    "lint/style/noNonNullAssertion": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/devtools-code-review.tsx": {
+    "lint/a11y/noAutofocus": 3,
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useSemanticElements": 2,
+    "lint/suspicious/noArrayIndexKey": 3
+  },
+  "apps/www/src/pages/showcase/devtools-docs-site.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useFocusableInteractive": 1,
+    "lint/a11y/useKeyWithClickEvents": 1,
+    "lint/a11y/useValidAnchor": 1,
+    "lint/suspicious/noArrayIndexKey": 3
+  },
+  "apps/www/src/pages/showcase/devtools-issue-tracker.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/a11y/useFocusableInteractive": 6,
+    "lint/a11y/useKeyWithClickEvents": 2,
+    "lint/a11y/useSemanticElements": 8,
+    "lint/correctness/useExhaustiveDependencies": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/empty-no-files.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/complexity/useOptionalChain": 1
+  },
+  "apps/www/src/pages/showcase/empty-no-team.tsx": {
+    "lint/a11y/useValidAnchor": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/empty-trash.tsx": {
+    "lint/a11y/useValidAnchor": 2
+  },
+  "apps/www/src/pages/showcase/forms-api-key.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1
+  },
+  "apps/www/src/pages/showcase/forms-invite-teammates.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/showcase/forms-notifications.tsx": {
+    "lint/a11y/noLabelWithoutControl": 2,
+    "lint/style/noNonNullAssertion": 3
+  },
+  "apps/www/src/pages/showcase/forms-workspace-settings.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1,
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/showcase/inset-login.tsx": {
+    "lint/a11y/useValidAnchor": 3,
+    "lint/correctness/useHookAtTopLevel": 1
+  },
+  "apps/www/src/pages/showcase/layouts-canvas-tools.tsx": {
+    "lint/a11y/useSemanticElements": 1,
+    "lint/correctness/useExhaustiveDependencies": 3,
+    "lint/style/noNonNullAssertion": 2,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/layouts-hairline-shell.tsx": {
+    "lint/a11y/noAutofocus": 1,
+    "lint/a11y/noStaticElementInteractions": 2,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/correctness/noUnusedVariables": 1
+  },
+  "apps/www/src/pages/showcase/layouts-inset-shell.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/correctness/noUnusedImports": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/layouts-split-resizable.tsx": {
+    "lint/a11y/useSemanticElements": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/layouts-split-shell.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/modals-command-palette.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/modals-create-workspace.tsx": {
+    "lint/a11y/useSemanticElements": 1
+  },
+  "apps/www/src/pages/showcase/modals-export.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1
+  },
+  "apps/www/src/pages/showcase/modals-feedback.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1,
+    "lint/a11y/useSemanticElements": 1
+  },
+  "apps/www/src/pages/showcase/modals-shortcuts.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/onboarding.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/personal-habits.tsx": {
+    "lint/a11y/useSemanticElements": 2,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/personal-money.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/personal-music-player.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/noSvgWithoutTitle": 8,
+    "lint/correctness/useExhaustiveDependencies": 3,
+    "lint/suspicious/noArrayIndexKey": 3
+  },
+  "apps/www/src/pages/showcase/pricing-comparison-table.tsx": {
+    "lint/a11y/noNoninteractiveTabindex": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/style/noNonNullAssertion": 2
+  },
+  "apps/www/src/pages/showcase/pricing-monthly-yearly.tsx": {
+    "lint/a11y/useSemanticElements": 2
+  },
+  "apps/www/src/pages/showcase/pricing-simple-card.tsx": {
+    "lint/a11y/useValidAnchor": 1
+  },
+  "apps/www/src/pages/showcase/pricing-slider-seats.tsx": {
+    "lint/a11y/useSemanticElements": 2
+  },
+  "apps/www/src/pages/showcase/profile-credentials.tsx": {
+    "lint/a11y/useAriaPropsSupportedByRole": 1
+  },
+  "apps/www/src/pages/showcase/profile-directory.tsx": {
+    "lint/suspicious/noAssignInExpressions": 1
+  },
+  "apps/www/src/pages/showcase/profile-hero.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/profile-org-chart.tsx": {
+    "lint/a11y/noNoninteractiveElementToInteractiveRole": 1,
+    "lint/a11y/noNoninteractiveTabindex": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/a11y/useFocusableInteractive": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/style/noNonNullAssertion": 2
+  },
+  "apps/www/src/pages/showcase/profile-skills.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1,
+    "lint/suspicious/noAssignInExpressions": 1
+  },
+  "apps/www/src/pages/showcase/profile-social-profile.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/noSvgWithoutTitle": 2,
+    "lint/a11y/useKeyWithClickEvents": 1,
+    "lint/a11y/useValidAnchor": 1,
+    "lint/suspicious/noArrayIndexKey": 4
+  },
+  "apps/www/src/pages/showcase/settings-appearance-settings.tsx": {
+    "lint/a11y/noLabelWithoutControl": 2
+  },
+  "apps/www/src/pages/showcase/settings-appearance.tsx": {
+    "lint/style/noNonNullAssertion": 3
+  },
+  "apps/www/src/pages/showcase/settings-connectors.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1,
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/correctness/useExhaustiveDependencies": 2,
+    "lint/suspicious/useIterableCallbackReturn": 1
+  },
+  "apps/www/src/pages/showcase/settings-developer-settings.tsx": {
+    "lint/a11y/noLabelWithoutControl": 4,
+    "lint/suspicious/useIterableCallbackReturn": 1
+  },
+  "apps/www/src/pages/showcase/settings-developer.tsx": {
+    "lint/a11y/noLabelWithoutControl": 3,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/settings-integrations.tsx": {
+    "lint/a11y/useSemanticElements": 1
+  },
+  "apps/www/src/pages/showcase/settings-localization.tsx": {
+    "lint/a11y/noLabelWithoutControl": 2
+  },
+  "apps/www/src/pages/showcase/settings-notification-settings.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1,
+    "lint/correctness/useExhaustiveDependencies": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/settings-permissions.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 3
+  },
+  "apps/www/src/pages/showcase/settings-privacy.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1
+  },
+  "apps/www/src/pages/showcase/settings-profile-settings.tsx": {
+    "lint/a11y/noNoninteractiveTabindex": 1,
+    "lint/a11y/useSemanticElements": 2,
+    "lint/correctness/noUnusedVariables": 1
+  },
+  "apps/www/src/pages/showcase/settings-security-settings.tsx": {
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/settings-settings-and-plans.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1,
+    "lint/a11y/useSemanticElements": 3
+  },
+  "apps/www/src/pages/showcase/settings-sso.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1
+  },
+  "apps/www/src/pages/showcase/settings-team-roles.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useFocusableInteractive": 7,
+    "lint/a11y/useSemanticElements": 13,
+    "lint/correctness/noUnusedImports": 1
+  },
+  "apps/www/src/pages/showcase/settings-webhooks.tsx": {
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/sidebars-docs-tree.tsx": {
+    "lint/a11y/noNoninteractiveElementToInteractiveRole": 1,
+    "lint/a11y/useFocusableInteractive": 1,
+    "lint/a11y/useSemanticElements": 1
+  },
+  "apps/www/src/pages/showcase/sidebars-inbox-rail.tsx": {
+    "lint/style/noNonNullAssertion": 2
+  },
+  "apps/www/src/pages/showcase/sidebars-mini-rail.tsx": {
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/showcase/table-admin-users.tsx": {
+    "lint/a11y/noStaticElementInteractions": 2,
+    "lint/a11y/useKeyWithClickEvents": 1,
+    "lint/a11y/useSemanticElements": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/table-api-keys.tsx": {
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/showcase/table-audit-log.tsx": {
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/table-inventory.tsx": {
+    "lint/a11y/useSemanticElements": 1
+  },
+  "apps/www/src/pages/showcase/table-issues.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 1
+  },
+  "apps/www/src/pages/showcase/table-logs.tsx": {
+    "lint/correctness/noUnusedVariables": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/table-orders.tsx": {
+    "lint/a11y/noLabelWithoutControl": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 2,
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/showcase/threads-comment-row.tsx": {
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/threads-compose-rich.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/threads-inline-thread.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/threads-mention-popover.tsx": {
+    "lint/a11y/noNoninteractiveElementToInteractiveRole": 3,
+    "lint/a11y/useFocusableInteractive": 2,
+    "lint/a11y/useKeyWithClickEvents": 2,
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/showcase/threads-side-panel.tsx": {
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/timelines-activity-feed.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/timelines-approvals.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/timelines-audit.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/timelines-commits.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/timelines-inbox-thread.tsx": {
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/timelines-notifications.tsx": {
+    "lint/a11y/useSemanticElements": 1,
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/timelines-pr-ops-console.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 1,
+    "lint/a11y/useValidAnchor": 2,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/timelines-pull-request.tsx": {
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/timelines-releases.tsx": {
+    "lint/correctness/noUnusedFunctionParameters": 1
+  },
+  "apps/www/src/pages/showcase/timelines-status-page.tsx": {
+    "lint/suspicious/noArrayIndexKey": 2
+  },
+  "apps/www/src/pages/showcase/toasts-info-banner.tsx": {
+    "lint/a11y/useSemanticElements": 1
+  },
+  "apps/www/src/pages/showcase/toasts-rich.tsx": {
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/showcase/toasts-undo.tsx": {
+    "lint/correctness/useExhaustiveDependencies": 1,
+    "lint/style/noNonNullAssertion": 1
+  },
+  "apps/www/src/pages/showcase/tours-arrow-tooltip.tsx": {
+    "lint/style/noNonNullAssertion": 6,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/tours-checklist.tsx": {
+    "lint/a11y/useSemanticElements": 1
+  },
+  "apps/www/src/pages/showcase/tours-spotlight.tsx": {
+    "lint/style/noNonNullAssertion": 5,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/tours-welcome-carousel.tsx": {
+    "lint/style/noNonNullAssertion": 1,
+    "lint/suspicious/noArrayIndexKey": 1
+  },
+  "apps/www/src/pages/showcase/waitlist.tsx": {
+    "lint/a11y/useValidAnchor": 1
+  },
+  "apps/www/src/routes/__root.tsx": {
+    "lint/security/noDangerouslySetInnerHtml": 1
+  },
+  "packages/ui/src/components/orbit-avatar-field.tsx": {
+    "lint/a11y/useAriaPropsSupportedByRole": 1
+  },
+  "packages/ui/src/components/orbit-avatar.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 1,
+    "lint/a11y/useAriaPropsSupportedByRole": 1,
+    "lint/suspicious/noArrayIndexKey": 4
+  },
+  "packages/ui/src/components/particle-field.tsx": {
+    "lint/correctness/useExhaustiveDependencies": 2,
+    "lint/style/useConst": 1
+  },
+  "packages/ui/src/components/ui/calendar.tsx": {
+    "lint/correctness/noComponentHookFactories": 1
+  },
+  "packages/ui/src/components/ui/drawer.tsx": {
+    "lint/a11y/noSvgWithoutTitle": 2
+  },
+  "packages/ui/src/components/ui/group.tsx": {
+    "lint/a11y/useSemanticElements": 1
+  },
+  "packages/ui/src/components/ui/input-group.tsx": {
+    "lint/a11y/noStaticElementInteractions": 1,
+    "lint/a11y/useSemanticElements": 1
+  },
+  "packages/ui/src/styles.css": {
+    "lint/complexity/noImportantStyles": 5,
+    "lint/style/noDescendingSpecificity": 1
+  },
+  "scripts/build-registry.ts": {
+    "lint/style/noNonNullAssertion": 14
+  },
+  "scripts/lint-gate.ts": {
+    "lint/suspicious/noAssignInExpressions": 1
+  },
+  "scripts/responsive-audit.ts": {
+    "lint/style/noNonNullAssertion": 3,
+    "lint/suspicious/noUndeclaredEnvVars": 2
+  },
+  "scripts/snapshot.ts": {
+    "lint/style/noNonNullAssertion": 2,
+    "lint/suspicious/noUndeclaredEnvVars": 3
+  }
+}

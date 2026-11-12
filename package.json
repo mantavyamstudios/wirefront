@@ -23,7 +23,9 @@
     "spdx": "tsx scripts/spdx.ts",
     "spdx:check": "tsx scripts/spdx.ts --check",
     "test": "npm run test -w @wirefront/www",
-    "prepare": "git config core.hooksPath .githooks || true"
+    "prepare": "git config core.hooksPath .githooks || true",
+    "lint:gate": "tsx scripts/lint-gate.ts",
+    "lint:baseline": "tsx scripts/lint-gate.ts --update"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.7",

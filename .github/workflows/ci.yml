@@ -38,7 +38,12 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm run lint
+      - name: Lint gate (fails on any new lint problem)
+        run: npm run lint:gate
+      - name: Full lint report (existing debt, tracked in lint-baseline.json)
+        if: always()
+        continue-on-error: true
+        run: npm run lint
 
   responsive:
     name: Responsive audit
