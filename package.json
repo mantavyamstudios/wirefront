@@ -15,15 +15,18 @@
     "predev": "npm run registry",
     "build": "turbo run build",
     "prebuild": "npm run registry",
-    "lint": "turbo run lint",
+    "lint": "biome lint",
     "typecheck": "turbo run typecheck",
     "registry": "tsx scripts/build-registry.ts",
     "snapshot": "tsx scripts/snapshot.ts",
     "audit:responsive": "tsx scripts/responsive-audit.ts",
     "spdx": "tsx scripts/spdx.ts",
-    "spdx:check": "tsx scripts/spdx.ts --check"
+    "spdx:check": "tsx scripts/spdx.ts --check",
+    "test": "npm run test -w @wirefront/www",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.6.7",
     "@types/node": "^24.12.2",
     "playwright": "^1.49.0",
     "tsx": "^4.19.2",

@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const NOTICE_URL = "https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md";
 
-const ROOTS = ["apps/www/src", "apps/www/scripts", "apps/www/vite.config.ts", "packages/ui/src", "scripts"];
+const ROOTS = ["apps/www/src", "apps/www/scripts", "apps/www/tests", "apps/www/vite.config.ts", "apps/www/vitest.config.ts", "packages/ui/src", "scripts"];
 const EXTENSIONS = /\.(ts|tsx|mjs|css)$/;
 const IGNORED = /(^|\/)routeTree\.gen\.ts$/;
 
@@ -46,7 +46,7 @@ export function hasHeader(source: string): boolean {
 
 function comment(path: string, lines: string[]): string {
   if (path.endsWith(".css")) return `/*\n${lines.map((l) => ` * ${l}`).join("\n")}\n */\n`;
-  return lines.map((l) => `// ${l}`).join("\n") + "\n";
+  return `${lines.map((l) => `// ${l}`).join("\n")}\n`;
 }
 
 export function withHeader(path: string, source: string): string {

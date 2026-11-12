@@ -8,8 +8,10 @@
     "prebuild": "cd ../.. && npm run registry",
     "build": "vite build",
     "start": "node .output/server/index.mjs",
-    "typecheck": "tsc -b",
-    "generate:og": "node scripts/generate-og.mjs"
+    "typecheck": "tsc -b && tsc -p tests",
+    "generate:og": "node scripts/generate-og.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@wirefront/ui": "*",
@@ -32,6 +34,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "typescript": "~6.0.2",
-    "vite": "^8.0.4"
+    "vite": "^8.0.4",
+    "vitest": "5.1.0"
   }
 }

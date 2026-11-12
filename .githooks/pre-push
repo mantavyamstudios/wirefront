@@ -1,0 +1,18 @@
+#!/bin/sh
+# SPDX-License-Identifier: AGPL-3.0-only
+# Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+#
+# Runs before every `git push`. A failing check stops the push.
+# Installed by `npm install` (the root `prepare` script sets core.hooksPath).
+set -e
+
+echo "▸ pre-push: typecheck"
+npm run -s typecheck
+
+echo "▸ pre-push: licence headers"
+npm run -s spdx:check
+
+echo "▸ pre-push: tests"
+npm run -s test
+
+echo "✓ pre-push checks passed"

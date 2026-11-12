@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTheme } from "@wirefront/ui/theme-provider";
-import { CATEGORIES, getCategory, type CategorySlug } from "@/lib/designs";
+import { getCategory, type CategorySlug } from "@/lib/designs";
+import {
+  type DesignTarget,
+  pickRandomDesign,
+  siblingCategory,
+  siblingDesign,
+} from "@/lib/navigation";
 import { getShowcase } from "@/pages/showcase/registry";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { AnimatePresence } from "motion/react";
@@ -57,57 +63,6 @@ export const Route = createFileRoute("/c/$category/$design")({
   },
   component: DesignRoute,
 });
-
-type DesignTarget = { category: string; design: string };
-
-function pickRandomDesign(current: DesignTarget): DesignTarget | null {
-  const all = CATEGORIES.flatMap((c) =>
-    c.designs
-      .filter((d) => !!getShowcase(c.slug, d.slug))
-      .map((d) => ({ category: c.slug, design: d.slug })),
-  );
-  const others = all.filter(
-    (d) => !(d.category === current.category && d.design === current.design),
-  );
-  if (others.length === 0) return null;
-  return others[Math.floor(Math.random() * others.length)] ?? null;
-}
-
-function siblingDesign(
-  current: DesignTarget,
-  delta: 1 | -1,
-): DesignTarget | null {
-  const cat = CATEGORIES.find((c) => c.slug === current.category);
-  if (!cat) return null;
-  const designs = cat.designs.filter((d) => !!getShowcase(cat.slug, d.slug));
-  if (designs.length === 0) return null;
-  const idx = designs.findIndex((d) => d.slug === current.design);
-  if (idx === -1) return null;
-  const nextIdx = (idx + delta + designs.length) % designs.length;
-  const next = designs[nextIdx];
-  return next ? { category: cat.slug, design: next.slug } : null;
-}
-
-function siblingCategory(
-  current: DesignTarget,
-  delta: 1 | -1,
-): DesignTarget | null {
-  const populated = CATEGORIES.filter((c) =>
-    c.designs.some((d) => !!getShowcase(c.slug, d.slug)),
-  );
-  if (populated.length <= 1) return null;
-  const idx = populated.findIndex((c) => c.slug === current.category);
-  if (idx === -1) return null;
-  const nextIdx = (idx + delta + populated.length) % populated.length;
-  const nextCat = populated[nextIdx];
-  if (!nextCat) return null;
-  const firstDesign = nextCat.designs.find(
-    (d) => !!getShowcase(nextCat.slug, d.slug),
-  );
-  return firstDesign
-    ? { category: nextCat.slug, design: firstDesign.slug }
-    : null;
-}
 
 function isTypingTarget(): boolean {
   const el = document.activeElement as HTMLElement | null;
