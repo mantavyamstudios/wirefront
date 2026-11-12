@@ -180,7 +180,7 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "notifications",
-        title: "Notification preferences",
+        title: "Notification matrix",
         blurb: "Grouped switch matrix for email and push.",
       },
       {
@@ -198,12 +198,12 @@ export const CATEGORIES: Category[] = [
     designs: [
       {
         slug: "login",
-        title: "Login",
+        title: "Split login",
         blurb: "Split layout — particle field, magic-link + OAuth.",
       },
       {
         slug: "onboarding",
-        title: "Onboarding",
+        title: "Setup with progress dots",
         blurb: "Multi-step workspace setup with progress dots.",
       },
       {
@@ -271,14 +271,14 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "sign-in",
-        title: "Sign In",
+        title: "Minimal sign-in",
         blurb: "A minimal centred sign-in wired to your auth: email and password, OAuth providers, SSO, passkey and magic link, each shown only when you connect it.",
         status: "new",
         states: ["ready", "error"],
       },
       {
         slug: "sign-up",
-        title: "Sign Up",
+        title: "Minimal sign-up",
         blurb: "A minimal centred sign-up: name, work email and a password whose length hint ticks green as you type, with inline errors and the terms in one quiet line.",
         status: "new",
       },
@@ -296,7 +296,7 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "first-run",
-        title: "First Run",
+        title: "AI workspace setup",
         blurb: "A four-step setup for a brand-new AI workspace, with a springy stepper, tools that connect right where they sit, invites as chips, a live preview of your first agent and a calm summary you can jump back from.",
         status: "new",
       },
@@ -331,7 +331,7 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "revenue",
-        title: "Revenue",
+        title: "MRR overview",
         blurb: "MRR hero with trend area, plan-tier breakdown, top accounts.",
         status: "wip",
       },
@@ -420,7 +420,7 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "issues",
-        title: "Issue tracker",
+        title: "Faceted issues table",
         blurb: "Issues grid with faceted filter row above — Linear-style filtering.",
       },
       {
@@ -537,12 +537,12 @@ export const CATEGORIES: Category[] = [
     designs: [
       {
         slug: "profile",
-        title: "Profile",
+        title: "Account profile",
         blurb: "Photo, identity, locale, security rows with destructive zone.",
       },
       {
         slug: "appearance",
-        title: "Appearance",
+        title: "Appearance options",
         blurb: "Mode previews, palette swatches, density toggle, font cards.",
         status: "wip",
       },
@@ -553,18 +553,18 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "integrations",
-        title: "Integrations",
+        title: "Integrations grid",
         blurb: "Searchable grid with category filters and connect actions.",
         status: "wip",
       },
       {
         slug: "security",
-        title: "Security",
+        title: "Security overview",
         blurb: "2FA banner, passkeys list, active sessions, recovery codes.",
       },
       {
         slug: "permissions",
-        title: "Roles & permissions",
+        title: "Permission matrix",
         blurb: "Role sidebar with a sticky-header capability matrix grid.",
         status: "wip",
       },
@@ -601,19 +601,19 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "appearance-settings",
-        title: "Appearance Settings",
+        title: "Appearance with live preview",
         blurb: "Theme cards with miniature previews above a compact live app that re-themes with a circular wipe, eases into your accent colour and glides between densities as you change them.",
         status: "new",
       },
       {
         slug: "profile-settings",
-        title: "Profile Settings",
+        title: "Profile editor",
         blurb: "Edit your profile: crop a generated photo in a small dialog, claim a username with a live availability check and suggestions, see your local time on a tiny clock, and save from a bar that springs up when something changes.",
         status: "new",
       },
       {
         slug: "security-settings",
-        title: "Security Settings",
+        title: "Security checklist",
         blurb: "Password, two-factor, passkeys and sessions in grouped rows: a tiny ring counts recommended steps, passkeys are added inline while your device confirms, and signed-out sessions slide off the table one after another.",
         status: "new",
       },
@@ -625,7 +625,7 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "notification-settings",
-        title: "Notification Settings",
+        title: "Notification channels",
         blurb: "Channels you can open and tune, per-event email, push and chat toggles grouped under section switches, quiet hours on a small 24-hour track, and a digest line whose item count rolls as you change things.",
         status: "new",
       },
@@ -643,7 +643,7 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "connectors",
-        title: "Connectors",
+        title: "Connector directory",
         blurb: "Browse every app your product plugs into, grouped by category in tidy two-up cards, with a sticky search, filters that glide, connect buttons that spin and settle into a quiet connected state, and a slide-over for permissions and settings.",
         status: "new",
       },
@@ -947,7 +947,7 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "calendar-week",
-        title: "Calendar Week",
+        title: "Drag-and-drop week",
         blurb: "A week calendar you can push around: drag events to move or stretch them on a 15-minute snap, drag empty time to create one, nudge with the arrow keys, and watch the now line creep down the day.",
         status: "new",
       },
@@ -1014,7 +1014,7 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "social-profile",
-        title: "Profile",
+        title: "Social profile",
         blurb: "A social profile with a painted cover, a Follow button that pinches off a notification bell like a droplet, followers that roll up, and posts, replies and a media grid that opens into a lightbox.",
         status: "new",
       },
@@ -1134,7 +1134,7 @@ export const CATEGORIES: Category[] = [
       },
       {
         slug: "issue-tracker",
-        title: "Issue Tracker",
+        title: "Keyboard issue tracker",
         blurb: "An issue list you drive with your hands on the keys: J and K to move, S, P, A and L to change status, priority, assignee and labels, X to multi-select, ⌘K for everything else, and rows glide to their new group when they change.",
         status: "new",
       },
