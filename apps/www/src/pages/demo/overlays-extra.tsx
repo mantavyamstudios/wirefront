@@ -12,31 +12,12 @@ import {
   TrashIcon,
   UserPlusIcon,
 } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogPopup,
-  AlertDialogTitle,
-} from "@wirefront/ui/alert-dialog";
+import { AlertDialog, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogTitle } from "@wirefront/ui/alert-dialog";
 import { Button } from "@wirefront/ui/button";
-import {
-  Dialog,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogHeader, DialogContent, DialogTitle } from "@wirefront/ui/dialog";
 import { Input } from "@wirefront/ui/input";
 import { Kbd } from "@wirefront/ui/kbd";
-import {
-  Sheet,
-  SheetHeader,
-  SheetPanel,
-  SheetPopup,
-  SheetTitle,
-} from "@wirefront/ui/sheet";
+import { Sheet, SheetHeader, SheetContent, SheetTitle } from "@wirefront/ui/sheet";
 import { useDemo, type Notification } from "./store";
 
 const ICONS: Record<Notification["Icon"], React.ComponentType<{ className?: string }>> = {
@@ -68,7 +49,7 @@ export function NotificationsSheet() {
 
   return (
     <Sheet open={open} onOpenChange={(o) => setOverlay(o ? "notifications" : null)}>
-      <SheetPopup side="right" className="!max-w-md">
+      <SheetContent side="right" className="!max-w-md">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <BellIcon className="size-4 opacity-70" />
@@ -81,7 +62,7 @@ export function NotificationsSheet() {
             Mark all read
           </Button>
         </SheetHeader>
-        <SheetPanel className="!p-0">
+        <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 !p-0">
           {buckets.map((bucket) => {
             const items = notifications.filter((n) => n.bucket === bucket);
             if (items.length === 0) return null;
@@ -129,8 +110,8 @@ export function NotificationsSheet() {
               </section>
             );
           })}
-        </SheetPanel>
-      </SheetPopup>
+        </div>
+      </SheetContent>
     </Sheet>
   );
 }
@@ -171,14 +152,14 @@ export function ShortcutsDialog() {
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOverlay(o ? "shortcuts" : null)}>
-      <DialogPopup className="!max-w-2xl">
+      <DialogContent className="!max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <KeyboardIcon className="size-4 opacity-70" />
             Keyboard shortcuts
           </DialogTitle>
         </DialogHeader>
-        <DialogPanel>
+        <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4">
           <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-3">
             {sections.map((s) => (
               <section key={s.title}>
@@ -203,8 +184,8 @@ export function ShortcutsDialog() {
               </section>
             ))}
           </div>
-        </DialogPanel>
-      </DialogPopup>
+        </div>
+      </DialogContent>
     </Dialog>
   );
 }
@@ -238,7 +219,7 @@ export function ConfirmArchiveAlert() {
         }
       }}
     >
-      <AlertDialogPopup>
+      <AlertDialogContent>
         <AlertDialogHeader>
           <div className="mb-2 inline-flex size-9 items-center justify-center self-start rounded-full bg-destructive/10 text-destructive">
             <TrashIcon className="size-4" />
@@ -261,10 +242,9 @@ export function ConfirmArchiveAlert() {
             value={phrase}
             onChange={(e) => setPhrase(e.target.value)}
             placeholder={pendingArchive.name}
-            nativeInput
             className="mt-2 font-mono"
             autoFocus
-          />
+            />
         </div>
         <AlertDialogFooter>
           <Button
@@ -296,7 +276,7 @@ export function ConfirmArchiveAlert() {
             Archive project
           </Button>
         </AlertDialogFooter>
-      </AlertDialogPopup>
+      </AlertDialogContent>
     </AlertDialog>
   );
 }

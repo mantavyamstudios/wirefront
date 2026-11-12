@@ -2,6 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `verify-email`).
+import { Spinner } from "@wirefront/ui/spinner";
 import { DevlFrame } from "./_devl-frame";
 import { CheckIcon, MailIcon } from "lucide-react";
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from "motion/react";
@@ -154,7 +155,8 @@ export function VerifyEmail({
               {error}
             </p>
           )}
-          <Button className="mt-2 w-full" disabled={!done && code.length < length} loading={busy} type="submit">
+          <Button className="mt-2 w-full" disabled={(!done && code.length < length) || (busy)} type="submit" aria-busy={busy}>
+{busy ? <Spinner data-icon="inline-start" /> : null}
             {done ? "Continue" : "Verify email"}
           </Button>
         </form>

@@ -32,19 +32,9 @@ import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import { Kbd } from "@wirefront/ui/kbd";
-import {
-  Menu,
-  MenuGroup,
-  MenuGroupLabel,
-  MenuItem,
-  MenuPopup,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuSeparator,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
-import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 
 function useReducedMotionSafe() {
   const prefers = useReducedMotion();
@@ -498,12 +488,12 @@ function ControlButton({
           ) : null}
         </AnimatePresence>
       </TooltipTrigger>
-      <TooltipPopup className="flex items-center gap-2" side="top" sideOffset={8}>
+      <TooltipContent className="flex items-center gap-2" side="top" sideOffset={8}>
         <span className="flex items-center gap-2">
           {label}
           {shortcut && <Kbd className="h-4 min-w-4 text-[10px]">{shortcut}</Kbd>}
         </span>
-      </TooltipPopup>
+      </TooltipContent>
     </Tooltip>
   );
 }
@@ -516,28 +506,28 @@ function DeviceSplit({ kind, devices, children }: { kind: string; devices: strin
   return (
     <div className="flex shrink-0 items-center rounded-full bg-secondary">
       {children}
-      <Menu>
-        <MenuTrigger
+      <DropdownMenu>
+        <DropdownMenuTrigger
           aria-label={`${kind} settings`}
           className={cn(
             "-ms-0.5 hidden h-10 w-7 cursor-pointer items-center justify-center rounded-e-full pe-1 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-popup-open:text-foreground @md:flex [&_svg]:size-4",
           )}
         >
           <ChevronUpIcon />
-        </MenuTrigger>
-        <MenuPopup align="start" className={cn("w-60", menuPop)} side="top" sideOffset={10}>
-          <MenuGroup>
-            <MenuGroupLabel>{kind}</MenuGroupLabel>
-            <MenuRadioGroup onValueChange={(v) => setDevice(v as string)} value={device}>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className={cn("w-60", menuPop)} side="top" sideOffset={10}>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>{kind}</DropdownMenuLabel>
+            <DropdownMenuRadioGroup onValueChange={(v) => setDevice(v as string)} value={device}>
               {devices.map((d) => (
-                <MenuRadioItem key={d} value={d}>
+                <DropdownMenuRadioItem key={d} value={d}>
                   {d}
-                </MenuRadioItem>
+                </DropdownMenuRadioItem>
               ))}
-            </MenuRadioGroup>
-          </MenuGroup>
-        </MenuPopup>
-      </Menu>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }
@@ -742,7 +732,7 @@ export function VideoCall({
   const panelBody =
     panel === "chat" ? (
       <div className="flex min-h-0 flex-1 flex-col">
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
+        <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 py-3">
           {messages.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
               <span className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
@@ -865,29 +855,29 @@ export function VideoCall({
                     )}
                   </span>
                   {!isYou && (
-                    <Menu>
-                      <MenuTrigger
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
                         aria-label={`Options for ${p.name}`}
                         render={<Button className="-me-1" size="icon-sm" variant="ghost" />}
                       >
                         <EllipsisIcon />
-                      </MenuTrigger>
-                      <MenuPopup align="end" className={cn("w-44", menuPop)}>
-                        <MenuItem
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className={cn("w-44", menuPop)}>
+                        <DropdownMenuItem
                           disabled={p.muted}
                           onClick={() => setPeople((all) => ({ ...all, [id]: { ...all[id], muted: true } }))}
                         >
                           <MicOffIcon /> Mute
-                        </MenuItem>
-                        <MenuItem onClick={() => setSpeakerId(id)}>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setSpeakerId(id)}>
                           <PresentationIcon /> Spotlight
-                        </MenuItem>
-                        <MenuSeparator />
-                        <MenuItem onClick={() => removePerson(id)} variant="destructive">
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => removePerson(id)} variant="destructive">
                           <XIcon /> Remove from call
-                        </MenuItem>
-                      </MenuPopup>
-                    </Menu>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   )}
                 </motion.li>
               );
@@ -1240,7 +1230,7 @@ export function VideoCall({
                 >
                   <SmilePlusIcon />
                 </PopoverTrigger>
-                <PopoverPopup className={cn("rounded-full before:rounded-full", menuPop)} side="top" sideOffset={10} tooltipStyle>
+                <PopoverContent className={cn("rounded-full before:rounded-full", menuPop)} side="top" sideOffset={10}>
                   <div aria-label="Reactions" className="flex items-center gap-0.5 py-0.5" role="group">
                     {REACTIONS.map((emoji) => (
                       <button
@@ -1254,7 +1244,7 @@ export function VideoCall({
                       </button>
                     ))}
                   </div>
-                </PopoverPopup>
+                </PopoverContent>
               </Popover>
               <ControlButton
                 className="hidden @md:flex"
@@ -1275,8 +1265,8 @@ export function VideoCall({
               >
                 <MessageSquareIcon />
               </ControlButton>
-              <Menu>
-                <MenuTrigger
+              <DropdownMenu>
+                <DropdownMenuTrigger
                   aria-label="More options"
                   className={cn(
                     "flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-secondary text-secondary-foreground outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background data-popup-open:bg-accent [&_svg]:size-[18px]",
@@ -1284,29 +1274,29 @@ export function VideoCall({
                   )}
                 >
                   <EllipsisIcon />
-                </MenuTrigger>
-                <MenuPopup align="center" className={cn("w-52", menuPop)} side="top" sideOffset={10}>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className={cn("w-52", menuPop)} side="top" sideOffset={10}>
                   <div className="@md:hidden">
-                    <MenuItem onClick={toggleShare}>
+                    <DropdownMenuItem onClick={toggleShare}>
                       <MonitorUpIcon /> {sharing ? "Stop presenting" : "Present screen"}
-                    </MenuItem>
-                    <MenuItem onClick={toggleHand}>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={toggleHand}>
                       <HandIcon /> {me.hand ? "Lower hand" : "Raise hand"}
-                    </MenuItem>
+                    </DropdownMenuItem>
                   </div>
-                  <MenuItem onClick={() => setPanel("people")}>
+                  <DropdownMenuItem onClick={() => setPanel("people")}>
                     <UsersIcon /> People
-                  </MenuItem>
-                  <MenuSeparator />
-                  <MenuGroup>
-                    <MenuGroupLabel>Layout</MenuGroupLabel>
-                    <MenuRadioGroup onValueChange={(v) => setLayout(v as "grid" | "spotlight")} value={layout}>
-                      <MenuRadioItem value="grid">Grid</MenuRadioItem>
-                      <MenuRadioItem value="spotlight">Spotlight</MenuRadioItem>
-                    </MenuRadioGroup>
-                  </MenuGroup>
-                </MenuPopup>
-              </Menu>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>Layout</DropdownMenuLabel>
+                    <DropdownMenuRadioGroup onValueChange={(v) => setLayout(v as "grid" | "spotlight")} value={layout}>
+                      <DropdownMenuRadioItem value="grid">Grid</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="spotlight">Spotlight</DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Tooltip>
                 <TooltipTrigger
                   render={
@@ -1324,9 +1314,9 @@ export function VideoCall({
                   <PhoneOffIcon className="size-[18px]" />
                   <span className="hidden @md:inline">Leave</span>
                 </TooltipTrigger>
-                <TooltipPopup side="top" sideOffset={8}>
+                <TooltipContent side="top" sideOffset={8}>
                   Leave call
-                </TooltipPopup>
+                </TooltipContent>
               </Tooltip>
             </div>
           )}

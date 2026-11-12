@@ -29,22 +29,14 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type FormEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { cn } from "@wirefront/ui/lib/utils";
-import {
-  AlertDialog,
-  AlertDialogClose,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogPopup,
-  AlertDialogTitle,
-} from "@wirefront/ui/alert-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogTitle } from "@wirefront/ui/alert-dialog";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
-import { Dialog, DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogPanel, DialogPopup, DialogTitle } from "@wirefront/ui/dialog";
+import { Dialog, DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogContent, DialogTitle } from "@wirefront/ui/dialog";
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Spinner } from "@wirefront/ui/spinner";
 import { Switch } from "@wirefront/ui/switch";
 
@@ -522,7 +514,7 @@ function SecretReveal({ name, secret, onDone, reduce }: { name: string; secret: 
           <span className="font-medium text-foreground">{name}</span> is ready. This is the only time the full key is shown.
         </DialogDescription>
       </DialogHeader>
-      <DialogPanel className="flex flex-col gap-3">
+      <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 flex flex-col gap-3">
         <div
           className={cn(
             "relative flex items-center gap-2 overflow-hidden rounded-lg border bg-muted/50 py-1.5 ps-3 pe-1.5 transition-colors duration-300",
@@ -559,7 +551,7 @@ function SecretReveal({ name, secret, onDone, reduce }: { name: string; secret: 
           <TriangleAlertIcon className="mt-px size-3.5 shrink-0 text-warning-foreground" />
           Store it in your secret manager now. If it’s lost, roll the key to get a new one.
         </p>
-      </DialogPanel>
+      </div>
       <DialogFooter>
         <Button className={press} onClick={onDone} variant={everCopied ? "default" : "outline"}>
           {everCopied ? "Done" : "I’ve saved it"}
@@ -607,10 +599,10 @@ function CreateKeyForm({
         <DialogTitle>Create API key</DialogTitle>
         <DialogDescription>Keys act as the workspace, not as you. Give each one only what it needs.</DialogDescription>
       </DialogHeader>
-      <DialogPanel className="flex flex-col gap-5">
+      <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 flex flex-col gap-5">
         <div className="flex flex-col gap-2">
           <Label htmlFor={`${id}-name`}>Name</Label>
-          <Input autoFocus id={`${id}-name`} onChange={(e) => setName(e.target.value)} placeholder="Release pipeline" value={name} />
+          <Input autoFocus id={`${id}-name`} onChange={(e) => setName(e.target.value)} placeholder="Release pipeline" value={name}  />
         </div>
         <fieldset className="flex flex-col gap-2">
           <legend className="mb-2 font-medium text-sm">Scopes</legend>
@@ -646,19 +638,19 @@ function CreateKeyForm({
             <SelectTrigger aria-label="Expiry">
               <SelectValue />
             </SelectTrigger>
-            <SelectPopup>
+            <SelectContent align="start">
               {expiryOptions.map((o) => (
                 <SelectItem key={o.value} value={o.value}>
                   {o.label}
                 </SelectItem>
               ))}
-            </SelectPopup>
+            </SelectContent>
           </Select>
           <p className={cn("text-xs tabular-nums", days === 0 ? "text-warning-foreground" : "text-muted-foreground")}>
             {days === 0 ? "Keys that never expire are easy to forget about." : `Stops working on ${addDays(today, days)}.`}
           </p>
         </div>
-      </DialogPanel>
+      </div>
       <DialogFooter>
         <DialogClose render={<Button variant="ghost" />}>Cancel</DialogClose>
         <Button className={press} disabled={!name.trim() || scopes.length === 0} type="submit">
@@ -703,7 +695,7 @@ function EventsForm({
           {adding ? "Ridgeline sends a signed POST to this URL for each event you pick." : <span className="break-all font-mono text-xs">{url}</span>}
         </DialogDescription>
       </DialogHeader>
-      <DialogPanel className="flex flex-col gap-5">
+      <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 flex flex-col gap-5">
         {adding && (
           <div className="flex flex-col gap-2">
             <Label htmlFor={`${id}-url`}>Endpoint URL</Label>
@@ -719,7 +711,7 @@ function EventsForm({
               placeholder="https://example.com/webhooks"
               type="url"
               value={value}
-            />
+             />
             {error && (
               <p className="text-destructive-foreground text-xs" id={`${id}-error`}>
                 {error}
@@ -760,7 +752,7 @@ function EventsForm({
             );
           })}
         </div>
-      </DialogPanel>
+      </div>
       <DialogFooter>
         <DialogClose render={<Button variant="ghost" />}>Cancel</DialogClose>
         <Button className={press} disabled={selected.length === 0} type="submit">
@@ -929,8 +921,8 @@ export function DeveloperSettings({
                           <Expiry apiKey={k} />
                         </span>
                       </div>
-                      <Menu>
-                        <MenuTrigger
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
                           render={
                             <Button
                               aria-label={`Actions for ${k.name}`}
@@ -941,14 +933,14 @@ export function DeveloperSettings({
                           }
                         >
                           <EllipsisIcon />
-                        </MenuTrigger>
-                        <MenuPopup align="end" className="w-48">
-                          <MenuItem onClick={() => rollKey(k)}>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuItem onClick={() => rollKey(k)}>
                             <RefreshCwIcon />
                             Roll key
-                          </MenuItem>
-                          <MenuSeparator />
-                          <MenuItem
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
                             onClick={() => {
                               setRevoking(k);
                               setRevokeOpen(true);
@@ -957,9 +949,9 @@ export function DeveloperSettings({
                           >
                             <Trash2Icon />
                             Revoke key
-                          </MenuItem>
-                        </MenuPopup>
-                      </Menu>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </motion.li>
                 ))}
@@ -1046,12 +1038,12 @@ export function DeveloperSettings({
                           className="relative"
                           onCheckedChange={(on) => updateEndpoint(e.id, (x) => ({ ...x, paused: !on }))}
                         />
-                        <Menu>
-                          <MenuTrigger render={<Button aria-label={`Actions for ${hostOf(e.url)}`} className={cn("relative", press)} size="icon-sm" variant="ghost" />}>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger render={<Button aria-label={`Actions for ${hostOf(e.url)}`} className={cn("relative", press)} size="icon-sm" variant="ghost" />}>
                             <EllipsisIcon />
-                          </MenuTrigger>
-                          <MenuPopup align="end" className="w-48">
-                            <MenuItem
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuItem
                               onClick={() => {
                                 counter.current += 1;
                                 setEventsDialog({ endpointId: e.id, key: counter.current });
@@ -1060,8 +1052,8 @@ export function DeveloperSettings({
                             >
                               <CheckIcon />
                               Edit events
-                            </MenuItem>
-                            <MenuItem
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
                               onClick={() => {
                                 setSelectedId(e.id);
                                 sendTest(e.id);
@@ -1069,9 +1061,9 @@ export function DeveloperSettings({
                             >
                               <SendIcon />
                               Send test event
-                            </MenuItem>
-                            <MenuSeparator />
-                            <MenuItem
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
                               onClick={() => {
                                 setDeleting(e);
                                 setDeleteOpen(true);
@@ -1080,9 +1072,9 @@ export function DeveloperSettings({
                             >
                               <Trash2Icon />
                               Delete endpoint
-                            </MenuItem>
-                          </MenuPopup>
-                        </Menu>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </motion.li>
                   );
@@ -1246,17 +1238,17 @@ export function DeveloperSettings({
       </div>
 
       <Dialog onOpenChange={setKeyDialogOpen} open={keyDialogOpen}>
-        <DialogPopup className="sm:max-w-md" showCloseButton={keyDialog?.mode === "create"}>
+        <DialogContent className="sm:max-w-md" showCloseButton={keyDialog?.mode === "create"}>
           {keyDialog?.mode === "reveal" ? (
             <SecretReveal key={keyDialog.secret} name={keyDialog.name} onDone={() => setKeyDialogOpen(false)} reduce={reduce} secret={keyDialog.secret} />
           ) : (
             <CreateKeyForm onCreate={createKey} resources={resources} today={today} />
           )}
-        </DialogPopup>
+        </DialogContent>
       </Dialog>
 
       <Dialog onOpenChange={setEventsOpen} open={eventsOpen}>
-        <DialogPopup className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-lg">
           {eventsDialog && (
             <EventsForm
               groups={eventGroups}
@@ -1277,11 +1269,11 @@ export function DeveloperSettings({
               url={eventsTarget?.url}
             />
           )}
-        </DialogPopup>
+        </DialogContent>
       </Dialog>
 
       <AlertDialog onOpenChange={setRevokeOpen} open={revokeOpen}>
-        <AlertDialogPopup>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Revoke {revoking?.name}?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -1289,18 +1281,18 @@ export function DeveloperSettings({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogClose render={<Button variant="ghost" />}>Cancel</AlertDialogClose>
-            <AlertDialogClose
+            <AlertDialogCancel render={<Button variant="ghost" />}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel
               render={<Button onClick={() => revoking && setKeys((all) => all.filter((x) => x.id !== revoking.id))} variant="destructive" />}
             >
               Revoke key
-            </AlertDialogClose>
+            </AlertDialogCancel>
           </AlertDialogFooter>
-        </AlertDialogPopup>
+        </AlertDialogContent>
       </AlertDialog>
 
       <AlertDialog onOpenChange={setDeleteOpen} open={deleteOpen}>
-        <AlertDialogPopup>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete this endpoint?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -1308,8 +1300,8 @@ export function DeveloperSettings({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogClose render={<Button variant="ghost" />}>Cancel</AlertDialogClose>
-            <AlertDialogClose
+            <AlertDialogCancel render={<Button variant="ghost" />}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel
               render={
                 <Button
                   onClick={() => {
@@ -1323,9 +1315,9 @@ export function DeveloperSettings({
               }
             >
               Delete endpoint
-            </AlertDialogClose>
+            </AlertDialogCancel>
           </AlertDialogFooter>
-        </AlertDialogPopup>
+        </AlertDialogContent>
       </AlertDialog>
     </RidgelineShell>
   );

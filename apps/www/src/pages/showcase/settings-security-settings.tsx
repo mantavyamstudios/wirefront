@@ -29,13 +29,25 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { type ReactNode, useEffect, useId, useRef, useState } from "react";
+import { type ComponentProps, type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { Input, type InputProps } from "@wirefront/ui/input";
+import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+
+// shadcn's Badge has no status tones; render them as a secondary badge with
+// Wirefront's semantic tokens.
+const TONE_CLASS = {
+  success: "bg-success/8 text-success-foreground dark:bg-success/16",
+  warning: "bg-warning/8 text-warning-foreground dark:bg-warning/16",
+  info: "bg-info/8 text-info-foreground dark:bg-info/16",
+  error: "bg-destructive/8 text-destructive-foreground dark:bg-destructive/16",
+} as const;
+type BadgeVariant = "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
+const badgeVariant = (v: string): BadgeVariant => (v in TONE_CLASS ? "secondary" : (v as BadgeVariant));
+const badgeTone = (v: string): string | undefined => TONE_CLASS[v as keyof typeof TONE_CLASS];
 
 export type SettingsSectionId =
   | "profile"
@@ -157,9 +169,9 @@ function useFocusOnMount<T extends HTMLElement>() {
   return ref;
 }
 
-function AutoFocusInput(props: InputProps) {
+function AutoFocusInput(props: ComponentProps<typeof Input>) {
   const ref = useFocusOnMount<HTMLInputElement>();
-  return <Input ref={ref} {...props} />;
+  return <Input ref={ref} {...props}  />;
 }
 
 function useCalmMotion() {
@@ -549,7 +561,6 @@ function PasskeyRow({
                   Passkey name
                 </Label>
                 <AutoFocusInput
-
                   id={inputId}
                   maxLength={40}
                   onBlur={commit}
@@ -561,7 +572,6 @@ function PasskeyRow({
                       onCancelRename();
                     }
                   }}
-                  size="sm"
                   value={draft}
                 />
               </form>
@@ -577,22 +587,22 @@ function PasskeyRow({
         <span className="hidden text-muted-foreground text-sm sm:block">
           {passkey.lastUsed === "Never" ? "Not yet" : passkey.lastUsed}
         </span>
-        <Menu>
-          <MenuTrigger
+        <DropdownMenu>
+          <DropdownMenuTrigger
             render={<Button aria-label={`Options for ${passkey.name}`} className="shrink-0" size="icon-sm" variant="ghost" />}
           >
             <MoreHorizontalIcon />
-          </MenuTrigger>
-          <MenuPopup align="end">
-            <MenuItem onClick={onStartRename}>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={onStartRename}>
               <PencilIcon /> Rename
-            </MenuItem>
-            <MenuSeparator />
-            <MenuItem onClick={onAskRemove} variant="destructive">
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={onAskRemove} variant="destructive">
               <Trash2Icon /> Remove
-            </MenuItem>
-          </MenuPopup>
-        </Menu>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <Collapse open={confirming} reduce={reduce}>
         <ConfirmStrip
@@ -750,7 +760,7 @@ function SessionRow({
                 {session.browser} on {session.os}
               </span>
               {session.current && (
-                <Badge className="shrink-0" variant="success">
+                <Badge className="bg-success/8 text-success-foreground dark:bg-success/16 shrink-0" variant="secondary">
                   This device
                 </Badge>
               )}
@@ -915,7 +925,7 @@ export function SecuritySettings({
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <span className="flex items-center gap-2">
                   <span className="font-medium text-sm">Authenticator app</span>
-                  <Badge variant={authOn ? "success" : "outline"}>{authOn ? "Enabled" : "Off"}</Badge>
+                  <Badge variant={badgeVariant(authOn ? "success" : "outline")} className={badgeTone(authOn ? "success" : "outline")}>{authOn ? "Enabled" : "Off"}</Badge>
                 </span>
                 <span className="text-pretty text-muted-foreground text-xs">
                   {authOn ? `6-digit codes from an app on your phone. Added ${authenticatorSince}.` : "Use an app on your phone for 6-digit codes."}
@@ -949,7 +959,7 @@ export function SecuritySettings({
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <span className="flex items-center gap-2">
                   <span className="font-medium text-sm">Recovery codes</span>
-                  {authOn && !saved && <Badge variant="warning">Not saved</Badge>}
+                  {authOn && !saved && <Badge variant="secondary" className="bg-warning/8 text-warning-foreground dark:bg-warning/16">Not saved</Badge>}
                 </span>
                 <span className="text-muted-foreground text-xs tabular-nums">
                   {authOn ? `${10 - used} of 10 left. Use one if you lose your phone.` : "Available once two-factor is on."}

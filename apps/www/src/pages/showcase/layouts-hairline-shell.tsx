@@ -35,19 +35,8 @@ import { type KeyboardEvent, type ReactElement, type ReactNode, useEffect, useId
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
-import {
-  Menu,
-  MenuGroup,
-  MenuGroupLabel,
-  MenuItem,
-  MenuPopup,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuSeparator,
-  MenuShortcut,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type HairlineTone = "orange" | "teal" | "cyan" | "violet" | "rose" | "info" | "success" | "warning";
@@ -189,9 +178,9 @@ function RailTip({ collapsed, label, children }: { collapsed: boolean; label: Re
   return (
     <Tooltip disabled={!collapsed}>
       <TooltipTrigger render={children} />
-      <TooltipPopup side="right" sideOffset={8}>
+      <TooltipContent side="right" sideOffset={8}>
         {label}
-      </TooltipPopup>
+      </TooltipContent>
     </Tooltip>
   );
 }
@@ -248,8 +237,8 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
     <LayoutGroup id={group}>
       <div className="flex h-full min-h-0 flex-col whitespace-nowrap">
         <div className="flex h-11 shrink-0 items-center gap-1 border-b px-1.5">
-          <Menu>
-            <MenuTrigger
+          <DropdownMenu>
+            <DropdownMenuTrigger
               aria-label={`Workspace: ${ws.name}`}
               className="flex h-8 min-w-0 flex-1 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2 text-left outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
             >
@@ -263,25 +252,25 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
               </span>
               <span className={cn("min-w-0 truncate font-medium", fade)}>{ws.name}</span>
               <ChevronDownIcon className={cn("size-3.5 shrink-0 text-muted-foreground", fade)} />
-            </MenuTrigger>
-            <MenuPopup align="start" className="w-56">
-              <MenuGroup>
-                <MenuGroupLabel>Switch workspace</MenuGroupLabel>
-                <MenuRadioGroup onValueChange={(v) => setWorkspace(v as string)} value={workspace}>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Switch workspace</DropdownMenuLabel>
+                <DropdownMenuRadioGroup onValueChange={(v) => setWorkspace(v as string)} value={workspace}>
                   {workspaces.map((w) => (
-                    <MenuRadioItem key={w.id} value={w.id}>
+                    <DropdownMenuRadioItem key={w.id} value={w.id}>
                       {w.name}
-                    </MenuRadioItem>
+                    </DropdownMenuRadioItem>
                   ))}
-                </MenuRadioGroup>
-              </MenuGroup>
-              <MenuSeparator />
-              <MenuItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
                 <PlusIcon />
                 New workspace
-              </MenuItem>
-            </MenuPopup>
-          </Menu>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {onClose ? (
             <Button aria-label="Close navigation" onClick={onClose} size="icon-sm" variant="ghost">
               <XIcon />
@@ -357,8 +346,8 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
         </div>
 
         <div className="flex h-10 shrink-0 items-center gap-1 border-t px-1.5">
-          <Menu>
-            <MenuTrigger
+          <DropdownMenu>
+            <DropdownMenuTrigger
               aria-label={`Account: ${user.name}`}
               className="flex h-7 min-w-0 flex-1 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2 text-left outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
             >
@@ -367,29 +356,29 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
               </Avatar>
               <span className={cn("min-w-0 flex-1 truncate", fade)}>{user.name}</span>
               <ChevronsUpDownIcon className={cn("size-3.5 shrink-0 text-muted-foreground", fade)} />
-            </MenuTrigger>
-            <MenuPopup align="start" className="w-52" side="top">
-              <MenuItem>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-52" side="top">
+              <DropdownMenuItem>
                 <UserRoundIcon />
                 Profile
-              </MenuItem>
-              <MenuItem>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
                 <SettingsIcon />
                 Settings
-                <MenuShortcut>G S</MenuShortcut>
-              </MenuItem>
-              <MenuItem>
+                <DropdownMenuShortcut>G S</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
                 <KeyboardIcon />
                 Shortcuts
-                <MenuShortcut>?</MenuShortcut>
-              </MenuItem>
-              <MenuSeparator />
-              <MenuItem>
+                <DropdownMenuShortcut>?</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
                 <LogOutIcon />
                 Log out
-              </MenuItem>
-            </MenuPopup>
-          </Menu>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {onToggle && (
             <RailTip
               collapsed
@@ -475,7 +464,7 @@ function IssueList({ issues, fresh, onAdd }: { issues: HairlineIssue[]; fresh: s
                 >
                   <PlusIcon />
                 </TooltipTrigger>
-                <TooltipPopup>New issue in {g.label}</TooltipPopup>
+                <TooltipContent>New issue in {g.label}</TooltipContent>
               </Tooltip>
             </div>
             <AnimatePresence initial={false}>

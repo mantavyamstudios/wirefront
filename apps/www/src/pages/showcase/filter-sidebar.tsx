@@ -11,18 +11,14 @@ import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
 import { CheckboxGroup } from "@wirefront/ui/checkbox-group";
-import {
-  Collapsible,
-  CollapsiblePanel,
-  CollapsibleTrigger,
-} from "@wirefront/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@wirefront/ui/collapsible";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@wirefront/ui/input-group";
 import { Label } from "@wirefront/ui/label";
-import { Sheet, SheetClose, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 import { Slider } from "@wirefront/ui/slider";
 import { Switch } from "@wirefront/ui/switch";
 
@@ -190,7 +186,7 @@ export function FilterSidebarShowcasePage() {
           <SlidersHorizontalIcon className="size-4 text-muted-foreground" />
           <h2 className="font-medium text-sm">Filters</h2>
           {activeCount > 0 ? (
-            <Badge size="sm" variant="secondary" className="font-mono text-[10px]">
+            <Badge variant="secondary" className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px]">
               {activeCount}
             </Badge>
           ) : null}
@@ -220,7 +216,6 @@ export function FilterSidebarShowcasePage() {
               onChange={(e) =>
                 setState((s) => ({ ...s, search: e.target.value }))
               }
-              nativeInput
             />
           </InputGroup>
         </div>
@@ -425,15 +420,15 @@ export function FilterSidebarShowcasePage() {
                 <SlidersHorizontalIcon />
                 Filters
                 {activeCount > 0 ? (
-                  <Badge size="sm" variant="secondary" className="font-mono text-[10px]">
+                  <Badge variant="secondary" className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px]">
                     {activeCount}
                   </Badge>
                 ) : null}
               </SheetTrigger>
-              <SheetPopup side="left" showCloseButton={false} className="max-w-[340px] bg-card pb-[env(safe-area-inset-bottom)]">
+              <SheetContent side="left" showCloseButton={false} className="max-w-[340px] bg-card pb-[env(safe-area-inset-bottom)]">
                 <SheetTitle className="sr-only">Filters</SheetTitle>
                 {renderPanel(true)}
-              </SheetPopup>
+              </SheetContent>
             </Sheet>
           </header>
           <ProductGrid products={filtered} onReset={reset} />
@@ -458,16 +453,16 @@ function Section({
         <span className="flex items-center gap-2 font-medium text-sm">
           {title}
           {badge ? (
-            <Badge variant="secondary" size="sm" className="font-mono text-[10px]">
+            <Badge variant="secondary" className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px]">
               {badge}
             </Badge>
           ) : null}
         </span>
         <ChevronDownIcon className="size-4 text-muted-foreground transition-transform group-data-[panel-open]:-rotate-180" />
       </CollapsibleTrigger>
-      <CollapsiblePanel className="overflow-hidden">
+      <CollapsibleContent className="overflow-hidden">
         <div className="pt-3">{children}</div>
-      </CollapsiblePanel>
+      </CollapsibleContent>
     </Collapsible>
   );
 }

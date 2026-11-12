@@ -24,16 +24,7 @@ import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import { Kbd } from "@wirefront/ui/kbd";
-import {
-  Menu,
-  MenuGroup,
-  MenuGroupLabel,
-  MenuPopup,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuSeparator,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type FolderTone = "orange" | "yellow" | "lime" | "teal" | "blue" | "violet" | "rose" | "slate" | "neutral";
@@ -504,31 +495,31 @@ export function Drive({
                   </h2>
                   <span className="text-muted-foreground text-xs tabular-nums">{visible.length}</span>
                   <div className="ms-auto flex items-center gap-1">
-                    <Menu>
-                      <MenuTrigger render={<Button aria-label={`Sort by ${sortLabel}`} className="text-muted-foreground" size="sm" variant="ghost" />}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger render={<Button aria-label={`Sort by ${sortLabel}`} className="text-muted-foreground" size="sm" variant="ghost" />}>
                         <ArrowDownUpIcon />
                         <span className="hidden @md:inline">{sortLabel}</span>
-                      </MenuTrigger>
-                      <MenuPopup align="end" className="w-48">
-                        <MenuGroup>
-                          <MenuGroupLabel>Sort by</MenuGroupLabel>
-                          <MenuRadioGroup onValueChange={(v) => setSort(v as SortKey)} value={sort}>
-                            <MenuRadioItem value="name">Name</MenuRadioItem>
-                            <MenuRadioItem value="edited">Last edited</MenuRadioItem>
-                            <MenuRadioItem value="size">Size</MenuRadioItem>
-                            <MenuRadioItem value="files">File count</MenuRadioItem>
-                          </MenuRadioGroup>
-                        </MenuGroup>
-                        <MenuSeparator />
-                        <MenuGroup>
-                          <MenuGroupLabel>Order</MenuGroupLabel>
-                          <MenuRadioGroup onValueChange={(v) => setDir(v as "asc" | "desc")} value={dir}>
-                            <MenuRadioItem value="asc">{sort === "name" ? "A to Z" : sort === "edited" ? "Oldest first" : "Smallest first"}</MenuRadioItem>
-                            <MenuRadioItem value="desc">{sort === "name" ? "Z to A" : sort === "edited" ? "Newest first" : "Largest first"}</MenuRadioItem>
-                          </MenuRadioGroup>
-                        </MenuGroup>
-                      </MenuPopup>
-                    </Menu>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuGroup>
+                          <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+                          <DropdownMenuRadioGroup onValueChange={(v) => setSort(v as SortKey)} value={sort}>
+                            <DropdownMenuRadioItem value="name">Name</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="edited">Last edited</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="size">Size</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="files">File count</DropdownMenuRadioItem>
+                          </DropdownMenuRadioGroup>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuLabel>Order</DropdownMenuLabel>
+                          <DropdownMenuRadioGroup onValueChange={(v) => setDir(v as "asc" | "desc")} value={dir}>
+                            <DropdownMenuRadioItem value="asc">{sort === "name" ? "A to Z" : sort === "edited" ? "Oldest first" : "Smallest first"}</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="desc">{sort === "name" ? "Z to A" : sort === "edited" ? "Newest first" : "Largest first"}</DropdownMenuRadioItem>
+                          </DropdownMenuRadioGroup>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                     <LayoutGroup id={`${group}-view`}>
                       <div aria-label="Layout" className="flex rounded-lg bg-muted p-0.5" role="radiogroup">
                         {(

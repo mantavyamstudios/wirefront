@@ -247,7 +247,7 @@ export function CalendarsYearHeatmapShowcasePage() {
               className="pl-7"
               spellCheck={false}
               autoComplete="off"
-            />
+             />
           </div>
           <Button type="submit" variant="outline" disabled={loading} className="shrink-0">
             {loading ? "Loading…" : "Load live"}

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { MessageSquareIcon, SmileIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 
 interface Comment {
   initials: string;
@@ -74,12 +74,12 @@ export function ThreadsInlineThreadShowcasePage() {
                 <MessageSquareIcon aria-hidden className="size-3" />
                 {comments.length}
               </SheetTrigger>
-              <SheetPopup side="bottom" className="max-h-[85svh] pb-[env(safe-area-inset-bottom)]">
+              <SheetContent side="bottom" className="max-h-[85svh] pb-[env(safe-area-inset-bottom)]">
                 <SheetTitle className="sr-only">Comment thread</SheetTitle>
                 <div className="overflow-y-auto p-4">
                   <Thread comments={comments} onReply={add} />
                 </div>
-              </SheetPopup>
+              </SheetContent>
             </Sheet>
           </div>
 

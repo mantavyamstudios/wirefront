@@ -137,8 +137,7 @@ function WorkspaceStep({
             autoComplete="off"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            nativeInput
-          />
+            />
         </div>
         <Button type="submit" size="lg" disabled={!value.trim()} className="mt-2">
           Continue
@@ -184,8 +183,7 @@ function InviteStep({
           autoComplete="off"
           value={pending}
           onChange={(e) => onPendingChange(e.target.value)}
-          nativeInput
-        />
+          />
         <Button type="submit" variant="outline" className="shrink-0">
           Add
         </Button>

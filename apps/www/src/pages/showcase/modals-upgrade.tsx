@@ -2,16 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { CheckIcon, SparklesIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Dialog,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogDescription, DialogFooter, DialogHeader, DialogContent, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
 
 const PLANS = [
   {
@@ -52,7 +43,7 @@ export function ModalsUpgradeShowcasePage() {
           <SparklesIcon />
           Upgrade
         </DialogTrigger>
-        <DialogPopup className="sm:max-w-2xl">
+        <DialogContent className="sm:max-w-2xl">
           <DialogHeader className="sm:flex-row sm:items-start sm:gap-4">
             <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-foreground text-background max-sm:hidden">
               <SparklesIcon className="size-5" />
@@ -71,7 +62,7 @@ export function ModalsUpgradeShowcasePage() {
             </div>
           </DialogHeader>
 
-          <DialogPanel className="grid grid-cols-1 gap-3 pt-2 sm:grid-cols-2">
+          <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 grid grid-cols-1 gap-3 pt-2 sm:grid-cols-2">
             {PLANS.map((p) => (
               <div
                 key={p.name}
@@ -116,7 +107,7 @@ export function ModalsUpgradeShowcasePage() {
                 </Button>
               </div>
             ))}
-          </DialogPanel>
+          </div>
 
           <DialogFooter className="text-muted-foreground text-xs sm:items-center sm:justify-between">
             <span className="text-center sm:text-left">14-day money-back · Cancel any time</span>
@@ -127,7 +118,7 @@ export function ModalsUpgradeShowcasePage() {
               See full plan comparison →
             </button>
           </DialogFooter>
-        </DialogPopup>
+        </DialogContent>
       </Dialog>
       </div>
     </div>

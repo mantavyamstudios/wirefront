@@ -11,24 +11,8 @@ import {
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import {
-  Menu,
-  MenuGroup,
-  MenuGroupLabel,
-  MenuItem,
-  MenuPopup,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuSeparator,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
-import {
-  Select,
-  SelectItem,
-  SelectPopup,
-  SelectTrigger,
-  SelectValue,
-} from "@wirefront/ui/select";
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import {
   Table,
   TableBody,
@@ -132,7 +116,7 @@ function MemberRow({ m }: { m: Member }) {
             <div className="flex items-center gap-2">
               <span className="truncate font-medium">{m.name}</span>
               {m.pending ? (
-                <Badge variant="outline" size="sm" className="font-mono text-[10px] uppercase tracking-wider">
+                <Badge variant="outline" className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px] uppercase tracking-wider">
                   pending
                 </Badge>
               ) : null}
@@ -166,13 +150,13 @@ function MemberRow({ m }: { m: Member }) {
             <SelectTrigger aria-label={`Role for ${m.name}`} className="h-8 w-32 text-sm pointer-coarse:h-10" size="sm">
               <SelectValue />
             </SelectTrigger>
-            <SelectPopup>
+            <SelectContent align="start">
               {ROLES.map((r) => (
                 <SelectItem key={r.value} value={r.value}>
                   {r.label}
                 </SelectItem>
               ))}
-            </SelectPopup>
+            </SelectContent>
           </Select>
         )}
       </TableCell>
@@ -191,38 +175,38 @@ function MemberRow({ m }: { m: Member }) {
       </TableCell>
       <TableCell className="text-muted-foreground tabular-nums max-md:hidden">{m.active}</TableCell>
       <TableCell className="pe-4">
-        <Menu>
-          <MenuTrigger
+        <DropdownMenu>
+          <DropdownMenuTrigger
             render={<Button variant="ghost" size="icon" aria-label={`Actions for ${m.name}`} className="pointer-coarse:size-11" />}
           >
             <EllipsisIcon />
-          </MenuTrigger>
-          <MenuPopup align="end">
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
             {m.role !== "owner" ? (
               <>
-                <MenuGroup>
-                  <MenuGroupLabel>Role</MenuGroupLabel>
-                  <MenuRadioGroup value={role} onValueChange={(v) => setRole(v as string)}>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Role</DropdownMenuLabel>
+                  <DropdownMenuRadioGroup value={role} onValueChange={(v) => setRole(v as string)}>
                     {ROLES.map((r) => (
-                      <MenuRadioItem key={r.value} value={r.value}>
+                      <DropdownMenuRadioItem key={r.value} value={r.value}>
                         {r.label}
-                      </MenuRadioItem>
+                      </DropdownMenuRadioItem>
                     ))}
-                  </MenuRadioGroup>
-                </MenuGroup>
-                <MenuSeparator />
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
               </>
             ) : null}
-            <MenuItem>
+            <DropdownMenuItem>
               <MailIcon /> Send email
-            </MenuItem>
-            <MenuItem>Transfer ownership</MenuItem>
-            <MenuSeparator />
-            <MenuItem variant="destructive">
+            </DropdownMenuItem>
+            <DropdownMenuItem>Transfer ownership</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive">
               <TrashIcon /> Remove
-            </MenuItem>
-          </MenuPopup>
-        </Menu>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </TableCell>
     </TableRow>
   );

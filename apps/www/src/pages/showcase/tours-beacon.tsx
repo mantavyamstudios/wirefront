@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Popover } from "@base-ui/react/popover";
 import { useState } from "react";
 import { LayersIcon, SlidersHorizontalIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import { PopoverPrimitive as Popover } from "@wirefront/ui/popover";
 
 // Beacons live *inside* the element they point at (a relative wrapper), so they
 // move with the layout. Each one is a Popover trigger with a 40px hit area

@@ -930,7 +930,7 @@ export function CodeReview({
                 {title} <span className="font-normal text-muted-foreground">#{number}</span>
               </h1>
               <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-muted-foreground text-xs">
-                <Badge className="gap-1" variant="success">
+                <Badge className="bg-success/8 text-success-foreground dark:bg-success/16 gap-1" variant="secondary">
                   <GitPullRequestIcon />
                   Open
                 </Badge>
@@ -965,7 +965,7 @@ export function CodeReview({
                 className={cn("transition-[box-shadow,scale] duration-150 ease-out active:scale-[0.97]", submitted === "approve" && "bg-success hover:bg-success/90 border-success text-white")}
                 onClick={() => setReviewOpen((o) => !o)}
                 size="sm"
-                variant={submitted === "changes" ? "destructive-outline" : "default"}
+                variant={submitted === "changes" ? "destructive" : "default"}
               >
                 {submitted === "approve" && <CheckIcon />}
                 {reviewLabel}
@@ -1106,7 +1106,7 @@ export function CodeReview({
                         <span className="font-medium text-foreground">{file.path.split("/").pop()}</span>
                       </span>
                       {file.status === "added" && (
-                        <Badge className="hidden @md:inline-flex" variant="success">
+                        <Badge className="bg-success/8 text-success-foreground dark:bg-success/16 hidden @md:inline-flex" variant="secondary">
                           New
                         </Badge>
                       )}

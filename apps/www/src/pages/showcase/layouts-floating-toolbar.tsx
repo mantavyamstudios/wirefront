@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
 import { Separator } from "@wirefront/ui/separator";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 
 type Anchor = { top: number; bottom: number; centerX: number };
 type ToolbarPos = { top: number; left: number; placement: "above" | "below" };
@@ -317,7 +317,7 @@ function ToolbarButton({
           </button>
         }
       />
-      <TooltipPopup>{label}</TooltipPopup>
+      <TooltipContent>{label}</TooltipContent>
     </Tooltip>
   );
 }

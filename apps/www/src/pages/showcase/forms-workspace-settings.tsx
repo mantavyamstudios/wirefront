@@ -13,14 +13,7 @@ import {
 } from "lucide-react";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Menu,
-  MenuPopup,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuSeparator,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
 import { Separator } from "@wirefront/ui/separator";
@@ -52,8 +45,8 @@ export function FormsWorkspaceSettingsShowcasePage() {
         {/* Phones: one sticky section switcher (current section + a menu of
             all sections) instead of a wall of chips. md+: the side nav. */}
         <div className="sticky top-0 z-20 border-border/60 border-b bg-background/95 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
-          <Menu>
-            <MenuTrigger
+          <DropdownMenu>
+            <DropdownMenuTrigger
               aria-label={`Settings section: ${section}`}
               className="flex min-h-11 w-full items-center gap-3 rounded-lg border border-border/60 bg-card px-3 text-left"
             >
@@ -67,16 +60,16 @@ export function FormsWorkspaceSettingsShowcasePage() {
                 <span className="block truncate text-sm">{section}</span>
               </span>
               <ChevronsUpDownIcon className="size-4 shrink-0 opacity-60" />
-            </MenuTrigger>
-            <MenuPopup align="start" className="w-(--anchor-width)">
-              <MenuRadioGroup
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-(--anchor-width)">
+              <DropdownMenuRadioGroup
                 value={section}
                 onValueChange={(v) => setSection(v as SectionLabel)}
               >
                 {NAV.map(({ icon: Icon, label, ...rest }) => (
                   <Fragment key={label}>
-                    {"danger" in rest ? <MenuSeparator /> : null}
-                    <MenuRadioItem
+                    {"danger" in rest ? <DropdownMenuSeparator /> : null}
+                    <DropdownMenuRadioItem
                       value={label}
                       closeOnClick
                       className={
@@ -87,12 +80,12 @@ export function FormsWorkspaceSettingsShowcasePage() {
                         <Icon className="opacity-70" />
                         {label}
                       </span>
-                    </MenuRadioItem>
+                    </DropdownMenuRadioItem>
                   </Fragment>
                 ))}
-              </MenuRadioGroup>
-            </MenuPopup>
-          </Menu>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <aside className="hidden border-border/60 border-r py-8 md:block md:px-4">
@@ -171,8 +164,8 @@ export function FormsWorkspaceSettingsShowcasePage() {
                       setName(e.target.value);
                       setDirty(true);
                     }}
-                    nativeInput
-                  />
+                   
+                    />
                 </Field>
 
                 <Field label="Slug" htmlFor="ws-slug" hint="Used in URLs.">

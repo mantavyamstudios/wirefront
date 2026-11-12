@@ -2,6 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `checkout`).
+import { Spinner } from "@wirefront/ui/spinner";
 import { DevlFrame } from "./_devl-frame";
 import {
   CheckIcon,
@@ -32,8 +33,8 @@ import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
-import { Radio, RadioGroup } from "@wirefront/ui/radio-group";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { RadioGroupItem, RadioGroup } from "@wirefront/ui/radio-group";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 
 export type CheckoutArt = "mug" | "tote" | "candle" | "notebook";
 
@@ -310,7 +311,7 @@ function TextField({
         className={cn(mono && "font-mono tabular-nums")}
         id={id}
         {...props}
-      />
+       />
       <FieldNote error={error} hint={hint} id={id} />
     </div>
   );
@@ -502,13 +503,13 @@ export function Checkout({
               <SelectTrigger id={`${uid}-country`}>
                 <SelectValue />
               </SelectTrigger>
-              <SelectPopup>
+              <SelectContent align="start">
                 {countries.map((c) => (
                   <SelectItem key={c.value} value={c.value}>
                     {c.label}
                   </SelectItem>
                 ))}
-              </SelectPopup>
+              </SelectContent>
             </Select>
           </div>
           <TextField
@@ -566,13 +567,13 @@ export function Checkout({
                 <SelectTrigger aria-invalid={errors.region ? true : undefined} className="min-w-0" id={`${uid}-region`}>
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
-                <SelectPopup>
+                <SelectContent align="start">
                   {country.regions.map((r) => (
                     <SelectItem key={r} value={r}>
                       {r}
                     </SelectItem>
                   ))}
-                </SelectPopup>
+                </SelectContent>
               </Select>
               <FieldNote error={errors.region} id={`${uid}-region`} />
             </div>
@@ -610,7 +611,7 @@ export function Checkout({
                   )}
                   key={s.id}
                 >
-                  <Radio value={s.id} />
+                  <RadioGroupItem value={s.id} />
                   <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
                     <Icon className="size-4" />
                   </span>
@@ -705,7 +706,8 @@ export function Checkout({
           <Checkbox checked={v.sameBilling} onCheckedChange={(c) => set("sameBilling", Boolean(c))} />
           Billing address is the same as shipping
         </Label>
-        <Button className={cn("h-10 w-full text-sm sm:h-10", press)} loading={status === "paying"} size="lg" type="submit">
+        <Button className={cn("h-10 w-full text-sm sm:h-10", press)} size="lg" type="submit" disabled={status === "paying"} aria-busy={status === "paying"}>
+{status === "paying" ? <Spinner data-icon="inline-start" /> : null}
           <LockIcon />
           Pay <Tween value={total} />
         </Button>
@@ -810,7 +812,7 @@ export function Checkout({
                 }}
                 placeholder="Discount code"
                 value={promo}
-              />
+               />
               <Button className={press} disabled={!promo.trim()} type="submit" variant="outline">
                 Apply
               </Button>

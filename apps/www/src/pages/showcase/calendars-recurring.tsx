@@ -474,7 +474,7 @@ function Editor({
             }
             className="w-16"
             min={1}
-          />
+           />
           <span className="text-muted-foreground text-sm">
             {rule.interval > 1 ? `${unit}s` : unit}
           </span>
@@ -610,7 +610,7 @@ function Editor({
                     })
                   }
                   className="ml-auto w-20"
-                />
+                 />
               ) : null
             }
           />

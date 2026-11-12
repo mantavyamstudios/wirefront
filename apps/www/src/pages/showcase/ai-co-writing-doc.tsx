@@ -28,7 +28,7 @@ import { Fragment, type ReactNode, useEffect, useId, useState } from "react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type CollaboratorTone = "info" | "success" | "violet" | "warning";
@@ -456,7 +456,7 @@ export function CoWritingDoc({
             >
               <CheckIcon />
             </TooltipTrigger>
-            <TooltipPopup>Resolve</TooltipPopup>
+            <TooltipContent>Resolve</TooltipContent>
           </Tooltip>
         </div>
         {quote && (
@@ -580,10 +580,10 @@ export function CoWritingDoc({
                   </Avatar>
                   <span className={cn("absolute -bottom-0.5 left-1/2 h-0.5 w-3 -translate-x-1/2 rounded-full", toneCls[p.tone].caret)} />
                 </TooltipTrigger>
-                <TooltipPopup>
+                <TooltipContent>
                   {p.name}
                   {p.agent ? " · agent" : ""}
-                </TooltipPopup>
+                </TooltipContent>
               </Tooltip>
             ))}
           </div>
@@ -622,10 +622,10 @@ export function CoWritingDoc({
               >
                 <t.icon />
               </TooltipTrigger>
-              <TooltipPopup>
+              <TooltipContent>
                 {t.label}
                 {t.kbd && <Kbd className="ms-1.5">{t.kbd}</Kbd>}
-              </TooltipPopup>
+              </TooltipContent>
             </Tooltip>
           ))}
           <span className="mx-1.5 h-5 w-px shrink-0 bg-border" />

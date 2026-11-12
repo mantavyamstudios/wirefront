@@ -2,6 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `sign-up`).
+import { Spinner } from "@wirefront/ui/spinner";
 import { DevlFrame } from "./_devl-frame";
 import { CheckIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
@@ -100,7 +101,7 @@ export function SignUp({
         <form className="mt-8 flex w-full flex-col gap-4" noValidate onSubmit={submit}>
           <div className="flex flex-col gap-2">
             <Label htmlFor={`${id}-name`}>Name</Label>
-            <Input autoComplete="name" disabled={done} id={`${id}-name`} onChange={(e) => setName(e.target.value)} placeholder="Ada Lindqvist" value={name} />
+            <Input autoComplete="name" disabled={done} id={`${id}-name`} onChange={(e) => setName(e.target.value)} placeholder="Ada Lindqvist" value={name}  />
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor={`${id}-email`}>Work email</Label>
@@ -114,7 +115,7 @@ export function SignUp({
               placeholder="you@company.com"
               type="email"
               value={email}
-            />
+             />
             {emailError && (
               <p className="text-destructive-foreground text-xs" id={`${id}-email-error`}>
                 {emailError}
@@ -173,7 +174,8 @@ export function SignUp({
               {error}
             </p>
           )}
-          <Button className={cn("mt-2 w-full", done && "pointer-events-none")} loading={busy} type="submit">
+          <Button className={cn("mt-2 w-full", done && "pointer-events-none")} type="submit" disabled={busy} aria-busy={busy}>
+{busy ? <Spinner data-icon="inline-start" /> : null}
             {done ? (
               <motion.span animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-2" initial={reduce ? false : { opacity: 0, scale: 0.9 }}>
                 <CheckIcon />

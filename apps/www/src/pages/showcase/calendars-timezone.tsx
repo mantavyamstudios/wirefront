@@ -13,11 +13,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Popover,
-  PopoverPopup,
-  PopoverTrigger,
-} from "@wirefront/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 
 interface Zone {
   name: string;
@@ -497,7 +493,7 @@ function ZonePicker({
         <PlusIcon />
         Add timezone
       </PopoverTrigger>
-      <PopoverPopup
+      <PopoverContent
         className="!w-80 !p-0 overflow-hidden"
         side="top"
         align="start"
@@ -542,7 +538,7 @@ function ZonePicker({
             ))
           )}
         </ul>
-      </PopoverPopup>
+      </PopoverContent>
     </Popover>
   );
 }

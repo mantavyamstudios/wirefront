@@ -4,13 +4,7 @@ import { useState } from "react";
 import { ChevronRightIcon, ShieldCheckIcon } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import {
-  Card,
-  CardFooter,
-  CardHeader,
-  CardPanel,
-  CardTitle,
-} from "@wirefront/ui/card";
+import { Card, CardFooter, CardHeader, CardContent, CardTitle } from "@wirefront/ui/card";
 
 type Brand = "visa" | "mastercard" | "amex";
 
@@ -66,7 +60,7 @@ export function CardPaymentMethodShowcasePage() {
               exp={METHODS[0].exp}
             />
           </CardHeader>
-          <CardPanel className="pt-2">
+          <CardContent className="pt-2">
             <CardTitle className="font-heading text-base">
               On file ({METHODS.length})
             </CardTitle>
@@ -107,7 +101,7 @@ export function CardPaymentMethodShowcasePage() {
                 </li>
               ))}
             </ul>
-          </CardPanel>
+          </CardContent>
           <CardFooter className="flex-col items-stretch gap-2 border-t">
             <Button className="w-full">Add new card</Button>
             <p className="inline-flex items-center justify-center gap-1.5 text-muted-foreground text-xs">

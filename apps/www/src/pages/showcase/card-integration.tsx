@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CheckCircle2Icon, ChevronRightIcon } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { Card, CardPanel } from "@wirefront/ui/card";
+import { Card, CardContent } from "@wirefront/ui/card";
 import { Switch } from "@wirefront/ui/switch";
 
 interface Integration {
@@ -40,7 +40,7 @@ const INTEGRATIONS: Integration[] = [
     lastSync: "rate-limited · retrying",
     tone: "from-slate-500/20 to-slate-500/5",
     enabled: true,
-    scopes: ["org/scratchpad", "org/coss-ui"],
+    scopes: ["org/scratchpad", "org/wirefront"],
   },
   {
     slug: "linear",
@@ -99,7 +99,7 @@ function IntegrationCard({ item }: { item: Integration }) {
   const status: Integration["status"] = enabled ? item.status : "off";
   return (
     <Card className="overflow-hidden">
-      <CardPanel className="flex items-start gap-3 p-3 sm:items-center sm:gap-4 sm:p-4">
+      <CardContent className="flex items-start gap-3 p-3 sm:items-center sm:gap-4 sm:p-4">
         <div
           className={
             "flex size-10 shrink-0 items-center justify-center rounded-xl border bg-gradient-to-br font-heading font-semibold text-base sm:size-11 " +
@@ -152,7 +152,7 @@ function IntegrationCard({ item }: { item: Integration }) {
             <ChevronRightIcon />
           </Button>
         </div>
-      </CardPanel>
+      </CardContent>
     </Card>
   );
 }

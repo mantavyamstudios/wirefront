@@ -139,8 +139,7 @@ export function FormsApiKeyShowcasePage() {
             placeholder="e.g. CI deploy bot"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            nativeInput
-          />
+            />
           <p className="text-muted-foreground text-xs">
             For your own bookkeeping — visible to admins only.
           </p>

@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { Button } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
-import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { Textarea } from "@wirefront/ui/textarea";
 import {
   ArchiveIcon,
@@ -286,8 +286,8 @@ export function LayoutsTwoPaneShowcasePage() {
             <Button variant="ghost" size="icon-sm" aria-label="Delete" className="pointer-coarse:size-11">
               <Trash2Icon />
             </Button>
-            <Menu>
-              <MenuTrigger
+            <DropdownMenu>
+              <DropdownMenuTrigger
                 render={
                   <Button
                     variant="ghost"
@@ -298,19 +298,19 @@ export function LayoutsTwoPaneShowcasePage() {
                 }
               >
                 <MoreHorizontalIcon />
-              </MenuTrigger>
-              <MenuPopup align="end">
-                <MenuItem>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
                   <ReplyIcon /> Reply
-                </MenuItem>
-                <MenuItem>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
                   <ReplyIcon /> Reply all
-                </MenuItem>
-                <MenuItem>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
                   <ForwardIcon /> Forward
-                </MenuItem>
-              </MenuPopup>
-            </Menu>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 

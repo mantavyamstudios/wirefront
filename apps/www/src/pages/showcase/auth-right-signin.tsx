@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import { type FormEvent, useState } from "react";
 import { CheckIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
@@ -43,7 +44,7 @@ function HeroColumn() {
           Build orbit-class products.
         </h2>
         <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
-          A practical scratchpad of UI patterns built on coss-ui — fast,
+          A practical scratchpad of UI patterns built on shadcn/ui — fast,
           opinionated, accessible.
         </p>
 
@@ -245,8 +246,7 @@ function SignInForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          nativeInput
-        />
+          />
       </Field>
 
       <Field>
@@ -260,7 +260,6 @@ function SignInForm() {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            nativeInput
           />
           <InputGroupAddon align="inline-end">
             <button
@@ -279,7 +278,8 @@ function SignInForm() {
         </InputGroup>
       </Field>
 
-      <Button type="submit" size="lg" loading={pending} className="mt-1">
+      <Button type="submit" size="lg" className="mt-1" disabled={pending} aria-busy={pending}>
+{pending ? <Spinner data-icon="inline-start" /> : null}
         Sign in
       </Button>
     </form>

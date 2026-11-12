@@ -1046,7 +1046,7 @@ function AddHabitSheet({
                   placeholder="e.g. Meditate for 5 minutes"
                   ref={nameRef}
                   value={name}
-                />
+                 />
                 <AnimatePresence initial={false}>
                   {tried && invalid && (
                     <motion.p
@@ -1202,7 +1202,7 @@ function AddHabitSheet({
                           onChange={(e) => setUnit(e.target.value)}
                           placeholder="glasses, pages…"
                           value={unit}
-                        />
+                         />
                         <span className="shrink-0 text-muted-foreground">a day</span>
                       </div>
                     </motion.div>

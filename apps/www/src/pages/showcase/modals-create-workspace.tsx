@@ -9,17 +9,7 @@ import {
   PlusIcon,
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogContent, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
 import { Input } from "@wirefront/ui/input";
 
 type Visibility = "private" | "team" | "public";
@@ -66,7 +56,7 @@ export function ModalsCreateWorkspaceShowcasePage() {
           <PlusIcon />
           New workspace
         </DialogTrigger>
-        <DialogPopup>
+        <DialogContent>
           <DialogHeader className="flex-row items-center gap-3">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-foreground/[0.06]">
               <BuildingIcon className="size-4 opacity-80" />
@@ -79,7 +69,7 @@ export function ModalsCreateWorkspaceShowcasePage() {
             </div>
           </DialogHeader>
 
-          <DialogPanel className="space-y-5">
+          <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 space-y-5">
             <div>
               <label htmlFor="ws-create-name" className="mb-1.5 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 Workspace name
@@ -89,7 +79,7 @@ export function ModalsCreateWorkspaceShowcasePage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Acme studios"
-              />
+               />
               <div className="mt-1.5 text-muted-foreground text-xs">
                 14 / 50
               </div>
@@ -154,7 +144,7 @@ export function ModalsCreateWorkspaceShowcasePage() {
                 })}
               </div>
             </div>
-          </DialogPanel>
+          </div>
 
           <DialogFooter className="sm:items-center">
             <span className="text-center text-muted-foreground text-xs sm:me-auto sm:text-left">
@@ -163,7 +153,7 @@ export function ModalsCreateWorkspaceShowcasePage() {
             <DialogClose render={<Button variant="ghost" type="button" />}>Cancel</DialogClose>
             <Button type="button">Create workspace</Button>
           </DialogFooter>
-        </DialogPopup>
+        </DialogContent>
       </Dialog>
       </div>
     </div>

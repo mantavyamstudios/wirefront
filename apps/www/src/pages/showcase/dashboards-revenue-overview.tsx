@@ -38,9 +38,9 @@ import {
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@wirefront/ui/empty";
-import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type RangeKey = "7d" | "30d" | "90d" | "12m";
@@ -639,7 +639,7 @@ function RangeSwitch({ value, onChange }: { value: RangeKey; onChange: (v: Range
     0,
     RANGES.findIndex((r) => r.value === value),
   );
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+  const onKeyDown = (e: KeyboardEvent<HTMLFieldSetElement>) => {
     const moves: Record<string, number> = {
       ArrowRight: index + 1,
       ArrowDown: index + 1,
@@ -1283,7 +1283,7 @@ function RailButton({ label, active, icon: Icon, onClick }: { label: string; act
       >
         <Icon aria-hidden className="size-4" />
       </TooltipTrigger>
-      <TooltipPopup side="right">{label}</TooltipPopup>
+      <TooltipContent side="right">{label}</TooltipContent>
     </Tooltip>
   );
 }
@@ -1437,23 +1437,23 @@ export function RevenueStory({
               {status ?? "Updated 2 min ago"}
             </span>
             {section.label === "Revenue" && (
-              <Menu>
-                <MenuTrigger render={<Button className={pressable} size="sm" variant="outline" />}>
+              <DropdownMenu>
+                <DropdownMenuTrigger render={<Button className={pressable} size="sm" variant="outline" />}>
                   <DownloadIcon />
                   Export
                   <ChevronDownIcon className="-me-0.5 opacity-60" />
-                </MenuTrigger>
-                <MenuPopup align="end" className="min-w-48">
-                  <MenuItem onClick={copySummary}>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="min-w-48">
+                  <DropdownMenuItem onClick={copySummary}>
                     <ClipboardIcon />
                     Copy summary
-                  </MenuItem>
-                  <MenuItem onClick={downloadCsv}>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={downloadCsv}>
                     <DownloadIcon />
                     Download CSV
-                  </MenuItem>
-                </MenuPopup>
-              </Menu>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </header>
 

@@ -49,4 +49,4 @@ Requires Node 24 and npm 10 or later.
 
 ## Licence
 
-Wirefront is [AGPL-3.0](LICENSE). By contributing you agree to the [CLA](CLA.md). Code from devl.dev and coss ui keeps its original notice, listed in [NOTICE.md](NOTICE.md).
+Wirefront is [AGPL-3.0](LICENSE). By contributing you agree to the [CLA](CLA.md). Code from devl.dev and shadcn/ui keeps its original notice, listed in [NOTICE.md](NOTICE.md).

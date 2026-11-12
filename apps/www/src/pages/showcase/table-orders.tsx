@@ -107,7 +107,8 @@ export function TableOrdersShowcasePage() {
           and Total (+ stage). Customer and a text status return at sm, Items at
           md, the stage tracker and Carrier at lg.
         */}
-        <Table variant="card">
+        <div className="overflow-hidden rounded-xl border bg-card">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>
@@ -174,6 +175,7 @@ export function TableOrdersShowcasePage() {
             })}
           </TableBody>
         </Table>
+        </div>
       </div>
 
       {/* Phones: bulk actions dock to the bottom while rows are selected. */}

@@ -39,6 +39,18 @@ import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 
+// shadcn's Badge has no status tones; render them as a secondary badge with
+// Wirefront's semantic tokens.
+const TONE_CLASS = {
+  success: "bg-success/8 text-success-foreground dark:bg-success/16",
+  warning: "bg-warning/8 text-warning-foreground dark:bg-warning/16",
+  info: "bg-info/8 text-info-foreground dark:bg-info/16",
+  error: "bg-destructive/8 text-destructive-foreground dark:bg-destructive/16",
+} as const;
+type BadgeVariant = "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
+const badgeVariant = (v: string): BadgeVariant => (v in TONE_CLASS ? "secondary" : (v as BadgeVariant));
+const badgeTone = (v: string): string | undefined => TONE_CLASS[v as keyof typeof TONE_CLASS];
+
 export type MoneyCategory = "groceries" | "dining" | "transport" | "shopping" | "home" | "fun" | "income";
 
 export interface MoneyAccount {
@@ -521,7 +533,7 @@ export function Money({
               {n.icon}
               <span className="flex-1">{n.label}</span>
               {n.badge ? (
-                <Badge className="tabular-nums" size="sm" variant="secondary">
+                <Badge className="h-4.5 rounded-sm px-1 text-[0.625rem] tabular-nums" variant="secondary">
                   {n.badge}
                 </Badge>
               ) : null}
@@ -625,7 +637,7 @@ export function Money({
               <Odometer format={money} value={shown} />
             </span>
           </div>
-          <Badge className="mb-1.5" size="lg" variant={since >= 0 ? "success" : "error"}>
+          <Badge variant={badgeVariant(since >= 0 ? "success" : "error")} className={cn(badgeTone(since >= 0 ? "success" : "error"), "h-6 px-2.5 text-sm mb-1.5")}>
             <Tween format={(n) => `${n >= 0 ? "+" : "−"}${money(Math.abs(n))}`} value={since} />
             <span className="font-normal opacity-80">in 30 days</span>
           </Badge>

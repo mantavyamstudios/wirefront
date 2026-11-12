@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { cn } from "@wirefront/ui/lib/utils";
 import {
   CheckIcon,
   CircleDashedIcon,
@@ -21,7 +22,7 @@ import {
   InputGroupInput,
 } from "@wirefront/ui/input-group";
 import { Label } from "@wirefront/ui/label";
-import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 import { Separator } from "@wirefront/ui/separator";
 import {
   Table,
@@ -146,7 +147,7 @@ export function TableIssuesShowcasePage() {
                     className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent"
                   >
                     <Checkbox value={p} />
-                    <Badge variant="outline" size="sm" className={"font-mono text-[10px] " + PRIORITY_META[p].cls}>
+                    <Badge variant="outline" className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", "font-mono text-[10px] " + PRIORITY_META[p].cls)}>
                       {PRIORITY_META[p].label}
                     </Badge>
                   </Label>
@@ -188,7 +189,7 @@ export function TableIssuesShowcasePage() {
                     className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent"
                   >
                     <Checkbox value={label} />
-                    <Badge variant="outline" size="sm" className={"text-[10px] " + LABEL_TONE[label]}>
+                    <Badge variant="outline" className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", "text-[10px] " + LABEL_TONE[label])}>
                       {label}
                     </Badge>
                   </Label>
@@ -250,8 +251,7 @@ export function TableIssuesShowcasePage() {
                         {issue.id}
                         <Badge
                           variant="outline"
-                          size="sm"
-                          className={"font-mono text-[10px] sm:hidden " + PRIORITY_META[issue.priority].cls}
+                          className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", "font-mono text-[10px] sm:hidden " + PRIORITY_META[issue.priority].cls)}
                         >
                           {PRIORITY_META[issue.priority].label}
                         </Badge>
@@ -262,8 +262,7 @@ export function TableIssuesShowcasePage() {
                           <Badge
                             key={lbl}
                             variant="outline"
-                            size="sm"
-                            className={"shrink-0 text-[10px] " + (LABEL_TONE[lbl] ?? "")}
+                            className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", "shrink-0 text-[10px] " + (LABEL_TONE[lbl] ?? ""))}
                           >
                             {lbl}
                           </Badge>
@@ -273,8 +272,7 @@ export function TableIssuesShowcasePage() {
                     <TableCell className="max-sm:hidden">
                       <Badge
                         variant="outline"
-                        size="sm"
-                        className={"font-mono text-[10px] " + PRIORITY_META[issue.priority].cls}
+                        className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", "font-mono text-[10px] " + PRIORITY_META[issue.priority].cls)}
                       >
                         {PRIORITY_META[issue.priority].label}
                       </Badge>
@@ -352,14 +350,13 @@ function FacetButton({
                     <Badge
                       key={c}
                       variant="secondary"
-                      size="sm"
-                      className="font-mono text-[10px]"
+                      className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px]"
                     >
                       {c}
                     </Badge>
                   ))
                 ) : (
-                  <Badge variant="secondary" size="sm" className="font-mono text-[10px]">
+                  <Badge variant="secondary" className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px]">
                     {count}
                   </Badge>
                 )}
@@ -368,7 +365,7 @@ function FacetButton({
           </Button>
         }
       />
-      <PopoverPopup className="w-60 p-0">{children}</PopoverPopup>
+      <PopoverContent className="w-60 p-0">{children}</PopoverContent>
     </Popover>
   );
 }

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import { type FormEvent, useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
@@ -210,9 +211,8 @@ function SignupForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          nativeInput
           className="border-white/15 bg-white/[0.06] text-white placeholder:text-white/50 hover:bg-white/[0.08] focus-visible:border-white/30"
-        />
+          />
       </Field>
 
       <Field>
@@ -229,7 +229,6 @@ function SignupForm() {
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            nativeInput
             className="text-white placeholder:text-white/50"
           />
           <InputGroupAddon align="inline-end">
@@ -252,9 +251,9 @@ function SignupForm() {
       <Button
         type="submit"
         size="lg"
-        loading={pending}
         className="mt-2 border-transparent bg-white text-[#0a0a0c] hover:bg-white/90 [&_[data-slot=button-loading-indicator]]:text-[#0a0a0c]"
-      >
+       disabled={pending} aria-busy={pending}>
+{pending ? <Spinner data-icon="inline-start" /> : null}
         Create account
       </Button>
     </form>

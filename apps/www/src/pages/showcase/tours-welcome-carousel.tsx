@@ -9,14 +9,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogDescription,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogClose, DialogDescription, DialogContent, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
 
 interface Step {
   Icon: React.ComponentType<{ className?: string }>;
@@ -83,7 +76,7 @@ export function ToursWelcomeCarouselShowcasePage() {
             Show welcome tour
           </DialogTrigger>
         </div>
-        <DialogPopup
+        <DialogContent
           showCloseButton={false}
           className="overflow-hidden p-0 sm:max-w-md"
           onKeyDown={(e) => {
@@ -177,7 +170,7 @@ export function ToursWelcomeCarouselShowcasePage() {
               )}
             </div>
           </div>
-        </DialogPopup>
+        </DialogContent>
       </Dialog>
     </div>
   );

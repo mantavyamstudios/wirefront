@@ -3,7 +3,7 @@
 import { ArrowDownToLineIcon, ExternalLinkIcon } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { Card, CardPanel } from "@wirefront/ui/card";
+import { Card, CardContent } from "@wirefront/ui/card";
 
 type Status = "paid" | "open" | "overdue" | "void";
 
@@ -88,7 +88,7 @@ export function CardInvoiceShowcasePage() {
 function InvoiceCard({ invoice }: { invoice: Invoice }) {
   return (
     <Card className="transition-shadow hover:shadow-md">
-      <CardPanel className="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
+      <CardContent className="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
         {/* The status tile repeats the badge; drop it on phones to give the customer name room. */}
         <div
           className={
@@ -132,7 +132,7 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
             <ExternalLinkIcon />
           </Button>
         </div>
-      </CardPanel>
+      </CardContent>
     </Card>
   );
 }

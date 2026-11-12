@@ -21,7 +21,7 @@ import {
   InputGroupInput,
 } from "@wirefront/ui/input-group";
 import { Label } from "@wirefront/ui/label";
-import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 import { Separator } from "@wirefront/ui/separator";
 
 type StatusKey = "todo" | "in-progress" | "in-review" | "done";
@@ -264,7 +264,7 @@ export function FilterFacetedShowcasePage() {
                   </Button>
                 }
               />
-              <PopoverPopup className="w-56 p-1">
+              <PopoverContent className="w-56 p-1">
                 <div className="px-2 pt-1 pb-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
                   Add filter
                 </div>
@@ -272,7 +272,7 @@ export function FilterFacetedShowcasePage() {
                   Custom fields aren't wired up in this demo — open the
                   facets above instead.
                 </p>
-              </PopoverPopup>
+              </PopoverContent>
             </Popover>
           </div>
 
@@ -356,8 +356,7 @@ function FacetTrigger({
                 <Separator orientation="vertical" className="mx-1 h-3" />
                 <Badge
                   variant="secondary"
-                  size="sm"
-                  className="font-mono text-[10px]"
+                  className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px]"
                 >
                   {count}
                 </Badge>
@@ -367,8 +366,7 @@ function FacetTrigger({
                       <Badge
                         key={s}
                         variant="secondary"
-                        size="sm"
-                        className="font-mono text-[10px]"
+                        className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px]"
                       >
                         {labelFor(s) ?? s}
                       </Badge>
@@ -380,7 +378,7 @@ function FacetTrigger({
           </Button>
         }
       />
-      <PopoverPopup className="w-[min(16rem,calc(100vw-2rem))] p-0">
+      <PopoverContent className="w-[min(16rem,calc(100vw-2rem))] p-0">
         <div className="flex flex-col">
           <FacetSearch placeholder={`Filter ${label.toLowerCase()}…`} />
           <Separator />
@@ -401,7 +399,7 @@ function FacetTrigger({
             </span>
           </div>
         </div>
-      </PopoverPopup>
+      </PopoverContent>
     </Popover>
   );
 }

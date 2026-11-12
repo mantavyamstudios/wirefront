@@ -2,16 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { useState } from "react";
 import { TriangleAlertIcon, Trash2Icon } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogClose,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogPopup,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@wirefront/ui/alert-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogTitle, AlertDialogTrigger } from "@wirefront/ui/alert-dialog";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 
@@ -44,7 +35,7 @@ export function ModalsConfirmDeleteShowcasePage() {
               <Trash2Icon />
               Delete workspace
             </AlertDialogTrigger>
-            <AlertDialogPopup className="sm:max-w-md">
+            <AlertDialogContent className="sm:max-w-md">
               <AlertDialogHeader className="sm:flex-row sm:items-start sm:gap-3">
                 <div className="mx-auto flex size-9 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive sm:mx-0">
                   <TriangleAlertIcon className="size-4" />
@@ -75,19 +66,19 @@ export function ModalsConfirmDeleteShowcasePage() {
                   autoCapitalize="none"
                   spellCheck={false}
                   className="mt-2 font-mono"
-                />
+                 />
               </div>
 
               <AlertDialogFooter>
-                <AlertDialogClose render={<Button variant="ghost" type="button" />}>
+                <AlertDialogCancel render={<Button variant="ghost" type="button" />}>
                   Cancel
-                </AlertDialogClose>
+                </AlertDialogCancel>
                 <Button type="button" variant="destructive" disabled={!matches}>
                   <Trash2Icon />
                   Delete forever
                 </Button>
               </AlertDialogFooter>
-            </AlertDialogPopup>
+            </AlertDialogContent>
           </AlertDialog>
         </div>
       </div>

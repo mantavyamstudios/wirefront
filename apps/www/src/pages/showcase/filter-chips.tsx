@@ -17,14 +17,8 @@ import {
   InputGroupInput,
 } from "@wirefront/ui/input-group";
 import { Label } from "@wirefront/ui/label";
-import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
-import {
-  Select,
-  SelectItem,
-  SelectPopup,
-  SelectTrigger,
-  SelectValue,
-} from "@wirefront/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Separator } from "@wirefront/ui/separator";
 import { Slider } from "@wirefront/ui/slider";
 
@@ -166,7 +160,6 @@ export function FilterChipsShowcasePage() {
                 placeholder="Search customers…"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                nativeInput
               />
             </InputGroup>
             <Separator orientation="vertical" className="mx-1 h-6 max-sm:hidden" />
@@ -339,7 +332,7 @@ function AddFilterPopover({
           </Button>
         }
       />
-      <PopoverPopup className="w-48 p-1">
+      <PopoverContent className="w-48 p-1">
         <div className="px-2 pt-1 pb-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
           Add filter
         </div>
@@ -359,7 +352,7 @@ function AddFilterPopover({
             </button>
           ))
         )}
-      </PopoverPopup>
+      </PopoverContent>
     </Popover>
   );
 }
@@ -426,7 +419,7 @@ function ChipShell({
             </button>
           }
         />
-        <PopoverPopup className="w-[min(14rem,calc(100vw-2rem))] p-2">{editor}</PopoverPopup>
+        <PopoverContent className="w-[min(14rem,calc(100vw-2rem))] p-2">{editor}</PopoverContent>
       </Popover>
       <button
         type="button"
@@ -494,13 +487,13 @@ function PlanEditor({
       <SelectTrigger size="sm">
         <SelectValue />
       </SelectTrigger>
-      <SelectPopup>
+      <SelectContent align="start">
         {opts.map((o) => (
           <SelectItem key={o.value} value={o.value}>
             {o.label}
           </SelectItem>
         ))}
-      </SelectPopup>
+      </SelectContent>
     </Select>
   );
 }
@@ -629,7 +622,6 @@ function TagEditor({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="h-8 text-sm"
-        nativeInput
       />
     </InputGroup>
   );
@@ -673,8 +665,7 @@ function CustomerList({ customers }: { customers: Customer[] }) {
           </div>
           <Badge
             variant="outline"
-            size="sm"
-            className="font-mono text-[10px] uppercase max-sm:hidden"
+            className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px] uppercase max-sm:hidden"
           >
             {c.status}
           </Badge>

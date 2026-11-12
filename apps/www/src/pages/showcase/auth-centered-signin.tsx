@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import { type FormEvent, useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardPanel,
-} from "@wirefront/ui/card";
+import { Card, CardHeader, CardContent } from "@wirefront/ui/card";
 import { Field, FieldLabel } from "@wirefront/ui/field";
 import { Input } from "@wirefront/ui/input";
 import {
@@ -35,12 +32,12 @@ export function AuthCenteredSigninShowcasePage() {
             </div>
           </CardHeader>
 
-          <CardPanel className="mt-6 flex flex-col gap-5 p-0">
+          <CardContent className="mt-6 flex flex-col gap-5 p-0">
             <OAuthRow />
             <OrSeparator />
             <SignInForm />
             <FooterLinks />
-          </CardPanel>
+          </CardContent>
         </Card>
       </div>
     </div>
@@ -148,8 +145,7 @@ function SignInForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          nativeInput
-        />
+          />
       </Field>
 
       <Field>
@@ -163,7 +159,6 @@ function SignInForm() {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            nativeInput
           />
           <InputGroupAddon align="inline-end">
             <button
@@ -182,7 +177,8 @@ function SignInForm() {
         </InputGroup>
       </Field>
 
-      <Button type="submit" size="lg" loading={pending} className="mt-1 w-full">
+      <Button type="submit" size="lg" className="mt-1 w-full" disabled={pending} aria-busy={pending}>
+{pending ? <Spinner data-icon="inline-start" /> : null}
         Sign in
       </Button>
     </form>

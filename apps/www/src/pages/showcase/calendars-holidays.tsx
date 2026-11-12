@@ -12,11 +12,7 @@ import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
-import {
-  Popover,
-  PopoverPopup,
-  PopoverTrigger,
-} from "@wirefront/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 
 type BlockType = "vacation" | "sick" | "remote";
 
@@ -545,9 +541,9 @@ function AddMemberPopover({
         <PlusIcon />
         Add member
       </PopoverTrigger>
-      <PopoverPopup className="!w-72 !p-0" side="bottom" align="end">
+      <PopoverContent className="!w-72 !p-0" side="bottom" align="end">
         <PopoverInner onSubmit={submit} name={name} setName={setName} role={role} setRole={setRole} />
-      </PopoverPopup>
+      </PopoverContent>
     </Popover>
   );
 }
@@ -585,8 +581,7 @@ function PopoverInner({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Avery Stone"
-          nativeInput
-        />
+          />
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="member-role" className="font-mono text-[10px] uppercase tracking-[0.25em]">
@@ -597,8 +592,7 @@ function PopoverInner({
           value={role}
           onChange={(e) => setRole(e.target.value)}
           placeholder="Engineering"
-          nativeInput
-        />
+          />
       </div>
       <div className="flex justify-end">
         <Button size="sm" type="submit" disabled={!name.trim()}>

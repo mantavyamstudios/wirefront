@@ -4,13 +4,7 @@ import { MailIcon, MapPinIcon, MessageSquareIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import {
-  Card,
-  CardFooter,
-  CardHeader,
-  CardPanel,
-  CardTitle,
-} from "@wirefront/ui/card";
+import { Card, CardFooter, CardHeader, CardContent, CardTitle } from "@wirefront/ui/card";
 import { Separator } from "@wirefront/ui/separator";
 
 export function CardProfileShowcasePage() {
@@ -35,7 +29,7 @@ export function CardProfileShowcasePage() {
               Senior Engineer · Platform team
             </p>
           </CardHeader>
-          <CardPanel className="pt-2">
+          <CardContent className="pt-2">
             <div className="flex flex-col gap-1.5 text-muted-foreground text-sm">
               <div className="flex items-center gap-2">
                 <MapPinIcon className="size-3.5" />
@@ -52,7 +46,7 @@ export function CardProfileShowcasePage() {
               <Stat label="PRs merged" value="89" />
               <Stat label="On-call" value="12d" />
             </div>
-          </CardPanel>
+          </CardContent>
           <CardFooter className="gap-2 border-t bg-background">
             <Button className="flex-1">
               <MessageSquareIcon />

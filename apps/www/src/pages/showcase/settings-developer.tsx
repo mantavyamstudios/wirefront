@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { cn } from "@wirefront/ui/lib/utils";
 import { useState } from "react";
 import { TerminalIcon } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { Radio, RadioGroup } from "@wirefront/ui/radio-group";
+import { RadioGroupItem, RadioGroup } from "@wirefront/ui/radio-group";
 import { Separator } from "@wirefront/ui/separator";
 import { Switch } from "@wirefront/ui/switch";
 
@@ -258,11 +259,10 @@ export function SettingsDeveloperShowcasePage() {
                             </code>
                             <Badge
                               variant="outline"
-                              size="sm"
-                              className={
+                              className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", 
                                 "font-mono text-[10px] uppercase tracking-[0.15em] " +
                                 status.className
-                              }
+                              )}
                             >
                               {status.label}
                             </Badge>
@@ -358,13 +358,13 @@ export function SettingsDeveloperShowcasePage() {
                 {
                   value: "production",
                   label: "Production",
-                  host: "api.coss.dev",
+                  host: "api.example.dev",
                   tone: "text-emerald-600 dark:text-emerald-400",
                 },
                 {
                   value: "staging",
                   label: "Staging",
-                  host: "api.staging.coss.dev",
+                  host: "api.staging.example.dev",
                   tone: "text-sky-600 dark:text-sky-400",
                 },
                 {
@@ -386,7 +386,7 @@ export function SettingsDeveloperShowcasePage() {
                       : "border-border/60 hover:border-foreground/20")
                   }
                 >
-                  <Radio value={opt.value} className="mt-0.5" />
+                  <RadioGroupItem value={opt.value} className="mt-0.5" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-medium text-sm">{opt.label}</span>

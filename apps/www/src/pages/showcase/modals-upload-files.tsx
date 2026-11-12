@@ -10,16 +10,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogFooter,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogClose, DialogFooter, DialogHeader, DialogContent, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
 
 interface UploadFile {
   name: string;
@@ -53,12 +44,12 @@ export function ModalsUploadFilesShowcasePage() {
           <CloudUploadIcon />
           Upload
         </DialogTrigger>
-        <DialogPopup className="sm:max-w-xl">
+        <DialogContent className="sm:max-w-xl">
           <DialogHeader>
             <DialogTitle className="text-base">Upload assets</DialogTitle>
           </DialogHeader>
 
-          <DialogPanel>
+          <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4">
             <label className="block cursor-pointer rounded-xl border-2 border-dashed border-border/70 bg-background px-6 py-8 text-center transition-colors hover:border-foreground/40 hover:bg-muted/60">
               <input type="file" multiple className="sr-only" />
               <div className="mx-auto flex size-10 items-center justify-center rounded-full bg-foreground/[0.06]">
@@ -162,7 +153,7 @@ export function ModalsUploadFilesShowcasePage() {
                 ))}
               </ul>
             </div>
-          </DialogPanel>
+          </div>
 
           <DialogFooter>
             <Button variant="ghost" type="button">
@@ -170,7 +161,7 @@ export function ModalsUploadFilesShowcasePage() {
             </Button>
             <DialogClose render={<Button type="button" />}>Done</DialogClose>
           </DialogFooter>
-        </DialogPopup>
+        </DialogContent>
       </Dialog>
       </div>
     </div>

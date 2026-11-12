@@ -26,20 +26,12 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type CSSProperties, type FormEvent, Fragment, type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { cn } from "@wirefront/ui/lib/utils";
-import {
-  AlertDialog,
-  AlertDialogClose,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogPopup,
-  AlertDialogTitle,
-} from "@wirefront/ui/alert-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogTitle } from "@wirefront/ui/alert-dialog";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 
 export type SettingsSectionId =
   | "profile"
@@ -379,7 +371,7 @@ function RoleSelect({
       <SelectTrigger aria-label={label} className={cn("w-32 min-w-0", className)} size="sm">
         <SelectValue />
       </SelectTrigger>
-      <SelectPopup alignItemWithTrigger={false} className="w-64">
+      <SelectContent alignItemWithTrigger={false} className="w-64" align="start">
         {options.map((r) => (
           <SelectItem className="items-start py-1.5 [&>span:first-child]:mt-0.5" key={r.id} value={r.id}>
             <span className="flex flex-col">
@@ -388,7 +380,7 @@ function RoleSelect({
             </span>
           </SelectItem>
         ))}
-      </SelectPopup>
+      </SelectContent>
     </Select>
   );
 }
@@ -740,7 +732,7 @@ export function TeamRoles({
                     placeholder="name@company.com"
                     type="email"
                     value={email}
-                  />
+                   />
                   {inviteError && (
                     <p className="px-0.5 text-destructive-foreground text-xs" id={`${id}-invite-error`}>
                       {inviteError}
@@ -818,8 +810,8 @@ export function TeamRoles({
                                 m.lastActive
                               )}
                             </span>
-                            <Menu>
-                              <MenuTrigger
+                            <DropdownMenu>
+                              <DropdownMenuTrigger
                                 render={
                                   <Button
                                     aria-label={`Actions for ${m.name}`}
@@ -830,14 +822,14 @@ export function TeamRoles({
                                 }
                               >
                                 <EllipsisIcon />
-                              </MenuTrigger>
-                              <MenuPopup align="end" className="w-52">
-                                <MenuItem onClick={() => navigator.clipboard?.writeText(m.email).catch(() => {})}>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-52">
+                                <DropdownMenuItem onClick={() => navigator.clipboard?.writeText(m.email).catch(() => {})}>
                                   <CopyIcon />
                                   Copy email
-                                </MenuItem>
-                                <MenuSeparator />
-                                <MenuItem
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
                                   disabled={role?.locked || you}
                                   onClick={() => {
                                     setRemoving(m);
@@ -847,9 +839,9 @@ export function TeamRoles({
                                 >
                                   <UserMinusIcon />
                                   {role?.locked ? "Owner can’t be removed" : "Remove from workspace"}
-                                </MenuItem>
-                              </MenuPopup>
-                            </Menu>
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         </motion.li>
                       );
@@ -1041,7 +1033,7 @@ export function TeamRoles({
           </div>
 
       <AlertDialog onOpenChange={setRemoveOpen} open={removeOpen}>
-        <AlertDialogPopup>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Remove {removing?.name}?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -1049,8 +1041,8 @@ export function TeamRoles({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogClose render={<Button variant="ghost" />}>Cancel</AlertDialogClose>
-            <AlertDialogClose
+            <AlertDialogCancel render={<Button variant="ghost" />}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel
               render={
                 <Button
                   onClick={() => {
@@ -1068,9 +1060,9 @@ export function TeamRoles({
               }
             >
               Remove
-            </AlertDialogClose>
+            </AlertDialogCancel>
           </AlertDialogFooter>
-        </AlertDialogPopup>
+        </AlertDialogContent>
       </AlertDialog>
     </RidgelineShell>
   );

@@ -15,11 +15,12 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@wirefront/ui": "*",
+    "@base-ui/react": "^1.4.0",
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/react-router": "^1.138.0",
     "@tanstack/react-start": "^1.138.0",
     "@vercel/og": "^0.10.0",
+    "@wirefront/ui": "*",
     "motion": "^14.9.1",
     "nitro": "^3.0.260415-beta",
     "prism-react-renderer": "^2.4.1",

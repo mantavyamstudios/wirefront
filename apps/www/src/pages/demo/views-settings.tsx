@@ -104,8 +104,8 @@ function GeneralPane() {
               setName(e.target.value);
               setDirty(true);
             }}
-            nativeInput
-          />
+           
+            />
         </Field>
 
         <Field label="URL" htmlFor="ws-slug" hint="orbit.so/<slug>">
@@ -433,9 +433,8 @@ function DangerPane() {
             placeholder={ws.name}
             value={phrase}
             onChange={(e) => setPhrase(e.target.value)}
-            nativeInput
             className="mt-2 font-mono"
-          />
+            />
         </div>
 
         <div className="mt-4 flex items-center justify-end gap-2">

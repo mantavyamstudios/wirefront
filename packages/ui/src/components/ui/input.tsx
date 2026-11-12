@@ -1,73 +1,21 @@
-// SPDX-License-Identifier: AGPL-3.0-only
-// coss ui © Cal.com, Inc. — https://coss.com/ui · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-"use client";
+// SPDX-License-Identifier: MIT
+// shadcn/ui (base-nova style) © 2023 shadcn — https://ui.shadcn.com · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
+import * as React from "react"
+import { Input as InputPrimitive } from "@base-ui/react/input"
+import { cn } from "../../lib/utils"
 
-import { Input as InputPrimitive } from "@base-ui/react/input";
-import type * as React from "react";
-import { cn } from "../../lib/utils";
-
-export type InputProps = Omit<
-  InputPrimitive.Props & React.RefAttributes<HTMLInputElement>,
-  "size"
-> & {
-  size?: "sm" | "default" | "lg" | number;
-  unstyled?: boolean;
-  nativeInput?: boolean;
-};
-
-export function Input({
-  className,
-  size = "default",
-  unstyled = false,
-  nativeInput = false,
-  ...props
-}: InputProps): React.ReactElement {
-  const inputClassName = cn(
-    "box-border h-9 w-full min-w-0 rounded-[inherit] px-[calc(--spacing(3)-1px)] py-0 leading-9 outline-none [transition:background-color_5000000s_ease-in-out_0s] placeholder:text-muted-foreground/72 sm:h-8 sm:leading-8",
-    size === "sm" &&
-      "h-8 px-[calc(--spacing(2.5)-1px)] leading-8 sm:h-7 sm:leading-7",
-    size === "lg" && "h-10 leading-10 sm:h-9 sm:leading-9",
-    props.type === "search" &&
-      "[&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-results-button]:appearance-none [&::-webkit-search-results-decoration]:appearance-none",
-    props.type === "file" &&
-      "text-muted-foreground file:me-3 file:bg-transparent file:font-medium file:text-foreground file:text-sm",
-  );
-
+function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
-    <span
-      className={
-        cn(
-          !unstyled &&
-            "relative inline-flex w-full rounded-lg border border-input bg-background not-dark:bg-clip-padding text-base text-foreground shadow-xs/5 ring-ring/24 transition-shadow before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] not-has-disabled:not-has-focus-visible:not-has-aria-invalid:before:shadow-[0_1px_--theme(--color-black/4%)] has-focus-visible:has-aria-invalid:border-destructive/64 has-focus-visible:has-aria-invalid:ring-destructive/16 has-aria-invalid:border-destructive/36 has-focus-visible:border-ring has-autofill:bg-foreground/4 has-disabled:opacity-64 has-[:disabled,:focus-visible,[aria-invalid]]:shadow-none has-focus-visible:ring-[3px] sm:text-sm dark:bg-input/32 dark:has-autofill:bg-foreground/8 dark:has-aria-invalid:ring-destructive/24 dark:not-has-disabled:not-has-focus-visible:not-has-aria-invalid:before:shadow-[0_-1px_--theme(--color-white/6%)]",
-          className,
-        ) || undefined
-      }
-      data-size={size}
-      data-slot="input-control"
-    >
-      {nativeInput ? (
-        (() => {
-          const { style, ...rest } = props;
-          return (
-            <input
-              className={inputClassName}
-              data-slot="input"
-              size={typeof size === "number" ? size : undefined}
-              style={typeof style === "function" ? undefined : style}
-              {...rest}
-            />
-          );
-        })()
-      ) : (
-        <InputPrimitive
-          className={inputClassName}
-          data-slot="input"
-          size={typeof size === "number" ? size : undefined}
-          {...props}
-        />
+    <InputPrimitive
+      type={type}
+      data-slot="input"
+      className={cn(
+        "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        className
       )}
-    </span>
-  );
+      {...props}
+    />
+  )
 }
 
-export { InputPrimitive };
+export { Input }

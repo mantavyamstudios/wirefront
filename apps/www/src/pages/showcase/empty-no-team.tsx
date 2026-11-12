@@ -35,7 +35,7 @@ export function EmptyNoTeamShowcasePage() {
                 Invite link
               </span>
             </InputGroupAddon>
-            <InputGroupInput readOnly value={inviteUrl} aria-label="Invite link" className="min-w-0 truncate" nativeInput />
+            <InputGroupInput readOnly value={inviteUrl} aria-label="Invite link" className="min-w-0 truncate" />
             <InputGroupAddon align="inline-end">
               <Button size="xs" variant="ghost" type="button">
                 <CopyIcon />

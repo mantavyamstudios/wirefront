@@ -82,8 +82,7 @@ function FormCard() {
             id="ent-name"
             placeholder="Mantavyam"
             autoComplete="name"
-            nativeInput
-          />
+            />
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="ent-co">Company</Label>
@@ -91,8 +90,7 @@ function FormCard() {
             id="ent-co"
             placeholder="Acme inc."
             autoComplete="organization"
-            nativeInput
-          />
+            />
         </div>
       </div>
 
@@ -104,8 +102,7 @@ function FormCard() {
             type="email"
             placeholder="you@company.com"
             autoComplete="email"
-            nativeInput
-          />
+            />
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="ent-seats">Estimated seats</Label>

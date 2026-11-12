@@ -15,7 +15,7 @@ import {
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 
 const PRIMARY = [
   { icon: HomeIcon, label: "Home" },
@@ -56,10 +56,10 @@ export function SidebarsWorkspaceRailShowcasePage() {
           >
             <MenuIcon className="size-5" />
           </SheetTrigger>
-          <SheetPopup side="left" className="max-w-[300px] bg-background">
+          <SheetContent side="left" className="max-w-[300px] bg-background">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <RailContent inSheet onNavigate={() => setNavOpen(false)} />
-          </SheetPopup>
+          </SheetContent>
         </Sheet>
         <WorkspaceMark />
         <span className="truncate font-medium text-sm">Acme inc.</span>

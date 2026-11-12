@@ -42,8 +42,8 @@ import {
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
-import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type ChatTone = "blue" | "orange" | "teal" | "violet" | "rose" | "amber" | "emerald" | "sky";
@@ -676,7 +676,7 @@ function EmojiPicker({ onPick, className }: { onPick: (emoji: string) => void; c
       >
         <SmilePlusIcon className="size-4" />
       </PopoverTrigger>
-      <PopoverPopup align="end" className="p-0" side="top" sideOffset={6}>
+      <PopoverContent align="end" className="p-0" side="top" sideOffset={6}>
         <div className="grid grid-cols-4 gap-0.5 p-1">
           {emojiChoices.map((e) => (
             <button
@@ -693,7 +693,7 @@ function EmojiPicker({ onPick, className }: { onPick: (emoji: string) => void; c
             </button>
           ))}
         </div>
-      </PopoverPopup>
+      </PopoverContent>
     </Popover>
   );
 }
@@ -1596,7 +1596,7 @@ export function TeamChat({
                         <UsersIcon className="size-3.5" />
                         <span className="tabular-nums">{channel.members}</span>
                       </PopoverTrigger>
-                      <PopoverPopup align="end" className="w-64">
+                      <PopoverContent align="end" className="w-64">
                         <div className="-mx-1 -my-1.5 flex flex-col gap-0.5">
                           <p className="px-1 pb-1.5 font-medium text-muted-foreground text-xs">
                             {channel.members} {channel.members === 1 ? "member" : "members"}
@@ -1615,7 +1615,7 @@ export function TeamChat({
                             <p className="px-1 pt-1 text-muted-foreground text-xs tabular-nums">and {channel.members - people.length} more</p>
                           )}
                         </div>
-                      </PopoverPopup>
+                      </PopoverContent>
                     </Popover>
                   ) : null}
                   <Popover onOpenChange={setPinsOpen} open={pinsOpen}>
@@ -1625,9 +1625,9 @@ export function TeamChat({
                       >
                         <PinIcon />
                       </TooltipTrigger>
-                      <TooltipPopup>Pinned</TooltipPopup>
+                      <TooltipContent>Pinned</TooltipContent>
                     </Tooltip>
-                    <PopoverPopup align="end" className="w-80">
+                    <PopoverContent align="end" className="w-80">
                       <div className="-mx-1 -my-1.5">
                         <p className="px-1 pb-1.5 font-medium text-muted-foreground text-xs">Pinned in {dmPerson ? "this conversation" : `#${channel.name}`}</p>
                         {pinned.length === 0 ? (
@@ -1665,7 +1665,7 @@ export function TeamChat({
                           </div>
                         )}
                       </div>
-                    </PopoverPopup>
+                    </PopoverContent>
                   </Popover>
                   <Tooltip>
                     <TooltipTrigger
@@ -1686,7 +1686,7 @@ export function TeamChat({
                     >
                       <SearchIcon />
                     </TooltipTrigger>
-                    <TooltipPopup>Search</TooltipPopup>
+                    <TooltipContent>Search</TooltipContent>
                   </Tooltip>
                 </header>
 

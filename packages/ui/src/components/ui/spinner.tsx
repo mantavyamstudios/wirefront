@@ -1,19 +1,12 @@
-// SPDX-License-Identifier: AGPL-3.0-only
-// coss ui © Cal.com, Inc. — https://coss.com/ui · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-import { Loader2Icon } from "lucide-react";
-import type React from "react";
-import { cn } from "../../lib/utils";
+// SPDX-License-Identifier: MIT
+// shadcn/ui (base-nova style) © 2023 shadcn — https://ui.shadcn.com · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
+import { cn } from "../../lib/utils"
+import { Loader2Icon } from "lucide-react"
 
-export function Spinner({
-  className,
-  ...props
-}: React.ComponentProps<typeof Loader2Icon>): React.ReactElement {
+function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
   return (
-    <Loader2Icon
-      aria-label="Loading"
-      className={cn("animate-spin", className)}
-      role="status"
-      {...props}
-    />
-  );
+    <Loader2Icon data-slot="spinner" role="status" aria-label="Loading" className={cn("size-4 animate-spin", className)} {...props} />
+  )
 }
+
+export { Spinner }

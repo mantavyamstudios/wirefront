@@ -23,14 +23,8 @@ import {
   AutocompletePopup,
 } from "@wirefront/ui/autocomplete";
 import { Label } from "@wirefront/ui/label";
-import { RadioGroup, Radio } from "@wirefront/ui/radio-group";
-import {
-  Select,
-  SelectItem,
-  SelectPopup,
-  SelectTrigger,
-  SelectValue,
-} from "@wirefront/ui/select";
+import { RadioGroup, RadioGroupItem } from "@wirefront/ui/radio-group";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Separator } from "@wirefront/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@wirefront/ui/toggle-group";
 
@@ -206,7 +200,7 @@ export function SettingsLocalizationShowcasePage() {
                       })()}
                     </SelectValue>
                   </SelectTrigger>
-                  <SelectPopup>
+                  <SelectContent align="start">
                     {LANGUAGES.map((l) => (
                       <SelectItem key={l.value} value={l.value}>
                         <span className="flex items-center gap-2">
@@ -220,7 +214,7 @@ export function SettingsLocalizationShowcasePage() {
                         </span>
                       </SelectItem>
                     ))}
-                  </SelectPopup>
+                  </SelectContent>
                 </Select>
               </Field>
             </Section>
@@ -279,7 +273,7 @@ export function SettingsLocalizationShowcasePage() {
                             : "border-border/60 hover:bg-foreground/[0.03]"
                         }`}
                       >
-                        <Radio value={d.id} className="mt-0.5" />
+                        <RadioGroupItem value={d.id} className="mt-0.5" />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-baseline justify-between gap-2">
                             <span className="font-mono text-sm">
@@ -366,7 +360,7 @@ export function SettingsLocalizationShowcasePage() {
                       })()}
                     </SelectValue>
                   </SelectTrigger>
-                  <SelectPopup>
+                  <SelectContent align="start">
                     {CURRENCIES.map((c) => (
                       <SelectItem key={c.value} value={c.value}>
                         <span className="flex items-center gap-2">
@@ -377,7 +371,7 @@ export function SettingsLocalizationShowcasePage() {
                         </span>
                       </SelectItem>
                     ))}
-                  </SelectPopup>
+                  </SelectContent>
                 </Select>
               </Field>
 
@@ -400,7 +394,7 @@ export function SettingsLocalizationShowcasePage() {
                             : "border-border/60 hover:bg-foreground/[0.03]"
                         }`}
                       >
-                        <Radio value={n.id} className="mt-0.5" />
+                        <RadioGroupItem value={n.id} className="mt-0.5" />
                         <div className="min-w-0 flex-1">
                           <div className="font-mono text-sm">{n.example}</div>
                           <div className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">

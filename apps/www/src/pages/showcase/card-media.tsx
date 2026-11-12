@@ -4,7 +4,7 @@ import { BookmarkIcon, ClockIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { Card, CardPanel } from "@wirefront/ui/card";
+import { Card, CardContent } from "@wirefront/ui/card";
 
 interface Article {
   slug: string;
@@ -86,7 +86,7 @@ function ArticleCard({ article }: { article: Article }) {
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-md">
       <Cover article={article} />
-      <CardPanel className="p-5">
+      <CardContent className="p-5">
         <div className="flex items-center gap-2">
           <Badge
             variant="secondary"
@@ -123,7 +123,7 @@ function ArticleCard({ article }: { article: Article }) {
             <BookmarkIcon />
           </Button>
         </div>
-      </CardPanel>
+      </CardContent>
     </Card>
   );
 }

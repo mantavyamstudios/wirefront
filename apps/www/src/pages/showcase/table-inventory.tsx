@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { cn } from "@wirefront/ui/lib/utils";
 import { ArrowUpDownIcon, PlusIcon, ShoppingBagIcon } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
@@ -151,7 +152,7 @@ function StockMeter({
         {p.stock}
         <span className="text-muted-foreground/60">/{p.capacity}</span>
       </span>
-      <Badge variant="outline" size="sm" className={tone.cls}>
+      <Badge variant="outline" className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", tone.cls)}>
         {tone.label}
       </Badge>
     </div>

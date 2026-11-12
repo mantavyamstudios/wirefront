@@ -14,7 +14,7 @@ const root = resolve(__dirname, '..')
 const TITLE = 'Wirefront'
 const TAGLINE = 'Mantavyam Studios'
 const DOMAIN = 'mantavyam.com'
-const SUBTITLE = 'Production-ready UI screens built on coss-ui'
+const SUBTITLE = 'Production-ready UI screens built on shadcn/ui'
 const STATS = ['200 screens', 'shadcn registry', "press 'c' to copy"]
 
 const [geistRegular, geistSemibold, logoBytes] = await Promise.all([

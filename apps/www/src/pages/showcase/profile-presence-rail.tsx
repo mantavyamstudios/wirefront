@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { ChevronDownIcon, MoonIcon, MusicIcon, PhoneIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 
 interface Person {
   name: string;
@@ -73,12 +73,12 @@ export function ProfilePresenceRailShowcasePage() {
               </span>
               <ChevronDownIcon className="-rotate-90 size-4 text-muted-foreground" />
             </SheetTrigger>
-            <SheetPopup side="bottom" className="max-h-[85svh] pb-[env(safe-area-inset-bottom)]">
+            <SheetContent side="bottom" className="max-h-[85svh] pb-[env(safe-area-inset-bottom)]">
               <SheetTitle className="sr-only">Presence</SheetTitle>
               <div className="overflow-y-auto">
                 <Rail />
               </div>
-            </SheetPopup>
+            </SheetContent>
           </Sheet>
 
           <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">

@@ -3,13 +3,7 @@
 import { CheckIcon } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import {
-  Card,
-  CardFooter,
-  CardHeader,
-  CardPanel,
-  CardTitle,
-} from "@wirefront/ui/card";
+import { Card, CardFooter, CardHeader, CardContent, CardTitle } from "@wirefront/ui/card";
 
 interface Tier {
   slug: string;
@@ -115,7 +109,7 @@ function PricingCard({ tier }: { tier: Tier }) {
           <div className="text-muted-foreground text-xs">{tier.period}</div>
         </div>
       </CardHeader>
-      <CardPanel className="pt-0">
+      <CardContent className="pt-0">
         <ul className="flex flex-col gap-2 text-sm">
           {tier.features.map((f) => (
             <li key={f} className="flex items-start gap-2">
@@ -124,7 +118,7 @@ function PricingCard({ tier }: { tier: Tier }) {
             </li>
           ))}
         </ul>
-      </CardPanel>
+      </CardContent>
       <CardFooter className="border-t">
         <Button
           variant={tier.highlight ? "default" : "outline"}

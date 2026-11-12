@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { Kbd } from "@wirefront/ui/kbd";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 import {
   ActivityIcon,
   FileTextIcon,
@@ -89,10 +89,10 @@ export function LayoutsFocusModeShowcasePage() {
             >
               <MenuIcon className="size-4" />
             </SheetTrigger>
-            <SheetPopup side="left" className="max-w-[280px] bg-background px-3 py-4">
+            <SheetContent side="left" className="max-w-[280px] bg-background px-3 py-4">
               <SheetTitle className="sr-only">Navigation</SheetTitle>
               <NavPanel />
-            </SheetPopup>
+            </SheetContent>
           </Sheet>
         ) : null}
         <div
@@ -126,12 +126,12 @@ export function LayoutsFocusModeShowcasePage() {
                 <ListIcon className="size-3.5" />
                 On this page
               </SheetTrigger>
-              <SheetPopup side="right" className="max-w-[300px] bg-background px-5 py-6">
+              <SheetContent side="right" className="max-w-[300px] bg-background px-5 py-6">
                 <SheetTitle className="mb-3 px-1 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em]">
                   On this page
                 </SheetTitle>
                 <TocList />
-              </SheetPopup>
+              </SheetContent>
             </Sheet>
           ) : null}
           <button

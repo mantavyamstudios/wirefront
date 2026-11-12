@@ -15,16 +15,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import type { ComponentType } from "react";
-import {
-  Menu,
-  MenuGroup,
-  MenuGroupLabel,
-  MenuItem,
-  MenuPopup,
-  MenuSeparator,
-  MenuShortcut,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { useDemo, type View } from "./store";
 
 const NAV: { id: View; label: string; Icon: ComponentType<{ className?: string }> }[] = [
@@ -58,8 +49,8 @@ export function DemoSidebar() {
 
   return (
     <aside className="relative flex h-svh flex-col border-r border-border/60 bg-foreground/[0.02]">
-      <Menu>
-        <MenuTrigger
+      <DropdownMenu>
+        <DropdownMenuTrigger
           render={
             <button
               type="button"
@@ -77,12 +68,12 @@ export function DemoSidebar() {
             </div>
           </div>
           <ChevronDownIcon className="size-3.5 shrink-0 opacity-60" />
-        </MenuTrigger>
-        <MenuPopup align="start" className="w-60">
-          <MenuGroup>
-            <MenuGroupLabel>Workspaces</MenuGroupLabel>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-60">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
             {workspaces.map((w) => (
-              <MenuItem
+              <DropdownMenuItem
                 key={w.id}
                 onClick={() => switchWorkspace(w.id)}
                 className="gap-2.5"
@@ -97,20 +88,20 @@ export function DemoSidebar() {
                 {w.id === currentWorkspaceId ? (
                   <CheckIcon className="size-3.5 opacity-80" />
                 ) : null}
-              </MenuItem>
+              </DropdownMenuItem>
             ))}
-          </MenuGroup>
-          <MenuSeparator />
-          <MenuItem
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
             onClick={() =>
               pushToast({ kind: "info", title: "New workspace flow — soon™" })
             }
           >
             <PlusIcon />
             New workspace
-          </MenuItem>
-        </MenuPopup>
-      </Menu>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <div className="px-3 pt-3">
         <button
@@ -213,8 +204,8 @@ export function DemoSidebar() {
         </ul>
       </nav>
 
-      <Menu>
-        <MenuTrigger
+      <DropdownMenu>
+        <DropdownMenuTrigger
           render={
             <button
               type="button"
@@ -233,8 +224,8 @@ export function DemoSidebar() {
             </div>
           </div>
           <SettingsIcon className="size-4 opacity-40" />
-        </MenuTrigger>
-        <MenuPopup align="start" side="top" className="w-56">
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" side="top" className="w-56">
           <div className="flex items-center gap-2.5 px-3 py-2">
             <div className={`flex size-7 shrink-0 items-center justify-center rounded-full font-medium text-[11px] ${me.tone}`}>
               {me.initials}
@@ -246,19 +237,19 @@ export function DemoSidebar() {
               </div>
             </div>
           </div>
-          <MenuSeparator />
-          <MenuItem onClick={() => setView("settings")}>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setView("settings")}>
             <SettingsIcon />
             Settings
-            <MenuShortcut>g s</MenuShortcut>
-          </MenuItem>
-          <MenuItem onClick={() => setOverlay("shortcuts")}>
+            <DropdownMenuShortcut>g s</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setOverlay("shortcuts")}>
             <KeyboardIcon />
             Keyboard shortcuts
-            <MenuShortcut>?</MenuShortcut>
-          </MenuItem>
-          <MenuSeparator />
-          <MenuItem
+            <DropdownMenuShortcut>?</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
             variant="destructive"
             onClick={() =>
               pushToast({ kind: "info", title: "Signed out (just kidding)." })
@@ -266,9 +257,9 @@ export function DemoSidebar() {
           >
             <LogOutIcon />
             Sign out
-          </MenuItem>
-        </MenuPopup>
-      </Menu>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </aside>
   );
 }

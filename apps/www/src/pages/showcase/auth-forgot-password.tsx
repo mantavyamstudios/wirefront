@@ -2,6 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `forgot-password`).
+import { Spinner } from "@wirefront/ui/spinner";
 import { DevlFrame } from "./_devl-frame";
 import { ArrowLeftIcon, KeyRoundIcon, MailCheckIcon } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -122,14 +123,15 @@ export function ForgotPassword({ defaultEmail = "", resendAfter = 30, onSend = d
                     placeholder="you@company.com"
                     type="email"
                     value={email}
-                  />
+                   />
                   {error && (
                     <p className="text-destructive-foreground text-xs" id={`${id}-error`}>
                       {error}
                     </p>
                   )}
                 </div>
-                <Button className="mt-2 w-full" loading={busy} type="submit">
+                <Button className="mt-2 w-full" type="submit" disabled={busy} aria-busy={busy}>
+{busy ? <Spinner data-icon="inline-start" /> : null}
                   Send reset link
                 </Button>
               </form>

@@ -3,13 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronLeftIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardPanel,
-  CardTitle,
-} from "@wirefront/ui/card";
+import { Card, CardDescription, CardHeader, CardContent, CardTitle } from "@wirefront/ui/card";
 import {
   OTPField,
   OTPFieldInput,
@@ -68,7 +62,7 @@ export function AuthOtpVerifyShowcasePage() {
             </CardDescription>
           </CardHeader>
 
-          <CardPanel className="flex flex-col gap-6">
+          <CardContent className="flex flex-col gap-6">
             <div className="flex justify-center">
               <OTPField
                 value={code}
@@ -127,7 +121,7 @@ export function AuthOtpVerifyShowcasePage() {
                 Try a different method →
               </a>
             </div>
-          </CardPanel>
+          </CardContent>
         </Card>
       </div>
     </div>

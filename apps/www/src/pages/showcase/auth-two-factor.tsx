@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import { type FormEvent, useState } from "react";
 import { LifeBuoyIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import { Card, CardFooter, CardHeader, CardPanel } from "@wirefront/ui/card";
+import { Card, CardFooter, CardHeader, CardContent } from "@wirefront/ui/card";
 import { Field, FieldLabel } from "@wirefront/ui/field";
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
@@ -68,7 +69,7 @@ export function AuthTwoFactorShowcasePage() {
           </div>
         </CardHeader>
 
-        <CardPanel>
+        <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-5">
             {mode === "code" ? (
               <CodeFields
@@ -87,14 +88,14 @@ export function AuthTwoFactorShowcasePage() {
             <Button
               type="submit"
               size="lg"
-              loading={pending}
-              disabled={
+              disabled={(
                 mode === "code"
                   ? code.length !== 6
                   : recoveryCode.length < 8
-              }
+              ) || (pending)}
               className="w-full"
-            >
+             aria-busy={pending}>
+{pending ? <Spinner data-icon="inline-start" /> : null}
               Verify
             </Button>
 
@@ -108,7 +109,7 @@ export function AuthTwoFactorShowcasePage() {
                 : "Try authenticator app instead"}
             </button>
           </form>
-        </CardPanel>
+        </CardContent>
 
         <CardFooter className="justify-center">
           <p className="flex items-center gap-1.5 text-muted-foreground text-xs">
@@ -188,9 +189,8 @@ function RecoveryFields({
         placeholder="xxxxx-xxxxx"
         value={recoveryCode}
         onChange={(e) => setRecoveryCode(e.target.value)}
-        nativeInput
         className="text-center font-mono tracking-[0.2em]"
-      />
+        />
     </Field>
   );
 }

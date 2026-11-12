@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { cn } from "@wirefront/ui/lib/utils";
 import {
   ArrowDownLeftIcon,
   ArrowDownToLineIcon,
@@ -23,13 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@wirefront/ui/pagination";
-import {
-  Select,
-  SelectItem,
-  SelectPopup,
-  SelectTrigger,
-  SelectValue,
-} from "@wirefront/ui/select";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Separator } from "@wirefront/ui/separator";
 import {
   Table,
@@ -145,26 +140,26 @@ export function TableTransactionsShowcasePage() {
               <SelectTrigger className="w-36 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
                 <SelectValue />
               </SelectTrigger>
-              <SelectPopup>
+              <SelectContent align="start">
                 {ACCOUNTS.map((a) => (
                   <SelectItem key={a.value} value={a.value}>
                     {a.label}
                   </SelectItem>
                 ))}
-              </SelectPopup>
+              </SelectContent>
             </Select>
 
             <Select items={DIRECTIONS} defaultValue="all">
               <SelectTrigger className="w-32 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
                 <SelectValue />
               </SelectTrigger>
-              <SelectPopup>
+              <SelectContent align="start">
                 {DIRECTIONS.map((a) => (
                   <SelectItem key={a.value} value={a.value}>
                     {a.label}
                   </SelectItem>
                 ))}
-              </SelectPopup>
+              </SelectContent>
             </Select>
 
             <Select items={RANGES} defaultValue="7d">
@@ -172,13 +167,13 @@ export function TableTransactionsShowcasePage() {
                 <CalendarIcon className="text-muted-foreground" />
                 <SelectValue />
               </SelectTrigger>
-              <SelectPopup>
+              <SelectContent align="start">
                 {RANGES.map((a) => (
                   <SelectItem key={a.value} value={a.value}>
                     {a.label}
                   </SelectItem>
                 ))}
-              </SelectPopup>
+              </SelectContent>
             </Select>
 
             <span className="ms-auto font-mono text-[11px] text-muted-foreground">
@@ -235,7 +230,7 @@ export function TableTransactionsShowcasePage() {
                   </TableCell>
                   <TableCell className="text-muted-foreground max-lg:hidden">{t.counterparty}</TableCell>
                   <TableCell className="max-xl:hidden">
-                    <Badge variant="outline" size="sm" className="font-mono text-[10px]">
+                    <Badge variant="outline" className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px]">
                       {METHOD_LABEL[t.method]}
                     </Badge>
                   </TableCell>
@@ -263,7 +258,7 @@ export function TableTransactionsShowcasePage() {
                       </div>
                     ) : null}
                     {t.status !== "succeeded" ? (
-                      <Badge variant="outline" size="sm" className={"mt-1 capitalize sm:hidden " + STATUS_TONE[t.status]}>
+                      <Badge variant="outline" className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", "mt-1 capitalize sm:hidden " + STATUS_TONE[t.status])}>
                         {t.status}
                       </Badge>
                     ) : null}

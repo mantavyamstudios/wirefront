@@ -2,16 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { CopyIcon, ExternalLinkIcon, ShieldCheckIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogFooter,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogClose, DialogFooter, DialogHeader, DialogContent, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
 import { OTPField, OTPFieldInput, OTPFieldSeparator } from "@wirefront/ui/otp-field";
 
 const RECOVERY = [
@@ -44,7 +35,7 @@ export function ModalsTwoFactorShowcasePage() {
           <ShieldCheckIcon />
           Enable 2FA
         </DialogTrigger>
-        <DialogPopup>
+        <DialogContent>
           <DialogHeader className="flex-row items-center gap-3">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-600">
               <ShieldCheckIcon className="size-4" />
@@ -57,7 +48,7 @@ export function ModalsTwoFactorShowcasePage() {
             </div>
           </DialogHeader>
 
-          <DialogPanel>
+          <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-[160px_minmax(0,1fr)]">
               <div className="hidden rounded-lg border border-border/60 bg-background p-3 sm:block">
                 <QrCode />
@@ -140,13 +131,13 @@ export function ModalsTwoFactorShowcasePage() {
                 lose access.
               </p>
             </div>
-          </DialogPanel>
+          </div>
 
           <DialogFooter>
             <DialogClose render={<Button variant="ghost" type="button" />}>Back</DialogClose>
             <Button type="button">Verify and continue</Button>
           </DialogFooter>
-        </DialogPopup>
+        </DialogContent>
       </Dialog>
       </div>
     </div>

@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
-import { Card, CardPanel } from "@wirefront/ui/card";
+import { Card, CardContent } from "@wirefront/ui/card";
 
 type Priority = "low" | "med" | "high" | "urgent";
 
@@ -119,7 +119,7 @@ export function CardTaskShowcasePage() {
 function TaskCard({ task }: { task: Task }) {
   return (
     <Card className="cursor-grab transition-shadow hover:shadow-md">
-      <CardPanel className="p-4">
+      <CardContent className="p-4">
         <div className="flex items-center gap-2">
           <span className="font-mono text-[11px] text-muted-foreground">
             {task.id}
@@ -192,7 +192,7 @@ function TaskCard({ task }: { task: Task }) {
             </span>
           </div>
         </div>
-      </CardPanel>
+      </CardContent>
     </Card>
   );
 }

@@ -23,7 +23,7 @@ import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react"
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type ServiceHealth = "operational" | "degraded" | "down";
@@ -443,7 +443,7 @@ export function StatusConsole({
                   <r.icon className="size-4" />
                   {r.id === "incidents" && !resolved && <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-destructive" />}
                 </TooltipTrigger>
-                <TooltipPopup side="right">{r.label}</TooltipPopup>
+                <TooltipContent side="right">{r.label}</TooltipContent>
               </Tooltip>
             ))}
           </nav>
@@ -609,9 +609,9 @@ export function StatusConsole({
                                 />
                               }
                             />
-                            <TooltipPopup>
+                            <TooltipContent>
                               {i === 59 ? (resolved ? "Today · 23 min degraded" : "Today · ongoing incident") : b ? `${60 - i} days ago · 12 min degraded` : `${60 - i} days ago · no incidents`}
-                            </TooltipPopup>
+                            </TooltipContent>
                           </Tooltip>
                         ))}
                       </div>
@@ -822,7 +822,7 @@ export function StatusConsole({
                                       >
                                         <RotateCcwIcon />
                                       </TooltipTrigger>
-                                      <TooltipPopup>Roll back</TooltipPopup>
+                                      <TooltipContent>Roll back</TooltipContent>
                                     </Tooltip>
                                   ) : (
                                     <span aria-hidden className="size-7 shrink-0 sm:size-6" />

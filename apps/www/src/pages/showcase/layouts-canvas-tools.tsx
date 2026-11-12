@@ -23,13 +23,9 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Separator } from "@wirefront/ui/separator";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 import { Slider } from "@wirefront/ui/slider";
-import {
-  Tooltip,
-  TooltipPopup,
-  TooltipTrigger,
-} from "@wirefront/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 type ShapeType = "rectangle" | "ellipse" | "text";
@@ -602,10 +598,10 @@ export function LayoutsCanvasToolsShowcasePage() {
             >
               <SlidersHorizontal className="size-4" />
             </SheetTrigger>
-            <SheetPopup side="bottom" className="max-h-[70svh] pb-[env(safe-area-inset-bottom)]">
+            <SheetContent side="bottom" className="max-h-[70svh] pb-[env(safe-area-inset-bottom)]">
               <SheetTitle className="sr-only">Inspector</SheetTitle>
               {inspector("w-full border-0 bg-transparent pt-12 shadow-none backdrop-blur-none")}
-            </SheetPopup>
+            </SheetContent>
           </Sheet>
         }
       />
@@ -770,7 +766,7 @@ function ToolsPalette({
             >
               <Icon className="size-4" />
             </TooltipTrigger>
-            <TooltipPopup side="right">
+            <TooltipContent side="right">
               <span className="flex items-center gap-2">
                 {t.label}
                 {t.shortcut ? (
@@ -779,7 +775,7 @@ function ToolsPalette({
                   </span>
                 ) : null}
               </span>
-            </TooltipPopup>
+            </TooltipContent>
           </Tooltip>
         );
       })}
@@ -842,7 +838,7 @@ function ZoomControls({
         >
           <MinusIcon className="size-3.5" />
         </TooltipTrigger>
-        <TooltipPopup>Zoom out</TooltipPopup>
+        <TooltipContent>Zoom out</TooltipContent>
       </Tooltip>
       <span className="min-w-[42px] px-2 text-center font-mono text-foreground/80 text-xs tabular-nums">
         {Math.round(zoom * 100)}%
@@ -855,7 +851,7 @@ function ZoomControls({
         >
           <PlusIcon className="size-3.5" />
         </TooltipTrigger>
-        <TooltipPopup>Zoom in</TooltipPopup>
+        <TooltipContent>Zoom in</TooltipContent>
       </Tooltip>
       <Separator orientation="vertical" className="mx-1 h-5" />
       <Tooltip>
@@ -866,7 +862,7 @@ function ZoomControls({
         >
           <Maximize2 className="size-3.5" />
         </TooltipTrigger>
-        <TooltipPopup>Fit to screen</TooltipPopup>
+        <TooltipContent>Fit to screen</TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger
@@ -875,7 +871,7 @@ function ZoomControls({
         >
           <Maximize className="size-3.5" />
         </TooltipTrigger>
-        <TooltipPopup>Fullscreen</TooltipPopup>
+        <TooltipContent>Fullscreen</TooltipContent>
       </Tooltip>
     </div>
   );

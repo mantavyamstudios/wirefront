@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Toast } from "@base-ui/react/toast";
 import { useEffect } from "react";
 import { CheckIcon, XIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import { ToastPrimitive as Toast } from "@wirefront/ui/toast";
 
 // A dedicated manager keeps this showcase self-contained. In an app, mount
 // <ToastProvider> once and call the shared `toastManager` from @wirefront/ui/toast.

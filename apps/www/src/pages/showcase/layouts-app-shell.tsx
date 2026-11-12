@@ -20,7 +20,7 @@ import {
   InputGroupInput,
 } from "@wirefront/ui/input-group";
 import { Kbd } from "@wirefront/ui/kbd";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 
 const PRIMARY = [
   { key: "home", icon: HomeIcon, label: "Home" },
@@ -69,7 +69,7 @@ export function LayoutsAppShellShowcasePage() {
           >
             <MenuIcon className="size-5" />
           </SheetTrigger>
-          <SheetPopup side="left" className="max-w-[300px] bg-background">
+          <SheetContent side="left" className="max-w-[300px] bg-background">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <SidebarNav
               activeItem={activeItem}
@@ -78,7 +78,7 @@ export function LayoutsAppShellShowcasePage() {
                 setNavOpen(false);
               }}
             />
-          </SheetPopup>
+          </SheetContent>
         </Sheet>
 
         <button

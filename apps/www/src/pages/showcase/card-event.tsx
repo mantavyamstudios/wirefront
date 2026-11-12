@@ -4,7 +4,7 @@ import { ClockIcon, MapPinIcon, VideoIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { Card, CardPanel } from "@wirefront/ui/card";
+import { Card, CardContent } from "@wirefront/ui/card";
 
 interface Event {
   id: string;
@@ -91,7 +91,7 @@ export function CardEventShowcasePage() {
 function EventCard({ event }: { event: Event }) {
   return (
     <Card className="overflow-hidden">
-      <CardPanel className="flex items-stretch gap-0 p-0">
+      <CardContent className="flex items-stretch gap-0 p-0">
         <div
           className={
             "flex w-16 shrink-0 flex-col items-center justify-center border-r bg-gradient-to-b p-3 sm:w-20 sm:p-4 " +
@@ -162,7 +162,7 @@ function EventCard({ event }: { event: Event }) {
             </div>
           </div>
         </div>
-      </CardPanel>
+      </CardContent>
     </Card>
   );
 }

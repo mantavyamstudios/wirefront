@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import { useEffect, useState } from "react";
 import { RotateCwIcon, WifiOffIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
@@ -51,8 +52,8 @@ export function EmptyOfflineShowcasePage() {
         <Button
           className="mt-8 w-full max-w-xs"
           onClick={tryAgain}
-          loading={retrying}
-        >
+         disabled={retrying} aria-busy={retrying}>
+{retrying ? <Spinner data-icon="inline-start" /> : null}
           <RotateCwIcon />
           Try again
         </Button>

@@ -41,9 +41,9 @@ import { useEffect, useId, useMemo, useReducer, useRef, useState } from "react";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { Skeleton } from "@wirefront/ui/skeleton";
-import { Tabs, TabsList, TabsTab } from "@wirefront/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@wirefront/ui/tabs";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type RunToolKind = "db" | "search" | "code" | "doc" | "send" | "task";
@@ -943,9 +943,9 @@ function DraftOutput({
   }, [copied]);
 
   const badge = {
-    drafting: <Badge variant="info">Drafting</Badge>,
-    ready: <Badge variant="warning">Ready for review</Badge>,
-    sent: <Badge variant="success">Sent</Badge>,
+    drafting: <Badge variant="secondary" className="bg-info/8 text-info-foreground dark:bg-info/16">Drafting</Badge>,
+    ready: <Badge variant="secondary" className="bg-warning/8 text-warning-foreground dark:bg-warning/16">Ready for review</Badge>,
+    sent: <Badge variant="secondary" className="bg-success/8 text-success-foreground dark:bg-success/16">Sent</Badge>,
     held: <Badge variant="secondary">Kept as draft</Badge>,
   }[sendState];
 
@@ -1263,26 +1263,26 @@ export function RunReplay({
                 {paused ? <PlayIcon /> : <PauseIcon />}
               </Button>
             )}
-            <Menu>
-              <MenuTrigger render={<Button aria-label="Run options" className={press} size="icon-sm" variant="ghost" />}>
+            <DropdownMenu>
+              <DropdownMenuTrigger render={<Button aria-label="Run options" className={press} size="icon-sm" variant="ghost" />}>
                 <EllipsisIcon />
-              </MenuTrigger>
-              <MenuPopup align="end">
-                <MenuItem>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
                   <LinkIcon />
                   Copy run link
-                </MenuItem>
-                <MenuItem>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
                   <BracesIcon />
                   Export trace as JSON
-                </MenuItem>
-                <MenuSeparator />
-                <MenuItem disabled={state.finished} onClick={cancel} variant="destructive">
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem disabled={state.finished} onClick={cancel} variant="destructive">
                   <BanIcon />
                   Cancel run
-                </MenuItem>
-              </MenuPopup>
-            </Menu>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
 
@@ -1400,11 +1400,11 @@ export function RunReplay({
           <section className="flex min-h-0 flex-col @3xl:overflow-hidden" aria-label="Run activity">
             <Tabs className="shrink-0 px-4 pt-4 @6xl:hidden" onValueChange={(v) => setTab(v as "activity" | "draft")} value={tab}>
               <TabsList>
-                <TabsTab aria-controls={`${tabsId}-activity`} value="activity">
+                <TabsTrigger aria-controls={`${tabsId}-activity`} value="activity">
                   Activity
                   <span className="text-muted-foreground text-xs tabular-nums">{state.log.length}</span>
-                </TabsTab>
-                <TabsTab aria-controls={`${tabsId}-draft`} value="draft">
+                </TabsTrigger>
+                <TabsTrigger aria-controls={`${tabsId}-draft`} value="draft">
                   Draft
                   <AnimatePresence>
                     {draftFresh && (
@@ -1418,7 +1418,7 @@ export function RunReplay({
                       />
                     )}
                   </AnimatePresence>
-                </TabsTab>
+                </TabsTrigger>
               </TabsList>
             </Tabs>
 

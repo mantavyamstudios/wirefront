@@ -642,19 +642,6 @@
     "lint/correctness/useExhaustiveDependencies": 2,
     "lint/style/useConst": 1
   },
-  "packages/ui/src/components/ui/calendar.tsx": {
-    "lint/correctness/noComponentHookFactories": 1
-  },
-  "packages/ui/src/components/ui/drawer.tsx": {
-    "lint/a11y/noSvgWithoutTitle": 2
-  },
-  "packages/ui/src/components/ui/group.tsx": {
-    "lint/a11y/useSemanticElements": 1
-  },
-  "packages/ui/src/components/ui/input-group.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/useSemanticElements": 1
-  },
   "packages/ui/src/styles.css": {
     "lint/complexity/noImportantStyles": 5,
     "lint/style/noDescendingSpecificity": 1

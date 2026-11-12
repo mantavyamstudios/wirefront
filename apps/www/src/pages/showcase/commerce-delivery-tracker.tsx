@@ -34,7 +34,7 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
-import { Menu, MenuItem, MenuLinkItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { Textarea } from "@wirefront/ui/textarea";
 
 export interface DeliveryItem {
@@ -320,42 +320,42 @@ export function DeliveryTracker({
           <span className="truncate font-medium">Order from {storeName}</span>
           <span className="font-mono text-muted-foreground text-xs">#{orderId}</span>
         </div>
-        <Menu>
-          <MenuTrigger
+        <DropdownMenu>
+          <DropdownMenuTrigger
             render={<Button aria-label="Help with this order" className={cn("ms-auto", press)} size="sm" variant="ghost" />}
           >
             <CircleHelpIcon /> <span className="hidden @md:inline">Help</span>
-          </MenuTrigger>
-          <MenuPopup align="end" className="w-60">
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-60">
             {delivered ? (
-              <MenuItem onClick={() => setRun((r) => r + 1)}>
+              <DropdownMenuItem onClick={() => setRun((r) => r + 1)}>
                 <RotateCcwIcon /> Watch the delivery again
-              </MenuItem>
+              </DropdownMenuItem>
             ) : (
               <>
-                <MenuItem onClick={() => setChat(true)}>
+                <DropdownMenuItem onClick={() => setChat(true)}>
                   <MessageCircleIcon /> Message {first}
-                </MenuItem>
-                <MenuLinkItem href={`tel:${courier.phone}`}>
+                </DropdownMenuItem>
+                <DropdownMenuItem render={<a href={`tel:${courier.phone}`} />}>
                   <PhoneIcon /> Call {first}
-                </MenuLinkItem>
-                <MenuItem
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   onClick={() => {
                     setDraft(note);
                     setEditing(true);
                   }}
                 >
                   <PencilIcon /> Change drop-off note
-                </MenuItem>
+                </DropdownMenuItem>
               </>
             )}
-            <MenuSeparator />
-            <MenuItem disabled>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem disabled>
               <XCircleIcon /> Cancel order
               <span className="ms-auto text-muted-foreground text-xs">{delivered ? "Delivered" : "On its way"}</span>
-            </MenuItem>
-          </MenuPopup>
-        </Menu>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </header>
 
       <div className="flex min-h-0 flex-1 flex-col @3xl:flex-row">
@@ -1072,7 +1072,7 @@ function CourierChat({
                   placeholder={`Message ${first}`}
                   ref={inputRef}
                   value={text}
-                />
+                 />
                 <Button aria-label="Send" className={press} disabled={!text.trim()} size="icon" type="submit">
                   <SendIcon />
                 </Button>

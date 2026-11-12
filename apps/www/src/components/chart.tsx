@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
- * Thin coss-design wrappers around Recharts.
+ * Thin Wirefront wrappers around Recharts, styled with the theme tokens.
  *
  * Goal: every chart in the scratchpad shares the same visual language —
  * mono uppercase axis labels, hairline grid lines, themed palette pulled

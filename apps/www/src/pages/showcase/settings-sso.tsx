@@ -12,13 +12,7 @@ import {
   PlusIcon,
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Select,
-  SelectItem,
-  SelectPopup,
-  SelectTrigger,
-  SelectValue,
-} from "@wirefront/ui/select";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Switch } from "@wirefront/ui/switch";
 
 interface Provider {
@@ -431,13 +425,13 @@ function AttributeMappingStep({
                 <SelectTrigger size="sm" aria-label={`Orbit field for ${m.source || "new attribute"}`} className="h-8 w-full text-xs max-sm:order-3 max-sm:col-span-2 pointer-coarse:h-10">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectPopup>
+                <SelectContent align="start">
                   {TARGET_FIELDS.map((t) => (
                     <SelectItem key={t.value} value={t.value}>
                       {t.label}
                     </SelectItem>
                   ))}
-                </SelectPopup>
+                </SelectContent>
               </Select>
               <div className="text-right max-sm:order-2 max-sm:row-start-1 max-sm:col-start-2 sm:w-16">
                 {m.required ? (

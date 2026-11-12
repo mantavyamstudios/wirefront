@@ -30,7 +30,7 @@ import {
 import { Button } from "@wirefront/ui/button";
 import { Calendar } from "@wirefront/ui/calendar";
 import { Kbd } from "@wirefront/ui/kbd";
-import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type CalendarTone = "teal" | "violet" | "sky" | "amber" | "rose";
@@ -670,7 +670,7 @@ export function CalendarWeek({
                 <span className="text-lg text-muted-foreground tabular-nums">{head.sub}</span>
                 <ChevronDownIcon className="size-4 text-muted-foreground" />
               </PopoverTrigger>
-              <PopoverPopup align="start" className="w-72">
+              <PopoverContent align="start" className="w-72">
                 <div className="p-1">
                   <MiniMonth busy={busy} month={month} onMonth={setMonth} onPick={(d) => setFocusDay(d)} selected={focusDay} today={today} weekStart={weekStart} wholeWeek={mode === "week"} />
                   <div className="mt-3 flex flex-wrap gap-1.5 border-t pt-3">
@@ -694,7 +694,7 @@ export function CalendarWeek({
                     })}
                   </div>
                 </div>
-              </PopoverPopup>
+              </PopoverContent>
             </Popover>
             )}
             <div className="ms-auto flex items-center gap-1.5">

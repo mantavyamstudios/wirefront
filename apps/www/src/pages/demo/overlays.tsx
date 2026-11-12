@@ -22,14 +22,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Dialog,
-  DialogFooter,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogFooter, DialogHeader, DialogContent, DialogTitle } from "@wirefront/ui/dialog";
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
 import { Textarea } from "@wirefront/ui/textarea";
@@ -276,11 +269,11 @@ function CommandPalette() {
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOverlay(o ? "palette" : null)}>
-      <DialogPopup
+      <DialogContent
         showCloseButton={false}
         className="!max-w-xl !p-0 !rounded-2xl"
       >
-        {/* Hidden title for a11y; coss requires the title element exist. */}
+        {/* Hidden title for a11y; Base UI requires the title element exist. */}
         <DialogHeader className="sr-only !p-0">
           <DialogTitle>Command palette</DialogTitle>
         </DialogHeader>
@@ -370,7 +363,7 @@ function CommandPalette() {
           </div>
           <span>{filtered.length} results</span>
         </div>
-      </DialogPopup>
+      </DialogContent>
     </Dialog>
   );
 }
@@ -405,12 +398,12 @@ function NewProjectDialog() {
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOverlay(o ? "new-project" : null)}>
-      <DialogPopup>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>New project</DialogTitle>
         </DialogHeader>
         <form onSubmit={onSubmit} className="contents">
-          <DialogPanel className="space-y-5 px-6 py-2">
+          <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 space-y-5 px-6 py-2">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="np-name">Name</Label>
               <Input
@@ -418,8 +411,7 @@ function NewProjectDialog() {
                 placeholder="e.g. Q4 launch"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                nativeInput
-              />
+                />
             </div>
 
             <div>
@@ -455,7 +447,7 @@ function NewProjectDialog() {
                 <VisibilityCard id="public" label="Public" description="Anyone with link." Icon={GlobeIcon} active={visibility === "public"} onSelect={setVisibility} />
               </div>
             </div>
-          </DialogPanel>
+          </div>
           <DialogFooter>
             <Button variant="ghost" type="button" onClick={() => setOverlay(null)}>
               Cancel
@@ -466,7 +458,7 @@ function NewProjectDialog() {
             </Button>
           </DialogFooter>
         </form>
-      </DialogPopup>
+      </DialogContent>
     </Dialog>
   );
 }
@@ -546,12 +538,12 @@ function InviteDialog() {
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOverlay(o ? "invite" : null)}>
-      <DialogPopup className="!max-w-lg">
+      <DialogContent className="!max-w-lg">
         <DialogHeader>
           <DialogTitle>Invite teammates</DialogTitle>
         </DialogHeader>
         <form onSubmit={onSubmit} className="contents">
-          <DialogPanel className="px-6 py-2">
+          <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 px-6 py-2">
             <div className="flex items-center justify-between">
               <Label className="font-mono text-[10px] uppercase tracking-[0.25em]">
                 Invitees
@@ -568,8 +560,7 @@ function InviteDialog() {
                     placeholder="name@example.com"
                     value={r.email}
                     onChange={(e) => change(r.id, { email: e.target.value })}
-                    nativeInput
-                  />
+                    />
                   <div className="relative">
                     <select
                       value={r.role}
@@ -613,7 +604,7 @@ function InviteDialog() {
                 placeholder="Hey — joining us in the workspace."
               />
             </div>
-          </DialogPanel>
+          </div>
           <DialogFooter>
             <Button variant="ghost" type="button" onClick={() => setOverlay(null)}>
               Cancel
@@ -623,7 +614,7 @@ function InviteDialog() {
             </Button>
           </DialogFooter>
         </form>
-      </DialogPopup>
+      </DialogContent>
     </Dialog>
   );
 }

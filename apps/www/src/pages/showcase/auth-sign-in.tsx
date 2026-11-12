@@ -2,6 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `sign-in`).
+import { Spinner } from "@wirefront/ui/spinner";
 import { DevlFrame } from "./_devl-frame";
 import { Building2Icon, CheckIcon, EyeIcon, EyeOffIcon, FingerprintIcon } from "lucide-react";
 import { motion, useAnimationControls, useReducedMotion } from "motion/react";
@@ -105,7 +106,8 @@ export function SignIn({
         <p className="mt-1.5 text-balance text-center text-muted-foreground text-sm">Welcome back. Pick up where you left off.</p>
 
         <div className="mt-8 grid w-full grid-cols-2 gap-2">
-          <Button disabled={done} loading={busy === "passkey"} onClick={passkey} type="button" variant="outline">
+          <Button disabled={(done) || (busy === "passkey")} onClick={passkey} type="button" variant="outline" aria-busy={busy === "passkey"}>
+{busy === "passkey" ? <Spinner data-icon="inline-start" /> : null}
             <FingerprintIcon />
             Passkey
           </Button>
@@ -132,7 +134,7 @@ export function SignIn({
               placeholder="you@company.com"
               type="email"
               value={email}
-            />
+             />
           </div>
           <motion.div animate={shake} className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
@@ -177,7 +179,8 @@ export function SignIn({
               </p>
             )}
           </motion.div>
-          <Button className={cn("mt-2 w-full", done && "pointer-events-none")} loading={busy === "password"} type="submit">
+          <Button className={cn("mt-2 w-full", done && "pointer-events-none")} type="submit" disabled={busy === "password"} aria-busy={busy === "password"}>
+{busy === "password" ? <Spinner data-icon="inline-start" /> : null}
             {done ? (
               <motion.span animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-2" initial={reduce ? false : { opacity: 0, scale: 0.9 }}>
                 <CheckIcon />

@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { useState } from "react";
 import { MoreHorizontalIcon, SmileIcon } from "lucide-react";
-import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 
 interface Comment {
   initials: string;
@@ -127,19 +127,19 @@ function CommentRow({ c }: { c: (typeof COMMENTS)[number] }) {
             </div>
           </div>
         </div>
-        <Menu>
-          <MenuTrigger
+        <DropdownMenu>
+          <DropdownMenuTrigger
             aria-label={`More actions for ${c.name}'s comment`}
             className="-mr-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 transition-all hover:bg-foreground/[0.05] hover:text-foreground focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100 data-popup-open:opacity-100 pointer-coarse:size-10 pointer-coarse:opacity-100"
           >
             <MoreHorizontalIcon className="size-4" />
-          </MenuTrigger>
-          <MenuPopup align="end">
-            <MenuItem>Copy link</MenuItem>
-            <MenuItem>Edit</MenuItem>
-            <MenuItem variant="destructive">Delete</MenuItem>
-          </MenuPopup>
-        </Menu>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>Copy link</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <p className="mt-2.5 text-foreground/90 text-sm leading-relaxed [&_code]:rounded [&_code]:bg-foreground/[0.06] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[12px]">

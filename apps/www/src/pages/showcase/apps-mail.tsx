@@ -32,7 +32,7 @@ import { type KeyboardEvent, type ReactElement, type ReactNode, type RefObject, 
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type MailTone = "blue" | "orange" | "teal" | "violet" | "rose" | "amber" | "emerald" | "sky";
@@ -484,12 +484,12 @@ function Tip({ label, keys, children }: { label: string; keys?: string; children
   return (
     <Tooltip>
       <TooltipTrigger render={children as ReactElement} />
-      <TooltipPopup>
+      <TooltipContent>
         <span className="flex items-center gap-2">
           {label}
           {keys && <Kbd className="h-4 min-w-4 text-[10px]">{keys}</Kbd>}
         </span>
-      </TooltipPopup>
+      </TooltipContent>
     </Tooltip>
   );
 }

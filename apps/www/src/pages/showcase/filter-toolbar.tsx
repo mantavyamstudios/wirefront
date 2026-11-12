@@ -18,24 +18,9 @@ import {
   InputGroupInput,
 } from "@wirefront/ui/input-group";
 import { Kbd } from "@wirefront/ui/kbd";
-import {
-  Select,
-  SelectItem,
-  SelectPopup,
-  SelectTrigger,
-  SelectValue,
-} from "@wirefront/ui/select";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Separator } from "@wirefront/ui/separator";
-import {
-  Sheet,
-  SheetClose,
-  SheetFooter,
-  SheetHeader,
-  SheetPanel,
-  SheetPopup,
-  SheetTitle,
-  SheetTrigger,
-} from "@wirefront/ui/sheet";
+import { Sheet, SheetClose, SheetFooter, SheetHeader, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 import { ToggleGroup, ToggleGroupItem } from "@wirefront/ui/toggle-group";
 
 type Status = "active" | "paused" | "archived";
@@ -143,13 +128,13 @@ export function FilterToolbarShowcasePage() {
               <SelectTrigger aria-label="Status" className={stacked ? "w-full" : "w-36"} size={stacked ? "default" : "sm"}>
                 <SelectValue />
               </SelectTrigger>
-              <SelectPopup>
+              <SelectContent align="start">
                 {STATUSES.map((s) => (
                   <SelectItem key={s.value} value={s.value}>
                     {s.label}
                   </SelectItem>
                 ))}
-              </SelectPopup>
+              </SelectContent>
             </Select>
 
             <Select
@@ -160,13 +145,13 @@ export function FilterToolbarShowcasePage() {
               <SelectTrigger aria-label="Owner" className={stacked ? "w-full" : "w-32"} size={stacked ? "default" : "sm"}>
                 <SelectValue />
               </SelectTrigger>
-              <SelectPopup>
+              <SelectContent align="start">
                 {OWNERS.map((s) => (
                   <SelectItem key={s.value} value={s.value}>
                     {s.label}
                   </SelectItem>
                 ))}
-              </SelectPopup>
+              </SelectContent>
             </Select>
 
             <Select
@@ -178,13 +163,13 @@ export function FilterToolbarShowcasePage() {
                 <CalendarIcon className="text-muted-foreground" />
                 <SelectValue />
               </SelectTrigger>
-              <SelectPopup>
+              <SelectContent align="start">
                 {RANGES.map((s) => (
                   <SelectItem key={s.value} value={s.value}>
                     {s.label}
                   </SelectItem>
                 ))}
-              </SelectPopup>
+              </SelectContent>
             </Select>
 
     </>
@@ -210,7 +195,6 @@ export function FilterToolbarShowcasePage() {
                 placeholder="Search projects…"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                nativeInput
               />
               <InputGroupAddon align="inline-end" className="pointer-coarse:hidden">
                 <Kbd>/</Kbd>
@@ -224,7 +208,7 @@ export function FilterToolbarShowcasePage() {
               <Button size="sm" variant="ghost" disabled>
               <ListFilterIcon />
               More filters
-              <Badge variant="outline" size="sm" className="ml-1 font-mono">
+              <Badge variant="outline" className="h-4.5 rounded-sm px-1 text-[0.625rem] ml-1 font-mono">
                 +0
               </Badge>
             </Button>
@@ -239,16 +223,16 @@ export function FilterToolbarShowcasePage() {
                 <ListFilterIcon />
                 Filters
                 {activeCount > 0 ? (
-                  <Badge variant="secondary" size="sm" className="ml-1 font-mono">
+                  <Badge variant="secondary" className="h-4.5 rounded-sm px-1 text-[0.625rem] ml-1 font-mono">
                     {activeCount}
                   </Badge>
                 ) : null}
               </SheetTrigger>
-              <SheetPopup side="bottom" className="pb-[env(safe-area-inset-bottom)]">
+              <SheetContent side="bottom" className="pb-[env(safe-area-inset-bottom)]">
                 <SheetHeader>
                   <SheetTitle>Filters</SheetTitle>
                 </SheetHeader>
-                <SheetPanel className="flex flex-col gap-3">{filterFields(true)}</SheetPanel>
+                <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 flex flex-col gap-3">{filterFields(true)}</div>
                 <SheetFooter>
                   <Button variant="ghost" onClick={reset} disabled={activeCount === 0}>
                     Clear
@@ -257,7 +241,7 @@ export function FilterToolbarShowcasePage() {
                     Show {filtered.length} result{filtered.length === 1 ? "" : "s"}
                   </SheetClose>
                 </SheetFooter>
-              </SheetPopup>
+              </SheetContent>
             </Sheet>
 
             <div className="ms-auto flex items-center gap-2 max-sm:hidden">

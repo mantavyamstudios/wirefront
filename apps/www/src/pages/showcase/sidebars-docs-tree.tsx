@@ -13,7 +13,7 @@ import {
   SearchIcon,
   StickyNoteIcon,
 } from "lucide-react";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 
 interface Doc {
   id: string;
@@ -112,10 +112,10 @@ export function SidebarsDocsTreeShowcasePage() {
             <ListTreeIcon className="size-4" />
             Contents
           </SheetTrigger>
-          <SheetPopup side="left" className="max-w-[320px] bg-background">
+          <SheetContent side="left" className="max-w-[320px] bg-background">
             <SheetTitle className="sr-only">Documentation contents</SheetTitle>
             {tree}
-          </SheetPopup>
+          </SheetContent>
         </Sheet>
         <span className="truncate text-sm">{findTitle(TREE, active)}</span>
       </header>

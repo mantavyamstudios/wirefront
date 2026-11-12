@@ -1,28 +1,21 @@
-// SPDX-License-Identifier: AGPL-3.0-only
-// coss ui © Cal.com, Inc. — https://coss.com/ui · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-"use client";
+// SPDX-License-Identifier: MIT
+// shadcn/ui (base-nova style) © 2023 shadcn — https://ui.shadcn.com · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
+"use client"
 
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
-import type React from "react";
-import { cn } from "../../lib/utils";
+import * as React from "react"
+import { cn } from "../../lib/utils"
 
-export function Label({
-  className,
-  render,
-  ...props
-}: useRender.ComponentProps<"label">): React.ReactElement {
-  const defaultProps = {
-    className: cn(
-      "inline-flex items-center gap-2 font-medium text-base/4.5 text-foreground sm:text-sm/4",
-      className,
-    ),
-    "data-slot": "label",
-  };
-
-  return useRender({
-    defaultTagName: "label",
-    props: mergeProps<"label">(defaultProps, props),
-    render,
-  });
+function Label({ className, ...props }: React.ComponentProps<"label">) {
+  return (
+    <label
+      data-slot="label"
+      className={cn(
+        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        className
+      )}
+      {...props}
+    />
+  )
 }
+
+export { Label }

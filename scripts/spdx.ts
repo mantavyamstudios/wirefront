@@ -24,15 +24,10 @@ const IGNORED = /(^|\/)routeTree\.gen\.ts$/;
 const WIREFRONT = "Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront";
 
 /** Licence lines for a file, based on where its code came from. */
-export function headerLines(path: string, source: string): string[] {
+export function headerLines(_path: string, source: string): string[] {
+  // shadcn/ui components are vendored with their own MIT header (see
+  // packages/ui/src/components/ui); everything else is Wirefront's.
   const lines = ["SPDX-License-Identifier: AGPL-3.0-only"];
-  const isCoss =
-    (path.startsWith("packages/ui/src/components/ui/") && !path.endsWith("auth-split-layout.tsx")) ||
-    path === "packages/ui/src/styles.css";
-  if (isCoss) {
-    lines.push(`coss ui © Cal.com, Inc. — https://coss.com/ui · see ${NOTICE_URL}`);
-    return lines;
-  }
   lines.push(WIREFRONT);
   if (source.includes("Ported from devl.dev")) {
     lines.push(`Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see ${NOTICE_URL}`);

@@ -25,8 +25,8 @@ import {
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { useTheme } from "@wirefront/ui/theme-provider";
 import { PALETTES } from "@wirefront/ui/themes";
 import { playGoo, setSoundEnabled, useSoundEnabled } from "@/lib/sound";
@@ -126,10 +126,10 @@ function PanelTooltip({ label, shortcut, trigger }: { label: string; shortcut?: 
   return (
     <Tooltip>
       <TooltipTrigger render={trigger} />
-      <TooltipPopup className="font-sans" side="top" sideOffset={10}>
+      <TooltipContent className="font-sans" side="top" sideOffset={10}>
         {label}
         {shortcut && <span className="ms-2 font-mono text-muted-foreground">{shortcut}</span>}
-      </TooltipPopup>
+      </TooltipContent>
     </Tooltip>
   );
 }
@@ -246,7 +246,7 @@ function PalettePicker() {
           </PopoverTrigger>
         }
       />
-      <PopoverPopup className="w-56 font-sans" side="top" sideOffset={12}>
+      <PopoverContent className="w-56 font-sans" side="top" sideOffset={12}>
         <p className="mb-2 font-mono text-[11px] text-muted-foreground uppercase tracking-widest">Palette</p>
         <div aria-label="Palette" className="flex flex-col gap-0.5" role="radiogroup">
           {Object.values(PALETTES).map((p, index) => {
@@ -273,7 +273,7 @@ function PalettePicker() {
             );
           })}
         </div>
-      </PopoverPopup>
+      </PopoverContent>
     </Popover>
   );
 }

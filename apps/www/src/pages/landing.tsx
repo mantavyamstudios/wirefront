@@ -176,7 +176,7 @@ export function LandingPage() {
           Designs.
         </h1>
         <p className="mt-3 max-w-xl text-muted-foreground text-sm leading-relaxed">
-          {totalFiles} screen designs, built on coss-ui —
+          {totalFiles} screen designs, built on shadcn/ui —
           with raw CSS, shaders, weird SVGs, and the odd canvas thrown in.
           Scroll, or press{" "}
           <kbd className="rounded border border-border/60 bg-background/80 px-1 py-0.5 font-mono text-[10px]">⌘K</kbd>{" "}

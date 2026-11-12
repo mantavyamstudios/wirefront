@@ -42,10 +42,22 @@ import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 import { Kbd } from "@wirefront/ui/kbd";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Spinner } from "@wirefront/ui/spinner";
 import { Switch } from "@wirefront/ui/switch";
+
+// shadcn's Badge has no status tones; render them as a secondary badge with
+// Wirefront's semantic tokens.
+const TONE_CLASS = {
+  success: "bg-success/8 text-success-foreground dark:bg-success/16",
+  warning: "bg-warning/8 text-warning-foreground dark:bg-warning/16",
+  info: "bg-info/8 text-info-foreground dark:bg-info/16",
+  error: "bg-destructive/8 text-destructive-foreground dark:bg-destructive/16",
+} as const;
+type BadgeVariant = "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
+const badgeVariant = (v: string): BadgeVariant => (v in TONE_CLASS ? "secondary" : (v as BadgeVariant));
+const badgeTone = (v: string): string | undefined => TONE_CLASS[v as keyof typeof TONE_CLASS];
 
 // Stays false until mounted so the server render and the first client render match.
 function useSafeReducedMotion() {
@@ -402,8 +414,8 @@ function ConnectButton({
               </span>
               Connected
             </span>
-            <Menu>
-              <MenuTrigger
+            <DropdownMenu>
+              <DropdownMenuTrigger
                 render={
                   <Button
                     aria-label={`${name} options`}
@@ -415,19 +427,19 @@ function ConnectButton({
                 }
               >
                 <EllipsisIcon />
-              </MenuTrigger>
-              <MenuPopup align="end" className={menuMotion}>
-                <MenuItem onClick={onConfigure}>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className={menuMotion}>
+                <DropdownMenuItem onClick={onConfigure}>
                   <Settings2Icon />
                   Configure
-                </MenuItem>
-                <MenuSeparator />
-                <MenuItem onClick={onDisconnect} variant="destructive">
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={onDisconnect} variant="destructive">
                   <UnplugIcon />
                   Disconnect
-                </MenuItem>
-              </MenuPopup>
-            </Menu>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </motion.div>
         ) : (
           <motion.div animate="animate" exit="exit" initial="initial" key="action" transition={quick} variants={variants}>
@@ -658,13 +670,13 @@ export function Connectors({
                   <SearchIcon className="pointer-events-none absolute start-2.5 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     aria-label="Search apps"
-                    className="[&_input]:ps-8 [&_input]:pe-12"
+                    className="ps-8 pe-12"
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search apps"
                     ref={searchRef}
                     type="search"
                     value={query}
-                  />
+                   />
                   <span className="absolute end-1.5 top-1/2 -translate-y-1/2">
                     {query ? (
                       <Button
@@ -758,13 +770,13 @@ export function Connectors({
                   <SelectTrigger aria-label="Sort apps" className="w-auto min-w-36 text-sm" size="sm">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectPopup>
+                  <SelectContent align="start">
                     {Object.entries(sortItems).map(([value, label]) => (
                       <SelectItem key={value} value={value}>
                         {label}
                       </SelectItem>
                     ))}
-                  </SelectPopup>
+                  </SelectContent>
                 </Select>
               </div>
             </div>
@@ -953,7 +965,7 @@ function AppCard({
             {app.name}
           </button>
           {app.tag && (
-            <Badge size="sm" variant={tagVariant[app.tag]}>
+            <Badge variant={badgeVariant(tagVariant[app.tag])} className={cn(badgeTone(tagVariant[app.tag]), "h-4.5 rounded-sm px-1 text-[0.625rem]")}>
               {app.tag}
             </Badge>
           )}
@@ -1062,7 +1074,7 @@ function DetailPanel({
             <div className="flex items-center gap-1.5">
               <h3 className="truncate font-heading font-semibold text-base">{app.name}</h3>
               {app.tag && (
-                <Badge size="sm" variant={tagVariant[app.tag]}>
+                <Badge variant={badgeVariant(tagVariant[app.tag])} className={cn(badgeTone(tagVariant[app.tag]), "h-4.5 rounded-sm px-1 text-[0.625rem]")}>
                   {app.tag}
                 </Badge>
               )}
@@ -1109,7 +1121,7 @@ function DetailPanel({
               else if (status === "connecting") onCancel();
               else onConnect();
             }}
-            variant={status === "connected" ? "destructive-outline" : status === "connecting" ? "outline" : "default"}
+            variant={status === "connected" ? "destructive" : status === "connecting" ? "outline" : "default"}
           >
             <span className="relative flex size-4 items-center justify-center">
               {status === "connected" ? (

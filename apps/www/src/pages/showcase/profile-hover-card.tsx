@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
-import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 
 export function ProfileHoverCardShowcasePage() {
   return (
@@ -176,12 +176,12 @@ function Mention({
         </Avatar>
         @{name}
       </PopoverTrigger>
-      <PopoverPopup
+      <PopoverContent
         aria-label={`${name} profile`}
         className="overflow-hidden [&_[data-slot=popover-viewport]]:p-0"
       >
         <ProfileCard />
-      </PopoverPopup>
+      </PopoverContent>
     </Popover>
   );
 }

@@ -41,20 +41,21 @@ import {
 } from "@wirefront/ui/breadcrumb";
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
-import {
-  Menu,
-  MenuGroup,
-  MenuGroupLabel,
-  MenuItem,
-  MenuPopup,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuSeparator,
-  MenuShortcut,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
+
+// shadcn's Badge has no status tones; render them as a secondary badge with
+// Wirefront's semantic tokens.
+const TONE_CLASS = {
+  success: "bg-success/8 text-success-foreground dark:bg-success/16",
+  warning: "bg-warning/8 text-warning-foreground dark:bg-warning/16",
+  info: "bg-info/8 text-info-foreground dark:bg-info/16",
+  error: "bg-destructive/8 text-destructive-foreground dark:bg-destructive/16",
+} as const;
+type BadgeVariant = "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
+const badgeVariant = (v: string): BadgeVariant => (v in TONE_CLASS ? "secondary" : (v as BadgeVariant));
+const badgeTone = (v: string): string | undefined => TONE_CLASS[v as keyof typeof TONE_CLASS];
 
 export type ShellTone = "orange" | "teal" | "cyan" | "violet" | "rose" | "info" | "success" | "warning";
 
@@ -172,9 +173,9 @@ function SidebarRow({
   return (
     <Tooltip disabled={!collapsed}>
       <TooltipTrigger render={children({ "aria-label": collapsed ? label : undefined }) as ReactElement} />
-      <TooltipPopup side="right" sideOffset={10}>
+      <TooltipContent side="right" sideOffset={10}>
         {tip ?? label}
-      </TooltipPopup>
+      </TooltipContent>
     </Tooltip>
   );
 }
@@ -229,8 +230,8 @@ function SidebarBody({
     <LayoutGroup id={pill}>
       <div className="flex h-full min-h-0 flex-col whitespace-nowrap">
         <div className="flex items-center gap-1 p-2">
-          <Menu>
-            <MenuTrigger
+          <DropdownMenu>
+            <DropdownMenuTrigger
               aria-label={`Workspace: ${ws.name}`}
               className="flex h-11 min-w-0 flex-1 cursor-pointer items-center gap-2.5 overflow-hidden rounded-xl px-1.5 text-left outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
             >
@@ -247,33 +248,33 @@ function SidebarBody({
                 <span className="truncate text-muted-foreground text-xs leading-tight">{ws.plan} plan</span>
               </span>
               <ChevronsUpDownIcon className={cn("size-4 shrink-0 text-muted-foreground", collapsed && "opacity-0")} />
-            </MenuTrigger>
-            <MenuPopup align="start" className="w-60">
-              <MenuGroup>
-                <MenuGroupLabel>Workspaces</MenuGroupLabel>
-                <MenuRadioGroup onValueChange={(v) => onWorkspace(v as string)} value={workspace}>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-60">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
+                <DropdownMenuRadioGroup onValueChange={(v) => onWorkspace(v as string)} value={workspace}>
                   {workspaces.map((w) => (
-                    <MenuRadioItem key={w.id} value={w.id}>
+                    <DropdownMenuRadioItem key={w.id} value={w.id}>
                       <span className="flex items-center gap-2">
                         <span className={cn("size-2 rounded-full", tile[w.tone])} />
                         {w.name}
                         <span className="text-muted-foreground text-xs">{w.plan}</span>
                       </span>
-                    </MenuRadioItem>
+                    </DropdownMenuRadioItem>
                   ))}
-                </MenuRadioGroup>
-              </MenuGroup>
-              <MenuSeparator />
-              <MenuItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
                 <PlusIcon />
                 Create workspace
-              </MenuItem>
-              <MenuItem>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
                 <SettingsIcon />
                 Workspace settings
-              </MenuItem>
-            </MenuPopup>
-          </Menu>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {onClose && (
             <Button aria-label="Close navigation" onClick={onClose} size="icon-sm" variant="ghost">
               <XIcon />
@@ -446,8 +447,8 @@ function SidebarBody({
               </button>
             )}
           </SidebarRow>
-          <Menu>
-            <MenuTrigger
+          <DropdownMenu>
+            <DropdownMenuTrigger
               aria-label={`Account: ${user.name}`}
               className="mt-1 flex h-12 w-full cursor-pointer items-center gap-2.5 overflow-hidden rounded-xl px-1.5 text-left outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
             >
@@ -459,8 +460,8 @@ function SidebarBody({
                 <span className="truncate text-muted-foreground text-xs leading-tight">{user.email}</span>
               </span>
               <ChevronsUpDownIcon className={cn("size-4 shrink-0 text-muted-foreground", collapsed && "opacity-0")} />
-            </MenuTrigger>
-            <MenuPopup align="start" className="w-56" side="top">
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56" side="top">
               <div className="flex items-center gap-2.5 px-2 py-1.5">
                 <Avatar className="size-8">
                   <AvatarFallback className="bg-teal-500/16 text-teal-800 dark:text-teal-400 text-xs">{user.initials}</AvatarFallback>
@@ -470,28 +471,28 @@ function SidebarBody({
                   <div className="truncate text-muted-foreground text-xs">{user.email}</div>
                 </div>
               </div>
-              <MenuSeparator />
-              <MenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
                 <UserRoundIcon />
                 Profile
-              </MenuItem>
-              <MenuItem>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
                 <SettingsIcon />
                 Preferences
-                <MenuShortcut>⌘,</MenuShortcut>
-              </MenuItem>
-              <MenuItem>
+                <DropdownMenuShortcut>⌘,</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
                 <KeyboardIcon />
                 Shortcuts
-                <MenuShortcut>?</MenuShortcut>
-              </MenuItem>
-              <MenuSeparator />
-              <MenuItem>
+                <DropdownMenuShortcut>?</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
                 <LogOutIcon />
                 Sign out
-              </MenuItem>
-            </MenuPopup>
-          </Menu>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </LayoutGroup>
@@ -700,7 +701,7 @@ function Properties({ project, d, className }: { project: ShellProject; d: Proje
     <dl className={cn("grid grid-cols-[88px_minmax(0,1fr)] gap-x-3 gap-y-1 text-sm", className)}>
       <dt className={cn(row, "text-muted-foreground text-xs")}>Status</dt>
       <dd className={row}>
-        <Badge variant={badge.variant}>{badge.label}</Badge>
+        <Badge variant={badgeVariant(badge.variant)} className={badgeTone(badge.variant)}>{badge.label}</Badge>
       </dd>
       <dt className={cn(row, "text-muted-foreground text-xs")}>Lead</dt>
       <dd className={cn(row, "min-w-0")}>
@@ -933,7 +934,7 @@ function NavPage({ id, label, icon: Icon, projects, onOpenProject }: { id: strin
                 <span className="flex items-center gap-2">
                   <span className={cn("size-2 rounded-full", dot[p.tone])} />
                   <span className="font-medium">{p.name}</span>
-                  {d && <Badge className="ms-auto" variant={statusBadge[d.status].variant}>{statusBadge[d.status].label}</Badge>}
+                  {d && <Badge variant={badgeVariant(statusBadge[d.status].variant)} className={cn(badgeTone(statusBadge[d.status].variant), "ms-auto")}>{statusBadge[d.status].label}</Badge>}
                 </span>
                 {d && (
                   <>
@@ -1189,7 +1190,7 @@ export function InsetShell({
                 >
                   <PanelLeftIcon />
                 </TooltipTrigger>
-                <TooltipPopup>{collapsed ? "Expand sidebar" : "Collapse sidebar"}</TooltipPopup>
+                <TooltipContent>{collapsed ? "Expand sidebar" : "Collapse sidebar"}</TooltipContent>
               </Tooltip>
               <span className="h-4 w-px bg-border" />
               <Breadcrumb className="min-w-0 flex-1">

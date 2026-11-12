@@ -941,9 +941,11 @@ export function MusicPlayer({
 
       <div className="flex items-center gap-2 text-muted-foreground">
         {iconButton(muted ? "Unmute" : "Mute", () => setMuted((m) => !m), <VolumeIcon className="!size-4.5" />, undefined, "size-8 text-muted-foreground")}
+        <span className="sr-only" id="music-player-volume-label">
+          Volume
+        </span>
         <Slider
-          aria-label="Volume"
-          getAriaLabel={() => "Volume"}
+          aria-labelledby="music-player-volume-label"
           className="flex-1 [&_[data-slot=slider-control]]:min-w-0"
           max={100}
           onValueChange={(v) => {

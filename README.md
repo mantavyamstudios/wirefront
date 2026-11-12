@@ -1,6 +1,6 @@
 # Wirefront
 
-200 responsive UI screens built on [coss ui](https://coss.com/ui) primitives (Base UI + Tailwind v4), each installable with the shadcn CLI. Browse a screen, preview it on desktop, tablet or phone, then copy its source or install it.
+200 responsive UI screens built on [shadcn/ui](https://ui.shadcn.com) with [Base UI](https://base-ui.com) and Tailwind v4, each installable with the shadcn CLI. Browse a screen, preview it on desktop, tablet or phone, then copy its source or install it.
 
 By [Mantavyam Studios](https://mantavyam.com) · [GitHub](https://github.com/mantavyamstudios) · [Book a call](https://cal.com/mantavyam/business)
 
@@ -11,7 +11,7 @@ By [Mantavyam Studios](https://mantavyam.com) · [GitHub](https://github.com/man
 ├── apps/
 │   └── www         →  TanStack Start app — the whole product (port 4000)
 └── packages/
-    └── ui          →  coss ui components, Tailwind v4 + Base UI
+    └── ui          →  shadcn/ui (base-nova) components + Wirefront's own Base UI components
 ```
 
 No backend, no auth, no database. Just the showcase.
@@ -62,10 +62,10 @@ Wirefront is being upgraded so every screen is ready to wire to any backend. Pro
 
 ## Credits
 
-Wirefront started from [devl.dev](https://github.com/sean-brydon/devl.dev) by Sean Brydon. Its original screens were reworked here to be responsive and production-ready, and 42 screens from the current devl.dev are included (their files say so in a header comment). The components in `packages/ui` are [coss ui](https://coss.com/ui) by Cal.com, Inc. See [NOTICE.md](NOTICE.md) for licenses.
+Wirefront started from [devl.dev](https://github.com/sean-brydon/devl.dev) by Sean Brydon. Its original screens were reworked here to be responsive and production-ready, and 42 screens from the current devl.dev are included (their files say so in a header comment). The components in `packages/ui` are [shadcn/ui](https://ui.shadcn.com) (MIT) plus Wirefront's own components on [Base UI](https://base-ui.com). See [NOTICE.md](NOTICE.md) for licenses.
 
 ## License
 
 Copyright (c) 2026 Mantavyam Studios. Wirefront is licensed under the [GNU Affero General Public License v3.0](LICENSE).
 
-Code that came from devl.dev keeps its MIT notice (Copyright (c) 2026 Sean Brydon), and coss ui in `packages/ui` is AGPL-3.0 by Cal.com, Inc. Both are listed in [NOTICE.md](NOTICE.md).
+Code that came from devl.dev keeps its MIT notice (Copyright (c) 2026 Sean Brydon), and the shadcn/ui components in `packages/ui` keep theirs (Copyright (c) 2023 shadcn). Both are listed in [NOTICE.md](NOTICE.md).

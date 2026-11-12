@@ -16,11 +16,7 @@ import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
 import { Separator } from "@wirefront/ui/separator";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@wirefront/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 
 type SwatchKey =
   | "primary"
@@ -153,8 +149,7 @@ export function SettingsBrandingShowcasePage() {
                         style={{ background: colors[s.key] }}
                       />
                       <Input
-                        size="sm"
-                        nativeInput
+                       
                         value={colors[s.key]}
                         onChange={(e) =>
                           setColors((c) => ({
@@ -162,8 +157,8 @@ export function SettingsBrandingShowcasePage() {
                             [s.key]: e.target.value,
                           }))
                         }
-                        className="font-mono text-xs"
-                      />
+                        className="h-7 text-xs font-mono text-xs"
+                        />
                     </div>
                     <div className="mt-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                       Presets
@@ -246,12 +241,11 @@ export function SettingsBrandingShowcasePage() {
                 </span>
                 <Input
                   id="b-domain"
-                  nativeInput
                   value={domain}
                   onChange={(e) => setDomain(e.target.value)}
                   placeholder="workspace.yourcompany.com"
                   className="pl-8 font-mono text-sm"
-                />
+                  />
               </div>
               <DomainStatusPill status={domainStatus} />
             </div>
@@ -341,23 +335,21 @@ export function SettingsBrandingShowcasePage() {
                 <Label htmlFor="b-from-name">From name</Label>
                 <Input
                   id="b-from-name"
-                  nativeInput
                   value={fromName}
                   onChange={(e) => setFromName(e.target.value)}
                   placeholder="Orbit"
-                />
+                  />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="b-from-addr">Reply-to address</Label>
                 <Input
                   id="b-from-addr"
-                  nativeInput
                   type="email"
                   value={fromAddress}
                   onChange={(e) => setFromAddress(e.target.value)}
                   placeholder="noreply@acme.io"
                   className="font-mono text-sm"
-                />
+                  />
               </div>
             </div>
 

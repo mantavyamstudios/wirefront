@@ -1114,7 +1114,6 @@ export function HelpCentre({
                         aria-label="Tell us more (optional)"
                         onChange={(e) => setFeedback((f) => ({ ...f, [article.id]: { ...f[article.id], note: e.target.value } }))}
                         placeholder="Tell us more (optional)"
-                        size="sm"
                         value={fb.note ?? ""}
                       />
                       <div className="flex items-center justify-end gap-2">
@@ -1379,7 +1378,7 @@ export function HelpCentre({
                     </AnimatePresence>
                   </label>
                   <div className="flex items-center gap-2">
-                    <Input aria-label="Your email" className="flex-1" defaultValue="maya@larkfield.studio" type="email" />
+                    <Input aria-label="Your email" className="flex-1" defaultValue="maya@larkfield.studio" type="email"  />
                     <Button className={press} type="submit">
                       Send
                     </Button>

@@ -9,17 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
-import {
-  Dialog,
-  DialogClose,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogContent, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
 import { Textarea } from "@wirefront/ui/textarea";
 
 type Kind = "bug" | "idea" | "praise";
@@ -64,7 +54,7 @@ export function ModalsFeedbackShowcasePage() {
         <div className="font-heading text-2xl">Project board</div>
       <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>Send feedback</DialogTrigger>
-        <DialogPopup className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base">Send us feedback</DialogTitle>
             <DialogDescription>
@@ -72,7 +62,7 @@ export function ModalsFeedbackShowcasePage() {
             </DialogDescription>
           </DialogHeader>
 
-          <DialogPanel className="space-y-4">
+          <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 space-y-4">
             <div role="radiogroup" aria-label="Feedback type" className="grid grid-cols-3 gap-2">
               {KINDS.map((k) => {
                 const active = kind === k.id;
@@ -126,13 +116,13 @@ export function ModalsFeedbackShowcasePage() {
               <Checkbox defaultChecked />
               Include console logs
             </label>
-          </DialogPanel>
+          </div>
 
           <DialogFooter>
             <DialogClose render={<Button variant="ghost" type="button" />}>Cancel</DialogClose>
             <Button type="button">Send feedback</Button>
           </DialogFooter>
-        </DialogPopup>
+        </DialogContent>
       </Dialog>
       </div>
     </div>

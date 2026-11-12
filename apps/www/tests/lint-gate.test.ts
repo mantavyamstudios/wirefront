@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /** The lint ratchet: existing debt may shrink, never grow (scripts/lint-gate.ts). */
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { compare, countDiagnostics } from "../../../scripts/lint-gate";
 
@@ -27,5 +30,20 @@ describe("lint gate", () => {
     const { regressions, improvements } = compare({ "a.tsx": { "lint/x": 2 } }, {});
     expect(regressions).toEqual([]);
     expect(improvements).toEqual(["a.tsx: lint/x 2 → 0"]);
+  });
+
+  it("excludes exactly the vendored shadcn/ui components from lint, nothing of Wirefront's", () => {
+    const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+    const dir = "packages/ui/src/components/ui";
+    const vendored = readdirSync(path.join(root, dir))
+      .filter((f) => {
+        const head = readFileSync(path.join(root, dir, f), "utf8").slice(0, 300);
+        return head.includes("SPDX-License-Identifier: MIT") && head.includes("shadcn/ui");
+      })
+      .map((f) => `!${dir}/${f}`)
+      .sort();
+    const biome = JSON.parse(readFileSync(path.join(root, "biome.json"), "utf8")) as { files: { includes: string[] } };
+    const excluded = biome.files.includes.filter((p) => p.startsWith(`!${dir}/`)).sort();
+    expect(excluded).toEqual(vendored);
   });
 });

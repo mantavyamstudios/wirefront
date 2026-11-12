@@ -56,9 +56,9 @@ import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import { Kbd } from "@wirefront/ui/kbd";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type AssistantTone = "orange" | "teal" | "violet" | "amber" | "info" | "success" | "warning";
@@ -490,7 +490,7 @@ function PromptBox({
           >
             <PaperclipIcon />
           </TooltipTrigger>
-          <TooltipPopup>Attach a file</TooltipPopup>
+          <TooltipContent>Attach a file</TooltipContent>
         </Tooltip>
         <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto [scrollbar-width:none]">
           {tools.map((t) => {
@@ -526,13 +526,13 @@ function PromptBox({
           >
             <SelectValue />
           </SelectTrigger>
-          <SelectPopup align="end">
+          <SelectContent align="end">
             {models.map((m) => (
               <SelectItem key={m.value} value={m.value}>
                 {m.label}
               </SelectItem>
             ))}
-          </SelectPopup>
+          </SelectContent>
         </Select>
         <SendButton disabled={!value.trim()} onSend={onSubmit} onStop={onStop} streaming={streaming} />
       </div>
@@ -612,7 +612,6 @@ function SidebarBody({
               aria-label="Search chats"
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search chats"
-              size="sm"
               value={query}
             />
           </InputGroup>
@@ -727,26 +726,26 @@ function SidebarBody({
             <div className="truncate font-medium">{userName}</div>
             <div className="truncate text-muted-foreground text-xs">Northlight Studio</div>
           </div>
-          <Menu>
-            <MenuTrigger render={<Button aria-label="Account menu" className="sm:size-8" size="icon-sm" variant="ghost" />}>
+          <DropdownMenu>
+            <DropdownMenuTrigger render={<Button aria-label="Account menu" className="sm:size-8" size="icon-sm" variant="ghost" />}>
               <EllipsisIcon />
-            </MenuTrigger>
-            <MenuPopup align="end" side="top">
-              <MenuItem>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" side="top">
+              <DropdownMenuItem>
                 <SettingsIcon />
                 Settings
-              </MenuItem>
-              <MenuItem>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
                 <SparklesIcon />
                 Upgrade plan
-              </MenuItem>
-              <MenuSeparator />
-              <MenuItem>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
                 <LogOutIcon />
                 Sign out
-              </MenuItem>
-            </MenuPopup>
-          </Menu>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </LayoutGroup>

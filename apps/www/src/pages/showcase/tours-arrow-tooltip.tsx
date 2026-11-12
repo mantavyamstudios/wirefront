@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Popover } from "@base-ui/react/popover";
 import { useEffect, useState } from "react";
 import { ArrowRightIcon, PlusIcon, XIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import { PopoverPrimitive as Popover } from "@wirefront/ui/popover";
 
 interface Step {
   target: string; // matches data-tour="…" on a real element

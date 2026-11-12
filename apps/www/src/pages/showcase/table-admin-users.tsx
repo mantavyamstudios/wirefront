@@ -39,18 +39,7 @@ import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
-import {
-  Menu,
-  MenuCheckboxItem,
-  MenuGroup,
-  MenuGroupLabel,
-  MenuItem,
-  MenuPopup,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuSeparator,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@wirefront/ui/table";
 
 function useReducedMotionAfterMount() {
@@ -370,17 +359,17 @@ export function AdminUsers({
     u.role === "owner" || u.id === currentUserId ? (
       <RolePill role={u.role} />
     ) : (
-      <Menu>
-        <MenuTrigger
+      <DropdownMenu>
+        <DropdownMenuTrigger
           aria-label={`Role for ${label(u)}: ${roleMeta(u.role).label}`}
           className={cn("group/role relative inline-flex cursor-pointer items-center gap-1 rounded-full after:absolute after:-inset-x-1 after:-inset-y-2 after:content-['']", ring)}
           onClick={(e) => e.stopPropagation()}
         >
           <RolePill role={u.role} />
           <ChevronDownIcon className="size-3.5 text-muted-foreground opacity-0 transition-opacity group-hover/role:opacity-100 group-data-popup-open/role:opacity-100 pointer-coarse:opacity-100" />
-        </MenuTrigger>
-        <MenuPopup align={align} className={cn("w-64", menuPop)}>
-          <MenuRadioGroup
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align={align} className={cn("w-64", menuPop)}>
+          <DropdownMenuRadioGroup
             onValueChange={(v) => {
               updateMany([u.id], { role: v as AdminRole });
               say(`${label(u)} is now ${roleMeta(v as AdminRole).label === "Admin" ? "an" : "a"} ${roleMeta(v as AdminRole).label.toLowerCase()}`);
@@ -390,69 +379,69 @@ export function AdminUsers({
             {adminRoles
               .filter((r) => r.value !== "owner")
               .map((r) => (
-                <MenuRadioItem key={r.value} value={r.value}>
+                <DropdownMenuRadioItem key={r.value} value={r.value}>
                   <span className="flex flex-col py-0.5">
                     <span className="font-medium">{r.label}</span>
                     <span className="text-pretty text-muted-foreground text-xs">{r.description}</span>
                   </span>
-                </MenuRadioItem>
+                </DropdownMenuRadioItem>
               ))}
-          </MenuRadioGroup>
-        </MenuPopup>
-      </Menu>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
 
   const rowMenu = (u: AdminUser) =>
     u.id === currentUserId ? (
       <span className="block size-8" />
     ) : (
-      <Menu>
-        <MenuTrigger
+      <DropdownMenu>
+        <DropdownMenuTrigger
           aria-label={`Actions for ${label(u)}`}
           onClick={(e) => e.stopPropagation()}
           render={<Button className={press} size="icon-sm" variant="ghost" />}
         >
           <EllipsisIcon />
-        </MenuTrigger>
-        <MenuPopup align="end" className={cn("w-48", menuPop)}>
-          <MenuItem onClick={() => setDetailId(u.id)}>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className={cn("w-48", menuPop)}>
+          <DropdownMenuItem onClick={() => setDetailId(u.id)}>
             <UserCogIcon /> View details
-          </MenuItem>
+          </DropdownMenuItem>
           {u.status === "invited" && (
-            <MenuItem onClick={() => say(`Invite resent to ${u.email}`)}>
+            <DropdownMenuItem onClick={() => say(`Invite resent to ${u.email}`)}>
               <SendIcon /> Resend invite
-            </MenuItem>
+            </DropdownMenuItem>
           )}
           {u.status === "active" && u.role !== "owner" && (
-            <MenuItem
+            <DropdownMenuItem
               onClick={() => {
                 updateMany([u.id], { status: "suspended" });
                 say(`${label(u)} suspended. Sessions signed out.`);
               }}
             >
               <UserRoundXIcon /> Suspend
-            </MenuItem>
+            </DropdownMenuItem>
           )}
           {u.status === "suspended" && (
-            <MenuItem
+            <DropdownMenuItem
               onClick={() => {
                 updateMany([u.id], { status: "active" });
                 say(`${label(u)} reactivated`);
               }}
             >
               <UserRoundCheckIcon /> Reactivate
-            </MenuItem>
+            </DropdownMenuItem>
           )}
           {u.role !== "owner" && (
             <>
-              <MenuSeparator />
-              <MenuItem onClick={() => setConfirm([u.id])} variant="destructive">
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setConfirm([u.id])} variant="destructive">
                 <UserMinusIcon /> {u.status === "invited" ? "Revoke invite" : "Remove from org"}
-              </MenuItem>
+              </DropdownMenuItem>
             </>
           )}
-        </MenuPopup>
-      </Menu>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
 
   const teamChips = (u: AdminUser, all = false) =>
@@ -727,8 +716,8 @@ export function AdminUsers({
                   </InputGroupAddon>
                   <InputGroupInput aria-label="Search members" onChange={(e) => setQuery(e.target.value)} placeholder="Name, email or team" type="search" value={query} />
                 </InputGroup>
-                <Menu>
-                  <MenuTrigger aria-label={filterCount ? `Filter, ${filterCount} active` : "Filter"} render={<Button className={cn("relative", press)} variant="outline" />}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger aria-label={filterCount ? `Filter, ${filterCount} active` : "Filter"} render={<Button className={cn("relative", press)} variant="outline" />}>
                     <FilterIcon />
                     <span className="hidden @md:inline">Filter</span>
                     <AnimatePresence initial={false}>
@@ -744,29 +733,29 @@ export function AdminUsers({
                         </motion.span>
                       )}
                     </AnimatePresence>
-                  </MenuTrigger>
-                  <MenuPopup align="end" className={cn("w-52", menuPop)}>
-                    <MenuGroup>
-                      <MenuGroupLabel>Role</MenuGroupLabel>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className={cn("w-52", menuPop)}>
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Role</DropdownMenuLabel>
                       {adminRoles.map((r) => (
-                        <MenuCheckboxItem
+                        <DropdownMenuCheckboxItem
                           checked={roleFilter.includes(r.value)}
                           key={r.value}
                           onCheckedChange={(on) => setRoleFilter((f) => (on ? [...f, r.value] : f.filter((x) => x !== r.value)))}
                         >
                           {r.label}
-                        </MenuCheckboxItem>
+                        </DropdownMenuCheckboxItem>
                       ))}
-                    </MenuGroup>
-                    <MenuSeparator />
-                    <MenuGroup>
-                      <MenuGroupLabel>Security</MenuGroupLabel>
-                      <MenuCheckboxItem checked={no2fa} onCheckedChange={(on) => setNo2fa(on)}>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Security</DropdownMenuLabel>
+                      <DropdownMenuCheckboxItem checked={no2fa} onCheckedChange={(on) => setNo2fa(on)}>
                         Two-factor off
-                      </MenuCheckboxItem>
-                    </MenuGroup>
-                  </MenuPopup>
-                </Menu>
+                      </DropdownMenuCheckboxItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 
@@ -859,7 +848,8 @@ export function AdminUsers({
                 </ul>
               </div>
 
-              <Table className="min-w-[860px] table-fixed" render={<div className="relative hidden w-full overflow-x-auto @3xl:block" />}>
+              <div className="hidden @3xl:block">
+              <Table className="min-w-[860px] table-fixed">
                 <TableHeader>
                   <TableRow className="bg-muted/30 text-muted-foreground text-xs not-in-data-[variant=card]:hover:bg-muted/30 dark:not-in-data-[variant=card]:hover:bg-muted/30 [&_th]:h-9 [&_th]:font-medium [&_th]:text-muted-foreground [&_th]:text-xs">
                     <TableHead className="ps-4 has-[[role=checkbox]]:w-auto first:has-[[role=checkbox]]:pe-4">
@@ -925,6 +915,7 @@ export function AdminUsers({
                   </AnimatePresence>
                 </TableBody>
               </Table>
+              </div>
               {rows.length === 0 && empty}
             </div>
           </div>
@@ -950,17 +941,17 @@ export function AdminUsers({
                   <span className="hidden @md:inline">selected</span>
                 </span>
                 <span className="h-5 w-px shrink-0 bg-primary-foreground/20 dark:bg-border" />
-                <Menu>
-                  <MenuTrigger className={barButton}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className={barButton}>
                     <UserCogIcon className="size-3.5 opacity-80" /> Role
-                  </MenuTrigger>
-                  <MenuPopup align="center" className={menuPop} side="top" sideOffset={8}>
-                    <MenuGroup>
-                      <MenuGroupLabel>Change role to</MenuGroupLabel>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="center" className={menuPop} side="top" sideOffset={8}>
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Change role to</DropdownMenuLabel>
                       {adminRoles
                         .filter((r) => r.value !== "owner")
                         .map((r) => (
-                          <MenuItem
+                          <DropdownMenuItem
                             key={r.value}
                             onClick={() => {
                               const ids = users.filter((u) => selectedVisible.includes(u.id) && u.role !== "owner").map((u) => u.id);
@@ -969,11 +960,11 @@ export function AdminUsers({
                             }}
                           >
                             {r.label}
-                          </MenuItem>
+                          </DropdownMenuItem>
                         ))}
-                    </MenuGroup>
-                  </MenuPopup>
-                </Menu>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 {selectedInvited.length > 0 && (
                   <button className={barButton} onClick={() => say(`${selectedInvited.length} ${selectedInvited.length === 1 ? "invite" : "invites"} resent`)} type="button">
                     <SendIcon className="size-3.5 opacity-80" /> Resend
@@ -1146,7 +1137,7 @@ export function AdminUsers({
                       {detail.status === "suspended" ? "Reactivate" : "Suspend"}
                     </Button>
                   )}
-                  <Button className={cn("flex-1", press)} onClick={() => setConfirm([detail.id])} variant="destructive-outline">
+                  <Button className={cn("flex-1", press)} onClick={() => setConfirm([detail.id])} variant="destructive">
                     <UserMinusIcon /> {detail.status === "invited" ? "Revoke" : "Remove"}
                   </Button>
                 </div>

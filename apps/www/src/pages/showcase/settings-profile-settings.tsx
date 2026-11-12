@@ -36,18 +36,10 @@ import {
 import { cn } from "@wirefront/ui/lib/utils";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import {
-  Dialog,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogDescription, DialogFooter, DialogHeader, DialogContent, DialogTitle } from "@wirefront/ui/dialog";
 import { Input } from "@wirefront/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@wirefront/ui/input-group";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Slider } from "@wirefront/ui/slider";
 import { Spinner } from "@wirefront/ui/spinner";
 import { Textarea } from "@wirefront/ui/textarea";
@@ -440,12 +432,12 @@ function CropDialog({
 
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
-      <DialogPopup className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle className="font-semibold text-lg">Adjust photo</DialogTitle>
           <DialogDescription>Drag to reposition, then zoom to frame it.</DialogDescription>
         </DialogHeader>
-        <DialogPanel className="flex flex-col gap-5">
+        <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 flex flex-col gap-5">
           <div className="mx-auto w-full max-w-64">
             <CropStage crop={crop} initials={initials} onChange={setCrop} />
           </div>
@@ -460,8 +452,11 @@ function CropDialog({
             >
               <ZoomOutIcon />
             </Button>
+            <span className="sr-only" id="profile-avatar-zoom-label">
+              Zoom
+            </span>
             <Slider
-              getAriaLabel={() => "Zoom"}
+              aria-labelledby="profile-avatar-zoom-label"
               max={zoomRange[1]}
               min={zoomRange[0]}
               onValueChange={(v) => setCrop((c) => clampCrop({ ...c, zoom: Array.isArray(v) ? v[0] : v }))}
@@ -509,7 +504,7 @@ function CropDialog({
               })}
             </div>
           </div>
-        </DialogPanel>
+        </div>
         <DialogFooter>
           <Button
             className={cn(press, "sm:me-auto")}
@@ -533,7 +528,7 @@ function CropDialog({
             Apply
           </Button>
         </DialogFooter>
-      </DialogPopup>
+      </DialogContent>
     </Dialog>
   );
 }
@@ -1019,7 +1014,8 @@ export function ProfileSettings({
                         <Button className={press} disabled={saving} onClick={discard} size="sm" variant="ghost">
                           Discard
                         </Button>
-                        <Button className={cn(press, "min-w-14")} disabled={Boolean(blocker)} loading={saving} onClick={save} size="sm">
+                        <Button className={cn(press, "min-w-14")} disabled={(Boolean(blocker)) || (saving)} onClick={save} size="sm" aria-busy={saving}>
+{saving ? <Spinner data-icon="inline-start" /> : null}
                           Save
                         </Button>
                       </motion.div>
@@ -1064,7 +1060,7 @@ export function ProfileSettings({
                 maxLength={48}
                 onChange={(e) => set("fullName", e.target.value)}
                 value={draft.fullName}
-              />
+               />
             </Field>
             <Field dirty={dirty.publicName} help="Shown on comments and mentions." htmlFor={ids.publicName} label="Public name">
               <Input
@@ -1074,7 +1070,7 @@ export function ProfileSettings({
                 onChange={(e) => set("publicName", e.target.value)}
                 placeholder={draft.fullName.split(" ")[0]}
                 value={draft.publicName}
-              />
+               />
             </Field>
           </div>
 
@@ -1089,7 +1085,7 @@ export function ProfileSettings({
                   aria-invalid={usernameStatus === "taken" || usernameStatus === "invalid" || undefined}
                   autoCapitalize="none"
                   autoComplete="off"
-                  className="[&_input]:ps-0.5!"
+                  className="ps-0.5!"
                   id={ids.username}
                   maxLength={28}
                   onChange={(e) => set("username", e.target.value.toLowerCase().replace(/\s+/g, "-"))}
@@ -1164,7 +1160,7 @@ export function ProfileSettings({
                       key="pending"
                       transition={{ duration: 0.15, ease: easeOut }}
                     >
-                      <Badge variant="warning">Unverified</Badge>
+                      <Badge variant="secondary" className="bg-warning/8 text-warning-foreground dark:bg-warning/16">Unverified</Badge>
                     </motion.span>
                   ) : (
                     <motion.span
@@ -1174,7 +1170,7 @@ export function ProfileSettings({
                       key="verified"
                       transition={{ duration: 0.15, ease: easeOut }}
                     >
-                      <Badge variant="success">
+                      <Badge variant="secondary" className="bg-success/8 text-success-foreground dark:bg-success/16">
                         <CheckIcon />
                         Verified
                       </Badge>
@@ -1241,7 +1237,7 @@ export function ProfileSettings({
                 <SelectTrigger aria-label="Time zone" className="sm:w-48" id={ids.zone} size="sm">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectPopup>
+                <SelectContent align="start">
                   {zones.map((z) => (
                     <SelectItem key={z.id} value={z.id}>
                       <span className="flex w-full items-center justify-between gap-4">
@@ -1252,7 +1248,7 @@ export function ProfileSettings({
                       </span>
                     </SelectItem>
                   ))}
-                </SelectPopup>
+                </SelectContent>
               </Select>
             </div>
           </div>

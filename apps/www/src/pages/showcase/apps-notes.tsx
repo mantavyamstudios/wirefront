@@ -34,16 +34,7 @@ import {
 import { cn } from "@wirefront/ui/lib/utils";
 import { Button } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
-import {
-  Menu,
-  MenuGroup,
-  MenuGroupLabel,
-  MenuItem,
-  MenuPopup,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 
 function useReducedMotionSafe() {
   const prefers = useReducedMotion();
@@ -703,28 +694,28 @@ export function Notes({
         className={cn("min-w-0 flex-1 flex-col border-r @3xl:flex @3xl:w-80 @3xl:flex-none", view === "list" ? "flex" : "hidden")}
       >
         <div className="flex h-14 shrink-0 items-center gap-2 px-3">
-          <Menu>
-            <MenuTrigger
+          <DropdownMenu>
+            <DropdownMenuTrigger
               className={cn("flex h-8 min-w-0 cursor-pointer items-center gap-1.5 rounded-lg px-2 font-heading font-semibold text-base hover:bg-accent data-popup-open:bg-accent @5xl:pointer-events-none @5xl:px-1", ring)}
             >
               <span className="truncate">{folderName(folder)}</span>
               <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground @5xl:hidden" />
-            </MenuTrigger>
-            <MenuPopup align="start" className={cn("w-56", menuPop)}>
-              <MenuRadioGroup onValueChange={(v) => setFolder(v as string)} value={folder}>
-                <MenuRadioItem value="all">All notes</MenuRadioItem>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className={cn("w-56", menuPop)}>
+              <DropdownMenuRadioGroup onValueChange={(v) => setFolder(v as string)} value={folder}>
+                <DropdownMenuRadioItem value="all">All notes</DropdownMenuRadioItem>
                 {folders.map((f) => (
-                  <MenuRadioItem key={f.id} value={f.id}>
+                  <DropdownMenuRadioItem key={f.id} value={f.id}>
                     <span className="flex items-center gap-2">
                       <span className={cn("size-2 rounded-full", tones[f.tone])} />
                       {f.name}
                     </span>
-                  </MenuRadioItem>
+                  </DropdownMenuRadioItem>
                 ))}
-                <MenuRadioItem value="trash">Recently deleted</MenuRadioItem>
-              </MenuRadioGroup>
-            </MenuPopup>
-          </Menu>
+                <DropdownMenuRadioItem value="trash">Recently deleted</DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <span className="text-muted-foreground text-xs tabular-nums">{visible.length}</span>
           <Button aria-label="New note" className={cn("ms-auto", press)} onClick={newNote} size="icon-sm" variant="ghost">
             <SquarePenIcon />
@@ -792,28 +783,28 @@ export function Notes({
                 {note.deleted ? (
                   <span>In Recently deleted</span>
                 ) : (
-                  <Menu>
-                    <MenuTrigger className={cn("flex h-7 cursor-pointer items-center gap-1.5 rounded-md px-1.5 hover:bg-accent hover:text-foreground data-popup-open:bg-accent", ring)}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className={cn("flex h-7 cursor-pointer items-center gap-1.5 rounded-md px-1.5 hover:bg-accent hover:text-foreground data-popup-open:bg-accent", ring)}>
                       <span className={cn("size-1.5 rounded-full", tones[folders.find((f) => f.id === note.folderId)?.tone ?? "amber"])} />
                       {folderName(note.folderId)}
                       <ChevronDownIcon className="size-3.5" />
-                    </MenuTrigger>
-                    <MenuPopup align="start" className={cn("w-48", menuPop)}>
-                      <MenuGroup>
-                        <MenuGroupLabel>Move to</MenuGroupLabel>
-                        <MenuRadioGroup onValueChange={(v) => touch(note.id, () => ({ folderId: v as string }))} value={note.folderId}>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className={cn("w-48", menuPop)}>
+                      <DropdownMenuGroup>
+                        <DropdownMenuLabel>Move to</DropdownMenuLabel>
+                        <DropdownMenuRadioGroup onValueChange={(v) => touch(note.id, () => ({ folderId: v as string }))} value={note.folderId}>
                           {folders.map((f) => (
-                            <MenuRadioItem key={f.id} value={f.id}>
+                            <DropdownMenuRadioItem key={f.id} value={f.id}>
                               <span className="flex items-center gap-2">
                                 <span className={cn("size-2 rounded-full", tones[f.tone])} />
                                 {f.name}
                               </span>
-                            </MenuRadioItem>
+                            </DropdownMenuRadioItem>
                           ))}
-                        </MenuRadioGroup>
-                      </MenuGroup>
-                    </MenuPopup>
-                  </Menu>
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )}
                 <span aria-hidden>·</span>
                 <span className="truncate tabular-nums">Edited {relDate(note.updatedAt, now).long}</span>

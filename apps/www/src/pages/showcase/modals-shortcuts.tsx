@@ -2,15 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { KeyboardIcon, SearchIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Dialog,
-  DialogFooter,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogFooter, DialogHeader, DialogContent, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
 import { Kbd, KbdGroup } from "@wirefront/ui/kbd";
 
 const GROUPS: { name: string; items: { keys: string[]; label: string }[] }[] = [
@@ -67,7 +59,7 @@ export function ModalsShortcutsShowcasePage() {
           <KeyboardIcon />
           Shortcuts
         </DialogTrigger>
-        <DialogPopup className="sm:max-w-2xl">
+        <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle className="text-base">Keyboard shortcuts</DialogTitle>
           </DialogHeader>
@@ -86,7 +78,7 @@ export function ModalsShortcutsShowcasePage() {
             </div>
           </div>
 
-          <DialogPanel className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+          <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 grid grid-cols-1 gap-x-8 sm:grid-cols-2">
             {GROUPS.map((g) => (
               <div key={g.name} className="mb-6">
                 <div className="mb-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
@@ -109,7 +101,7 @@ export function ModalsShortcutsShowcasePage() {
                 </ul>
               </div>
             ))}
-          </DialogPanel>
+          </div>
 
           <DialogFooter className="text-muted-foreground text-xs sm:items-center sm:justify-between">
             <span>
@@ -118,7 +110,7 @@ export function ModalsShortcutsShowcasePage() {
             </span>
             <span>v3.4 · 47 shortcuts</span>
           </DialogFooter>
-        </DialogPopup>
+        </DialogContent>
       </Dialog>
       </div>
     </div>

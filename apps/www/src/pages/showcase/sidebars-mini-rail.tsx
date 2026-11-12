@@ -13,8 +13,8 @@ import {
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 
 const ITEMS = [
   { icon: HomeIcon, label: "Home" },
@@ -167,7 +167,7 @@ function RailTooltip({ label, children }: { label: string; children: React.React
   return (
     <Tooltip>
       {children}
-      <TooltipPopup side="right">{label}</TooltipPopup>
+      <TooltipContent side="right">{label}</TooltipContent>
     </Tooltip>
   );
 }
@@ -196,7 +196,7 @@ function WorkspaceSwitcher({ current }: { current: (typeof WORKSPACES)[number] }
         <span className="font-medium text-sm">{current.name}</span>
         <ChevronDownIcon className="size-3.5 opacity-60" />
       </SheetTrigger>
-      <SheetPopup side="bottom" className="pb-[env(safe-area-inset-bottom)]">
+      <SheetContent side="bottom" className="pb-[env(safe-area-inset-bottom)]">
         <div className="px-4 pt-4 pb-2">
           <SheetTitle className="font-heading text-base">Workspaces</SheetTitle>
         </div>
@@ -231,7 +231,7 @@ function WorkspaceSwitcher({ current }: { current: (typeof WORKSPACES)[number] }
             </button>
           </li>
         </ul>
-      </SheetPopup>
+      </SheetContent>
     </Sheet>
   );
 }

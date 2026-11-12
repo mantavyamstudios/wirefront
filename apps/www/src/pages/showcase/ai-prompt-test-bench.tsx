@@ -36,11 +36,23 @@ import {
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Spinner } from "@wirefront/ui/spinner";
-import { Tabs, TabsList, TabsTab } from "@wirefront/ui/tabs";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Tabs, TabsList, TabsTrigger } from "@wirefront/ui/tabs";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
+
+// shadcn's Badge has no status tones; render them as a secondary badge with
+// Wirefront's semantic tokens.
+const TONE_CLASS = {
+  success: "bg-success/8 text-success-foreground dark:bg-success/16",
+  warning: "bg-warning/8 text-warning-foreground dark:bg-warning/16",
+  info: "bg-info/8 text-info-foreground dark:bg-info/16",
+  error: "bg-destructive/8 text-destructive-foreground dark:bg-destructive/16",
+} as const;
+type BadgeVariant = "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
+const badgeVariant = (v: string): BadgeVariant => (v in TONE_CLASS ? "secondary" : (v as BadgeVariant));
+const badgeTone = (v: string): string | undefined => TONE_CLASS[v as keyof typeof TONE_CLASS];
 
 export interface PromptVersion {
   id: string;
@@ -1004,7 +1016,7 @@ function StatusPill({ status }: { status: Status }) {
           key={status}
           transition={spring}
         >
-          <Badge className="rounded-full px-1.5" variant={m.variant}>
+          <Badge variant={badgeVariant(m.variant)} className={cn(badgeTone(m.variant), "rounded-full px-1.5")}>
             {m.icon}
             {m.label}
           </Badge>
@@ -1249,13 +1261,13 @@ function PromptDiff({
     <Card
       action={
         <Tabs onValueChange={(v) => setMode(v as "unified" | "split")} value={mode}>
-          <TabsList aria-label="Diff layout" className="text-muted-foreground" size="sm">
-            <TabsTab className={TAB_HIT} value="unified">
+          <TabsList aria-label="Diff layout" className="h-7 text-muted-foreground">
+            <TabsTrigger className={TAB_HIT} value="unified">
               Unified
-            </TabsTab>
-            <TabsTab className={TAB_HIT} value="split">
+            </TabsTrigger>
+            <TabsTrigger className={TAB_HIT} value="split">
               Split
-            </TabsTab>
+            </TabsTrigger>
           </TabsList>
         </Tabs>
       }
@@ -1611,9 +1623,9 @@ function SidebarContent({
                   </button>
                 }
               />
-              <TooltipPopup side="right" sideOffset={8}>
+              <TooltipContent side="right" sideOffset={8}>
                 {l.hint}
-              </TooltipPopup>
+              </TooltipContent>
             </Tooltip>
           ))}
         </TooltipProvider>
@@ -1763,14 +1775,14 @@ function PromptBoard({
             <SelectTrigger aria-label="Prompt version" className="w-36">
               <SelectValue />
             </SelectTrigger>
-            <SelectPopup>
+            <SelectContent align="start">
               {[...versions].reverse().map((v) => (
                 <SelectItem key={v.id} value={v.id}>
                   <span className="font-mono">{v.id}</span> · {v.date}
                   {v.id === productionId ? " · prod" : ""}
                 </SelectItem>
               ))}
-            </SelectPopup>
+            </SelectContent>
           </Select>
           <Button
             aria-disabled={busy > 0}
@@ -1854,7 +1866,7 @@ function PromptBoard({
       <Card
         action={
           <Tabs onValueChange={(v) => setFilter(v as Filter)} value={filter}>
-            <TabsList aria-label="Filter test cases" className="text-muted-foreground" size="sm">
+            <TabsList aria-label="Filter test cases" className="h-7 text-muted-foreground">
               {(
                 [
                   { value: "all", label: "All", count: list.length },
@@ -1862,10 +1874,10 @@ function PromptBoard({
                   { value: "fail", label: "Failed", count: failed },
                 ] as const
               ).map((o) => (
-                <TabsTab className={cn("gap-1.5 text-xs sm:text-xs", TAB_HIT)} key={o.value} value={o.value}>
+                <TabsTrigger className={cn("gap-1.5 text-xs sm:text-xs", TAB_HIT)} key={o.value} value={o.value}>
                   {o.label}
                   <span className="min-w-[2ch] text-left text-muted-foreground tabular-nums">{o.count}</span>
-                </TabsTab>
+                </TabsTrigger>
               ))}
             </TabsList>
           </Tabs>

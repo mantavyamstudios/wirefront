@@ -6,10 +6,10 @@
  * apps/www/public/r/<category>/<design>.json.
  *
  * Each item's source has its `@wirefront/ui/<name>` imports rewritten to
- * `@/components/ui/<name>`, and declares `@coss/<name>` registry deps so
- * `shadcn add` pulls coss primitives into the consumer's project.
+ * `@/components/ui/<name>`, and declares shadcn/ui registry deps (e.g. `button`)
+ * so `shadcn add` pulls the primitives into the consumer's project.
  *
- * Some `@wirefront/ui` exports aren't published to the public coss registry
+ * Some `@wirefront/ui` exports aren't shadcn/ui components
  * (see LOCAL_INLINES). For those, the source is recursively inlined into
  * the registry item along with any of its transitive imports inside the
  * `@wirefront/ui` package.
@@ -32,9 +32,11 @@ const UI_PKG_DIR = resolve(ROOT, "packages/ui/src");
 const OUT_DIR = resolve(ROOT, "apps/www/public/r");
 
 // Known external npm packages that show up in showcases. Anything not in
-// this set is assumed to be a workspace/coss/local import we don't need
+// this set is assumed to be a workspace/shadcn/local import we don't need
 // to surface as a npm dependency.
 const TRACKED_NPM_DEPS = new Set([
+  "@base-ui/react",
+  "class-variance-authority",
   "lucide-react",
   "motion",
   "prism-react-renderer",
@@ -42,12 +44,19 @@ const TRACKED_NPM_DEPS = new Set([
   "recharts",
 ]);
 
-// `@wirefront/ui/<name>` exports that are NOT published to the public coss
-// registry — their source is inlined into each registry item that uses
-// them (along with transitive imports inside @wirefront/ui). The value is
-// the path inside packages/ui/src where the source lives.
+// `@wirefront/ui/<name>` exports that aren't shadcn/ui components — their
+// source is inlined into each registry item that uses them (along with
+// transitive imports inside @wirefront/ui). Everything else under
+// components/ui is a stock shadcn/ui (base-nova) component and becomes a
+// plain registryDependency (e.g. "button"), resolved from the builder's own
+// shadcn setup. The value is the path inside packages/ui/src.
 const LOCAL_INLINES: Record<string, string> = {
   "auth-split-layout": "components/ui/auth-split-layout.tsx",
+  autocomplete: "components/ui/autocomplete.tsx",
+  "checkbox-group": "components/ui/checkbox-group.tsx",
+  command: "components/ui/command.tsx",
+  "otp-field": "components/ui/otp-field.tsx",
+  "segmented-control": "components/ui/segmented-control.tsx",
   "particle-field": "components/particle-field.tsx",
   "theme-provider": "components/theme-provider.tsx",
 };
@@ -97,11 +106,11 @@ function mapLibraryPath(absPath: string): {
   alias: string;
   // null when the consumer is expected to already have the file (e.g.
   // `lib/utils` from shadcn init) or when the file is satisfied via a
-  // `@coss/*` registry dep (see `cossDep` below).
+  // shadcn/ui registry dep (see `shadcnDep` below).
   output: string | null;
   type: RegistryFile["type"];
-  // When set, emit this registry dep instead of inlining the file.
-  cossDep?: string;
+  // When set, emit this shadcn/ui registry dep instead of inlining the file.
+  shadcnDep?: string;
 } {
   const rel = relative(UI_PKG_DIR, absPath);
 
@@ -109,10 +118,10 @@ function mapLibraryPath(absPath: string): {
     return { alias: "@/lib/utils", output: null, type: "registry:lib" };
   }
 
-  // packages/ui/src/components/ui/<x>.tsx — coss primitive (button, card,
+  // packages/ui/src/components/ui/<x>.tsx — shadcn/ui primitive (button, card,
   // etc.) unless it's one of the local-only exports listed in
   // LOCAL_INLINES (e.g. auth-split-layout). Inlined files don't go under
-  // components/ui/ since that path is reserved for shadcn/coss primitives
+  // components/ui/ since that path is reserved for shadcn/ui primitives
   // in the consumer.
   let m = rel.match(/^components\/ui\/([a-z0-9-]+)\.tsx$/);
   if (m) {
@@ -128,7 +137,7 @@ function mapLibraryPath(absPath: string): {
       alias: `@/components/ui/${name}`,
       output: null,
       type: "registry:component",
-      cossDep: `@coss/${name}`,
+      shadcnDep: name,
     };
   }
 
@@ -211,15 +220,15 @@ function rewriteLibraryFile(absPath: string, source: string): {
           `cannot resolve relative import "${spec}" from ${absPath}`,
         );
       }
-      const { alias, output, cossDep } = mapLibraryPath(target);
-      if (cossDep) registryDeps.add(cossDep);
+      const { alias, output, shadcnDep } = mapLibraryPath(target);
+      if (shadcnDep) registryDeps.add(shadcnDep);
       if (output) follow.push(target);
       return `from ${q}${alias}${q}`;
     },
   );
 
   // 2. @wirefront/ui/<name> imports — rewrite to consumer alias and either
-  //    queue inlining (local-only) or emit a @coss/* registry dep.
+  //    queue inlining (local-only) or emit a shadcn/ui registry dep.
   out = out.replace(
     /from\s+(["'])@wirefront\/ui\/([a-z0-9/-]+)\1/g,
     (_match, q: string, name: string) => {
@@ -233,7 +242,7 @@ function rewriteLibraryFile(absPath: string, source: string): {
         follow.push(resolve(UI_PKG_DIR, LOCAL_INLINES[baseName]!));
         return `from ${q}@/components/${baseName}${q}`;
       }
-      registryDeps.add(`@coss/${baseName}`);
+      registryDeps.add(baseName);
       return `from ${q}@/components/ui/${baseName}${q}`;
     },
   );
@@ -301,7 +310,7 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
       continue;
     }
 
-    // @wirefront/ui/<name> -> queue local inline OR add @coss/* dep.
+    // @wirefront/ui/<name> -> queue local inline OR add a shadcn/ui dep.
     const orbitRe = /from\s+["']@wirefront\/ui\/([a-z0-9/-]+)["']/g;
     for (const m of raw.matchAll(orbitRe)) {
       const importPath = m[1]!;
@@ -312,7 +321,7 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
       } else if (LOCAL_INLINES[baseName]) {
         libQueue.push(resolve(UI_PKG_DIR, LOCAL_INLINES[baseName]!));
       } else {
-        registryDeps.add(`@coss/${baseName}`);
+        registryDeps.add(baseName);
       }
     }
 

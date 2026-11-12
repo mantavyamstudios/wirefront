@@ -10,17 +10,7 @@ import {
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
-import {
-  Dialog,
-  DialogClose,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogContent, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
 
 type Format = "csv" | "json" | "pdf";
 
@@ -50,13 +40,13 @@ export function ModalsExportShowcasePage() {
           <DownloadIcon />
           Export
         </DialogTrigger>
-        <DialogPopup className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base">Export data</DialogTitle>
             <DialogDescription>We'll email you the download link.</DialogDescription>
           </DialogHeader>
 
-          <DialogPanel className="space-y-5">
+          <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 space-y-5">
             <div>
               <div className="mb-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 Format
@@ -134,7 +124,7 @@ export function ModalsExportShowcasePage() {
                 ))}
               </div>
             </div>
-          </DialogPanel>
+          </div>
 
           <DialogFooter className="sm:items-center">
             <span className="text-center text-muted-foreground text-xs sm:me-auto sm:text-left">
@@ -146,7 +136,7 @@ export function ModalsExportShowcasePage() {
               Export
             </Button>
           </DialogFooter>
-        </DialogPopup>
+        </DialogContent>
       </Dialog>
       </div>
     </div>

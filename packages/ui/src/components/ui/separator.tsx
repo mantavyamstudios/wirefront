@@ -1,25 +1,26 @@
-// SPDX-License-Identifier: AGPL-3.0-only
-// coss ui © Cal.com, Inc. — https://coss.com/ui · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-import { Separator as SeparatorPrimitive } from "@base-ui/react/separator";
-import type React from "react";
-import { cn } from "../../lib/utils";
+// SPDX-License-Identifier: MIT
+// shadcn/ui (base-nova style) © 2023 shadcn — https://ui.shadcn.com · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
+"use client"
 
-export function Separator({
+import { Separator as SeparatorPrimitive } from "@base-ui/react/separator"
+import { cn } from "../../lib/utils"
+
+function Separator({
   className,
   orientation = "horizontal",
   ...props
-}: SeparatorPrimitive.Props): React.ReactElement {
+}: SeparatorPrimitive.Props) {
   return (
     <SeparatorPrimitive
-      className={cn(
-        "shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:not-[[class^='h-']]:not-[[class*='_h-']]:self-stretch",
-        className,
-      )}
       data-slot="separator"
       orientation={orientation}
+      className={cn(
+        "shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch",
+        className
+      )}
       {...props}
     />
-  );
+  )
 }
 
-export { SeparatorPrimitive };
+export { Separator }

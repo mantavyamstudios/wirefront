@@ -9,7 +9,7 @@ import {
   VideoIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
-import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 
 interface Person {
   name: string;
@@ -175,22 +175,22 @@ export function ProfileDirectoryShowcasePage() {
                           ))}
                         </div>
                         {/* Touch / phones: one ⋯ menu. */}
-                        <Menu>
-                          <MenuTrigger
+                        <DropdownMenu>
+                          <DropdownMenuTrigger
                             aria-label={`Actions for ${p.name}`}
                             className="hidden size-10 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] max-sm:grid pointer-coarse:grid"
                           >
                             <MoreHorizontalIcon className="size-4" />
-                          </MenuTrigger>
-                          <MenuPopup align="end">
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
                             {ACTIONS.map((a) => (
-                              <MenuItem key={a.label}>
+                              <DropdownMenuItem key={a.label}>
                                 <a.Icon />
                                 {a.label}
-                              </MenuItem>
+                              </DropdownMenuItem>
                             ))}
-                          </MenuPopup>
-                        </Menu>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </li>
                     ))}
                   </ul>

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { cn } from "@wirefront/ui/lib/utils";
 import { useState } from "react";
 import {
   CheckIcon,
@@ -14,13 +15,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import {
-  Menu,
-  MenuItem,
-  MenuPopup,
-  MenuSeparator,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -101,13 +96,12 @@ export function TableApiKeysShowcasePage() {
                       <span className="truncate font-medium">{k.name}</span>
                       <Badge
                         variant="outline"
-                        size="sm"
-                        className={
+                        className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", 
                           "shrink-0 font-mono text-[10px] uppercase " +
                           (k.env === "live"
                             ? "border-emerald-500/30 text-emerald-700 dark:text-emerald-400"
                             : "border-violet-500/30 text-violet-700 dark:text-violet-400")
-                        }
+                        )}
                       >
                         {k.env}
                       </Badge>
@@ -140,8 +134,7 @@ export function TableApiKeysShowcasePage() {
                         <Badge
                           key={s}
                           variant="outline"
-                          size="sm"
-                          className="font-mono text-[10px]"
+                          className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px]"
                         >
                           {s}
                         </Badge>
@@ -161,23 +154,23 @@ export function TableApiKeysShowcasePage() {
                         onReveal={() => setRevealed((r) => (r === k.prefix ? null : k.prefix))}
                       />
                     </span>
-                    <Menu>
-                      <MenuTrigger
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
                         render={<Button variant="ghost" size="icon" aria-label={`Actions for ${k.name}`} className="pointer-coarse:size-11" />}
                       >
                         <EllipsisIcon />
-                      </MenuTrigger>
-                      <MenuPopup align="end">
-                        <MenuItem>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
                           <RotateCwIcon /> Rotate key
-                        </MenuItem>
-                        <MenuItem>Edit scopes</MenuItem>
-                        <MenuSeparator />
-                        <MenuItem variant="destructive">
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>Edit scopes</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem variant="destructive">
                           <TrashIcon /> Revoke
-                        </MenuItem>
-                      </MenuPopup>
-                    </Menu>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                     </div>
                   </TableCell>
                 </TableRow>

@@ -35,7 +35,6 @@ export function EmptyNoResultsShowcasePage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search invoices…"
-            nativeInput
           />
         </InputGroup>
 

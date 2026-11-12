@@ -32,7 +32,6 @@ interface CodeStageProps {
 
 const SETUP_COMMANDS: { label: string; value: string }[] = [
   { label: "Init shadcn", value: "npx shadcn@latest init" },
-  { label: "Register @coss", value: "npx shadcn@latest registry add @coss" },
 ];
 
 const EASE = [0.23, 1, 0.32, 1] as const;

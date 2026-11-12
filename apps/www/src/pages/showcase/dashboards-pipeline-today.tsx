@@ -51,19 +51,9 @@ import {
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
-import {
-  Menu,
-  MenuGroup,
-  MenuGroupLabel,
-  MenuItem,
-  MenuPopup,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuSeparator,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type DealStage = "lead" | "qualified" | "proposal" | "negotiation" | "won";
@@ -1003,7 +993,7 @@ function DetailPanel({
           <XIcon />
         </Button>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
+      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 pb-4">
         <dl className="grid grid-cols-2 gap-x-3 gap-y-3 rounded-xl border p-3 text-xs">
           <div className="flex flex-col gap-1">
             <dt className="text-muted-foreground">Value</dt>
@@ -1012,32 +1002,32 @@ function DetailPanel({
           <div className="flex flex-col items-start gap-1">
             <dt className="text-muted-foreground">Stage</dt>
             <dd>
-              <Menu>
-                <MenuTrigger
+              <DropdownMenu>
+                <DropdownMenuTrigger
                   aria-label={`Stage: ${stage?.label}. Change stage`}
                   className="-mx-1.5 -my-0.5 flex h-6 cursor-pointer items-center gap-1.5 rounded-md px-1.5 font-medium text-sm outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
                 >
                   <span className={cn("size-1.5 rounded-full", stageDot[deal.stage])} />
                   {stage?.label}
                   <ChevronDownIcon className="size-3.5 text-muted-foreground" />
-                </MenuTrigger>
-                <MenuPopup
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
                   align="start"
                   className="w-44 transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] data-ending-style:scale-95 data-starting-style:scale-95 data-ending-style:opacity-0 data-starting-style:opacity-0"
                 >
-                  <MenuRadioGroup onValueChange={(v) => onMove(v as DealStage)} value={deal.stage}>
+                  <DropdownMenuRadioGroup onValueChange={(v) => onMove(v as DealStage)} value={deal.stage}>
                     {stages.map((s) => (
-                      <MenuRadioItem key={s.id} value={s.id}>
+                      <DropdownMenuRadioItem key={s.id} value={s.id}>
                         <span className="flex w-full items-center gap-2">
                           <span className={cn("size-1.5 rounded-full", stageDot[s.id])} />
                           <span className="flex-1">{s.label}</span>
                           <span className="font-mono text-muted-foreground text-xs">{Math.round(s.probability * 100)}%</span>
                         </span>
-                      </MenuRadioItem>
+                      </DropdownMenuRadioItem>
                     ))}
-                  </MenuRadioGroup>
-                </MenuPopup>
-              </Menu>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </dd>
           </div>
           <div className="flex flex-col gap-1">
@@ -1577,28 +1567,28 @@ export function PipelineToday({
   ];
 
   const workspaceMenu = (trigger: ReactElement) => (
-    <Menu>
-      <MenuTrigger render={trigger} />
-      <MenuPopup
+    <DropdownMenu>
+      <DropdownMenuTrigger render={trigger} />
+      <DropdownMenuContent
         align="start"
         className="w-56 transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] data-ending-style:scale-95 data-starting-style:scale-95 data-ending-style:opacity-0 data-starting-style:opacity-0"
         side="bottom"
       >
-        <MenuGroup>
-          <MenuGroupLabel>{workspace}</MenuGroupLabel>
-          <MenuRadioGroup defaultValue="sales">
-            <MenuRadioItem value="sales">Sales pipeline</MenuRadioItem>
-            <MenuRadioItem value="renewals">Renewals</MenuRadioItem>
-            <MenuRadioItem value="partners">Partnerships</MenuRadioItem>
-          </MenuRadioGroup>
-        </MenuGroup>
-        <MenuSeparator />
-        <MenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>{workspace}</DropdownMenuLabel>
+          <DropdownMenuRadioGroup defaultValue="sales">
+            <DropdownMenuRadioItem value="sales">Sales pipeline</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="renewals">Renewals</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="partners">Partnerships</DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
           <SettingsIcon />
           Workspace settings
-        </MenuItem>
-      </MenuPopup>
-    </Menu>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 
   const lane = (stage: PipelineStage) => {
@@ -1753,7 +1743,7 @@ export function PipelineToday({
           <p className="text-muted-foreground text-xs">Who to act on today, and why</p>
         </div>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-2 [scrollbar-width:thin]">
+      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 pb-2 [scrollbar-width:thin]">
         {visibleSignals.length ? (
           <ul>
             <AnimatePresence initial={false}>
@@ -1881,7 +1871,7 @@ export function PipelineToday({
                     <span className="absolute top-2 right-2 size-1.5 rounded-full bg-rose-500 ring-2 ring-background dark:bg-rose-400" />
                   ) : null}
                 </TooltipTrigger>
-                <TooltipPopup side="right">{n.label}</TooltipPopup>
+                <TooltipContent side="right">{n.label}</TooltipContent>
               </Tooltip>
             ))}
             <div className="mt-auto flex flex-col items-center gap-3">
@@ -1897,7 +1887,7 @@ export function PipelineToday({
                 >
                   <SettingsIcon className="size-4.5" />
                 </TooltipTrigger>
-                <TooltipPopup side="right">Settings</TooltipPopup>
+                <TooltipContent side="right">Settings</TooltipContent>
               </Tooltip>
               <Avatar aria-label={me?.name} role="img" className="[--avatar-size:--spacing(7)]">
                 <AvatarFallback className={cn("font-semibold text-[10px]", ownerTones[ownerIndex(currentUserId) % ownerTones.length])}>

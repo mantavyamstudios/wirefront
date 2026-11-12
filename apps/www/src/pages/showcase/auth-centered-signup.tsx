@@ -1,16 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import { type FormEvent, useMemo, useState } from "react";
 import { CheckIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardPanel,
-  CardTitle,
-} from "@wirefront/ui/card";
+import { Card, CardDescription, CardFooter, CardHeader, CardContent, CardTitle } from "@wirefront/ui/card";
 import { Checkbox } from "@wirefront/ui/checkbox";
 import { Field, FieldLabel } from "@wirefront/ui/field";
 import { Input } from "@wirefront/ui/input";
@@ -105,7 +99,7 @@ export function AuthCenteredSignupShowcasePage() {
             <CardDescription>It only takes a minute.</CardDescription>
           </CardHeader>
 
-          <CardPanel className="flex flex-col gap-5">
+          <CardContent className="flex flex-col gap-5">
             <div className="grid grid-cols-2 gap-2.5">
               <Button variant="outline" size="lg" type="button">
                 <GitHubIcon />
@@ -136,8 +130,7 @@ export function AuthCenteredSignupShowcasePage() {
                   autoComplete="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  nativeInput
-                />
+                  />
               </Field>
 
               <Field>
@@ -150,8 +143,7 @@ export function AuthCenteredSignupShowcasePage() {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  nativeInput
-                />
+                  />
               </Field>
 
               <Field>
@@ -165,7 +157,6 @@ export function AuthCenteredSignupShowcasePage() {
                     autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    nativeInput
                   />
                   <InputGroupAddon align="inline-end">
                     <button
@@ -233,14 +224,14 @@ export function AuthCenteredSignupShowcasePage() {
               <Button
                 type="submit"
                 size="lg"
-                loading={pending}
-                disabled={!canSubmit}
+                disabled={(!canSubmit) || (pending)}
                 className="mt-1 w-full"
-              >
+               aria-busy={pending}>
+{pending ? <Spinner data-icon="inline-start" /> : null}
                 Create account
               </Button>
             </form>
-          </CardPanel>
+          </CardContent>
 
           <CardFooter className="justify-center">
             <p className="text-muted-foreground text-sm">

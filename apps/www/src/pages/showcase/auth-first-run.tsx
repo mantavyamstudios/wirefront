@@ -34,8 +34,8 @@ import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
-import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Spinner } from "@wirefront/ui/spinner";
 import { Textarea } from "@wirefront/ui/textarea";
 
@@ -648,7 +648,7 @@ export function FirstRun({
                             onChange={(e) => onName(e.target.value)}
                             placeholder="Acme Inc."
                             value={name}
-                          />
+                           />
                           <p
                             className={cn("mt-1.5 text-xs", name.trim() ? "text-muted-foreground" : "text-destructive-foreground")}
                             id={`${ids}-name-hint`}
@@ -868,13 +868,13 @@ export function FirstRun({
                               <SelectTrigger aria-label="Role" className="w-28">
                                 <SelectValue />
                               </SelectTrigger>
-                              <SelectPopup>
+                              <SelectContent align="start">
                                 {Object.entries(roleItems).map(([v, l]) => (
                                   <SelectItem key={v} value={v}>
                                     {l}
                                   </SelectItem>
                                 ))}
-                              </SelectPopup>
+                              </SelectContent>
                             </Select>
                             <Button
                               className={cn("flex-1 @md:flex-none", press)}
@@ -1021,7 +1021,7 @@ export function FirstRun({
                               aria-describedby={`${ids}-agent-hint`}
                               aria-invalid={!agentName.trim() || undefined}
                               value={agentName}
-                            />
+                             />
                             <p
                               className={cn("mt-1.5 text-xs", agentName.trim() ? "text-muted-foreground" : "text-destructive-foreground")}
                               id={`${ids}-agent-hint`}
@@ -1060,7 +1060,7 @@ export function FirstRun({
                                 <span className="block truncate font-medium">{agentName || "Untitled agent"}</span>
                                 <span className="block truncate text-muted-foreground text-xs">in {name || "your workspace"}</span>
                               </span>
-                              <Badge variant="warning">Draft</Badge>
+                              <Badge variant="secondary" className="bg-warning/8 text-warning-foreground dark:bg-warning/16">Draft</Badge>
                             </div>
                             <p className="mt-3 line-clamp-4 text-muted-foreground text-xs leading-relaxed">
                               {instructions || "No instructions yet."}
@@ -1157,7 +1157,7 @@ function WalkthroughCard({ slots }: { slots: string[] }) {
         <PopoverTrigger render={<Button className={cn("w-full", press)} size="sm" variant="outline" />}>
           {booked ? "Change time" : "Book a walkthrough"}
         </PopoverTrigger>
-        <PopoverPopup align="end" className="w-64" side="top" sideOffset={6}>
+        <PopoverContent align="end" className="w-64" side="top" sideOffset={6}>
           <p className="font-medium text-sm" id={`${ids}-title`}>
             Pick a time
           </p>
@@ -1193,7 +1193,7 @@ function WalkthroughCard({ slots }: { slots: string[] }) {
           >
             {booked === choice ? "Keep this time" : "Book call"}
           </Button>
-        </PopoverPopup>
+        </PopoverContent>
       </Popover>
     </div>
   );
@@ -1285,7 +1285,7 @@ function FinishView({
         <>
           <span className="flex min-w-0 items-center gap-2">
             <span className="truncate font-medium">{agentName}</span>
-            <Badge className="shrink-0" variant="success">
+            <Badge className="bg-success/8 text-success-foreground dark:bg-success/16 shrink-0" variant="secondary">
               Live
             </Badge>
           </span>

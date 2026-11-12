@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import { type FormEvent, useRef, useState } from "react";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
@@ -93,11 +94,11 @@ function MagicLinkForm() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            nativeInput
-          />
+            />
         </div>
 
-        <Button type="submit" size="lg" loading={pending} className="mt-2">
+        <Button type="submit" size="lg" className="mt-2" disabled={pending} aria-busy={pending}>
+{pending ? <Spinner data-icon="inline-start" /> : null}
           Send sign-in link
         </Button>
         {!sentTo ? (

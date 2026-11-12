@@ -57,8 +57,7 @@ export function SettingsProfileShowcasePage() {
               id="p-name"
               defaultValue="Mantavyam"
               onChange={() => setDirty(true)}
-              nativeInput
-            />
+              />
           </Field>
           <Field label="Handle" htmlFor="p-handle">
             <div className="flex h-9 items-center gap-1 rounded-lg border border-input bg-background px-3 font-mono text-sm focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/24">
@@ -76,8 +75,7 @@ export function SettingsProfileShowcasePage() {
               id="p-pron"
               placeholder="e.g. they / them"
               onChange={() => setDirty(true)}
-              nativeInput
-            />
+              />
           </Field>
           <Field label="Bio" htmlFor="p-bio" hint="Up to 240 characters.">
             <Textarea
@@ -98,8 +96,8 @@ export function SettingsProfileShowcasePage() {
               type="email"
               defaultValue="hello@mantavyam.com"
               readOnly
-              nativeInput
-            />
+             
+              />
           </Field>
           <Field label="Language" htmlFor="p-lang">
             <NativeSelect

@@ -1,16 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import { type FormEvent, useState } from "react";
 import { CheckIcon, ChevronLeftIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardPanel,
-  CardTitle,
-} from "@wirefront/ui/card";
+import { Card, CardDescription, CardFooter, CardHeader, CardContent, CardTitle } from "@wirefront/ui/card";
 import { Field, FieldLabel } from "@wirefront/ui/field";
 import { Input } from "@wirefront/ui/input";
 
@@ -95,7 +89,7 @@ function RequestState({
           Enter your email and we'll send you a link to reset it.
         </CardDescription>
       </CardHeader>
-      <CardPanel>
+      <CardContent>
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
           <Field>
             <FieldLabel htmlFor="reset-email">Email</FieldLabel>
@@ -107,15 +101,15 @@ function RequestState({
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              nativeInput
-            />
+              />
           </Field>
 
-          <Button type="submit" size="lg" loading={pending} className="mt-1">
+          <Button type="submit" size="lg" className="mt-1" disabled={pending} aria-busy={pending}>
+{pending ? <Spinner data-icon="inline-start" /> : null}
             Send reset link
           </Button>
         </form>
-      </CardPanel>
+      </CardContent>
       <CardFooter className="justify-center">
         <a
           href="#"
@@ -150,7 +144,7 @@ function SentState({
           <strong className="text-foreground break-all">{email}</strong>
         </CardDescription>
       </CardHeader>
-      <CardPanel className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-4">
         <p className="text-center text-muted-foreground text-xs">
           The link expires in 30 minutes. Didn't get it? Check your spam folder.
         </p>
@@ -162,7 +156,7 @@ function SentState({
             Try a different email
           </Button>
         </div>
-      </CardPanel>
+      </CardContent>
       <CardFooter className="justify-center">
         <a
           href="#"

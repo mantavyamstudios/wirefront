@@ -24,7 +24,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { cn } from "@wirefront/ui/lib/utils";
 import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Switch } from "@wirefront/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@wirefront/ui/toggle-group";
 
@@ -460,13 +460,13 @@ function HourSelect({ label, value, onChange }: { label: string; value: number; 
       <SelectTrigger aria-label={label} className="w-24 min-w-0 font-mono tabular-nums" size="sm">
         <SelectValue />
       </SelectTrigger>
-      <SelectPopup>
+      <SelectContent align="start">
         {hourItems.map((h) => (
           <SelectItem className="font-mono tabular-nums" key={h.value} value={h.value}>
             {h.label}
           </SelectItem>
         ))}
-      </SelectPopup>
+      </SelectContent>
     </Select>
   );
 }
@@ -740,13 +740,13 @@ export function NotificationSettings({
                 <SelectTrigger aria-label="Email digest" className="w-28 min-w-0" size="sm">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectPopup>
+                <SelectContent align="start">
                   {digestItems.map((d) => (
                     <SelectItem key={d.value} value={d.value}>
                       {d.label}
                     </SelectItem>
                   ))}
-                </SelectPopup>
+                </SelectContent>
               </Select>
             </div>
           </div>

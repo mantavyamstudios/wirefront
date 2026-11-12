@@ -2,6 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `appearance-settings`).
+import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group";
+import { Radio as RadioPrimitive } from "@base-ui/react/radio";
 import { DevlFrame } from "./_devl-frame";
 import {
   ArrowLeftIcon,
@@ -27,7 +29,6 @@ import { AnimatePresence, MotionConfig, motion, useReducedMotion } from "motion/
 import { type ComponentType, type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Button } from "@wirefront/ui/button";
-import { RadioGroupPrimitive, RadioPrimitive } from "@wirefront/ui/radio-group";
 import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
 import { Slider } from "@wirefront/ui/slider";
 import { Switch } from "@wirefront/ui/switch";
@@ -883,8 +884,11 @@ export function AppearanceSettings({
                   <span aria-hidden className="w-3 text-center text-muted-foreground text-xs">
                     A
                   </span>
+                  <span className="sr-only" id="appearance-font-size-label">
+                    Font size
+                  </span>
                   <Slider
-                    getAriaLabel={() => "Font size"}
+                    aria-labelledby="appearance-font-size-label"
                     max={textSizes.length - 1}
                     min={0}
                     onValueChange={(v) => {

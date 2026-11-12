@@ -45,9 +45,21 @@ import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
 import { Kbd } from "@wirefront/ui/kbd";
-import { Tabs, TabsList, TabsPanel, TabsTab } from "@wirefront/ui/tabs";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Tabs, TabsList, TabsContent, TabsTrigger } from "@wirefront/ui/tabs";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
+
+// shadcn's Badge has no status tones; render them as a secondary badge with
+// Wirefront's semantic tokens.
+const TONE_CLASS = {
+  success: "bg-success/8 text-success-foreground dark:bg-success/16",
+  warning: "bg-warning/8 text-warning-foreground dark:bg-warning/16",
+  info: "bg-info/8 text-info-foreground dark:bg-info/16",
+  error: "bg-destructive/8 text-destructive-foreground dark:bg-destructive/16",
+} as const;
+type BadgeVariant = "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
+const badgeVariant = (v: string): BadgeVariant => (v in TONE_CLASS ? "secondary" : (v as BadgeVariant));
+const badgeTone = (v: string): string | undefined => TONE_CLASS[v as keyof typeof TONE_CLASS];
 
 export interface WorkspaceTask {
   id: string;
@@ -235,7 +247,7 @@ function Cite({ n, label }: { n: number; label: string }) {
       >
         {n}
       </TooltipTrigger>
-      <TooltipPopup>{label}</TooltipPopup>
+      <TooltipContent>{label}</TooltipContent>
     </Tooltip>
   );
 }
@@ -719,35 +731,35 @@ function WorkPanel({
   return (
     <Tabs className="h-full min-h-0 gap-0" onValueChange={(v) => setTab(v as string)} value={tab}>
       <div className="flex h-13 shrink-0 items-center gap-2 border-b px-3">
-        <TabsList className="min-w-0 overflow-x-auto text-muted-foreground [scrollbar-width:none]" size="sm">
-          <TabsTab value="tools">
+        <TabsList className="h-7 min-w-0 overflow-x-auto text-muted-foreground [scrollbar-width:none]">
+          <TabsTrigger value="tools">
             <WrenchIcon />
             Tools
             <span className="text-muted-foreground text-xs tabular-nums">{calls.length}</span>
-          </TabsTab>
-          <TabsTab value="browser">
+          </TabsTrigger>
+          <TabsTrigger value="browser">
             <GlobeIcon />
             Browser
             {reading && <span className="size-1.5 rounded-full bg-info" />}
-          </TabsTab>
-          <TabsTab value="sources">
+          </TabsTrigger>
+          <TabsTrigger value="sources">
             <BookOpenIcon />
             Sources
-          </TabsTab>
+          </TabsTrigger>
         </TabsList>
         <Button aria-label="Close work panel" className="ms-auto" onClick={onClose} size="icon-sm" variant="ghost">
           <XIcon />
         </Button>
       </div>
-      <TabsPanel className="min-h-0 overflow-y-auto" value="tools">
+      <TabsContent className="min-h-0 overflow-y-auto" value="tools">
         <ToolsTab calls={calls} step={step} />
-      </TabsPanel>
-      <TabsPanel className="min-h-0" value="browser">
+      </TabsContent>
+      <TabsContent className="min-h-0" value="browser">
         <BrowserTab reading={Boolean(reading)} />
-      </TabsPanel>
-      <TabsPanel className="min-h-0 overflow-y-auto" value="sources">
+      </TabsContent>
+      <TabsContent className="min-h-0 overflow-y-auto" value="sources">
         <SourcesTab sources={sources} />
-      </TabsPanel>
+      </TabsContent>
     </Tabs>
   );
 }
@@ -897,7 +909,7 @@ export function SplitShell({
                   Competitive scan: note apps
                 </span>
               </nav>
-              <Badge className="hidden gap-1.5 @lg:inline-flex" variant={running ? "info" : "success"}>
+              <Badge variant={badgeVariant(running ? "info" : "success")} className={cn(badgeTone(running ? "info" : "success"), "hidden gap-1.5 @lg:inline-flex")}>
                 {running ? (
                   <LoaderCircleIcon className="size-3 animate-spin motion-reduce:animate-none" />
                 ) : (
@@ -925,7 +937,7 @@ export function SplitShell({
                 >
                   <PanelRightIcon />
                 </TooltipTrigger>
-                <TooltipPopup>{showPanel ? "Hide work panel" : "Show work panel"}</TooltipPopup>
+                <TooltipContent>{showPanel ? "Hide work panel" : "Show work panel"}</TooltipContent>
               </Tooltip>
             </header>
             <div className="min-h-0 flex-1">

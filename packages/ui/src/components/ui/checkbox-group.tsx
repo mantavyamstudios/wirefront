@@ -1,21 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// coss ui © Cal.com, Inc. — https://coss.com/ui · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-"use client";
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client"
 
-import { CheckboxGroup as CheckboxGroupPrimitive } from "@base-ui/react/checkbox-group";
-import type React from "react";
-import { cn } from "../../lib/utils";
+import { CheckboxGroup as CheckboxGroupPrimitive } from "@base-ui/react/checkbox-group"
 
-export function CheckboxGroup({
-  className,
-  ...props
-}: CheckboxGroupPrimitive.Props): React.ReactElement {
+import { cn } from "../../lib/utils"
+
+/** A group of checkboxes sharing one value array (Base UI CheckboxGroup). */
+function CheckboxGroup({ className, ...props }: CheckboxGroupPrimitive.Props) {
   return (
     <CheckboxGroupPrimitive
+      data-slot="checkbox-group"
       className={cn("flex flex-col items-start gap-3", className)}
       {...props}
     />
-  );
+  )
 }
 
-export { CheckboxGroupPrimitive };
+export { CheckboxGroup }

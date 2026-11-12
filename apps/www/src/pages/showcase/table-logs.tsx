@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { cn } from "@wirefront/ui/lib/utils";
 import { useState } from "react";
 import {
   CircleAlertIcon,
@@ -19,13 +20,7 @@ import { Button } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import { Kbd } from "@wirefront/ui/kbd";
 import { Separator } from "@wirefront/ui/separator";
-import {
-  Sheet,
-  SheetHeader,
-  SheetPanel,
-  SheetPopup,
-  SheetTitle,
-} from "@wirefront/ui/sheet";
+import { Sheet, SheetHeader, SheetContent, SheetTitle } from "@wirefront/ui/sheet";
 import {
   Table,
   TableBody,
@@ -433,13 +428,12 @@ export function TableLogsShowcasePage() {
                         {e.status ? (
                           <Badge
                             variant="outline"
-                            size="sm"
-                            className={
+                            className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", 
                               "ml-auto shrink-0 font-mono text-[10px] " +
                               (e.status >= 400
                                 ? "border-destructive/30 text-destructive"
                                 : "")
-                            }
+                            )}
                           >
                             {e.status}
                           </Badge>
@@ -480,7 +474,7 @@ function LogDetailSheet({
   const isPhone = useMediaQuery("max-sm");
   return (
     <Sheet open={!!entry} onOpenChange={(o) => !o && onClose()}>
-      <SheetPopup side={isPhone ? "bottom" : "right"} className={isPhone ? "max-h-[85svh]" : "!max-w-xl"}>
+      <SheetContent side={isPhone ? "bottom" : "right"} className={isPhone ? "max-h-[85svh]" : "!max-w-xl"}>
         {entry ? (
           <>
             <SheetHeader>
@@ -497,11 +491,10 @@ function LogDetailSheet({
                 {entry.status ? (
                   <Badge
                     variant="outline"
-                    size="sm"
-                    className={
+                    className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", 
                       "font-mono text-[9px] " +
                       (entry.status >= 400 ? "border-destructive/30 text-destructive" : "")
-                    }
+                    )}
                   >
                     {entry.status}
                   </Badge>
@@ -512,7 +505,7 @@ function LogDetailSheet({
               </p>
             </SheetHeader>
 
-            <SheetPanel className="flex flex-col gap-6 overflow-y-auto !p-0">
+            <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 flex flex-col gap-6 overflow-y-auto !p-0">
               <Section title="Message" copyValue={entry.message}>
                 <pre className="whitespace-pre-wrap rounded-md border border-border/60 bg-foreground/[0.03] p-3 font-mono text-[12px] leading-relaxed text-foreground/90 dark:bg-white/[0.03]">
                   {entry.message}
@@ -602,10 +595,10 @@ function LogDetailSheet({
                   ) : null}
                 </div>
               </div>
-            </SheetPanel>
+            </div>
           </>
         ) : null}
-      </SheetPopup>
+      </SheetContent>
     </Sheet>
   );
 }

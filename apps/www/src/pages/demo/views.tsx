@@ -20,13 +20,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Menu,
-  MenuItem,
-  MenuPopup,
-  MenuSeparator,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { useDemo, type Member, type Project } from "./store";
 import { InboxView } from "./views-inbox";
 import { SettingsView } from "./views-settings";
@@ -316,8 +310,8 @@ function ProjectsView() {
                     {p.updatedAt}
                   </td>
                   <td className="px-3 py-3 text-right" onClick={(e) => e.stopPropagation()}>
-                    <Menu>
-                      <MenuTrigger
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
                         render={
                           <button
                             type="button"
@@ -327,13 +321,13 @@ function ProjectsView() {
                         }
                       >
                         <MoreHorizontalIcon className="size-4" />
-                      </MenuTrigger>
-                      <MenuPopup align="end" className="w-44">
-                        <MenuItem onClick={() => openProject(p.id)}>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-44">
+                        <DropdownMenuItem onClick={() => openProject(p.id)}>
                           <ExternalLinkIcon />
                           Open
-                        </MenuItem>
-                        <MenuItem
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
                           onClick={() =>
                             pushToast({
                               kind: "success",
@@ -344,25 +338,25 @@ function ProjectsView() {
                         >
                           <ShareIcon />
                           Share
-                        </MenuItem>
-                        <MenuItem
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
                           onClick={() =>
                             pushToast({ kind: "info", title: "Duplicated (demo only)" })
                           }
                         >
                           <CopyIcon />
                           Duplicate
-                        </MenuItem>
-                        <MenuSeparator />
-                        <MenuItem
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
                           variant="destructive"
                           onClick={() => requestArchive(p.id)}
                         >
                           <TrashIcon />
                           Archive
-                        </MenuItem>
-                      </MenuPopup>
-                    </Menu>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </td>
                 </tr>
               ))}

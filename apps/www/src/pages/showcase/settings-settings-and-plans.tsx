@@ -2,6 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `settings-and-plans`).
+import { Spinner } from "@wirefront/ui/spinner";
 import { DevlFrame } from "./_devl-frame";
 import {
   AlertTriangleIcon,
@@ -28,24 +29,28 @@ import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, use
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@wirefront/ui/alert";
-import {
-  AlertDialog,
-  AlertDialogClose,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogPopup,
-  AlertDialogTitle,
-} from "@wirefront/ui/alert-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogTitle } from "@wirefront/ui/alert-dialog";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@wirefront/ui/input-group";
 import { Label } from "@wirefront/ui/label";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Switch } from "@wirefront/ui/switch";
+
+// shadcn's Badge has no status tones; render them as a secondary badge with
+// Wirefront's semantic tokens.
+const TONE_CLASS = {
+  success: "bg-success/8 text-success-foreground dark:bg-success/16",
+  warning: "bg-warning/8 text-warning-foreground dark:bg-warning/16",
+  info: "bg-info/8 text-info-foreground dark:bg-info/16",
+  error: "bg-destructive/8 text-destructive-foreground dark:bg-destructive/16",
+} as const;
+type BadgeVariant = "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
+const badgeVariant = (v: string): BadgeVariant => (v in TONE_CLASS ? "secondary" : (v as BadgeVariant));
+const badgeTone = (v: string): string | undefined => TONE_CLASS[v as keyof typeof TONE_CLASS];
 
 function useReducedMotionAfterMount() {
   const prefers = useReducedMotion();
@@ -585,7 +590,7 @@ function WorkspacePanel({
                 id={`${ids}-name`}
                 onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
                 value={draft.name}
-              />
+               />
               <FieldError id={`${ids}-name-error`}>{errors.name}</FieldError>
             </div>
           </Row>
@@ -611,13 +616,13 @@ function WorkspacePanel({
               <SelectTrigger aria-label="Data region" className="w-full">
                 <SelectValue />
               </SelectTrigger>
-              <SelectPopup>
+              <SelectContent align="start">
                 {regions.map((r) => (
                   <SelectItem key={r.value} value={r.value}>
                     {r.label}
                   </SelectItem>
                 ))}
-              </SelectPopup>
+              </SelectContent>
             </Select>
           </Row>
         </Rows>
@@ -669,7 +674,7 @@ function WorkspacePanel({
                   setConfirmOpen(true);
                 }}
                 size="sm"
-                variant="destructive-outline"
+                variant="destructive"
               >
                 Delete…
               </Button>
@@ -679,7 +684,7 @@ function WorkspacePanel({
       </Section>
 
       <AlertDialog onOpenChange={setConfirmOpen} open={confirmOpen}>
-        <AlertDialogPopup>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete {draft.name || "this workspace"}?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -689,19 +694,19 @@ function WorkspacePanel({
               <Label htmlFor={`${ids}-confirm`}>
                 Type <span className="font-mono">{savedSlug}</span> to confirm
               </Label>
-              <Input autoComplete="off" className="font-mono" id={`${ids}-confirm`} onChange={(e) => setTyped(e.target.value)} value={typed} />
+              <Input autoComplete="off" className="font-mono" id={`${ids}-confirm`} onChange={(e) => setTyped(e.target.value)} value={typed}  />
             </div>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogClose render={<Button variant="ghost" />}>Cancel</AlertDialogClose>
-            <AlertDialogClose
+            <AlertDialogCancel render={<Button variant="ghost" />}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel
               disabled={typed !== savedSlug}
               render={<Button disabled={typed !== savedSlug} onClick={() => setScheduled(true)} variant="destructive" />}
             >
               Delete workspace
-            </AlertDialogClose>
+            </AlertDialogCancel>
           </AlertDialogFooter>
-        </AlertDialogPopup>
+        </AlertDialogContent>
       </AlertDialog>
     </>
   );
@@ -718,7 +723,7 @@ function RoleSelect({ member, onRole }: { member: SettingsMember; onRole: (id: s
       <SelectTrigger aria-label={`Role for ${member.name}`} className="w-32 min-w-0" size="sm">
         <SelectValue />
       </SelectTrigger>
-      <SelectPopup alignItemWithTrigger={false} className="w-60">
+      <SelectContent alignItemWithTrigger={false} className="w-60" align="start">
         {roleItems.slice(1).map((r) => (
           <SelectItem className="items-start py-1.5 [&>span:first-child]:mt-0.5" key={r.value} value={r.value}>
             <span className="flex flex-col">
@@ -727,7 +732,7 @@ function RoleSelect({ member, onRole }: { member: SettingsMember; onRole: (id: s
             </span>
           </SelectItem>
         ))}
-      </SelectPopup>
+      </SelectContent>
     </Select>
   );
 }
@@ -826,7 +831,7 @@ function MembersPanel({ initial, seatLimit }: { initial: SettingsMember[]; seatL
               placeholder="name@company.com"
               type="email"
               value={email}
-            />
+             />
             <div className="flex gap-2">
               <Select
                 items={roleItems.slice(1).map((r) => ({ value: r.value, label: r.label }))}
@@ -836,15 +841,16 @@ function MembersPanel({ initial, seatLimit }: { initial: SettingsMember[]; seatL
                 <SelectTrigger aria-label="Role for invite" className="w-28 min-w-0">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectPopup>
+                <SelectContent align="start">
                   {roleItems.slice(1).map((r) => (
                     <SelectItem key={r.value} value={r.value}>
                       {r.label}
                     </SelectItem>
                   ))}
-                </SelectPopup>
+                </SelectContent>
               </Select>
-              <Button className={cn(press, "flex-1 sm:flex-none")} loading={Boolean(sending)} type="submit">
+              <Button className={cn(press, "flex-1 sm:flex-none")} type="submit" disabled={Boolean(sending)} aria-busy={Boolean(sending)}>
+{Boolean(sending) ? <Spinner data-icon="inline-start" /> : null}
                 <MailIcon />
                 Invite
               </Button>
@@ -885,7 +891,7 @@ function MembersPanel({ initial, seatLimit }: { initial: SettingsMember[]; seatL
                       <p className="flex min-w-0 items-center gap-2 font-medium text-sm">
                         <span className="truncate">{m.name}</span>
                         {m.invited && (
-                          <Badge size="sm" variant="info">
+                          <Badge variant="secondary" className="bg-info/8 text-info-foreground dark:bg-info/16 h-4.5 rounded-sm px-1 text-[0.625rem]">
                             Invited
                           </Badge>
                         )}
@@ -903,13 +909,13 @@ function MembersPanel({ initial, seatLimit }: { initial: SettingsMember[]; seatL
                     {m.role === "owner" ? (
                       <span aria-hidden className="size-8 sm:size-7" />
                     ) : (
-                      <Menu>
-                        <MenuTrigger render={<Button aria-label={`Actions for ${m.name}`} size="icon-sm" variant="ghost" />}>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger render={<Button aria-label={`Actions for ${m.name}`} size="icon-sm" variant="ghost" />}>
                           <EllipsisIcon />
-                        </MenuTrigger>
-                        <MenuPopup align="end">
-                          {m.invited && <MenuItem onClick={() => setNotice(`Invite resent to ${m.email}.`)}>Resend invite</MenuItem>}
-                          <MenuItem
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          {m.invited && <DropdownMenuItem onClick={() => setNotice(`Invite resent to ${m.email}.`)}>Resend invite</DropdownMenuItem>}
+                          <DropdownMenuItem
                             onClick={() => {
                               navigator.clipboard?.writeText(m.email).catch(() => {});
                               setNotice(`Copied ${m.email}.`);
@@ -917,14 +923,14 @@ function MembersPanel({ initial, seatLimit }: { initial: SettingsMember[]; seatL
                           >
                             <CopyIcon />
                             Copy email
-                          </MenuItem>
-                          <MenuSeparator />
-                          <MenuItem onClick={() => setRemoving(m)} variant="destructive">
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => setRemoving(m)} variant="destructive">
                             <Trash2Icon />
                             {m.invited ? "Revoke invite" : "Remove from workspace"}
-                          </MenuItem>
-                        </MenuPopup>
-                      </Menu>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     )}
                   </div>
                 </div>
@@ -935,7 +941,7 @@ function MembersPanel({ initial, seatLimit }: { initial: SettingsMember[]; seatL
       </Section>
 
       <AlertDialog onOpenChange={(open) => !open && setRemoving(null)} open={Boolean(removing)}>
-        <AlertDialogPopup>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{removing?.invited ? `Revoke the invite for ${removing.email}?` : `Remove ${removing?.name}?`}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -945,8 +951,8 @@ function MembersPanel({ initial, seatLimit }: { initial: SettingsMember[]; seatL
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogClose render={<Button variant="ghost" />}>Cancel</AlertDialogClose>
-            <AlertDialogClose
+            <AlertDialogCancel render={<Button variant="ghost" />}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel
               render={
                 <Button
                   onClick={() => {
@@ -960,9 +966,9 @@ function MembersPanel({ initial, seatLimit }: { initial: SettingsMember[]; seatL
               }
             >
               {removing?.invited ? "Revoke invite" : "Remove"}
-            </AlertDialogClose>
+            </AlertDialogCancel>
           </AlertDialogFooter>
-        </AlertDialogPopup>
+        </AlertDialogContent>
       </AlertDialog>
     </>
   );
@@ -1047,7 +1053,7 @@ function KeysPanel({ initial }: { initial: SettingsApiKey[] }) {
             >
               <div className="flex flex-col gap-2">
                 <Label htmlFor={`${ids}-name`}>Name</Label>
-                <Input autoFocus id={`${ids}-name`} onChange={(e) => setName(e.target.value)} placeholder="e.g. Staging worker" value={name} />
+                <Input autoFocus id={`${ids}-name`} onChange={(e) => setName(e.target.value)} placeholder="e.g. Staging worker" value={name}  />
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-medium text-sm" id={`${ids}-scope`}>
@@ -1136,7 +1142,7 @@ function KeysPanel({ initial }: { initial: SettingsApiKey[] }) {
                       <code className="block truncate font-mono text-muted-foreground text-xs">{show ? k.secret : mask(k.secret)}</code>
                     </div>
                     <div className="col-start-1 row-start-2 flex items-center gap-2 sm:col-start-2 sm:row-start-1">
-                      <Badge size="sm" variant={k.scope === "admin" ? "warning" : k.scope === "write" ? "info" : "secondary"}>
+                      <Badge variant={badgeVariant(k.scope === "admin" ? "warning" : k.scope === "write" ? "info" : "secondary")} className={cn(badgeTone(k.scope === "admin" ? "warning" : k.scope === "write" ? "info" : "secondary"), "h-4.5 rounded-sm px-1 text-[0.625rem]")}>
                         {scopeItems.find((s) => s.value === k.scope)?.label}
                       </Badge>
                       <span className="text-muted-foreground text-xs sm:hidden">
@@ -1145,29 +1151,29 @@ function KeysPanel({ initial }: { initial: SettingsApiKey[] }) {
                     </div>
                     <span className="hidden truncate text-muted-foreground text-sm sm:col-start-3 sm:row-start-1 sm:block">{k.lastUsed}</span>
                     <div className="col-start-2 row-start-1 flex justify-end sm:col-start-4">
-                      <Menu>
-                        <MenuTrigger render={<Button aria-label={`Actions for ${k.name}`} size="icon-sm" variant="ghost" />}>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger render={<Button aria-label={`Actions for ${k.name}`} size="icon-sm" variant="ghost" />}>
                           <EllipsisIcon />
-                        </MenuTrigger>
-                        <MenuPopup align="end">
-                          <MenuItem
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
                             disabled={k.id === fresh?.id}
                             onClick={() => setRevealed((r) => (r.includes(k.id) ? r.filter((x) => x !== k.id) : [...r, k.id]))}
                           >
                             {show ? <EyeOffIcon /> : <EyeIcon />}
                             {show ? "Hide key" : "Reveal key"}
-                          </MenuItem>
-                          <MenuItem onClick={() => navigator.clipboard?.writeText(k.secret).catch(() => {})}>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => navigator.clipboard?.writeText(k.secret).catch(() => {})}>
                             <CopyIcon />
                             Copy key
-                          </MenuItem>
-                          <MenuSeparator />
-                          <MenuItem onClick={() => setRevoking(k)} variant="destructive">
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => setRevoking(k)} variant="destructive">
                             <Trash2Icon />
                             Revoke
-                          </MenuItem>
-                        </MenuPopup>
-                      </Menu>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
                 </motion.div>
@@ -1185,14 +1191,14 @@ function KeysPanel({ initial }: { initial: SettingsApiKey[] }) {
       </Section>
 
       <AlertDialog onOpenChange={(open) => !open && setRevoking(null)} open={Boolean(revoking)}>
-        <AlertDialogPopup>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Revoke {revoking?.name}?</AlertDialogTitle>
             <AlertDialogDescription>Anything still using this key starts getting 401s immediately. This can't be undone.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogClose render={<Button variant="ghost" />}>Keep key</AlertDialogClose>
-            <AlertDialogClose
+            <AlertDialogCancel render={<Button variant="ghost" />}>Keep key</AlertDialogCancel>
+            <AlertDialogCancel
               render={
                 <Button
                   onClick={() => {
@@ -1206,9 +1212,9 @@ function KeysPanel({ initial }: { initial: SettingsApiKey[] }) {
               }
             >
               Revoke key
-            </AlertDialogClose>
+            </AlertDialogCancel>
           </AlertDialogFooter>
-        </AlertDialogPopup>
+        </AlertDialogContent>
       </AlertDialog>
     </>
   );
@@ -1338,7 +1344,10 @@ function BillingPanel({
       <Collapse show={Boolean(banner)}>
         {banner && (
           <div className="pt-8">
-            <Alert variant={banner.key === "failed" ? "error" : "success"}>
+            <Alert
+              variant={banner.key === "failed" ? "destructive" : "default"}
+              className={banner.key === "failed" ? undefined : "border-success/30 bg-success/8 text-success-foreground [&>svg]:text-success"}
+            >
               {banner.key === "failed" ? <AlertTriangleIcon /> : <CheckIcon />}
               <AlertTitle>
                 {banner.key === "failed" ? `The ${banner.invoice.date.replace(/, \d{4}$/, "")} payment didn't go through` : "Payment received"}
@@ -1359,7 +1368,8 @@ function BillingPanel({
               </AlertDescription>
               {banner.key === "failed" && (
                 <AlertAction>
-                  <Button className={press} loading={retrying} onClick={() => setRetrying(true)} size="sm" variant="outline">
+                  <Button className={press} onClick={() => setRetrying(true)} size="sm" variant="outline" disabled={retrying} aria-busy={retrying}>
+{retrying ? <Spinner data-icon="inline-start" /> : null}
                     Retry payment
                   </Button>
                 </AlertAction>
@@ -1375,7 +1385,7 @@ function BillingPanel({
             <div className="min-w-0 flex-1 basis-44">
               <p className="flex items-center gap-2">
                 <span className="font-semibold text-base tracking-tight">{plan.name}</span>
-                <Badge size="sm" variant="secondary">
+                <Badge variant="secondary" className="h-4.5 rounded-sm px-1 text-[0.625rem]">
                   Current
                 </Badge>
               </p>
@@ -1439,7 +1449,8 @@ function BillingPanel({
                 <Button className={press} disabled={switching} onClick={() => setPicking(false)} size="sm" variant="ghost">
                   Cancel
                 </Button>
-                <Button className={cn(press, "min-w-32")} disabled={choice === planId} loading={switching} onClick={() => setSwitching(true)} size="sm">
+                <Button className={cn(press, "min-w-32")} disabled={(choice === planId) || (switching)} onClick={() => setSwitching(true)} size="sm" aria-busy={switching}>
+{switching ? <Spinner data-icon="inline-start" /> : null}
                   Switch to {plans.find((p) => p.id === choice)?.name}
                 </Button>
               </div>
@@ -1544,7 +1555,7 @@ function BillingPanel({
               <span className="hidden text-muted-foreground text-sm sm:block">{inv.date}</span>
               <span>
                 <Swap id={inv.status}>
-                  <Badge variant={invoiceBadge[inv.status].variant}>{invoiceBadge[inv.status].label}</Badge>
+                  <Badge variant={badgeVariant(invoiceBadge[inv.status].variant)} className={badgeTone(invoiceBadge[inv.status].variant)}>{invoiceBadge[inv.status].label}</Badge>
                 </Swap>
               </span>
               <span className="text-right text-sm tabular-nums">{formatCents(inv.amount)}</span>
@@ -1695,7 +1706,8 @@ export function SettingsAndPlans({
                       <Button className={press} disabled={saving} onClick={() => setDraft(saved)} size="sm" variant="ghost">
                         Discard
                       </Button>
-                      <Button className={cn(press, "min-w-14")} disabled={Boolean(blocker)} loading={saving} onClick={() => setSaving(true)} size="sm">
+                      <Button className={cn(press, "min-w-14")} disabled={(Boolean(blocker)) || (saving)} onClick={() => setSaving(true)} size="sm" aria-busy={saving}>
+{saving ? <Spinner data-icon="inline-start" /> : null}
                         Save
                       </Button>
                     </motion.div>

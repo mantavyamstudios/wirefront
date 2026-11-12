@@ -35,7 +35,7 @@ import { type KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from 
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 export type FolderFileKind = "doc" | "sheet" | "image" | "slides" | "pdf" | "video";
@@ -900,7 +900,7 @@ export function FolderView({
                     <Icon />
                     <span className="hidden @lg:inline">{label}</span>
                   </TooltipTrigger>
-                  <TooltipPopup className="@lg:hidden">{label}</TooltipPopup>
+                  <TooltipContent className="@lg:hidden">{label}</TooltipContent>
                 </Tooltip>
               ))}
               <Button

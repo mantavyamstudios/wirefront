@@ -7,13 +7,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetPopup,
-  SheetTitle,
-  SheetTrigger,
-} from "@wirefront/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 
 interface Comment {
   id: number;
@@ -81,7 +75,7 @@ export function ThreadsSidePanelShowcasePage() {
       <Sheet defaultOpen>
         <FakeApp />
 
-        <SheetPopup
+        <SheetContent
           side="right"
           showCloseButton={false}
           className="h-svh w-full max-w-none sm:max-w-[420px]"
@@ -211,7 +205,7 @@ export function ThreadsSidePanelShowcasePage() {
               </div>
             </div>
           </footer>
-        </SheetPopup>
+        </SheetContent>
       </Sheet>
     </div>
   );

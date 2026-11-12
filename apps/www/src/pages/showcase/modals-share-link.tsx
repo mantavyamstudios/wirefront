@@ -10,16 +10,7 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogFooter,
-  DialogHeader,
-  DialogPanel,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-} from "@wirefront/ui/dialog";
+import { Dialog, DialogClose, DialogFooter, DialogHeader, DialogContent, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
 import { Input } from "@wirefront/ui/input";
 
 const MEMBERS = [
@@ -49,21 +40,21 @@ export function ModalsShareLinkShowcasePage() {
             <Share2Icon />
             Share
           </DialogTrigger>
-          <DialogPopup>
-            <DialogHeader>
+          <DialogContent>
+            <DialogHeader className="min-w-0">
               <DialogTitle className="flex items-center gap-2 pe-8 text-base">
                 <LinkIcon className="size-4 shrink-0 opacity-60" />
                 <span className="min-w-0 truncate">Share "Onboarding handbook v3"</span>
               </DialogTitle>
             </DialogHeader>
 
-            <DialogPanel className="space-y-4">
+            <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 space-y-4">
               <div className="flex items-center gap-2">
                 <Input
                   aria-label="Add people, groups, or emails"
                   placeholder="Add people, groups, or emails…"
                   className="min-w-0 flex-1"
-                />
+                 />
                 <RoleButton label="Editor" />
               </div>
 
@@ -116,7 +107,7 @@ export function ModalsShareLinkShowcasePage() {
                   ))}
                 </ul>
               </div>
-            </DialogPanel>
+            </div>
 
             <DialogFooter className="sm:items-center sm:justify-between">
               <span className="text-center text-muted-foreground text-xs sm:text-left">
@@ -124,7 +115,7 @@ export function ModalsShareLinkShowcasePage() {
               </span>
               <DialogClose render={<Button type="button" />}>Done</DialogClose>
             </DialogFooter>
-          </DialogPopup>
+          </DialogContent>
         </Dialog>
       </div>
     </div>

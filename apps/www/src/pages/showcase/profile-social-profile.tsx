@@ -38,7 +38,7 @@ import { Fragment, type ReactNode, useEffect, useId, useRef, useState } from "re
 import { cn } from "@wirefront/ui/lib/utils";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
-import { Menu, MenuCheckboxItem, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 
 export type ProfileHue = "amber" | "rose" | "violet" | "teal" | "sky" | "orange" | "emerald" | "indigo" | "fuchsia";
 
@@ -473,8 +473,8 @@ export function Profile({
                   </Avatar>
                 </span>
                 <div className="flex items-center gap-2 pb-1">
-                  <Menu>
-                    <MenuTrigger
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
                       render={
                         <Button
                           aria-label={`More options for @${user.handle}`}
@@ -496,17 +496,17 @@ export function Profile({
                           {copied ? <CheckIcon className="text-success-foreground" /> : <EllipsisIcon />}
                         </motion.span>
                       </AnimatePresence>
-                    </MenuTrigger>
-                    <MenuPopup align="end" className="w-56">
-                      <MenuItem onClick={copyProfileLink}>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuItem onClick={copyProfileLink}>
                         <LinkIcon /> Copy link to profile
-                      </MenuItem>
-                      <MenuSeparator />
-                      <MenuCheckboxItem checked={muted} onCheckedChange={setMuted} variant="switch">
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuCheckboxItem checked={muted} onCheckedChange={setMuted}>
                         Mute @{user.handle}
-                      </MenuCheckboxItem>
-                    </MenuPopup>
-                  </Menu>
+                      </DropdownMenuCheckboxItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   <FollowButton
                     bell={bell}
                     following={following}

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { cn } from "@wirefront/ui/lib/utils";
 import { useState } from "react";
 import { Highlight, type PrismTheme } from "prism-react-renderer";
 import {
@@ -20,13 +21,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import {
-  Menu,
-  MenuItem,
-  MenuPopup,
-  MenuSeparator,
-  MenuTrigger,
-} from "@wirefront/ui/menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { Separator } from "@wirefront/ui/separator";
 import {
   Table,
@@ -36,7 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@wirefront/ui/table";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 
 type EndpointStatus = "success" | "failing" | "paused";
 
@@ -282,12 +277,12 @@ export function SettingsWebhooksShowcasePage() {
                   </button>
                 }
               />
-              <TooltipPopup side="top" className="max-w-[260px] p-2 text-left">
+              <TooltipContent side="top" className="max-w-[260px] p-2 text-left">
                 <p className="font-medium text-foreground">Rotate signing secret</p>
                 <p className="mt-0.5 text-muted-foreground">
                   The previous secret stays valid for 24 hours so you can roll deploys.
                 </p>
-              </TooltipPopup>
+              </TooltipContent>
             </Tooltip>
           </div>
           <div className="mt-2 flex w-full min-w-0 items-center gap-1 rounded-md border bg-background py-1 pr-1 pl-2.5 font-mono text-xs">
@@ -384,8 +379,7 @@ export function SettingsWebhooksShowcasePage() {
                           <Badge
                             key={e}
                             variant="outline"
-                            size="sm"
-                            className="font-mono text-[10px]"
+                            className="h-4.5 rounded-sm px-1 text-[0.625rem] font-mono text-[10px]"
                           >
                             {e}
                           </Badge>
@@ -396,20 +390,19 @@ export function SettingsWebhooksShowcasePage() {
                               render={
                                 <Badge
                                   variant="outline"
-                                  size="sm"
-                                  className="cursor-default font-mono text-[10px] text-muted-foreground"
+                                  className="h-4.5 rounded-sm px-1 text-[0.625rem] cursor-default font-mono text-[10px] text-muted-foreground"
                                 >
                                   {`+${overflow}`}
                                 </Badge>
                               }
                             />
-                            <TooltipPopup side="top" className="p-2 text-left">
+                            <TooltipContent side="top" className="p-2 text-left">
                               <ul className="flex flex-col gap-0.5 font-mono text-[11px]">
                                 {ep.events.slice(2).map((e) => (
                                   <li key={e}>{e}</li>
                                 ))}
                               </ul>
-                            </TooltipPopup>
+                            </TooltipContent>
                           </Tooltip>
                         ) : null}
                       </div>
@@ -431,15 +424,15 @@ export function SettingsWebhooksShowcasePage() {
                             </span>
                           }
                         />
-                        <TooltipPopup side="top">{tone.tip}</TooltipPopup>
+                        <TooltipContent side="top">{tone.tip}</TooltipContent>
                       </Tooltip>
                     </TableCell>
                     <TableCell className="text-muted-foreground tabular-nums max-md:hidden">
                       {ep.lastDelivery}
                     </TableCell>
                     <TableCell className="pe-4">
-                      <Menu>
-                        <MenuTrigger
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
                           render={
                             <Button
                               variant="ghost"
@@ -449,21 +442,21 @@ export function SettingsWebhooksShowcasePage() {
                           }
                         >
                           <MoreHorizontalIcon />
-                        </MenuTrigger>
-                        <MenuPopup align="end">
-                          <MenuItem>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
                             <PencilIcon /> Edit
-                          </MenuItem>
-                          <MenuItem>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
                             <PauseIcon />{" "}
                             {ep.status === "paused" ? "Resume" : "Pause"}
-                          </MenuItem>
-                          <MenuSeparator />
-                          <MenuItem variant="destructive">
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem variant="destructive">
                             <TrashIcon /> Delete
-                          </MenuItem>
-                        </MenuPopup>
-                      </Menu>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 );
@@ -532,8 +525,7 @@ export function SettingsWebhooksShowcasePage() {
                     </span>
                     <Badge
                       variant="outline"
-                      size="sm"
-                      className={"justify-center font-mono text-[10px] " + statusTone(d.status)}
+                      className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", "justify-center font-mono text-[10px] " + statusTone(d.status))}
                     >
                       {d.status}
                     </Badge>
@@ -545,7 +537,7 @@ export function SettingsWebhooksShowcasePage() {
                               <RotateCwIcon className="size-3 text-amber-500" />
                             }
                           />
-                          <TooltipPopup side="top">Retried</TooltipPopup>
+                          <TooltipContent side="top">Retried</TooltipContent>
                         </Tooltip>
                       ) : null}
                       {d.ms}ms
@@ -652,8 +644,7 @@ function PayloadBlock({
           {status !== undefined ? (
             <Badge
               variant="outline"
-              size="sm"
-              className={"font-mono text-[9px] " + statusTone(status)}
+              className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", "font-mono text-[9px] " + statusTone(status))}
             >
               {status}
             </Badge>

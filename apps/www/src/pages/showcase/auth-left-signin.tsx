@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import { type FormEvent, useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
@@ -123,8 +124,7 @@ function SignInForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          nativeInput
-        />
+          />
       </Field>
 
       <Field>
@@ -138,7 +138,6 @@ function SignInForm() {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            nativeInput
           />
           <InputGroupAddon align="inline-end">
             <button
@@ -157,7 +156,8 @@ function SignInForm() {
         </InputGroup>
       </Field>
 
-      <Button type="submit" size="lg" loading={pending} className="mt-2">
+      <Button type="submit" size="lg" className="mt-2" disabled={pending} aria-busy={pending}>
+{pending ? <Spinner data-icon="inline-start" /> : null}
         Sign in
       </Button>
 

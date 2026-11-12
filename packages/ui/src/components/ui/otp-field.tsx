@@ -1,67 +1,49 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// coss ui © Cal.com, Inc. — https://coss.com/ui · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-"use client";
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client"
 
-import { OTPFieldPreview as OTPFieldPrimitive } from "@base-ui/react/otp-field";
-import type * as React from "react";
-import { cn } from "../../lib/utils";
-import { Separator } from "./separator";
+import type * as React from "react"
+import { OTPFieldPreview as OTPFieldPrimitive } from "@base-ui/react/otp-field"
 
-export function OTPField({
+import { cn } from "../../lib/utils"
+
+/** One-time-code input built on Base UI's OTP field (render one OTPFieldInput per digit). */
+function OTPField({
   className,
   size = "default",
   ...props
-}: React.ComponentProps<typeof OTPFieldPrimitive.Root> & {
-  size?: "default" | "lg";
-}): React.ReactElement {
+}: React.ComponentProps<typeof OTPFieldPrimitive.Root> & { size?: "default" | "lg" }) {
   return (
     <OTPFieldPrimitive.Root
-      className={cn(
-        "flex items-center gap-2 has-disabled:opacity-64 has-disabled:**:data-[slot=otp-field-input]:shadow-none has-disabled:**:data-[slot=otp-field-input]:before:shadow-none!",
-        className,
-      )}
-      data-size={size}
       data-slot="otp-field"
+      data-size={size}
+      className={cn("group/otp flex items-center gap-2 has-disabled:opacity-50", className)}
       {...props}
     />
-  );
+  )
 }
 
-export function OTPFieldInput({
-  className,
-  ...props
-}: React.ComponentProps<typeof OTPFieldPrimitive.Input>): React.ReactElement {
+function OTPFieldInput({ className, ...props }: React.ComponentProps<typeof OTPFieldPrimitive.Input>) {
   return (
     <OTPFieldPrimitive.Input
+      data-slot="otp-field-input"
       className={cn(
-        "relative in-[[data-slot=otp-field][data-size=lg]]:size-10 size-9 min-w-0 rounded-lg border border-input bg-background not-dark:bg-clip-padding text-center in-[[data-slot=otp-field][data-size=lg]]:text-lg text-base text-foreground in-[[data-slot=otp-field][data-size=lg]]:leading-10 leading-9 shadow-xs/5 outline-none ring-ring/24 transition-shadow before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] not-focus-visible:not-aria-invalid:before:shadow-[0_1px_--theme(--color-black/4%)] focus-visible:z-10 focus-visible:border-ring focus-visible:shadow-none focus-visible:ring-[3px] focus-visible:ring-ring/24 aria-invalid:border-destructive/36 aria-invalid:shadow-none aria-invalid:focus-visible:border-destructive/64 aria-invalid:focus-visible:ring-destructive/16 sm:in-[[data-slot=otp-field][data-size=lg]]:size-9 sm:size-8 sm:in-[[data-slot=otp-field][data-size=lg]]:text-base sm:text-sm sm:in-[[data-slot=otp-field][data-size=lg]]:leading-9 sm:leading-8 dark:bg-input/32 dark:aria-invalid:focus-visible:ring-destructive/24 dark:not-focus-visible:not-aria-invalid:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+        "size-9 group-data-[size=lg]/otp:size-11 group-data-[size=lg]/otp:text-lg rounded-lg border border-input bg-transparent text-center font-mono text-base tabular-nums transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30",
         className,
       )}
-      data-slot="otp-field-input"
-      spellCheck={false}
       {...props}
     />
-  );
+  )
 }
 
-export function OTPFieldSeparator({
-  className,
-  ...props
-}: React.ComponentProps<typeof Separator>): React.ReactElement {
+function OTPFieldSeparator({ className, ...props }: React.ComponentProps<typeof OTPFieldPrimitive.Separator>) {
   return (
     <OTPFieldPrimitive.Separator
-      render={
-        <Separator
-          className={cn(
-            "rounded-full bg-input data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-3",
-            className,
-          )}
-          orientation="horizontal"
-          {...props}
-        />
-      }
+      data-slot="otp-field-separator"
+      className={cn("h-0.5 w-2 rounded-full bg-border", className)}
+      {...props}
     />
-  );
+  )
 }
 
-export { OTPFieldPrimitive };
+export { OTPField, OTPFieldInput, OTPFieldSeparator }

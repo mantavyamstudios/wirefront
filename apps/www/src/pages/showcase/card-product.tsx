@@ -3,13 +3,7 @@
 import { HeartIcon, ShoppingBagIcon, StarIcon } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import {
-  Card,
-  CardFooter,
-  CardHeader,
-  CardPanel,
-  CardTitle,
-} from "@wirefront/ui/card";
+import { Card, CardFooter, CardHeader, CardContent, CardTitle } from "@wirefront/ui/card";
 
 interface Product {
   slug: string;
@@ -133,7 +127,7 @@ function ProductCard({ product }: { product: Product }) {
         </div>
         <p className="text-muted-foreground text-sm">{product.series}</p>
       </CardHeader>
-      <CardPanel className="pt-0">
+      <CardContent className="pt-0">
         <div className="flex items-baseline gap-2">
           <div className="font-heading font-semibold text-lg">
             ${product.price}
@@ -144,7 +138,7 @@ function ProductCard({ product }: { product: Product }) {
             </div>
           ) : null}
         </div>
-      </CardPanel>
+      </CardContent>
       <CardFooter className="border-t">
         <Button className="w-full">
           <ShoppingBagIcon />

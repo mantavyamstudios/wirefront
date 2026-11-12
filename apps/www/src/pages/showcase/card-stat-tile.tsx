@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { ArrowDownRightIcon, ArrowUpRightIcon } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
-import { Card, CardHeader, CardPanel, CardTitle } from "@wirefront/ui/card";
+import { Card, CardHeader, CardContent, CardTitle } from "@wirefront/ui/card";
 
 interface Stat {
   label: string;
@@ -76,7 +76,7 @@ function StatTile({ stat }: { stat: Stat }) {
           {stat.value}
         </CardTitle>
       </CardHeader>
-      <CardPanel className="pt-0">
+      <CardContent className="pt-0">
         <Sparkline values={stat.series} positive={positive} />
         <div
           className={
@@ -93,7 +93,7 @@ function StatTile({ stat }: { stat: Stat }) {
           {stat.delta.toFixed(1)}%
           <span className="text-muted-foreground">vs prev</span>
         </div>
-      </CardPanel>
+      </CardContent>
     </Card>
   );
 }

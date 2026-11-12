@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import {
   type ClipboardEvent,
   type FormEvent,
@@ -19,18 +20,8 @@ import {
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
 import { Label } from "@wirefront/ui/label";
-import {
-  Popover,
-  PopoverPopup,
-  PopoverTrigger,
-} from "@wirefront/ui/popover";
-import {
-  Select,
-  SelectItem,
-  SelectPopup,
-  SelectTrigger,
-  SelectValue,
-} from "@wirefront/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Textarea } from "@wirefront/ui/textarea";
 
 const WORKSPACE_DOMAIN = "acme.com";
@@ -172,7 +163,7 @@ export function FormsInviteTeammatesShowcasePage() {
                 <SelectTrigger size="sm" aria-label="Default role" className="h-8 w-32 text-sm pointer-coarse:h-11">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectPopup>
+                <SelectContent align="start">
                   {ROLES.map((r) => (
                     <SelectItem key={r.value} value={r.value}>
                       <div className="flex flex-col">
@@ -183,7 +174,7 @@ export function FormsInviteTeammatesShowcasePage() {
                       </div>
                     </SelectItem>
                   ))}
-                </SelectPopup>
+                </SelectContent>
               </Select>
             </div>
           </div>
@@ -273,10 +264,10 @@ export function FormsInviteTeammatesShowcasePage() {
             <CopyLinkButton />
             <Button
               type="submit"
-              loading={pending}
-              disabled={stats.sendable === 0}
+              disabled={(stats.sendable === 0) || (pending)}
               className="max-sm:w-full pointer-coarse:h-11"
-            >
+             aria-busy={pending}>
+{pending ? <Spinner data-icon="inline-start" /> : null}
               {stats.sendable > 0
                 ? `Send ${stats.sendable} invite${stats.sendable === 1 ? "" : "s"}`
                 : "Send invites"}
@@ -381,7 +372,7 @@ function ChipPill({
             }
             aria-label={`Change role for ${chip.email}`}
           />
-          <PopoverPopup className="w-56 p-1">
+          <PopoverContent className="w-56 p-1">
             {ROLES.map((r) => {
               const active = r.value === chip.role;
               return (
@@ -406,7 +397,7 @@ function ChipPill({
                 </button>
               );
             })}
-          </PopoverPopup>
+          </PopoverContent>
         </Popover>
       ) : (
         <span className="font-mono text-[10px] uppercase tracking-[0.2em]">

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { Spinner } from "@wirefront/ui/spinner";
 import { useEffect, useState } from "react";
 import {
   ArrowLeftIcon,
@@ -63,10 +64,10 @@ export function AuthCheckEmail({ illustration }: { illustration: string }) {
             size="lg"
             variant="ghost"
             type="button"
-            disabled={secondsLeft > 0 || resending}
-            loading={resending}
+            disabled={(secondsLeft > 0 || resending) || (resending)}
             onClick={onResend}
-          >
+           aria-busy={resending}>
+{resending ? <Spinner data-icon="inline-start" /> : null}
             {secondsLeft > 0
               ? `Resend in ${String(secondsLeft).padStart(2, "0")}s`
               : "Resend link"}
