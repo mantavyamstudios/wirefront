@@ -56,6 +56,10 @@ A design lives at `/c/<category>/<design-slug>`.
 1. Add the wireframe SVG to `wireframe-icons.tsx`.
 2. Add the category to `CATEGORIES` in `designs.ts` (and to the `CategorySlug` union).
 
+## Roadmap and contributing
+
+Wirefront is being upgraded so every screen is ready to wire to any backend. Progress is tracked on the [wiki roadmap](https://github.com/mantavyamstudios/wirefront/wiki/Roadmap). Contributions are welcome; pull requests need a signed [Contributor License Agreement](CLA.md), and the CLA check explains how on your first pull request.
+
 ## Credits
 
 Wirefront started from [devl.dev](https://github.com/sean-brydon/devl.dev) by Sean Brydon. Its original screens were reworked here to be responsive and production-ready, and 42 screens from the current devl.dev are included (their files say so in a header comment). The components in `packages/ui` are [coss ui](https://coss.com/ui) by Cal.com, Inc. See [NOTICE.md](NOTICE.md) for licenses.
