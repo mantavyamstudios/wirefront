@@ -1,0 +1,14 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.7/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": ["apps/www/src/**", "apps/www/tests/**", "apps/www/scripts/**", "apps/www/*.ts", "packages/ui/src/**", "scripts/**", "!**/routeTree.gen.ts"]
+  },
+  "formatter": { "enabled": false },
+  "assist": { "enabled": false },
+  "css": { "parser": { "tailwindDirectives": true } },
+  "linter": {
+    "enabled": true,
+    "rules": { "recommended": true }
+  }
+}
