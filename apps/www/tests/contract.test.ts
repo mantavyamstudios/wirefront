@@ -64,22 +64,23 @@ describe("ready-to-wire screens", () => {
     expect(checkScreenFolder(join(SHOWCASE_DIR, screen))).toEqual([]);
   });
 
-  // A fixture named after an operation is what the mocks answer with, so it
-  // must match that operation's response schema.
+  // Every operation that returns a body has a fixture named after it: the
+  // mocks answer with it, so it must match the response schema.
   it.each(screens.length ? screens : ["(none yet)"])("%s has fixtures that match its API", async (screen) => {
     if (screen === "(none yet)") return;
     const { api } = (await import(join(SHOWCASE_DIR, screen, "schema.ts"))) as { api: ApiContract };
     const fixtures = (await import(join(SHOWCASE_DIR, screen, "fixtures.ts"))) as Record<string, unknown>;
     const problems: string[] = [];
-    let checked = 0;
     for (const [name, op] of Object.entries(api)) {
+      if (!op.response) continue;
       const fixture = fixtures[name];
-      if (!op.response || fixture === undefined || typeof fixture === "function") continue;
-      checked += 1;
+      if (fixture === undefined || typeof fixture === "function") {
+        problems.push(`${name}: no fixture value named "${name}" for its response`);
+        continue;
+      }
       const parsed = op.response.safeParse(fixture);
       if (!parsed.success) problems.push(`${name}: ${parsed.error.issues.map((i) => `${i.path.join(".")} ${i.message}`).join("; ")}`);
     }
     expect(problems).toEqual([]);
-    expect(checked, "at least one operation's response has a fixture").toBeGreaterThan(0);
   });
 });
