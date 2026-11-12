@@ -24,6 +24,10 @@ import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const SHOWCASE_DIR = resolve(ROOT, "apps/www/src/pages/showcase");
+// App-level components a showcase may import as `@/components/<name>`
+// (e.g. the shared chart wrapper). Shipped alongside the screen.
+const APP_COMPONENTS_DIR = resolve(ROOT, "apps/www/src/components");
+const APP_PREFIX = "app:";
 const UI_PKG_DIR = resolve(ROOT, "packages/ui/src");
 const OUT_DIR = resolve(ROOT, "apps/www/public/r");
 
@@ -33,7 +37,9 @@ const OUT_DIR = resolve(ROOT, "apps/www/public/r");
 const TRACKED_NPM_DEPS = new Set([
   "lucide-react",
   "motion",
+  "prism-react-renderer",
   "react-day-picker",
+  "recharts",
 ]);
 
 // `@wirefront/ui/<name>` exports that are NOT published to the public coss
@@ -161,6 +167,11 @@ function rewriteShowcaseImports(source: string): string {
     /from\s+(["'])@wirefront\/ui\/lib\/utils\1/g,
     "from $1@/lib/utils$1",
   );
+  // Hooks are inlined into the item (see crawl), at the consumer's @/hooks.
+  out = out.replace(
+    /from\s+(["'])@wirefront\/ui\/hooks\/([a-z0-9-]+)\1/g,
+    "from $1@/hooks/$2$1",
+  );
   out = out.replace(
     /from\s+(["'])@wirefront\/ui\/([a-z0-9-]+)\1/g,
     (_match, q: string, name: string) => {
@@ -214,6 +225,10 @@ function rewriteLibraryFile(absPath: string, source: string): {
     (_match, q: string, name: string) => {
       if (name === "lib/utils") return `from ${q}@/lib/utils${q}`;
       const baseName = name.split("/").pop()!;
+      if (name.startsWith("hooks/")) {
+        follow.push(resolve(UI_PKG_DIR, `${name}.ts`));
+        return `from ${q}@/hooks/${baseName}${q}`;
+      }
       if (LOCAL_INLINES[baseName]) {
         follow.push(resolve(UI_PKG_DIR, LOCAL_INLINES[baseName]!));
         return `from ${q}@/components/${baseName}${q}`;
@@ -237,6 +252,9 @@ function rewriteLibraryFile(absPath: string, source: string): {
 }
 
 async function readShowcase(filename: string): Promise<string> {
+  if (filename.startsWith(APP_PREFIX)) {
+    return readFile(resolve(APP_COMPONENTS_DIR, `${filename.slice(APP_PREFIX.length)}.tsx`), "utf8");
+  }
   return readFile(resolve(SHOWCASE_DIR, `${filename}.tsx`), "utf8");
 }
 
@@ -289,7 +307,9 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
       const importPath = m[1]!;
       if (importPath === "lib/utils") continue;
       const baseName = importPath.split("/").pop()!;
-      if (LOCAL_INLINES[baseName]) {
+      if (importPath.startsWith("hooks/")) {
+        libQueue.push(resolve(UI_PKG_DIR, `${importPath}.ts`));
+      } else if (LOCAL_INLINES[baseName]) {
         libQueue.push(resolve(UI_PKG_DIR, LOCAL_INLINES[baseName]!));
       } else {
         registryDeps.add(`@coss/${baseName}`);
@@ -303,6 +323,13 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
       if (!visitedShowcase.has(sibling)) showcaseQueue.push(sibling);
     }
 
+    // App-level components (@/components/<name>, not @/components/ui/*).
+    const appRe = /from\s+["']@\/components\/([a-z0-9-]+)["']/g;
+    for (const m of raw.matchAll(appRe)) {
+      const app = `${APP_PREFIX}${m[1]}`;
+      if (!visitedShowcase.has(app)) showcaseQueue.push(app);
+    }
+
     const importRe = /from\s+["']([^"']+)["']/g;
     for (const m of raw.matchAll(importRe)) {
       const spec = m[1]!;
@@ -311,7 +338,10 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
       if (TRACKED_NPM_DEPS.has(pkg)) npmDeps.add(pkg);
     }
 
-    showcaseFiles.push({ name: fname, content: rewriteShowcaseImports(raw) });
+    showcaseFiles.push({
+      name: fname.startsWith(APP_PREFIX) ? fname.slice(APP_PREFIX.length) : fname,
+      content: rewriteShowcaseImports(raw),
+    });
 
     await drainLibQueue();
   }
