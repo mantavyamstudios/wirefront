@@ -7,8 +7,12 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronUpIcon,
+  CircleCheckIcon,
   CodeIcon,
   EyeIcon,
+  InboxIcon,
+  LoaderIcon,
+  LockIcon,
   MonitorIcon,
   MoonIcon,
   PaletteIcon,
@@ -19,11 +23,13 @@ import {
   SmartphoneIcon,
   SunIcon,
   TabletIcon,
+  TriangleAlertIcon,
   Volume2Icon,
   VolumeXIcon,
 } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
+import type { ScreenState } from "@/lib/showcase-state";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
@@ -278,6 +284,22 @@ function PalettePicker() {
   );
 }
 
+const STATE_LABEL: Record<ScreenState, string> = {
+  ready: "Ready",
+  loading: "Loading",
+  empty: "Empty",
+  error: "Error",
+  forbidden: "No access",
+};
+
+const STATE_ICON: Record<ScreenState, ReactNode> = {
+  ready: <CircleCheckIcon />,
+  loading: <LoaderIcon />,
+  empty: <InboxIcon />,
+  error: <TriangleAlertIcon />,
+  forbidden: <LockIcon />,
+};
+
 export function InteractionPanel({
   codeOpen,
   onCodeOpenChange,
@@ -291,6 +313,9 @@ export function InteractionPanel({
   onGroup,
   onRandom,
   hidden,
+  states = [],
+  screenState = "ready",
+  onScreenStateChange,
 }: {
   onBack: () => void;
   onBrowse: (delta: 1 | -1) => void;
@@ -304,6 +329,10 @@ export function InteractionPanel({
   landscape: boolean;
   onLandscapeChange: (landscape: boolean) => void;
   hidden?: boolean;
+  /** States the design renders; the State control shows when there are two or more. */
+  states?: readonly ScreenState[];
+  screenState?: ScreenState;
+  onScreenStateChange?: (state: ScreenState) => void;
 }) {
   const reduce = useReducedMotion();
   const { resolved, setPreference } = useTheme();
@@ -435,6 +464,17 @@ export function InteractionPanel({
                 </motion.span>
               )}
             </AnimatePresence>
+            {states.length > 1 && onScreenStateChange ? (
+              <>
+                <Divider />
+                <Segmented
+                  items={states.map((s) => ({ value: s, label: STATE_LABEL[s], icon: STATE_ICON[s], shortcut: "S" }))}
+                  label="Screen state"
+                  onChange={onScreenStateChange}
+                  value={screenState}
+                />
+              </>
+            ) : null}
             <Divider />
             <SoundToggle />
             <PalettePicker />

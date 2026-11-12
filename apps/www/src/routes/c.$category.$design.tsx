@@ -22,9 +22,17 @@ import {
 } from "@/components/interaction-panel";
 import { DesignNotFound } from "@/pages/design-not-found";
 import { DesignError } from "@/components/design-error";
+import {
+  nextScreenState,
+  parseScreenState,
+  type ScreenState,
+  ShowcaseStateProvider,
+} from "@/lib/showcase-state";
 
 interface DesignSearch {
   preview?: string;
+  /** The screen state to preview (designs that declare `states`). */
+  state?: string;
 }
 
 export const Route = createFileRoute("/c/$category/$design")({
@@ -37,6 +45,7 @@ export const Route = createFileRoute("/c/$category/$design")({
       typeof raw.preview === "boolean"
         ? String(raw.preview)
         : undefined,
+    state: typeof raw.state === "string" ? raw.state : undefined,
   }),
   head: ({ params }) => {
     const category = getCategory(params.category as CategorySlug);
@@ -75,11 +84,21 @@ function isTypingTarget(): boolean {
 
 function DesignRoute() {
   const { category, design } = Route.useParams();
-  const { preview } = Route.useSearch();
+  const { preview, state } = Route.useSearch();
   const isPreview = preview === "1" || preview === "true";
   const navigate = useNavigate();
   const { toggleLightDark, setPreference, setPalette } = useTheme();
   const found = getCategory(category);
+  const states = found?.designs.find((d) => d.slug === design)?.states ?? [];
+  const screenState = parseScreenState(state, states);
+  const setScreenState = (next: ScreenState) => {
+    void navigate({
+      to: "/c/$category/$design",
+      params: { category, design },
+      search: (prev) => ({ ...prev, state: next === "ready" ? undefined : next }),
+      replace: true,
+    });
+  };
   const [codeOpen, setCodeOpen] = useState(false);
   const [device, setDevice] = useState<Device>("desktop");
   const [replays, setReplays] = useState(0);
@@ -130,8 +149,11 @@ function DesignRoute() {
   const random = () => goTo(pickRandomDesign({ category, design }));
 
   // Latest handlers for the keydown listener without re-binding it every render.
-  const actions = useRef({ goBack, browse, group, random });
-  actions.current = { goBack, browse, group, random };
+  const cycleState = () => {
+    if (states.length > 1) setScreenState(nextScreenState(screenState, states));
+  };
+  const actions = useRef({ goBack, browse, group, random, cycleState });
+  actions.current = { goBack, browse, group, random, cycleState };
 
   useEffect(() => {
     if (isPreview || !found) return;
@@ -184,6 +206,11 @@ function DesignRoute() {
       if ((e.key === "h" || e.key === "H") && !e.shiftKey) {
         e.preventDefault();
         setPanelHidden((v) => !v);
+        return;
+      }
+      if ((e.key === "s" || e.key === "S") && !e.shiftKey) {
+        e.preventDefault();
+        a.cycleState();
       }
     };
     window.addEventListener("keydown", handler);
@@ -201,52 +228,59 @@ function DesignRoute() {
 
   if (isPreview) {
     return (
-      <div className="relative min-h-svh bg-background text-foreground">
-        <Showcase />
-      </div>
+      <ShowcaseStateProvider value={screenState}>
+        <div className="relative min-h-svh bg-background text-foreground">
+          <Showcase />
+        </div>
+      </ShowcaseStateProvider>
     );
   }
 
   return (
-    <div className="relative min-h-svh bg-background text-foreground">
-      {(device === "desktop" || !stageReady) && <Showcase key={replays} />}
-      <AnimatePresence>
-        {device !== "desktop" && (
-          <DeviceStage
-            device={device}
-            landscape={landscape}
-            key="device-stage"
-            onReady={() => setStageReady(true)}
-            reloadKey={replays}
-            src={`/c/${category}/${design}?preview=1`}
-          />
-        )}
-      </AnimatePresence>
-      <InteractionPanel
-        codeOpen={codeOpen}
-        device={device}
-        hidden={panelHidden}
-        onCodeOpenChange={setCodeOpen}
-        onDeviceChange={setDevice}
-        onReplay={() => setReplays((n) => n + 1)}
-        landscape={landscape}
-        onLandscapeChange={setLandscape}
-        onBack={goBack}
-        onBrowse={browse}
-        onGroup={group}
-        onRandom={random}
-      />
-      <AnimatePresence>
-        {codeOpen && (
-          <CodeStage
-            category={found.slug as CategorySlug}
-            design={design}
-            key="code"
-            title={meta.title}
-          />
-        )}
-      </AnimatePresence>
-    </div>
+    <ShowcaseStateProvider value={screenState}>
+      <div className="relative min-h-svh bg-background text-foreground">
+        {(device === "desktop" || !stageReady) && <Showcase key={replays} />}
+        <AnimatePresence>
+          {device !== "desktop" && (
+            <DeviceStage
+              device={device}
+              landscape={landscape}
+              key="device-stage"
+              onReady={() => setStageReady(true)}
+              reloadKey={replays}
+              src={`/c/${category}/${design}?preview=1${screenState === "ready" ? "" : `&state=${screenState}`}`}
+            />
+          )}
+        </AnimatePresence>
+        <InteractionPanel
+          codeOpen={codeOpen}
+          device={device}
+          hidden={panelHidden}
+          onCodeOpenChange={setCodeOpen}
+          onDeviceChange={setDevice}
+          onReplay={() => setReplays((n) => n + 1)}
+          landscape={landscape}
+          onLandscapeChange={setLandscape}
+          onBack={goBack}
+          onBrowse={browse}
+          onGroup={group}
+          onRandom={random}
+          states={states}
+          screenState={screenState}
+          onScreenStateChange={setScreenState}
+        />
+        <AnimatePresence>
+          {codeOpen && (
+            <CodeStage
+              category={found.slug as CategorySlug}
+              design={design}
+              key="code"
+              title={meta.title}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+    </ShowcaseStateProvider>
   );
 }
 

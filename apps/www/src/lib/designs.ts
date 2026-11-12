@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import type { ComponentType } from "react";
+import type { ScreenState } from "@/lib/showcase-state";
 import {
   WireframeAI,
   WireframeApps,
@@ -59,6 +60,11 @@ export interface Design {
   title: string;
   blurb: string;
   status?: DesignStatus;
+  /**
+   * States the screen renders, switchable from the interaction panel
+   * (ready-to-wire screens). The first is the default view.
+   */
+  states?: ScreenState[];
 }
 
 export interface Category {
