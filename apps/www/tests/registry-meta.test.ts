@@ -6,8 +6,10 @@ import { CATEGORIES } from "@/lib/designs";
 import { readDesignMeta, readTokenValues, tokensUsed, WIREFRONT_TOKENS } from "../../../scripts/lib/registry-meta";
 
 describe("registry metadata", () => {
-  it("parses every design's slug, title and blurb from designs.ts", () => {
-    const real = CATEGORIES.flatMap((c) => c.designs.map((d) => ({ category: c.slug, slug: d.slug, title: d.title, blurb: d.blurb })));
+  it("parses every design's slug, title, blurb and states from designs.ts", () => {
+    const real = CATEGORIES.flatMap((c) =>
+      c.designs.map((d) => ({ category: c.slug, slug: d.slug, title: d.title, blurb: d.blurb, ...(d.states ? { states: d.states } : {}) })),
+    );
     expect(readDesignMeta()).toEqual(real);
   });
 

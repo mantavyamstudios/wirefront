@@ -271,7 +271,7 @@ export const CATEGORIES: Category[] = [
       {
         slug: "sign-in",
         title: "Sign In",
-        blurb: "A minimal centred sign-in: passkey and single sign-on side by side, email and password with a show toggle, a gentle shake when the password is wrong and a check when you’re in.",
+        blurb: "A minimal centred sign-in wired to your auth: email and password, OAuth providers, SSO, passkey and magic link, each shown only when you connect it.",
         status: "new",
         states: ["ready", "error"],
       },
@@ -391,8 +391,9 @@ export const CATEGORIES: Category[] = [
       {
         slug: "members",
         title: "Team members",
-        blurb: "Avatars, role select cells, last-active time, and a row action menu.",
-        status: "wip",
+        blurb: "Search, role filter, sorting and paging driven by your API; invite, role changes that roll back on failure, and confirmed removal.",
+        status: "new",
+        states: ["ready", "loading", "empty", "error"],
       },
       {
         slug: "orders",

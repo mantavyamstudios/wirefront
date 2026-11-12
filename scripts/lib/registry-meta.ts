@@ -16,6 +16,8 @@ export interface DesignMeta {
   slug: string;
   title: string;
   blurb: string;
+  /** The screen states it renders (designs.ts `states`); absent means only "ready". */
+  states?: string[];
 }
 
 /**
@@ -31,8 +33,18 @@ export function readDesignMeta(source = readFileSync(resolve(ROOT, "apps/www/src
   const categoryRe = /\n {4}slug: "([a-z0-9-]+)",\s*\n {4}title: "[^"]*",[\s\S]*?designs: \[([\s\S]*?)\n {4}\],/g;
   for (const c of body.matchAll(categoryRe)) {
     const designRe = /\{\s*slug: "([a-z0-9-]+)",\s*title: "((?:[^"\\]|\\.)*)",\s*blurb:\s*"((?:[^"\\]|\\.)*)"/g;
-    for (const d of (c[2] ?? "").matchAll(designRe)) {
-      out.push({ category: c[1] ?? "", slug: d[1] ?? "", title: JSON.parse(`"${d[2]}"`), blurb: JSON.parse(`"${d[3]}"`) });
+    const designs = c[2] ?? "";
+    for (const d of designs.matchAll(designRe)) {
+      // The rest of this design's object, up to the next design.
+      const rest = designs.slice((d.index ?? 0) + d[0].length).split(/\n\s*\},?\s*\n/)[0] ?? "";
+      const states = rest.match(/\n\s*states: \[([^\]]*)\]/)?.[1]?.match(/"([a-z]+)"/g)?.map((s) => s.slice(1, -1));
+      out.push({
+        category: c[1] ?? "",
+        slug: d[1] ?? "",
+        title: JSON.parse(`"${d[2]}"`),
+        blurb: JSON.parse(`"${d[3]}"`),
+        ...(states ? { states } : {}),
+      });
     }
   }
   return out;

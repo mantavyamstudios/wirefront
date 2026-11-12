@@ -32,6 +32,7 @@ import { type Browser, chromium } from "playwright";
 
 import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
 import { withAppServer } from "./lib/app-server";
+import { readDesignMeta } from "./lib/registry-meta";
 import { trackProgress } from "./lib/progress";
 import { waitForSettledLayout } from "./lib/settle";
 import { compare, type Counts } from "./lint-gate";
@@ -62,7 +63,19 @@ const designs = Object.entries(SOURCE_FILES)
   .flatMap(([category, map]) => Object.keys(map ?? {}).map((slug) => `${category}/${slug}`))
   .filter((d) => !onlyDesigns || onlyDesigns.includes(d));
 
-async function checkScreen(browser: Browser, base: string, design: string, vp: (typeof VIEWPORTS)[number]): Promise<ScreenResult> {
+// Every state a screen declares (designs.ts `states`) is checked too, keyed
+// <design>~<state>@<viewport>; the default "ready" state keeps <design>@<viewport>.
+const statesOf = new Map(readDesignMeta().map((d) => [`${d.category}/${d.slug}`, d.states ?? ["ready"]]));
+const unitKey = (design: string, state: string, viewport: string) =>
+  state === "ready" ? `${design}@${viewport}` : `${design}~${state}@${viewport}`;
+
+async function checkScreen(
+  browser: Browser,
+  base: string,
+  design: string,
+  state: string,
+  vp: (typeof VIEWPORTS)[number],
+): Promise<ScreenResult> {
   const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height } });
   const page = await context.newPage();
   const result: ScreenResult = { errors: [], warnings: [], a11y: {} };
@@ -75,7 +88,8 @@ async function checkScreen(browser: Browser, base: string, design: string, vp: (
   try {
     // Real clock on purpose: this check is about runtime behaviour, and a frozen
     // browser clock would cause hydration mismatches the app doesn't have.
-    await page.goto(`${base}/c/${design}?preview=%221%22`, { waitUntil: "networkidle", timeout: 60_000 });
+    const stateParam = state === "ready" ? "" : `&state=${state}`;
+    await page.goto(`${base}/c/${design}?preview=%221%22${stateParam}`, { waitUntil: "networkidle", timeout: 60_000 });
     result.settleMs = await waitForSettledLayout(page);
     await page.addScriptTag({ content: AXE_SOURCE });
     const violations = (await page.evaluate(
@@ -92,7 +106,9 @@ async function checkScreen(browser: Browser, base: string, design: string, vp: (
 
 async function main(): Promise<void> {
   const results: Record<string, ScreenResult> = {};
-  const units = designs.flatMap((d) => VIEWPORTS.map((vp) => ({ design: d, vp })));
+  const units = designs.flatMap((d) =>
+    (statesOf.get(d) ?? ["ready"]).flatMap((state) => VIEWPORTS.map((vp) => ({ design: d, state, vp }))),
+  );
   const progress = trackProgress("browser", { total: units.length, slowUnitMs: 30_000, stallMs: 90_000 });
 
   await withAppServer("browser", async (base) => {
@@ -102,9 +118,9 @@ async function main(): Promise<void> {
       await Promise.all(
         Array.from({ length: CONCURRENCY }, async () => {
           for (let u = queue.shift(); u; u = queue.shift()) {
-            const key = `${u.design}@${u.vp.name}`;
+            const key = unitKey(u.design, u.state, u.vp.name);
             progress.start(key);
-            const r = await checkScreen(browser, base, u.design, u.vp);
+            const r = await checkScreen(browser, base, u.design, u.state, u.vp);
             results[key] = r;
             progress.done(key, r.errors.length === 0);
             if (r.errors.length) process.stdout.write(`[browser] ✗ ${key}: ${r.errors[0]}\n`);
@@ -138,7 +154,7 @@ async function main(): Promise<void> {
     const baseline = JSON.parse(readFileSync(BASELINE, "utf8")) as Counts;
     // When only some designs ran, compare only those.
     const scoped = onlyDesigns
-      ? Object.fromEntries(Object.entries(baseline).filter(([k]) => onlyDesigns.some((d) => k.startsWith(`${d}@`))))
+      ? Object.fromEntries(Object.entries(baseline).filter(([k]) => onlyDesigns.some((d) => k.startsWith(`${d}@`) || k.startsWith(`${d}~`))))
       : baseline;
     const { regressions, improvements } = compare(scoped, current);
     a11yProblems = regressions.map((r) => `new a11y violation: ${r}`);
