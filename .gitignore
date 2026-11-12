@@ -55,3 +55,9 @@ docs/
 
 # Fresh shadcn projects used by `npm run test:install`
 .install-test/
+
+# Live status of long-running checks (scripts/lib/progress.ts)
+.test-status/
+
+# Visual regression diffs (npm run test:visual)
+.visual-diff/

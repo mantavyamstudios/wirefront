@@ -58,6 +58,27 @@ jobs:
       - run: npm ci
       - run: npm run test:install
 
+  browser:
+    name: Browser check (runtime errors, hydration, accessibility)
+    # Playwright 1.59 has no Chromium build for ubuntu-latest (26.04) yet.
+    runs-on: ubuntu-24.04
+    needs: checks
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: browser-report
+          path: .audit/browser/report.json
+          if-no-files-found: warn
+
   responsive:
     name: Responsive audit
     # Playwright 1.59 has no Chromium build for ubuntu-latest (26.04) yet.
@@ -71,14 +92,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - name: Start the dev server
-        run: |
-          npm run dev:www > dev.log 2>&1 &
-          for i in $(seq 1 90); do
-            curl -sf http://localhost:4000 > /dev/null && exit 0
-            sleep 2
-          done
-          echo "Dev server did not start within 3 minutes"; cat dev.log; exit 1
       - run: npm run audit:responsive -- --strict
       - if: always()
         uses: actions/upload-artifact@v7

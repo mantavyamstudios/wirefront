@@ -30,7 +30,12 @@ Requires Node 24 and npm 10 or later.
 | `npm run lint` | Biome lint rules, including accessibility (full report) |
 | `npm run lint:gate` | No new lint problems: existing ones are recorded per file in `lint-baseline.json` and may only go down. After fixing some, run `npm run lint:baseline` and commit the file |
 | `npm run test:install` | Installs every registry item into fresh shadcn Next.js, Vite and TanStack Start projects, then typechecks and builds them (first run scaffolds the projects, a few minutes) |
-| `npm run audit:responsive` | Every screen at 375 / 768 / 1024 / 1440px (needs `npm run dev` running) |
+| `npm run test:browser` | Every screen in a real browser at desktop and mobile width: fails on page errors, console errors, hydration mismatches, crashed routes and new accessibility violations (axe, per-screen baseline) |
+| `npm run test:visual` | Compares every screen with its committed preview; run `npm run snapshot` to update previews when a change is intended |
+| `npm run test:phase` | All of the phase checks in sequence (see [TESTING.md](TESTING.md)) |
+| `npm run audit:responsive` | Every screen at 375 / 768 / 1024 / 1440px |
+
+Browser checks start and stop their own server; you don't need `npm run dev` running. [TESTING.md](TESTING.md) maps every failure mode to its check.
 
 `git push` runs the pre-push hook: typecheck, licence headers, the lint gate and tests. If it fails, fix the cause rather than skipping the hook; CI runs the same checks on every pull request.
 

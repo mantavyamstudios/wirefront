@@ -21,6 +21,7 @@ import {
   type ThemeSyncMessage,
 } from "@/components/interaction-panel";
 import { DesignNotFound } from "@/pages/design-not-found";
+import { DesignError } from "@/components/design-error";
 
 interface DesignSearch {
   preview?: string;
@@ -62,6 +63,7 @@ export const Route = createFileRoute("/c/$category/$design")({
     };
   },
   component: DesignRoute,
+  errorComponent: DesignError,
 });
 
 function isTypingTarget(): boolean {

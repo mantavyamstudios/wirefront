@@ -33,6 +33,8 @@ import type { AddressInfo } from "node:net";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { trackProgress } from "./lib/progress";
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const REGISTRY_DIR = resolve(ROOT, "apps/www/public/r");
 const WORK = resolve(ROOT, ".install-test");
@@ -59,7 +61,14 @@ function run(cmd: string, argv: string[], cwd: string, label: string): Promise<v
     };
     child.stdout.on("data", collect);
     child.stderr.on("data", collect);
-    const tail = () => out.trim().split("\n").slice(-40).join("\n");
+    // Last lines of output, with very long lines (the 205-URL command) cut.
+    const tail = () =>
+      out
+        .trim()
+        .split("\n")
+        .slice(-40)
+        .map((l) => (l.length > 300 ? `${l.slice(0, 300)}…` : l))
+        .join("\n");
     const timer = setTimeout(() => {
       child.kill("SIGTERM");
       fail(new Error(`${label} was still running after ${STEP_LIMIT_MS / 60_000} minutes and was stopped:\n${tail()}`));
@@ -74,6 +83,21 @@ function run(cmd: string, argv: string[], cwd: string, label: string): Promise<v
       else fail(new Error(`${label} failed (exit ${code}):\n${tail()}`));
     });
   });
+}
+
+// Transient network failures reaching the public shadcn registry. Only these
+// are retried (once, logged); anything else fails the template as usual.
+const NETWORK_ERROR = /ETIMEDOUT|ECONNRESET|ECONNREFUSED|ENOTFOUND|EAI_AGAIN|socket hang up|fetch failed/;
+
+async function runWithNetworkRetry(cmd: string, argv: string[], cwd: string, label: string): Promise<void> {
+  try {
+    await run(cmd, argv, cwd, label);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (!NETWORK_ERROR.test(msg)) throw err;
+    console.log(`[install] ${label}: network error reaching the registry, retrying once:\n  ${msg.split("\n").find((l) => NETWORK_ERROR.test(l))?.trim()}`);
+    await run(cmd, argv, cwd, `${label} (retry)`);
+  }
 }
 
 function git(cwd: string, ...argv: string[]): string {
@@ -166,10 +190,13 @@ async function main(): Promise<void> {
     .filter((f) => !onlyItems || onlyItems.includes(f.replace(/\.json$/, "")));
   const server = await serveRegistry();
   const failures: string[] = [];
+  const progress = trackProgress("install", { total: templates.length, slowUnitMs: 5 * 60_000, stallMs: 10 * 60_000 });
 
   try {
     for (const t of templates) {
       const started = Date.now();
+      progress.start(t);
+      let ok = false;
       try {
         const dir = await scaffold(t);
         const before = new Map(
@@ -179,7 +206,7 @@ async function main(): Promise<void> {
             .map((f) => [f, readFileSync(join(dir, f), "utf8")]),
         );
         console.log(`[install] ${t}: adding ${items.length} items…`);
-        await run("npx", ["-y", SHADCN, "add", ...items.map((i) => `${server.url}/${i}`), "-y", "-c", dir], dir, `${t}: shadcn add`);
+        await runWithNetworkRetry("npx", ["-y", SHADCN, "add", ...items.map((i) => `${server.url}/${i}`), "-y", "-c", dir], dir, `${t}: shadcn add`);
 
         const overwritten = [...before]
           .filter(([f, content]) => !/(^|\/)components\/ui\//.test(f) && existsSync(join(dir, f)) && readFileSync(join(dir, f), "utf8") !== content)
@@ -193,15 +220,19 @@ async function main(): Promise<void> {
         console.log(`[install] ${t}: build…`);
         await run("npm", ["run", "build"], dir, `${t}: build`);
         console.log(`[install] ${t} ✓ (${Math.round((Date.now() - started) / 1000)}s)`);
+        ok = true;
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         failures.push(msg);
         console.log(`[install] ${t} ✗\n${msg}`);
+      } finally {
+        progress.done(t, ok);
       }
     }
   } finally {
     server.close();
   }
+  progress.finish(`${templates.length - failures.length}/${templates.length} templates install, typecheck and build`);
 
   if (failures.length) {
     console.error(`[install] ${failures.length}/${templates.length} template(s) failed.`);

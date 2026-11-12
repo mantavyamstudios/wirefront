@@ -37,6 +37,11 @@ function serveDepSourcemaps(): Plugin {
 
 export default defineConfig({
   server: { port: 4000 },
+  // The code-review screen shows a diff containing `import … from "vitest"`
+  // as text; Vite's dependency scanner mistakes it for a real import and
+  // re-optimises (reloading the page) when it finds it. Nothing in the app
+  // uses vitest, so keep it out of browser dependency optimisation.
+  optimizeDeps: { exclude: ['vitest'] },
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
   },

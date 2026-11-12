@@ -639,10 +639,9 @@
   },
   "scripts/responsive-audit.ts": {
     "lint/style/noNonNullAssertion": 3,
-    "lint/suspicious/noUndeclaredEnvVars": 2
+    "lint/suspicious/noUndeclaredEnvVars": 1
   },
   "scripts/snapshot.ts": {
-    "lint/style/noNonNullAssertion": 2,
-    "lint/suspicious/noUndeclaredEnvVars": 3
+    "lint/suspicious/noUndeclaredEnvVars": 1
   }
 }

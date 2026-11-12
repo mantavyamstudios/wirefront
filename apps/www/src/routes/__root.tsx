@@ -8,6 +8,7 @@ import {
   Outlet,
   Scripts,
 } from '@tanstack/react-router'
+import { DesignError } from '@/components/design-error'
 import appCss from '@wirefront/ui/styles.css?url'
 import {
   ORBIT_THEME_STORAGE_KEY,
@@ -65,6 +66,7 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootComponent,
+  errorComponent: DesignError,
 })
 
 function RootComponent() {

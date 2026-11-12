@@ -26,12 +26,19 @@
     "prepare": "git config core.hooksPath .githooks || true",
     "lint:gate": "tsx scripts/lint-gate.ts",
     "lint:baseline": "tsx scripts/lint-gate.ts --update",
-    "test:install": "tsx scripts/install-test.ts"
+    "test:install": "tsx scripts/install-test.ts",
+    "test:browser": "tsx scripts/browser-test.ts",
+    "test:visual": "tsx scripts/visual-test.ts",
+    "test:phase": "tsx scripts/phase-check.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.7",
     "@types/node": "^24.12.2",
+    "@types/pngjs": "6.0.5",
+    "axe-core": "4.14.0",
+    "pixelmatch": "8.0.0",
     "playwright": "^1.49.0",
+    "pngjs": "7.0.0",
     "tsx": "^4.19.2",
     "turbo": "^2.9.6",
     "typescript": "~6.0.2"

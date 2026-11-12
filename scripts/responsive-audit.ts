@@ -21,7 +21,8 @@
  *   --strict            exit 1 if any design fails a gate (see GATES)
  *
  * Env knobs:
- *   AUDIT_BASE_URL      default http://localhost:4000
+ *   APP_URL             audit an already running server instead of starting
+ *                       a fresh one (scripts/lib/app-server.ts)
  *   AUDIT_CONCURRENCY   default 4
  *   SETTLE_WATCHDOG_MS  default 45000: a screen whose layout hasn't settled by
  *                       then fails as "layout never settled" (scripts/lib/settle.ts)
@@ -35,13 +36,14 @@ import { fileURLToPath } from "node:url";
 import { chromium, type Browser, type BrowserContext } from "playwright";
 
 import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
+import { withAppServer } from "./lib/app-server";
+import { type Progress, trackProgress } from "./lib/progress";
 import { waitForSettledLayout } from "./lib/settle";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const SHOWCASE_DIR = resolve(ROOT, "apps/www/src/pages/showcase");
 const OUT_DIR = resolve(ROOT, ".audit/responsive");
-const BASE = process.env.AUDIT_BASE_URL ?? "http://localhost:4000";
 const CONCURRENCY = Math.max(
   1,
   Number.parseInt(process.env.AUDIT_CONCURRENCY ?? "4", 10) || 4,
@@ -211,15 +213,6 @@ function parseArgs(argv: string[]) {
   };
 }
 
-async function reachable(url: string): Promise<boolean> {
-  try {
-    const res = await fetch(url, { method: "GET" });
-    return res.ok || (res.status >= 300 && res.status < 400);
-  } catch {
-    return false;
-  }
-}
-
 function buildQueue(args: ReturnType<typeof parseArgs>): Task[] {
   const tasks: Task[] = [];
   for (const [category, designs] of Object.entries(SOURCE_FILES)) {
@@ -256,6 +249,8 @@ function failures(result: Result): string[] {
 }
 
 async function runWorker(
+  base: string,
+  progress: Progress,
   browser: Browser,
   viewports: (typeof VIEWPORTS)[number][],
   queue: Task[],
@@ -281,6 +276,7 @@ async function runWorker(
     if (!task) break;
     const key = `${task.category}/${task.design}`;
     const result: Result = {};
+    progress.start(key);
 
     for (const v of viewports) {
       const page = await contexts.get(v.name)!.newPage();
@@ -291,7 +287,7 @@ async function runWorker(
         // JSON-parses search params, so `preview=1` arrives as a number.
         // Pass a JSON string to hide the viewer chrome.
         await page.goto(
-          `${BASE}/c/${task.category}/${task.design}?preview=%221%22`,
+          `${base}/c/${task.category}/${task.design}?preview=%221%22`,
           { waitUntil: "networkidle", timeout: 45_000 },
         );
         // Only a settled layout is measured (scripts/lib/settle.ts).
@@ -314,6 +310,7 @@ async function runWorker(
     results[key] = result;
     const done = Object.keys(results).length.toString().padStart(3, " ");
     const failed = failures(result);
+    progress.done(key, failed.length === 0);
     process.stdout.write(
       `[audit] [${done}/${total}] ${key}${failed.length ? ` ✗ ${failed.join(", ")}` : " ✓"}\n`,
     );
@@ -334,13 +331,6 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  if (!(await reachable(BASE))) {
-    console.error(
-      `[audit] no server at ${BASE}. Start it (e.g. \`npm run dev:www\`) and re-run.`,
-    );
-    process.exit(1);
-  }
-
   const queue = buildQueue(args);
   if (queue.length === 0) {
     console.warn("[audit] no designs matched — nothing to do.");
@@ -356,18 +346,26 @@ async function main(): Promise<void> {
   );
 
   const t0 = Date.now();
-  const browser = await chromium.launch();
   const results: Record<string, Result> = {};
-  await Promise.all(
-    Array.from({ length: Math.min(CONCURRENCY, total) }, () =>
-      runWorker(browser, [...viewports], queue, results, args.screenshots, total),
-    ),
-  );
-  await browser.close();
+  const progress = trackProgress("audit", { total, slowUnitMs: 60_000, stallMs: 120_000 });
+  let baseUrl = "";
+  await withAppServer("audit", async (base) => {
+    baseUrl = base;
+    const browser = await chromium.launch();
+    try {
+      await Promise.all(
+        Array.from({ length: Math.min(CONCURRENCY, total) }, () =>
+          runWorker(base, progress, browser, [...viewports], queue, results, args.screenshots, total),
+        ),
+      );
+    } finally {
+      await browser.close();
+    }
+  });
 
   const report = {
     generatedAt: new Date().toISOString(),
-    baseUrl: BASE,
+    baseUrl,
     viewports,
     gates: { viewports: GATED_VIEWPORTS, metrics: GATES },
     results,
@@ -377,6 +375,7 @@ async function main(): Promise<void> {
 
   const failing = Object.entries(results).filter(([, r]) => failures(r).length > 0);
   const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
+  progress.finish(`${total - failing.length}/${total} designs pass the gates`);
   console.log(
     `[audit] ${total - failing.length}/${total} designs pass the gates in ${elapsed}s → ${reportPath}`,
   );
