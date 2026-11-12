@@ -13,6 +13,13 @@ export const SignInInput = z
   .meta({ id: "SignInInput" });
 export type SignInInput = z.infer<typeof SignInInput>;
 
+/** What "Email me a sign-in link" submits. */
+export const MagicLinkInput = SignInInput.pick({ email: true }).meta({ id: "MagicLinkInput" });
+export type MagicLinkInput = z.infer<typeof MagicLinkInput>;
+
+/** An OAuth provider's path parameter, e.g. "google" or "github". */
+export const ProviderParams = z.object({ provider: z.string() }).meta({ id: "ProviderParams" });
+
 /** What a successful sign-in returns. `redirectTo` lets the backend choose where to go next. */
 export const Session = z
   .object({
@@ -38,5 +45,19 @@ export const api = defineApi({
     summary: "Sign in with a passkey (WebAuthn assertion verified by the backend)",
     response: Session,
     errors: { 401: "The passkey wasn't accepted" },
+  },
+  sendMagicLink: {
+    method: "POST",
+    path: "/auth/magic-link",
+    summary: "Email a one-time sign-in link",
+    body: MagicLinkInput,
+    errors: { 429: "Too many links requested; try again later" },
+  },
+  startOAuth: {
+    method: "POST",
+    path: "/auth/oauth/{provider}",
+    summary: "Start sign-in with an OAuth provider; the backend returns where to redirect",
+    params: ProviderParams,
+    response: Session,
   },
 });

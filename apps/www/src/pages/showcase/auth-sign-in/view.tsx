@@ -16,9 +16,9 @@ import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { Building2Icon, CheckIcon, EyeIcon, EyeOffIcon, FingerprintIcon } from "lucide-react";
 import { motion, useAnimationControls, useReducedMotion } from "motion/react";
-import { type ReactNode, useEffect, useId, useState } from "react";
+import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 
-import { type Session, SignInInput } from "./schema";
+import { MagicLinkInput, type Session, SignInInput } from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("signIn.<key>"). */
 export const SIGN_IN_MESSAGES = {
@@ -36,9 +36,18 @@ export const SIGN_IN_MESSAGES = {
   hidePassword: "Hide password",
   submit: "Sign in",
   signedIn: "Signed in",
+  magicLink: "Email me a sign-in link",
+  magicLinkSent: "Check {email} for a sign-in link.",
+  continueWith: "Continue with {provider}",
   noAccount: "Don’t have an account?",
   signUp: "Sign up",
 };
+
+export interface SignInProvider {
+  id: string;
+  name: string;
+  icon?: ReactNode;
+}
 
 export interface SignInProps {
   /** Your product's name, shown in the heading. */
@@ -55,6 +64,12 @@ export interface SignInProps {
   onSignIn: Action<SignInInput, Session>;
   /** Sign in with a passkey. The Passkey button only shows when this is given. */
   onPasskey?: Action<void, Session>;
+  /** Email a one-time sign-in link. The "Email me a sign-in link" button only shows when this is given. */
+  onMagicLink?: Action<MagicLinkInput>;
+  /** OAuth providers to offer, e.g. [{ id: "google", name: "Google", icon: <GoogleLogo /> }]. Needs `onProvider`. */
+  providers?: SignInProvider[];
+  /** Start signing in with a provider (receives its id). Usually redirects; resolve with a session if it doesn't. */
+  onProvider?: Action<string, Session>;
   /** Called after a successful sign-in, e.g. to navigate to `session.redirectTo`. */
   onSuccess?: (session: Session | undefined) => void;
   /** An error that arrived with the page, such as an expired session or a failed SSO callback. */
@@ -79,6 +94,8 @@ function Mark() {
 }
 
 const noPasskey: Action<void, Session> = async () => {};
+const noMagicLink: Action<MagicLinkInput> = async () => {};
+const noProvider: Action<string, Session> = async () => {};
 
 export function SignIn({
   product,
@@ -86,6 +103,9 @@ export function SignIn({
   defaultEmail,
   onSignIn,
   onPasskey,
+  onMagicLink,
+  providers = [],
+  onProvider,
   onSuccess,
   error,
   forgotPasswordHref,
@@ -99,6 +119,8 @@ export function SignIn({
   const shake = useAnimationControls();
   const [reveal, setReveal] = useState(false);
   const [done, setDone] = useState(false);
+  const [sentTo, setSentTo] = useState<string>();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const complete = (session: Session | undefined) => {
     setDone(true);
@@ -106,8 +128,20 @@ export function SignIn({
   };
   const form = useActionForm({ schema: SignInInput, action: onSignIn, onSuccess: complete });
   const passkey = useAction(onPasskey ?? noPasskey, { onSuccess: complete });
+  const provider = useAction(onProvider ?? noProvider, { onSuccess: complete });
+  const magic = useActionForm({
+    schema: MagicLinkInput,
+    action: onMagicLink ?? noMagicLink,
+    onSuccess: (_, input) => setSentTo(input.email),
+  });
+  const sendMagicLink = () => {
+    setSentTo(undefined);
+    form.reset();
+    void magic.submit({ email: formRef.current ? new FormData(formRef.current).get("email") : "" });
+  };
 
-  const failure = form.formError ?? passkey.error ?? error;
+  const failure = form.formError ?? magic.formError ?? passkey.error ?? provider.error ?? error;
+  const errors = { ...form.errors, ...magic.errors };
   const hasFieldErrors = Object.keys(form.errors).length > 0;
   useEffect(() => {
     if ((form.formError || hasFieldErrors || passkey.error) && !reduce) {
@@ -115,7 +149,11 @@ export function SignIn({
     }
   }, [form.formError, hasFieldErrors, passkey.error, reduce, shake]);
 
-  const busy = form.pending || passkey.isPending();
+  const busy = form.pending || magic.pending || passkey.isPending() || provider.isPending();
+  const shownProviders = onProvider ? providers : [];
+  const options = (onPasskey ? 1 : 0) + shownProviders.length + (ssoHref ? 1 : 0);
+  // Two per row; an odd last option takes the full row.
+  const optionClass = (index: number) => (options > 1 && options % 2 === 1 && index === options - 1 ? "col-span-2" : undefined);
   const fieldError = "text-destructive-foreground text-xs";
   const linkClass =
     "rounded-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring";
@@ -127,12 +165,13 @@ export function SignIn({
         <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">{interpolate(t.title, { product })}</h1>
         <p className="mt-1.5 text-balance text-center text-muted-foreground text-sm">{t.subtitle}</p>
 
-        {onPasskey || ssoHref ? (
+        {options > 0 ? (
           <>
-            <div className={cn("mt-8 grid w-full gap-2", onPasskey && ssoHref ? "grid-cols-2" : "grid-cols-1")}>
+            <div className={cn("mt-8 grid w-full gap-2", options > 1 ? "grid-cols-2" : "grid-cols-1")}>
               {onPasskey ? (
                 <Button
                   aria-busy={passkey.isPending()}
+                  className={optionClass(0)}
                   disabled={done || busy}
                   onClick={() => void passkey.run()}
                   type="button"
@@ -142,8 +181,28 @@ export function SignIn({
                   {t.passkey}
                 </Button>
               ) : null}
+              {shownProviders.map((p, i) => (
+                <Button
+                  aria-busy={provider.isPending(p.id)}
+                  aria-label={interpolate(t.continueWith, { provider: p.name })}
+                  className={optionClass((onPasskey ? 1 : 0) + i)}
+                  disabled={done || busy}
+                  key={p.id}
+                  onClick={() => void provider.run(p.id, p.id)}
+                  type="button"
+                  variant="outline"
+                >
+                  {provider.isPending(p.id) ? <Spinner data-icon="inline-start" /> : p.icon}
+                  {p.name}
+                </Button>
+              ))}
               {ssoHref ? (
-                <Button nativeButton={false} render={<WirefrontLink href={ssoHref} />} variant="outline">
+                <Button
+                  className={optionClass(options - 1)}
+                  nativeButton={false}
+                  render={<WirefrontLink href={ssoHref} />}
+                  variant="outline"
+                >
                   <Building2Icon />
                   {t.sso}
                 </Button>
@@ -159,7 +218,7 @@ export function SignIn({
           <div className="mt-8" />
         )}
 
-        <Form className="flex w-full flex-col gap-4" noValidate {...form.formProps}>
+        <Form className="flex w-full flex-col gap-4" noValidate ref={formRef} {...form.formProps} errors={errors}>
           <Field.Root className="flex flex-col gap-2" disabled={done} name="email">
             <Field.Label className="font-medium text-sm">{t.email}</Field.Label>
             <Input
@@ -206,6 +265,11 @@ export function SignIn({
               {failure}
             </p>
           ) : null}
+          {sentTo ? (
+            <p className="text-muted-foreground text-xs" role="status">
+              {interpolate(t.magicLinkSent, { email: sentTo })}
+            </p>
+          ) : null}
           <Button
             aria-busy={form.pending}
             className={cn("mt-2 w-full", done && "pointer-events-none")}
@@ -222,6 +286,12 @@ export function SignIn({
               t.submit
             )}
           </Button>
+          {onMagicLink ? (
+            <Button aria-busy={magic.pending} className="w-full" disabled={done || busy} onClick={sendMagicLink} type="button" variant="ghost">
+              {magic.pending ? <Spinner data-icon="inline-start" /> : null}
+              {t.magicLink}
+            </Button>
+          ) : null}
         </Form>
 
         {signUpHref ? (

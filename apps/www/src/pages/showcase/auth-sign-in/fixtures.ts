@@ -12,3 +12,12 @@ export const signIn: Session = { userId: "usr_01", redirectTo: "/dashboard" };
 
 /** What the mocks return for a successful passkey sign-in (operation `signInWithPasskey`). */
 export const signInWithPasskey: Session = { userId: "usr_01", redirectTo: "/dashboard" };
+
+/** The OAuth providers the demo offers. */
+export const providers = [
+  { id: "google", name: "Google" },
+  { id: "github", name: "GitHub" },
+];
+
+/** What the mocks return once an OAuth provider hands back (operation `startOAuth`). */
+export const startOAuth: Session = { userId: "usr_01", redirectTo: "/dashboard" };

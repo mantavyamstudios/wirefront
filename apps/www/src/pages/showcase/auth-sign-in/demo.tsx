@@ -21,6 +21,15 @@ async function demoSignIn({ password }: SignInInput) {
   return ok(fixtures.signIn);
 }
 
+async function demoMagicLink() {
+  await wait(900);
+}
+
+async function demoProvider() {
+  await wait(1200);
+  return ok(fixtures.startOAuth);
+}
+
 async function demoPasskey() {
   await wait(1200);
   return ok(fixtures.signInWithPasskey);
@@ -34,9 +43,12 @@ export function AuthSignInShowcasePage() {
         defaultEmail={fixtures.defaultEmail}
         error={state === "error" ? "Your session expired. Sign in again to continue." : undefined}
         forgotPasswordHref="#forgot-password"
+        onMagicLink={demoMagicLink}
         onPasskey={demoPasskey}
+        onProvider={demoProvider}
         onSignIn={demoSignIn}
         product={fixtures.product}
+        providers={fixtures.providers}
         signUpHref="#sign-up"
         ssoHref="#sso"
       />

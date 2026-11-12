@@ -78,12 +78,56 @@ describe("SignIn", () => {
     expect(onSuccess).toHaveBeenCalledWith(session);
   });
 
+  it("emails a sign-in link to the address in the form", async () => {
+    const onMagicLink = vi.fn(async () => {});
+    const onSignIn = vi.fn();
+    render(<SignIn onMagicLink={onMagicLink} onSignIn={onSignIn} product="Acme" />);
+    const send = screen.getByRole("button", { name: "Email me a sign-in link" });
+    fireEvent.click(send);
+    expect(await screen.findByText("Enter a valid email address.")).toBeTruthy();
+    expect(onMagicLink).not.toHaveBeenCalled();
+
+    fireEvent.change(screen.getByLabelText("Email"), { target: { value: "ada@acme.dev" } });
+    fireEvent.click(send);
+    const sent = await screen.findByText("Check ada@acme.dev for a sign-in link.");
+    expect(sent.getAttribute("role")).toBe("status");
+    expect(onMagicLink).toHaveBeenCalledWith({ email: "ada@acme.dev" });
+    expect(onSignIn).not.toHaveBeenCalled();
+  });
+
+  it("starts OAuth with the chosen provider", async () => {
+    const onProvider = vi.fn(async () => ok(session));
+    const onSuccess = vi.fn();
+    render(
+      <SignIn
+        onProvider={onProvider}
+        onSignIn={vi.fn()}
+        onSuccess={onSuccess}
+        product="Acme"
+        providers={[
+          { id: "google", name: "Google" },
+          { id: "github", name: "GitHub" },
+        ]}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Continue with GitHub" }));
+    expect(await screen.findByText("Signed in")).toBeTruthy();
+    expect(onProvider).toHaveBeenCalledWith("github");
+    expect(onSuccess).toHaveBeenCalledWith(session);
+  });
+
   it("shows only the options the builder wires", () => {
     render(<SignIn onSignIn={vi.fn()} product="Acme" />);
     expect(screen.queryByRole("button", { name: "Passkey" })).toBeNull();
     expect(screen.queryByText("SSO")).toBeNull();
     expect(screen.queryByText("Forgot password?")).toBeNull();
     expect(screen.queryByText("Sign up")).toBeNull();
+    expect(screen.queryByText("Email me a sign-in link")).toBeNull();
+  });
+
+  it("hides providers until the builder wires onProvider", () => {
+    render(<SignIn onSignIn={vi.fn()} product="Acme" providers={[{ id: "google", name: "Google" }]} />);
+    expect(screen.queryByText("Google")).toBeNull();
   });
 
   it("renders links through the builder's router and copy from their messages", () => {
@@ -103,7 +147,7 @@ describe("SignIn", () => {
   });
 
   it("describes its backend operations", () => {
-    expect(Object.keys(api)).toEqual(["signIn", "signInWithPasskey"]);
+    expect(Object.keys(api)).toEqual(["signIn", "signInWithPasskey", "sendMagicLink", "startOAuth"]);
     expect(api.signIn.body.safeParse({ email: "ada@acme.dev", password: "x" }).success).toBe(true);
   });
 });
