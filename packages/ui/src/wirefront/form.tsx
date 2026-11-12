@@ -42,8 +42,16 @@ export function useActionForm<Schema extends z.ZodType, Output = void>({
       if (inFlight.current) return;
       const parsed = schema.safeParse(values);
       if (!parsed.success) {
-        setErrors(flattenError(parsed.error).fieldErrors as FieldErrors);
-        setFormError(undefined);
+        const { fieldErrors, formErrors } = flattenError(parsed.error);
+        setErrors(fieldErrors as FieldErrors);
+        // Errors no rendered field can show (the key wasn't submitted, or the
+        // schema refined the whole object) go to the form-level message, so a
+        // failed validation is never silent.
+        const orphaned = Object.entries(fieldErrors)
+          .filter(([key]) => !(key in values))
+          .flatMap(([, messages]) => (messages as string[] | undefined) ?? []);
+        const unshown = [...formErrors, ...orphaned];
+        setFormError(unshown.length ? unshown.join(" ") : undefined);
         return;
       }
       inFlight.current = true;

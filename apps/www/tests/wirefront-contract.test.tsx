@@ -155,6 +155,15 @@ describe("useActionForm with Base UI Form", () => {
     expect(action).toHaveBeenCalledWith({ email: "ada@example.com" });
   });
 
+  it("never fails silently: errors no field can show become the form error", async () => {
+    const schema = z.object({ email: z.email("Enter a valid email"), plan: z.enum(["free", "pro"], "Choose a plan") });
+    const action = vi.fn(async () => {});
+    const { result } = renderHook(() => useActionForm({ schema, action }));
+    await act(() => result.current.submit({ email: "ada@example.com" }));
+    expect(result.current.formError).toBe("Choose a plan");
+    expect(action).not.toHaveBeenCalled();
+  });
+
   it("puts the server's field errors on the field and its message in an alert", async () => {
     render(<InviteForm action={async () => fail("Couldn't invite", { email: "Already a member" })} />);
     typeEmail("ada@example.com");

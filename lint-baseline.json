@@ -342,12 +342,6 @@
     "lint/a11y/useSemanticElements": 1,
     "lint/suspicious/noArrayIndexKey": 2
   },
-  "apps/www/src/pages/showcase/modals-command-palette.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/modals-create-workspace.tsx": {
-    "lint/a11y/useSemanticElements": 1
-  },
   "apps/www/src/pages/showcase/modals-export.tsx": {
     "lint/a11y/noLabelWithoutControl": 1
   },

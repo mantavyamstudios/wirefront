@@ -365,12 +365,6 @@
   "settings/settings-and-plans@desktop": {
     "color-contrast": 1
   },
-  "modals/confirm-delete@desktop": {
-    "color-contrast": 1
-  },
-  "modals/confirm-delete@mobile": {
-    "color-contrast": 1
-  },
   "modals/two-factor@desktop": {
     "label": 6
   },
