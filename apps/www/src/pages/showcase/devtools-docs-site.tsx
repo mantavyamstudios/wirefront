@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `docs-site`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
 import {
   ArrowLeftIcon,
@@ -1157,19 +1158,11 @@ export function DocsSite({
   );
 }
 
-function DocsSiteDemo() {
+export function DocsSiteDemo() {
   return (
     <DocsSite
       dashboardHref="https://kestrel.example/dashboard"
       editHref={(page) => `https://kestrel.example/docs/edit/${page}.mdx`}
     />
-  );
-}
-
-export function DevtoolsDocsSiteShowcasePage() {
-  return (
-    <DevlFrame>
-      <DocsSiteDemo />
-    </DevlFrame>
   );
 }

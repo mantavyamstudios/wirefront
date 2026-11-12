@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `video-call`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   CheckIcon,
   ChevronUpIcon,
@@ -1434,14 +1435,6 @@ function PanelHeader({
   );
 }
 
-function VideoCallDemo() {
+export function VideoCallDemo() {
   return <VideoCall title="Design crit · Onboarding v3" />;
-}
-
-export function AppsVideoCallShowcasePage() {
-  return (
-    <DevlFrame>
-      <VideoCallDemo />
-    </DevlFrame>
-  );
 }

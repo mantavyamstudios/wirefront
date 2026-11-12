@@ -2,8 +2,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
- * Generate shadcn registry items, one per showcase, into
- * apps/www/public/r/<category>/<design>.json.
+ * Generate the shadcn registry into apps/www/public/r:
+ * - one item per design at r/<category>-<design>.json (flat, so a namespace
+ *   such as `@wirefront/{name}` resolves to it), with the design's blurb as
+ *   its description and `cssVars` for any Wirefront theme tokens it uses;
+ * - one item per Wirefront component (autocomplete, command, …) at
+ *   r/<name>.json;
+ * - the index at r/registry.json.
  *
  * Each item's source has its `@wirefront/ui/<name>` imports rewritten to
  * `@/components/ui/<name>`, and declares shadcn/ui registry deps (e.g. `button`)
@@ -20,6 +25,7 @@ import { resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
+import { cssVarsFor, readDesignMeta, tokensUsed } from "./lib/registry-meta";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -63,6 +69,9 @@ const LOCAL_INLINES: Record<string, string> = {
 
 interface RegistryFile {
   path: string;
+  /** Where shadcn installs it: `@components/…`, `@hooks/…` or `@lib/…`, so
+   * the builder's configured aliases (src/ or not) are respected. */
+  target?: string;
   content: string;
   type: "registry:component" | "registry:lib";
 }
@@ -70,12 +79,18 @@ interface RegistryFile {
 interface RegistryItem {
   $schema: string;
   name: string;
-  type: "registry:component";
+  type: "registry:component" | "registry:ui";
   title: string;
+  description?: string;
   registryDependencies?: string[];
   dependencies?: string[];
+  cssVars?: ReturnType<typeof cssVarsFor>;
   files: RegistryFile[];
 }
+
+// Wirefront's own components, also published as standalone items.
+const WIREFRONT_COMPONENTS = ["autocomplete", "checkbox-group", "command", "otp-field", "segmented-control"] as const;
+const SITE_HOMEPAGE = "https://github.com/mantavyamstudios/wirefront";
 
 interface InlinedFile {
   // Consumer-relative output path used as `files[].path`.
@@ -128,8 +143,8 @@ function mapLibraryPath(absPath: string): {
     const name = m[1]!;
     if (name in LOCAL_INLINES) {
       return {
-        alias: `@/components/${name}`,
-        output: `components/${name}.tsx`,
+        alias: `@/components/wirefront/${name}`,
+        output: `components/wirefront/${name}.tsx`,
         type: "registry:component",
       };
     }
@@ -144,8 +159,8 @@ function mapLibraryPath(absPath: string): {
   m = rel.match(/^components\/([a-z0-9-]+)\.tsx$/);
   if (m) {
     return {
-      alias: `@/components/${m[1]}`,
-      output: `components/${m[1]}.tsx`,
+      alias: `@/components/wirefront/${m[1]}`,
+      output: `components/wirefront/${m[1]}.tsx`,
       type: "registry:component",
     };
   }
@@ -153,8 +168,8 @@ function mapLibraryPath(absPath: string): {
   m = rel.match(/^themes\/([a-z0-9-]+)\.ts$/);
   if (m) {
     return {
-      alias: `@/lib/themes/${m[1]}`,
-      output: `lib/themes/${m[1]}.ts`,
+      alias: `@/lib/wirefront/themes/${m[1]}`,
+      output: `lib/wirefront/themes/${m[1]}.ts`,
       type: "registry:lib",
     };
   }
@@ -162,8 +177,8 @@ function mapLibraryPath(absPath: string): {
   m = rel.match(/^hooks\/([a-z0-9-]+)\.ts$/);
   if (m) {
     return {
-      alias: `@/hooks/${m[1]}`,
-      output: `hooks/${m[1]}.ts`,
+      alias: `@/hooks/wirefront/${m[1]}`,
+      output: `hooks/wirefront/${m[1]}.ts`,
       type: "registry:lib",
     };
   }
@@ -176,17 +191,23 @@ function rewriteShowcaseImports(source: string): string {
     /from\s+(["'])@wirefront\/ui\/lib\/utils\1/g,
     "from $1@/lib/utils$1",
   );
-  // Hooks are inlined into the item (see crawl), at the consumer's @/hooks.
+  // Hooks are inlined into the item (see crawl), under the consumer's
+  // @/hooks/wirefront so they never collide with the builder's own hooks.
   out = out.replace(
     /from\s+(["'])@wirefront\/ui\/hooks\/([a-z0-9-]+)\1/g,
-    "from $1@/hooks/$2$1",
+    "from $1@/hooks/wirefront/$2$1",
   );
   out = out.replace(
     /from\s+(["'])@wirefront\/ui\/([a-z0-9-]+)\1/g,
     (_match, q: string, name: string) => {
-      const dir = name in LOCAL_INLINES ? "components" : "components/ui";
+      const dir = name in LOCAL_INLINES ? "components/wirefront" : "components/ui";
       return `from ${q}@/${dir}/${name}${q}`;
     },
+  );
+  // App-level components (@/components/<name>) ship under components/wirefront.
+  out = out.replace(
+    /from\s+(["'])@\/components\/(?!ui\/|wirefront\/)([a-z0-9-]+)\1/g,
+    "from $1@/components/wirefront/$2$1",
   );
   return out;
 }
@@ -236,11 +257,11 @@ function rewriteLibraryFile(absPath: string, source: string): {
       const baseName = name.split("/").pop()!;
       if (name.startsWith("hooks/")) {
         follow.push(resolve(UI_PKG_DIR, `${name}.ts`));
-        return `from ${q}@/hooks/${baseName}${q}`;
+        return `from ${q}@/hooks/wirefront/${baseName}${q}`;
       }
       if (LOCAL_INLINES[baseName]) {
         follow.push(resolve(UI_PKG_DIR, LOCAL_INLINES[baseName]!));
-        return `from ${q}@/components/${baseName}${q}`;
+        return `from ${q}@/components/wirefront/${baseName}${q}`;
       }
       registryDeps.add(baseName);
       return `from ${q}@/components/ui/${baseName}${q}`;
@@ -365,55 +386,97 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
   };
 }
 
+async function writeItem(item: RegistryItem): Promise<void> {
+  await writeFile(resolve(OUT_DIR, `${item.name}.json`), `${JSON.stringify(item, null, 2)}\n`);
+}
+
+// Everything Wirefront ships lives under a wirefront/ folder so it never
+// overwrites a builder's own components, hooks or lib files.
+function targetFor(path: string): string {
+  const m = path.match(/^(components|hooks|lib)\/(wirefront\/.+)$/);
+  if (!m) throw new Error(`unexpected registry file path: ${path}`);
+  return `@${m[1]}/${m[2]}`;
+}
+
+function withDeps(item: RegistryItem, registryDeps: Set<string>, npmDeps: Set<string>): RegistryItem {
+  item.files = item.files.map((f) => ({ path: f.path, target: targetFor(f.path), type: f.type, content: f.content }));
+  if (registryDeps.size > 0) item.registryDependencies = [...registryDeps].sort();
+  if (npmDeps.size > 0) item.dependencies = [...npmDeps].sort();
+  const cssVars = cssVarsFor(tokensUsed(item.files.map((f) => f.content).join("\n")));
+  if (cssVars) item.cssVars = cssVars;
+  return item;
+}
+
 async function main() {
   await rm(OUT_DIR, { recursive: true, force: true });
   await mkdir(OUT_DIR, { recursive: true });
 
-  let count = 0;
+  const meta = new Map(readDesignMeta().map((d) => [`${d.category}/${d.slug}`, d]));
+  const index: RegistryItem[] = [];
+
   for (const [category, designs] of Object.entries(SOURCE_FILES)) {
     if (!designs) continue;
-    const catDir = resolve(OUT_DIR, category);
-    await mkdir(catDir, { recursive: true });
-
     for (const [designSlug, filename] of Object.entries(designs)) {
-      const { showcaseFiles, inlined, registryDeps, npmDeps } =
-        await crawl(filename);
+      const { showcaseFiles, inlined, registryDeps, npmDeps } = await crawl(filename);
       if (showcaseFiles.length === 0) {
-        console.warn(`skip ${category}/${designSlug}: no source for ${filename}`);
-        continue;
+        throw new Error(`${category}/${designSlug}: no source for ${filename}`);
       }
-      const item: RegistryItem = {
-        $schema: "https://ui.shadcn.com/schema/registry-item.json",
-        name: `${category}-${designSlug}`,
-        type: "registry:component",
-        title: titleCase(designSlug),
-        files: [
-          ...showcaseFiles.map((f) => ({
-            path: `components/${f.name}.tsx`,
-            content: f.content,
-            type: "registry:component" as const,
-          })),
-          ...inlined.map((f) => ({
-            path: f.outputPath,
-            content: f.content,
-            type: f.type,
-          })),
-        ],
-      };
-      if (registryDeps.size > 0) {
-        item.registryDependencies = [...registryDeps].sort();
-      }
-      if (npmDeps.size > 0) {
-        item.dependencies = [...npmDeps].sort();
-      }
-      await writeFile(
-        resolve(catDir, `${designSlug}.json`),
-        JSON.stringify(item, null, 2) + "\n",
+      const d = meta.get(`${category}/${designSlug}`);
+      if (!d) throw new Error(`${category}/${designSlug} is mapped in source-files.ts but not listed in designs.ts`);
+      const item = withDeps(
+        {
+          $schema: "https://ui.shadcn.com/schema/registry-item.json",
+          name: `${category}-${designSlug}`,
+          type: "registry:component",
+          title: d.title,
+          description: d.blurb,
+          files: [
+            ...showcaseFiles.map((f) => ({
+              path: `components/wirefront/${f.name}.tsx`,
+              content: f.content,
+              type: "registry:component" as const,
+            })),
+            ...inlined.map((f) => ({ path: f.outputPath, content: f.content, type: f.type })),
+          ],
+        },
+        registryDeps,
+        npmDeps,
       );
-      count++;
+      await writeItem(item);
+      index.push(item);
     }
   }
-  console.log(`wrote ${count} registry entries to ${OUT_DIR}`);
+
+  for (const name of WIREFRONT_COMPONENTS) {
+    const absPath = resolve(UI_PKG_DIR, LOCAL_INLINES[name] ?? "");
+    const { rewritten, registryDeps, npmDeps } = rewriteLibraryFile(absPath, await readFile(absPath, "utf8"));
+    const item = withDeps(
+      {
+        $schema: "https://ui.shadcn.com/schema/registry-item.json",
+        name,
+        type: "registry:ui",
+        title: titleCase(name),
+        description: `Wirefront's ${name.replace(/-/g, " ")} component, built on Base UI.`,
+        files: [{ path: `components/wirefront/${name}.tsx`, content: rewritten, type: "registry:component" }],
+      },
+      registryDeps,
+      npmDeps,
+    );
+    await writeItem(item);
+    index.push(item);
+  }
+
+  const registry = {
+    $schema: "https://ui.shadcn.com/schema/registry.json",
+    name: "wirefront",
+    homepage: SITE_HOMEPAGE,
+    items: index.map(({ $schema: _schema, files, ...rest }) => ({
+      ...rest,
+      files: files.map(({ path, type }) => ({ path, type })),
+    })),
+  };
+  await writeFile(resolve(OUT_DIR, "registry.json"), `${JSON.stringify(registry, null, 2)}\n`);
+  console.log(`wrote ${index.length} registry items and registry.json to ${OUT_DIR}`);
 }
 
 main().catch((err) => {

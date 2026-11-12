@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `admin-users`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -1424,14 +1425,6 @@ function InviteDialog({
   );
 }
 
-function AdminUsersDemo() {
+export function AdminUsersDemo() {
   return <AdminUsers currentUserId="u1" orgName="Larkfield Studio" seats={15} />;
-}
-
-export function TableAdminUsersShowcasePage() {
-  return (
-    <DevlFrame>
-      <AdminUsersDemo />
-    </DevlFrame>
-  );
 }

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client";
+
 import { PolarAngleAxis, RadialBar, RadialBarChart } from "recharts";
 import { ChartContainer } from "@/components/chart";
 

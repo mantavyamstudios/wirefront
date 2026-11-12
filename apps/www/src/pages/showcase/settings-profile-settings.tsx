@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `profile-settings`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   ArrowLeftIcon,
   BellIcon,
@@ -82,7 +83,6 @@ export interface ProfileSettingsProps {
 type UsernameStatus = "current" | "checking" | "available" | "taken" | "invalid";
 
 const easeOut = [0.23, 1, 0.32, 1] as const;
-const spring = { type: "spring", stiffness: 520, damping: 42 } as const;
 const press = "transition-[background-color,color,box-shadow,scale] duration-150 ease-out motion-safe:active:scale-[0.97]";
 const stageSpan = 136;
 const zoomRange = [1, 2.4] as const;
@@ -1267,14 +1267,6 @@ export function ProfileSettings({
   );
 }
 
-function ProfileSettingsDemo() {
+export function ProfileSettingsDemo() {
   return <ProfileSettings />;
-}
-
-export function SettingsProfileSettingsShowcasePage() {
-  return (
-    <DevlFrame>
-      <ProfileSettingsDemo />
-    </DevlFrame>
-  );
 }

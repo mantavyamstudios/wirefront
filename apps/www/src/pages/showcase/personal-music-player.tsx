@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `music-player`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   CompassIcon,
   GripVerticalIcon,
@@ -1120,14 +1121,6 @@ export function MusicPlayer({
   );
 }
 
-function MusicPlayerDemo() {
+export function MusicPlayerDemo() {
   return <MusicPlayer appName="Murmur" initialPosition={47} />;
-}
-
-export function PersonalMusicPlayerShowcasePage() {
-  return (
-    <DevlFrame>
-      <MusicPlayerDemo />
-    </DevlFrame>
-  );
 }

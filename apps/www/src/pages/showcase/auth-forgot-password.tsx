@@ -2,8 +2,9 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `forgot-password`).
+"use client";
+
 import { Spinner } from "@wirefront/ui/spinner";
-import { DevlFrame } from "./_devl-frame";
 import { ArrowLeftIcon, KeyRoundIcon, MailCheckIcon } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type FormEvent, useEffect, useId, useState } from "react";
@@ -150,14 +151,6 @@ export function ForgotPassword({ defaultEmail = "", resendAfter = 30, onSend = d
   );
 }
 
-function ForgotPasswordDemo() {
+export function ForgotPasswordDemo() {
   return <ForgotPassword defaultEmail="ada@ridgeline.app" />;
-}
-
-export function AuthForgotPasswordShowcasePage() {
-  return (
-    <DevlFrame>
-      <ForgotPasswordDemo />
-    </DevlFrame>
-  );
 }

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client";
+
 import { Button } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";

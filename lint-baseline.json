@@ -104,7 +104,6 @@
   },
   "apps/www/src/pages/showcase/apps-notes.tsx": {
     "lint/a11y/useSemanticElements": 1,
-    "lint/correctness/noUnusedImports": 1,
     "lint/correctness/useExhaustiveDependencies": 1
   },
   "apps/www/src/pages/showcase/apps-team-chat.tsx": {
@@ -132,7 +131,6 @@
   },
   "apps/www/src/pages/showcase/auth-first-run.tsx": {
     "lint/a11y/useSemanticElements": 3,
-    "lint/correctness/noUnusedVariables": 2,
     "lint/suspicious/useIterableCallbackReturn": 1
   },
   "apps/www/src/pages/showcase/auth-glass-signup.tsx": {
@@ -173,7 +171,6 @@
     "lint/a11y/noNoninteractiveTabindex": 1,
     "lint/a11y/useAriaPropsSupportedByRole": 1,
     "lint/a11y/useSemanticElements": 1,
-    "lint/correctness/noUnusedVariables": 1,
     "lint/style/noNonNullAssertion": 2,
     "lint/suspicious/noArrayIndexKey": 2
   },
@@ -186,7 +183,6 @@
   },
   "apps/www/src/pages/showcase/calendars-recurring.tsx": {
     "lint/a11y/useSemanticElements": 2,
-    "lint/correctness/noUnusedFunctionParameters": 2,
     "lint/suspicious/noArrayIndexKey": 5
   },
   "apps/www/src/pages/showcase/calendars-timezone.tsx": {
@@ -215,9 +211,6 @@
   },
   "apps/www/src/pages/showcase/card-media.tsx": {
     "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/card-task.tsx": {
-    "lint/correctness/noUnusedImports": 1
   },
   "apps/www/src/pages/showcase/charts-bar-grouped.tsx": {
     "lint/suspicious/noArrayIndexKey": 1
@@ -349,12 +342,10 @@
   "apps/www/src/pages/showcase/layouts-hairline-shell.tsx": {
     "lint/a11y/noAutofocus": 1,
     "lint/a11y/noStaticElementInteractions": 2,
-    "lint/a11y/useSemanticElements": 1,
-    "lint/correctness/noUnusedVariables": 1
+    "lint/a11y/useSemanticElements": 1
   },
   "apps/www/src/pages/showcase/layouts-inset-shell.tsx": {
     "lint/a11y/noStaticElementInteractions": 1,
-    "lint/correctness/noUnusedImports": 1,
     "lint/suspicious/noArrayIndexKey": 1
   },
   "apps/www/src/pages/showcase/layouts-split-resizable.tsx": {
@@ -486,8 +477,7 @@
   },
   "apps/www/src/pages/showcase/settings-profile-settings.tsx": {
     "lint/a11y/noNoninteractiveTabindex": 1,
-    "lint/a11y/useSemanticElements": 2,
-    "lint/correctness/noUnusedVariables": 1
+    "lint/a11y/useSemanticElements": 2
   },
   "apps/www/src/pages/showcase/settings-security-settings.tsx": {
     "lint/suspicious/noArrayIndexKey": 2
@@ -502,8 +492,7 @@
   "apps/www/src/pages/showcase/settings-team-roles.tsx": {
     "lint/a11y/noStaticElementInteractions": 1,
     "lint/a11y/useFocusableInteractive": 7,
-    "lint/a11y/useSemanticElements": 13,
-    "lint/correctness/noUnusedImports": 1
+    "lint/a11y/useSemanticElements": 13
   },
   "apps/www/src/pages/showcase/settings-webhooks.tsx": {
     "lint/suspicious/noArrayIndexKey": 2
@@ -539,7 +528,6 @@
     "lint/a11y/useAriaPropsSupportedByRole": 1
   },
   "apps/www/src/pages/showcase/table-logs.tsx": {
-    "lint/correctness/noUnusedVariables": 1,
     "lint/suspicious/noArrayIndexKey": 1
   },
   "apps/www/src/pages/showcase/table-orders.tsx": {
@@ -592,9 +580,6 @@
   },
   "apps/www/src/pages/showcase/timelines-pull-request.tsx": {
     "lint/suspicious/noArrayIndexKey": 2
-  },
-  "apps/www/src/pages/showcase/timelines-releases.tsx": {
-    "lint/correctness/noUnusedFunctionParameters": 1
   },
   "apps/www/src/pages/showcase/timelines-status-page.tsx": {
     "lint/suspicious/noArrayIndexKey": 2

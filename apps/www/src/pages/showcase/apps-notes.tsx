@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `notes`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -34,7 +35,7 @@ import {
 import { cn } from "@wirefront/ui/lib/utils";
 import { Button } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
-import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 
 function useReducedMotionSafe() {
   const prefers = useReducedMotion();
@@ -1042,14 +1043,6 @@ export function Notes({
   );
 }
 
-function NotesDemo() {
+export function NotesDemo() {
   return <Notes initialNoteId="n1" now="2026-10-24T10:00:00" />;
-}
-
-export function AppsNotesShowcasePage() {
-  return (
-    <DevlFrame>
-      <NotesDemo />
-    </DevlFrame>
-  );
 }

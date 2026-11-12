@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client";
+
 import { type FormEvent, useMemo, useRef, useState } from "react";
 import {
   CircleAlertIcon,
@@ -70,12 +72,6 @@ function autoTone(seed: string) {
   let h = 0;
   for (let i = 0; i < seed.length; i++) h = (h << 5) - h + seed.charCodeAt(i);
   return TONES[Math.abs(h) % TONES.length]!;
-}
-
-function rangeDays(start: number, span: number): Record<number, true> {
-  const out: Record<number, true> = {};
-  for (let d = start; d < start + span; d++) out[d] = true;
-  return out;
 }
 
 function expand(

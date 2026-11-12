@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `help-centre`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   ArrowLeftRightIcon,
   ArrowRightIcon,
@@ -1393,14 +1394,6 @@ export function HelpCentre({
   );
 }
 
-function HelpCentreDemo() {
+export function HelpCentreDemo() {
   return <HelpCentre productName="Kite" replyTime="4 min" />;
-}
-
-export function AppsHelpCentreShowcasePage() {
-  return (
-    <DevlFrame>
-      <HelpCentreDemo />
-    </DevlFrame>
-  );
 }

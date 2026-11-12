@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client";
+
 import { useId, useMemo, useState } from "react";
 import {
   CalendarIcon,
@@ -754,8 +756,6 @@ function DayOfMonthGrid({
 
 function Preview({
   tokens,
-  raw,
-  description,
   occurrences,
   allOccurrences,
   monthOffset,

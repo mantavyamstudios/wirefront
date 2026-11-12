@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `developer-settings`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   ArrowLeftIcon,
   BellIcon,
@@ -1323,14 +1324,6 @@ export function DeveloperSettings({
   );
 }
 
-function DeveloperSettingsDemo() {
+export function DeveloperSettingsDemo() {
   return <DeveloperSettings />;
-}
-
-export function SettingsDeveloperSettingsShowcasePage() {
-  return (
-    <DevlFrame>
-      <DeveloperSettingsDemo />
-    </DevlFrame>
-  );
 }

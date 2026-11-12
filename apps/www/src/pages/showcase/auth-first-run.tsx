@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `first-run`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -190,7 +191,6 @@ function Rolling({ value }: { value: number | string }) {
   );
 }
 
-type StepStatus = "done" | "skipped" | "current" | "upcoming";
 
 function CheckDot({ checked, active }: { checked: boolean; active?: boolean }) {
   const reduce = useReducedMotionAfterMount();
@@ -330,7 +330,6 @@ export function FirstRun({
   const [dir, setDir] = useState(1);
   const [finished, setFinished] = useState(false);
   const [left, setLeft] = useState<number[]>([]);
-  const [maxReached, setMaxReached] = useState(0);
 
   const [name, setName] = useState(defaultWorkspaceName);
   const [slug, setSlug] = useState(slugify(defaultWorkspaceName));
@@ -369,9 +368,6 @@ export function FirstRun({
     invites.length > 0,
     finished,
   ];
-  const statuses: StepStatus[] = STEPS.map((_, i) =>
-    !finished && i === step ? "current" : doneByStep[i] ? "done" : left.includes(i) ? "skipped" : "upcoming",
-  );
 
   const checklist: ChecklistItem[] = [
     {
@@ -415,7 +411,6 @@ export function FirstRun({
     setDir(finished || target > step ? 1 : -1);
     setFinished(false);
     setStep(target);
-    setMaxReached((m) => Math.max(m, target));
   };
 
   const next = () => {
@@ -423,7 +418,6 @@ export function FirstRun({
     if (step === STEPS.length - 1) {
       setDir(1);
       setFinished(true);
-      setMaxReached(STEPS.length - 1);
       onFinish?.({
         workspace: name,
         tools: connectedTools.map((t) => t.name),
@@ -438,7 +432,6 @@ export function FirstRun({
   const restart = () => {
     setFinished(false);
     setLeft([]);
-    setMaxReached(0);
     setToolStatus({});
     setInvites([]);
     setDraft([]);
@@ -1367,14 +1360,6 @@ function FinishView({
   );
 }
 
-function FirstRunDemo() {
+export function FirstRunDemo() {
   return <FirstRun defaultWorkspaceName="Northwind Labs" productName="Hearth" />;
-}
-
-export function AuthFirstRunShowcasePage() {
-  return (
-    <DevlFrame>
-      <FirstRunDemo />
-    </DevlFrame>
-  );
 }

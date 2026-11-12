@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `connectors`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   ActivityIcon,
   BugIcon,
@@ -1189,14 +1190,6 @@ function DetailPanel({
   );
 }
 
-function ConnectorsDemo() {
+export function ConnectorsDemo() {
   return <Connectors title="Integrations" />;
-}
-
-export function SettingsConnectorsShowcasePage() {
-  return (
-    <DevlFrame>
-      <ConnectorsDemo />
-    </DevlFrame>
-  );
 }

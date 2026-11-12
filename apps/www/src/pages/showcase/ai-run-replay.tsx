@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `run-replay`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   AnimatePresence,
   MotionConfig,
@@ -1174,7 +1175,14 @@ export function RunReplay({
   const doneCount = state.steps.filter((s) => s === "done" || s === "skipped").length;
   const toolCalls = state.log.filter((e) => e.kind === "tool").length;
   const liveStep = state.steps.findIndex((s) => s === "running" || s === "waiting" || s === "failed");
-  const lastTouched = state.steps.findLastIndex((s) => s !== "pending");
+  // ES2022-safe findLastIndex (builders' projects may target ES2022).
+  let lastTouched = -1;
+  for (let i = state.steps.length - 1; i >= 0; i--) {
+    if (state.steps[i] !== "pending") {
+      lastTouched = i;
+      break;
+    }
+  }
   const activeStep = liveStep >= 0 ? liveStep : Math.max(lastTouched, 0);
   const failedStep = state.failure ? steps[state.failure.step] : undefined;
   const failedCall = state.failure ? state.log.find((e) => e.id === state.failure?.id) : undefined;
@@ -1491,7 +1499,7 @@ export function RunReplay({
   );
 }
 
-function RunReplayDemo() {
+export function RunReplayDemo() {
   return (
     <RunReplay
       agentName="Renewal Scout"
@@ -1499,13 +1507,5 @@ function RunReplayDemo() {
       runId="run_8f3k21"
       task="Find Q3 renewals at risk and draft outreach for each account owner."
     />
-  );
-}
-
-export function AiRunReplayShowcasePage() {
-  return (
-    <DevlFrame>
-      <RunReplayDemo />
-    </DevlFrame>
   );
 }

@@ -2,8 +2,9 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `verify-email`).
+"use client";
+
 import { Spinner } from "@wirefront/ui/spinner";
-import { DevlFrame } from "./_devl-frame";
 import { CheckIcon, MailIcon } from "lucide-react";
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from "motion/react";
 import { useEffect, useId, useState } from "react";
@@ -198,14 +199,6 @@ export function VerifyEmail({
   );
 }
 
-function VerifyEmailDemo() {
+export function VerifyEmailDemo() {
   return <VerifyEmail email="ada@ridgeline.app" />;
-}
-
-export function AuthVerifyEmailShowcasePage() {
-  return (
-    <DevlFrame>
-      <VerifyEmailDemo />
-    </DevlFrame>
-  );
 }

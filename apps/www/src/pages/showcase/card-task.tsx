@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client";
+
 import {
   CalendarDaysIcon,
   MessageCircleIcon,
   PaperclipIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
-import { Badge } from "@wirefront/ui/badge";
 import { Card, CardContent } from "@wirefront/ui/card";
 
 type Priority = "low" | "med" | "high" | "urgent";

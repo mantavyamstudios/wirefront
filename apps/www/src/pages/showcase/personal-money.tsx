@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `money`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import {
   ArrowDownLeftIcon,
   CheckIcon,
@@ -1300,14 +1301,6 @@ function BudgetRow({
   );
 }
 
-function MoneyDemo() {
+export function MoneyDemo() {
   return <Money productName="Tally" today="2026-10-24" userName="Ines Moreau" />;
-}
-
-export function PersonalMoneyShowcasePage() {
-  return (
-    <DevlFrame>
-      <MoneyDemo />
-    </DevlFrame>
-  );
 }

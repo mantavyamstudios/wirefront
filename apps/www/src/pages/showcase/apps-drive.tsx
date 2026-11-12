@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `drive`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
 import {
   ArrowDownUpIcon,
@@ -709,14 +710,6 @@ export function Drive({
   );
 }
 
-function DriveDemo() {
+export function DriveDemo() {
   return <Drive />;
-}
-
-export function AppsDriveShowcasePage() {
-  return (
-    <DevlFrame>
-      <DriveDemo />
-    </DevlFrame>
-  );
 }

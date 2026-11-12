@@ -1,0 +1,27 @@
+{
+  // Compiles every file the registry ships with the strictest settings found
+  // across the shadcn Next.js, Vite and TanStack Start templates, so code
+  // that would fail in a builder's project fails here first.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
+    "paths": { "@/*": ["./src/*"] },
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedSideEffectImports": true,
+    "noEmit": true
+  },
+  "include": [
+    "src/pages/showcase/*.tsx",
+    "src/components/chart.tsx",
+    "../../packages/ui/src/components/ui/autocomplete.tsx",
+    "../../packages/ui/src/components/ui/checkbox-group.tsx",
+    "../../packages/ui/src/components/ui/command.tsx",
+    "../../packages/ui/src/components/ui/otp-field.tsx",
+    "../../packages/ui/src/components/ui/segmented-control.tsx"
+  ],
+  "exclude": ["src/pages/showcase/_*.tsx", "src/pages/showcase/*.showcase.tsx", "src/pages/showcase/registry.tsx"]
+}

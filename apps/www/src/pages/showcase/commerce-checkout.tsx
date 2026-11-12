@@ -2,8 +2,9 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `checkout`).
+"use client";
+
 import { Spinner } from "@wirefront/ui/spinner";
-import { DevlFrame } from "./_devl-frame";
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -1258,14 +1259,6 @@ function Placed({
   );
 }
 
-function CheckoutDemo() {
+export function CheckoutDemo() {
   return <Checkout promoCodes={{ HEARTH10: 0.1 }} storeName="Hearth Goods" taxRate={0.0825} />;
-}
-
-export function CommerceCheckoutShowcasePage() {
-  return (
-    <DevlFrame>
-      <CheckoutDemo />
-    </DevlFrame>
-  );
 }

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client";
+
 import { Spinner } from "@wirefront/ui/spinner";
 import { type FormEvent, useState } from "react";
 import { LifeBuoyIcon } from "lucide-react";

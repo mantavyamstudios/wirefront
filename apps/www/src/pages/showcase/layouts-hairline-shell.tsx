@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `hairline-shell`).
-import { DevlFrame } from "./_devl-frame";
+"use client";
+
 import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
 import {
   ChevronDownIcon,
@@ -95,17 +96,6 @@ const swatch: Record<HairlineTone, string> = {
   info: "bg-info",
   success: "bg-success",
   warning: "bg-warning",
-};
-
-const text: Record<HairlineTone, string> = {
-  "orange": "text-orange-600 dark:text-orange-400",
-  "teal": "text-teal-600 dark:text-teal-400",
-  "cyan": "text-cyan-600 dark:text-cyan-400",
-  "violet": "text-violet-600 dark:text-violet-400",
-  "rose": "text-rose-600 dark:text-rose-400",
-  info: "text-info-foreground",
-  success: "text-success-foreground",
-  warning: "text-warning-foreground",
 };
 
 const spring = { type: "spring", stiffness: 500, damping: 40 } as const;
@@ -901,14 +891,6 @@ function IssueBoard({ issues }: { issues: HairlineIssue[] }) {
   );
 }
 
-function HairlineShellDemo() {
+export function HairlineShellDemo() {
   return <HairlineShell />;
-}
-
-export function LayoutsHairlineShellShowcasePage() {
-  return (
-    <DevlFrame>
-      <HairlineShellDemo />
-    </DevlFrame>
-  );
 }

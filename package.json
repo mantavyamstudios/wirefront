@@ -16,7 +16,7 @@
     "build": "turbo run build",
     "prebuild": "npm run registry",
     "lint": "biome lint",
-    "typecheck": "turbo run typecheck",
+    "typecheck": "turbo run typecheck && tsc -p scripts",
     "registry": "tsx scripts/build-registry.ts",
     "snapshot": "tsx scripts/snapshot.ts",
     "audit:responsive": "tsx scripts/responsive-audit.ts",
@@ -25,7 +25,8 @@
     "test": "npm run test -w @wirefront/www",
     "prepare": "git config core.hooksPath .githooks || true",
     "lint:gate": "tsx scripts/lint-gate.ts",
-    "lint:baseline": "tsx scripts/lint-gate.ts --update"
+    "lint:baseline": "tsx scripts/lint-gate.ts --update",
+    "test:install": "tsx scripts/install-test.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.7",

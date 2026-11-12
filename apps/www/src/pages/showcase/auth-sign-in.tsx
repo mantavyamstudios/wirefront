@@ -2,8 +2,9 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 // Ported from devl.dev (sean-brydon/devl.dev, registry item `sign-in`).
+"use client";
+
 import { Spinner } from "@wirefront/ui/spinner";
-import { DevlFrame } from "./_devl-frame";
 import { Building2Icon, CheckIcon, EyeIcon, EyeOffIcon, FingerprintIcon } from "lucide-react";
 import { motion, useAnimationControls, useReducedMotion } from "motion/react";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
@@ -207,14 +208,6 @@ export function SignIn({
   );
 }
 
-function SignInDemo() {
+export function SignInDemo() {
   return <SignIn />;
-}
-
-export function AuthSignInShowcasePage() {
-  return (
-    <DevlFrame>
-      <SignInDemo />
-    </DevlFrame>
-  );
 }

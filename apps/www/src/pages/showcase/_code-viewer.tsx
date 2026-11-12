@@ -47,8 +47,8 @@ export function CodeStage({ category, design, title }: CodeStageProps) {
   const [setupOpen, setSetupOpen] = useState(false);
   const registryUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/r/${category}/${design}.json`
-      : `/r/${category}/${design}.json`;
+      ? `${window.location.origin}/r/${category}-${design}.json`
+      : `/r/${category}-${design}.json`;
   const installCommand = `npx shadcn@latest add ${registryUrl}`;
   const transition = reduce ? { duration: 0 } : { duration: 0.35, ease: EASE };
 

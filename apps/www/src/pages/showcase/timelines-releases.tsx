@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client";
+
 import { CheckIcon, RocketIcon, TimerIcon } from "lucide-react";
 
 type Stage = "done" | "active" | "queued";
@@ -39,7 +41,7 @@ export function TimelinesReleasesShowcasePage() {
               aria-hidden
               className="absolute top-2 bottom-2 left-[15px] w-px bg-border/50"
             />
-            {PIPELINE.map((s, i) => (
+            {PIPELINE.map((s) => (
               <li
                 key={s.env}
                 className="relative grid grid-cols-[32px_minmax(0,1fr)_auto] items-start gap-3 py-3"

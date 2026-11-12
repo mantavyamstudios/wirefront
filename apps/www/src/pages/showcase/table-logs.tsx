@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client";
+
 import { cn } from "@wirefront/ui/lib/utils";
 import { useState } from "react";
 import {
   CircleAlertIcon,
+  CheckIcon,
   CopyIcon,
   ExternalLinkIcon,
   FlameIcon,
@@ -690,11 +693,11 @@ function KeyVal({
               setCopied(true);
               window.setTimeout(() => setCopied(false), 1200);
             }}
-            aria-label={`Copy ${label}`}
+            aria-label={copied ? `${label} copied` : `Copy ${label}`}
             // Hover reveal on desktop; always visible on touch and when focused.
             className="inline-flex size-6 items-center justify-center rounded text-muted-foreground/40 opacity-0 transition-opacity hover:bg-foreground/[0.05] hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-9 pointer-coarse:opacity-100"
           >
-            <CopyIcon className="size-3" />
+            {copied ? <CheckIcon className="size-3" /> : <CopyIcon className="size-3" />}
           </button>
         ) : null}
       </span>
