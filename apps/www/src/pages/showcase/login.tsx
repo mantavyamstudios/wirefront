@@ -3,7 +3,7 @@
 "use client";
 
 import { Spinner } from "@wirefront/ui/spinner";
-import { type FormEvent, useRef, useState } from "react";
+import { type ReactNode, type FormEvent, useRef, useState } from "react";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
@@ -15,9 +15,9 @@ import {
 } from "@wirefront/ui/particle-field";
 import { AuthShell, useAuthTypingImpulse } from "./auth-shell";
 
-export function Login({ illustration }: { illustration: string }) {
+export function Login({ illustration, actions }: { illustration: string; actions?: ReactNode }) {
   return (
-    <AuthShell variant="welcome" illustration={illustration}>
+    <AuthShell variant="welcome" illustration={illustration} actions={actions}>
       <LoginForm />
     </AuthShell>
   );

@@ -4,7 +4,6 @@
 
 import type { ReactNode } from "react";
 import { cn } from "../../lib/utils";
-import { ThemeToggle } from "../theme-toggle";
 
 type AuthSplitLayoutProps = {
   left: ReactNode;
@@ -13,6 +12,11 @@ type AuthSplitLayoutProps = {
   frameClassName?: string;
   leftClassName?: string;
   rightClassName?: string;
+  /**
+   * Controls for the top-right corner, such as the app's own theme toggle.
+   * The layout ships none: theme switching belongs to the builder's app.
+   */
+  actions?: ReactNode;
 };
 
 export function AuthSplitLayout({
@@ -22,6 +26,7 @@ export function AuthSplitLayout({
   frameClassName,
   leftClassName,
   rightClassName,
+  actions,
 }: AuthSplitLayoutProps) {
   return (
     <div
@@ -30,7 +35,7 @@ export function AuthSplitLayout({
         className,
       )}
     >
-      <ThemeToggle className="absolute top-4 right-4 z-30 sm:top-6 sm:right-6" />
+      {actions ? <div className="absolute top-4 right-4 z-30 sm:top-6 sm:right-6">{actions}</div> : null}
       <div
         className={cn(
           "relative mx-auto flex h-full w-full max-w-[1600px]",

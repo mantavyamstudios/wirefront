@@ -48,6 +48,7 @@ const TRACKED_NPM_DEPS = new Set([
   "prism-react-renderer",
   "react-day-picker",
   "recharts",
+  "zod",
 ]);
 
 // `@wirefront/ui/<name>` exports that aren't shadcn/ui components — their
@@ -165,6 +166,16 @@ function mapLibraryPath(absPath: string): {
     };
   }
 
+  // Contract helpers (packages/ui/src/wirefront): provider, types, form, …
+  m = rel.match(/^wirefront\/([a-z0-9-]+)\.tsx$/);
+  if (m) {
+    return {
+      alias: `@/components/wirefront/${m[1]}`,
+      output: `components/wirefront/${m[1]}.tsx`,
+      type: "registry:lib",
+    };
+  }
+
   m = rel.match(/^themes\/([a-z0-9-]+)\.ts$/);
   if (m) {
     return {
@@ -190,6 +201,11 @@ function rewriteShowcaseImports(source: string): string {
   let out = source.replace(
     /from\s+(["'])@wirefront\/ui\/lib\/utils\1/g,
     "from $1@/lib/utils$1",
+  );
+  // Contract helpers ship under components/wirefront (see crawl).
+  out = out.replace(
+    /from\s+(["'])@wirefront\/ui\/wirefront\/([a-z0-9-]+)\1/g,
+    "from $1@/components/wirefront/$2$1",
   );
   // Hooks are inlined into the item (see crawl), under the consumer's
   // @/hooks/wirefront so they never collide with the builder's own hooks.
@@ -258,6 +274,10 @@ function rewriteLibraryFile(absPath: string, source: string): {
       if (name.startsWith("hooks/")) {
         follow.push(resolve(UI_PKG_DIR, `${name}.ts`));
         return `from ${q}@/hooks/wirefront/${baseName}${q}`;
+      }
+      if (name.startsWith("wirefront/")) {
+        follow.push(resolve(UI_PKG_DIR, `${name}.tsx`));
+        return `from ${q}@/components/wirefront/${baseName}${q}`;
       }
       if (LOCAL_INLINES[baseName]) {
         follow.push(resolve(UI_PKG_DIR, LOCAL_INLINES[baseName]!));
@@ -339,6 +359,8 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
       const baseName = importPath.split("/").pop()!;
       if (importPath.startsWith("hooks/")) {
         libQueue.push(resolve(UI_PKG_DIR, `${importPath}.ts`));
+      } else if (importPath.startsWith("wirefront/")) {
+        libQueue.push(resolve(UI_PKG_DIR, `${importPath}.tsx`));
       } else if (LOCAL_INLINES[baseName]) {
         libQueue.push(resolve(UI_PKG_DIR, LOCAL_INLINES[baseName]!));
       } else {

@@ -22,16 +22,20 @@ export function AuthShell({
   children,
   illustration,
   variant = "welcome",
+  actions,
 }: {
   children: ReactNode;
   /** Image the particle field is drawn from (any URL or imported asset). */
   illustration: string;
   variant?: Variant;
+  /** Top-right controls, such as the app's theme toggle. */
+  actions?: ReactNode;
 }) {
   const typingImpulseRef = useRef(0);
   return (
     <TypingImpulseContext.Provider value={typingImpulseRef}>
       <AuthSplitLayout
+        actions={actions}
         rightClassName="lg:w-[min(620px,55%)]"
         left={
           <>

@@ -3,7 +3,7 @@
 "use client";
 
 import { Spinner } from "@wirefront/ui/spinner";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -15,7 +15,7 @@ import { AuthShell } from "./auth-shell";
 
 const RESEND_SECONDS = 30;
 
-export function AuthCheckEmail({ illustration }: { illustration: string }) {
+export function AuthCheckEmail({ illustration, actions }: { illustration: string; actions?: ReactNode }) {
   const email = "you@example.com";
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const [resendCount, setResendCount] = useState(0);
@@ -37,7 +37,7 @@ export function AuthCheckEmail({ illustration }: { illustration: string }) {
   };
 
   return (
-    <AuthShell variant="welcome" illustration={illustration}>
+    <AuthShell variant="welcome" illustration={illustration} actions={actions}>
       <div className="w-full max-w-lg">
         <div className="inline-flex size-11 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
           <CheckCircle2Icon className="size-5" />

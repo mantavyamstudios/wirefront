@@ -144,6 +144,13 @@ describe("registry", () => {
     expect(outside).toEqual([]);
   });
 
+  it("ships no theme provider or theme toggle: the builder's app owns theming", () => {
+    const shipped = items.flatMap((i) =>
+      i.files.filter((f) => /theme-(provider|toggle)/.test(f.path)).map((f) => `${i.name}: ${f.path}`),
+    );
+    expect(shipped).toEqual([]);
+  });
+
   it("ships no showcase-only code (the devl.dev frame, .showcase companions)", () => {
     const leaked = items.flatMap((i) =>
       i.files.filter((f) => /_devl-frame|DevlFrame|\.showcase/.test(f.path + f.content)).map((f) => `${i.name}: ${f.path}`),

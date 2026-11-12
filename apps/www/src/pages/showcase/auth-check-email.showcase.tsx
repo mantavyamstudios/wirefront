@@ -3,8 +3,9 @@
 // Showcase only: renders the screen with Wirefront's demo illustration.
 // Not shipped by the registry; builders pass their own `illustration`.
 import welcomeSrc from "@/assets/figures/welcome.png";
+import { ThemeToggle } from "@wirefront/ui/theme-toggle";
 import { AuthCheckEmail } from "./auth-check-email";
 
 export function AuthCheckEmailShowcasePage() {
-  return <AuthCheckEmail illustration={welcomeSrc} />;
+  return <AuthCheckEmail actions={<ThemeToggle />} illustration={welcomeSrc} />;
 }

@@ -8,7 +8,7 @@ import { Highlight, themes } from "prism-react-renderer";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Separator } from "@wirefront/ui/separator";
-import { useTheme } from "@wirefront/ui/theme-provider";
+import { useColorScheme } from "@wirefront/ui/wirefront/provider";
 
 const CODE = `import { useState } from "react";
 import { Button } from "@wirefront/ui/button";
@@ -206,7 +206,8 @@ export function LayoutsSplitResizableShowcasePage() {
 }
 
 function EditorPane() {
-  const { resolved } = useTheme();
+  // Follows the builder's theme (WirefrontProvider or the `dark` class on <html>).
+  const resolved = useColorScheme();
   const theme = resolved === "dark" ? themes.vsDark : themes.vsLight;
   // The resolved theme is only known on the client; colouring tokens before
   // mount would make the server HTML disagree with hydration.

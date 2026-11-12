@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type ReactNode, type FormEvent, useState } from "react";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
@@ -14,9 +14,9 @@ import { AuthShell, useAuthTypingImpulse } from "./auth-shell";
 
 const STEPS = ["Workspace", "Invite", "Ready"] as const;
 
-export function Onboarding({ illustration }: { illustration: string }) {
+export function Onboarding({ illustration, actions }: { illustration: string; actions?: ReactNode }) {
   return (
-    <AuthShell variant="onboarding" illustration={illustration}>
+    <AuthShell variant="onboarding" illustration={illustration} actions={actions}>
       <OnboardingFlow />
     </AuthShell>
   );

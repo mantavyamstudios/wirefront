@@ -3,8 +3,9 @@
 // Showcase only: renders the screen with Wirefront's demo illustration.
 // Not shipped by the registry; builders pass their own `illustration`.
 import welcomeSrc from "@/assets/figures/welcome.png";
+import { ThemeToggle } from "@wirefront/ui/theme-toggle";
 import { Login } from "./login";
 
 export function LoginShowcasePage() {
-  return <Login illustration={welcomeSrc} />;
+  return <Login actions={<ThemeToggle />} illustration={welcomeSrc} />;
 }
