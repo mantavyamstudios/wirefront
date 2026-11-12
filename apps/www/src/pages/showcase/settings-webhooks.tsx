@@ -16,16 +16,16 @@ import {
   TriangleAlertIcon,
   WebhookIcon,
 } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
 import {
   Menu,
   MenuItem,
   MenuPopup,
   MenuSeparator,
   MenuTrigger,
-} from "@orbit/ui/menu";
-import { Separator } from "@orbit/ui/separator";
+} from "@wirefront/ui/menu";
+import { Separator } from "@wirefront/ui/separator";
 import {
   Table,
   TableBody,
@@ -33,8 +33,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@orbit/ui/table";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@orbit/ui/tooltip";
+} from "@wirefront/ui/table";
+import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
 
 type EndpointStatus = "success" | "failing" | "paused";
 

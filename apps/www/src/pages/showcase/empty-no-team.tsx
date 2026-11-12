@@ -1,10 +1,10 @@
 import { CopyIcon, MailPlusIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@orbit/ui/input-group";
+} from "@wirefront/ui/input-group";
 
 export function EmptyNoTeamShowcasePage() {
   const inviteUrl = "https://orbit.so/invite/8f3a2c";

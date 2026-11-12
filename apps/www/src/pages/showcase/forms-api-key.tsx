@@ -1,9 +1,9 @@
 import { type FormEvent, useState } from "react";
 import { CopyIcon, KeyIcon, TerminalIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
 
 interface Scope {
   id: string;

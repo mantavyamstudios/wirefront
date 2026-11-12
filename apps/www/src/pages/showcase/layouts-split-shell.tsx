@@ -37,14 +37,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { Kbd } from "@orbit/ui/kbd";
-import { Tabs, TabsList, TabsPanel, TabsTab } from "@orbit/ui/tabs";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@orbit/ui/tooltip";
-import { cn } from "@orbit/ui/lib/utils";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { Kbd } from "@wirefront/ui/kbd";
+import { Tabs, TabsList, TabsPanel, TabsTab } from "@wirefront/ui/tabs";
+import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export interface WorkspaceTask {
   id: string;

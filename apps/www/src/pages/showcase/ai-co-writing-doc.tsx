@@ -22,11 +22,11 @@ import {
   XIcon,
 } from "lucide-react";
 import { Fragment, type ReactNode, useEffect, useId, useState } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { Kbd } from "@orbit/ui/kbd";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@orbit/ui/tooltip";
-import { cn } from "@orbit/ui/lib/utils";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { Kbd } from "@wirefront/ui/kbd";
+import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type CollaboratorTone = "info" | "success" | "violet" | "warning";
 

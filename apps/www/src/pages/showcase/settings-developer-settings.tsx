@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type FormEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
+import { cn } from "@wirefront/ui/lib/utils";
 import {
   AlertDialog,
   AlertDialogClose,
@@ -34,16 +34,16 @@ import {
   AlertDialogHeader,
   AlertDialogPopup,
   AlertDialogTitle,
-} from "@orbit/ui/alert-dialog";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { Dialog, DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogPanel, DialogPopup, DialogTitle } from "@orbit/ui/dialog";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@orbit/ui/menu";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@orbit/ui/select";
-import { Spinner } from "@orbit/ui/spinner";
-import { Switch } from "@orbit/ui/switch";
+} from "@wirefront/ui/alert-dialog";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { Dialog, DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogPanel, DialogPopup, DialogTitle } from "@wirefront/ui/dialog";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
+import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
+import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Spinner } from "@wirefront/ui/spinner";
+import { Switch } from "@wirefront/ui/switch";
 
 export type SettingsSectionId =
   | "profile"

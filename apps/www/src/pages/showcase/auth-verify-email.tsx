@@ -3,9 +3,9 @@ import { DevlFrame } from "./_devl-frame";
 import { CheckIcon, MailIcon } from "lucide-react";
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from "motion/react";
 import { useEffect, useId, useState } from "react";
-import { Button } from "@orbit/ui/button";
-import { OTPField, OTPFieldInput, OTPFieldSeparator } from "@orbit/ui/otp-field";
-import { cn } from "@orbit/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { OTPField, OTPFieldInput, OTPFieldSeparator } from "@wirefront/ui/otp-field";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type VerifyResult = { ok: true } | { ok: false; error: string };
 

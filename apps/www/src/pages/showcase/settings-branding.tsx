@@ -10,15 +10,15 @@ import {
   RefreshCwIcon,
   UploadCloudIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
-import { Separator } from "@orbit/ui/separator";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
+import { Separator } from "@wirefront/ui/separator";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@orbit/ui/popover";
+} from "@wirefront/ui/popover";
 
 type SwatchKey =
   | "primary"

@@ -1,5 +1,5 @@
 import { ChevronDownIcon, FilterIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 type Health = "healthy" | "degraded" | "down" | "deploying";
 

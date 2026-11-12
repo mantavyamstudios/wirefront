@@ -22,11 +22,11 @@ import {
 } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Popover, PopoverPopup, PopoverTrigger } from "@orbit/ui/popover";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@orbit/ui/tooltip";
-import { useTheme } from "@orbit/ui/theme-provider";
-import { PALETTES } from "@orbit/ui/themes";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
+import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { useTheme } from "@wirefront/ui/theme-provider";
+import { PALETTES } from "@wirefront/ui/themes";
 import { playGoo, setSoundEnabled, useSoundEnabled } from "@/lib/sound";
 
 export type Device = "desktop" | "tablet" | "mobile";

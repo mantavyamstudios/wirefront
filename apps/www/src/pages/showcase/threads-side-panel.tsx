@@ -4,14 +4,14 @@ import {
   MoreHorizontalIcon,
   XIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Sheet,
   SheetClose,
   SheetPopup,
   SheetTitle,
   SheetTrigger,
-} from "@orbit/ui/sheet";
+} from "@wirefront/ui/sheet";
 
 interface Comment {
   id: number;

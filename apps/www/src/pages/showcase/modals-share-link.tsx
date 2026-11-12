@@ -6,8 +6,8 @@ import {
   LockIcon,
   Share2Icon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -17,8 +17,8 @@ import {
   DialogPopup,
   DialogTitle,
   DialogTrigger,
-} from "@orbit/ui/dialog";
-import { Input } from "@orbit/ui/input";
+} from "@wirefront/ui/dialog";
+import { Input } from "@wirefront/ui/input";
 
 const MEMBERS = [
   { name: "Maya Okafor", email: "maya@acme.dev", role: "Owner", initials: "MO" },

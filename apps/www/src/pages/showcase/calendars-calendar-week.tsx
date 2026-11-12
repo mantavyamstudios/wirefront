@@ -24,11 +24,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button } from "@orbit/ui/button";
-import { Calendar } from "@orbit/ui/calendar";
-import { Kbd } from "@orbit/ui/kbd";
-import { Popover, PopoverPopup, PopoverTrigger } from "@orbit/ui/popover";
-import { cn } from "@orbit/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { Calendar } from "@wirefront/ui/calendar";
+import { Kbd } from "@wirefront/ui/kbd";
+import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type CalendarTone = "teal" | "violet" | "sky" | "amber" | "rose";
 

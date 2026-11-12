@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CheckCircle2Icon, ChevronDownIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 interface Thread {
   id: number;

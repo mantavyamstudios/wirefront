@@ -1,5 +1,5 @@
 import { ArrowRightIcon, FolderPlusIcon, ImportIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Empty,
   EmptyContent,
@@ -7,8 +7,8 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@orbit/ui/empty";
-import { Separator } from "@orbit/ui/separator";
+} from "@wirefront/ui/empty";
+import { Separator } from "@wirefront/ui/separator";
 
 export function EmptyFirstProjectShowcasePage() {
   return (

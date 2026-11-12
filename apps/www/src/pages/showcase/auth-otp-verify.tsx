@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { ChevronLeftIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardPanel,
   CardTitle,
-} from "@orbit/ui/card";
+} from "@wirefront/ui/card";
 import {
   OTPField,
   OTPFieldInput,
   OTPFieldSeparator,
-} from "@orbit/ui/otp-field";
-import { Spinner } from "@orbit/ui/spinner";
+} from "@wirefront/ui/otp-field";
+import { Spinner } from "@wirefront/ui/spinner";
 
 const RESEND_SECONDS = 45;
 

@@ -11,19 +11,19 @@ import {
   PlayIcon as RetryIcon,
   TerminalIcon,
 } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { useMediaQuery } from "@orbit/ui/hooks/use-media-query";
-import { Button } from "@orbit/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@orbit/ui/input-group";
-import { Kbd } from "@orbit/ui/kbd";
-import { Separator } from "@orbit/ui/separator";
+import { Badge } from "@wirefront/ui/badge";
+import { useMediaQuery } from "@wirefront/ui/hooks/use-media-query";
+import { Button } from "@wirefront/ui/button";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import { Kbd } from "@wirefront/ui/kbd";
+import { Separator } from "@wirefront/ui/separator";
 import {
   Sheet,
   SheetHeader,
   SheetPanel,
   SheetPopup,
   SheetTitle,
-} from "@orbit/ui/sheet";
+} from "@wirefront/ui/sheet";
 import {
   Table,
   TableBody,
@@ -31,7 +31,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@orbit/ui/table";
+} from "@wirefront/ui/table";
 
 type Severity = "debug" | "info" | "warn" | "error";
 

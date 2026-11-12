@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SearchIcon, XIcon } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
 import {
   Empty,
   EmptyContent,
@@ -9,12 +9,12 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@orbit/ui/empty";
+} from "@wirefront/ui/empty";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@orbit/ui/input-group";
+} from "@wirefront/ui/input-group";
 
 const INITIAL_FILTERS = ["status:open", "owner:me", "label:billing"];
 

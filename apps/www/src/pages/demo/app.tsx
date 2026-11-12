@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useTheme } from "@orbit/ui/theme-provider";
+import { useTheme } from "@wirefront/ui/theme-provider";
 import { DemoOverlays } from "./overlays";
 import { DemoSidebar } from "./sidebar";
 import { DemoTopbar } from "./topbar";

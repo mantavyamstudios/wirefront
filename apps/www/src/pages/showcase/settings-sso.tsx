@@ -9,15 +9,15 @@ import {
   LoaderIcon,
   PlusIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Select,
   SelectItem,
   SelectPopup,
   SelectTrigger,
   SelectValue,
-} from "@orbit/ui/select";
-import { Switch } from "@orbit/ui/switch";
+} from "@wirefront/ui/select";
+import { Switch } from "@wirefront/ui/switch";
 
 interface Provider {
   id: string;

@@ -6,8 +6,8 @@ import {
   RepeatIcon,
   SparklesIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
 
 type Freq = "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
 type WeekDay = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU";

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useTheme } from "@orbit/ui/theme-provider";
+import { useTheme } from "@wirefront/ui/theme-provider";
 import { CATEGORIES, getCategory, type CategorySlug } from "@/lib/designs";
 import { getShowcase } from "@/pages/showcase/registry";
 import { SITE_NAME, SITE_URL } from "@/lib/site";

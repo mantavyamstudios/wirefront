@@ -9,9 +9,9 @@ import {
   AlertDialogPopup,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@orbit/ui/alert-dialog";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
+} from "@wirefront/ui/alert-dialog";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
 
 const PHRASE = "delete acme-prod";
 

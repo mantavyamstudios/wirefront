@@ -36,12 +36,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { Kbd } from "@orbit/ui/kbd";
-import { Popover, PopoverPopup, PopoverTrigger } from "@orbit/ui/popover";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@orbit/ui/tooltip";
-import { cn } from "@orbit/ui/lib/utils";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { Kbd } from "@wirefront/ui/kbd";
+import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
+import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type ChatTone = "blue" | "orange" | "teal" | "violet" | "rose" | "amber" | "emerald" | "sky";
 

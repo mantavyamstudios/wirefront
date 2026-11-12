@@ -4,7 +4,7 @@ import {
   MapPinIcon,
   VideoIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 
 interface Slot {
   type: "event" | "gap";

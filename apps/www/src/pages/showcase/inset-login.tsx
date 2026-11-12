@@ -6,15 +6,15 @@ import {
   MailIcon,
   ShuffleIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Field, FieldLabel } from "@orbit/ui/field";
-import { Input } from "@orbit/ui/input";
+import { Button } from "@wirefront/ui/button";
+import { Field, FieldLabel } from "@wirefront/ui/field";
+import { Input } from "@wirefront/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@orbit/ui/input-group";
-import { Separator } from "@orbit/ui/separator";
+} from "@wirefront/ui/input-group";
+import { Separator } from "@wirefront/ui/separator";
 
 export function InsetLoginShowcasePage() {
   return (

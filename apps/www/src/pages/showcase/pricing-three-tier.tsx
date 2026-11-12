@@ -1,5 +1,5 @@
 import { CheckIcon, SparklesIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 const PLANS = [
   {

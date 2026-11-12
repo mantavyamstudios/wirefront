@@ -6,7 +6,7 @@ import {
   RotateCcwIcon,
   XCircleIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 
 type Status = "succeeded" | "failed" | "rolled-back" | "in-progress";
 
@@ -32,7 +32,7 @@ const ENV_TONE: Record<Deploy["env"], string> = {
 const DEPLOYS: Deploy[] = [
   { id: "dpl_8a92", env: "production", branch: "main", sha: "f3b9a21", status: "in-progress", message: "feat(audit): persist 1y retention", by: "Maya Okafor", initials: "MO", duration: "06:42", when: "now" },
   { id: "dpl_4f01", env: "production", branch: "main", sha: "2b10f7c", status: "succeeded", message: "release v3.4", by: "Mantavyam", initials: "MS", duration: "5m 18s", when: "1d" },
-  { id: "dpl_31bc", env: "staging", branch: "main", sha: "4d99a0c", status: "succeeded", message: "chore: bump @orbit/ui", by: "Riya Patel", initials: "RP", duration: "1m 32s", when: "1d" },
+  { id: "dpl_31bc", env: "staging", branch: "main", sha: "4d99a0c", status: "succeeded", message: "chore: bump @wirefront/ui", by: "Riya Patel", initials: "RP", duration: "1m 32s", when: "1d" },
   { id: "dpl_22ae", env: "preview", branch: "feat/audit-log", sha: "12cae71", status: "succeeded", message: "Merge feat/audit-log", by: "Maya Okafor", initials: "MO", duration: "2m 04s", when: "2d" },
   { id: "dpl_19fc", env: "production", branch: "main", sha: "9b0c44e", status: "rolled-back", message: "fix(billing): retry on 5xx", by: "James Lin", initials: "JL", duration: "4m 22s", when: "3d" },
   { id: "dpl_0ff3", env: "preview", branch: "fix/csv-export", sha: "7f10b5e", status: "failed", message: "wip(table): wire export action menu", by: "James Lin", initials: "JL", duration: "0m 48s", when: "4d" },

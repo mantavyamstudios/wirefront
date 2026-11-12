@@ -8,12 +8,12 @@ import {
   UploadIcon,
   UsersIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
-import { Separator } from "@orbit/ui/separator";
-import { Switch } from "@orbit/ui/switch";
-import { useTheme } from "@orbit/ui/theme-provider";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
+import { Separator } from "@wirefront/ui/separator";
+import { Switch } from "@wirefront/ui/switch";
+import { useTheme } from "@wirefront/ui/theme-provider";
 import { useDemo, type SettingsTab } from "./store";
 
 const TABS: { id: SettingsTab; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { InfoIcon, XIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 // A system banner is persistent, page-level and dismissible — not a toast.
 // The message wraps instead of truncating (it's the whole point), and on

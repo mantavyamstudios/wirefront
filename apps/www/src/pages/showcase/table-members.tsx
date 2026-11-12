@@ -6,9 +6,9 @@ import {
   TrashIcon,
   UserPlusIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
 import {
   Menu,
   MenuGroup,
@@ -19,14 +19,14 @@ import {
   MenuRadioItem,
   MenuSeparator,
   MenuTrigger,
-} from "@orbit/ui/menu";
+} from "@wirefront/ui/menu";
 import {
   Select,
   SelectItem,
   SelectPopup,
   SelectTrigger,
   SelectValue,
-} from "@orbit/ui/select";
+} from "@wirefront/ui/select";
 import {
   Table,
   TableBody,
@@ -34,7 +34,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@orbit/ui/table";
+} from "@wirefront/ui/table";
 
 type Role = "owner" | "admin" | "member" | "viewer";
 

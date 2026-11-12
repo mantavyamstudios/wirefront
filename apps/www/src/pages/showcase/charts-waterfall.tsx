@@ -1,4 +1,4 @@
-import { useMediaQuery } from "@orbit/ui/hooks/use-media-query";
+import { useMediaQuery } from "@wirefront/ui/hooks/use-media-query";
 import { Bar, BarChart, Cell, LabelList } from "recharts";
 import {
   ChartAxis,

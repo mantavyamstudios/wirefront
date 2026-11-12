@@ -1,8 +1,8 @@
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Skeleton } from "@orbit/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Skeleton } from "@wirefront/ui/skeleton";
 
 const DEFAULT_USERNAME = "mantavyam";
 
@@ -113,7 +113,7 @@ function sampleData(login: string): {
   const messages = [
     "fix(table): keep sticky column opaque",
     "feat(audit): persist 1y retention",
-    "chore: bump @orbit/ui",
+    "chore: bump @wirefront/ui",
     "refactor(calendar): single scroll container",
     "docs: responsive audit notes",
     "test(api): cover rate-limit headers",

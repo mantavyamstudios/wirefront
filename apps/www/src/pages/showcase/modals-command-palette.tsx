@@ -12,7 +12,7 @@ import {
   ZapIcon,
 } from "lucide-react";
 import type { ComponentType } from "react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Command,
   CommandCollection,
@@ -27,8 +27,8 @@ import {
   CommandItem,
   CommandList,
   CommandShortcut,
-} from "@orbit/ui/command";
-import { Kbd } from "@orbit/ui/kbd";
+} from "@wirefront/ui/command";
+import { Kbd } from "@wirefront/ui/kbd";
 
 interface Cmd {
   label: string;

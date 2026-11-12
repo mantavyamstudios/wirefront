@@ -6,13 +6,13 @@ import {
   RefreshCcwIcon,
   SearchIcon,
 } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@orbit/ui/input-group";
+} from "@wirefront/ui/input-group";
 import {
   Pagination,
   PaginationContent,
@@ -20,15 +20,15 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@orbit/ui/pagination";
+} from "@wirefront/ui/pagination";
 import {
   Select,
   SelectItem,
   SelectPopup,
   SelectTrigger,
   SelectValue,
-} from "@orbit/ui/select";
-import { Separator } from "@orbit/ui/separator";
+} from "@wirefront/ui/select";
+import { Separator } from "@wirefront/ui/separator";
 import {
   Table,
   TableBody,
@@ -36,7 +36,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@orbit/ui/table";
+} from "@wirefront/ui/table";
 
 type Direction = "in" | "out";
 type Method = "card" | "ach" | "wire" | "wallet";

@@ -8,19 +8,19 @@ import {
   TagIcon,
   UserIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { CheckboxGroup } from "@orbit/ui/checkbox-group";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { CheckboxGroup } from "@wirefront/ui/checkbox-group";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@orbit/ui/input-group";
-import { Label } from "@orbit/ui/label";
-import { Popover, PopoverPopup, PopoverTrigger } from "@orbit/ui/popover";
-import { Separator } from "@orbit/ui/separator";
+} from "@wirefront/ui/input-group";
+import { Label } from "@wirefront/ui/label";
+import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
+import { Separator } from "@wirefront/ui/separator";
 import {
   Table,
   TableBody,
@@ -28,7 +28,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@orbit/ui/table";
+} from "@wirefront/ui/table";
 
 type Status = "todo" | "in-progress" | "in-review" | "done";
 type Priority = "p0" | "p1" | "p2" | "p3" | "none";

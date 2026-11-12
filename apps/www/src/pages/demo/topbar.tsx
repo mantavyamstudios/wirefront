@@ -1,5 +1,5 @@
 import { ArrowLeftIcon, BellIcon, KeyboardIcon, SearchIcon } from "lucide-react";
-import { ThemeToggle } from "@orbit/ui/theme-toggle";
+import { ThemeToggle } from "@wirefront/ui/theme-toggle";
 import { useDemo } from "./store";
 
 const TITLES: Record<string, { eyebrow: string; title: string }> = {

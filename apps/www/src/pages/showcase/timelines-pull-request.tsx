@@ -16,8 +16,8 @@ import {
   UserPlusIcon,
   XIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
 
 type ReviewState = "approved" | "changes" | "pending";
 

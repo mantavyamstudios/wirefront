@@ -13,7 +13,7 @@ import {
   ShareIcon,
   StarIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import { useDemo, type Issue } from "./store";
 
 type DetailTab = "overview" | "issues" | "activity";

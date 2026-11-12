@@ -6,7 +6,7 @@ import {
   LockIcon,
   PlusIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -17,8 +17,8 @@ import {
   DialogPopup,
   DialogTitle,
   DialogTrigger,
-} from "@orbit/ui/dialog";
-import { Input } from "@orbit/ui/input";
+} from "@wirefront/ui/dialog";
+import { Input } from "@wirefront/ui/input";
 
 type Visibility = "private" | "team" | "public";
 

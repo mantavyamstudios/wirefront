@@ -6,9 +6,9 @@ import {
   PackageIcon,
   TruckIcon,
 } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -16,7 +16,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@orbit/ui/table";
+} from "@wirefront/ui/table";
 
 type Stage = "ordered" | "packed" | "shipped" | "delivered";
 

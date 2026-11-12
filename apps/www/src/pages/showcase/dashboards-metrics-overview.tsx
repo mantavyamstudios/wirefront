@@ -6,7 +6,7 @@ import {
   PlusIcon,
   TrendingUpIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 const STATS = [
   { label: "Active users", value: "12,408", delta: "+8.2%", trend: "up" as const, sub: "vs. last 30d" },

@@ -1,6 +1,6 @@
 import { ChevronDownIcon, MoonIcon, MusicIcon, PhoneIcon } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 
 interface Person {
   name: string;

@@ -45,9 +45,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { Kbd } from "@orbit/ui/kbd";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { Kbd } from "@wirefront/ui/kbd";
 import {
   Menu,
   MenuGroup,
@@ -58,10 +58,10 @@ import {
   MenuRadioItem,
   MenuSeparator,
   MenuTrigger,
-} from "@orbit/ui/menu";
-import { SegmentedControl, SegmentedControlItem } from "@orbit/ui/segmented-control";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@orbit/ui/tooltip";
-import { cn } from "@orbit/ui/lib/utils";
+} from "@wirefront/ui/menu";
+import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
+import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type DealStage = "lead" | "qualified" | "proposal" | "negotiation" | "won";
 export type Engagement = "hot" | "warm" | "cooling" | "cold";

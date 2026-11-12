@@ -6,7 +6,7 @@ import {
   CommandIcon,
   PlusIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 const TASKS = [
   { id: 1, title: "Review Maya's audit log PR", project: "API", due: "Today", done: false },

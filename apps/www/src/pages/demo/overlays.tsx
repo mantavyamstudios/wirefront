@@ -19,7 +19,7 @@ import {
   UsersIcon,
   XIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Dialog,
   DialogFooter,
@@ -27,11 +27,11 @@ import {
   DialogPanel,
   DialogPopup,
   DialogTitle,
-} from "@orbit/ui/dialog";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
-import { Textarea } from "@orbit/ui/textarea";
-import { useTheme } from "@orbit/ui/theme-provider";
+} from "@wirefront/ui/dialog";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
+import { Textarea } from "@wirefront/ui/textarea";
+import { useTheme } from "@wirefront/ui/theme-provider";
 import {
   ConfirmArchiveAlert,
   NotificationsSheet,

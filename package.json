@@ -1,5 +1,5 @@
 {
-  "name": "scratchpad",
+  "name": "wirefront",
   "private": true,
   "version": "0.0.0",
   "license": "AGPL-3.0-only",
@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
-    "dev:www": "turbo run dev --filter=@orbit/www",
+    "dev:www": "turbo run dev --filter=@wirefront/www",
     "predev": "npm run registry",
     "build": "turbo run build",
     "prebuild": "npm run registry",

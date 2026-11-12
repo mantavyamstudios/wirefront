@@ -1,5 +1,5 @@
 import { CopyIcon, ExternalLinkIcon, ShieldCheckIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -9,8 +9,8 @@ import {
   DialogPopup,
   DialogTitle,
   DialogTrigger,
-} from "@orbit/ui/dialog";
-import { OTPField, OTPFieldInput, OTPFieldSeparator } from "@orbit/ui/otp-field";
+} from "@wirefront/ui/dialog";
+import { OTPField, OTPFieldInput, OTPFieldSeparator } from "@wirefront/ui/otp-field";
 
 const RECOVERY = [
   "ZQX-PT4-9KH",

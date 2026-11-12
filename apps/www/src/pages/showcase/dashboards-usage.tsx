@@ -1,5 +1,5 @@
 import { ArrowUpRightIcon, ZapIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 interface UsageRow {
   label: string;

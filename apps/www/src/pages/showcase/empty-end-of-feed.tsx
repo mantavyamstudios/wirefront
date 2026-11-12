@@ -1,5 +1,5 @@
 import { CheckIcon, RotateCwIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 const FEED = [
   { id: 1, who: "Lina", what: "shipped pricing-v2 to production", when: "12m" },

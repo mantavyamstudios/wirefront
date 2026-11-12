@@ -5,7 +5,7 @@ import {
   CheckCircle2Icon,
   MailIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import { AuthShell } from "./auth-shell";
 
 const RESEND_SECONDS = 30;

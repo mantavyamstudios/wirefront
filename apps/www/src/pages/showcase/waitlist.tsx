@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { ParticleField } from "@orbit/ui/particle-field";
+import { ParticleField } from "@wirefront/ui/particle-field";
 import emptyRoomSrc from "@/assets/figures/empty-room.png";
 
 export function WaitlistShowcasePage() {

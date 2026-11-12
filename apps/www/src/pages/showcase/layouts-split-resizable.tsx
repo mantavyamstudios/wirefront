@@ -1,13 +1,13 @@
 import { type CSSProperties, type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from "react";
 import { GripVerticalIcon, PlayIcon, RotateCcwIcon, Share2Icon, WandSparklesIcon } from "lucide-react";
 import { Highlight, themes } from "prism-react-renderer";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Separator } from "@orbit/ui/separator";
-import { useTheme } from "@orbit/ui/theme-provider";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Separator } from "@wirefront/ui/separator";
+import { useTheme } from "@wirefront/ui/theme-provider";
 
 const CODE = `import { useState } from "react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 // A tiny counter widget
 export function Counter() {

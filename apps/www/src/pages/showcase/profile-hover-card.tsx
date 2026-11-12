@@ -4,9 +4,9 @@ import {
   MapPinIcon,
   PlusIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { Popover, PopoverPopup, PopoverTrigger } from "@orbit/ui/popover";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
 
 export function ProfileHoverCardShowcasePage() {
   return (

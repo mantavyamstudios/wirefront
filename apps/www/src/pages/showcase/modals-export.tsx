@@ -6,8 +6,8 @@ import {
   FileSpreadsheetIcon,
   FileTextIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -18,7 +18,7 @@ import {
   DialogPopup,
   DialogTitle,
   DialogTrigger,
-} from "@orbit/ui/dialog";
+} from "@wirefront/ui/dialog";
 
 type Format = "csv" | "json" | "pdf";
 

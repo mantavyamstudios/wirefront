@@ -5,24 +5,24 @@ import {
   SearchIcon,
   SlidersHorizontalIcon,
 } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { CheckboxGroup } from "@orbit/ui/checkbox-group";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { CheckboxGroup } from "@wirefront/ui/checkbox-group";
 import {
   Collapsible,
   CollapsiblePanel,
   CollapsibleTrigger,
-} from "@orbit/ui/collapsible";
+} from "@wirefront/ui/collapsible";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@orbit/ui/input-group";
-import { Label } from "@orbit/ui/label";
-import { Sheet, SheetClose, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
-import { Slider } from "@orbit/ui/slider";
-import { Switch } from "@orbit/ui/switch";
+} from "@wirefront/ui/input-group";
+import { Label } from "@wirefront/ui/label";
+import { Sheet, SheetClose, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Slider } from "@wirefront/ui/slider";
+import { Switch } from "@wirefront/ui/switch";
 
 type CategoryVal = "apparel" | "drinkware" | "stationery" | "hardware" | "home" | "games";
 type ColorVal = "bone" | "moss" | "dune" | "night" | "rust" | "sky";

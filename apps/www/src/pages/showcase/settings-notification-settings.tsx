@@ -19,11 +19,11 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { SegmentedControl, SegmentedControlItem } from "@orbit/ui/segmented-control";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@orbit/ui/select";
-import { Switch } from "@orbit/ui/switch";
-import { ToggleGroup, ToggleGroupItem } from "@orbit/ui/toggle-group";
+import { cn } from "@wirefront/ui/lib/utils";
+import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
+import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Switch } from "@wirefront/ui/switch";
+import { ToggleGroup, ToggleGroupItem } from "@wirefront/ui/toggle-group";
 
 export type SettingsSectionId =
   | "profile"

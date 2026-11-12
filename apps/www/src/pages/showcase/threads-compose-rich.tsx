@@ -11,8 +11,8 @@ import {
   SmileIcon,
   StrikethroughIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Kbd } from "@orbit/ui/kbd";
+import { Button } from "@wirefront/ui/button";
+import { Kbd } from "@wirefront/ui/kbd";
 
 const TOOLS = [
   { Icon: BoldIcon, label: "Bold", shortcut: "⌘B" },

@@ -1,5 +1,5 @@
 import { CheckIcon, SparklesIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Dialog,
   DialogDescription,
@@ -9,7 +9,7 @@ import {
   DialogPopup,
   DialogTitle,
   DialogTrigger,
-} from "@orbit/ui/dialog";
+} from "@wirefront/ui/dialog";
 
 const PLANS = [
   {

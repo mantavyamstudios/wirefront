@@ -1,16 +1,16 @@
 import { type FormEvent, useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { Card } from "@orbit/ui/card";
-import { Field, FieldLabel } from "@orbit/ui/field";
-import { Input } from "@orbit/ui/input";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { Card } from "@wirefront/ui/card";
+import { Field, FieldLabel } from "@wirefront/ui/field";
+import { Input } from "@wirefront/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@orbit/ui/input-group";
-import { Separator } from "@orbit/ui/separator";
+} from "@wirefront/ui/input-group";
+import { Separator } from "@wirefront/ui/separator";
 
 export function AuthLeftSigninShowcasePage() {
   return (

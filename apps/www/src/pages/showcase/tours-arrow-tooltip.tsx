@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRightIcon, PlusIcon, XIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { PopoverPrimitive as Popover } from "@orbit/ui/popover";
+import { Button } from "@wirefront/ui/button";
+import { PopoverPrimitive as Popover } from "@wirefront/ui/popover";
 
 interface Step {
   target: string; // matches data-tour="…" on a real element

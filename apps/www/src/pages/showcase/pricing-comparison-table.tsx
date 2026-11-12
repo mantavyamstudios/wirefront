@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { CheckIcon, MinusIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 const PLANS = [
   { id: "starter", name: "Starter", price: "$0", cadence: "/mo" },

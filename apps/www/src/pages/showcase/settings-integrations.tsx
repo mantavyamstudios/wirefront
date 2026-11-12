@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CheckIcon, ExternalLinkIcon, SearchIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 interface Integration {
   id: string;

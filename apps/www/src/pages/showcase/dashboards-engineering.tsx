@@ -3,8 +3,8 @@ import {
   ArrowUpRightIcon,
   ChevronDownIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
 
 interface Dora {
   label: string;

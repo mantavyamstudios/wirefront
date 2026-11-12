@@ -6,7 +6,7 @@ import {
   SparklesIcon,
   UsersIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -14,7 +14,7 @@ import {
   DialogPopup,
   DialogTitle,
   DialogTrigger,
-} from "@orbit/ui/dialog";
+} from "@wirefront/ui/dialog";
 
 interface Step {
   Icon: React.ComponentType<{ className?: string }>;

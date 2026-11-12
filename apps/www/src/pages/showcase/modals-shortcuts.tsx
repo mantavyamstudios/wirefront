@@ -1,5 +1,5 @@
 import { KeyboardIcon, SearchIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Dialog,
   DialogFooter,
@@ -8,8 +8,8 @@ import {
   DialogPopup,
   DialogTitle,
   DialogTrigger,
-} from "@orbit/ui/dialog";
-import { Kbd, KbdGroup } from "@orbit/ui/kbd";
+} from "@wirefront/ui/dialog";
+import { Kbd, KbdGroup } from "@wirefront/ui/kbd";
 
 const GROUPS: { name: string; items: { keys: string[]; label: string }[] }[] = [
   {

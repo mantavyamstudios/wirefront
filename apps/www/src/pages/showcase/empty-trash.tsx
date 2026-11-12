@@ -1,5 +1,5 @@
 import { Trash2Icon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Empty,
   EmptyContent,
@@ -7,7 +7,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@orbit/ui/empty";
+} from "@wirefront/ui/empty";
 
 export function EmptyTrashShowcasePage() {
   return (

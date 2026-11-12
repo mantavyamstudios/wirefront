@@ -29,10 +29,10 @@ import {
   useRef,
   useState,
 } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { Kbd } from "@orbit/ui/kbd";
-import { cn } from "@orbit/ui/lib/utils";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { Kbd } from "@wirefront/ui/kbd";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type IssueStatus = "backlog" | "todo" | "in_progress" | "in_review" | "done";
 export type IssuePriority = 0 | 1 | 2 | 3 | 4;

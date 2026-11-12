@@ -1,11 +1,11 @@
 import { type FormEvent, useState } from "react";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
 import {
   bumpParticleTypingImpulse,
   pulseParticleSubmitImpulse,
-} from "@orbit/ui/particle-field";
+} from "@wirefront/ui/particle-field";
 import { AuthShell, useAuthTypingImpulse } from "./auth-shell";
 
 const STEPS = ["Workspace", "Invite", "Ready"] as const;

@@ -1,16 +1,16 @@
 import { type FormEvent, useState } from "react";
 import { LifeBuoyIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Card, CardFooter, CardHeader, CardPanel } from "@orbit/ui/card";
-import { Field, FieldLabel } from "@orbit/ui/field";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
+import { Button } from "@wirefront/ui/button";
+import { Card, CardFooter, CardHeader, CardPanel } from "@wirefront/ui/card";
+import { Field, FieldLabel } from "@wirefront/ui/field";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
 import {
   OTPField,
   OTPFieldInput,
   OTPFieldSeparator,
-} from "@orbit/ui/otp-field";
-import { Switch } from "@orbit/ui/switch";
+} from "@wirefront/ui/otp-field";
+import { Switch } from "@wirefront/ui/switch";
 
 type Mode = "code" | "recovery";
 

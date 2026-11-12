@@ -6,15 +6,15 @@ import {
   TrashIcon,
   XIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
 import {
   Popover,
   PopoverPopup,
   PopoverTrigger,
-} from "@orbit/ui/popover";
+} from "@wirefront/ui/popover";
 
 type BlockType = "vacation" | "sick" | "remote";
 

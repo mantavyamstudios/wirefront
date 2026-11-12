@@ -17,10 +17,10 @@ import {
   XIcon,
 } from "lucide-react";
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@orbit/ui/input-group";
-import { Kbd } from "@orbit/ui/kbd";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import { Kbd } from "@wirefront/ui/kbd";
 import {
   Menu,
   MenuGroup,
@@ -30,8 +30,8 @@ import {
   MenuRadioItem,
   MenuSeparator,
   MenuTrigger,
-} from "@orbit/ui/menu";
-import { cn } from "@orbit/ui/lib/utils";
+} from "@wirefront/ui/menu";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type FolderTone = "orange" | "yellow" | "lime" | "teal" | "blue" | "violet" | "rose" | "slate" | "neutral";
 

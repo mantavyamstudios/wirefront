@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 
 interface Node {
   name: string;

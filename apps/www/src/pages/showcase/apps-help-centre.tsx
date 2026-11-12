@@ -26,11 +26,11 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Kbd } from "@orbit/ui/kbd";
-import { Textarea } from "@orbit/ui/textarea";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Kbd } from "@wirefront/ui/kbd";
+import { Textarea } from "@wirefront/ui/textarea";
 
 function useReducedMotionAfterMount() {
   const prefers = useReducedMotion();

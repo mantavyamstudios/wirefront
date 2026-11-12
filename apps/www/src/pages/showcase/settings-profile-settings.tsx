@@ -30,9 +30,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
 import {
   Dialog,
   DialogDescription,
@@ -41,13 +41,13 @@ import {
   DialogPanel,
   DialogPopup,
   DialogTitle,
-} from "@orbit/ui/dialog";
-import { Input } from "@orbit/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@orbit/ui/input-group";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@orbit/ui/select";
-import { Slider } from "@orbit/ui/slider";
-import { Spinner } from "@orbit/ui/spinner";
-import { Textarea } from "@orbit/ui/textarea";
+} from "@wirefront/ui/dialog";
+import { Input } from "@wirefront/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@wirefront/ui/input-group";
+import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Slider } from "@wirefront/ui/slider";
+import { Spinner } from "@wirefront/ui/spinner";
+import { Textarea } from "@wirefront/ui/textarea";
 
 export type AvatarPalette = "dusk" | "tide" | "ember" | "moss";
 

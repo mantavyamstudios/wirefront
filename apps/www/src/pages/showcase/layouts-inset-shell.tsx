@@ -28,16 +28,16 @@ import {
   XIcon,
 } from "lucide-react";
 import { type ReactElement, type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Badge } from "@orbit/ui/badge";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Badge } from "@wirefront/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-} from "@orbit/ui/breadcrumb";
-import { Button } from "@orbit/ui/button";
-import { Kbd } from "@orbit/ui/kbd";
+} from "@wirefront/ui/breadcrumb";
+import { Button } from "@wirefront/ui/button";
+import { Kbd } from "@wirefront/ui/kbd";
 import {
   Menu,
   MenuGroup,
@@ -49,9 +49,9 @@ import {
   MenuSeparator,
   MenuShortcut,
   MenuTrigger,
-} from "@orbit/ui/menu";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@orbit/ui/tooltip";
-import { cn } from "@orbit/ui/lib/utils";
+} from "@wirefront/ui/menu";
+import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type ShellTone = "orange" | "teal" | "cyan" | "violet" | "rose" | "info" | "success" | "warning";
 

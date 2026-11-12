@@ -11,8 +11,8 @@ import {
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@orbit/ui/tooltip";
+import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
 
 const ITEMS = [
   { icon: HomeIcon, label: "Home" },

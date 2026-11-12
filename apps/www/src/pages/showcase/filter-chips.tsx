@@ -5,26 +5,26 @@ import {
   SearchIcon,
   XIcon,
 } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { CheckboxGroup } from "@orbit/ui/checkbox-group";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { CheckboxGroup } from "@wirefront/ui/checkbox-group";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@orbit/ui/input-group";
-import { Label } from "@orbit/ui/label";
-import { Popover, PopoverPopup, PopoverTrigger } from "@orbit/ui/popover";
+} from "@wirefront/ui/input-group";
+import { Label } from "@wirefront/ui/label";
+import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
 import {
   Select,
   SelectItem,
   SelectPopup,
   SelectTrigger,
   SelectValue,
-} from "@orbit/ui/select";
-import { Separator } from "@orbit/ui/separator";
-import { Slider } from "@orbit/ui/slider";
+} from "@wirefront/ui/select";
+import { Separator } from "@wirefront/ui/separator";
+import { Slider } from "@wirefront/ui/slider";
 
 type StatusVal = "active" | "trial" | "churned" | "paused";
 type PlanVal = "free" | "pro" | "enterprise";

@@ -6,8 +6,8 @@ import {
   ExternalLinkIcon,
   ZapIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Separator } from "@orbit/ui/separator";
+import { Button } from "@wirefront/ui/button";
+import { Separator } from "@wirefront/ui/separator";
 
 const INVOICES = [
   { id: "INV-2026-04", date: "Apr 14, 2026", amount: "$240.00", status: "paid" as const },

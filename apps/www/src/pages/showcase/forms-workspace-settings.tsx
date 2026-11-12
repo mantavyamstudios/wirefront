@@ -10,7 +10,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { ChevronsUpDownIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Menu,
   MenuPopup,
@@ -18,11 +18,11 @@ import {
   MenuRadioItem,
   MenuSeparator,
   MenuTrigger,
-} from "@orbit/ui/menu";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
-import { Separator } from "@orbit/ui/separator";
-import { Switch } from "@orbit/ui/switch";
+} from "@wirefront/ui/menu";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
+import { Separator } from "@wirefront/ui/separator";
+import { Switch } from "@wirefront/ui/switch";
 
 const NAV = [
   { icon: SettingsIcon, label: "General", active: true },

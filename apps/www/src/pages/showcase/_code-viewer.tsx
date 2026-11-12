@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Highlight, themes } from "prism-react-renderer";
 import { CheckIcon, ChevronDownIcon, CopyIcon } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
-import { Button } from "@orbit/ui/button";
-import { cn } from "@orbit/ui/lib/utils";
-import { useTheme } from "@orbit/ui/theme-provider";
+import { Button } from "@wirefront/ui/button";
+import { cn } from "@wirefront/ui/lib/utils";
+import { useTheme } from "@wirefront/ui/theme-provider";
 import type { CategorySlug } from "@/lib/designs";
 import { getSourceFile } from "./source-files";
 

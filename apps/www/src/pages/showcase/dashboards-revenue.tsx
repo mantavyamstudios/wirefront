@@ -4,8 +4,8 @@ import {
   DownloadIcon,
 } from "lucide-react";
 import { useId } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
 
 const MRR_SERIES = [
   68.4, 71.2, 73.0, 76.8, 78.4, 82.1, 84.6, 88.3, 91.0, 95.7, 99.2, 103.4,

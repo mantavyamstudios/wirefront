@@ -24,11 +24,11 @@ import {
 } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { type CSSProperties, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@orbit/ui/input-group";
-import { Kbd } from "@orbit/ui/kbd";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import { Kbd } from "@wirefront/ui/kbd";
 import {
   Menu,
   MenuGroup,
@@ -39,9 +39,9 @@ import {
   MenuRadioItem,
   MenuSeparator,
   MenuTrigger,
-} from "@orbit/ui/menu";
-import { Popover, PopoverPopup, PopoverTrigger } from "@orbit/ui/popover";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@orbit/ui/tooltip";
+} from "@wirefront/ui/menu";
+import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
+import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 
 function useReducedMotionSafe() {
   const prefers = useReducedMotion();

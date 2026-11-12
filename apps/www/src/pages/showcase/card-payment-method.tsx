@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { ChevronRightIcon, ShieldCheckIcon } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
 import {
   Card,
   CardFooter,
   CardHeader,
   CardPanel,
   CardTitle,
-} from "@orbit/ui/card";
+} from "@wirefront/ui/card";
 
 type Brand = "visa" | "mastercard" | "amex";
 

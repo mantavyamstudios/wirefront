@@ -1,6 +1,6 @@
 import { type FormEvent, useMemo, useState } from "react";
 import { CheckIcon, EyeIcon, EyeOffIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Card,
   CardDescription,
@@ -8,17 +8,17 @@ import {
   CardHeader,
   CardPanel,
   CardTitle,
-} from "@orbit/ui/card";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { Field, FieldLabel } from "@orbit/ui/field";
-import { Input } from "@orbit/ui/input";
+} from "@wirefront/ui/card";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { Field, FieldLabel } from "@wirefront/ui/field";
+import { Input } from "@wirefront/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@orbit/ui/input-group";
-import { Label } from "@orbit/ui/label";
-import { Separator } from "@orbit/ui/separator";
+} from "@wirefront/ui/input-group";
+import { Label } from "@wirefront/ui/label";
+import { Separator } from "@wirefront/ui/separator";
 
 type Strength = "empty" | "weak" | "ok" | "strong";
 

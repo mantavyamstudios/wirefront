@@ -17,14 +17,14 @@ import {
   TrashIcon,
   UsersIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Menu,
   MenuItem,
   MenuPopup,
   MenuSeparator,
   MenuTrigger,
-} from "@orbit/ui/menu";
+} from "@wirefront/ui/menu";
 import { useDemo, type Member, type Project } from "./store";
 import { InboxView } from "./views-inbox";
 import { SettingsView } from "./views-settings";

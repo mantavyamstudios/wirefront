@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { CheckIcon, XIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { ToastPrimitive as Toast } from "@orbit/ui/toast";
+import { Button } from "@wirefront/ui/button";
+import { ToastPrimitive as Toast } from "@wirefront/ui/toast";
 
 // A dedicated manager keeps this showcase self-contained. In an app, mount
-// <ToastProvider> once and call the shared `toastManager` from @orbit/ui/toast.
+// <ToastProvider> once and call the shared `toastManager` from @wirefront/ui/toast.
 const toasts = Toast.createToastManager();
 
 function notifySaved(timeout?: number) {

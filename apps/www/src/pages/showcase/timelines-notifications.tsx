@@ -7,7 +7,7 @@ import {
   SettingsIcon,
 } from "lucide-react";
 import { type ComponentType, useState } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 
 interface Notif {
   who: string;

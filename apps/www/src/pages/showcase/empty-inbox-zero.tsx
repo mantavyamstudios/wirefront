@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { CheckCheckIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { ParticleField } from "@orbit/ui/particle-field";
+import { Button } from "@wirefront/ui/button";
+import { ParticleField } from "@wirefront/ui/particle-field";
 import dustyFieldSrc from "@/assets/figures/dusty-field.png";
 
 export function EmptyInboxZeroShowcasePage() {

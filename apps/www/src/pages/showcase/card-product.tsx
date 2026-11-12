@@ -1,13 +1,13 @@
 import { HeartIcon, ShoppingBagIcon, StarIcon } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
 import {
   Card,
   CardFooter,
   CardHeader,
   CardPanel,
   CardTitle,
-} from "@orbit/ui/card";
+} from "@wirefront/ui/card";
 
 interface Product {
   slug: string;

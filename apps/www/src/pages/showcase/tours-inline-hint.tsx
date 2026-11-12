@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LightbulbIcon, XIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 export function ToursInlineHintShowcasePage() {
   const [open, setOpen] = useState(true);

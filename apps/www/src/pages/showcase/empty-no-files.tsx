@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { FileTextIcon, ImageIcon, UploadCloudIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Kbd } from "@orbit/ui/kbd";
+import { Button } from "@wirefront/ui/button";
+import { Kbd } from "@wirefront/ui/kbd";
 
 export function EmptyNoFilesShowcasePage() {
   const inputRef = useRef<HTMLInputElement>(null);

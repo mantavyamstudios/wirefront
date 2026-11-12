@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { ArchiveIcon, TrashIcon, XIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { ToastPrimitive as Toast } from "@orbit/ui/toast";
+import { Button } from "@wirefront/ui/button";
+import { ToastPrimitive as Toast } from "@wirefront/ui/toast";
 
 const UNDO_MS = 8000;
 const PROJECTS = ["Q3 planning", "Design system", "Billing revamp", "Mobile app"];
 
 // A dedicated manager keeps this showcase self-contained. In an app, mount
-// <ToastProvider> once and use the shared `toastManager` from @orbit/ui/toast.
+// <ToastProvider> once and use the shared `toastManager` from @wirefront/ui/toast.
 const toasts = Toast.createToastManager<{ undo: () => void }>();
 
 // Archive → snackbar with Undo. The undo window is the toast's own timeout,

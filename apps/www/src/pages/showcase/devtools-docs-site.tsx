@@ -30,9 +30,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button } from "@orbit/ui/button";
-import { Kbd } from "@orbit/ui/kbd";
-import { cn } from "@orbit/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { Kbd } from "@wirefront/ui/kbd";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type DocsLang = "node" | "python" | "go" | "curl";
 

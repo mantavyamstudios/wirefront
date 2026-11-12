@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ExternalLinkIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Card } from "@orbit/ui/card";
+import { Button } from "@wirefront/ui/button";
+import { Card } from "@wirefront/ui/card";
 
 const RESEND_SECONDS = 30;
 

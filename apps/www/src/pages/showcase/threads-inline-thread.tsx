@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MessageSquareIcon, SmileIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
+import { Button } from "@wirefront/ui/button";
+import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 
 interface Comment {
   initials: string;

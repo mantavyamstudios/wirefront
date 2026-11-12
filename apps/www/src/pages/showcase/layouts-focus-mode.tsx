@@ -1,5 +1,5 @@
-import { Kbd } from "@orbit/ui/kbd";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
+import { Kbd } from "@wirefront/ui/kbd";
+import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 import {
   ActivityIcon,
   FileTextIcon,

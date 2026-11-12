@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { TerminalIcon } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Radio, RadioGroup } from "@orbit/ui/radio-group";
-import { Separator } from "@orbit/ui/separator";
-import { Switch } from "@orbit/ui/switch";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Radio, RadioGroup } from "@wirefront/ui/radio-group";
+import { Separator } from "@wirefront/ui/separator";
+import { Switch } from "@wirefront/ui/switch";
 
 type FlagStatus = "stable" | "beta" | "experimental";
 

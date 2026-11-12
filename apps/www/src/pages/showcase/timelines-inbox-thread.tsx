@@ -5,9 +5,9 @@ import {
   SmileIcon,
   StarIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { Textarea } from "@orbit/ui/textarea";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { Textarea } from "@wirefront/ui/textarea";
 
 interface Msg {
   who: string;

@@ -1,7 +1,7 @@
 import type { ReactNode, RefObject } from "react";
 import { createContext, useContext, useRef } from "react";
-import { ParticleField } from "@orbit/ui/particle-field";
-import { AuthSplitLayout } from "@orbit/ui/auth-split-layout";
+import { ParticleField } from "@wirefront/ui/particle-field";
+import { AuthSplitLayout } from "@wirefront/ui/auth-split-layout";
 import welcomeSrc from "@/assets/figures/welcome.png";
 import teamSrc from "@/assets/figures/team.png";
 import clustersSrc from "@/assets/figures/clusters.png";

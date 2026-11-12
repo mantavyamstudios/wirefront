@@ -1,8 +1,8 @@
 import { CheckIcon, ShieldCheckIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
-import { Textarea } from "@orbit/ui/textarea";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
+import { Textarea } from "@wirefront/ui/textarea";
 
 const FEATURES = [
   "Unlimited everything",

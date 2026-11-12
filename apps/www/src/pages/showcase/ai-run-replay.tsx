@@ -35,13 +35,13 @@ import {
   XIcon,
 } from "lucide-react";
 import { useEffect, useId, useMemo, useReducer, useRef, useState } from "react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@orbit/ui/menu";
-import { Skeleton } from "@orbit/ui/skeleton";
-import { Tabs, TabsList, TabsTab } from "@orbit/ui/tabs";
-import { cn } from "@orbit/ui/lib/utils";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
+import { Skeleton } from "@wirefront/ui/skeleton";
+import { Tabs, TabsList, TabsTab } from "@wirefront/ui/tabs";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type RunToolKind = "db" | "search" | "code" | "doc" | "send" | "task";
 

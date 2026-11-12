@@ -32,9 +32,9 @@ import {
   useTransform,
 } from "motion/react";
 import { type FormEvent, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
 
 export type HabitIcon =
   | "water"

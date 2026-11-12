@@ -8,8 +8,8 @@ import {
   SearchIcon,
   SmileIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Kbd } from "@orbit/ui/kbd";
+import { Button } from "@wirefront/ui/button";
+import { Kbd } from "@wirefront/ui/kbd";
 import { useDemo, type Thread } from "./store";
 
 export function InboxView() {

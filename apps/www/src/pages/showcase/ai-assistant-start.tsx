@@ -48,15 +48,15 @@ import {
   useRef,
   useState,
 } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@orbit/ui/input-group";
-import { Kbd } from "@orbit/ui/kbd";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@orbit/ui/menu";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@orbit/ui/select";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@orbit/ui/tooltip";
-import { cn } from "@orbit/ui/lib/utils";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import { Kbd } from "@wirefront/ui/kbd";
+import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
+import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type AssistantTone = "orange" | "teal" | "violet" | "amber" | "info" | "success" | "warning";
 

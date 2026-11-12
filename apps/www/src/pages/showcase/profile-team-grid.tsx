@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { GlobeIcon, MailIcon, MapPinIcon, SearchIcon } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
 
 interface Member {
   name: string;

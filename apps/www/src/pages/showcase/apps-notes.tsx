@@ -28,9 +28,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Button } from "@orbit/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@orbit/ui/input-group";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import {
   Menu,
   MenuGroup,
@@ -40,7 +40,7 @@ import {
   MenuRadioGroup,
   MenuRadioItem,
   MenuTrigger,
-} from "@orbit/ui/menu";
+} from "@wirefront/ui/menu";
 
 function useReducedMotionSafe() {
   const prefers = useReducedMotion();

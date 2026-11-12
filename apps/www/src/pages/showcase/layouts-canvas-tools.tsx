@@ -19,16 +19,16 @@ import {
   Type,
   UnlockIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Separator } from "@orbit/ui/separator";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
-import { Slider } from "@orbit/ui/slider";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Separator } from "@wirefront/ui/separator";
+import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import { Slider } from "@wirefront/ui/slider";
 import {
   Tooltip,
   TooltipPopup,
   TooltipTrigger,
-} from "@orbit/ui/tooltip";
-import { cn } from "@orbit/ui/lib/utils";
+} from "@wirefront/ui/tooltip";
+import { cn } from "@wirefront/ui/lib/utils";
 
 type ShapeType = "rectangle" | "ellipse" | "text";
 type Tool =

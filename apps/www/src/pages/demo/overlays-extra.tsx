@@ -17,24 +17,24 @@ import {
   AlertDialogHeader,
   AlertDialogPopup,
   AlertDialogTitle,
-} from "@orbit/ui/alert-dialog";
-import { Button } from "@orbit/ui/button";
+} from "@wirefront/ui/alert-dialog";
+import { Button } from "@wirefront/ui/button";
 import {
   Dialog,
   DialogHeader,
   DialogPanel,
   DialogPopup,
   DialogTitle,
-} from "@orbit/ui/dialog";
-import { Input } from "@orbit/ui/input";
-import { Kbd } from "@orbit/ui/kbd";
+} from "@wirefront/ui/dialog";
+import { Input } from "@wirefront/ui/input";
+import { Kbd } from "@wirefront/ui/kbd";
 import {
   Sheet,
   SheetHeader,
   SheetPanel,
   SheetPopup,
   SheetTitle,
-} from "@orbit/ui/sheet";
+} from "@wirefront/ui/sheet";
 import { useDemo, type Notification } from "./store";
 
 const ICONS: Record<Notification["Icon"], React.ComponentType<{ className?: string }>> = {

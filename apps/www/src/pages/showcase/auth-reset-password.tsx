@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from "react";
 import { CheckIcon, ChevronLeftIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Card,
   CardDescription,
@@ -8,9 +8,9 @@ import {
   CardHeader,
   CardPanel,
   CardTitle,
-} from "@orbit/ui/card";
-import { Field, FieldLabel } from "@orbit/ui/field";
-import { Input } from "@orbit/ui/input";
+} from "@wirefront/ui/card";
+import { Field, FieldLabel } from "@wirefront/ui/field";
+import { Input } from "@wirefront/ui/input";
 
 export function AuthResetPasswordShowcasePage() {
   const [email, setEmail] = useState("");

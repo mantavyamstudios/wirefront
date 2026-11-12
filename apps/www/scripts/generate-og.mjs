@@ -23,7 +23,7 @@ const [geistRegular, geistSemibold, logoBytes] = await Promise.all([
 
 const logoDataUrl = `data:image/png;base64,${logoBytes.toString('base64')}`
 
-// Mirrors @orbit/ui Badge `outline` variant at `lg` size: rounded-sm,
+// Mirrors @wirefront/ui Badge `outline` variant at `lg` size: rounded-sm,
 // border-input bg-background, font-medium, dark-mode background tint.
 const Badge = (label) =>
   h(

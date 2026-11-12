@@ -15,21 +15,21 @@ import {
   SparklesIcon,
   XIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Label } from "@orbit/ui/label";
+import { Button } from "@wirefront/ui/button";
+import { Label } from "@wirefront/ui/label";
 import {
   Popover,
   PopoverPopup,
   PopoverTrigger,
-} from "@orbit/ui/popover";
+} from "@wirefront/ui/popover";
 import {
   Select,
   SelectItem,
   SelectPopup,
   SelectTrigger,
   SelectValue,
-} from "@orbit/ui/select";
-import { Textarea } from "@orbit/ui/textarea";
+} from "@wirefront/ui/select";
+import { Textarea } from "@wirefront/ui/textarea";
 
 const WORKSPACE_DOMAIN = "acme.com";
 

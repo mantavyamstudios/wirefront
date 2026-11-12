@@ -7,7 +7,7 @@ import {
   TabletIcon,
 } from "lucide-react";
 import type { ComponentType } from "react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 interface Session {
   device: string;

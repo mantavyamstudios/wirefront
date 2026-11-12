@@ -22,7 +22,7 @@ import {
   MenuSeparator,
   MenuShortcut,
   MenuTrigger,
-} from "@orbit/ui/menu";
+} from "@wirefront/ui/menu";
 import { useDemo, type View } from "./store";
 
 const NAV: { id: View; label: string; Icon: ComponentType<{ className?: string }> }[] = [

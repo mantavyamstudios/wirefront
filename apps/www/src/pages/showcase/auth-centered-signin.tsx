@@ -1,19 +1,19 @@
 import { type FormEvent, useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Card,
   CardHeader,
   CardPanel,
-} from "@orbit/ui/card";
-import { Field, FieldLabel } from "@orbit/ui/field";
-import { Input } from "@orbit/ui/input";
+} from "@wirefront/ui/card";
+import { Field, FieldLabel } from "@wirefront/ui/field";
+import { Input } from "@wirefront/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@orbit/ui/input-group";
-import { Separator } from "@orbit/ui/separator";
+} from "@wirefront/ui/input-group";
+import { Separator } from "@wirefront/ui/separator";
 
 export function AuthCenteredSigninShowcasePage() {
   return (

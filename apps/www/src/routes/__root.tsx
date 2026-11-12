@@ -6,11 +6,11 @@ import {
   Outlet,
   Scripts,
 } from '@tanstack/react-router'
-import appCss from '@orbit/ui/styles.css?url'
+import appCss from '@wirefront/ui/styles.css?url'
 import {
   ORBIT_THEME_STORAGE_KEY,
   ThemeProvider,
-} from '@orbit/ui/theme-provider'
+} from '@wirefront/ui/theme-provider'
 import {
   SITE_AUTHOR,
   SITE_DESCRIPTION,

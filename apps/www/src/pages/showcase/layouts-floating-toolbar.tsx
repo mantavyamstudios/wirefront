@@ -10,9 +10,9 @@ import {
   StrikethroughIcon,
   UnderlineIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Separator } from "@orbit/ui/separator";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "@orbit/ui/tooltip";
+import { Button } from "@wirefront/ui/button";
+import { Separator } from "@wirefront/ui/separator";
+import { Tooltip, TooltipPopup, TooltipTrigger } from "@wirefront/ui/tooltip";
 
 type Anchor = { top: number; bottom: number; centerX: number };
 type ToolbarPos = { top: number; left: number; placement: "above" | "below" };

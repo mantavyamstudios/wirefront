@@ -26,15 +26,15 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type KeyboardEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Popover, PopoverPopup, PopoverTrigger } from "@orbit/ui/popover";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@orbit/ui/select";
-import { Spinner } from "@orbit/ui/spinner";
-import { Textarea } from "@orbit/ui/textarea";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Popover, PopoverPopup, PopoverTrigger } from "@wirefront/ui/popover";
+import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Spinner } from "@wirefront/ui/spinner";
+import { Textarea } from "@wirefront/ui/textarea";
 
 export type FirstRunTone = "orange" | "teal" | "violet" | "amber" | "rose" | "info" | "success" | "destructive";
 

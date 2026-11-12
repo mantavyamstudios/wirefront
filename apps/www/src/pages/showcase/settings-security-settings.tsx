@@ -27,12 +27,12 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Input, type InputProps } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@orbit/ui/menu";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Input, type InputProps } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
+import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
 
 export type SettingsSectionId =
   | "profile"

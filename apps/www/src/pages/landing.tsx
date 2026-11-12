@@ -9,7 +9,7 @@ import {
   SearchIcon,
   ShuffleIcon,
 } from "lucide-react";
-import { AmbientGrain } from "@orbit/ui/ambient-grain";
+import { AmbientGrain } from "@wirefront/ui/ambient-grain";
 import {
   Command,
   CommandCollection,
@@ -20,8 +20,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@orbit/ui/command";
-import { ThemeToggle } from "@orbit/ui/theme-toggle";
+} from "@wirefront/ui/command";
+import { ThemeToggle } from "@wirefront/ui/theme-toggle";
 import { MantavyamMark } from "@/components/mantavyam-mark";
 import { LINKS } from "@/lib/site";
 import {

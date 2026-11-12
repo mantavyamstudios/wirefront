@@ -13,7 +13,7 @@ import {
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
+import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 
 const PRIMARY = [
   { icon: HomeIcon, label: "Home" },

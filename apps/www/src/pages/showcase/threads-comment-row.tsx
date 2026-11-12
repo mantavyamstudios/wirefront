@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MoreHorizontalIcon, SmileIcon } from "lucide-react";
-import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@orbit/ui/menu";
+import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@wirefront/ui/menu";
 
 interface Comment {
   initials: string;

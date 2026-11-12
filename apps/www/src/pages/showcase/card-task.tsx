@@ -3,9 +3,9 @@ import {
   MessageCircleIcon,
   PaperclipIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Badge } from "@orbit/ui/badge";
-import { Card, CardPanel } from "@orbit/ui/card";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Badge } from "@wirefront/ui/badge";
+import { Card, CardPanel } from "@wirefront/ui/card";
 
 type Priority = "low" | "med" | "high" | "urgent";
 

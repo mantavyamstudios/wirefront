@@ -16,10 +16,10 @@ import {
   UserIcon,
   Wifi,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Separator } from "@orbit/ui/separator";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Separator } from "@wirefront/ui/separator";
 
 type TabKey = "home" | "discover" | "create" | "alerts" | "profile";
 

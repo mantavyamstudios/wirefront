@@ -3,10 +3,10 @@ import { DevlFrame } from "./_devl-frame";
 import { ArrowLeftIcon, KeyRoundIcon, MailCheckIcon } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type FormEvent, useEffect, useId, useState } from "react";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
-import { cn } from "@orbit/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export interface ForgotPasswordProps {
   defaultEmail?: string;

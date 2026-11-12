@@ -1,8 +1,8 @@
 import { BookmarkIcon, ClockIcon } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Card, CardPanel } from "@orbit/ui/card";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Card, CardPanel } from "@wirefront/ui/card";
 
 interface Article {
   slug: string;

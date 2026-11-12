@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { CheckCircle2Icon, ChevronRightIcon } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Card, CardPanel } from "@orbit/ui/card";
-import { Switch } from "@orbit/ui/switch";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Card, CardPanel } from "@wirefront/ui/card";
+import { Switch } from "@wirefront/ui/switch";
 
 interface Integration {
   slug: string;

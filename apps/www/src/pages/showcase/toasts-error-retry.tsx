@@ -6,13 +6,13 @@ import {
   RotateCcwIcon,
   XIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { ToastPrimitive as Toast } from "@orbit/ui/toast";
+import { Button } from "@wirefront/ui/button";
+import { ToastPrimitive as Toast } from "@wirefront/ui/toast";
 
 type InviteToast = { code?: string; retrying?: boolean };
 
 // A dedicated manager keeps this showcase self-contained. In an app, mount
-// <ToastProvider> once and use the shared `toastManager` from @orbit/ui/toast.
+// <ToastProvider> once and use the shared `toastManager` from @wirefront/ui/toast.
 const toasts = Toast.createToastManager<InviteToast>();
 const ID = "invite-failed";
 

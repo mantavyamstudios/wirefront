@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMediaQuery } from "@orbit/ui/hooks/use-media-query";
+import { useMediaQuery } from "@wirefront/ui/hooks/use-media-query";
 import {
   BellRingIcon,
   BoldIcon,

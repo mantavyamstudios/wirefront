@@ -8,7 +8,7 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 import type { ComponentType } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 
 interface Event {
   who: string;

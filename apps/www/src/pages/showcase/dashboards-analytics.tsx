@@ -1,5 +1,5 @@
 import { ArrowUpRightIcon, GlobeIcon, MoreHorizontalIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 const SOURCES = [
   { label: "Direct", value: 4820, share: 38, color: "bg-foreground/85" },

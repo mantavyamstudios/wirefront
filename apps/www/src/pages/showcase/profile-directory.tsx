@@ -6,8 +6,8 @@ import {
   SearchIcon,
   VideoIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@orbit/ui/menu";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@wirefront/ui/menu";
 
 interface Person {
   name: string;

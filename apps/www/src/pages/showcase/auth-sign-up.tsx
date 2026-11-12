@@ -3,11 +3,11 @@ import { DevlFrame } from "./_devl-frame";
 import { CheckIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@orbit/ui/input-group";
-import { Label } from "@orbit/ui/label";
-import { cn } from "@orbit/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import { Label } from "@wirefront/ui/label";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type SignUpResult = { ok: true } | { ok: false; error: string };
 

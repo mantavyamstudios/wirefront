@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { WrenchIcon } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Progress } from "@orbit/ui/progress";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Progress } from "@wirefront/ui/progress";
 
 const TOTAL_SECONDS = 18 * 60;
 

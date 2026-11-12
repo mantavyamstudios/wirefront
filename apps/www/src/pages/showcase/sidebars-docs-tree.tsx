@@ -11,7 +11,7 @@ import {
   SearchIcon,
   StickyNoteIcon,
 } from "lucide-react";
-import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@orbit/ui/sheet";
+import { Sheet, SheetPopup, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
 
 interface Doc {
   id: string;

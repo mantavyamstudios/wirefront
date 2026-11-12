@@ -19,18 +19,18 @@ import {
   AutocompleteItem,
   AutocompleteList,
   AutocompletePopup,
-} from "@orbit/ui/autocomplete";
-import { Label } from "@orbit/ui/label";
-import { RadioGroup, Radio } from "@orbit/ui/radio-group";
+} from "@wirefront/ui/autocomplete";
+import { Label } from "@wirefront/ui/label";
+import { RadioGroup, Radio } from "@wirefront/ui/radio-group";
 import {
   Select,
   SelectItem,
   SelectPopup,
   SelectTrigger,
   SelectValue,
-} from "@orbit/ui/select";
-import { Separator } from "@orbit/ui/separator";
-import { ToggleGroup, ToggleGroupItem } from "@orbit/ui/toggle-group";
+} from "@wirefront/ui/select";
+import { Separator } from "@wirefront/ui/separator";
+import { ToggleGroup, ToggleGroupItem } from "@wirefront/ui/toggle-group";
 
 type FirstDay = "sun" | "mon" | "sat";
 type TimeFormat = "h12" | "h24";

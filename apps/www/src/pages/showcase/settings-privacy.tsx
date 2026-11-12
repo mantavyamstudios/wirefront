@@ -8,11 +8,11 @@ import {
   ShieldOffIcon,
   TimerResetIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { Progress } from "@orbit/ui/progress";
-import { Slider } from "@orbit/ui/slider";
-import { Switch } from "@orbit/ui/switch";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { Progress } from "@wirefront/ui/progress";
+import { Slider } from "@wirefront/ui/slider";
+import { Switch } from "@wirefront/ui/switch";
 
 type IncludeKey = "messages" | "files" | "comments" | "activity" | "calendar";
 

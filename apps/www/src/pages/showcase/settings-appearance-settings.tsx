@@ -22,12 +22,12 @@ import {
 } from "lucide-react";
 import { AnimatePresence, MotionConfig, motion, useReducedMotion } from "motion/react";
 import { type ComponentType, type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Button } from "@orbit/ui/button";
-import { RadioGroupPrimitive, RadioPrimitive } from "@orbit/ui/radio-group";
-import { SegmentedControl, SegmentedControlItem } from "@orbit/ui/segmented-control";
-import { Slider } from "@orbit/ui/slider";
-import { Switch } from "@orbit/ui/switch";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { RadioGroupPrimitive, RadioPrimitive } from "@wirefront/ui/radio-group";
+import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
+import { Slider } from "@wirefront/ui/slider";
+import { Switch } from "@wirefront/ui/switch";
 
 export type ThemeChoice = "system" | "light" | "dark";
 export type Density = "compact" | "default" | "comfortable";

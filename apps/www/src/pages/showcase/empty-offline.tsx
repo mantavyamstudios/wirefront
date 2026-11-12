@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { RotateCwIcon, WifiOffIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 const TIPS = [
   "Check that your VPN isn't blocking *.orbit.so",

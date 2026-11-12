@@ -30,9 +30,9 @@ import {
   useReducedMotion,
 } from "motion/react";
 import { type KeyboardEvent, type ReactNode, type RefObject, useEffect, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Button } from "@orbit/ui/button";
-import { Slider } from "@orbit/ui/slider";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { Slider } from "@wirefront/ui/slider";
 
 function useReducedMotionAfterMount() {
   const prefers = useReducedMotion();

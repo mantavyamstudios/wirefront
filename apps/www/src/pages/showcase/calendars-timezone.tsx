@@ -10,12 +10,12 @@ import {
   XCircleIcon,
   XIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 import {
   Popover,
   PopoverPopup,
   PopoverTrigger,
-} from "@orbit/ui/popover";
+} from "@wirefront/ui/popover";
 
 interface Zone {
   name: string;

@@ -34,15 +34,15 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Badge } from "@orbit/ui/badge";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Kbd } from "@orbit/ui/kbd";
-import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@orbit/ui/menu";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@orbit/ui/select";
-import { Spinner } from "@orbit/ui/spinner";
-import { Switch } from "@orbit/ui/switch";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Badge } from "@wirefront/ui/badge";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Kbd } from "@wirefront/ui/kbd";
+import { Menu, MenuItem, MenuPopup, MenuSeparator, MenuTrigger } from "@wirefront/ui/menu";
+import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Spinner } from "@wirefront/ui/spinner";
+import { Switch } from "@wirefront/ui/switch";
 
 // Stays false until mounted so the server render and the first client render match.
 function useSafeReducedMotion() {

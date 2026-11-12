@@ -24,13 +24,13 @@ import {
   useTransform,
 } from "motion/react";
 import { type FormEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
-import { Radio, RadioGroup } from "@orbit/ui/radio-group";
-import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@orbit/ui/select";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
+import { Radio, RadioGroup } from "@wirefront/ui/radio-group";
+import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 
 export type CheckoutArt = "mug" | "tote" | "candle" | "notebook";
 

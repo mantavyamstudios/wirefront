@@ -3,14 +3,14 @@
  * Generate shadcn registry items, one per showcase, into
  * apps/www/public/r/<category>/<design>.json.
  *
- * Each item's source has its `@orbit/ui/<name>` imports rewritten to
+ * Each item's source has its `@wirefront/ui/<name>` imports rewritten to
  * `@/components/ui/<name>`, and declares `@coss/<name>` registry deps so
  * `shadcn add` pulls coss primitives into the consumer's project.
  *
- * Some `@orbit/ui` exports aren't published to the public coss registry
+ * Some `@wirefront/ui` exports aren't published to the public coss registry
  * (see LOCAL_INLINES). For those, the source is recursively inlined into
  * the registry item along with any of its transitive imports inside the
- * `@orbit/ui` package.
+ * `@wirefront/ui` package.
  */
 import { existsSync } from "node:fs";
 import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
@@ -34,9 +34,9 @@ const TRACKED_NPM_DEPS = new Set([
   "react-day-picker",
 ]);
 
-// `@orbit/ui/<name>` exports that are NOT published to the public coss
+// `@wirefront/ui/<name>` exports that are NOT published to the public coss
 // registry — their source is inlined into each registry item that uses
-// them (along with transitive imports inside @orbit/ui). The value is
+// them (along with transitive imports inside @wirefront/ui). The value is
 // the path inside packages/ui/src where the source lives.
 const LOCAL_INLINES: Record<string, string> = {
   "auth-split-layout": "components/ui/auth-split-layout.tsx",
@@ -156,11 +156,11 @@ function mapLibraryPath(absPath: string): {
 
 function rewriteShowcaseImports(source: string): string {
   let out = source.replace(
-    /from\s+(["'])@orbit\/ui\/lib\/utils\1/g,
+    /from\s+(["'])@wirefront\/ui\/lib\/utils\1/g,
     "from $1@/lib/utils$1",
   );
   out = out.replace(
-    /from\s+(["'])@orbit\/ui\/([a-z0-9-]+)\1/g,
+    /from\s+(["'])@wirefront\/ui\/([a-z0-9-]+)\1/g,
     (_match, q: string, name: string) => {
       const dir = name in LOCAL_INLINES ? "components" : "components/ui";
       return `from ${q}@/${dir}/${name}${q}`;
@@ -205,10 +205,10 @@ function rewriteLibraryFile(absPath: string, source: string): {
     },
   );
 
-  // 2. @orbit/ui/<name> imports — rewrite to consumer alias and either
+  // 2. @wirefront/ui/<name> imports — rewrite to consumer alias and either
   //    queue inlining (local-only) or emit a @coss/* registry dep.
   out = out.replace(
-    /from\s+(["'])@orbit\/ui\/([a-z0-9/-]+)\1/g,
+    /from\s+(["'])@wirefront\/ui\/([a-z0-9/-]+)\1/g,
     (_match, q: string, name: string) => {
       if (name === "lib/utils") return `from ${q}@/lib/utils${q}`;
       const baseName = name.split("/").pop()!;
@@ -221,7 +221,7 @@ function rewriteLibraryFile(absPath: string, source: string): {
     },
   );
 
-  // 3. Track known npm deps (anything not relative and not @/ or @orbit/).
+  // 3. Track known npm deps (anything not relative and not @/ or @wirefront/).
   const importRe = /from\s+["']([^"']+)["']/g;
   for (const m of out.matchAll(importRe)) {
     const spec = m[1]!;
@@ -281,8 +281,8 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
       continue;
     }
 
-    // @orbit/ui/<name> -> queue local inline OR add @coss/* dep.
-    const orbitRe = /from\s+["']@orbit\/ui\/([a-z0-9/-]+)["']/g;
+    // @wirefront/ui/<name> -> queue local inline OR add @coss/* dep.
+    const orbitRe = /from\s+["']@wirefront\/ui\/([a-z0-9/-]+)["']/g;
     for (const m of raw.matchAll(orbitRe)) {
       const importPath = m[1]!;
       if (importPath === "lib/utils") continue;

@@ -1,13 +1,13 @@
 import { type FormEvent, useRef, useState } from "react";
-import { Button } from "@orbit/ui/button";
-import { Input } from "@orbit/ui/input";
-import { Label } from "@orbit/ui/label";
-import { Separator } from "@orbit/ui/separator";
-import { Kbd } from "@orbit/ui/kbd";
+import { Button } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { Label } from "@wirefront/ui/label";
+import { Separator } from "@wirefront/ui/separator";
+import { Kbd } from "@wirefront/ui/kbd";
 import {
   bumpParticleTypingImpulse,
   pulseParticleSubmitImpulse,
-} from "@orbit/ui/particle-field";
+} from "@wirefront/ui/particle-field";
 import { AuthShell, useAuthTypingImpulse } from "./auth-shell";
 
 export function LoginShowcasePage() {

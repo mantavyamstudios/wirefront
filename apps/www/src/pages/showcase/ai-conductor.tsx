@@ -20,8 +20,8 @@ import {
   WorkflowIcon,
 } from "lucide-react";
 import { type ComponentType, type KeyboardEvent, type ReactNode, useEffect, useId, useReducer, useRef, useState } from "react";
-import { Button } from "@orbit/ui/button";
-import { cn } from "@orbit/ui/lib/utils";
+import { Button } from "@wirefront/ui/button";
+import { cn } from "@wirefront/ui/lib/utils";
 
 export type AgentTone = "orange" | "teal" | "violet" | "info" | "rose";
 

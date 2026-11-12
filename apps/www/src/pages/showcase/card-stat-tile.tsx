@@ -1,6 +1,6 @@
 import { ArrowDownRightIcon, ArrowUpRightIcon } from "lucide-react";
-import { Badge } from "@orbit/ui/badge";
-import { Card, CardHeader, CardPanel, CardTitle } from "@orbit/ui/card";
+import { Badge } from "@wirefront/ui/badge";
+import { Card, CardHeader, CardPanel, CardTitle } from "@wirefront/ui/card";
 
 interface Stat {
   label: string;

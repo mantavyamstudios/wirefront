@@ -1,5 +1,5 @@
 import { ArrowLeftIcon, HomeIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
+import { Button } from "@wirefront/ui/button";
 
 export function Empty404ShowcasePage() {
   return (

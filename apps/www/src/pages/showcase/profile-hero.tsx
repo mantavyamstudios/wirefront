@@ -8,8 +8,8 @@ import {
   StarIcon,
 } from "lucide-react";
 import type { ComponentType } from "react";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
 
 const TABS = ["Overview", "Activity", "Projects", "Posts"];
 const STATS = [

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { BellIcon, MailIcon, MessageSquareIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Separator } from "@orbit/ui/separator";
-import { Switch } from "@orbit/ui/switch";
+import { Button } from "@wirefront/ui/button";
+import { Separator } from "@wirefront/ui/separator";
+import { Switch } from "@wirefront/ui/switch";
 
 interface Pref {
   key: string;

@@ -1,7 +1,7 @@
-import { Button } from "@orbit/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@orbit/ui/input-group";
-import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@orbit/ui/menu";
-import { Textarea } from "@orbit/ui/textarea";
+import { Button } from "@wirefront/ui/button";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@wirefront/ui/menu";
+import { Textarea } from "@wirefront/ui/textarea";
 import {
   ArchiveIcon,
   ChevronLeftIcon,

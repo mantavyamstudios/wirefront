@@ -31,11 +31,11 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type MouseEvent, type ReactNode, useEffect, useRef, useState } from "react";
-import { cn } from "@orbit/ui/lib/utils";
-import { Avatar, AvatarFallback } from "@orbit/ui/avatar";
-import { Button } from "@orbit/ui/button";
-import { Checkbox } from "@orbit/ui/checkbox";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@orbit/ui/input-group";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Button } from "@wirefront/ui/button";
+import { Checkbox } from "@wirefront/ui/checkbox";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import {
   Menu,
   MenuCheckboxItem,
@@ -47,8 +47,8 @@ import {
   MenuRadioItem,
   MenuSeparator,
   MenuTrigger,
-} from "@orbit/ui/menu";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@orbit/ui/table";
+} from "@wirefront/ui/menu";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@wirefront/ui/table";
 
 function useReducedMotionAfterMount() {
   const prefers = useReducedMotion();

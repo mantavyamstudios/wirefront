@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LayersIcon, SlidersHorizontalIcon } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { PopoverPrimitive as Popover } from "@orbit/ui/popover";
+import { Button } from "@wirefront/ui/button";
+import { PopoverPrimitive as Popover } from "@wirefront/ui/popover";
 
 // Beacons live *inside* the element they point at (a relative wrapper), so they
 // move with the layout. Each one is a Popover trigger with a 40px hit area

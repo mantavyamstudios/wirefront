@@ -17,8 +17,8 @@ import {
   UsbIcon,
   XIcon,
 } from "lucide-react";
-import { Button } from "@orbit/ui/button";
-import { Separator } from "@orbit/ui/separator";
+import { Button } from "@wirefront/ui/button";
+import { Separator } from "@wirefront/ui/separator";
 
 interface Passkey {
   id: string;
