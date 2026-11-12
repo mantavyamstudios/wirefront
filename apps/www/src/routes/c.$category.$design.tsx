@@ -90,6 +90,15 @@ function DesignRoute() {
   }, [device]);
   const [panelHidden, setPanelHidden] = usePanelHidden();
 
+  // Marks which design has mounted: this effect runs after the screen's own
+  // mount effects, so tools (the responsive audit) can wait for it instead
+  // of guessing with a fixed delay. Cleared when the design changes.
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute("data-design-ready", `${category}/${design}`);
+    return () => root.removeAttribute("data-design-ready");
+  }, [category, design]);
+
   // Device-width previews run this route in an iframe with ?preview=1; follow
   // the parent's theme and palette as they change.
   useEffect(() => {
