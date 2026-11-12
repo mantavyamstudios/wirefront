@@ -23,6 +23,8 @@
  * Env knobs:
  *   AUDIT_BASE_URL      default http://localhost:4000
  *   AUDIT_CONCURRENCY   default 4
+ *   SETTLE_WATCHDOG_MS  default 45000: a screen whose layout hasn't settled by
+ *                       then fails as "layout never settled" (scripts/lib/settle.ts)
  *
  * Output: `.audit/responsive/report.json` (+ `shots/` with --screenshots).
  */
@@ -33,6 +35,7 @@ import { fileURLToPath } from "node:url";
 import { chromium, type Browser, type BrowserContext } from "playwright";
 
 import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
+import { waitForSettledLayout } from "./lib/settle";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -43,12 +46,6 @@ const CONCURRENCY = Math.max(
   1,
   Number.parseInt(process.env.AUDIT_CONCURRENCY ?? "4", 10) || 4,
 );
-// Measure only once the page has settled (see SETTLE): fonts loaded, no
-// finite animation running and the layout unchanged for SETTLE_QUIET_MS.
-// A page still changing after SETTLE_MAX_MS is measured anyway, logged and
-// marked `settled: false` in the report.
-const SETTLE_QUIET_MS = 300;
-const SETTLE_MAX_MS = 10_000;
 
 // `isMobile` stays false on purpose: Chromium's mobile emulation widens the
 // layout viewport to fit overflowing content, which hides the very overflow
@@ -87,67 +84,11 @@ interface Metrics {
   textEls: number;
   tiny: number;
   errors: string[];
-  /** Whether the layout settled before measuring, and how long that took. */
-  settled: boolean;
+  /** How long the screen took to settle before it was measured. */
   settleMs: number;
 }
 
 type Result = Partial<Record<ViewportName, Metrics | { error: string }>>;
-
-// Runs in the page and resolves when the layout has settled: the design has
-// mounted (<html data-design-ready>, set by the design route after the
-// screen's own mount effects), web fonts are loaded, the main thread had no long task
-// (hydration, heavy effects) in the quiet window, no finite animation is running (Motion and CSS transitions show up
-// in document.getAnimations(); infinite ones such as spinners are ignored),
-// and a fingerprint of every element's layout box has been unchanged for
-// `quietMs`. offset* metrics ignore transforms, so a spinning icon or a
-// sliding transform doesn't count as layout movement. Resolves with
-// { settled: false } after `maxMs` if the page never settles.
-const SETTLE = `(async ({ quietMs, maxMs }) => {
-  const start = performance.now();
-  let lastLongTaskEnd = 0;
-  const longTasks = new PerformanceObserver((list) => {
-    for (const e of list.getEntries()) lastLongTaskEnd = Math.max(lastLongTaskEnd, e.startTime + e.duration);
-  });
-  try { longTasks.observe({ type: "longtask", buffered: true }); } catch {}
-  await document.fonts.ready;
-  const fingerprint = () => {
-    const els = document.body.getElementsByTagName("*");
-    let out = document.documentElement.scrollWidth + ":" + document.documentElement.scrollHeight;
-    for (let i = 0; i < els.length; i++) {
-      const el = els[i];
-      if (el instanceof HTMLElement) out += "|" + el.offsetLeft + "," + el.offsetTop + "," + el.offsetWidth + "," + el.offsetHeight;
-    }
-    return out;
-  };
-  const animating = () =>
-    document.getAnimations().some((a) => {
-      if (a.playState !== "running") return false;
-      const end = a.effect && a.effect.getComputedTiming().endTime;
-      return end !== Infinity;
-    });
-  return await new Promise((resolve) => {
-    let last = fingerprint();
-    let stableSince = performance.now();
-    const done = (settled, now) => {
-      longTasks.disconnect();
-      resolve({ settled, settleMs: Math.round(now - start) });
-    };
-    const tick = () => {
-      const now = performance.now();
-      const fp = fingerprint();
-      if (fp !== last || animating() || !document.documentElement.hasAttribute("data-design-ready")) {
-        last = fp;
-        stableSince = now;
-      }
-      stableSince = Math.max(stableSince, lastLongTaskEnd);
-      if (now - stableSince >= quietMs) return done(true, now);
-      if (now - start >= maxMs) return done(false, now);
-      requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  });
-})`;
 
 // Runs in the page. Kept as a plain string so the TS/esbuild transform can't
 // inject helpers (e.g. `__name`) that don't exist in the browser.
@@ -304,7 +245,7 @@ function failures(result: Result): string[] {
     const m = result[vp];
     if (!m) continue;
     if ("error" in m) {
-      out.push(`${vp}: load error`);
+      out.push(`${vp}: ${m.error}`);
       continue;
     }
     for (const gate of GATES) {
@@ -353,16 +294,10 @@ async function runWorker(
           `${BASE}/c/${task.category}/${task.design}?preview=%221%22`,
           { waitUntil: "networkidle", timeout: 45_000 },
         );
-        const settle = (await page.evaluate(
-          `${SETTLE}(${JSON.stringify({ quietMs: SETTLE_QUIET_MS, maxMs: SETTLE_MAX_MS })})`,
-        )) as { settled: boolean; settleMs: number };
-        if (!settle.settled) {
-          process.stdout.write(
-            `[audit] ⚠ ${key} ${v.name}: layout still changing after ${SETTLE_MAX_MS}ms; measured anyway\n`,
-          );
-        }
-        const metrics = (await page.evaluate(MEASURE)) as Omit<Metrics, "errors" | "settled" | "settleMs">;
-        result[v.name] = { ...metrics, errors, ...settle };
+        // Only a settled layout is measured (scripts/lib/settle.ts).
+        const settleMs = await waitForSettledLayout(page);
+        const metrics = (await page.evaluate(MEASURE)) as Omit<Metrics, "errors" | "settleMs">;
+        result[v.name] = { ...metrics, errors, settleMs };
         if (screenshots) {
           await page.screenshot({
             path: resolve(OUT_DIR, "shots", `${task.category}__${task.design}--${v.name}.png`),

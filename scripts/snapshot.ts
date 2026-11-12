@@ -24,6 +24,7 @@ import { chromium } from "playwright";
 import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
+import { waitForSettledLayout } from "./lib/settle";
 
 const BASE = process.env.SNAPSHOT_BASE_URL ?? "http://localhost:4000";
 const CONCURRENCY = Math.max(
@@ -33,7 +34,6 @@ const CONCURRENCY = Math.max(
 const OUT_DIR = resolve(process.cwd(), "apps/www/public/previews");
 const ONLY_MISSING = process.env.SNAPSHOT_ONLY_MISSING === "1";
 const VIEWPORT = { width: 1440, height: 900 };
-const SETTLE_MS = 900;
 const MODES = ["light", "dark"] as const;
 type Mode = (typeof MODES)[number];
 
@@ -139,7 +139,8 @@ async function runWorker(
       await page.goto(`${BASE}${task.path}?preview=1`, {
         waitUntil: "networkidle",
       });
-      await page.waitForTimeout(SETTLE_MS);
+      // Only a settled layout is captured (scripts/lib/settle.ts).
+      await waitForSettledLayout(page);
       await page.screenshot({ path: file, fullPage: false });
       state.done += 1;
       const idx = state.done.toString().padStart(3, " ");

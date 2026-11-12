@@ -1,14 +1,21 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
+  "globalPassThroughEnv": [
+    "SETTLE_WATCHDOG_MS"
+  ],
   "tasks": {
     "dev": {
       "cache": false,
       "persistent": true
     },
     "build": {
-      "dependsOn": ["^build"],
-      "env": ["VITE_*"],
+      "dependsOn": [
+        "^build"
+      ],
+      "env": [
+        "VITE_*"
+      ],
       "inputs": [
         "$TURBO_DEFAULT$",
         "../../scripts/build-registry.ts",
@@ -23,7 +30,9 @@
       ]
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"],
+      "dependsOn": [
+        "^typecheck"
+      ],
       "outputs": []
     },
     "lint": {
