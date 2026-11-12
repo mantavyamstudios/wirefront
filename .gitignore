@@ -52,3 +52,6 @@ apps/www/public/r/
 
 # Responsive audit notes (kept local, not contributed upstream)
 docs/
+
+# Fresh shadcn projects used by `npm run test:install`
+.install-test/

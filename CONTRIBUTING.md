@@ -29,6 +29,7 @@ Requires Node 24 and npm 10 or later.
 | `npm run spdx:check` | Every source file has its licence header (`npm run spdx` adds missing ones) |
 | `npm run lint` | Biome lint rules, including accessibility (full report) |
 | `npm run lint:gate` | No new lint problems: existing ones are recorded per file in `lint-baseline.json` and may only go down. After fixing some, run `npm run lint:baseline` and commit the file |
+| `npm run test:install` | Installs every registry item into fresh shadcn Next.js, Vite and TanStack Start projects, then typechecks and builds them (first run scaffolds the projects, a few minutes) |
 | `npm run audit:responsive` | Every screen at 375 / 768 / 1024 / 1440px (needs `npm run dev` running) |
 
 `git push` runs the pre-push hook: typecheck, licence headers, the lint gate and tests. If it fails, fix the cause rather than skipping the hook; CI runs the same checks on every pull request.
