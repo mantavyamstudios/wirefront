@@ -1,7 +1,11 @@
 {
   "files": [],
   "references": [
-    { "path": "./packages/ui" },
-    { "path": "./apps/api" }
+    {
+      "path": "./packages/ui"
+    },
+    {
+      "path": "./apps/www"
+    }
   ]
 }
