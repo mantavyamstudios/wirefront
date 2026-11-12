@@ -256,7 +256,8 @@ export const CATEGORIES: Category[] = [
       {
         slug: "reset-password",
         title: "Reset password",
-        blurb: "Two-state flow — request → success — with a demo toggle in the corner.",
+        blurb: "Choose a new password from a reset link: typed twice, sent with the link's token, with an expired-link state.",
+        states: ["ready", "error"],
       },
       {
         slug: "two-factor",

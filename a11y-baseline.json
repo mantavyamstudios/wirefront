@@ -30,24 +30,6 @@
   "auth/right-signin@mobile": {
     "link-in-text-block": 1
   },
-  "auth/otp-verify@desktop": {
-    "label": 6
-  },
-  "auth/otp-verify@mobile": {
-    "label": 6
-  },
-  "auth/reset-password@desktop": {
-    "color-contrast": 1
-  },
-  "auth/reset-password@mobile": {
-    "color-contrast": 1
-  },
-  "auth/two-factor@desktop": {
-    "label": 6
-  },
-  "auth/two-factor@mobile": {
-    "label": 6
-  },
   "empty-states/no-team@desktop": {
     "link-in-text-block": 1
   },

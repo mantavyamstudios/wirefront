@@ -139,20 +139,8 @@
   "apps/www/src/pages/showcase/auth-left-signin.tsx": {
     "lint/a11y/useValidAnchor": 2
   },
-  "apps/www/src/pages/showcase/auth-otp-verify.tsx": {
-    "lint/a11y/useValidAnchor": 2
-  },
-  "apps/www/src/pages/showcase/auth-reset-password.tsx": {
-    "lint/a11y/useValidAnchor": 2
-  },
   "apps/www/src/pages/showcase/auth-right-signin.tsx": {
     "lint/a11y/useValidAnchor": 2
-  },
-  "apps/www/src/pages/showcase/auth-two-factor.tsx": {
-    "lint/a11y/useValidAnchor": 1
-  },
-  "apps/www/src/pages/showcase/auth-verify-email.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
   },
   "apps/www/src/pages/showcase/calendars-agenda.tsx": {
     "lint/a11y/useAriaPropsSupportedByRole": 1,
