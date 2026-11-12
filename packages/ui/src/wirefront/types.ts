@@ -45,7 +45,7 @@ export type ActionResult<Output = void> =
 // biome-ignore lint/suspicious/noConfusingVoidType: `void` is what lets builders pass a plain `async (x) => { await api(x) }` (Promise<void>) as well as actions that return a result on some paths; void-free unions break both (see tests/wirefront-contract.test.tsx). Approved exception, D-014.
 export type Action<Input = void, Output = void> = (input: Input) => Promise<ActionResult<Output> | void>;
 
-export const ok = <Output,>(data: Output): ActionResult<Output> => ({ ok: true, data });
+export const ok = <Output>(data: Output): ActionResult<Output> => ({ ok: true, data });
 
 export const fail = (error?: string, fieldErrors?: FieldErrors): ActionResult<never> => ({
   ok: false,

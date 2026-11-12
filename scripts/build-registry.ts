@@ -166,12 +166,13 @@ function mapLibraryPath(absPath: string): {
     };
   }
 
-  // Contract helpers (packages/ui/src/wirefront): provider, types, form, …
-  m = rel.match(/^wirefront\/([a-z0-9-]+)\.tsx$/);
+  // Contract helpers (packages/ui/src/wirefront): provider, form, … (.tsx)
+  // and the server-safe types and api (.ts, no "use client").
+  m = rel.match(/^wirefront\/([a-z0-9-]+)\.(tsx?)$/);
   if (m) {
     return {
       alias: `@/components/wirefront/${m[1]}`,
-      output: `components/wirefront/${m[1]}.tsx`,
+      output: `components/wirefront/${m[1]}.${m[2]}`,
       type: "registry:lib",
     };
   }
@@ -276,7 +277,8 @@ function rewriteLibraryFile(absPath: string, source: string): {
         return `from ${q}@/hooks/wirefront/${baseName}${q}`;
       }
       if (name.startsWith("wirefront/")) {
-        follow.push(resolve(UI_PKG_DIR, `${name}.tsx`));
+        const ts = resolve(UI_PKG_DIR, `${name}.ts`);
+        follow.push(existsSync(ts) ? ts : resolve(UI_PKG_DIR, `${name}.tsx`));
         return `from ${q}@/components/wirefront/${baseName}${q}`;
       }
       if (LOCAL_INLINES[baseName]) {
@@ -301,11 +303,24 @@ function rewriteLibraryFile(absPath: string, source: string): {
   return { rewritten: out, follow, registryDeps, npmDeps };
 }
 
-async function readShowcase(filename: string): Promise<string> {
+// A ready-to-wire screen is a folder (SCREEN-CONTRACT.md); the registry ships
+// its view, schema and fixtures. demo.tsx is showcase-only wiring.
+const FOLDER_FILES = ["view", "schema", "fixtures"];
+
+function isScreenFolder(filename: string): boolean {
+  return existsSync(resolve(SHOWCASE_DIR, filename, "view.tsx"));
+}
+
+/** The file's source and its extension (folder screens mix .tsx and .ts). */
+async function readShowcase(filename: string): Promise<{ raw: string; ext: string }> {
   if (filename.startsWith(APP_PREFIX)) {
-    return readFile(resolve(APP_COMPONENTS_DIR, `${filename.slice(APP_PREFIX.length)}.tsx`), "utf8");
+    return { raw: await readFile(resolve(APP_COMPONENTS_DIR, `${filename.slice(APP_PREFIX.length)}.tsx`), "utf8"), ext: "tsx" };
   }
-  return readFile(resolve(SHOWCASE_DIR, `${filename}.tsx`), "utf8");
+  for (const ext of filename.includes("/") ? ["tsx", "ts"] : ["tsx"]) {
+    const path = resolve(SHOWCASE_DIR, `${filename}.${ext}`);
+    if (existsSync(path)) return { raw: await readFile(path, "utf8"), ext };
+  }
+  throw new Error(`no showcase source for ${filename}`);
 }
 
 async function crawl(rootFilename: string): Promise<CrawlResult> {
@@ -315,7 +330,9 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
   const inlinedByOutput = new Map<string, InlinedFile>();
   const registryDeps = new Set<string>();
   const npmDeps = new Set<string>();
-  const showcaseQueue: string[] = [rootFilename];
+  const showcaseQueue: string[] = isScreenFolder(rootFilename)
+    ? FOLDER_FILES.map((f) => `${rootFilename}/${f}`)
+    : [rootFilename];
   const libQueue: string[] = [];
 
   const drainLibQueue = async () => {
@@ -345,8 +362,9 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
     visitedShowcase.add(fname);
 
     let raw: string;
+    let ext: string;
     try {
-      raw = await readShowcase(fname);
+      ({ raw, ext } = await readShowcase(fname));
     } catch {
       continue;
     }
@@ -360,7 +378,8 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
       if (importPath.startsWith("hooks/")) {
         libQueue.push(resolve(UI_PKG_DIR, `${importPath}.ts`));
       } else if (importPath.startsWith("wirefront/")) {
-        libQueue.push(resolve(UI_PKG_DIR, `${importPath}.tsx`));
+        const ts = resolve(UI_PKG_DIR, `${importPath}.ts`);
+        libQueue.push(existsSync(ts) ? ts : resolve(UI_PKG_DIR, `${importPath}.tsx`));
       } else if (LOCAL_INLINES[baseName]) {
         libQueue.push(resolve(UI_PKG_DIR, LOCAL_INLINES[baseName]!));
       } else {
@@ -371,7 +390,9 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
     // Sibling showcase imports (./foo).
     const relRe = /from\s+["']\.\/([a-z0-9_-]+)["']/g;
     for (const m of raw.matchAll(relRe)) {
-      const sibling = m[1]!;
+      // Inside a screen folder, ./x is a file of that folder.
+      const dir = fname.includes("/") && !fname.startsWith(APP_PREFIX) ? fname.slice(0, fname.lastIndexOf("/") + 1) : "";
+      const sibling = `${dir}${m[1]!}`;
       if (!visitedShowcase.has(sibling)) showcaseQueue.push(sibling);
     }
 
@@ -391,7 +412,7 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
     }
 
     showcaseFiles.push({
-      name: fname.startsWith(APP_PREFIX) ? fname.slice(APP_PREFIX.length) : fname,
+      name: `${fname.startsWith(APP_PREFIX) ? fname.slice(APP_PREFIX.length) : fname}.${ext}`,
       content: rewriteShowcaseImports(raw),
     });
 
@@ -454,7 +475,7 @@ async function main() {
           description: d.blurb,
           files: [
             ...showcaseFiles.map((f) => ({
-              path: `components/wirefront/${f.name}.tsx`,
+              path: `components/wirefront/${f.name}`,
               content: f.content,
               type: "registry:component" as const,
             })),

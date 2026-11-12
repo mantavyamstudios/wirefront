@@ -6,15 +6,34 @@ Every screen that is **ready to wire** follows this contract: a builder installs
 
 ## Folder layout
 
+A ready-to-wire screen is a folder in `apps/www/src/pages/showcase/`:
+
 ```
-members-table/
-  schema.ts     zod schemas and inferred types (builders reuse them on the server)
+tables-members/
+  schema.ts     zod schemas, inferred types and the API contract: export const api = defineApi({…})
   view.tsx      the screen: props in, UI out; no data, no fetching, no router
-  fixtures.ts   demo data that satisfies schema.ts
-  demo.tsx      view + fixtures + simulated handlers; what the showcase renders
+  fixtures.ts   demo data that satisfies schema.ts (also what the generated mocks return)
+  demo.tsx      view + fixtures + the previewed state; exports <Name>ShowcasePage
 ```
 
-Only `schema.ts` and `view.tsx` are required in a builder's app. `fixtures.ts` and `demo.tsx` ship too, for tests, Storybook and MSW mocks.
+`schema.ts` and `view.tsx` are what a builder wires; `fixtures.ts` ships too, for tests and mocks. `demo.tsx` is showcase-only (simulated actions, previewed state) and is never shipped. The registry installs the screen as `components/wirefront/<screen>/{view.tsx,schema.ts,fixtures.ts}` with the helpers it uses beside it. The contract checker (`scripts/lib/contract.ts`) enforces this layout and the rules below on every push.
+
+## Building blocks
+
+Screens build on the contract helpers in `packages/ui/src/wirefront/` (imported as `@wirefront/ui/wirefront/<name>`; installed into a builder's project under `components/wirefront/`):
+
+| Helper | What it gives a screen |
+|---|---|
+| `types` | `AsyncStatus`, `ListQuery`, `FieldErrors`, `ActionResult`, `Action`, `ok`, `fail`, `settle`. Server-safe (no `"use client"`): use `ok`/`fail` in server actions too. |
+| `provider` | `WirefrontProvider`, `useWirefront`, `useFormat` (dates, times, money, relative), `useMessages` (copy overrides), `useCan`, `WirefrontLink`, `useColorScheme` |
+| `form` | `useActionForm({ schema, action })`: Base UI `<Form>` + zod + the builder's action, field errors from either side, pending |
+| `action` | `useAction(action, { optimistic })`: pending per item, optimistic update with rollback |
+| `list` | `toggleSort`, `withSearch`, `withFilter`, `withPage`, `withPageSize`, `useListQuery`, `useSelection` |
+| `api` | `defineApi({…})`: the screen's backend operations; Wirefront generates OpenAPI 3.1 and MSW mocks from it. Server-safe, so `schema.ts` can validate requests on the server. |
+
+## States
+
+A screen lists the states it renders in `designs.ts` (`states: ["ready", "loading", "empty", "error", "forbidden"]`, ready first). The interaction panel switches between them (key `S`, URL `?state=`), and `demo.tsx` reads the current one with `useShowcaseState()` to pass the matching props.
 
 ## Props
 

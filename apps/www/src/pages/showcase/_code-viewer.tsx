@@ -10,18 +10,29 @@ import { useTheme } from "@wirefront/ui/theme-provider";
 import type { CategorySlug } from "@/lib/designs";
 import { getSourceFile } from "./source-files";
 
-const RAW_SOURCES = import.meta.glob("./*.tsx", {
+const RAW_SOURCES = import.meta.glob(["./*.tsx", "./*/view.tsx", "./*/schema.ts", "./*/fixtures.ts"], {
   query: "?raw",
   import: "default",
   eager: true,
 }) as Record<string, string>;
 
-function getSource(category: CategorySlug, design: string): { filename: string; code: string } | null {
-  const filename = getSourceFile(category, design);
-  if (!filename) return null;
-  const code = RAW_SOURCES[`./${filename}.tsx`];
-  if (!code) return null;
-  return { filename, code };
+// A ready-to-wire screen folder shows the files the registry ships.
+const FOLDER_FILES = ["view.tsx", "schema.ts", "fixtures.ts"];
+
+interface SourceFile {
+  filename: string;
+  code: string;
+}
+
+function getSources(category: CategorySlug, design: string): SourceFile[] {
+  const name = getSourceFile(category, design);
+  if (!name) return [];
+  const flat = RAW_SOURCES[`./${name}.tsx`];
+  if (flat) return [{ filename: `${name}.tsx`, code: flat }];
+  return FOLDER_FILES.flatMap((file) => {
+    const code = RAW_SOURCES[`./${name}/${file}`];
+    return code ? [{ filename: `${name}/${file}`, code }] : [];
+  });
 }
 
 interface CodeStageProps {
@@ -41,7 +52,9 @@ const EASE = [0.23, 1, 0.32, 1] as const;
  * backdrop) while the interaction panel collapses to Preview | Code.
  */
 export function CodeStage({ category, design, title }: CodeStageProps) {
-  const source = getSource(category, design);
+  const sources = getSources(category, design);
+  const [active, setActive] = useState(0);
+  const source = sources[active] ?? sources[0];
   const { resolved } = useTheme();
   const reduce = useReducedMotion();
   const [setupOpen, setSetupOpen] = useState(false);
@@ -72,14 +85,30 @@ export function CodeStage({ category, design, title }: CodeStageProps) {
           <div className="flex min-w-0 flex-col">
             <h2 className="truncate font-heading font-semibold text-[15px] leading-tight">{title}</h2>
             {source ? (
-              <span className="truncate font-mono text-[11px] text-muted-foreground">{source.filename}.tsx</span>
+              <span className="truncate font-mono text-[11px] text-muted-foreground">{source.filename}</span>
             ) : null}
           </div>
           <CopyButton disabled={!source} label="Copy code" value={source?.code ?? ""} />
         </div>
 
+        {sources.length > 1 ? (
+          <fieldset aria-label="Files" className="flex min-w-0 shrink-0 gap-1 overflow-x-auto border-b px-3 py-2 sm:px-4">
+            {sources.map((file, i) => (
+              <Button
+                aria-pressed={file === source}
+                key={file.filename}
+                onClick={() => setActive(i)}
+                size="sm"
+                type="button"
+                variant={file === source ? "secondary" : "ghost"}
+              >
+                <span className="font-mono text-[12px]">{file.filename.split("/").pop()}</span>
+              </Button>
+            ))}
+          </fieldset>
+        ) : null}
         <div
-          aria-label={source ? `${source.filename}.tsx` : "Source"}
+          aria-label={source ? source.filename : "Source"}
           className="min-h-24 flex-1 overflow-auto overscroll-contain bg-background outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
           role="region"
           tabIndex={0}

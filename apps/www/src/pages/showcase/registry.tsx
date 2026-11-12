@@ -6,7 +6,9 @@ import { SOURCE_FILES } from "./source-files";
 
 type ShowcaseModule = Record<string, ComponentType>;
 
-const MODULES = import.meta.glob<ShowcaseModule>("./*.tsx", {
+// Flat screens are ./<file>.tsx; ready-to-wire screens are folders whose
+// showcase wiring lives in ./<file>/demo.tsx (see SCREEN-CONTRACT.md).
+const MODULES = import.meta.glob<ShowcaseModule>(["./*.tsx", "./*/demo.tsx"], {
   eager: true,
 }) as Record<string, ShowcaseModule>;
 
@@ -33,6 +35,7 @@ function buildShowcases(): Partial<Record<CategorySlug, Showcase>> {
       // A sibling <file>.showcase.tsx holds showcase-only wiring (demo
       // assets, fixtures) that the registry doesn't ship; prefer it.
       const component =
+        pickShowcase(MODULES[`./${filename}/demo.tsx`]) ??
         pickShowcase(MODULES[`./${filename}.showcase.tsx`]) ??
         pickShowcase(MODULES[`./${filename}.tsx`]);
       if (component) entry[designSlug] = component;

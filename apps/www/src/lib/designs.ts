@@ -273,6 +273,7 @@ export const CATEGORIES: Category[] = [
         title: "Sign In",
         blurb: "A minimal centred sign-in: passkey and single sign-on side by side, email and password with a show toggle, a gentle shake when the password is wrong and a check when you’re in.",
         status: "new",
+        states: ["ready", "error"],
       },
       {
         slug: "sign-up",

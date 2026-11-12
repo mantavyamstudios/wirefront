@@ -43,7 +43,9 @@ describe("catalogue", () => {
     for (const d of designs) {
       const file = SOURCE_FILES[d.category]?.[d.slug];
       if (!file) problems.push(`${d.category}/${d.slug}: not in source-files.ts`);
-      else if (!existsSync(path.join(SHOWCASE_DIR, `${file}.tsx`))) problems.push(`${d.category}/${d.slug}: ${file}.tsx missing`);
+      // A flat screen is <file>.tsx; a ready-to-wire screen is a <file>/ folder.
+      else if (!existsSync(path.join(SHOWCASE_DIR, `${file}.tsx`)) && !existsSync(path.join(SHOWCASE_DIR, file, "view.tsx")))
+        problems.push(`${d.category}/${d.slug}: neither ${file}.tsx nor ${file}/view.tsx exists`);
     }
     expect(problems).toEqual([]);
   });
@@ -67,7 +69,9 @@ describe("catalogue", () => {
     const mapped = new Set(Object.values(SOURCE_FILES).flatMap((map) => Object.values(map ?? {})));
     // Shared helpers (e.g. auth-shell) are imported by screens rather than mapped.
     const imported = new Set(
-      [...mapped].flatMap((f) =>
+      [...mapped]
+        .filter((f) => existsSync(path.join(SHOWCASE_DIR, `${f}.tsx`)))
+        .flatMap((f) =>
         [...readFileSync(path.join(SHOWCASE_DIR, `${f}.tsx`), "utf8").matchAll(/from\s+["']\.\/([\w-]+)["']/g)].map((m) => must(m[1], "an import name")),
       ),
     );

@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Generate an OpenAPI 3.1 document and MSW mock handlers from a screen's API
- * contract (packages/ui/src/wirefront/api.tsx).
+ * contract (packages/ui/src/wirefront/api.ts).
  *
  * Schemas come from zod 4's own JSON Schema output (draft 2020-12, which is
  * what OpenAPI 3.1 uses). Schemas named with `.meta({ id })` become

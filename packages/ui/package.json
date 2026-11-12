@@ -20,6 +20,8 @@
     "./orbit-avatar-field": "./src/components/orbit-avatar-field.tsx",
     "./themes": "./src/themes/index.ts",
     "./*": "./src/components/ui/*.tsx",
+    "./wirefront/api": "./src/wirefront/api.ts",
+    "./wirefront/types": "./src/wirefront/types.ts",
     "./wirefront/*": "./src/wirefront/*.tsx"
   },
   "scripts": {
