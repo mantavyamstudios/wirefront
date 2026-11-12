@@ -310,7 +310,8 @@ export const CATEGORIES: Category[] = [
       {
         slug: "metrics-overview",
         title: "Metrics overview",
-        blurb: "Stat tiles + sparkline chart + activity feed.",
+        blurb: "Stat tiles, a trend chart and an activity feed for a date range, formatted in your locale and currency from raw numbers your API returns.",
+        states: ["ready", "loading", "empty", "error"],
       },
       {
         slug: "usage",

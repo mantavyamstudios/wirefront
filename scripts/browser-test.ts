@@ -56,6 +56,8 @@ interface ScreenResult {
   errors: string[];
   warnings: string[];
   a11y: Record<string, number>;
+  /** Each violating element (rule: selector — what axe found), so a new violation can be traced. */
+  a11yNodes?: string[];
   settleMs?: number;
 }
 
@@ -93,9 +95,12 @@ async function checkScreen(
     result.settleMs = await waitForSettledLayout(page);
     await page.addScriptTag({ content: AXE_SOURCE });
     const violations = (await page.evaluate(
-      `axe.run(document, { runOnly: { type: "tag", values: ${JSON.stringify(AXE_TAGS)} }, resultTypes: ["violations"] }).then((r) => r.violations.map((v) => [v.id, v.nodes.length]))`,
-    )) as [string, number][];
-    for (const [rule, nodes] of violations) result.a11y[rule] = nodes;
+      `axe.run(document, { runOnly: { type: "tag", values: ${JSON.stringify(AXE_TAGS)} }, resultTypes: ["violations"] }).then((r) => r.violations.map((v) => [v.id, v.nodes.map((n) => n.target.join(" ") + " — " + (n.failureSummary || "").replace(/\\s+/g, " ").slice(0, 240))]))`,
+    )) as [string, string[]][];
+    for (const [rule, nodes] of violations) {
+      result.a11y[rule] = nodes.length;
+      result.a11yNodes = [...(result.a11yNodes ?? []), ...nodes.map((n) => `${rule}: ${n}`)];
+    }
   } catch (err) {
     result.errors.push(err instanceof Error ? err.message.split("\n")[0] ?? String(err) : String(err));
   } finally {
@@ -146,7 +151,16 @@ async function main(): Promise<void> {
 
   let a11yProblems: string[] = [];
   if (updateBaseline) {
-    writeFileSync(BASELINE, `${JSON.stringify(current, null, 2)}\n`);
+    // With --design, replace only those designs' entries and keep the rest.
+    const kept =
+      onlyDesigns && existsSync(BASELINE)
+        ? Object.fromEntries(
+            Object.entries(JSON.parse(readFileSync(BASELINE, "utf8")) as Counts).filter(
+              ([k]) => !onlyDesigns.some((d) => k.startsWith(`${d}@`) || k.startsWith(`${d}~`)),
+            ),
+          )
+        : {};
+    writeFileSync(BASELINE, `${JSON.stringify({ ...kept, ...current }, null, 2)}\n`);
     process.stdout.write(`[browser] a11y baseline recorded: ${Object.keys(current).length} screen/viewports with violations.\n`);
   } else if (!existsSync(BASELINE)) {
     a11yProblems = ["a11y-baseline.json is missing; run `npm run test:browser -- --update-a11y-baseline`."];

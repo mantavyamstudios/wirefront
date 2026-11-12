@@ -244,12 +244,6 @@
   "layouts/split-shell@desktop": {
     "color-contrast": 2
   },
-  "dashboards/metrics-overview@desktop": {
-    "color-contrast": 10
-  },
-  "dashboards/metrics-overview@mobile": {
-    "color-contrast": 10
-  },
   "dashboards/usage@desktop": {
     "color-contrast": 5
   },

@@ -246,10 +246,6 @@
     "lint/a11y/useSemanticElements": 1,
     "lint/suspicious/noArrayIndexKey": 1
   },
-  "apps/www/src/pages/showcase/dashboards-metrics-overview.tsx": {
-    "lint/style/noNonNullAssertion": 1,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
   "apps/www/src/pages/showcase/dashboards-pipeline-today.tsx": {
     "lint/a11y/noStaticElementInteractions": 1,
     "lint/a11y/useSemanticElements": 5,
