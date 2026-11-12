@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { useState } from "react";
 import { PlusIcon, ThumbsUpIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";

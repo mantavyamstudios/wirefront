@@ -1,4 +1,6 @@
 #!/usr/bin/env tsx
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Crawl the running dev server and screenshot every design page in
  * both light and dark mode — in parallel.

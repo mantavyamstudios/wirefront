@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Shared 6-tone palette used by seeded avatars (rooms, workspaces, members).
  * Keeping one source of truth so a given slug/id always maps to the same hue

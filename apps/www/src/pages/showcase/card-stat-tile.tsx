@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { ArrowDownRightIcon, ArrowUpRightIcon } from "lucide-react";
 import { Badge } from "@wirefront/ui/badge";
 import { Card, CardHeader, CardPanel, CardTitle } from "@wirefront/ui/card";

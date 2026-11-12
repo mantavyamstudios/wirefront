@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { type ReactNode, useEffect } from "react";
 
 // Screens ported from devl.dev were designed for a sans-serif base, while the

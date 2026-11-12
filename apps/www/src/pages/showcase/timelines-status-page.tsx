@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { CheckCircle2Icon } from "lucide-react";
 
 type Severity = "investigating" | "identified" | "monitoring" | "resolved";

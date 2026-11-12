@@ -19,7 +19,9 @@
     "typecheck": "turbo run typecheck",
     "registry": "tsx scripts/build-registry.ts",
     "snapshot": "tsx scripts/snapshot.ts",
-    "audit:responsive": "tsx scripts/responsive-audit.ts"
+    "audit:responsive": "tsx scripts/responsive-audit.ts",
+    "spdx": "tsx scripts/spdx.ts",
+    "spdx:check": "tsx scripts/spdx.ts --check"
   },
   "devDependencies": {
     "@types/node": "^24.12.2",

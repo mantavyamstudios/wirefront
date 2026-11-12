@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { useRef } from "react";
 import { ParticleField } from "@wirefront/ui/particle-field";
 import emptyRoomSrc from "@/assets/figures/empty-room.png";

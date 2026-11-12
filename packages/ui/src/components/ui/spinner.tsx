@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// coss ui © Cal.com, Inc. — https://coss.com/ui · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 import { Loader2Icon } from "lucide-react";
 import type React from "react";
 import { cn } from "../../lib/utils";

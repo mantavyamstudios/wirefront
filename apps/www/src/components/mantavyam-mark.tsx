@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // MANTAVYAM STUDIOS arrow-M mark, from the brand kit's frozen master
 // (branding/mantavyam/assets/mark/mantavyam-mark-master.svg). Paths unchanged;
 // colour comes from currentColor.

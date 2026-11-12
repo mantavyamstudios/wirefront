@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import type { ComponentType } from "react";
 import type { CategorySlug } from "@/lib/designs";
 import { SOURCE_FILES } from "./source-files";

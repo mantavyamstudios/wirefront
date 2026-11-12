@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Public origin of the deployed site, used for canonical, Open Graph and
 // Twitter URLs. Set VITE_SITE_URL (e.g. https://wirefront.example) at build
 // time; without it these URLs stay relative to whatever host serves the app.
