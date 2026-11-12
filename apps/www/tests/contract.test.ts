@@ -3,6 +3,7 @@
 /** The contract checker (scripts/lib/contract.ts) and every ready-to-wire screen. */
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import type { ApiContract } from "@wirefront/ui/wirefront/api";
 import { checkScreenFolder, checkView, readyScreens, SHOWCASE_DIR } from "../../../scripts/lib/contract";
 
 const HEADER = "// SPDX-License-Identifier: AGPL-3.0-only\n// Wirefront © 2026 Mantavyam Studios\n";
@@ -61,5 +62,24 @@ describe("ready-to-wire screens", () => {
   it.each(screens.length ? screens : ["(none yet)"])("%s follows the screen contract", (screen) => {
     if (screen === "(none yet)") return;
     expect(checkScreenFolder(join(SHOWCASE_DIR, screen))).toEqual([]);
+  });
+
+  // A fixture named after an operation is what the mocks answer with, so it
+  // must match that operation's response schema.
+  it.each(screens.length ? screens : ["(none yet)"])("%s has fixtures that match its API", async (screen) => {
+    if (screen === "(none yet)") return;
+    const { api } = (await import(join(SHOWCASE_DIR, screen, "schema.ts"))) as { api: ApiContract };
+    const fixtures = (await import(join(SHOWCASE_DIR, screen, "fixtures.ts"))) as Record<string, unknown>;
+    const problems: string[] = [];
+    let checked = 0;
+    for (const [name, op] of Object.entries(api)) {
+      const fixture = fixtures[name];
+      if (!op.response || fixture === undefined || typeof fixture === "function") continue;
+      checked += 1;
+      const parsed = op.response.safeParse(fixture);
+      if (!parsed.success) problems.push(`${name}: ${parsed.error.issues.map((i) => `${i.path.join(".")} ${i.message}`).join("; ")}`);
+    }
+    expect(problems).toEqual([]);
+    expect(checked, "at least one operation's response has a fixture").toBeGreaterThan(0);
   });
 });

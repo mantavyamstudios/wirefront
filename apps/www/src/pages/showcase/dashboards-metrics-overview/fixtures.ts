@@ -24,8 +24,8 @@ function points(range: Range) {
   });
 }
 
-/** What the mocks return for `getOverview`, per range. */
-export function getOverview(range: Range): Overview {
+/** The overview for a range, as a backend would return it. */
+export function overviewFor(range: Range): Overview {
   const series = points(range);
   return {
     period: { start: series[0]?.date ?? "2026-04-25", end: "2026-04-25" },
@@ -46,10 +46,13 @@ export function getOverview(range: Range): Overview {
   };
 }
 
+/** What the mocks return for `getOverview` (range=30d). */
+export const getOverview = overviewFor("30d");
+
 /** A workspace with no data yet. */
 export const emptyOverview: Overview = {
   period: { start: "2026-03-27", end: "2026-04-25" },
-  metrics: getOverview("30d").metrics.map((m) => ({ ...m, value: 0, change: 0 })),
+  metrics: overviewFor("30d").metrics.map((m) => ({ ...m, value: 0, change: 0 })),
   chart: { metricId: "active-users", points: [] },
   activity: [],
 };

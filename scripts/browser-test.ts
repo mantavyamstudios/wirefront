@@ -32,6 +32,7 @@ import { type Browser, chromium } from "playwright";
 
 import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
 import { withAppServer } from "./lib/app-server";
+import { readyScreens } from "./lib/contract";
 import { readDesignMeta } from "./lib/registry-meta";
 import { trackProgress } from "./lib/progress";
 import { waitForSettledLayout } from "./lib/settle";
@@ -68,6 +69,15 @@ const designs = Object.entries(SOURCE_FILES)
 // Every state a screen declares (designs.ts `states`) is checked too, keyed
 // <design>~<state>@<viewport>; the default "ready" state keeps <design>@<viewport>.
 const statesOf = new Map(readDesignMeta().map((d) => [`${d.category}/${d.slug}`, d.states ?? ["ready"]]));
+// Ready-to-wire screens (SCREEN-CONTRACT.md, definition of done) must be axe
+// clean in every state; the baseline only covers screens not yet converted.
+const ready = new Set(readyScreens());
+const isReady = (design: string) => {
+  const [category, slug] = design.split("/");
+  const file = SOURCE_FILES[category as keyof typeof SOURCE_FILES]?.[slug ?? ""];
+  return file !== undefined && ready.has(file);
+};
+
 const unitKey = (design: string, state: string, viewport: string) =>
   state === "ready" ? `${design}@${viewport}` : `${design}~${state}@${viewport}`;
 
@@ -126,6 +136,9 @@ async function main(): Promise<void> {
             const key = unitKey(u.design, u.state, u.vp.name);
             progress.start(key);
             const r = await checkScreen(browser, base, u.design, u.state, u.vp);
+            if (isReady(u.design) && r.a11yNodes?.length) {
+              r.errors.push(`ready-to-wire screens allow no a11y violations: ${r.a11yNodes[0]}`);
+            }
             results[key] = r;
             progress.done(key, r.errors.length === 0);
             if (r.errors.length) process.stdout.write(`[browser] ✗ ${key}: ${r.errors[0]}\n`);

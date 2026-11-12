@@ -2,7 +2,7 @@
 
 Every screen that is **ready to wire** follows this contract: a builder installs it and connects it to their backend without editing its UI code.
 
-> **Status: draft.** It is locked after the [Phase 4 pilot](https://github.com/mantavyamstudios/wirefront/wiki/Roadmap#phase-4-pilot-3-screens). Changes go through a pull request to this file; the [wiki](https://github.com/mantavyamstudios/wirefront/wiki/Screen-Contract) mirrors it.
+> **Status: locked (v1).** Reviewed against the three [Phase 4 pilot](https://github.com/mantavyamstudios/wirefront/wiki/Roadmap#phase-4-pilot-3-screens) screens: `auth/sign-in` (forms), `tables/members` (server-driven lists and mutations) and `dashboards/metrics-overview` (read-only data). Changes go through a pull request to this file with an entry in the [decision log](https://github.com/mantavyamstudios/wirefront/wiki/Decisions); the [wiki](https://github.com/mantavyamstudios/wirefront/wiki/Screen-Contract) mirrors it. [WIRING.md](WIRING.md) shows the pilots wired to real backends.
 
 ## Folder layout
 
@@ -52,10 +52,11 @@ type MembersTableProps = {
   query: ListQuery                // { page, pageSize, sort, filters, search }
   onQueryChange: (query: ListQuery) => void
 
-  // actions: Promise-returning; the view handles pending, success, failure
-  onInvite: (input: InviteInput) => Promise<ActionResult>
-  onRoleChange: (id: string, role: Role) => Promise<ActionResult>
-  onRemove: (id: string) => Promise<ActionResult>
+  // actions: one input, Promise-returning; the view handles pending, success, failure.
+  // Optional: a control whose action isn't given is not shown.
+  onInvite?: Action<InviteInput, Member>
+  onRoleChange?: Action<{ id: string; role: AssignableRole }>
+  onRemove?: Action<string>
 }
 ```
 
@@ -63,13 +64,18 @@ Rules:
 
 1. **Data in, events out.** No module-level data in `view.tsx`. Every list, user, number and label that would come from a backend arrives through props.
 2. **Actions return Promises.** The view shows pending state, applies optimistic updates when it is safe, rolls back on rejection and shows the error. No `setTimeout` fake latency.
-3. **Every state is built in:** loading (skeleton), empty, error with retry, forbidden, partial data. Each is reachable through props.
+3. **Every state is built in:** loading (skeleton), empty, error with retry. Each is reachable through props and declared in `designs.ts` `states`. Permissions hide individual controls through the provider's `can`; a `forbidden` state is only for screens that can be denied as a whole.
 4. **Lists are controlled.** Pagination, sort, filters and search are a `ListQuery` the builder sends to their API.
 5. **Forms use Base UI `Form` and `Field`.** Values are validated with the screen's zod schema in `onFormSubmit`; field errors the API returns (field → message) are passed to `<Form errors>`, which clears each one as the user edits that field.
 6. **No framework imports.** Links, toasts, formatting, strings and permissions come from `WirefrontProvider`.
 7. **Deterministic render.** No `Math.random()`, `Date.now()` or `new Date()` during render; time arrives as props or through the provider.
 8. **Client boundary.** Interactive views start with `"use client"`.
 9. **Licence header.** Every file starts with the SPDX header.
+10. **Unwired means hidden.** An optional action or link prop that isn't given hides its control. No control does nothing when clicked.
+11. **Raw values in, formatted out.** APIs return numbers, ISO dates and units; the screen formats them with `useFormat`, so the builder's locale, time zone and currency apply. No preformatted strings in the data.
+12. **Safe mutations.** Destructive actions ask for confirmation first. Reversible updates (a role, a toggle) apply at once and roll back with the error shown if the action fails.
+13. **Server-safe schemas.** `schema.ts`, `types` and `api` carry no `"use client"`, so the builder validates requests on the server with the same zod schemas.
+14. **Lists report every change.** Search, filter and sort changes go back to page 1 and fire `onQueryChange` each time; debouncing is the builder's choice (it belongs with their fetching).
 
 ## WirefrontProvider
 
@@ -96,7 +102,7 @@ const { data, status, refetch } = useQuery(membersQuery(query))
   onRetry={refetch}
   query={query} onQueryChange={setQuery}
   onInvite={(input) => api.members.invite(input)}
-  onRoleChange={(id, role) => api.members.update(id, { role })}
+  onRoleChange={({ id, role }) => api.members.update(id, { role })}
   onRemove={(id) => api.members.remove(id)}
 />
 ```
@@ -105,12 +111,14 @@ const { data, status, refetch } = useQuery(membersQuery(query))
 
 A screen gets the **Ready to wire** badge when all of these hold:
 
-- [ ] `schema.ts`, `view.tsx`, `fixtures.ts`, `demo.tsx` exist and typecheck
+- [ ] `schema.ts`, `view.tsx`, `fixtures.ts`, `demo.tsx` exist and typecheck, including under the strictest template settings (`tsconfig.shipped.json`)
+- [ ] Fixtures satisfy the schemas
 - [ ] `view.tsx` passes the contract checker (no hard-coded data, `setTimeout`, router or framework imports)
 - [ ] All states reachable from the interaction panel's state switcher
 - [ ] Every action is a Promise callback with pending, success and error handling
+- [ ] Wiring tests (`apps/www/tests/<screen>.test.tsx`) cover what each action receives and what the screen shows for success, returned failures and thrown errors
 - [ ] Semantic tokens only; logical properties; strings through messages
-- [ ] axe clean; icon buttons labelled; tap targets ≥ 24px; keyboard path works; reduced motion respected
+- [ ] axe clean in every declared state (zero violations, nothing baselined); icon buttons labelled; tap targets ≥ 24px; keyboard path works; reduced motion respected
 - [ ] Responsive audit passes at 375 / 768 / 1024 / 1440px
 - [ ] Installs and builds in fresh Next.js, TanStack Start and Vite apps
-- [ ] Docs page with props table and at least one wiring recipe
+- [ ] Props table and at least one typechecked wiring recipe (in [WIRING.md](WIRING.md) until each screen has its docs page)

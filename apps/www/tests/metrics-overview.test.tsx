@@ -22,7 +22,7 @@ function renderOverview(props: Partial<ComponentProps<typeof MetricsOverview>> =
   const onRangeChange = vi.fn();
   render(
     <WirefrontProvider now={now} {...provider}>
-      <MetricsOverview data={fixtures.getOverview("30d")} onRangeChange={onRangeChange} range="30d" {...props} />
+      <MetricsOverview data={fixtures.getOverview} onRangeChange={onRangeChange} range="30d" {...props} />
     </WirefrontProvider>,
   );
   return { onRangeChange };
@@ -81,7 +81,7 @@ describe("MetricsOverview", () => {
 
   it("describes its backend operation, and the fixtures satisfy it", () => {
     expect(Object.keys(api)).toEqual(["getOverview"]);
-    for (const range of ["7d", "30d", "90d"] as const) expect(Overview.safeParse(fixtures.getOverview(range)).success).toBe(true);
+    for (const range of ["7d", "30d", "90d"] as const) expect(Overview.safeParse(fixtures.overviewFor(range)).success).toBe(true);
     expect(Overview.safeParse(fixtures.emptyOverview).success).toBe(true);
   });
 });

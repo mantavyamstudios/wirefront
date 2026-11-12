@@ -14,7 +14,7 @@ const demoNow = () => new Date(fixtures.now);
 export function DashboardsMetricsOverviewShowcasePage() {
   const state = useShowcaseState();
   const [range, setRange] = useState<Range>("30d");
-  const data = state === "empty" ? fixtures.emptyOverview : fixtures.getOverview(range);
+  const data = state === "empty" ? fixtures.emptyOverview : fixtures.overviewFor(range);
   return (
     <WirefrontProvider now={demoNow}>
       <MetricsOverview
