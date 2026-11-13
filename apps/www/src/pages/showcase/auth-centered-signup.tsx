@@ -209,14 +209,14 @@ export function AuthCenteredSignup() {
                   I agree to the{" "}
                   <a
                     href="#"
-                    className="text-foreground underline-offset-4 hover:underline"
+                    className="text-foreground underline underline-offset-4"
                   >
                     Terms
                   </a>{" "}
                   and{" "}
                   <a
                     href="#"
-                    className="text-foreground underline-offset-4 hover:underline"
+                    className="text-foreground underline underline-offset-4"
                   >
                     Privacy
                   </a>
@@ -240,7 +240,7 @@ export function AuthCenteredSignup() {
               Already have an account?{" "}
               <a
                 href="#"
-                className="text-foreground underline-offset-4 hover:underline"
+                className="text-foreground underline underline-offset-4"
               >
                 Sign in
               </a>

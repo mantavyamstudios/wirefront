@@ -139,7 +139,7 @@ export function TableTransactions() {
             <Separator orientation="vertical" className="mx-1 h-6 max-sm:hidden" />
 
             <Select items={ACCOUNTS} defaultValue="op">
-              <SelectTrigger className="w-36 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
+              <SelectTrigger aria-label="Account" className="w-36 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent align="start">
@@ -152,7 +152,7 @@ export function TableTransactions() {
             </Select>
 
             <Select items={DIRECTIONS} defaultValue="all">
-              <SelectTrigger className="w-32 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
+              <SelectTrigger aria-label="Direction" className="w-32 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent align="start">
@@ -165,7 +165,7 @@ export function TableTransactions() {
             </Select>
 
             <Select items={RANGES} defaultValue="7d">
-              <SelectTrigger className="w-40 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
+              <SelectTrigger aria-label="Date range" className="w-40 max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10" size="sm">
                 <CalendarIcon className="text-muted-foreground" />
                 <SelectValue />
               </SelectTrigger>

@@ -55,7 +55,7 @@ export function EmptyNoTeam() {
             Anyone with the link can join as a member. Change in{" "}
             <a
               href="#"
-              className="text-foreground underline-offset-4 hover:underline"
+              className="text-foreground underline underline-offset-4"
             >
               workspace settings
             </a>

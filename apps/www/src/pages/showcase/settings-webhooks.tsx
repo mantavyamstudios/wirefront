@@ -675,7 +675,7 @@ function PayloadBlock({
       </div>
       <Highlight code={body.trim()} language="json" theme={PRISM_BLANK}>
         {({ tokens, getLineProps, getTokenProps }) => (
-          <pre className="max-h-56 overflow-auto px-3 py-2 font-mono text-[11px] leading-relaxed">
+          <pre className="whitespace-pre-wrap break-all px-3 py-2 font-mono text-[11px] leading-relaxed">
             {tokens.map((line, i) => {
               const lineProps = getLineProps({ line });
               return (

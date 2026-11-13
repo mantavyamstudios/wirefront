@@ -1,40 +1,4 @@
 {
-  "auth/inset-login@desktop": {
-    "link-in-text-block": 1
-  },
-  "auth/inset-login@mobile": {
-    "link-in-text-block": 1
-  },
-  "auth/centered-signin@desktop": {
-    "link-in-text-block": 1
-  },
-  "auth/centered-signin@mobile": {
-    "link-in-text-block": 1
-  },
-  "auth/centered-signup@desktop": {
-    "link-in-text-block": 3
-  },
-  "auth/left-signin@mobile": {
-    "link-in-text-block": 1
-  },
-  "auth/centered-signup@mobile": {
-    "link-in-text-block": 3
-  },
-  "auth/left-signin@desktop": {
-    "link-in-text-block": 1
-  },
-  "auth/right-signin@desktop": {
-    "link-in-text-block": 1
-  },
-  "auth/right-signin@mobile": {
-    "link-in-text-block": 1
-  },
-  "empty-states/no-team@desktop": {
-    "link-in-text-block": 1
-  },
-  "empty-states/no-team@mobile": {
-    "link-in-text-block": 1
-  },
   "cards/event@desktop": {
     "color-contrast": 1
   },
@@ -50,12 +14,6 @@
   "forms/workspace-settings@mobile": {
     "label-content-name-mismatch": 1
   },
-  "tables/transactions@desktop": {
-    "button-name": 3
-  },
-  "tables/transactions@mobile": {
-    "button-name": 3
-  },
   "filters/faceted@desktop": {
     "label-content-name-mismatch": 3
   },
@@ -67,9 +25,6 @@
   },
   "filters/chips@mobile": {
     "label-content-name-mismatch": 2
-  },
-  "filters/sidebar@desktop": {
-    "label": 2
   },
   "layouts/inbox-rail@desktop": {
     "color-contrast": 7
@@ -87,8 +42,7 @@
     "color-contrast": 5
   },
   "layouts/split-resizable@mobile": {
-    "color-contrast": 5,
-    "scrollable-region-focusable": 1
+    "color-contrast": 5
   },
   "layouts/focus-mode@desktop": {
     "label-content-name-mismatch": 1
@@ -97,15 +51,10 @@
     "label-content-name-mismatch": 1
   },
   "layouts/canvas-tools@desktop": {
-    "color-contrast": 4,
-    "label": 1,
-    "nested-interactive": 3
+    "color-contrast": 4
   },
   "layouts/canvas-tools@mobile": {
     "color-contrast": 2
-  },
-  "layouts/bottom-nav@desktop": {
-    "scrollable-region-focusable": 1
   },
   "layouts/hairline-shell@desktop": {
     "label-content-name-mismatch": 2
@@ -113,17 +62,17 @@
   "dashboards/revenue-overview@desktop": {
     "label-content-name-mismatch": 5
   },
-  "dashboards/status-console@desktop": {
-    "label-content-name-mismatch": 9
-  },
   "dashboards/status-console@mobile": {
     "label-content-name-mismatch": 5
   },
-  "dashboards/pipeline-today@desktop": {
-    "label-content-name-mismatch": 14
+  "dashboards/status-console@desktop": {
+    "label-content-name-mismatch": 9
   },
   "dashboards/pipeline-today@mobile": {
     "label-content-name-mismatch": 4
+  },
+  "dashboards/pipeline-today@desktop": {
+    "label-content-name-mismatch": 14
   },
   "settings/appearance@desktop": {
     "color-contrast": 1
@@ -143,66 +92,26 @@
   "settings/security@mobile": {
     "color-contrast": 1
   },
-  "settings/branding@desktop": {
-    "color-contrast": 2
-  },
   "settings/branding@mobile": {
     "color-contrast": 2
   },
-  "settings/webhooks@desktop": {
-    "scrollable-region-focusable": 1
-  },
-  "settings/webhooks@mobile": {
-    "scrollable-region-focusable": 1
-  },
-  "settings/privacy@desktop": {
-    "aria-toggle-field-name": 1,
-    "label": 4
-  },
-  "settings/privacy@mobile": {
-    "aria-toggle-field-name": 1,
-    "label": 4
-  },
-  "settings/sso@desktop": {
-    "label-content-name-mismatch": 4
+  "settings/branding@desktop": {
+    "color-contrast": 2
   },
   "settings/sso@mobile": {
     "label-content-name-mismatch": 1
   },
-  "modals/two-factor@desktop": {
-    "label": 6
-  },
-  "modals/two-factor@mobile": {
-    "label": 6
-  },
-  "charts/cohort-heatmap@desktop": {
-    "color-contrast": 76
-  },
-  "charts/cohort-heatmap@mobile": {
-    "color-contrast": 42,
-    "scrollable-region-focusable": 1
-  },
-  "timelines/pull-request@mobile": {
-    "button-name": 3,
-    "scrollable-region-focusable": 1
-  },
-  "timelines/pull-request@desktop": {
-    "button-name": 3
+  "settings/sso@desktop": {
+    "label-content-name-mismatch": 4
   },
   "calendars/month@desktop": {
     "label-content-name-mismatch": 18
   },
-  "calendars/week@mobile": {
-    "color-contrast": 7
-  },
   "calendars/week@desktop": {
     "color-contrast": 15
   },
-  "calendars/recurring@desktop": {
-    "button-name": 2
-  },
-  "calendars/recurring@mobile": {
-    "button-name": 2
+  "calendars/week@mobile": {
+    "color-contrast": 7
   },
   "calendars/holidays@desktop": {
     "color-contrast": 6
@@ -213,10 +122,10 @@
   "calendars/calendar-week@desktop": {
     "label-content-name-mismatch": 21
   },
-  "toasts/error-retry@mobile": {
+  "toasts/error-retry@desktop": {
     "aria-hidden-focus": 1
   },
-  "toasts/error-retry@desktop": {
+  "toasts/error-retry@mobile": {
     "aria-hidden-focus": 1
   },
   "toasts/info-banner@desktop": {
@@ -246,49 +155,41 @@
   "threads/side-panel@desktop": {
     "color-contrast": 7
   },
-  "threads/comment-row@desktop": {
-    "color-contrast": 3
-  },
   "threads/comment-row@mobile": {
     "color-contrast": 3
   },
-  "threads/mention-popover@mobile": {
-    "color-contrast": 1
+  "threads/comment-row@desktop": {
+    "color-contrast": 3
   },
   "threads/mention-popover@desktop": {
     "color-contrast": 1
   },
-  "threads/resolved@desktop": {
-    "color-contrast": 6
+  "threads/mention-popover@mobile": {
+    "color-contrast": 1
   },
   "threads/resolved@mobile": {
     "color-contrast": 3
   },
-  "ai/co-writing-doc@mobile": {
-    "button-name": 1
-  },
-  "dev-tools/docs-site@mobile": {
-    "button-name": 1,
-    "scrollable-region-focusable": 4
-  },
-  "dev-tools/issue-tracker@desktop": {
-    "color-contrast": 1
+  "threads/resolved@desktop": {
+    "color-contrast": 6
   },
   "dev-tools/issue-tracker@mobile": {
-    "button-name": 1,
     "color-contrast": 1
   },
-  "apps/mail@desktop": {
+  "dev-tools/issue-tracker@desktop": {
     "color-contrast": 1
   },
   "apps/mail@mobile": {
     "color-contrast": 1
   },
-  "apps/team-chat@desktop": {
-    "color-contrast": 2
+  "apps/mail@desktop": {
+    "color-contrast": 1
   },
   "apps/team-chat@mobile": {
     "color-contrast": 1
+  },
+  "apps/team-chat@desktop": {
+    "color-contrast": 2
   },
   "personal/money@mobile": {
     "color-contrast": 1,

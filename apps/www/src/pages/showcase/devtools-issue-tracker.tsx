@@ -984,7 +984,7 @@ export function IssueTracker({
                     <Kbd>/</Kbd>
                   )}
                 </label>
-                <Button className="transition-[box-shadow,scale] duration-150 ease-out active:scale-[0.97]" onClick={() => createIssue()} size="sm">
+                <Button aria-label="New issue" className="transition-[box-shadow,scale] duration-150 ease-out active:scale-[0.97]" onClick={() => createIssue()} size="sm">
                   <PlusIcon />
                   <span className="hidden @md:inline">New issue</span>
                 </Button>

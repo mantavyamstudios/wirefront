@@ -37,6 +37,7 @@ import {
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
+import { ScrollArea } from "@wirefront/ui/scroll-area";
 
 export type DocsLang = "node" | "python" | "go" | "curl";
 
@@ -476,9 +477,9 @@ function CodeTabs({ samples, title, lang, onLang }: { samples: Partial<Record<Do
           </AnimatePresence>
         </button>
       </div>
-      <pre className="overflow-x-auto px-4 py-3 font-mono text-[12.5px] leading-6 [scrollbar-width:thin]">
+      <ScrollArea aria-label={title ?? "Code sample"} orientation="horizontal"><pre className="px-4 py-3 font-mono text-[12.5px] leading-6">
         <code>{highlight(samples[current] ?? "")}</code>
-      </pre>
+      </pre></ScrollArea>
     </div>
   );
 }
@@ -554,7 +555,7 @@ function Block({ block, lang, onLang }: { block: DocsBlock; lang: DocsLang; onLa
       return <CodeTabs lang={lang} onLang={onLang} samples={block.samples} title={block.title} />;
     case "table":
       return (
-        <div className="overflow-x-auto rounded-xl border [scrollbar-width:thin]">
+        <ScrollArea aria-label={block.head.join(", ")} className="rounded-xl border" orientation="horizontal">
           <table className="w-full min-w-[420px] text-left text-sm">
             <thead className="bg-muted/30">
               <tr>
@@ -577,7 +578,7 @@ function Block({ block, lang, onLang }: { block: DocsBlock; lang: DocsLang; onLa
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollArea>
       );
   }
 }
@@ -939,7 +940,7 @@ export function DocsSite({
               type="button"
             >
               <SearchIcon className="size-4" />
-              <span className="hidden flex-1 text-left @xl:inline">Search docs</span>
+              <span className="sr-only flex-1 text-left @xl:not-sr-only">Search docs</span>
               <Kbd className="hidden @xl:inline-flex">⌘K</Kbd>
             </button>
             {dashboardHref && (

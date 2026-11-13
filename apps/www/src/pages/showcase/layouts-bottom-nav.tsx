@@ -24,6 +24,7 @@ import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Separator } from "@wirefront/ui/separator";
+import { ScrollArea } from "@wirefront/ui/scroll-area";
 
 type TabKey = "home" | "discover" | "create" | "alerts" | "profile";
 
@@ -82,9 +83,11 @@ function PhoneFrame({
         <div className="flex min-h-svh flex-col md:h-full md:min-h-0">
           <StatusBar />
           <AppHeader title={TAB_TITLES[activeTab]} />
-          <main className="flex-1 px-4 pt-4 pb-[calc(72px+env(safe-area-inset-bottom)+1rem)] sm:px-5 md:overflow-y-auto md:pb-4">
-            <TabContent tab={activeTab} />
-          </main>
+          <ScrollArea aria-label={TAB_TITLES[activeTab]} className="flex-1 md:min-h-0">
+            <main className="px-4 pt-4 pb-[calc(72px+env(safe-area-inset-bottom)+1rem)] sm:px-5 md:pb-4">
+              <TabContent tab={activeTab} />
+            </main>
+          </ScrollArea>
           <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
       </div>

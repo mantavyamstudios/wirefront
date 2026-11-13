@@ -1010,6 +1010,7 @@ function Inspector({
                 </span>
                 <Slider
                   className="flex-1"
+                  getAriaLabel={() => "Opacity"}
                   max={100}
                   min={0}
                   value={[shape.opacity]}
@@ -1053,18 +1054,8 @@ function Inspector({
               return (
                 <div
                   key={layer.id}
-                  role="button"
-                  tabIndex={0}
-                  aria-pressed={isActive}
-                  onClick={() => onSelect(layer.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      onSelect(layer.id);
-                    }
-                  }}
                   className={cn(
-                    "flex w-full cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 text-left text-[11px] transition-colors pointer-coarse:min-h-11 pointer-coarse:text-xs",
+                    "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-[11px] transition-colors pointer-coarse:min-h-11 pointer-coarse:text-xs",
                     isActive
                       ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
                       : "hover:bg-foreground/[0.05]",
@@ -1072,10 +1063,7 @@ function Inspector({
                 >
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleVisible(layer.id);
-                    }}
+                    onClick={() => onToggleVisible(layer.id)}
                     aria-label={`${layer.visible ? "Hide" : "Show"} ${layer.name}`}
                     className="grid size-6 place-items-center rounded text-muted-foreground hover:text-foreground pointer-coarse:size-9"
                   >
@@ -1085,14 +1073,18 @@ function Inspector({
                       <EyeOffIcon className="size-3" />
                     )}
                   </button>
-                  <ShapeIcon type={layer.type} />
-                  <span className="flex-1 truncate">{layer.name}</span>
+                  <button
+                    aria-pressed={isActive}
+                    className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 self-stretch rounded text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    onClick={() => onSelect(layer.id)}
+                    type="button"
+                  >
+                    <ShapeIcon type={layer.type} />
+                    <span className="flex-1 truncate">{layer.name}</span>
+                  </button>
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleLocked(layer.id);
-                    }}
+                    onClick={() => onToggleLocked(layer.id)}
                     aria-label={`${layer.locked ? "Unlock" : "Lock"} ${layer.name}`}
                     className="grid size-6 place-items-center rounded text-muted-foreground hover:text-foreground pointer-coarse:size-9"
                   >

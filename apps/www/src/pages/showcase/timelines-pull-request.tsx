@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
+import { ScrollArea } from "@wirefront/ui/scroll-area";
 
 type ReviewState = "approved" | "changes" | "pending";
 
@@ -415,6 +416,7 @@ function MergeReadiness({
             Squash & merge
           </Button>
           <button
+            aria-label="More merge options"
             type="button"
             disabled={!ready}
             className="inline-flex h-9 items-center rounded-md border border-border/60 bg-background px-2 text-muted-foreground hover:text-foreground disabled:opacity-50"
@@ -625,7 +627,7 @@ function TimelineBody({ item }: { item: TimelineItem }) {
                 <span className="min-w-0 truncate">{item.diff.file}</span>
                 <span className="shrink-0">line {item.diff.line}</span>
               </div>
-              <pre className="overflow-x-auto px-3 py-2 font-mono text-[11px]">
+              <ScrollArea aria-label={item.diff.file} orientation="horizontal"><pre className="px-3 py-2 font-mono text-[11px]">
                 {item.diff.lines.map((l, i) => (
                   <div
                     key={i}
@@ -643,7 +645,7 @@ function TimelineBody({ item }: { item: TimelineItem }) {
                     {l.text}
                   </div>
                 ))}
-              </pre>
+              </pre></ScrollArea>
             </div>
           )}
           <p className="mt-2 text-foreground/85 text-sm">{item.body}</p>
@@ -728,6 +730,7 @@ function SidebarSection({
         </span>
         {actionIcon && (
           <button
+            aria-label={`Add to ${title.toLowerCase()}`}
             type="button"
             className="text-muted-foreground hover:text-foreground"
           >

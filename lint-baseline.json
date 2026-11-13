@@ -200,7 +200,6 @@
     "lint/suspicious/noArrayIndexKey": 1
   },
   "apps/www/src/pages/showcase/charts-cohort-heatmap.tsx": {
-    "lint/a11y/useAriaPropsSupportedByRole": 1,
     "lint/suspicious/noArrayIndexKey": 2
   },
   "apps/www/src/pages/showcase/charts-scatter.tsx": {
@@ -310,7 +309,6 @@
     "lint/correctness/useHookAtTopLevel": 1
   },
   "apps/www/src/pages/showcase/layouts-canvas-tools.tsx": {
-    "lint/a11y/useSemanticElements": 1,
     "lint/correctness/useExhaustiveDependencies": 3,
     "lint/style/noNonNullAssertion": 2,
     "lint/suspicious/noArrayIndexKey": 1

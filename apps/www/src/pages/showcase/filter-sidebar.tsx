@@ -255,6 +255,7 @@ export function FilterSidebar() {
           <Section title="Price">
             <div className="px-1 pt-1">
               <Slider
+                getAriaLabel={(i) => (i === 0 ? "Minimum price" : "Maximum price")}
                 value={state.priceRange}
                 min={0}
                 max={200}
@@ -481,7 +482,7 @@ function ToggleRow({
   return (
     <Label className="flex cursor-pointer items-center justify-between py-1.5 text-sm pointer-coarse:min-h-11">
       <span>{label}</span>
-      <Switch checked={checked} onCheckedChange={(v) => onChange(Boolean(v))} />
+      <Switch aria-label={label} checked={checked} onCheckedChange={(v) => onChange(Boolean(v))} />
     </Label>
   );
 }

@@ -147,6 +147,7 @@ export function SettingsPrivacy() {
                   {/* Below sm the hint drops under the label so the label keeps its width. */}
                   <label className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.03] pointer-coarse:min-h-11">
                     <Checkbox
+                      aria-label={opt.label}
                       checked={include[opt.key]}
                       onCheckedChange={(v) =>
                         setInclude((s) => ({ ...s, [opt.key]: Boolean(v) }))
@@ -273,6 +274,7 @@ export function SettingsPrivacy() {
                   </div>
                   <div className="mt-3 px-1">
                     <Slider
+                      getAriaLabel={() => `${row.label} retention`}
                       min={0}
                       max={RETENTION_STOPS.length - 1}
                       step={1}
@@ -314,6 +316,7 @@ export function SettingsPrivacy() {
               Demo
             </span>
             <Switch
+              aria-label="Demo: deletion pending"
               checked={pending}
               onCheckedChange={(v) => setPending(Boolean(v))}
             />

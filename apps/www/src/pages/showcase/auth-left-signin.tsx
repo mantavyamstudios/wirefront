@@ -179,7 +179,7 @@ function FooterAnchor() {
   return (
     <p className="mt-10 text-center text-muted-foreground text-sm">
       Don't have an account?{" "}
-      <a href="#" className="text-foreground hover:underline">
+      <a href="#" className="text-foreground underline underline-offset-4">
         Sign up
       </a>
     </p>

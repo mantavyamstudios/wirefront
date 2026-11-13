@@ -2,6 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 "use client";
 
+import { ScrollArea } from "@wirefront/ui/scroll-area";
+
 const COHORTS = [
   { label: "Apr 2025", size: 412 },
   { label: "May 2025", size: 538 },
@@ -39,7 +41,7 @@ export function ChartsCohortHeatmap() {
 
         <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-3 sm:p-5">
           {/* Only the grid scrolls; the cohort column stays pinned while it does. */}
-          <div className="overflow-x-auto">
+          <ScrollArea aria-label="Retention by cohort" orientation="horizontal">
           <table className="w-full border-separate border-spacing-1 text-xs">
             <thead>
               <tr>
@@ -90,7 +92,7 @@ export function ChartsCohortHeatmap() {
               })}
             </tbody>
           </table>
-          </div>
+          </ScrollArea>
 
           {/* Legend */}
           <div className="mt-5 flex items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
@@ -111,19 +113,41 @@ export function ChartsCohortHeatmap() {
   );
 }
 
+/** Relative luminance of an sRGB colour (WCAG 2). */
+function luminance([r, g, b]: number[]) {
+  const lin = (c: number) => {
+    const v = c / 255;
+    return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * lin(r ?? 0) + 0.7152 * lin(g ?? 0) + 0.0722 * lin(b ?? 0);
+}
+
+const contrast = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+const INDIGO = [99, 102, 241];
+// Near-black: with white, every background luminance has an ink at 4.5:1 or more (indigo-950 leaves a gap mid-ramp).
+const INK = [2, 2, 12];
+
+/** The cell text colour with the most contrast against the indigo blended over white at this alpha. */
+function inkFor(alpha: number) {
+  const bg = luminance(INDIGO.map((c) => 255 - alpha * (255 - c)));
+  return contrast(1, bg) >= contrast(luminance(INK), bg) ? "white" : `rgb(${INK.join(" ")})`;
+}
+
 function Cell({ value, highlight, label }: { value: number; highlight?: boolean; label: string }) {
   const intensity = value / 100;
+  const alpha = 0.12 + intensity * 0.78;
   return (
     <div
       title={`${label}: ${value.toFixed(0)}% retained`}
       aria-label={`${label}: ${value.toFixed(0)}% retained`}
+      role="img"
       className={
         "grid h-7 place-items-center rounded font-mono text-[10px] transition-transform hover:scale-[1.04] " +
         (highlight ? "ring-1 ring-foreground/20" : "")
       }
       style={{
-        backgroundColor: `rgba(99, 102, 241, ${0.12 + intensity * 0.78})`,
-        color: intensity > 0.55 ? "white" : "rgb(67 56 202)",
+        backgroundColor: `rgba(99, 102, 241, ${alpha})`,
+        color: inkFor(alpha),
       }}
     >
       {value.toFixed(0)}

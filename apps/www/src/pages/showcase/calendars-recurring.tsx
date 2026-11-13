@@ -884,6 +884,7 @@ function MiniCalendar({
       <div className="mb-2 flex items-center justify-between">
         <button
           type="button"
+          aria-label="Previous month"
           onClick={() => setOffset(offset - 1)}
           className="grid size-6 place-items-center rounded text-muted-foreground hover:bg-muted hover:text-foreground"
         >
@@ -897,6 +898,7 @@ function MiniCalendar({
         </span>
         <button
           type="button"
+          aria-label="Next month"
           onClick={() => setOffset(offset + 1)}
           className="grid size-6 place-items-center rounded text-muted-foreground hover:bg-muted hover:text-foreground"
         >

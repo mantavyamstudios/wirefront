@@ -633,7 +633,7 @@ function FooterLinks() {
     <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 text-sm">
       <p className="whitespace-nowrap text-muted-foreground">
         Don't have an account?{" "}
-        <a href="#" className="text-foreground hover:underline">
+        <a href="#" className="text-foreground underline underline-offset-4">
           Sign up
         </a>
       </p>

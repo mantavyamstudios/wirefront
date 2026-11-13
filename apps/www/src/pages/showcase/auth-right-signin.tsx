@@ -299,7 +299,7 @@ function FooterLinks() {
       </a>
       <p className="whitespace-nowrap text-muted-foreground">
         New here?{" "}
-        <a href="#" className="text-foreground hover:underline">
+        <a href="#" className="text-foreground underline underline-offset-4">
           Sign up
         </a>
       </p>

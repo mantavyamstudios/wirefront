@@ -648,7 +648,7 @@ export function CoWritingDoc({
                 Replay
               </Button>
             )}
-            <Button size="sm" variant="outline">
+            <Button aria-label="Ask an agent" size="sm" variant="outline">
               <SparklesIcon />
               <span className="hidden @md:inline">Ask an agent</span>
             </Button>

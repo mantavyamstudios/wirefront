@@ -90,17 +90,17 @@ export function ModalsTwoFactor() {
                 </div>
 
                 <div className="mt-5">
-                  <div id="tfa-code-label" className="mb-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+                  <label htmlFor="tfa-code" id="tfa-code-label" className="mb-2 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                     Confirm with a 6-digit code
-                  </div>
-                  <OTPField length={6} defaultValue="3914" aria-labelledby="tfa-code-label">
-                    <OTPFieldInput />
-                    <OTPFieldInput />
-                    <OTPFieldInput />
+                  </label>
+                  <OTPField length={6} defaultValue="3914" id="tfa-code" aria-labelledby="tfa-code-label">
+                    <OTPFieldInput aria-label="Digit 1 of 6" />
+                    <OTPFieldInput aria-label="Digit 2 of 6" />
+                    <OTPFieldInput aria-label="Digit 3 of 6" />
                     <OTPFieldSeparator />
-                    <OTPFieldInput />
-                    <OTPFieldInput />
-                    <OTPFieldInput />
+                    <OTPFieldInput aria-label="Digit 4 of 6" />
+                    <OTPFieldInput aria-label="Digit 5 of 6" />
+                    <OTPFieldInput aria-label="Digit 6 of 6" />
                   </OTPField>
                 </div>
               </div>

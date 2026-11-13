@@ -9,6 +9,7 @@ import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Separator } from "@wirefront/ui/separator";
 import { useColorScheme } from "@wirefront/ui/wirefront/provider";
+import { ScrollArea } from "@wirefront/ui/scroll-area";
 
 const CODE = `import { useState } from "react";
 import { Button } from "@wirefront/ui/button";
@@ -220,7 +221,7 @@ function EditorPane() {
         <EditorTab label="playground.tsx" active />
         <EditorTab label="config.json" />
       </div>
-      <div className="flex-1 overflow-auto">
+      <ScrollArea aria-label="playground.tsx" className="min-h-0 flex-1" orientation="both">
         {!mounted ? (
           <pre className="m-0 whitespace-pre px-3 py-3 font-mono text-[12.5px] leading-[1.65]">
             {CODE.trimEnd()}
@@ -248,7 +249,7 @@ function EditorPane() {
           )}
         </Highlight>
         )}
-      </div>
+      </ScrollArea>
     </div>
   );
 }
