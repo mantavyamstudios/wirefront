@@ -163,25 +163,25 @@ function EnvelopeArt() {
 
       <span
         aria-hidden
-        className="pointer-events-none absolute top-1 left-2 size-1 rounded-full bg-muted-foreground/60"
+        className="pointer-events-none absolute top-1 start-2 size-1 rounded-full bg-muted-foreground/60"
         data-magic-float
         style={{ animation: "magic-float-a 3s ease-in-out infinite" }}
       />
       <span
         aria-hidden
-        className="pointer-events-none absolute top-3 right-1 size-1.5 rounded-full bg-muted-foreground/50"
+        className="pointer-events-none absolute top-3 end-1 size-1.5 rounded-full bg-muted-foreground/50"
         data-magic-float
         style={{ animation: "magic-float-b 4s ease-in-out infinite 0.4s" }}
       />
       <span
         aria-hidden
-        className="pointer-events-none absolute bottom-2 left-0 size-1 rounded-full bg-muted-foreground/40"
+        className="pointer-events-none absolute bottom-2 start-0 size-1 rounded-full bg-muted-foreground/40"
         data-magic-float
         style={{ animation: "magic-float-c 3.6s ease-in-out infinite 0.8s" }}
       />
       <span
         aria-hidden
-        className="pointer-events-none absolute right-0 bottom-4 size-1 rounded-full bg-muted-foreground/55"
+        className="pointer-events-none absolute end-0 bottom-4 size-1 rounded-full bg-muted-foreground/55"
         data-magic-float
         style={{ animation: "magic-float-a 3.4s ease-in-out infinite 1.2s" }}
       />

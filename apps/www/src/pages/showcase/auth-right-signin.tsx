@@ -151,7 +151,7 @@ function DashboardMock() {
 
 function FormColumn() {
   return (
-    <div className="flex items-center justify-center px-6 py-12 lg:border-border/60 lg:border-l lg:px-12">
+    <div className="flex items-center justify-center px-6 py-12 lg:border-border/60 lg:border-s lg:px-12">
       <Card className="w-full max-w-sm gap-0 px-5 py-8 shadow-sm sm:px-6">
         <BrandMark />
         <Heading />

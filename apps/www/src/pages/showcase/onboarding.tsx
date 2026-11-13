@@ -91,7 +91,7 @@ function Stepper({ step }: { step: number }) {
       <span>
         Step {String(step + 1).padStart(2, "0")} / {STEPS.length}
       </span>
-      <div aria-hidden className="ml-2 flex items-center gap-1.5">
+      <div aria-hidden className="ms-2 flex items-center gap-1.5">
         {STEPS.map((_, i) => (
           <span
             key={i}
@@ -196,7 +196,7 @@ function InviteStep({
           {invitees.map((email) => (
             <li
               key={email}
-              className="flex items-center justify-between gap-2 rounded-md border border-border/70 bg-background/40 py-1 pr-1 pl-3 text-sm"
+              className="flex items-center justify-between gap-2 rounded-md border border-border/70 bg-background/40 py-1 pe-1 ps-3 text-sm"
             >
               <span className="truncate text-foreground/85">{email}</span>
               <button

@@ -1072,7 +1072,7 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                   aria-expanded={isOpen}
                   aria-label={`${spot.compact ? "" : `${text.label}${text.delta ? ` ${text.delta}` : ""}, `}chart note: ${m.title}, ${momentDates(m)}`}
                   className={cn(
-                    "absolute top-0 left-0 z-10 inline-flex h-6 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border bg-background text-xs shadow-xs/5 outline-none before:absolute before:-inset-x-1 before:-inset-y-1 focus-visible:ring-2 focus-visible:ring-ring",
+                    "absolute top-0 start-0 z-10 inline-flex h-6 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border bg-background text-xs shadow-xs/5 outline-none before:absolute before:-inset-x-1 before:-inset-y-1 focus-visible:ring-2 focus-visible:ring-ring",
                     "transition-[background-color,border-color,scale] duration-150 ease-out active:scale-[0.97] [@media(hover:hover)]:hover:bg-accent",
                     spot.compact ? "w-6 justify-center" : "ps-[3px] pe-2",
                     isOpen && "border-foreground/25 bg-accent",
@@ -1109,7 +1109,7 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
           {ready && open && (
             <motion.div
               animate={{ opacity: 1, scale: 1, x: cardLeft, y: cardTop }}
-              className="pointer-events-none absolute top-0 left-0 z-20 rounded-xl border bg-popover p-3 text-popover-foreground shadow-lg/5"
+              className="pointer-events-none absolute top-0 start-0 z-20 rounded-xl border bg-popover p-3 text-popover-foreground shadow-lg/5"
               exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.12 } }}
               id={cardId}
               initial={{ opacity: 0, scale: 0.97, x: cardLeft, y: cardTop }}
@@ -1189,7 +1189,7 @@ function Breakdown({ model }: { model: Model }) {
                 <div className="truncate">{c.label}</div>
                 <div className="text-muted-foreground text-xs tabular-nums">{Math.round((c.total / total) * 100)}% of revenue</div>
               </div>
-              <div className="text-right">
+              <div className="text-end">
                 <Rolling className="font-medium" format={compact} value={c.total} />
                 {hasPrev && (
                   <div className={cn("text-xs tabular-nums", tone(change))}>
@@ -1227,7 +1227,7 @@ function MomentList({ model, handlers, cardId }: { model: Model; handlers: Momen
                   aria-controls={isOpen ? cardId : undefined}
                   aria-expanded={isOpen}
                   className={cn(
-                    "grid w-full cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 rounded-lg px-2 py-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring [@media(hover:hover)]:hover:bg-accent/60",
+                    "grid w-full cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 rounded-lg px-2 py-1 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring [@media(hover:hover)]:hover:bg-accent/60",
                     pressable,
                     isOpen && "bg-accent [@media(hover:hover)]:hover:bg-accent",
                   )}
@@ -1398,7 +1398,7 @@ export function RevenueStory({
   return (
     <TooltipProvider>
       <div className={cn("@container relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm", className)}>
-        <aside aria-label="App" className="hidden w-14 shrink-0 flex-col items-center gap-1 border-r bg-muted/40 py-3 @3xl:flex">
+        <aside aria-label="App" className="hidden w-14 shrink-0 flex-col items-center gap-1 border-e bg-muted/40 py-3 @3xl:flex">
           <span
             aria-label={store.name}
             className="mb-3 flex size-8 items-center justify-center rounded-lg bg-primary font-heading font-semibold text-primary-foreground text-sm"
@@ -1481,7 +1481,7 @@ export function RevenueStory({
 
                 <div className="grid min-h-0 flex-1 grid-cols-1 gap-x-7 gap-y-8 @4xl:grid-cols-[minmax(0,1fr)_20rem] @4xl:grid-rows-[minmax(0,1fr)]">
                   <StoryChart cardId={cardId} handlers={handlers} model={model} />
-                  <div className="flex min-h-0 min-w-0 flex-col gap-5 border-t pt-6 @4xl:border-t-0 @4xl:border-l @4xl:pt-0 @4xl:ps-7">
+                  <div className="flex min-h-0 min-w-0 flex-col gap-5 border-t pt-6 @4xl:border-t-0 @4xl:border-s @4xl:pt-0 @4xl:ps-7">
                     <Breakdown model={model} />
                     <MomentList cardId={cardId} handlers={handlers} model={model} />
                   </div>

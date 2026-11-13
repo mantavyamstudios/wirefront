@@ -35,7 +35,7 @@ export function AuthSplitLayout({
         className,
       )}
     >
-      {actions ? <div className="absolute top-4 right-4 z-30 sm:top-6 sm:right-6">{actions}</div> : null}
+      {actions ? <div className="absolute top-4 end-4 z-30 sm:top-6 sm:end-6">{actions}</div> : null}
       <div
         className={cn(
           "relative mx-auto flex h-full w-full max-w-[1600px]",
@@ -46,7 +46,7 @@ export function AuthSplitLayout({
       >
         <div
           className={cn(
-            "relative hidden flex-1 overflow-hidden border-border/60 border-r lg:block",
+            "relative hidden flex-1 overflow-hidden border-border/60 border-e lg:block",
             leftClassName,
           )}
         >

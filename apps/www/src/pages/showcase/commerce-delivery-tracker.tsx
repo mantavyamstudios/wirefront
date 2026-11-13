@@ -521,7 +521,7 @@ export function DeliveryTracker({
               {delivered ? "Delivered" : "Live"}
             </span>
           </div>
-          <div className="absolute right-3 bottom-3 flex flex-col overflow-hidden rounded-xl border bg-popover shadow-xs/5">
+          <div className="absolute end-3 bottom-3 flex flex-col overflow-hidden rounded-xl border bg-popover shadow-xs/5">
             <button
               aria-label="Zoom in on courier"
               className="flex size-9 cursor-pointer items-center justify-center text-foreground outline-none transition-colors hover:bg-accent focus-visible:bg-accent disabled:cursor-default disabled:opacity-40"
@@ -544,7 +544,7 @@ export function DeliveryTracker({
           </div>
         </div>
 
-        <div className="relative min-h-0 flex-1 overflow-y-auto border-t @3xl:w-[380px] @3xl:flex-none @3xl:border-t-0 @3xl:border-l">
+        <div className="relative min-h-0 flex-1 overflow-y-auto border-t @3xl:w-[380px] @3xl:flex-none @3xl:border-t-0 @3xl:border-s">
           <div className="flex flex-col divide-y">
             <section aria-live="polite" className="flex flex-col gap-4 px-5 py-5">
               <AnimatePresence initial={false} mode="popLayout">
@@ -975,7 +975,7 @@ function CourierChat({
             animate={{ y: 0 }}
             aria-label={`Chat with ${first}`}
             aria-modal
-            className="absolute inset-x-0 top-16 bottom-0 z-50 flex flex-col rounded-t-2xl border-t bg-popover text-popover-foreground shadow-lg/10 @3xl:top-14 @3xl:left-auto @3xl:w-[380px] @3xl:rounded-none @3xl:border-t-0 @3xl:border-l"
+            className="absolute inset-x-0 top-16 bottom-0 z-50 flex flex-col rounded-t-2xl border-t bg-popover text-popover-foreground shadow-lg/10 @3xl:top-14 @3xl:start-auto @3xl:w-[380px] @3xl:rounded-none @3xl:border-t-0 @3xl:border-s"
             exit={reduce ? { opacity: 0 } : { y: "100%" }}
             initial={reduce ? { opacity: 0 } : { y: "100%" }}
             onKeyDown={(e) => {
@@ -1013,7 +1013,7 @@ function CourierChat({
                     <span
                       className={cn(
                         "rounded-2xl px-3 py-2 text-pretty",
-                        m.from === "me" ? "rounded-br-md bg-primary text-primary-foreground" : "rounded-bl-md bg-muted",
+                        m.from === "me" ? "rounded-ee-md bg-primary text-primary-foreground" : "rounded-es-md bg-muted",
                       )}
                     >
                       {m.text}
@@ -1025,7 +1025,7 @@ function CourierChat({
                   <motion.div
                     animate={{ opacity: 1 }}
                     aria-label={`${first} is typing`}
-                    className="flex h-9 w-14 items-center justify-center gap-1 self-start rounded-2xl rounded-bl-md bg-muted"
+                    className="flex h-9 w-14 items-center justify-center gap-1 self-start rounded-2xl rounded-es-md bg-muted"
                     exit={{ opacity: 0 }}
                     initial={{ opacity: 0 }}
                     key="typing"

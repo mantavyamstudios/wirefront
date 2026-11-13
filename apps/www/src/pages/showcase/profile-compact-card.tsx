@@ -109,7 +109,7 @@ export function ProfileCompactCard() {
                 <span
                   aria-hidden
                   className={
-                    "absolute right-0 bottom-0 size-3 rounded-full border-2 border-background " +
+                    "absolute end-0 bottom-0 size-3 rounded-full border-2 border-background " +
                     STATUS_DOT[m.status]
                   }
                 />
@@ -161,7 +161,7 @@ export function ProfileCompactCard() {
               <button
                 type="button"
                 aria-label={`More actions for ${m.name}`}
-                className="-mr-1 grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
+                className="-me-1 grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
               >
                 <MoreHorizontalIcon className="size-4" />
               </button>

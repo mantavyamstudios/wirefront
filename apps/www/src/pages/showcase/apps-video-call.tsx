@@ -246,8 +246,8 @@ function SpeakingBars({ reduce }: { reduce: boolean | null }) {
 function Ambient({ hue }: { hue: CallHue }) {
   return (
     <div aria-hidden className={cn("absolute inset-0", hues[hue].wash)}>
-      <div className={cn("absolute -top-1/3 -left-1/4 h-full w-3/4 rounded-full blur-3xl", hues[hue].glowA)} />
-      <div className={cn("absolute -right-1/4 -bottom-1/2 h-full w-3/4 rounded-full blur-3xl", hues[hue].glowB)} />
+      <div className={cn("absolute -top-1/3 -start-1/4 h-full w-3/4 rounded-full blur-3xl", hues[hue].glowA)} />
+      <div className={cn("absolute -end-1/4 -bottom-1/2 h-full w-3/4 rounded-full blur-3xl", hues[hue].glowB)} />
     </div>
   );
 }
@@ -390,7 +390,7 @@ function CallTile({
         {p?.hand && (
           <motion.span
             animate={{ opacity: 1, y: 0 }}
-            className="absolute top-2 left-2 flex h-6 items-center gap-1 rounded-full bg-amber-400 px-2 font-medium text-amber-950 text-xs"
+            className="absolute top-2 start-2 flex h-6 items-center gap-1 rounded-full bg-amber-400 px-2 font-medium text-amber-950 text-xs"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: -4 }}
             layout={!reduce}
             transition={{ duration: 0.2, ease: easeOut }}
@@ -401,7 +401,7 @@ function CallTile({
         )}
 
         {p && (p.muted || p.cameraOff) && (
-          <motion.span className="absolute top-2 right-2 flex items-center gap-1" layout={!reduce}>
+          <motion.span className="absolute top-2 end-2 flex items-center gap-1" layout={!reduce}>
             {p.cameraOff && !compact && (
               <span className="flex size-6 items-center justify-center rounded-full bg-background/85 text-muted-foreground shadow-xs/5 backdrop-blur-sm">
                 <VideoOffIcon aria-hidden className="size-3.5" />
@@ -416,7 +416,7 @@ function CallTile({
         )}
 
         <motion.span
-          className="absolute bottom-2 left-2 flex h-6 max-w-[calc(100%-1rem)] items-center gap-1.5 rounded-md bg-background/85 px-2 font-medium text-foreground text-xs shadow-xs/5 backdrop-blur-sm"
+          className="absolute bottom-2 start-2 flex h-6 max-w-[calc(100%-1rem)] items-center gap-1.5 rounded-md bg-background/85 px-2 font-medium text-foreground text-xs shadow-xs/5 backdrop-blur-sm"
           layout={!reduce}
         >
           {tile.kind === "screen" && <MonitorUpIcon className="size-3.5 shrink-0 text-muted-foreground" />}
@@ -479,7 +479,7 @@ function ControlButton({
           {badge ? (
             <motion.span
               animate={{ opacity: 1, scale: 1 }}
-              className="absolute -top-0.5 -right-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 font-medium text-[10px] text-primary-foreground tabular-nums ring-2 ring-background"
+              className="absolute -top-0.5 -end-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 font-medium text-[10px] text-primary-foreground tabular-nums ring-2 ring-background"
               exit={{ opacity: 0, scale: 0.9 }}
               initial={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.15, ease: easeOut }}

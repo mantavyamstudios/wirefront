@@ -25,7 +25,7 @@ export function PricingContactSales() {
           without scrolling past the whole value prop. lg: pitch + proof on the
           left, form on the right spanning both rows. */}
       <div className="mx-auto grid min-h-svh max-w-6xl grid-cols-1 lg:grid-cols-[1.1fr_1fr] lg:grid-rows-[1fr_auto]">
-        <section className="flex flex-col justify-end border-border/60 px-4 pt-10 pb-6 sm:px-8 lg:border-r lg:pt-16 lg:pb-0">
+        <section className="flex flex-col justify-end border-border/60 px-4 pt-10 pb-6 sm:px-8 lg:border-e lg:pt-16 lg:pb-0">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/40 px-2.5 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             <ShieldCheckIcon className="size-3" />
             Enterprise
@@ -44,7 +44,7 @@ export function PricingContactSales() {
           <FormCard />
         </section>
 
-        <section className="flex flex-col justify-start border-border/60 px-4 pb-12 sm:px-8 lg:border-r lg:pb-16">
+        <section className="flex flex-col justify-start border-border/60 px-4 pb-12 sm:px-8 lg:border-e lg:pb-16">
           <ul className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:mt-8">
             {FEATURES.map((f) => (
               <li key={f} className="flex items-start gap-2 text-sm">
@@ -111,7 +111,7 @@ function FormCard() {
           <div className="relative">
             <select
               id="ent-seats"
-              className="h-9 w-full appearance-none rounded-lg border border-input bg-background pr-9 pl-3 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm pointer-coarse:h-10"
+              className="h-9 w-full appearance-none rounded-lg border border-input bg-background pe-9 ps-3 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm pointer-coarse:h-10"
             >
               <option>50–100</option>
               <option>100–500</option>
@@ -124,7 +124,7 @@ function FormCard() {
               stroke="currentColor"
               strokeWidth="1.5"
               aria-hidden
-              className="pointer-events-none absolute right-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
+              className="pointer-events-none absolute end-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
             >
               <polyline points="4 6 8 10 12 6" />
             </svg>

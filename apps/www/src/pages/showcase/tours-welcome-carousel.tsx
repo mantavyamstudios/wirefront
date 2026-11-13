@@ -181,7 +181,7 @@ export function ToursWelcomeCarousel() {
 function FakeAppBackdrop() {
   return (
     <div aria-hidden className="absolute inset-0 grid grid-cols-1 opacity-30 md:grid-cols-[200px_1fr]">
-      <div className="space-y-2 border-border/40 border-r bg-foreground/[0.02] p-4 max-md:hidden">
+      <div className="space-y-2 border-border/40 border-e bg-foreground/[0.02] p-4 max-md:hidden">
         <div className="h-3 w-24 rounded bg-foreground/10" />
         <div className="h-2 w-32 rounded bg-foreground/10" />
         <div className="h-2 w-28 rounded bg-foreground/10" />

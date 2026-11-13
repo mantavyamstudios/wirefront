@@ -100,7 +100,7 @@ export function ChartsWaterfall() {
               <span className="size-2.5 rounded-sm bg-rose-500" />
               loss
             </span>
-            <span className="text-foreground sm:ml-auto">
+            <span className="text-foreground sm:ms-auto">
               NRR <span className="font-mono">125.2%</span>
             </span>
           </div>

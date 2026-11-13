@@ -61,7 +61,7 @@ export function CalendarsDateRange() {
   return (
     <div className="min-h-svh bg-background sm:grid sm:place-items-center sm:p-6 lg:p-8">
       <div className="flex min-h-svh flex-col bg-background sm:min-h-0 sm:w-full sm:max-w-xl sm:overflow-hidden sm:rounded-xl sm:border sm:border-border sm:shadow-xl md:grid md:max-w-none md:w-auto md:grid-cols-[180px_minmax(0,1fr)]">
-        <aside className="border-border/60 border-b bg-background p-3 md:border-r md:border-b-0">
+        <aside className="border-border/60 border-b bg-background p-3 md:border-e md:border-b-0">
           <div className="px-1 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] md:px-2">
             Quick range
           </div>
@@ -75,7 +75,7 @@ export function CalendarsDateRange() {
                     aria-pressed={active}
                     onClick={() => setPreset(p)}
                     className={
-                      "min-h-8 w-full whitespace-nowrap rounded-full border px-3 py-1.5 text-left text-sm pointer-coarse:min-h-10 md:rounded-md md:border-0 md:px-2 md:pointer-coarse:min-h-8 " +
+                      "min-h-8 w-full whitespace-nowrap rounded-full border px-3 py-1.5 text-start text-sm pointer-coarse:min-h-10 md:rounded-md md:border-0 md:px-2 md:pointer-coarse:min-h-8 " +
                       (active
                         ? "border-foreground bg-foreground text-background"
                         : "border-border/60 text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground")
@@ -209,10 +209,10 @@ function Month({
                 <span className="absolute inset-0 bg-foreground/[0.06]" />
               ) : null}
               {isStart && end && !isEnd ? (
-                <span className="absolute inset-y-0 right-0 left-1/2 bg-foreground/[0.06]" />
+                <span className="absolute inset-y-0 end-0 left-1/2 bg-foreground/[0.06]" />
               ) : null}
               {isEnd && !isStart ? (
-                <span className="absolute inset-y-0 right-1/2 left-0 bg-foreground/[0.06]" />
+                <span className="absolute inset-y-0 right-1/2 start-0 bg-foreground/[0.06]" />
               ) : null}
               <button
                 type="button"

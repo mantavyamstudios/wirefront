@@ -20,7 +20,7 @@ export function ToastsInfoBanner() {
           aria-label="System announcement"
           className="sticky top-0 z-50 border-amber-500/40 border-b bg-amber-500/10 pt-[env(safe-area-inset-top)] backdrop-blur dark:bg-amber-500/[0.08]"
         >
-          <div className="mx-auto flex max-w-6xl items-start gap-3 py-2 pr-2 pl-4 sm:items-center sm:pr-4 sm:pl-6">
+          <div className="mx-auto flex max-w-6xl items-start gap-3 py-2 pe-2 ps-4 sm:items-center sm:pe-4 sm:ps-6">
             <InfoIcon
               aria-hidden
               className="mt-0.5 size-4 shrink-0 text-amber-800 sm:mt-0 dark:text-amber-400"
@@ -36,7 +36,7 @@ export function ToastsInfoBanner() {
                 size="sm"
                 variant="ghost"
                 type="button"
-                className="-ml-2.5 self-start text-amber-900 hover:bg-amber-500/15 sm:ml-0 sm:self-auto dark:text-amber-100"
+                className="-ms-2.5 self-start text-amber-900 hover:bg-amber-500/15 sm:ms-0 sm:self-auto dark:text-amber-100"
               >
                 Learn more
               </Button>
@@ -63,7 +63,7 @@ function FakeAppBody() {
     // flex-1 instead of a hard-coded calc(100svh - 44px): the banner's height
     // varies once it can wrap.
     <div className="grid flex-1 grid-cols-1 md:grid-cols-[220px_1fr]">
-      <aside className="border-border/60 border-r bg-foreground/[0.02] p-4 max-md:hidden">
+      <aside className="border-border/60 border-e bg-foreground/[0.02] p-4 max-md:hidden">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Workspace
         </div>

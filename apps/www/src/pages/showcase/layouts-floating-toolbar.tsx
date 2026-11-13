@@ -207,7 +207,7 @@ export function LayoutsFloatingToolbar() {
             Mechanics worth getting right
           </h3>
 
-          <ol className="ml-5 flex list-decimal flex-col gap-2 text-foreground/90 leading-relaxed">
+          <ol className="ms-5 flex list-decimal flex-col gap-2 text-foreground/90 leading-relaxed">
             <li>
               Anchor the toolbar to the live selection rectangle, not the
               caret. The rectangle moves naturally as the selection grows.
@@ -229,7 +229,7 @@ export function LayoutsFloatingToolbar() {
             </li>
           </ol>
 
-          <blockquote className="border-border border-l-4 pl-4 text-foreground/90 italic leading-relaxed">
+          <blockquote className="border-border border-s-4 ps-4 text-foreground/90 italic leading-relaxed">
             The best UI is the UI you don't notice. Floating toolbars work
             because they vanish the moment you stop needing them — leaving
             the page exactly as you found it.
@@ -283,7 +283,7 @@ export function LayoutsFloatingToolbar() {
           <ToolbarButton label="Highlight">
             <span className="relative inline-flex">
               <HighlighterIcon className="size-4" />
-              <span className="-bottom-0.5 absolute right-0 size-1.5 rounded-full bg-yellow-400" />
+              <span className="-bottom-0.5 absolute end-0 size-1.5 rounded-full bg-yellow-400" />
             </span>
           </ToolbarButton>
           <Separator orientation="vertical" className="h-4" />

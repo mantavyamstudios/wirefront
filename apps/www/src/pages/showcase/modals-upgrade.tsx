@@ -76,7 +76,7 @@ export function ModalsUpgrade() {
                 }
               >
                 {p.highlight ? (
-                  <span className="absolute -top-2 right-4 rounded-full bg-foreground px-2 py-0.5 font-mono text-[10px] text-background uppercase tracking-[0.2em]">
+                  <span className="absolute -top-2 end-4 rounded-full bg-foreground px-2 py-0.5 font-mono text-[10px] text-background uppercase tracking-[0.2em]">
                     Recommended
                   </span>
                 ) : null}
@@ -112,7 +112,7 @@ export function ModalsUpgrade() {
           </div>
 
           <DialogFooter className="text-muted-foreground text-xs sm:items-center sm:justify-between">
-            <span className="text-center sm:text-left">14-day money-back · Cancel any time</span>
+            <span className="text-center sm:text-start">14-day money-back · Cancel any time</span>
             <button
               type="button"
               className="min-h-8 underline-offset-2 hover:text-foreground hover:underline pointer-coarse:min-h-10"

@@ -30,7 +30,7 @@ export function EmptyEndOfFeed() {
             >
               <span className="font-medium">{event.who}</span>{" "}
               <span className="text-muted-foreground">{event.what}</span>
-              <span className="ml-2 font-mono text-[11px] text-muted-foreground">
+              <span className="ms-2 font-mono text-[11px] text-muted-foreground">
                 {event.when}
               </span>
             </li>

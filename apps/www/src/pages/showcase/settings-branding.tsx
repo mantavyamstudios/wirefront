@@ -210,7 +210,7 @@ export function SettingsBranding() {
               <button
                 type="button"
                 onClick={() => setColors(DEFAULT_COLORS)}
-                className="ml-auto inline-flex h-8 items-center gap-1.5 self-start rounded-md px-2.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+                className="ms-auto inline-flex h-8 items-center gap-1.5 self-start rounded-md px-2.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
               >
                 <RefreshCwIcon className="size-3" />
                 Reset all
@@ -238,7 +238,7 @@ export function SettingsBranding() {
             <Label htmlFor="b-domain">Domain</Label>
             <div className="mt-1.5 flex items-stretch gap-2">
               <div className="relative flex-1">
-                <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2">
+                <span className="pointer-events-none absolute top-1/2 start-3 -translate-y-1/2">
                   <GlobeIcon className="size-3.5 opacity-60" />
                 </span>
                 <Input
@@ -246,7 +246,7 @@ export function SettingsBranding() {
                   value={domain}
                   onChange={(e) => setDomain(e.target.value)}
                   placeholder="workspace.yourcompany.com"
-                  className="pl-8 font-mono text-sm"
+                  className="ps-8 font-mono text-sm"
                   />
               </div>
               <DomainStatusPill status={domainStatus} />

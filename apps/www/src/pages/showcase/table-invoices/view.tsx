@@ -147,10 +147,10 @@ function InvoicesTableScreen({
         <TableCell className="ps-4" colSpan={6}>
           <div className="flex items-center justify-between gap-4">
             <div className="flex flex-col gap-1.5">
-              <Skeleton className="h-3.5 w-40" />
-              <Skeleton className="h-3 w-52" />
+              <Skeleton className="h-3.5 w-40 motion-reduce:animate-none" />
+              <Skeleton className="h-3 w-52 motion-reduce:animate-none" />
             </div>
-            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-4 w-20 motion-reduce:animate-none" />
           </div>
         </TableCell>
       </TableRow>
@@ -206,7 +206,7 @@ function InvoicesTableScreen({
           <TableCell className="text-muted-foreground max-md:hidden">{day(inv.issuedAt)}</TableCell>
           <TableCell className="text-muted-foreground max-md:hidden">{due}</TableCell>
           <TableCell className="max-sm:hidden">{badge}</TableCell>
-          <TableCell className="pe-4 text-right font-mono tabular-nums">
+          <TableCell className="pe-4 text-end font-mono tabular-nums">
             {inv.status === "void" ? (
               <span className="text-muted-foreground line-through">{money(inv.amount, inv.currency)}</span>
             ) : (
@@ -305,7 +305,7 @@ function InvoicesTableScreen({
                 {sortHead("issuedAt", t.columnIssued, "max-md:hidden")}
                 {sortHead("dueAt", t.columnDue, "max-md:hidden")}
                 <TableHead className="max-sm:hidden">{t.columnStatus}</TableHead>
-                {sortHead("amount", t.columnAmount, "pe-4 text-right")}
+                {sortHead("amount", t.columnAmount, "pe-4 text-end")}
               </TableRow>
             </TableHeader>
             <TableBody>{body}</TableBody>
@@ -317,7 +317,7 @@ function InvoicesTableScreen({
                     <TableCell className="ps-4" colSpan={span}>
                       {t.outstanding} <span className="max-sm:hidden">{t.outstandingNote}</span>
                     </TableCell>
-                    <TableCell className="pe-4 text-right font-mono tabular-nums">
+                    <TableCell className="pe-4 text-end font-mono tabular-nums">
                       {money(page.outstanding.amount, page.outstanding.currency)}
                     </TableCell>
                   </TableRow>

@@ -128,7 +128,7 @@ export function ThreadsResolved() {
                         {t.time}
                       </span>
                       {t.replyCount > 0 ? (
-                        <span className="ml-1 rounded-full bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                        <span className="ms-1 rounded-full bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                           +{t.replyCount}
                         </span>
                       ) : null}

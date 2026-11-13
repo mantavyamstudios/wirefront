@@ -81,7 +81,7 @@ export function TableInventory() {
                 <TableHead className="max-md:hidden">SKU</TableHead>
                 <TableHead className="max-lg:hidden">Category</TableHead>
                 <TableHead className="max-sm:hidden">Stock</TableHead>
-                <TableHead className="pe-4 text-right">Price</TableHead>
+                <TableHead className="pe-4 text-end">Price</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -115,7 +115,7 @@ export function TableInventory() {
                     <TableCell className="max-sm:hidden">
                       <StockMeter p={p} pct={pct} tone={tone} />
                     </TableCell>
-                    <TableCell className="pe-4 text-right font-mono tabular-nums">
+                    <TableCell className="pe-4 text-end font-mono tabular-nums">
                       ${p.price.toFixed(2)}
                     </TableCell>
                   </TableRow>

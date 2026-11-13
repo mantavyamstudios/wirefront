@@ -64,7 +64,7 @@ export function ProfileSkills() {
               <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 {list.length}
               </span>
-              <span className="ml-auto h-px flex-1 bg-border/40" />
+              <span className="ms-auto h-px flex-1 bg-border/40" />
             </div>
             <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {list.map((s) => (
@@ -88,7 +88,7 @@ export function ProfileSkills() {
                           </AvatarFallback>
                         </Avatar>
                       ))}
-                      <span className="ml-3 font-mono text-[10px] text-muted-foreground tabular-nums">
+                      <span className="ms-3 font-mono text-[10px] text-muted-foreground tabular-nums">
                         {s.endorsements + (endorsed.has(s.name) ? 1 : 0)}
                         <span className="sr-only"> endorsements</span>
                       </span>

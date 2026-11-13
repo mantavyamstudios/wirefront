@@ -24,7 +24,7 @@ import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Separator } from "@wirefront/ui/separator";
-import { ScrollArea } from "@wirefront/ui/scroll-area";
+import { ScrollRegion } from "@wirefront/ui/wirefront/scroll-region";
 
 type TabKey = "home" | "discover" | "create" | "alerts" | "profile";
 
@@ -83,11 +83,11 @@ function PhoneFrame({
         <div className="flex min-h-svh flex-col md:h-full md:min-h-0">
           <StatusBar />
           <AppHeader title={TAB_TITLES[activeTab]} />
-          <ScrollArea aria-label={TAB_TITLES[activeTab]} className="flex-1 md:min-h-0">
+          <ScrollRegion aria-label={TAB_TITLES[activeTab]} className="flex-1 md:min-h-0">
             <main className="px-4 pt-4 pb-[calc(72px+env(safe-area-inset-bottom)+1rem)] sm:px-5 md:pb-4">
               <TabContent tab={activeTab} />
             </main>
-          </ScrollArea>
+          </ScrollRegion>
           <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
       </div>
@@ -389,7 +389,7 @@ function ProfileView() {
           <button
             key={action.label}
             type="button"
-            className="flex items-center gap-3 p-3.5 text-left hover:bg-muted/40 transition-colors first:rounded-t-2xl last:rounded-b-2xl"
+            className="flex items-center gap-3 p-3.5 text-start hover:bg-muted/40 transition-colors first:rounded-t-2xl last:rounded-b-2xl"
           >
             <div className="flex size-9 items-center justify-center rounded-lg bg-muted text-foreground">
               <action.icon className="size-4" />
@@ -491,7 +491,7 @@ function BottomNav({
                 strokeWidth={isActive ? 2.4 : 2}
               />
               {tab.badge ? (
-                <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 rounded-full bg-foreground text-background text-[10px] font-medium flex items-center justify-center">
+                <span className="absolute -top-1.5 -end-2 min-w-[16px] h-4 px-1 rounded-full bg-foreground text-background text-[10px] font-medium flex items-center justify-center">
                   {tab.badge}
                   <span className="sr-only"> new</span>
                 </span>

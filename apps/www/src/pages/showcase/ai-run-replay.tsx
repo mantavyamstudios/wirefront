@@ -519,11 +519,11 @@ function ToolEntry({ entry, total }: { entry: Extract<LogEntry, { kind: "tool" }
       <button
         aria-controls={panelId}
         aria-expanded={open}
-        className="grid w-full cursor-pointer grid-cols-[2.5rem_1rem_minmax(0,1fr)_auto] items-start gap-x-3 rounded-lg px-2 py-2 text-left outline-none transition-colors duration-150 hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring"
+        className="grid w-full cursor-pointer grid-cols-[2.5rem_1rem_minmax(0,1fr)_auto] items-start gap-x-3 rounded-lg px-2 py-2 text-start outline-none transition-colors duration-150 hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring"
         onClick={() => setOpen((o) => !o)}
         type="button"
       >
-        <time className="pt-px text-right font-mono text-[11px] text-muted-foreground tabular-nums">{secs(entry.at)}</time>
+        <time className="pt-px text-end font-mono text-[11px] text-muted-foreground tabular-nums">{secs(entry.at)}</time>
         <meta.icon className={cn("mt-px size-4", failed ? "text-destructive-foreground" : meta.text)} />
         <span className="min-w-0">
           <span className="flex items-center gap-2">
@@ -808,7 +808,7 @@ function ActivityLog({ log, steps, total }: { log: LogEntry[]; steps: RunStep[];
                 <ToolEntry entry={e} total={total} />
               ) : (
                 <div className="grid grid-cols-[2.5rem_1rem_minmax(0,1fr)] items-start gap-x-3 px-2 py-2 text-xs">
-                  <time className="pt-px text-right font-mono text-[11px] text-muted-foreground tabular-nums">{secs(e.at)}</time>
+                  <time className="pt-px text-end font-mono text-[11px] text-muted-foreground tabular-nums">{secs(e.at)}</time>
                   {e.kind === "thought" ? (
                     <>
                       <SparklesIcon className="mt-px size-4 text-muted-foreground" />
@@ -873,7 +873,7 @@ function TraceStrip({
         <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-border" />
         <motion.div
           animate={{ scaleX: target }}
-          className="absolute inset-y-0 left-0 w-full origin-left rounded-sm bg-foreground/[0.04] dark:bg-foreground/[0.06]"
+          className="absolute inset-y-0 start-0 w-full origin-left rounded-sm bg-foreground/[0.04] dark:bg-foreground/[0.06]"
           initial={false}
           transition={reduce ? { duration: 0 } : { duration, ease: "linear" }}
         />
@@ -910,10 +910,10 @@ function TraceStrip({
           initial={false}
           transition={reduce ? { duration: 0 } : { duration, ease: "linear" }}
         >
-          <span className="absolute inset-y-0 left-0 w-px bg-foreground/48" />
+          <span className="absolute inset-y-0 start-0 w-px bg-foreground/48" />
         </motion.div>
       </div>
-      <span className="shrink-0 whitespace-nowrap text-right font-mono text-[11px] text-muted-foreground tabular-nums">
+      <span className="shrink-0 whitespace-nowrap text-end font-mono text-[11px] text-muted-foreground tabular-nums">
         {secs(head)} / {secs(total)}
       </span>
     </div>
@@ -979,9 +979,9 @@ function DraftOutput({
           {rows === 0
             ? [0, 1, 2].map((i) => (
                 <div className="flex items-center gap-3 border-b px-3 py-2.5 last:border-0" key={i}>
-                  <Skeleton className="h-3 w-28" />
-                  <Skeleton className="ms-auto h-1.5 w-16 rounded-full" />
-                  <Skeleton className="h-3 w-8" />
+                  <Skeleton className="h-3 w-28 motion-reduce:animate-none" />
+                  <Skeleton className="ms-auto h-1.5 w-16 rounded-full motion-reduce:animate-none" />
+                  <Skeleton className="h-3 w-8 motion-reduce:animate-none" />
                 </div>
               ))
             : (
@@ -1006,8 +1006,8 @@ function DraftOutput({
                         transition={{ ...spring, delay: 0.1 }}
                       />
                     </span>
-                    <span className="w-8 text-right font-medium text-xs tabular-nums">{a.score.toFixed(2)}</span>
-                    <span className="hidden w-11 text-right text-muted-foreground text-xs tabular-nums @md:block">{a.arr}</span>
+                    <span className="w-8 text-end font-medium text-xs tabular-nums">{a.score.toFixed(2)}</span>
+                    <span className="hidden w-11 text-end text-muted-foreground text-xs tabular-nums @md:block">{a.arr}</span>
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -1021,13 +1021,13 @@ function DraftOutput({
         <div className="rounded-xl border p-3">
           <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 border-b pb-2.5 text-xs">
             <dt className="text-muted-foreground">To</dt>
-            <dd className="truncate">{words > 0 ? email.to : <Skeleton className="mt-0.5 h-3 w-40" />}</dd>
+            <dd className="truncate">{words > 0 ? email.to : <Skeleton className="mt-0.5 h-3 w-40 motion-reduce:animate-none" />}</dd>
             <dt className="text-muted-foreground">Subject</dt>
-            <dd className="truncate font-medium">{words > 0 ? email.subject : <Skeleton className="mt-0.5 h-3 w-52" />}</dd>
+            <dd className="truncate font-medium">{words > 0 ? email.subject : <Skeleton className="mt-0.5 h-3 w-52 motion-reduce:animate-none" />}</dd>
           </dl>
           <div className="mt-2.5 flex min-h-6 flex-wrap gap-1">
             {words === 0
-              ? email.highlights.map((h) => <Skeleton className="h-6 w-24 rounded-full" key={h} />)
+              ? email.highlights.map((h) => <Skeleton className="h-6 w-24 rounded-full motion-reduce:animate-none" key={h} />)
               : email.highlights.map((h, i) => (
                 <motion.span
                   animate={{ opacity: 1, scale: 1 }}
@@ -1043,9 +1043,9 @@ function DraftOutput({
           <div className="mt-2.5 min-h-24 whitespace-pre-line text-sm/6">
             {words === 0 ? (
               <div className="flex flex-col gap-2 pt-1">
-                <Skeleton className="h-3 w-full" />
-                <Skeleton className="h-3 w-11/12" />
-                <Skeleton className="h-3 w-3/4" />
+                <Skeleton className="h-3 w-full motion-reduce:animate-none" />
+                <Skeleton className="h-3 w-11/12 motion-reduce:animate-none" />
+                <Skeleton className="h-3 w-3/4 motion-reduce:animate-none" />
               </div>
             ) : (
               <>
@@ -1335,7 +1335,7 @@ export function RunReplay({
                     {!last && (
                       <span
                         aria-hidden
-                        className={cn("absolute top-6 bottom-1 left-[9px] w-0.5 overflow-hidden rounded-full bg-border", !planOpen && "hidden @3xl:block")}
+                        className={cn("absolute top-6 bottom-1 start-[9px] w-0.5 overflow-hidden rounded-full bg-border", !planOpen && "hidden @3xl:block")}
                       >
                         <motion.span
                           animate={{ scaleY: st === "done" || st === "skipped" ? 1 : 0 }}
@@ -1408,11 +1408,11 @@ export function RunReplay({
           <section className="flex min-h-0 flex-col @3xl:overflow-hidden" aria-label="Run activity">
             <Tabs className="shrink-0 px-4 pt-4 @6xl:hidden" onValueChange={(v) => setTab(v as "activity" | "draft")} value={tab}>
               <TabsList>
-                <TabsTrigger aria-controls={`${tabsId}-activity`} value="activity">
+                <TabsTrigger aria-controls={`${tabsId}-activity`} className="text-foreground/70" value="activity">
                   Activity
                   <span className="text-muted-foreground text-xs tabular-nums">{state.log.length}</span>
                 </TabsTrigger>
-                <TabsTrigger aria-controls={`${tabsId}-draft`} value="draft">
+                <TabsTrigger aria-controls={`${tabsId}-draft`} className="text-foreground/70" value="draft">
                   Draft
                   <AnimatePresence>
                     {draftFresh && (

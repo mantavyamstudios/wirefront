@@ -8,12 +8,8 @@ import { cn } from "../../lib/utils"
 function ScrollArea({
   className,
   children,
-  orientation = "vertical",
   ...props
-}: ScrollAreaPrimitive.Root.Props & {
-  /** Which scrollbars to show. The viewport is keyboard-focusable, so wide tables and code stay reachable. */
-  orientation?: "vertical" | "horizontal" | "both"
-}) {
+}: ScrollAreaPrimitive.Root.Props) {
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
@@ -26,8 +22,7 @@ function ScrollArea({
       >
         {children}
       </ScrollAreaPrimitive.Viewport>
-      {orientation !== "horizontal" ? <ScrollBar /> : null}
-      {orientation !== "vertical" ? <ScrollBar orientation="horizontal" /> : null}
+      <ScrollBar />
       <ScrollAreaPrimitive.Corner />
     </ScrollAreaPrimitive.Root>
   )

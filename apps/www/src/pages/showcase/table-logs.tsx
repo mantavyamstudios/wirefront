@@ -315,7 +315,7 @@ export function TableLogs() {
           <div className="flex items-center gap-2">
             <TerminalIcon className="size-4 text-muted-foreground" />
             <h1 className="font-heading text-xl">Logs</h1>
-            <Badge variant="outline" className="ml-1 gap-1.5 font-mono text-[10px]">
+            <Badge variant="outline" className="ms-1 gap-1.5 font-mono text-[10px]">
               <span
                 className={
                   "size-1.5 rounded-full " +
@@ -361,12 +361,12 @@ export function TableLogs() {
           <Table className="min-w-[860px] text-xs">
             <TableHeader>
               <TableRow className="border-b bg-background">
-                <TableHead className="sticky left-0 z-10 bg-background ps-4 text-[10px] uppercase tracking-wider">Time</TableHead>
+                <TableHead className="sticky start-0 z-10 bg-background ps-4 text-[10px] uppercase tracking-wider">Time</TableHead>
                 <TableHead className="text-[10px] uppercase tracking-wider">Lvl</TableHead>
                 <TableHead className="text-[10px] uppercase tracking-wider">Service</TableHead>
                 <TableHead className="text-[10px] uppercase tracking-wider">Request</TableHead>
                 <TableHead className="text-[10px] uppercase tracking-wider">Message</TableHead>
-                <TableHead className="pe-4 text-right text-[10px] uppercase tracking-wider">ms</TableHead>
+                <TableHead className="pe-4 text-end text-[10px] uppercase tracking-wider">ms</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -398,7 +398,7 @@ export function TableLogs() {
                     {/* Pinned cell is opaque, so it mixes the row tint into the card colour. */}
                     <TableCell
                       className={
-                        "sticky left-0 z-10 ps-4 text-muted-foreground tabular-nums transition-colors " +
+                        "sticky start-0 z-10 ps-4 text-muted-foreground tabular-nums transition-colors " +
                         (active
                           ? "bg-[color-mix(in_srgb,var(--card),var(--foreground)_6%)]"
                           : e.severity === "error"
@@ -432,7 +432,7 @@ export function TableLogs() {
                           <Badge
                             variant="outline"
                             className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", 
-                              "ml-auto shrink-0 font-mono text-[10px] " +
+                              "ms-auto shrink-0 font-mono text-[10px] " +
                               (e.status >= 400
                                 ? "border-destructive/30 text-destructive-foreground"
                                 : "")
@@ -443,7 +443,7 @@ export function TableLogs() {
                         ) : null}
                       </span>
                     </TableCell>
-                    <TableCell className="pe-4 text-right text-muted-foreground tabular-nums">
+                    <TableCell className="pe-4 text-end text-muted-foreground tabular-nums">
                       {e.duration ?? ""}
                     </TableCell>
                   </TableRow>
@@ -565,7 +565,7 @@ function LogDetailSheet({
                         key={i}
                         className="flex items-baseline gap-3 border-border/40 border-b px-3 py-2 font-mono text-[11px] last:border-b-0"
                       >
-                        <span className="w-5 text-right text-muted-foreground tabular-nums">
+                        <span className="w-5 text-end text-muted-foreground tabular-nums">
                           {i + 1}
                         </span>
                         <span className="flex-1 truncate text-foreground/85">

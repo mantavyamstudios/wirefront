@@ -128,7 +128,7 @@ export function TableOrders() {
               <TableHead className="max-md:hidden">Items</TableHead>
               <TableHead className="max-sm:hidden">Status</TableHead>
               <TableHead className="max-lg:hidden">Carrier</TableHead>
-              <TableHead className="text-right">Total</TableHead>
+              <TableHead className="text-end">Total</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -166,7 +166,7 @@ export function TableOrders() {
                     </span>
                   </TableCell>
                   <TableCell className="text-muted-foreground max-lg:hidden">{o.carrier}</TableCell>
-                  <TableCell className="text-right font-mono tabular-nums">
+                  <TableCell className="text-end font-mono tabular-nums">
                     ${o.total.toFixed(2)}
                     <div className="mt-1 flex justify-end font-sans sm:hidden">
                       <StageLabel stage={o.stage} />

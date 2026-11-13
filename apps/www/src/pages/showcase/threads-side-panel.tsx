@@ -132,7 +132,7 @@ export function ThreadsSidePanel() {
               <button
                 type="button"
                 aria-haspopup="menu"
-                className="ml-auto inline-flex min-h-8 items-center gap-1 rounded px-2 font-mono text-[10px] pointer-coarse:min-h-10 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+                className="ms-auto inline-flex min-h-8 items-center gap-1 rounded px-2 font-mono text-[10px] pointer-coarse:min-h-10 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
               >
                 Subscribed
                 <ChevronDownIcon className="size-3" />
@@ -155,11 +155,11 @@ export function ThreadsSidePanel() {
                     {c.time}
                   </span>
                 </div>
-                <p className="ml-9 text-muted-foreground text-sm leading-relaxed">
+                <p className="ms-9 text-muted-foreground text-sm leading-relaxed">
                   {c.body}
                 </p>
                 {c.reactions ? (
-                  <div className="ml-9 flex flex-wrap items-center gap-1.5 pt-1">
+                  <div className="ms-9 flex flex-wrap items-center gap-1.5 pt-1">
                     {c.reactions.map((r, i) => (
                       <button
                         key={i}
@@ -179,7 +179,7 @@ export function ThreadsSidePanel() {
                     <button
                       type="button"
                       aria-label="Add reaction"
-                      className="ml-1 grid min-h-7 min-w-7 place-items-center rounded-full font-mono text-[11px] pointer-coarse:min-h-9 pointer-coarse:min-w-9 text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:text-foreground"
+                      className="ms-1 grid min-h-7 min-w-7 place-items-center rounded-full font-mono text-[11px] pointer-coarse:min-h-9 pointer-coarse:min-w-9 text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:text-foreground"
                     >
                       +
                     </button>
@@ -216,7 +216,7 @@ export function ThreadsSidePanel() {
 function FakeApp() {
   return (
     <div className="grid min-h-svh grid-cols-1 md:grid-cols-[220px_1fr]">
-      <aside className="space-y-2 border-border/60 border-r bg-foreground/[0.02] p-4 max-md:hidden">
+      <aside className="space-y-2 border-border/60 border-e bg-foreground/[0.02] p-4 max-md:hidden">
         <div className="h-3 w-28 rounded bg-foreground/15" />
         <div className="mt-3 h-2 w-32 rounded bg-foreground/10" />
         <div className="h-2 w-28 rounded bg-foreground/10" />

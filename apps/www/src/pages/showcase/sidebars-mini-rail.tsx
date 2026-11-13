@@ -50,7 +50,7 @@ export function SidebarsMiniRail() {
       </header>
 
       {/* Desktop: 60px icon rail */}
-      <aside className="sticky top-0 hidden h-svh flex-col items-center border-r border-border/60 bg-foreground/[0.02] py-3 md:flex">
+      <aside className="sticky top-0 hidden h-svh flex-col overflow-x-clip items-center border-e border-border/60 bg-foreground/[0.02] py-3 md:flex">
         <ul className="flex flex-col items-center gap-1.5">
           {WORKSPACES.map((w) => (
             <li key={w.letter} className="relative">
@@ -64,7 +64,7 @@ export function SidebarsMiniRail() {
                 </TooltipTrigger>
               </RailTooltip>
               {w.active ? (
-                <span className="-translate-y-1/2 absolute top-1/2 -left-3 h-5 w-1 rounded-r-full bg-foreground" />
+                <span className="-translate-y-1/2 absolute top-1/2 -start-3 h-5 w-1 rounded-e-full bg-foreground" />
               ) : null}
             </li>
           ))}
@@ -100,9 +100,9 @@ export function SidebarsMiniRail() {
                   </TooltipTrigger>
                 </RailTooltip>
                 {item.active ? (
-                  <span className="-translate-y-1/2 absolute top-1/2 -left-3 h-5 w-1 rounded-r-full bg-foreground" />
+                  <span className="-translate-y-1/2 absolute top-1/2 -start-3 h-5 w-1 rounded-e-full bg-foreground" />
                 ) : null}
-                {item.badge ? <Badge count={item.badge} className="top-0.5 right-0.5" /> : null}
+                {item.badge ? <Badge count={item.badge} className="top-0.5 end-0.5" /> : null}
               </li>
             ))}
           </ul>
@@ -152,7 +152,7 @@ export function SidebarsMiniRail() {
               >
                 <span className="relative">
                   <item.icon className="size-5" />
-                  {item.badge ? <Badge count={item.badge} className="-top-1.5 -right-2.5" /> : null}
+                  {item.badge ? <Badge count={item.badge} className="-top-1.5 -end-2.5" /> : null}
                 </span>
                 {item.label}
                 {item.badge ? <span className="sr-only">, {item.badge} unread</span> : null}
@@ -189,7 +189,7 @@ function WorkspaceSwitcher({ current }: { current: (typeof WORKSPACES)[number] }
   const [open, setOpen] = useState(false);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger className="flex min-h-11 items-center gap-2 rounded-md px-1.5 text-left transition-colors hover:bg-foreground/[0.04]">
+      <SheetTrigger className="flex min-h-11 items-center gap-2 rounded-md px-1.5 text-start transition-colors hover:bg-foreground/[0.04]">
         <span
           className={`flex size-8 items-center justify-center rounded-lg font-medium text-[12px] text-foreground/85 ${current.color}`}
         >
@@ -209,7 +209,7 @@ function WorkspaceSwitcher({ current }: { current: (typeof WORKSPACES)[number] }
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-current={w.active ? "true" : undefined}
-                className="flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-left text-sm transition-colors hover:bg-foreground/[0.04]"
+                className="flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-start text-sm transition-colors hover:bg-foreground/[0.04]"
               >
                 <span
                   className={`flex size-8 items-center justify-center rounded-lg font-medium text-[12px] text-foreground/85 ${w.color}`}
@@ -224,7 +224,7 @@ function WorkspaceSwitcher({ current }: { current: (typeof WORKSPACES)[number] }
           <li>
             <button
               type="button"
-              className="flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-left text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+              className="flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-start text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
             >
               <span className="flex size-8 items-center justify-center rounded-lg border border-dashed border-border/70">
                 <PlusIcon className="size-4" />

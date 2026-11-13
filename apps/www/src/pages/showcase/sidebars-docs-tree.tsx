@@ -122,7 +122,7 @@ export function SidebarsDocsTree() {
         <span className="truncate text-sm">{findTitle(TREE, active)}</span>
       </header>
 
-      <aside className="sticky top-0 hidden h-svh flex-col border-r border-border/60 bg-foreground/[0.02] md:flex">
+      <aside className="sticky top-0 hidden h-svh flex-col border-e border-border/60 bg-foreground/[0.02] md:flex">
         {tree}
       </aside>
 
@@ -158,7 +158,7 @@ function TreePanel({
         </div>
         <button
           type="button"
-          className="mt-3 flex w-full items-center gap-2 rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-left transition-colors hover:bg-background pointer-coarse:min-h-11"
+          className="mt-3 flex w-full items-center gap-2 rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-start transition-colors hover:bg-background pointer-coarse:min-h-11"
         >
           <SearchIcon className="size-3.5 opacity-50" />
           <span className="flex-1 truncate text-muted-foreground text-xs">

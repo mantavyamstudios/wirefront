@@ -578,7 +578,7 @@ function RecoveryCodesPanel({
       <ol className="grid max-w-md grid-cols-2 gap-x-6 gap-y-2 font-mono text-sm tabular-nums">
         {codes.map((c, i) => (
           <li className="flex items-baseline gap-3" key={c.code}>
-            <span className="w-4 text-right text-muted-foreground text-xs">{i + 1}</span>
+            <span className="w-4 text-end text-muted-foreground text-xs">{i + 1}</span>
             <span className={cn(c.used && "text-muted-foreground line-through")}>{c.code}</span>
             {c.used ? <span className="sr-only">{t.used}</span> : null}
           </li>
@@ -828,7 +828,7 @@ function SecuritySettingsScreen({
               </WirefrontLink>
             ) : (
               <button
-                className="cursor-pointer rounded-sm text-muted-foreground underline-offset-4 outline-none transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring max-sm:basis-full max-sm:ps-7 max-sm:text-left"
+                className="cursor-pointer rounded-sm text-muted-foreground underline-offset-4 outline-none transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring max-sm:basis-full max-sm:ps-7 max-sm:text-start"
                 onClick={fixNext}
                 type="button"
               >

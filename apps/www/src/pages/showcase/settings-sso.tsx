@@ -173,7 +173,7 @@ export function SettingsSso() {
           <div className="grid grid-cols-1 md:grid-cols-[220px_1fr]">
             {/* Step rail */}
             {/* Below md: a compact stepper that wraps, so every step stays visible. */}
-            <ol className="flex flex-wrap gap-1 border-border/60 border-b px-3 py-2 md:flex-col md:flex-nowrap md:border-r md:border-b-0 md:py-5">
+            <ol className="flex flex-wrap gap-1 border-border/60 border-b px-3 py-2 md:flex-col md:flex-nowrap md:border-e md:border-b-0 md:py-5">
               {STEPS.map((s) => {
                 const isCurrent = s.id === currentStep;
                 const isComplete = s.id < maxReached;
@@ -408,7 +408,7 @@ function AttributeMappingStep({
           <span>IdP attribute</span>
           <span className="w-4" />
           <span>Orbit field</span>
-          <span className="w-16 text-right">Required</span>
+          <span className="w-16 text-end">Required</span>
         </div>
         <ul>
           {mappings.map((m, idx) => (
@@ -442,7 +442,7 @@ function AttributeMappingStep({
                   ))}
                 </SelectContent>
               </Select>
-              <div className="text-right max-sm:order-2 max-sm:row-start-1 max-sm:col-start-2 sm:w-16">
+              <div className="text-end max-sm:order-2 max-sm:row-start-1 max-sm:col-start-2 sm:w-16">
                 {m.required ? (
                   <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                     Required

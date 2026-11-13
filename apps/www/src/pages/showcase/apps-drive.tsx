@@ -299,9 +299,9 @@ export function Drive({
   return (
     <MotionConfig reducedMotion="user">
       <div className={cn("@container relative flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm", className)}>
-        <aside className="hidden w-56 shrink-0 flex-col border-r bg-muted/30 px-3 py-3 @3xl:flex">
+        <aside className="hidden w-56 shrink-0 flex-col border-e bg-muted/30 px-3 py-3 @3xl:flex">
           <button
-            className="flex h-9 cursor-pointer items-center gap-2 rounded-lg px-1.5 text-left outline-none hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex h-9 cursor-pointer items-center gap-2 rounded-lg px-1.5 text-start outline-none hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring"
             type="button"
           >
             <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -322,7 +322,7 @@ export function Drive({
                   <button
                     aria-current={on ? "page" : undefined}
                     className={cn(
-                      "relative flex h-8 cursor-pointer items-center gap-2.5 rounded-md px-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      "relative flex h-8 cursor-pointer items-center gap-2.5 rounded-md px-2 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring",
                       on ? "font-medium text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
                     )}
                     key={t.id}
@@ -337,7 +337,7 @@ export function Drive({
                 );
               })}
               <button
-                className="flex h-8 cursor-pointer items-center gap-2.5 rounded-md px-2 text-left text-muted-foreground outline-none hover:bg-accent/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex h-8 cursor-pointer items-center gap-2.5 rounded-md px-2 text-start text-muted-foreground outline-none hover:bg-accent/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
                 type="button"
               >
                 <Trash2Icon className="size-4 shrink-0 opacity-80" />
@@ -360,7 +360,7 @@ export function Drive({
                       transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
                     >
                       <button
-                        className="flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-md px-2 text-left text-muted-foreground outline-none hover:bg-accent/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                        className="flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-md px-2 text-start text-muted-foreground outline-none hover:bg-accent/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
                         onClick={() => onOpenFolder?.(f)}
                         type="button"
                       >
@@ -463,7 +463,7 @@ export function Drive({
                   </div>
                   <div className="-mx-4 mt-2 flex snap-x scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] @6xl:mx-0 @6xl:grid @6xl:grid-cols-[auto_repeat(5,minmax(0,1fr))] @6xl:px-0 @6xl:[&>*:nth-child(n+7)]:hidden">
                     <button
-                      className="group/tpl flex h-14 w-28 shrink-0 snap-start cursor-pointer items-center gap-3 rounded-xl border border-dashed px-3 text-left text-muted-foreground outline-none transition-[background-color,color,scale] duration-150 ease-out hover:bg-accent/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] @6xl:w-auto @6xl:pe-5"
+                      className="group/tpl flex h-14 w-28 shrink-0 snap-start cursor-pointer items-center gap-3 rounded-xl border border-dashed px-3 text-start text-muted-foreground outline-none transition-[background-color,color,scale] duration-150 ease-out hover:bg-accent/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] @6xl:w-auto @6xl:pe-5"
                       onClick={() => setCreated("Untitled doc")}
                       type="button"
                     >
@@ -474,7 +474,7 @@ export function Drive({
                     </button>
                     {templates.map((t) => (
                       <button
-                        className="flex h-14 w-44 shrink-0 snap-start cursor-pointer items-center gap-3 rounded-xl border bg-card px-3 text-left outline-none transition-[border-color,box-shadow,scale] duration-150 ease-out hover:border-foreground/16 hover:shadow-xs/5 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] @6xl:w-auto"
+                        className="flex h-14 w-44 shrink-0 snap-start cursor-pointer items-center gap-3 rounded-xl border bg-card px-3 text-start outline-none transition-[border-color,box-shadow,scale] duration-150 ease-out hover:border-foreground/16 hover:shadow-xs/5 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] @6xl:w-auto"
                         key={t.id}
                         onClick={() => setCreated(t.name)}
                         type="button"
@@ -641,7 +641,7 @@ export function Drive({
                               aria-pressed={Boolean(f.starred)}
                               className={cn(
                                 "absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-md outline-none transition-opacity hover:bg-accent focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring",
-                                grid ? "top-2 right-2" : "top-2.5 right-2",
+                                grid ? "top-2 end-2" : "top-2.5 end-2",
                                 f.starred ? "text-amber-800 opacity-100 dark:text-amber-400" : "text-muted-foreground opacity-0 group-hover/folder:opacity-100 pointer-coarse:opacity-100",
                               )}
                               layout="position"

@@ -67,7 +67,7 @@ function ErrorViewport() {
   const { toasts: list } = Toast.useToastManager<InviteToast>();
   return (
     <Toast.Portal>
-      <Toast.Viewport className="fixed inset-x-0 top-0 z-50 flex flex-col gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] outline-none sm:inset-x-auto sm:top-6 sm:right-6 sm:w-96 sm:px-0 sm:pt-0">
+      <Toast.Viewport className="fixed inset-x-0 top-0 z-50 flex flex-col gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] outline-none sm:inset-x-auto sm:top-6 sm:end-6 sm:w-96 sm:px-0 sm:pt-0">
         {list.map((t) => {
           const failed = t.type === "error";
           const retrying = !!t.data?.retrying;
@@ -107,7 +107,7 @@ function ErrorViewport() {
                 </div>
                 <Toast.Close
                   aria-label="Dismiss"
-                  className="-mt-1 -mr-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
+                  className="-mt-1 -me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
                 >
                   <XIcon className="size-3.5" />
                 </Toast.Close>
@@ -146,7 +146,7 @@ function FakeAppBackdrop({ onSend }: { onSend: () => void }) {
     <div className="grid min-h-svh grid-cols-1 md:grid-cols-[200px_1fr]">
       <div
         aria-hidden
-        className="space-y-2 border-border/40 border-r bg-foreground/[0.02] p-4 opacity-50 max-md:hidden"
+        className="space-y-2 border-border/40 border-e bg-foreground/[0.02] p-4 opacity-50 max-md:hidden"
       >
         <div className="h-3 w-24 rounded bg-foreground/10" />
         <div className="h-2 w-32 rounded bg-foreground/10" />

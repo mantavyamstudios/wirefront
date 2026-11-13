@@ -38,7 +38,7 @@ export function CalendarsMini() {
             <span>4 events today</span>
             <button
               type="button"
-              className="-mr-2 min-h-8 rounded px-2 hover:text-foreground pointer-coarse:min-h-10"
+              className="-me-2 min-h-8 rounded px-2 hover:text-foreground pointer-coarse:min-h-10"
             >
               Open →
             </button>

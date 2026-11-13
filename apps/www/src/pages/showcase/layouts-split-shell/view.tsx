@@ -106,7 +106,7 @@ function Sidebar({
   const format = useFormat();
   const group = useId();
   const navRow =
-    "flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 text-left text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring";
+    "flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 text-start text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring";
   const account = (
     <>
       <Avatar className="size-7">
@@ -179,7 +179,7 @@ function Sidebar({
                 <WirefrontLink
                   aria-current={on ? "page" : undefined}
                   className={cn(
-                    "relative flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 text-left outline-none transition-transform focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]",
+                    "relative flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 text-start outline-none transition-transform focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]",
                     on ? "text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground",
                   )}
                   href={item.href}

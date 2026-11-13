@@ -59,7 +59,7 @@ export function ProfilePresenceRail() {
           </p>
 
           <Sheet>
-            <SheetTrigger className="mt-4 flex w-full items-center gap-3 rounded-lg border border-border/60 bg-background px-3 py-2.5 text-left hover:bg-foreground/[0.02] md:hidden">
+            <SheetTrigger className="mt-4 flex w-full items-center gap-3 rounded-lg border border-border/60 bg-background px-3 py-2.5 text-start hover:bg-foreground/[0.02] md:hidden">
               <span className="flex -space-x-2">
                 {ONLINE.map((p) => (
                   <Avatar key={p.name} className="size-8 border-2 border-background">
@@ -106,7 +106,7 @@ function Rail() {
         <button
           type="button"
           aria-haspopup="menu"
-          className="-mr-2 inline-flex min-h-8 items-center gap-1 rounded px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground"
+          className="-me-2 inline-flex min-h-8 items-center gap-1 rounded px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground"
         >
           All
           <ChevronDownIcon className="size-3" />
@@ -158,7 +158,7 @@ function Section({
         <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           {label}
         </span>
-        <span className="ml-auto font-mono text-[10px] text-muted-foreground">
+        <span className="ms-auto font-mono text-[10px] text-muted-foreground">
           {count}
         </span>
       </summary>
@@ -181,7 +181,7 @@ function Section({
               <span
                 aria-hidden
                 className={
-                  "absolute right-0 bottom-0 size-2.5 rounded-full border-2 border-background " +
+                  "absolute end-0 bottom-0 size-2.5 rounded-full border-2 border-background " +
                   STATUS_DOT[p.status]
                 }
               />

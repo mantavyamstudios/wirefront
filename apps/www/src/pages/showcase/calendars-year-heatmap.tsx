@@ -240,7 +240,7 @@ export function CalendarsYearHeatmap() {
 
         <form onSubmit={onSubmit} className="mt-3 flex items-center gap-2">
           <div className="relative min-w-0 flex-1 sm:max-w-xs">
-            <span className="-translate-y-1/2 absolute top-1/2 left-3 text-muted-foreground">
+            <span className="-translate-y-1/2 absolute top-1/2 start-3 text-muted-foreground">
               @
             </span>
             <Input
@@ -248,7 +248,7 @@ export function CalendarsYearHeatmap() {
               onChange={(e) => setInput(e.target.value)}
               aria-label="GitHub username"
               placeholder="github username"
-              className="pl-7"
+              className="ps-7"
               spellCheck={false}
               autoComplete="off"
              />
@@ -301,8 +301,8 @@ export function CalendarsYearHeatmap() {
               </>
             ) : (
               <div className="space-y-2">
-                <Skeleton className="h-7 w-40" />
-                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-7 w-40 motion-reduce:animate-none" />
+                <Skeleton className="h-4 w-24 motion-reduce:animate-none" />
               </div>
             )}
           </div>
@@ -319,7 +319,7 @@ export function CalendarsYearHeatmap() {
             <h2 className="font-heading text-xl">
               {data.totalContributions.toLocaleString()} contributions
               {stats && (
-                <span className="block font-sans text-muted-foreground text-sm sm:ml-2 sm:inline">
+                <span className="block font-sans text-muted-foreground text-sm sm:ms-2 sm:inline">
                   · active {stats.activeDays} days · longest{" "}
                   <span className="text-foreground">
                     {stats.longestStreak} days
@@ -332,7 +332,7 @@ export function CalendarsYearHeatmap() {
               )}
             </h2>
           ) : (
-            <Skeleton className="h-7 w-72" />
+            <Skeleton className="h-7 w-72 motion-reduce:animate-none" />
           )}
         </div>
 
@@ -480,8 +480,8 @@ export function CalendarsYearHeatmap() {
             {events == null
               ? Array.from({ length: 4 }).map((_, i) => (
                   <div key={i} className="px-4 py-3">
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="mt-2 h-3 w-32" />
+                    <Skeleton className="h-4 w-3/4 motion-reduce:animate-none" />
+                    <Skeleton className="mt-2 h-3 w-32 motion-reduce:animate-none" />
                   </div>
                 ))
               : recentCommits.length === 0

@@ -168,7 +168,7 @@ export function ToursSpotlight() {
             aria-labelledby="tour-step-title"
             aria-describedby="tour-step-body"
             tabIndex={-1}
-            className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border border-border/70 bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl outline-none sm:inset-x-auto sm:bottom-auto sm:left-(--x) sm:top-(--y) sm:w-80 sm:rounded-xl sm:pb-4 motion-safe:sm:transition-[left,top] motion-safe:sm:duration-300"
+            className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border border-border/70 bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl outline-none sm:inset-x-auto sm:bottom-auto sm:start-(--x) sm:top-(--y) sm:w-80 sm:rounded-xl sm:pb-4 motion-safe:sm:transition-[left,top] motion-safe:sm:duration-300"
             style={{ "--x": `${pos.left}px`, "--y": `${pos.top}px` } as React.CSSProperties}
           >
             <div className="flex items-start justify-between gap-3">
@@ -179,7 +179,7 @@ export function ToursSpotlight() {
                 <h3 id="tour-step-title" className="mt-1 font-heading text-base">
                   {current.title}
                   {current.kbd ? (
-                    <kbd className="ml-2 rounded border border-border/70 px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground pointer-coarse:hidden">
+                    <kbd className="ms-2 rounded border border-border/70 px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground pointer-coarse:hidden">
                       {current.kbd}
                     </kbd>
                   ) : null}
@@ -189,7 +189,7 @@ export function ToursSpotlight() {
                 type="button"
                 aria-label="Close tour"
                 onClick={close}
-                className="-mt-1 -mr-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
+                className="-mt-1 -me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
               >
                 <XIcon className="size-3.5" />
               </button>
@@ -244,7 +244,7 @@ export function ToursSpotlight() {
 function FakeApp({ onRestart }: { onRestart?: () => void }) {
   return (
     <div className="grid min-h-svh grid-cols-1 md:grid-cols-[220px_1fr]">
-      <aside className="space-y-2 border-border/60 border-r bg-foreground/[0.02] p-4 max-md:hidden">
+      <aside className="space-y-2 border-border/60 border-e bg-foreground/[0.02] p-4 max-md:hidden">
         <div className="h-3 w-24 rounded bg-foreground/15" />
         <div className="h-2 w-32 rounded bg-foreground/10" />
         <div className="h-2 w-28 rounded bg-foreground/10" />

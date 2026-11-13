@@ -247,10 +247,10 @@ function MembersTableScreen({
       <TableRow key={key}>
         <TableCell className="ps-4" colSpan={6}>
           <div className="flex items-center gap-3">
-            <Skeleton className="size-8 rounded-full" />
+            <Skeleton className="size-8 rounded-full motion-reduce:animate-none" />
             <div className="flex flex-col gap-1.5">
-              <Skeleton className="h-3.5 w-36" />
-              <Skeleton className="h-3 w-48" />
+              <Skeleton className="h-3.5 w-36 motion-reduce:animate-none" />
+              <Skeleton className="h-3 w-48 motion-reduce:animate-none" />
             </div>
           </div>
         </TableCell>

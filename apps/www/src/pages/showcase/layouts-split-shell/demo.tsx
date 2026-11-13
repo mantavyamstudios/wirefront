@@ -605,17 +605,17 @@ function WorkPanel({
     <Tabs className="h-full min-h-0 gap-0" onValueChange={(v) => setTab(v as string)} value={tab}>
       <div className="flex h-13 shrink-0 items-center gap-2 border-b px-3">
         <TabsList className="h-7 min-w-0 overflow-x-auto text-muted-foreground [scrollbar-width:none]">
-          <TabsTrigger value="tools">
+          <TabsTrigger className="text-foreground/70" value="tools">
             <WrenchIcon />
             Tools
             <span className="text-muted-foreground text-xs tabular-nums">{calls.length}</span>
           </TabsTrigger>
-          <TabsTrigger value="browser">
+          <TabsTrigger className="text-foreground/70" value="browser">
             <GlobeIcon />
             Browser
             {reading && <span className="size-1.5 rounded-full bg-info" />}
           </TabsTrigger>
-          <TabsTrigger value="sources">
+          <TabsTrigger className="text-foreground/70" value="sources">
             <BookOpenIcon />
             Sources
           </TabsTrigger>

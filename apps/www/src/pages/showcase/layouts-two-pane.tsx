@@ -344,7 +344,7 @@ export function LayoutsTwoPane() {
               already on the board.
             </p>
             <p>For visibility, here's where things stand:</p>
-            <ul className="list-disc space-y-1 pl-5">
+            <ul className="list-disc space-y-1 ps-5">
               <li>Backend cutover is complete and the old code path is dark.</li>
               <li>Frontend is using the new pagination contract end-to-end.</li>
               <li>

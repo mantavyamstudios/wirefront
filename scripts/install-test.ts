@@ -182,6 +182,35 @@ function wireImportCheck(t: Template, dir: string): void {
   writeFileSync(entry, `import { wirefrontModules } from "${rel}";\nvoid wirefrontModules;\n${readFileSync(entry, "utf8")}`);
 }
 
+/**
+ * The showcase must render what a builder installs: every shadcn primitive
+ * that `shadcn add` put in the project's components/ui must match the copy
+ * in packages/ui/src/components/ui. Allowed differences: comments (our licence
+ * header), import paths of lib/utils and sibling primitives, and an unused
+ * `import * as React` (upstream keeps it; our stricter typecheck rejects it).
+ * Fix drift by copying the installed file over ours, never by editing the
+ * primitive: fixes belong in the screens or in Wirefront helpers, which ship.
+ */
+function primitiveFidelityCheck(t: Template, dir: string) {
+  const installed = join(dir, "components/ui");
+  if (!existsSync(installed)) return;
+  const norm = (src: string) =>
+    src
+      .replace(/^\s*\/\/.*$/gm, "")
+      .replace(/^import \* as React from "react"\s*$/m, "")
+      .replace(/"(?:@\/lib\/utils|\.\.\/\.\.\/lib\/utils|cn)"/g, "UTILS")
+      .replace(/"(?:@\/components\/ui\/|\.\/)([\w-]+)"/g, "UI:$1")
+      .replace(/\s+/g, "");
+  const drift = readdirSync(installed)
+    .filter((f) => f.endsWith(".tsx"))
+    .filter((f) => {
+      const ours = resolve(ROOT, "packages/ui/src/components/ui", f);
+      return !existsSync(ours) || norm(readFileSync(ours, "utf8")) !== norm(readFileSync(join(installed, f), "utf8"));
+    });
+  if (drift.length)
+    throw new Error(`${t}: packages/ui primitives differ from what shadcn installs (${drift.join(", ")}); the showcase would not show what builders get`);
+}
+
 async function main(): Promise<void> {
   console.log("[install] building the registry…");
   await run("npx", ["tsx", "scripts/build-registry.ts"], ROOT, "build-registry");
@@ -217,6 +246,7 @@ async function main(): Promise<void> {
         if (overwritten.length) throw new Error(`${t}: installing changed the builder's own files: ${overwritten.join(", ")}`);
 
         wireImportCheck(t, dir);
+        primitiveFidelityCheck(t, dir);
         console.log(`[install] ${t}: typecheck…`);
         await run("npx", ["tsc", "--noEmit", "-p", existsSync(join(dir, "tsconfig.app.json")) ? "tsconfig.app.json" : "tsconfig.json"], dir, `${t}: typecheck`);
         console.log(`[install] ${t}: build…`);

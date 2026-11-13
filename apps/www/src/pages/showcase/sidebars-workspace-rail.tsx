@@ -68,14 +68,14 @@ export function SidebarsWorkspaceRail() {
         <button
           type="button"
           aria-label="Search"
-          className="ml-auto flex size-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+          className="ms-auto flex size-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
         >
           <SearchIcon className="size-4" />
         </button>
       </header>
 
       {/* Desktop: docked rail */}
-      <aside className="sticky top-0 hidden h-svh flex-col border-r border-border/60 bg-foreground/[0.02] md:flex">
+      <aside className="sticky top-0 hidden h-svh flex-col border-e border-border/60 bg-foreground/[0.02] md:flex">
         <RailContent />
       </aside>
 
@@ -128,7 +128,7 @@ function RailContent({
       <div className="px-3 pt-3">
         <button
           type="button"
-          className="flex w-full items-center gap-2 rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-left transition-colors hover:bg-background pointer-coarse:min-h-11"
+          className="flex w-full items-center gap-2 rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-start transition-colors hover:bg-background pointer-coarse:min-h-11"
         >
           <SearchIcon className="size-3.5 opacity-50" />
           <span className="flex-1 truncate text-muted-foreground text-xs">

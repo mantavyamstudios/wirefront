@@ -313,7 +313,7 @@ function Art({ art, className, large }: { art: ProfileArt; className?: string; l
         </>
       ) : (
         <>
-          <span className="absolute -top-1/4 -left-1/4 size-3/4 rounded-full bg-white/20 blur-2xl" />
+          <span className="absolute -top-1/4 -start-1/4 size-3/4 rounded-full bg-white/20 blur-2xl" />
           <span
             className={cn(
               "relative font-heading font-semibold leading-none drop-shadow-sm",
@@ -857,13 +857,13 @@ function FollowButton({
       <span aria-hidden className="absolute inset-0" style={{ filter: `url(#${filterId})` }}>
         <motion.span
           animate={{ width: pillW }}
-          className="absolute inset-y-0 right-0 rounded-full bg-(--goo) transition-[background-color] duration-200"
+          className="absolute inset-y-0 end-0 rounded-full bg-(--goo) transition-[background-color] duration-200"
           initial={false}
           transition={move}
         />
         <motion.span
           animate={{ scale: following ? 1 : 0.6 }}
-          className="absolute top-0 left-0 size-9 rounded-full bg-(--goo) transition-[background-color] duration-200"
+          className="absolute top-0 start-0 size-9 rounded-full bg-(--goo) transition-[background-color] duration-200"
           initial={false}
           transition={move}
         />
@@ -876,7 +876,7 @@ function FollowButton({
             aria-label={bell ? `Turn off notifications from ${name}` : `Get notified when ${name} posts`}
             aria-pressed={bell}
             className={cn(
-              "absolute top-0 left-0 flex size-9 cursor-pointer items-center justify-center rounded-full text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              "absolute top-0 start-0 flex size-9 cursor-pointer items-center justify-center rounded-full text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               press,
             )}
             exit={{ opacity: 0, transition: { duration: 0.08 } }}
@@ -904,7 +904,7 @@ function FollowButton({
         aria-label={following ? `Unfollow ${name}` : `Follow ${name}`}
         aria-pressed={following}
         className={cn(
-          "absolute top-0 right-0 flex h-9 cursor-pointer items-center justify-center rounded-full font-medium outline-none transition-[color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97]",
+          "absolute top-0 end-0 flex h-9 cursor-pointer items-center justify-center rounded-full font-medium outline-none transition-[color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97]",
           following ? (hover ? "text-destructive-foreground" : "text-foreground") : "text-primary-foreground",
         )}
         onBlur={() => setHover(false)}
@@ -969,7 +969,7 @@ function PostItem({
       )}
       {post.replyTo && (
         <div className="relative flex gap-3">
-          <span aria-hidden className="absolute top-11 bottom-[-0.875rem] left-[19px] w-0.5 rounded-full bg-border" />
+          <span aria-hidden className="absolute top-11 bottom-[-0.875rem] start-[19px] w-0.5 rounded-full bg-border" />
           <Avatar className="[--avatar-size:--spacing(10)]">
             <AvatarFallback className={cn("bg-gradient-to-br font-semibold text-white text-xs", hues[post.replyTo.hue].avatar)}>
               {initials(post.replyTo.name)}
@@ -1235,7 +1235,7 @@ function Lightbox({
         >
           <button
             aria-label="Close"
-            className="absolute top-3 right-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white outline-none hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white"
+            className="absolute top-3 end-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white outline-none hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white"
             onClick={onClose}
             ref={closeRef}
             type="button"

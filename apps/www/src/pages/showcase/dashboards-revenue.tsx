@@ -186,7 +186,7 @@ export function DashboardsRevenue() {
                       {a.plan}
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-end">
                     <div className="font-mono text-sm tabular-nums">
                       ${a.mrr.toLocaleString()}
                     </div>

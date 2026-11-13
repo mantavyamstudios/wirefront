@@ -383,7 +383,7 @@ function QueueRow({
         <GripVerticalIcon className="size-4" />
       </button>
       <button
-        className={cn("flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-lg py-1.5 pe-1 text-left hover:bg-accent/60", ring, press, "active:scale-[0.99]")}
+        className={cn("flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-lg py-1.5 pe-1 text-start hover:bg-accent/60", ring, press, "active:scale-[0.99]")}
         onClick={onPlay}
         type="button"
       >
@@ -702,7 +702,7 @@ export function MusicPlayer({
               <li data-line={i} key={`${l.time}-${i}`}>
                 <button
                   className={cn(
-                    "w-full cursor-pointer text-pretty rounded-lg px-2 py-1.5 text-left font-semibold tracking-tight transition-colors duration-300 ease-out hover:text-foreground",
+                    "w-full cursor-pointer text-pretty rounded-lg px-2 py-1.5 text-start font-semibold tracking-tight transition-colors duration-300 ease-out hover:text-foreground",
                     ring,
                     big ? "text-2xl" : "text-xl leading-snug",
                     state === "now" && "text-foreground",
@@ -792,7 +792,7 @@ export function MusicPlayer({
           <button
             aria-current={n.active ? "page" : undefined}
             className={cn(
-              "flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left [&_svg]:size-4 [&_svg]:opacity-80",
+              "flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-start [&_svg]:size-4 [&_svg]:opacity-80",
               ring,
               press,
               n.active ? "bg-accent font-medium text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -809,7 +809,7 @@ export function MusicPlayer({
         <span className="px-2.5 font-medium text-muted-foreground text-xs">Playlists</span>
         <button
           aria-current={activePlaylist === "liked" || undefined}
-          className={cn("flex cursor-pointer items-center gap-2.5 rounded-lg p-1.5 text-left hover:bg-accent", ring, press)}
+          className={cn("flex cursor-pointer items-center gap-2.5 rounded-lg p-1.5 text-start hover:bg-accent", ring, press)}
           onClick={() => {
             const list = liked.map((id) => tracks.find((t) => t.id === id)).filter(Boolean) as MusicTrack[];
             if (list.length) {
@@ -835,7 +835,7 @@ export function MusicPlayer({
         {playlists.map((p) => (
           <button
             aria-current={activePlaylist === p.id || undefined}
-            className={cn("flex cursor-pointer items-center gap-2.5 rounded-lg p-1.5 text-left hover:bg-accent", ring, press)}
+            className={cn("flex cursor-pointer items-center gap-2.5 rounded-lg p-1.5 text-start hover:bg-accent", ring, press)}
             key={p.id}
             onClick={() => playPlaylist(p)}
             type="button"
@@ -955,7 +955,7 @@ export function MusicPlayer({
           }}
           value={muted ? 0 : volume}
         />
-        <span className="w-7 text-right text-xs tabular-nums">{muted ? 0 : volume}</span>
+        <span className="w-7 text-end text-xs tabular-nums">{muted ? 0 : volume}</span>
       </div>
     </div>
   );
@@ -973,7 +973,7 @@ export function MusicPlayer({
         if (e.key === "Escape" && drawer) setDrawer(false);
       }}
     >
-      <aside className="hidden w-60 shrink-0 overflow-y-auto border-r bg-muted/40 @5xl:block">{sidebar}</aside>
+      <aside className="hidden w-60 shrink-0 overflow-y-auto border-e bg-muted/40 @5xl:block">{sidebar}</aside>
 
       <AnimatePresence>
         {drawer && (
@@ -992,7 +992,7 @@ export function MusicPlayer({
               animate={{ x: 0 }}
               aria-label="Library"
               aria-modal
-              className="absolute inset-y-0 left-0 z-50 w-72 max-w-[85%] overflow-y-auto border-r bg-background outline-none @5xl:hidden"
+              className="absolute inset-y-0 start-0 z-50 w-72 max-w-[85%] overflow-y-auto border-e bg-background outline-none @5xl:hidden"
               exit={{ x: "-100%" }}
               initial={{ x: "-100%" }}
               key="drawer"
@@ -1001,7 +1001,7 @@ export function MusicPlayer({
               tabIndex={-1}
               transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 42 }}
             >
-              <Button aria-label="Close library" className="absolute top-3 right-3" onClick={() => setDrawer(false)} size="icon-sm" variant="ghost">
+              <Button aria-label="Close library" className="absolute top-3 end-3" onClick={() => setDrawer(false)} size="icon-sm" variant="ghost">
                 <XIcon />
               </Button>
               {sidebar}
@@ -1055,7 +1055,7 @@ export function MusicPlayer({
             </div>
           )}
 
-          <aside className="hidden w-80 shrink-0 flex-col border-l @3xl:flex">
+          <aside className="hidden w-80 shrink-0 flex-col border-s @3xl:flex">
             <div aria-label="Side panel" className="flex h-13 shrink-0 items-center gap-0.5 px-3" role="tablist">
               {(
                 [
@@ -1103,7 +1103,7 @@ export function MusicPlayer({
                 <span className="block h-full origin-left bg-primary transition-transform duration-250 ease-linear" style={{ transform: `scaleX(${position / current.duration})` }} />
               </span>
               <div className="flex items-center gap-3 px-3 py-2.5">
-                <button className={cn("flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-lg text-left", ring)} onClick={() => setPane("playing")} type="button">
+                <button className={cn("flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-lg text-start", ring)} onClick={() => setPane("playing")} type="button">
                   <Cover art={current.art} className="size-10 rounded-md" />
                   <span className="flex min-w-0 flex-col">
                     <span className="truncate font-medium">{current.title}</span>

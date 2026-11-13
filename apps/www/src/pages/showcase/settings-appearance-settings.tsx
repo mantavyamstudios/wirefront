@@ -237,7 +237,7 @@ function SettingsShell({
   const items = navGroups.flatMap((g) => g.items);
   return (
     <>
-      <aside className="hidden w-60 shrink-0 flex-col border-r bg-muted/30 px-3 py-4 md:flex">
+      <aside className="hidden w-60 shrink-0 flex-col border-e bg-muted/30 px-3 py-4 md:flex">
         <button
           className="flex h-8 items-center gap-2 rounded-md px-2 text-muted-foreground text-sm outline-none ring-ring/24 transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:ring-[3px]"
           type="button"
@@ -257,7 +257,7 @@ function SettingsShell({
                     <button
                       aria-current={current ? "page" : undefined}
                       className={cn(
-                        "flex h-8 w-full items-center gap-2 rounded-md px-2 text-left text-sm outline-none ring-ring/24 transition-colors focus-visible:ring-[3px]",
+                        "flex h-8 w-full items-center gap-2 rounded-md px-2 text-start text-sm outline-none ring-ring/24 transition-colors focus-visible:ring-[3px]",
                         current ? "bg-accent font-medium text-foreground" : "text-foreground/80 hover:bg-accent/60",
                       )}
                       key={item.id}
@@ -356,7 +356,7 @@ function MiniApp({
         </span>
       </div>
       <div className="flex min-h-0 flex-1">
-        <div className="hidden w-[12em] shrink-0 flex-col gap-[0.15em] border-r bg-muted/50 p-[0.6em] @lg/app:flex">
+        <div className="hidden w-[12em] shrink-0 flex-col gap-[0.15em] border-e bg-muted/50 p-[0.6em] @lg/app:flex">
           <div className="mb-[0.4em] flex items-center gap-[0.5em] px-[0.4em] pt-[0.2em]">
             <span
               className={cn(
@@ -582,7 +582,7 @@ function ThemeThumb({ variant, accent }: { variant: "light" | "dark"; accent: Ac
       className={cn("flex size-full bg-background", variant === "dark" && "dark")}
       style={tintStyle(variant, accent)}
     >
-      <span className="flex w-[26%] flex-col gap-[6%] border-r bg-muted px-[5%] pt-[9%]">
+      <span className="flex w-[26%] flex-col gap-[6%] border-e bg-muted px-[5%] pt-[9%]">
         <span className={cn("size-2.5 rounded-[calc(var(--radius)*0.3)] bg-(--tint)", tintTransition)} />
         <span className="h-1 w-4/5 rounded-full bg-foreground/20" />
         <span className="h-1 w-3/5 rounded-full bg-foreground/12" />
@@ -629,7 +629,7 @@ function ThemeCard({ value, label, accent }: { value: ThemeChoice; label: string
           <ThemeThumb accent={accent} variant={value} />
         )}
         <RadioPrimitive.Indicator
-          className="absolute top-1.5 right-1.5 flex size-4.5 items-center justify-center rounded-full bg-foreground text-background shadow-xs/5 transition-[opacity,scale] duration-150 ease-out data-starting-style:scale-75 data-starting-style:opacity-0"
+          className="absolute top-1.5 end-1.5 flex size-4.5 items-center justify-center rounded-full bg-foreground text-background shadow-xs/5 transition-[opacity,scale] duration-150 ease-out data-starting-style:scale-75 data-starting-style:opacity-0"
           keepMounted={false}
         >
           <CheckIcon className="size-3" strokeWidth={3} />

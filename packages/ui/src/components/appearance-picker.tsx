@@ -82,7 +82,7 @@ export function AppearancePicker({ onPersist }: AppearancePickerProps) {
                 setPreference(m);
                 void onPersist({ themeMode: m });
               }}
-              className="group overflow-hidden rounded-xl border border-border bg-card text-left transition-colors hover:border-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[selected=true]:border-primary"
+              className="group overflow-hidden rounded-xl border border-border bg-card text-start transition-colors hover:border-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[selected=true]:border-primary"
               aria-pressed={preference === m}
             >
               <ModePreviewCard mode={m} accent={PALETTES[palette].swatch[0]} />
@@ -113,7 +113,7 @@ export function AppearancePicker({ onPersist }: AppearancePickerProps) {
                 setPalette(p.id);
                 void onPersist({ themePalette: p.id });
               }}
-              className="group overflow-hidden rounded-xl border border-border bg-card text-left transition-colors hover:border-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[selected=true]:border-primary"
+              className="group overflow-hidden rounded-xl border border-border bg-card text-start transition-colors hover:border-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[selected=true]:border-primary"
               aria-pressed={palette === p.id}
             >
               <MiniAppChrome
@@ -202,7 +202,7 @@ function MiniAppChrome({
     >
       {/* Rail */}
       <div
-        className="flex w-[26px] flex-col items-center gap-2 border-r py-2"
+        className="flex w-[26px] flex-col items-center gap-2 border-e py-2"
         style={{ background: s.sidebar, borderColor: s.sidebarBorder }}
       >
         <span
@@ -232,7 +232,7 @@ function MiniAppChrome({
             style={{ background: s.muted }}
           />
           <span
-            className="ml-auto h-1.5 w-5 rounded-full"
+            className="ms-auto h-1.5 w-5 rounded-full"
             style={{ background: s.mutedSoft }}
           />
         </div>

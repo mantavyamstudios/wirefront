@@ -70,7 +70,7 @@ export function SettingsShell({ children, groups, activeId, back, user, classNam
 
   return (
     <div className={cn("flex h-[760px] w-full bg-background text-foreground", className)}>
-      <aside className="hidden w-60 shrink-0 flex-col border-r bg-muted/30 px-3 py-4 md:flex">
+      <aside className="hidden w-60 shrink-0 flex-col border-e bg-muted/30 px-3 py-4 md:flex">
         {back ? (
           <WirefrontLink
             className={cn("flex h-8 items-center gap-2 rounded-md px-2 text-muted-foreground text-sm transition-colors hover:bg-accent/60 hover:text-foreground", focus)}
@@ -91,7 +91,7 @@ export function SettingsShell({ children, groups, activeId, back, user, classNam
                     <WirefrontLink
                       aria-current={current ? "page" : undefined}
                       className={cn(
-                        "flex h-8 items-center gap-2 rounded-md px-2 text-left text-sm transition-colors [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
+                        "flex h-8 items-center gap-2 rounded-md px-2 text-start text-sm transition-colors [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
                         focus,
                         current ? "bg-accent font-medium text-foreground" : "text-foreground/80 hover:bg-accent/60",
                       )}

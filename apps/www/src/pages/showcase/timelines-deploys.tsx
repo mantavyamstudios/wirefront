@@ -109,7 +109,7 @@ export function TimelinesDeploys() {
                     </AvatarFallback>
                   </Avatar>
                   <span className="truncate text-xs">{d.by}</span>
-                  <span className="shrink-0 font-mono text-[10px] text-muted-foreground md:ml-auto">
+                  <span className="shrink-0 font-mono text-[10px] text-muted-foreground md:ms-auto">
                     {d.when} ago
                   </span>
                 </div>

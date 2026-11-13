@@ -134,8 +134,8 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
       <TableRow key={key}>
         <TableCell className="ps-4" colSpan={6}>
           <div className="flex flex-col gap-1.5">
-            <Skeleton className="h-3.5 w-40" />
-            <Skeleton className="h-3 w-56" />
+            <Skeleton className="h-3.5 w-40 motion-reduce:animate-none" />
+            <Skeleton className="h-3 w-56 motion-reduce:animate-none" />
           </div>
         </TableCell>
       </TableRow>

@@ -107,7 +107,7 @@ export function PricingSliderSeats() {
                   key={v}
                   className={
                     "absolute " +
-                    (i === 0 ? "left-0" : i === all.length - 1 ? "right-0" : "-translate-x-1/2")
+                    (i === 0 ? "start-0" : i === all.length - 1 ? "end-0" : "-translate-x-1/2")
                   }
                   style={i > 0 && i < all.length - 1 ? { left: `${((v - 1) / 49) * 100}%` } : undefined}
                 >

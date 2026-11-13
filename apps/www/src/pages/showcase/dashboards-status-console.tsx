@@ -446,7 +446,7 @@ export function StatusConsole({
                   }
                 >
                   <r.icon className="size-4" />
-                  {r.id === "incidents" && !resolved && <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-destructive" />}
+                  {r.id === "incidents" && !resolved && <span className="absolute top-1.5 end-1.5 size-1.5 rounded-full bg-destructive" />}
                 </TooltipTrigger>
                 <TooltipContent side="right">{r.label}</TooltipContent>
               </Tooltip>
@@ -543,9 +543,9 @@ export function StatusConsole({
                       >
                         <span className="min-w-0 flex-1">Service</span>
                         <span className="w-32 @4xl:w-40">p95 · last 80s</span>
-                        <span className="w-14 text-right">p95</span>
-                        <span className="w-14 text-right">Errors</span>
-                        <span className="w-16 text-right">30d</span>
+                        <span className="w-14 text-end">p95</span>
+                        <span className="w-14 text-end">Errors</span>
+                        <span className="w-16 text-end">30d</span>
                       </div>
                       <div aria-label="Services" className="flex flex-col divide-y" onKeyDown={onGridKey} role="listbox">
                         {services.map((s, i) => {
@@ -557,7 +557,7 @@ export function StatusConsole({
                             <button
                               aria-selected={on}
                               className={cn(
-                                "group/row relative flex h-11 min-w-0 cursor-pointer items-center gap-4 px-3 text-left outline-none transition-[background-color,opacity] duration-150 ease-out focus-visible:bg-accent/60",
+                                "group/row relative flex h-11 min-w-0 cursor-pointer items-center gap-4 px-3 text-start outline-none transition-[background-color,opacity] duration-150 ease-out focus-visible:bg-accent/60",
                                 on ? "bg-accent/70" : "hover:bg-accent/40",
                                 selected && !on && "opacity-50",
                               )}
@@ -571,7 +571,7 @@ export function StatusConsole({
                               tabIndex={i === focusIdx ? 0 : -1}
                               type="button"
                             >
-                              {on && <motion.span className="absolute inset-y-0 left-0 w-0.5 bg-foreground" layoutId="service-rail" transition={{ type: "spring", stiffness: 520, damping: 42 }} />}
+                              {on && <motion.span className="absolute inset-y-0 start-0 w-0.5 bg-foreground" layoutId="service-rail" transition={{ type: "spring", stiffness: 520, damping: 42 }} />}
                               <span className="flex min-w-0 flex-1 items-center gap-2.5">
                                 <span className="relative flex size-2 shrink-0">
                                   {!calm && <span className={cn("absolute inset-0 rounded-full opacity-60 motion-safe:animate-ping motion-reduce:hidden", healthDot[s.health])} />}
@@ -588,14 +588,14 @@ export function StatusConsole({
                               <span className="hidden w-32 shrink-0 @xl:block @4xl:w-40">
                                 <Sparkline health={s.health} max={s.p95} values={values} />
                               </span>
-                              <span className={cn("w-14 shrink-0 text-right font-medium tabular-nums transition-colors duration-500", calm ? "text-foreground" : healthText[s.health])}>
+                              <span className={cn("w-14 shrink-0 text-end font-medium tabular-nums transition-colors duration-500", calm ? "text-foreground" : healthText[s.health])}>
                                 <span className="sr-only">, p95 </span>
                                 {fmtMs(now)}
                               </span>
-                              <span className="hidden w-14 shrink-0 text-right text-muted-foreground tabular-nums @md:block">
+                              <span className="hidden w-14 shrink-0 text-end text-muted-foreground tabular-nums @md:block">
                                 {s.errorRate.toFixed(2)}%<span className="sr-only"> errors</span>
                               </span>
-                              <span className="hidden w-16 shrink-0 text-right text-muted-foreground tabular-nums @xl:block">
+                              <span className="hidden w-16 shrink-0 text-end text-muted-foreground tabular-nums @xl:block">
                                 {s.uptime.toFixed(2)}%<span className="sr-only"> uptime</span>
                               </span>
                             </button>
@@ -694,7 +694,7 @@ export function StatusConsole({
                                 key={u.id}
                                 transition={{ duration: 0.3, ease }}
                               >
-                                {i < updates.length - 1 && <span className="absolute top-6 bottom-[-12px] left-[11px] w-px bg-border" />}
+                                {i < updates.length - 1 && <span className="absolute top-6 bottom-[-12px] start-[11px] w-px bg-border" />}
                                 <span className="relative">
                                   <PersonAvatar person={p} />
                                 </span>
@@ -748,7 +748,7 @@ export function StatusConsole({
                             <li className="flex items-center gap-2.5" key={o.id}>
                               <span className="relative">
                                 <PersonAvatar person={p} size="size-8" />
-                                <span className="absolute -right-0.5 -bottom-0.5 size-2.5 rounded-full bg-success ring-2 ring-card" />
+                                <span className="absolute -end-0.5 -bottom-0.5 size-2.5 rounded-full bg-success ring-2 ring-card" />
                               </span>
                               <div className="min-w-0 flex-1 leading-tight">
                                 <div className="truncate font-medium">{p?.name}</div>
@@ -825,7 +825,7 @@ export function StatusConsole({
                                       </span>
                                     )}
                                   </span>
-                                  <span className="w-12 shrink-0 text-right text-muted-foreground text-xs tabular-nums">
+                                  <span className="w-12 shrink-0 text-end text-muted-foreground text-xs tabular-nums">
                                     {d.status === "rolling" ? `${Math.round(d.progress ?? 0)}%` : d.time}
                                   </span>
                                   {d.status === "succeeded" ? (

@@ -64,7 +64,7 @@ export function TimelinesInboxThread() {
             type="button"
             aria-label="Star thread"
             aria-pressed={false}
-            className="-mr-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
+            className="-me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
           >
             <StarIcon className="size-4" />
           </button>
@@ -102,12 +102,12 @@ export function TimelinesInboxThread() {
                     <span className="min-w-0 truncate text-muted-foreground text-xs max-sm:order-last max-sm:basis-full">
                       {m.email}
                     </span>
-                    <span className="ml-auto font-mono text-[10px] text-muted-foreground">
+                    <span className="ms-auto font-mono text-[10px] text-muted-foreground">
                       {m.at}
                     </span>
                   </div>
                   {m.quoted ? (
-                    <blockquote className="mt-3 flex gap-3 break-words border-foreground/30 border-l-2 pl-3 text-muted-foreground text-sm italic">
+                    <blockquote className="mt-3 flex gap-3 break-words border-foreground/30 border-s-2 ps-3 text-muted-foreground text-sm italic">
                       <CornerUpLeftIcon className="mt-0.5 size-3 shrink-0 opacity-60" />
                       "{m.quoted}"
                     </blockquote>
@@ -129,7 +129,7 @@ export function TimelinesInboxThread() {
                     </div>
                   ) : null}
                   {i < MSGS.length - 1 ? (
-                    <div className="mt-2 -ml-2 flex items-center gap-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+                    <div className="mt-2 -ms-2 flex items-center gap-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                       <button
                         type="button"
                         className="inline-flex min-h-8 items-center gap-1 rounded-md px-2 hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:min-h-10"

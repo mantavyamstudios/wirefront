@@ -175,13 +175,13 @@ export function SettingsAppearance() {
                         style={{ background: p.swatch[0] }}
                       />
                       <span
-                        className="-ml-3 relative size-7 rounded-full ring-2 ring-background"
+                        className="-ms-3 relative size-7 rounded-full ring-2 ring-background"
                         style={{ background: p.swatch[1] }}
                       />
                     </div>
                     <span className="font-medium text-xs">{p.name}</span>
                     {palette === p.id ? (
-                      <CheckIcon className="absolute top-1.5 right-1.5 size-3 opacity-80" />
+                      <CheckIcon className="absolute top-1.5 end-1.5 size-3 opacity-80" />
                     ) : null}
                   </button>
                 ))}
@@ -239,7 +239,7 @@ export function SettingsAppearance() {
                       {f.label}
                     </div>
                     {font === f.id ? (
-                      <CheckIcon className="absolute top-2.5 right-2.5 size-3.5 opacity-80" />
+                      <CheckIcon className="absolute top-2.5 end-2.5 size-3.5 opacity-80" />
                     ) : null}
                   </button>
                 ))}
@@ -328,7 +328,7 @@ function PreviewPane({
 
       <div className="grid grid-cols-[80px_1fr]">
         <div
-          className="flex flex-col items-center gap-1.5 border-r"
+          className="flex flex-col items-center gap-1.5 border-e"
           style={{
             background: s.rail,
             borderColor: s.railBorder,
@@ -482,7 +482,7 @@ function RailItem({
     <div className="relative">
       {active ? (
         <span
-          className="-translate-y-1/2 absolute top-1/2 -left-2 h-3 w-1 rounded-r-full"
+          className="-translate-y-1/2 absolute top-1/2 -start-2 h-3 w-1 rounded-e-full"
           style={{ background: accent }}
         />
       ) : null}
@@ -626,7 +626,7 @@ function MiniChrome({ scheme }: { scheme: "light" | "dark" }) {
   return (
     <div className="flex h-24" style={{ background: s.bg }}>
       <div
-        className="flex w-[26px] flex-col items-center gap-1.5 border-r py-2"
+        className="flex w-[26px] flex-col items-center gap-1.5 border-e py-2"
         style={{ background: s.rail, borderColor: s.railBorder }}
       >
         <span

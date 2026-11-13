@@ -227,7 +227,7 @@ export function TableIssues() {
                 <TableHead className="w-24 max-sm:w-px max-sm:pe-4">
                   <span className="max-sm:sr-only">Assignee</span>
                 </TableHead>
-                <TableHead className="pe-4 w-28 text-right max-md:hidden">Updated</TableHead>
+                <TableHead className="pe-4 w-28 text-end max-md:hidden">Updated</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -303,7 +303,7 @@ export function TableIssues() {
                         />
                       )}
                     </TableCell>
-                    <TableCell className="pe-4 text-right text-muted-foreground text-xs tabular-nums max-md:hidden">
+                    <TableCell className="pe-4 text-end text-muted-foreground text-xs tabular-nums max-md:hidden">
                       {issue.updated}
                     </TableCell>
                   </TableRow>

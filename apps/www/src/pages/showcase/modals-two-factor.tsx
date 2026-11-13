@@ -42,7 +42,7 @@ export function ModalsTwoFactor() {
             <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
               <ShieldCheckIcon className="size-4" />
             </div>
-            <div className="flex flex-col gap-0.5 text-left">
+            <div className="flex flex-col gap-0.5 text-start">
               <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 Step 2 of 3
               </div>
@@ -76,7 +76,7 @@ export function ModalsTwoFactor() {
                   <ExternalLinkIcon />
                   Open authenticator app
                 </Button>
-                <div className="mt-3 flex items-center gap-2 rounded-md border border-border/60 bg-background py-1 pr-1 pl-3">
+                <div className="mt-3 flex items-center gap-2 rounded-md border border-border/60 bg-background py-1 pe-1 ps-3">
                   <code className="min-w-0 flex-1 break-all font-mono text-sm">
                     {DEMO_SETUP_KEY.join(" ")}
                   </code>

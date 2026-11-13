@@ -618,7 +618,7 @@ function AdminUsersScreen({
     );
 
   const nameButton = (u: AdminUser) => (
-    <button className={cn("flex w-fit max-w-full cursor-pointer items-center gap-1.5 truncate rounded text-left font-medium hover:underline", ring)} onClick={() => setDetailId(u.id)} type="button">
+    <button className={cn("flex w-fit max-w-full cursor-pointer items-center gap-1.5 truncate rounded text-start font-medium hover:underline", ring)} onClick={() => setDetailId(u.id)} type="button">
       <span className="truncate">{nameOf(u)}</span>
       {u.id === currentUserId && <span className="font-normal text-muted-foreground text-xs">{t.you}</span>}
     </button>
@@ -630,10 +630,10 @@ function AdminUsersScreen({
       <ul aria-busy className="divide-y">
         {SKELETON_ROWS.map((key) => (
           <li className="flex items-center gap-3 px-4 py-3" key={key}>
-            <Skeleton className="size-8 rounded-full" />
+            <Skeleton className="size-8 rounded-full motion-reduce:animate-none" />
             <div className="flex flex-col gap-1.5">
-              <Skeleton className="h-3.5 w-36" />
-              <Skeleton className="h-3 w-48" />
+              <Skeleton className="h-3.5 w-36 motion-reduce:animate-none" />
+              <Skeleton className="h-3 w-48 motion-reduce:animate-none" />
             </div>
           </li>
         ))}
@@ -688,7 +688,7 @@ function AdminUsersScreen({
             {rows.map((u) => (
               <li className={cn("flex items-center gap-3 px-4 py-3 transition-colors", selection.isSelected(u.id) && "bg-accent/60")} key={u.id}>
                 {checkbox(u)}
-                <button className={cn("flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-lg text-left", ring)} onClick={() => setDetailId(u.id)} type="button">
+                <button className={cn("flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-lg text-start", ring)} onClick={() => setDetailId(u.id)} type="button">
                   <UserAvatar user={u} />
                   <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <span className="flex items-center gap-1.5 truncate font-medium">
@@ -759,7 +759,7 @@ function AdminUsersScreen({
                   <TableCell>{twoFa(u)}</TableCell>
                   <TableCell>{teamChips(u)}</TableCell>
                   <TableCell className="text-muted-foreground text-xs tabular-nums">{lastActive(u)}</TableCell>
-                  <TableCell className="pe-3 text-right">{rowMenu(u)}</TableCell>
+                  <TableCell className="pe-3 text-end">{rowMenu(u)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -804,7 +804,7 @@ function AdminUsersScreen({
               </span>
             </div>
             <button
-              className={cn("flex min-w-0 cursor-pointer flex-col gap-2 p-3 text-left transition-colors duration-150 @xl:gap-2.5 @xl:px-4 @xl:py-3.5 [@media(hover:hover)]:hover:bg-accent/40", ring, "focus-visible:ring-inset")}
+              className={cn("flex min-w-0 cursor-pointer flex-col gap-2 p-3 text-start transition-colors duration-150 @xl:gap-2.5 @xl:px-4 @xl:py-3.5 [@media(hover:hover)]:hover:bg-accent/40", ring, "focus-visible:ring-inset")}
               onClick={() => setTab("invited")}
               type="button"
             >
@@ -816,7 +816,7 @@ function AdminUsersScreen({
               <span className="hidden text-muted-foreground text-xs @xl:block">{t.invitesExpire}</span>
             </button>
             <button
-              className={cn("flex min-w-0 cursor-pointer flex-col gap-2 p-3 text-left transition-colors duration-150 @xl:gap-2.5 @xl:px-4 @xl:py-3.5 [@media(hover:hover)]:hover:bg-accent/40", ring, "focus-visible:ring-inset")}
+              className={cn("flex min-w-0 cursor-pointer flex-col gap-2 p-3 text-start transition-colors duration-150 @xl:gap-2.5 @xl:px-4 @xl:py-3.5 [@media(hover:hover)]:hover:bg-accent/40", ring, "focus-visible:ring-inset")}
               onClick={() => {
                 selection.clear();
                 onQueryChange(withFilter(withFilter(query, "status", "active"), "twoFactor", "off"));
@@ -879,7 +879,7 @@ function AdminUsersScreen({
                   <FilterIcon />
                   <span className="hidden @md:inline">{t.filter}</span>
                   {filterCount > 0 ? (
-                    <span className="absolute -top-1.5 -right-1.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 font-medium text-[10px] text-primary-foreground tabular-nums ring-2 ring-background">
+                    <span className="absolute -top-1.5 -end-1.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 font-medium text-[10px] text-primary-foreground tabular-nums ring-2 ring-background">
                       {filterCount}
                     </span>
                   ) : null}
@@ -1250,7 +1250,7 @@ function MemberDetails({
                   <section className="flex flex-col gap-3">
                     <h4 className="font-medium text-muted-foreground text-xs">{t.activity}</h4>
                     <ol className="relative flex flex-col gap-4">
-                      <span aria-hidden className="absolute top-3 bottom-3 left-[13px] w-px bg-border" />
+                      <span aria-hidden className="absolute top-3 bottom-3 start-[13px] w-px bg-border" />
                       {data.data.activity.map((a) => (
                         <li className="relative flex gap-3" key={a.id}>
                           <span className="relative flex size-7 shrink-0 items-center justify-center rounded-full border bg-background text-muted-foreground [&_svg]:size-3.5">
@@ -1412,7 +1412,7 @@ function InviteDialog({
             {INVITE_ROLES.map((r) => (
               <Radio.Root
                 className={cn(
-                  "relative flex cursor-pointer flex-col gap-1 rounded-xl border p-3 text-left hover:bg-accent/40 active:scale-[0.98] data-checked:border-foreground/40 data-checked:bg-accent/60",
+                  "relative flex cursor-pointer flex-col gap-1 rounded-xl border p-3 text-start hover:bg-accent/40 active:scale-[0.98] data-checked:border-foreground/40 data-checked:bg-accent/60",
                   ring,
                   press,
                 )}

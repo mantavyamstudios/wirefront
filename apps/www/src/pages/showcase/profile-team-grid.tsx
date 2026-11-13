@@ -95,7 +95,7 @@ export function ProfileTeamGrid() {
               <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 {d.count}
               </span>
-              <span className="ml-auto h-px flex-1 bg-border/40" />
+              <span className="ms-auto h-px flex-1 bg-border/40" />
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {d.members.map((m) => (
@@ -111,7 +111,7 @@ export function ProfileTeamGrid() {
                       <span
                         aria-hidden
                         className={
-                          "absolute right-0 bottom-0 size-3 rounded-full border-2 border-background " +
+                          "absolute end-0 bottom-0 size-3 rounded-full border-2 border-background " +
                           (m.status === "online"
                             ? "bg-emerald-500"
                             : m.status === "away"

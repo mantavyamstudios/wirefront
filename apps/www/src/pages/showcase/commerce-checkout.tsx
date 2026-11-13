@@ -92,7 +92,7 @@ const easeOut = [0.23, 1, 0.32, 1] as const;
 const press = "transition-[color,background-color,box-shadow,scale,opacity] duration-150 ease-out active:scale-[0.97]";
 
 const defaultItems: CheckoutItem[] = [
-  { id: "i1", name: "Speckled stoneware mug", variant: "Oat · 350 ml", price: 28, qty: 2, art: "mug" },
+  { id: "i1", name: "Speckled stoneware mug", variant: "Oat · 350 ms", price: 28, qty: 2, art: "mug" },
   { id: "i2", name: "Waxed canvas tote", variant: "Moss", price: 64, qty: 1, art: "tote" },
   { id: "i3", name: "Cedar & smoke candle", variant: "220 g", price: 32, qty: 1, art: "candle" },
 ];
@@ -902,7 +902,7 @@ export function Checkout({
             </span>
           </div>
         </div>
-        <div className="hidden min-w-0 flex-1 basis-0 items-center border-l bg-muted/40 @4xl:flex">
+        <div className="hidden min-w-0 flex-1 basis-0 items-center border-s bg-muted/40 @4xl:flex">
           <div className="flex w-full max-w-[440px] items-center px-10">
             <span className="flex items-center gap-1.5 text-muted-foreground text-xs">
               <LockIcon className="size-3.5" /> Secure checkout
@@ -915,7 +915,7 @@ export function Checkout({
         <button
           aria-controls={`${uid}-summary`}
           aria-expanded={summaryOpen}
-          className="flex h-12 w-full cursor-pointer items-center gap-2 px-4 text-left outline-none focus-visible:bg-accent"
+          className="flex h-12 w-full cursor-pointer items-center gap-2 px-4 text-start outline-none focus-visible:bg-accent"
           onClick={() => setSummaryOpen((o) => !o)}
           type="button"
         >
@@ -1065,7 +1065,7 @@ export function Checkout({
           </div>
         </div>
 
-        <aside aria-label="Order summary" className="hidden min-w-0 flex-1 basis-0 overflow-y-auto border-l bg-muted/40 @4xl:block">
+        <aside aria-label="Order summary" className="hidden min-w-0 flex-1 basis-0 overflow-y-auto border-s bg-muted/40 @4xl:block">
           <div className="w-full max-w-[440px] px-10 py-10">
             <h2 className="mb-5 font-medium">Order summary</h2>
             {summary}
@@ -1113,7 +1113,7 @@ function CardPreview({
           className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-xl bg-linear-to-br from-neutral-700 via-neutral-800 to-neutral-950 p-4 text-white shadow-lg/16 ring-1 ring-white/10"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <span className="pointer-events-none absolute -top-16 -right-12 size-44 rounded-full bg-white/6" />
+          <span className="pointer-events-none absolute -top-16 -end-12 size-44 rounded-full bg-white/6" />
           <div className="relative flex items-center justify-between">
             <span className="h-6 w-8 rounded-md bg-gradient-to-br from-amber-200 to-amber-400 ring-1 ring-black/10" />
             <NfcIcon className="size-5 opacity-80" />
@@ -1227,7 +1227,7 @@ function Placed({
         ].map((step, i, all) => (
           <li className="relative flex gap-3 pb-4 last:pb-0" key={step.title}>
             {i < all.length - 1 && (
-              <span aria-hidden className="absolute top-5 bottom-0 left-[7px] w-px bg-border" />
+              <span aria-hidden className="absolute top-5 bottom-0 start-[7px] w-px bg-border" />
             )}
             <span
               aria-hidden

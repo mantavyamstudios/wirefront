@@ -117,7 +117,7 @@ export function FormsNotifications() {
         </p>
 
         {/* Visual column headers; each switch carries its own accessible name. */}
-        <div aria-hidden className="sticky top-0 z-10 mt-8 flex items-center justify-end gap-2 border-y border-border/60 bg-background/95 py-3 pr-4 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] backdrop-blur sm:gap-6 sm:tracking-[0.3em]">
+        <div aria-hidden className="sticky top-0 z-10 mt-8 flex items-center justify-end gap-2 border-y border-border/60 bg-background/95 py-3 pe-4 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] backdrop-blur sm:gap-6 sm:tracking-[0.3em]">
           <span className="flex w-14 justify-center gap-1.5 sm:w-16">
             <MailIcon className="size-3.5 opacity-70" />
             Email
@@ -143,7 +143,7 @@ export function FormsNotifications() {
                 return (
                   <li
                     key={p.key}
-                    className="flex items-center gap-2 py-1.5 pl-4 sm:gap-6"
+                    className="flex items-center gap-2 py-1.5 ps-4 sm:gap-6"
                   >
                     <div className="min-w-0 flex-1 py-2">
                       <div className="font-medium text-sm">{p.title}</div>
@@ -151,7 +151,7 @@ export function FormsNotifications() {
                         {p.description}
                       </p>
                     </div>
-                    <div className="flex items-stretch justify-center gap-2 pr-4 sm:gap-6">
+                    <div className="flex items-stretch justify-center gap-2 pe-4 sm:gap-6">
                       {/* Each cell is a label so the whole 44px area toggles. */}
                       <label className="flex min-h-11 w-14 cursor-pointer items-center justify-center rounded-md hover:bg-foreground/[0.03] sm:w-16">
                         <Switch

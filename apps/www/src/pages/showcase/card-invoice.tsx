@@ -121,14 +121,14 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
             <span className="block text-xs sm:inline sm:text-sm">{invoice.due}</span>
           </div>
         </div>
-        <div className="shrink-0 text-right">
+        <div className="shrink-0 text-end">
           <div className="font-heading font-semibold text-base tabular-nums">
             {invoice.amount}
           </div>
           <Button
             variant="ghost"
             size="xs"
-            className="-mr-2 h-6 text-muted-foreground"
+            className="-me-2 h-6 text-muted-foreground"
           >
             Open
             <ExternalLinkIcon />

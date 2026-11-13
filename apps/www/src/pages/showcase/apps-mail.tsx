@@ -521,7 +521,7 @@ function FolderNav({
   onClose?: () => void;
 }) {
   const row =
-    "group/row relative flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring";
+    "group/row relative flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring";
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex items-center gap-2 px-3 pt-3 pb-2">
@@ -663,7 +663,7 @@ function ThreadRow({
       <button
         aria-current={selected ? "true" : undefined}
         className={cn(
-          "relative flex w-full cursor-pointer items-start gap-3 rounded-lg py-2.5 ps-3.5 pe-3 text-left outline-none transition-colors duration-100 focus-visible:ring-2 focus-visible:ring-ring",
+          "relative flex w-full cursor-pointer items-start gap-3 rounded-lg py-2.5 ps-3.5 pe-3 text-start outline-none transition-colors duration-100 focus-visible:ring-2 focus-visible:ring-ring",
           selected ? "bg-accent" : "hover:bg-accent/60",
         )}
         onClick={onOpen}
@@ -671,7 +671,7 @@ function ThreadRow({
         type="button"
       >
         {thread.unread && (
-          <span aria-label="Unread" className="absolute top-[18px] left-1 size-1.5 rounded-full bg-info" role="img" />
+          <span aria-label="Unread" className="absolute top-[18px] start-1 size-1.5 rounded-full bg-info" role="img" />
         )}
         <Person person={last.from.email === me.email ? thread.messages[0].from : last.from} size="size-8" />
         <span className="flex min-w-0 flex-1 flex-col">
@@ -696,7 +696,7 @@ function ThreadRow({
         aria-label={thread.starred ? "Unstar" : "Star"}
         aria-pressed={!!thread.starred}
         className={cn(
-          "absolute top-1.5 right-1.5 flex size-8 cursor-pointer items-center justify-center rounded-md outline-none transition-[opacity,color,scale] duration-150 ease-out hover:bg-background/80 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
+          "absolute top-1.5 end-1.5 flex size-8 cursor-pointer items-center justify-center rounded-md outline-none transition-[opacity,color,scale] duration-150 ease-out hover:bg-background/80 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
           thread.starred ? "text-amber-800 dark:text-amber-400" : "text-muted-foreground opacity-0 group-hover/thread:opacity-100",
         )}
         onClick={onStar}
@@ -725,7 +725,7 @@ function MessageBlock({
     return (
       <button
         aria-expanded={false}
-        className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-left outline-none transition-colors hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-start outline-none transition-colors hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring"
         onClick={onToggle}
         type="button"
       >
@@ -745,7 +745,7 @@ function MessageBlock({
     >
       <button
         aria-expanded
-        className="-m-1 flex w-[calc(100%+0.5rem)] cursor-pointer items-start gap-3 rounded-lg p-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="-m-1 flex w-[calc(100%+0.5rem)] cursor-pointer items-start gap-3 rounded-lg p-1 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring"
         onClick={onToggle}
         type="button"
       >
@@ -771,7 +771,7 @@ function MessageBlock({
               const Icon = attachmentIcon[a.kind];
               return (
                 <button
-                  className="flex min-w-0 max-w-full cursor-pointer items-center gap-2.5 rounded-xl border bg-card py-2 ps-2 pe-3 text-left shadow-xs/5 outline-none transition-[background-color,scale] duration-150 ease-out hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
+                  className="flex min-w-0 max-w-full cursor-pointer items-center gap-2.5 rounded-xl border bg-card py-2 ps-2 pe-3 text-start shadow-xs/5 outline-none transition-[background-color,scale] duration-150 ease-out hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
                   key={a.name}
                   onClick={() => onAttachment(a)}
                   type="button"
@@ -891,7 +891,7 @@ function Compose({
     <motion.div
       animate={{ opacity: 1, scale: 1, y: 0 }}
       aria-label="New message"
-      className="absolute right-3 bottom-3 left-3 z-40 flex origin-bottom-right flex-col overflow-hidden rounded-2xl border bg-popover shadow-lg/10 @xl:left-auto @xl:w-[440px]"
+      className="absolute end-3 bottom-3 start-3 z-40 flex origin-bottom-right flex-col overflow-hidden rounded-2xl border bg-popover shadow-lg/10 @xl:start-auto @xl:w-[440px]"
       exit={{ opacity: 0, scale: 0.96, y: 8 }}
       initial={{ opacity: 0, scale: 0.96, y: 8 }}
       onKeyDown={(e) => {
@@ -1185,7 +1185,7 @@ export function Mail({ account = me, threads: initialThreads = defaultThreads, l
                   animate={{ x: 0 }}
                   aria-label="Mailboxes"
                   aria-modal="true"
-                  className="absolute inset-y-2 left-2 z-50 w-[264px] max-w-[calc(100%-3rem)] overflow-hidden rounded-2xl border bg-sidebar shadow-lg/10 @5xl:hidden"
+                  className="absolute inset-y-2 start-2 z-50 w-[264px] max-w-[calc(100%-3rem)] overflow-hidden rounded-2xl border bg-sidebar shadow-lg/10 @5xl:hidden"
                   exit={{ x: "-110%" }}
                   initial={{ x: "-110%" }}
                   role="dialog"
@@ -1490,7 +1490,7 @@ export function Mail({ account = me, threads: initialThreads = defaultThreads, l
 
             <div
               aria-live="polite"
-              className="pointer-events-none absolute inset-x-0 bottom-4 z-30 flex justify-center px-4 @3xl:right-auto @3xl:bottom-12 @3xl:w-[340px] @6xl:w-[380px]"
+              className="pointer-events-none absolute inset-x-0 bottom-4 z-30 flex justify-center px-4 @3xl:end-auto @3xl:bottom-12 @3xl:w-[340px] @6xl:w-[380px]"
             >
               <AnimatePresence mode="popLayout">
                 {toast && !composing && (

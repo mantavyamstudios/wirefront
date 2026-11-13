@@ -542,7 +542,7 @@ export function LayoutsCanvasTools() {
         onPointerDown={onCanvasPointerDown}
       >
         <div
-          className="absolute top-0 left-0"
+          className="absolute top-0 start-0"
           style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
             transformOrigin: "0 0",
@@ -831,7 +831,7 @@ function ZoomControls({
   onFit: () => void;
 }) {
   return (
-    <div className="absolute top-3 right-3 z-10 flex items-center gap-0.5 rounded-full border border-border bg-card/85 p-1 shadow-lg backdrop-blur">
+    <div className="absolute top-3 end-3 z-10 flex items-center gap-0.5 rounded-full border border-border bg-card/85 p-1 shadow-lg backdrop-blur">
       <Tooltip>
         <TooltipTrigger
           aria-label="Zoom out"
@@ -889,7 +889,7 @@ function StatusPill({
   return (
     <div
       aria-live="polite"
-      className="absolute bottom-3 left-3 z-10 hidden rounded-md border border-border bg-card/85 px-2 py-1 font-mono text-[10px] text-foreground/70 uppercase tracking-[0.2em] backdrop-blur md:block"
+      className="absolute bottom-3 start-3 z-10 hidden rounded-md border border-border bg-card/85 px-2 py-1 font-mono text-[10px] text-foreground/70 uppercase tracking-[0.2em] backdrop-blur md:block"
     >
       {selected
         ? `1 selected · ${Math.round(selected.width)} × ${Math.round(selected.height)}`
@@ -922,7 +922,7 @@ function Inspector({
   return (
     <div
       className={cn(
-        "absolute right-3 bottom-3 z-10 w-72 overflow-hidden rounded-xl border border-border bg-card/85 shadow-lg backdrop-blur",
+        "absolute end-3 bottom-3 z-10 w-72 overflow-hidden rounded-xl border border-border bg-card/85 shadow-lg backdrop-blur",
         className && "static",
         className,
       )}
@@ -1008,9 +1008,12 @@ function Inspector({
                 <span className="w-8 font-mono text-[10px] text-muted-foreground tabular-nums">
                   {shape.opacity}%
                 </span>
+                <span className="sr-only" id={`opacity-label-${shape.id}`}>
+                  Opacity
+                </span>
                 <Slider
+                  aria-labelledby={`opacity-label-${shape.id}`}
                   className="flex-1"
-                  getAriaLabel={() => "Opacity"}
                   max={100}
                   min={0}
                   value={[shape.opacity]}
@@ -1055,7 +1058,7 @@ function Inspector({
                 <div
                   key={layer.id}
                   className={cn(
-                    "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-[11px] transition-colors pointer-coarse:min-h-11 pointer-coarse:text-xs",
+                    "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-start text-[11px] transition-colors pointer-coarse:min-h-11 pointer-coarse:text-xs",
                     isActive
                       ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
                       : "hover:bg-foreground/[0.05]",
@@ -1075,7 +1078,7 @@ function Inspector({
                   </button>
                   <button
                     aria-pressed={isActive}
-                    className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 self-stretch rounded text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 self-stretch rounded text-start outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     onClick={() => onSelect(layer.id)}
                     type="button"
                   >

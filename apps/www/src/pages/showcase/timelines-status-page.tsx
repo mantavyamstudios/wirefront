@@ -97,7 +97,7 @@ export function TimelinesStatusPage() {
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Acme Status · status.acme.dev
           </div>
-          <div className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-amber-500/15 px-4 py-1.5 text-left font-mono text-[12px] text-amber-800 dark:text-amber-400">
+          <div className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-amber-500/15 px-4 py-1.5 text-start font-mono text-[12px] text-amber-800 dark:text-amber-400">
             <span className="size-2 shrink-0 rounded-full bg-amber-500 motion-safe:animate-pulse" />
             One service is experiencing degraded performance
           </div>
@@ -129,7 +129,7 @@ export function TimelinesStatusPage() {
                   </div>
                 </div>
                 <UptimeBars degraded={c.status !== "operational"} />
-                <span className="shrink-0 text-right font-mono text-[11px] text-muted-foreground sm:order-last sm:w-20">
+                <span className="shrink-0 text-end font-mono text-[11px] text-muted-foreground sm:order-last sm:w-20">
                   {c.uptime}
                 </span>
               </li>
@@ -172,7 +172,7 @@ export function TimelinesStatusPage() {
               <ol className="relative mt-5">
                 <span
                   aria-hidden
-                  className="absolute top-1 bottom-1 left-[5px] w-px bg-border/50"
+                  className="absolute top-1 bottom-1 start-[5px] w-px bg-border/50"
                 />
                 {inc.updates.map((u, i) => (
                   <li

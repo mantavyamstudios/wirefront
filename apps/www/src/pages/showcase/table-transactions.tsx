@@ -196,7 +196,7 @@ export function TableTransactions() {
                 <TableHead className="max-lg:hidden">Counterparty</TableHead>
                 <TableHead className="max-xl:hidden">Method</TableHead>
                 <TableHead className="max-sm:hidden">Status</TableHead>
-                <TableHead className="pe-4 text-right">Amount</TableHead>
+                <TableHead className="pe-4 text-end">Amount</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -241,7 +241,7 @@ export function TableTransactions() {
                       {t.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="pe-4 text-right">
+                  <TableCell className="pe-4 text-end">
                     <div
                       className={
                         "font-mono tabular-nums " +

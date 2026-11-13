@@ -238,7 +238,7 @@ export function DashboardsSupport() {
                       {a.resolved} resolved · {Math.round(a.load * 100)}% load
                     </div>
                   </div>
-                  <div className="text-right font-mono text-[11px] tabular-nums max-sm:hidden">
+                  <div className="text-end font-mono text-[11px] tabular-nums max-sm:hidden">
                     <div>
                       <span className="text-foreground">{a.resolved}</span>{" "}
                       <span className="text-muted-foreground">resolved</span>
@@ -247,7 +247,7 @@ export function DashboardsSupport() {
                       avg {a.avgFirstResp}
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-end">
                     <div className="font-mono text-sm text-amber-800 tabular-nums dark:text-amber-400">
                       ★ {a.csat.toFixed(1)}
                     </div>
@@ -330,31 +330,31 @@ function Donut({ buckets }: { buckets: Bucket[] }) {
 // target column, md moves the customer into its own column.
 function BreachTable({ breaches }: { breaches: Breach[] }) {
   return (
-    <table className="mt-3 w-full table-fixed border-collapse text-left">
+    <table className="mt-3 w-full table-fixed border-collapse text-start">
       <caption className="sr-only">Tickets breaching SLA</caption>
       <thead>
         <tr className="border-border/60 border-b font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-          <th scope="col" className="w-14 py-2 pr-2 font-normal">Pri</th>
-          <th scope="col" className="py-2 pr-3 font-normal">Ticket</th>
-          <th scope="col" className="w-32 py-2 pr-3 font-normal max-md:hidden">Customer</th>
-          <th scope="col" className="w-32 py-2 pr-3 font-normal max-sm:hidden">SLA</th>
-          <th scope="col" className="w-24 py-2 text-right font-normal">Overdue</th>
+          <th scope="col" className="w-14 py-2 pe-2 font-normal">Pri</th>
+          <th scope="col" className="py-2 pe-3 font-normal">Ticket</th>
+          <th scope="col" className="w-32 py-2 pe-3 font-normal max-md:hidden">Customer</th>
+          <th scope="col" className="w-32 py-2 pe-3 font-normal max-sm:hidden">SLA</th>
+          <th scope="col" className="w-24 py-2 text-end font-normal">Overdue</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-border/40">
         {breaches.map((b) => (
           <tr key={b.id} className="h-14 align-middle">
-            <td className="pr-2">
+            <td className="pe-2">
               <PriorityChip p={b.priority} />
             </td>
-            <td className="min-w-0 pr-3">
+            <td className="min-w-0 pe-3">
               <div className="truncate text-sm">{b.subject}</div>
               <div className="truncate font-mono text-[11px] text-muted-foreground">
                 {b.id}
                 <span className="md:hidden"> · {b.customer}</span>
               </div>
             </td>
-            <td className="pr-3 max-md:hidden">
+            <td className="pe-3 max-md:hidden">
               <div className="flex min-w-0 items-center gap-2">
                 <Avatar className="size-6 shrink-0">
                   <AvatarFallback className="text-[10px]">{b.initials}</AvatarFallback>
@@ -362,10 +362,10 @@ function BreachTable({ breaches }: { breaches: Breach[] }) {
                 <span className="truncate text-sm">{b.customer}</span>
               </div>
             </td>
-            <td className="truncate pr-3 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.1em] max-sm:hidden">
+            <td className="truncate pe-3 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.1em] max-sm:hidden">
               {b.due}
             </td>
-            <td className="text-right">
+            <td className="text-end">
               <OverdueBadge minutes={b.overdueMin} />
             </td>
           </tr>

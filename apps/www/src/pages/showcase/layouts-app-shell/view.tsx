@@ -147,7 +147,7 @@ export function AppShell({
           </button>
         ) : null}
 
-        <div className="ml-auto flex items-center gap-1 sm:gap-2">
+        <div className="ms-auto flex items-center gap-1 sm:gap-2">
           {onSearch ? (
             <Button aria-label={t.searchLabel} className="md:hidden" onClick={onSearch} size="icon" variant="ghost">
               <SearchIcon />
@@ -156,7 +156,7 @@ export function AppShell({
           {notificationsHref ? (
             <WirefrontLink className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "relative")} href={notificationsHref} aria-label={unread ? interpolate(t.notificationsUnread, { count: unread }) : t.notifications}>
               <BellIcon />
-              {unread ? <span className="absolute top-2 right-2 size-2 rounded-full bg-primary ring-2 ring-background" /> : null}
+              {unread ? <span className="absolute top-2 end-2 size-2 rounded-full bg-primary ring-2 ring-background" /> : null}
             </WirefrontLink>
           ) : null}
           <div className="relative">{avatar("size-7")}</div>
@@ -164,7 +164,7 @@ export function AppShell({
       </header>
 
       <div className="flex-1 md:grid md:grid-cols-[256px_minmax(0,1fr)]">
-        <aside className="sticky top-14 hidden h-[calc(100svh-3.5rem)] border-border/60 border-r bg-foreground/[0.015] md:block">
+        <aside className="sticky top-14 hidden h-[calc(100svh-3.5rem)] border-border/60 border-e bg-foreground/[0.015] md:block">
           <SidebarNav accountHref={accountHref} activeId={activeId} avatar={avatar("size-7")} sections={sections} t={t} user={user} />
         </aside>
         <main className="min-w-0 p-4 md:p-6">{children}</main>
@@ -207,7 +207,7 @@ function SidebarNav({
     </>
   );
   const accountClass =
-    "flex items-center gap-2 border-border/60 border-t px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] text-left transition-colors hover:bg-foreground/[0.03]";
+    "flex items-center gap-2 border-border/60 border-t px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] text-start transition-colors hover:bg-foreground/[0.03]";
 
   return (
     <nav aria-label={t.workspace} className="flex h-full min-h-0 flex-col">
@@ -232,7 +232,7 @@ function SidebarNav({
                       ) : item.color ? (
                         <span aria-hidden className="size-2 shrink-0 rounded-sm" style={{ backgroundColor: item.color }} />
                       ) : null}
-                      <span className="flex-1 truncate text-left">{item.label}</span>
+                      <span className="flex-1 truncate text-start">{item.label}</span>
                       {item.count !== undefined ? (
                         <span className="rounded-full bg-foreground/10 px-1.5 py-0.5 font-mono text-[10px] text-foreground">{format.number(item.count)}</span>
                       ) : null}

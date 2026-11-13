@@ -472,7 +472,7 @@ function SearchBox({
           hero ? "h-12 @lg:h-13" : "h-9",
         )}
       >
-        <SearchIcon className={cn("pointer-events-none absolute text-muted-foreground", hero ? "left-4 size-4.5" : "left-3 size-4")} />
+        <SearchIcon className={cn("pointer-events-none absolute text-muted-foreground", hero ? "start-4 size-4.5" : "start-3 size-4")} />
         <input
           aria-activedescendant={active >= 0 ? `${listId}-${active}` : undefined}
           aria-autocomplete="list"
@@ -512,14 +512,14 @@ function SearchBox({
         {query ? (
           <button
             aria-label="Clear search"
-            className={cn("absolute flex size-7 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground", ring, hero ? "right-3" : "right-1")}
+            className={cn("absolute flex size-7 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground", ring, hero ? "end-3" : "end-1")}
             onClick={() => setQuery("")}
             type="button"
           >
             <XIcon className="size-4" />
           </button>
         ) : (
-          hero && <Kbd className="absolute right-4 hidden @lg:inline-flex">/</Kbd>
+          hero && <Kbd className="absolute end-4 hidden @lg:inline-flex">/</Kbd>
         )}
       </div>
 
@@ -527,7 +527,7 @@ function SearchBox({
         {showList && (
           <motion.div
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            className="absolute inset-x-0 top-full z-30 mt-2 origin-top overflow-hidden rounded-xl border bg-popover text-left text-popover-foreground shadow-lg/5"
+            className="absolute inset-x-0 top-full z-30 mt-2 origin-top overflow-hidden rounded-xl border bg-popover text-start text-popover-foreground shadow-lg/5"
             exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.1 } }}
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: -4, scale: 0.98 }}
             transition={{ duration: 0.16, ease: easeOut }}
@@ -539,7 +539,7 @@ function SearchBox({
                   return (
                     <li aria-selected={active === i} id={`${listId}-${i}`} key={a.id} role="option">
                       <button
-                        className={cn("flex w-full cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-left", active === i ? "bg-accent" : "hover:bg-accent/60")}
+                        className={cn("flex w-full cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-start", active === i ? "bg-accent" : "hover:bg-accent/60")}
                         onClick={() => {
                           onOpen(a.id);
                           setOpen(false);
@@ -593,7 +593,7 @@ function ArticleRow({ article, category, query = "", onOpen }: { article: HelpAr
   return (
     <li>
       <button
-        className={cn("group/row flex w-full cursor-pointer items-start gap-3 rounded-xl px-3 py-3 text-left hover:bg-accent/60", ring, press, "active:scale-[0.99]")}
+        className={cn("group/row flex w-full cursor-pointer items-start gap-3 rounded-xl px-3 py-3 text-start hover:bg-accent/60", ring, press, "active:scale-[0.99]")}
         onClick={onOpen}
         type="button"
       >
@@ -724,7 +724,7 @@ export function HelpCentre({
               <button
                 aria-current={on && !activeArticle ? "page" : undefined}
                 className={cn(
-                  "flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-md px-2 text-left [&_svg]:size-4",
+                  "flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-md px-2 text-start [&_svg]:size-4",
                   ring,
                   on ? "bg-accent font-medium text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
                 )}
@@ -735,13 +735,13 @@ export function HelpCentre({
                 <span className="truncate">{tc.name}</span>
               </button>
               {inCat.length > 0 && (
-                <ul className="my-1 ms-4 flex flex-col border-l ps-2">
+                <ul className="my-1 ms-4 flex flex-col border-s ps-2">
                   {inCat.map((a) => (
                     <li key={a.id}>
                       <button
                         aria-current={a.id === activeArticle ? "page" : undefined}
                         className={cn(
-                          "w-full cursor-pointer rounded-md px-2 py-1.5 text-left text-xs leading-5",
+                          "w-full cursor-pointer rounded-md px-2 py-1.5 text-start text-xs leading-5",
                           ring,
                           a.id === activeArticle ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
                         )}
@@ -825,7 +825,7 @@ export function HelpCentre({
                 >
                   <button
                     className={cn(
-                      "group/cat flex h-full w-full cursor-pointer items-start gap-3.5 rounded-xl border bg-card p-4 text-left hover:border-foreground/16 hover:bg-accent/32",
+                      "group/cat flex h-full w-full cursor-pointer items-start gap-3.5 rounded-xl border bg-card p-4 text-start hover:border-foreground/16 hover:bg-accent/32",
                       ring,
                       press,
                       "active:scale-[0.98]",
@@ -1154,21 +1154,21 @@ export function HelpCentre({
         {headings.length > 1 && (
           <aside className="sticky top-0 hidden w-44 shrink-0 self-start pt-11 @6xl:block">
             <h2 className="mb-2 font-medium text-xs">On this page</h2>
-            <ul className="relative flex flex-col border-l">
+            <ul className="relative flex flex-col border-s">
               {headings.map((h) => {
                 const on = activeHeading === slug(h);
                 return (
                   <li className="relative" key={h}>
                     {on && (
                       <motion.span
-                        className="absolute inset-y-1 -left-px w-0.5 rounded-full bg-foreground"
+                        className="absolute inset-y-1 -start-px w-0.5 rounded-full bg-foreground"
                         layoutId="hc-toc"
                         transition={reduce ? { duration: 0 } : spring}
                       />
                     )}
                     <button
                       className={cn(
-                        "w-full cursor-pointer rounded-r-md py-1.5 ps-3 text-left text-xs leading-5 transition-colors",
+                        "w-full cursor-pointer rounded-e-md py-1.5 ps-3 text-start text-xs leading-5 transition-colors",
                         ring,
                         on ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
                       )}

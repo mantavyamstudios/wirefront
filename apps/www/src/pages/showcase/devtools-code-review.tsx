@@ -552,7 +552,7 @@ function ThreadView({
         ) : (
           <div className="flex items-center gap-2">
             <button
-              className="h-7 flex-1 cursor-text rounded-md border bg-background px-2.5 text-left text-[13px] text-muted-foreground outline-none transition-colors hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring dark:bg-input/32"
+              className="h-7 flex-1 cursor-text rounded-md border bg-background px-2.5 text-start text-[13px] text-muted-foreground outline-none transition-colors hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring dark:bg-input/32"
               onClick={() => setReplying(true)}
               type="button"
             >
@@ -819,7 +819,7 @@ export function CodeReview({
             <button
               aria-current={on ? "true" : undefined}
               className={cn(
-                "flex h-7 w-full cursor-pointer items-center gap-2 rounded-md pe-2 text-left text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+                "flex h-7 w-full cursor-pointer items-center gap-2 rounded-md pe-2 text-start text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
                 on ? "bg-accent font-medium text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
               )}
               onClick={() => scrollToFile(n.path)}
@@ -857,16 +857,16 @@ export function CodeReview({
       );
     });
 
-  const lineNo = "w-10 shrink-0 select-none px-1.5 text-right text-muted-foreground tabular-nums";
+  const lineNo = "w-10 shrink-0 select-none px-1.5 text-end text-muted-foreground tabular-nums";
 
   const gutterButton = (file: string, line: number, side: "new" | "old") => (
     <button
       aria-label={`Comment on line ${line}`}
-      className="group/gutter absolute inset-y-0 left-0 z-10 w-10 cursor-pointer outline-none"
+      className="group/gutter absolute inset-y-0 start-0 z-10 w-10 cursor-pointer outline-none"
       onClick={() => setComposer({ file, line, side })}
       type="button"
     >
-      <span className="absolute top-0.5 left-1 flex size-4 items-center justify-center rounded bg-info text-white opacity-0 transition-[opacity,scale] duration-100 ease-out group-hover/line:opacity-100 group-focus-visible/gutter:opacity-100 group-focus-visible/gutter:ring-2 group-focus-visible/gutter:ring-ring group-active/gutter:scale-90">
+      <span className="absolute top-0.5 start-1 flex size-4 items-center justify-center rounded bg-info text-white opacity-0 transition-[opacity,scale] duration-100 ease-out group-hover/line:opacity-100 group-focus-visible/gutter:opacity-100 group-focus-visible/gutter:ring-2 group-focus-visible/gutter:ring-ring group-active/gutter:scale-90">
         <PlusIcon className="size-3" strokeWidth={3} />
       </span>
     </button>
@@ -1049,7 +1049,7 @@ export function CodeReview({
                 className={cn(
                   "flex shrink-0 flex-col overflow-hidden bg-sidebar",
                   !measured && "hidden @[900px]:flex",
-                  narrow ? "absolute inset-y-0 left-0 z-30 w-[272px] max-w-[85%] border-e shadow-lg/10" : "border-e",
+                  narrow ? "absolute inset-y-0 start-0 z-30 w-[272px] max-w-[85%] border-e shadow-lg/10" : "border-e",
                 )}
                 exit={narrow ? { x: "-100%", opacity: 1 } : { width: 0, opacity: 0 }}
                 initial={narrow ? { x: "-100%", opacity: 1 } : { width: 0, opacity: 0 }}
@@ -1224,7 +1224,7 @@ export function CodeReview({
             <motion.div
               animate={{ opacity: 1, scale: 1, y: 0 }}
               aria-label="Finish your review"
-              className="absolute top-16 right-3 left-3 z-40 origin-top-right rounded-2xl border bg-popover p-3 shadow-lg/10 @xl:left-auto @xl:w-[380px]"
+              className="absolute top-16 end-3 start-3 z-40 origin-top-right rounded-2xl border bg-popover p-3 shadow-lg/10 @xl:start-auto @xl:w-[380px]"
               exit={{ opacity: 0, scale: 0.97, y: -4 }}
               initial={{ opacity: 0, scale: 0.97, y: -4 }}
               role="dialog"
@@ -1258,7 +1258,7 @@ export function CodeReview({
                   <button
                     aria-checked={verdict === o.id}
                     className={cn(
-                      "flex cursor-pointer items-start gap-2.5 rounded-xl border px-3 py-2 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+                      "flex cursor-pointer items-start gap-2.5 rounded-xl border px-3 py-2 text-start outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
                       verdict === o.id ? "border-foreground/20 bg-accent" : "border-transparent hover:bg-accent/50",
                     )}
                     key={o.id}

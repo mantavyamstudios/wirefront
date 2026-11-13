@@ -135,7 +135,7 @@ export interface InsetShellProps {
 const spring = { type: "spring", stiffness: 420, damping: 36 } as const;
 const widthSpring = { type: "spring", stiffness: 380, damping: 38 } as const;
 const row =
-  "group/row relative flex h-8 w-full cursor-pointer items-center gap-2.5 overflow-hidden rounded-lg px-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  "group/row relative flex h-8 w-full cursor-pointer items-center gap-2.5 overflow-hidden rounded-lg px-3 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 function initials(name: string) {
   return name
@@ -222,7 +222,7 @@ function SidebarBody({
       </span>
     </>
   );
-  const faceClass = "flex min-w-0 items-center gap-2.5 overflow-hidden rounded-xl px-1.5 text-left";
+  const faceClass = "flex min-w-0 items-center gap-2.5 overflow-hidden rounded-xl px-1.5 text-start";
 
   return (
     <LayoutGroup id={pill}>
@@ -335,7 +335,7 @@ function SidebarBody({
                       {section.label}
                       <ChevronDownIcon className={cn("size-3 transition-transform duration-200", !open && "-rotate-90")} />
                     </button>
-                    {collapsed && <span className="absolute left-4 h-px w-6 bg-border" />}
+                    {collapsed && <span className="absolute start-4 h-px w-6 bg-border" />}
                     {section.addHref ? (
                       <WirefrontLink
                         aria-label={interpolate(t.addTo, { section: section.label })}
@@ -402,7 +402,7 @@ function SidebarBody({
                                     </span>
                                   )}
                                   {collapsed && item.attention && item.count ? (
-                                    <span className="absolute top-1.5 left-7 size-1.5 rounded-full bg-info ring-2 ring-sidebar" />
+                                    <span className="absolute top-1.5 start-7 size-1.5 rounded-full bg-info ring-2 ring-sidebar" />
                                   ) : null}
                                 </WirefrontLink>
                               )}
@@ -561,7 +561,7 @@ export function InsetShell({
                       href={notificationsHref}
                     >
                       <BellIcon />
-                      {unread ? <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-info" /> : null}
+                      {unread ? <span className="absolute top-1.5 end-1.5 size-1.5 rounded-full bg-info" /> : null}
                     </WirefrontLink>
                   ) : null}
                 </div>

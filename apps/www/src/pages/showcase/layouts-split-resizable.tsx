@@ -9,7 +9,7 @@ import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Separator } from "@wirefront/ui/separator";
 import { useColorScheme } from "@wirefront/ui/wirefront/provider";
-import { ScrollArea } from "@wirefront/ui/scroll-area";
+import { ScrollRegion } from "@wirefront/ui/wirefront/scroll-region";
 
 /** VS light with the two token colours that miss 4.5:1 on the editor background darkened. */
 const vsLightAA = {
@@ -126,7 +126,7 @@ export function LayoutsSplitResizable() {
           </Button>
         </div>
         {/* Split ratio + reset only matter when the split is visible (md+). */}
-        <div className="ml-auto hidden shrink-0 items-center gap-2 md:flex">
+        <div className="ms-auto hidden shrink-0 items-center gap-2 md:flex">
           <Badge variant="outline" className="font-mono text-[10px] tracking-wider">
             {leftLabel}% / {rightLabel}%
           </Badge>
@@ -233,7 +233,7 @@ function EditorPane() {
         <EditorTab label="playground.tsx" active />
         <EditorTab label="config.json" />
       </div>
-      <ScrollArea aria-label="playground.tsx" className="min-h-0 flex-1" orientation="both">
+      <ScrollRegion aria-label="playground.tsx" className="min-h-0 flex-1" orientation="both">
         {!mounted ? (
           <pre className="m-0 whitespace-pre px-3 py-3 font-mono text-[12.5px] leading-[1.65]">
             {CODE.trimEnd()}
@@ -247,7 +247,7 @@ function EditorPane() {
             >
               {tokens.map((line, i) => (
                 <div key={i} {...getLineProps({ line })} className="table-row">
-                  <span className="table-cell select-none pr-4 text-right font-mono text-muted-foreground text-xs tabular-nums">
+                  <span className="table-cell select-none pe-4 text-end font-mono text-muted-foreground text-xs tabular-nums">
                     {i + 1}
                   </span>
                   <span className="table-cell whitespace-pre">
@@ -261,7 +261,7 @@ function EditorPane() {
           )}
         </Highlight>
         )}
-      </ScrollArea>
+      </ScrollRegion>
     </div>
   );
 }

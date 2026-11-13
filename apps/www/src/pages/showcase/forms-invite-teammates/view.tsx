@@ -320,7 +320,7 @@ function ChipPill({
   return (
     <span
       className={cn(
-        "group inline-flex h-7 items-center gap-1.5 rounded-full border pr-1 pl-1 text-xs",
+        "group inline-flex h-7 items-center gap-1.5 rounded-full border pe-1 ps-1 text-xs",
         !valid && "border-destructive/50 bg-destructive/8 text-destructive-foreground",
         valid && autoJoin && "border-emerald-500/30 bg-emerald-500/8 text-foreground",
         valid && !autoJoin && "border-border bg-foreground/[0.03] text-foreground",
@@ -360,7 +360,7 @@ function ChipPill({
             {InviteRole.options.map((r) => (
               <button
                 aria-pressed={r === chip.role}
-                className="flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-foreground/[0.04]"
+                className="flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-start text-sm hover:bg-foreground/[0.04]"
                 key={r}
                 onClick={() => onRole(r)}
                 type="button"

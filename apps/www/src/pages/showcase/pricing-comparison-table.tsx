@@ -93,7 +93,7 @@ export function PricingComparisonTable() {
               <tr className="bg-foreground/[0.02]">
                 <th
                   scope="col"
-                  className="sticky left-0 z-10 w-[45%] bg-background px-4 py-4 text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em] md:w-[28%]"
+                  className="sticky start-0 z-10 w-[45%] bg-background px-4 py-4 text-start font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em] md:w-[28%]"
                 >
                   Plan
                 </th>
@@ -103,7 +103,7 @@ export function PricingComparisonTable() {
                     scope="col"
                     className={
                       col(p.id) +
-                      "px-4 py-4 text-left " +
+                      "px-4 py-4 text-start " +
                       (p.highlight ? "bg-foreground/[0.06]" : "")
                     }
                   >
@@ -125,7 +125,7 @@ export function PricingComparisonTable() {
                     <th
                       scope="colgroup"
                       colSpan={5}
-                      className="border-border/50 border-y bg-foreground/[0.02] px-4 py-2 text-left font-mono text-[11px] text-muted-foreground uppercase tracking-[0.25em]"
+                      className="border-border/50 border-y bg-foreground/[0.02] px-4 py-2 text-start font-mono text-[11px] text-muted-foreground uppercase tracking-[0.25em]"
                     >
                       {section.title}
                     </th>
@@ -137,7 +137,7 @@ export function PricingComparisonTable() {
                     >
                       <th
                         scope="row"
-                        className="sticky left-0 z-10 bg-background px-4 py-3 text-left font-normal text-foreground/85"
+                        className="sticky start-0 z-10 bg-background px-4 py-3 text-start font-normal text-foreground/85"
                       >
                         {row.label}
                       </th>
@@ -174,7 +174,7 @@ export function PricingComparisonTable() {
                 </Fragment>
               ))}
               <tr className="bg-foreground/[0.02]">
-                <td className="sticky left-0 z-10 bg-background" />
+                <td className="sticky start-0 z-10 bg-background" />
                 {PLANS.map((p) => (
                   <td key={p.id} className={col(p.id) + "px-4 py-4"}>
                     <Button

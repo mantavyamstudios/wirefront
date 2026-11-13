@@ -96,7 +96,7 @@ function EventCard({ event }: { event: Event }) {
       <CardContent className="flex items-stretch gap-0 p-0">
         <div
           className={
-            "flex w-16 shrink-0 flex-col items-center justify-center border-r bg-gradient-to-b p-3 sm:w-20 sm:p-4 " +
+            "flex w-16 shrink-0 flex-col items-center justify-center border-e bg-gradient-to-b p-3 sm:w-20 sm:p-4 " +
             event.tone
           }
         >

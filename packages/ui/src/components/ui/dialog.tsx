@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 // shadcn/ui (base-nova style) © 2023 shadcn — https://ui.shadcn.com · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
+"use client"
+
 import * as React from "react"
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 import { cn } from "../../lib/utils"
@@ -122,7 +124,7 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
     <DialogPrimitive.Title
       data-slot="dialog-title"
       className={cn(
-        "text-base leading-none font-medium",
+        "font-heading text-base leading-none font-medium",
         className
       )}
       {...props}

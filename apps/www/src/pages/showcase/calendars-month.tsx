@@ -104,7 +104,7 @@ export function CalendarsMonth() {
             <div
               role="group"
               aria-label="Calendar view"
-              className="ml-auto flex items-center rounded-md border border-border/60 p-0.5 font-mono text-[10px] uppercase tracking-[0.2em] sm:ml-2"
+              className="ms-auto flex items-center rounded-md border border-border/60 p-0.5 font-mono text-[10px] uppercase tracking-[0.2em] sm:ms-2"
             >
               {VIEWS.map((v) => (
                 <button
@@ -120,7 +120,7 @@ export function CalendarsMonth() {
             </div>
             <button
               type="button"
-              className="ml-2 inline-flex min-h-8 items-center gap-1 rounded-md bg-foreground px-3 py-1.5 font-mono text-[11px] text-background uppercase tracking-[0.2em] max-sm:hidden"
+              className="ms-2 inline-flex min-h-8 items-center gap-1 rounded-md bg-foreground px-3 py-1.5 font-mono text-[11px] text-background uppercase tracking-[0.2em] max-sm:hidden"
             >
               <PlusIcon className="size-3" />
               Event
@@ -133,7 +133,7 @@ export function CalendarsMonth() {
             {DAYS.map((d) => (
               <div
                 key={d}
-                className="px-1 py-2 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:px-3 sm:text-left sm:tracking-[0.25em]"
+                className="px-1 py-2 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:px-3 sm:text-start sm:tracking-[0.25em]"
               >
                 <span aria-hidden className="sm:hidden">{d[0]}</span>
                 <span className="max-sm:sr-only">{d}</span>
@@ -155,7 +155,7 @@ export function CalendarsMonth() {
                   key={i}
                   className={
                     "min-h-14 border-border/40 border-b sm:min-h-[110px] " +
-                    (col < 6 ? "border-r " : "") +
+                    (col < 6 ? "border-e " : "") +
                     (out ? "bg-muted/20" : "")
                   }
                 >
@@ -166,7 +166,7 @@ export function CalendarsMonth() {
                       aria-pressed={isSelected}
                       aria-current={isToday ? "date" : undefined}
                       className={
-                        "flex h-full w-full flex-col items-center gap-1 p-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:items-stretch sm:p-1.5 " +
+                        "flex h-full w-full flex-col items-center gap-1 p-1 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:items-stretch sm:p-1.5 " +
                         (isSelected ? "max-sm:bg-foreground/[0.05] sm:bg-foreground/[0.02]" : "hover:bg-foreground/[0.02]")
                       }
                     >
@@ -232,7 +232,7 @@ export function CalendarsMonth() {
                 >
                   {e.title}
                   {e.span && e.span > 1 ? (
-                    <span className="ml-2 font-mono text-[11px] opacity-70">
+                    <span className="ms-2 font-mono text-[11px] opacity-70">
                       {e.span} days
                     </span>
                   ) : null}
@@ -249,7 +249,7 @@ export function CalendarsMonth() {
       <button
         type="button"
         aria-label="New event"
-        className="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] grid size-14 place-items-center rounded-full bg-foreground text-background shadow-lg sm:hidden"
+        className="fixed end-4 bottom-[max(1rem,env(safe-area-inset-bottom))] grid size-14 place-items-center rounded-full bg-foreground text-background shadow-lg sm:hidden"
       >
         <PlusIcon className="size-5" />
       </button>

@@ -550,14 +550,14 @@ function MiniClock({ hours, minutes }: { hours: number | null; minutes: number |
     >
       <motion.span
         className={cn(
-          "absolute bottom-1/2 left-[calc(50%-1px)] h-2 w-0.5 origin-bottom rounded-full bg-current transition-opacity",
+          "absolute bottom-1/2 start-[calc(50%-1px)] h-2 w-0.5 origin-bottom rounded-full bg-current transition-opacity",
           ready ? "opacity-100" : "opacity-0",
         )}
         style={{ rotate: hour }}
       />
       <motion.span
         className={cn(
-          "absolute bottom-1/2 left-[calc(50%-0.75px)] h-3 w-[1.5px] origin-bottom rounded-full bg-current transition-opacity",
+          "absolute bottom-1/2 start-[calc(50%-0.75px)] h-3 w-[1.5px] origin-bottom rounded-full bg-current transition-opacity",
           ready ? "opacity-100" : "opacity-0",
         )}
         style={{ rotate: minute }}

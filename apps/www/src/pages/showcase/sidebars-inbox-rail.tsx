@@ -118,7 +118,7 @@ export function SidebarsInboxRail() {
           </div>
           <button
             type="button"
-            className="mt-3 flex w-full items-center gap-2 rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-left transition-colors hover:bg-background pointer-coarse:min-h-11"
+            className="mt-3 flex w-full items-center gap-2 rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-start transition-colors hover:bg-background pointer-coarse:min-h-11"
           >
             <SearchIcon className="size-3.5 opacity-50" />
             <span className="flex-1 truncate text-muted-foreground text-xs">
@@ -158,7 +158,7 @@ export function SidebarsInboxRail() {
                   }`}
                 >
                   {t.unread ? (
-                    <span className="-translate-y-1/2 absolute top-1/2 left-1.5 size-1.5 rounded-full bg-primary">
+                    <span className="-translate-y-1/2 absolute top-1/2 start-1.5 size-1.5 rounded-full bg-primary">
                       <span className="sr-only">Unread</span>
                     </span>
                   ) : null}

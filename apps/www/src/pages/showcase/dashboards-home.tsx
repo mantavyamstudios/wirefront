@@ -54,7 +54,7 @@ export function DashboardsHome() {
               <button
                 key={s.label}
                 type="button"
-                className="group flex items-center justify-between gap-2 rounded-lg border border-border/60 bg-background/40 px-3.5 py-2.5 text-left transition-colors hover:border-foreground/40 hover:bg-background/60 pointer-coarse:min-h-12"
+                className="group flex items-center justify-between gap-2 rounded-lg border border-border/60 bg-background/40 px-3.5 py-2.5 text-start transition-colors hover:border-foreground/40 hover:bg-background/60 pointer-coarse:min-h-12"
               >
                 <span className="text-sm">{s.label}</span>
                 <ArrowRightIcon className="size-3.5 opacity-50 transition-transform group-hover:translate-x-0.5 group-hover:opacity-90" />
@@ -106,7 +106,7 @@ export function DashboardsHome() {
                         <span className="rounded bg-foreground/[0.05] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">
                           {t.project}
                         </span>
-                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:w-16 sm:text-right">
+                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:w-16 sm:text-end">
                           {t.due}
                         </span>
                       </span>
@@ -152,7 +152,7 @@ export function DashboardsHome() {
       </div>
 
       {/* Keyboard hint: only where a keyboard is likely. */}
-      <div className="fixed right-6 bottom-6 z-50 hidden items-center gap-2 rounded-md border border-border/70 bg-background/70 px-3 py-1.5 font-mono text-[10px] text-muted-foreground backdrop-blur md:flex pointer-coarse:hidden">
+      <div className="fixed end-6 bottom-6 z-50 hidden items-center gap-2 rounded-md border border-border/70 bg-background/70 px-3 py-1.5 font-mono text-[10px] text-muted-foreground backdrop-blur md:flex pointer-coarse:hidden">
         <CommandIcon className="size-3" />
         <span className="uppercase tracking-[0.25em]">⌘K to jump anywhere</span>
       </div>

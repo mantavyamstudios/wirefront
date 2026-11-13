@@ -279,7 +279,7 @@ export function SettingsWebhooks() {
                   </button>
                 }
               />
-              <TooltipContent side="top" className="max-w-[260px] p-2 text-left">
+              <TooltipContent side="top" className="max-w-[260px] p-2 text-start">
                 <p className="font-medium text-foreground">Rotate signing secret</p>
                 <p className="mt-0.5 text-muted-foreground">
                   The previous secret stays valid for 24 hours so you can roll deploys.
@@ -287,7 +287,7 @@ export function SettingsWebhooks() {
               </TooltipContent>
             </Tooltip>
           </div>
-          <div className="mt-2 flex w-full min-w-0 items-center gap-1 rounded-md border bg-background py-1 pr-1 pl-2.5 font-mono text-xs">
+          <div className="mt-2 flex w-full min-w-0 items-center gap-1 rounded-md border bg-background py-1 pe-1 ps-2.5 font-mono text-xs">
             <span className="min-w-0 flex-1 truncate text-foreground/85">
               {revealed ? SECRET_REAL : SECRET_MASKED}
             </span>
@@ -307,7 +307,7 @@ export function SettingsWebhooks() {
             <Button
               size="icon"
               variant="ghost"
-              className="-mr-1 size-7 shrink-0 pointer-coarse:size-9"
+              className="-me-1 size-7 shrink-0 pointer-coarse:size-9"
               aria-label="Copy signing secret"
               onClick={() => {
                 try {
@@ -398,7 +398,7 @@ export function SettingsWebhooks() {
                                 </Badge>
                               }
                             />
-                            <TooltipContent side="top" className="p-2 text-left">
+                            <TooltipContent side="top" className="p-2 text-start">
                               <ul className="flex flex-col gap-0.5 font-mono text-[11px]">
                                 {ep.events.slice(2).map((e) => (
                                   <li key={e}>{e}</li>
@@ -516,7 +516,7 @@ export function SettingsWebhooks() {
                     // Below sm: event + status + chevron on line 1, time · endpoint · ms
                     // on line 2. From sm: the original six-column row, with a
                     // flexible endpoint column instead of fixed widths.
-                    className="grid w-full grid-cols-[minmax(0,1fr)_auto_16px] items-center gap-x-3 gap-y-0.5 px-4 py-2.5 text-left transition-colors hover:bg-foreground/[0.03] sm:grid-cols-[64px_minmax(0,160px)_minmax(0,1fr)_56px_64px_24px]"
+                    className="grid w-full grid-cols-[minmax(0,1fr)_auto_16px] items-center gap-x-3 gap-y-0.5 px-4 py-2.5 text-start transition-colors hover:bg-foreground/[0.03] sm:grid-cols-[64px_minmax(0,160px)_minmax(0,1fr)_56px_64px_24px]"
                   >
                     <span className="text-muted-foreground tabular-nums max-sm:hidden">
                       {d.ts}
@@ -571,7 +571,7 @@ export function SettingsWebhooks() {
                           duration{" "}
                           <span className="text-foreground/85">{d.ms}ms</span>
                         </span>
-                        <span className="ml-auto inline-flex items-center gap-1.5">
+                        <span className="ms-auto inline-flex items-center gap-1.5">
                           <Button size="xs" variant="outline">
                             <RotateCwIcon /> Resend
                           </Button>
@@ -680,7 +680,7 @@ function PayloadBlock({
               const lineProps = getLineProps({ line });
               return (
                 <div key={i} {...lineProps} className="table-row">
-                  <span className="table-cell select-none pr-3 text-right text-muted-foreground tabular-nums">
+                  <span className="table-cell select-none pe-3 text-end text-muted-foreground tabular-nums">
                     {i + 1}
                   </span>
                   <span className="table-cell whitespace-pre">

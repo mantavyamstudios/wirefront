@@ -199,7 +199,7 @@ function ServiceCard({ service: s }: { service: Service }) {
             {s.health}
           </div>
         </div>
-        <div className="text-right font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+        <div className="text-end font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
           owner
           <div className="mt-0.5 text-foreground">{s.owner}</div>
         </div>

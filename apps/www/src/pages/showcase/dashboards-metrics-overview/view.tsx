@@ -169,9 +169,9 @@ function MetricsOverviewScreen({
                   ))
                 : SKELETON_CARDS.map((key) => (
                     <div className={cn(card, "flex flex-col gap-3 p-4")} key={key}>
-                      <Skeleton className="h-3 w-24" />
-                      <Skeleton className="h-8 w-28" />
-                      <Skeleton className="h-3 w-32" />
+                      <Skeleton className="h-3 w-24 motion-reduce:animate-none" />
+                      <Skeleton className="h-8 w-28 motion-reduce:animate-none" />
+                      <Skeleton className="h-3 w-32 motion-reduce:animate-none" />
                     </div>
                   ))}
             </div>
@@ -181,7 +181,7 @@ function MetricsOverviewScreen({
                 <div className="flex flex-wrap items-end justify-between gap-3">
                   <div>
                     <div className={eyebrow}>
-                      {chartMetric ? interpolate(t.daily, { metric: chartMetric.label }) : <Skeleton className="h-3 w-32" />}
+                      {chartMetric ? interpolate(t.daily, { metric: chartMetric.label }) : <Skeleton className="h-3 w-32 motion-reduce:animate-none" />}
                     </div>
                     <div className="mt-1 flex items-baseline gap-2">
                       {chartMetric ? (
@@ -199,7 +199,7 @@ function MetricsOverviewScreen({
                           </span>
                         </>
                       ) : (
-                        <Skeleton className="h-7 w-24" />
+                        <Skeleton className="h-7 w-24 motion-reduce:animate-none" />
                       )}
                     </div>
                   </div>
@@ -239,7 +239,7 @@ function MetricsOverviewScreen({
                       {t.noChartData}
                     </div>
                   ) : (
-                    <Skeleton className="h-full w-full" />
+                    <Skeleton className="h-full w-full motion-reduce:animate-none" />
                   )}
                 </div>
               </div>
@@ -269,7 +269,7 @@ function MetricsOverviewScreen({
                 ) : (
                   <div className="mt-4 flex flex-col gap-4">
                     {SKELETON_CARDS.map((key) => (
-                      <Skeleton className="h-8 w-full" key={key} />
+                      <Skeleton className="h-8 w-full motion-reduce:animate-none" key={key} />
                     ))}
                   </div>
                 )}

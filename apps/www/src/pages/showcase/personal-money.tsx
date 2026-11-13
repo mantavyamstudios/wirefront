@@ -346,7 +346,7 @@ function MerchantTile({ merchant, category }: { merchant: string; category: Mone
       </span>
       <span
         aria-hidden
-        className="absolute -right-1 -bottom-1 flex size-4 items-center justify-center rounded-full bg-card text-muted-foreground ring-2 ring-card"
+        className="absolute -end-1 -bottom-1 flex size-4 items-center justify-center rounded-full bg-card text-muted-foreground ring-2 ring-card"
       >
         <Icon className="size-2.5" />
       </span>
@@ -516,7 +516,7 @@ export function Money({
             <button
               aria-current={active ? "page" : undefined}
               className={cn(
-                "relative flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4 [&_svg]:opacity-80",
+                "relative flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4 [&_svg]:opacity-80",
                 press,
                 active ? "font-medium text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
               )}
@@ -551,7 +551,7 @@ export function Money({
             <button
               aria-pressed={active}
               className={cn(
-                "relative flex h-11 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                "relative flex h-11 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 press,
                 !active && "hover:bg-accent/60",
               )}
@@ -667,7 +667,7 @@ export function Money({
                 <button
                   aria-pressed={active}
                   className={cn(
-                    "flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    "flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     press,
                     active ? "bg-accent" : "hover:bg-accent/60",
                   )}
@@ -681,7 +681,7 @@ export function Money({
                   <span className={cn("size-2 shrink-0 rounded-full", c.dot)} />
                   <span className="flex-1 truncate">{c.label}</span>
                   <span className="text-muted-foreground text-xs tabular-nums">{Math.round((s.value / spent) * 100)}%</span>
-                  <span className="w-[4.75rem] text-right font-medium tabular-nums">
+                  <span className="w-[4.75rem] text-end font-medium tabular-nums">
                     <Tween value={s.value} />
                   </span>
                 </button>
@@ -905,7 +905,7 @@ export function Money({
         if (e.key === "Escape" && drawer) setDrawer(false);
       }}
     >
-      <aside className="hidden w-60 shrink-0 border-r bg-muted/40 @4xl:block">{sidebar("rail")}</aside>
+      <aside className="hidden w-60 shrink-0 border-e bg-muted/40 @4xl:block">{sidebar("rail")}</aside>
 
       <AnimatePresence>
         {drawer && (
@@ -924,7 +924,7 @@ export function Money({
               animate={{ x: 0 }}
               aria-label="Navigation"
               aria-modal
-              className="absolute inset-y-0 left-0 z-50 w-72 max-w-[85%] border-r bg-background outline-none @4xl:hidden"
+              className="absolute inset-y-0 start-0 z-50 w-72 max-w-[85%] border-e bg-background outline-none @4xl:hidden"
               exit={{ x: "-100%" }}
               initial={{ x: "-100%" }}
               key="drawer"
@@ -935,7 +935,7 @@ export function Money({
             >
               <Button
                 aria-label="Close navigation"
-                className="absolute top-3 right-3"
+                className="absolute top-3 end-3"
                 onClick={() => setDrawer(false)}
                 size="icon-sm"
                 variant="ghost"
@@ -1261,7 +1261,7 @@ function BudgetRow({
   return (
     <button
       className={cn(
-        "flex w-full cursor-pointer items-center gap-3 rounded-xl px-2 py-2.5 text-left outline-none hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring",
+        "flex w-full cursor-pointer items-center gap-3 rounded-xl px-2 py-2.5 text-start outline-none hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring",
         press,
       )}
       onClick={onPick}

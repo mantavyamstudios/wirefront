@@ -121,7 +121,7 @@ function NoResultsScreen({ query, onQueryChange, filters, onRemoveFilter, onClea
                 {f.label}
                 <button
                   aria-label={interpolate(t.removeFilter, { label: f.label })}
-                  className="-my-1 -mr-1.5 flex size-6 items-center justify-center rounded-sm opacity-60 hover:opacity-100 pointer-coarse:size-8"
+                  className="-my-1 -me-1.5 flex size-6 items-center justify-center rounded-sm opacity-60 hover:opacity-100 pointer-coarse:size-8"
                   onClick={() => onRemoveFilter(f.id)}
                   type="button"
                 >
@@ -129,7 +129,7 @@ function NoResultsScreen({ query, onQueryChange, filters, onRemoveFilter, onClea
                 </button>
               </Badge>
             ))}
-            <Button className="ml-1" onClick={onClearFilters} size="xs" variant="ghost">
+            <Button className="ms-1" onClick={onClearFilters} size="xs" variant="ghost">
               {t.clearAll}
             </Button>
           </div>

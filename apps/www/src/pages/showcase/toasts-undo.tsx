@@ -76,7 +76,7 @@ function UndoViewport() {
             swipeDirection={["down", "left", "right"]}
             className="group/toast translate-x-(--toast-swipe-movement-x) translate-y-(--toast-swipe-movement-y) overflow-hidden rounded-lg border border-foreground/10 bg-foreground text-background shadow-xl transition-[translate,opacity] duration-300 data-ending-style:opacity-0 data-starting-style:translate-y-3 data-starting-style:opacity-0 motion-reduce:transition-none"
           >
-            <div className="flex items-center gap-3 py-2 pr-2 pl-3.5">
+            <div className="flex items-center gap-3 py-2 pe-2 ps-3.5">
               <span
                 aria-hidden
                 className="flex size-7 shrink-0 items-center justify-center rounded-full bg-background/15"

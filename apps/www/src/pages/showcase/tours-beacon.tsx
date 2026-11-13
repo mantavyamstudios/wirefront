@@ -17,7 +17,7 @@ export function ToursBeacon() {
   return (
     <div className="relative min-h-svh bg-background text-foreground">
       <div className="grid min-h-svh grid-cols-1 md:grid-cols-[220px_1fr]">
-        <aside className="space-y-2 border-border/60 border-r bg-foreground/[0.02] p-4 max-md:hidden">
+        <aside className="space-y-2 border-border/60 border-e bg-foreground/[0.02] p-4 max-md:hidden">
           <div className="h-3 w-28 rounded bg-foreground/15" />
           <div className="h-2 w-32 rounded bg-foreground/10" />
           <div className="h-2 w-28 rounded bg-foreground/10" />
@@ -57,7 +57,7 @@ export function ToursBeacon() {
                 <div className="mt-2 h-2 w-32 max-w-full rounded bg-foreground/10" />
                 <div className="mt-2 h-2 w-28 max-w-full rounded bg-foreground/10" />
                 {i === 2 ? (
-                  <div className="absolute right-3 bottom-3">
+                  <div className="absolute end-3 bottom-3">
                     <span className="relative inline-flex">
                       <SlidersHorizontalIcon aria-hidden className="size-4 text-muted-foreground" />
                       {!seen.includes("filters") ? (
@@ -95,7 +95,7 @@ function Beacon({
       <Popover.Trigger
         aria-label={`Hint: ${title}`}
         // 40px invisible hit area over the corner of the parent.
-        className="-top-3 -right-3 absolute z-10 grid size-10 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="-top-3 -end-3 absolute z-10 grid size-10 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <span
           aria-hidden

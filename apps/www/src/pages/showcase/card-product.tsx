@@ -91,7 +91,7 @@ function ProductCard({ product }: { product: Product }) {
         {product.tag ? (
           <Badge
             variant="secondary"
-            className="absolute top-3 left-3 font-mono text-[10px] uppercase tracking-wider"
+            className="absolute top-3 start-3 font-mono text-[10px] uppercase tracking-wider"
           >
             {product.tag}
           </Badge>
@@ -100,11 +100,11 @@ function ProductCard({ product }: { product: Product }) {
           size="icon-sm"
           variant="outline"
           aria-label={`Save ${product.name} to wishlist`}
-          className="absolute top-2 right-2 rounded-full bg-background/80 backdrop-blur"
+          className="absolute top-2 end-2 rounded-full bg-background/80 backdrop-blur"
         >
           <HeartIcon />
         </Button>
-        <div className="absolute right-3 bottom-3 flex items-center gap-1">
+        <div className="absolute end-3 bottom-3 flex items-center gap-1">
           {product.swatches.map((c) => (
             <span
               key={c}

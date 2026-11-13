@@ -127,7 +127,7 @@ function CommandPaletteScreen({ groups, onSelect, onQueryChange, defaultOpen, ho
                               <Icon className="size-4 shrink-0 opacity-70" />
                               <span className="min-w-0 flex-1 truncate">
                                 {entry.label}
-                                {entry.hint ? <span className="ml-2 text-muted-foreground text-xs">{entry.hint}</span> : null}
+                                {entry.hint ? <span className="ms-2 text-muted-foreground text-xs">{entry.hint}</span> : null}
                               </span>
                               {entry.shortcut ? (
                                 <CommandShortcut className="pointer-coarse:hidden">{entry.shortcut}</CommandShortcut>

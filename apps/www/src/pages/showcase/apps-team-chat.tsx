@@ -370,7 +370,7 @@ function PersonAvatar({ person, size = "size-9", presence }: { person?: ChatPers
       {presence && (
         <span
           className={cn(
-            "absolute -right-0.5 -bottom-0.5 size-2 rounded-full ring-2 ring-sidebar",
+            "absolute -end-0.5 -bottom-0.5 size-2 rounded-full ring-2 ring-sidebar",
             person.presence === "active" ? "bg-success" : person.presence === "away" ? "bg-warning" : "border border-muted-foreground/60 bg-sidebar",
           )}
         />
@@ -428,7 +428,7 @@ function ChannelNav({
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState("");
   const row =
-    "group/row relative flex h-8 w-full cursor-pointer items-center gap-2 rounded-lg px-2.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring";
+    "group/row relative flex h-8 w-full cursor-pointer items-center gap-2 rounded-lg px-2.5 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring";
   const finishCreate = () => {
     const name = slugify(newName);
     if (name) onCreateChannel(name);
@@ -576,7 +576,7 @@ function ChannelNav({
           type="button"
         >
           <SearchIcon className="size-4" />
-          <span className="flex-1 text-left">Jump to…</span>
+          <span className="flex-1 text-start">Jump to…</span>
           <Kbd>⌘K</Kbd>
         </button>
       </div>
@@ -748,7 +748,7 @@ function MessageRow({
     >
       <div className="w-9 shrink-0">
         {grouped ? (
-          <span className="block pt-0.5 text-right text-[10px] text-muted-foreground tabular-nums leading-5 opacity-0 group-hover/msg:opacity-100">
+          <span className="block pt-0.5 text-end text-[10px] text-muted-foreground tabular-nums leading-5 opacity-0 group-hover/msg:opacity-100">
             {message.time.replace(/ (AM|PM)/, "")}
           </span>
         ) : (
@@ -787,7 +787,7 @@ function MessageRow({
         <Reactions me={me} onToggle={onReact} people={people} reactions={message.reactions ?? []} />
         {replies && replies.length > 0 && onOpenThread && (
           <button
-            className="group/thr -ms-1.5 mt-1 flex cursor-pointer items-center gap-2 rounded-lg py-1 ps-1.5 pe-2 text-left outline-none transition-colors hover:bg-background focus-visible:ring-2 focus-visible:ring-ring dark:hover:bg-accent"
+            className="group/thr -ms-1.5 mt-1 flex cursor-pointer items-center gap-2 rounded-lg py-1 ps-1.5 pe-2 text-start outline-none transition-colors hover:bg-background focus-visible:ring-2 focus-visible:ring-ring dark:hover:bg-accent"
             onClick={onOpenThread}
             type="button"
           >
@@ -806,7 +806,7 @@ function MessageRow({
         )}
       </div>
 
-      <div className="pointer-events-none absolute -top-3 right-3 z-10 flex items-center gap-0.5 rounded-lg border bg-popover p-0.5 opacity-0 shadow-xs/5 transition-opacity duration-100 group-hover/msg:pointer-events-auto group-hover/msg:opacity-100 group-focus-within/msg:pointer-events-auto group-focus-within/msg:opacity-100">
+      <div className="pointer-events-none absolute -top-3 end-3 z-10 flex items-center gap-0.5 rounded-lg border bg-popover p-0.5 opacity-0 shadow-xs/5 transition-opacity duration-100 group-hover/msg:pointer-events-auto group-hover/msg:opacity-100 group-focus-within/msg:pointer-events-auto group-focus-within/msg:opacity-100">
         {["✅", "👀", "🙌"].map((e) => (
           <button
             aria-label={`React with ${e}`}
@@ -1211,7 +1211,7 @@ function ViewList({
               return (
                 <li key={`${h.channel.id}:${h.message.id}:${h.reply?.id ?? ""}`}>
                   <button
-                    className="flex w-full cursor-pointer gap-3 rounded-xl px-3 py-2.5 text-left outline-none transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring"
+                    className="flex w-full cursor-pointer gap-3 rounded-xl px-3 py-2.5 text-start outline-none transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring"
                     onClick={() => onOpen(h)}
                     type="button"
                   >
@@ -1544,7 +1544,7 @@ export function TeamChat({
                   animate={{ x: 0 }}
                   aria-label="Channels"
                   aria-modal="true"
-                  className="absolute inset-y-2 left-2 z-50 w-[264px] max-w-[calc(100%-3rem)] overflow-hidden rounded-2xl border bg-sidebar shadow-lg/10 @4xl:hidden"
+                  className="absolute inset-y-2 start-2 z-50 w-[264px] max-w-[calc(100%-3rem)] overflow-hidden rounded-2xl border bg-sidebar shadow-lg/10 @4xl:hidden"
                   exit={{ x: "-110%" }}
                   initial={{ x: "-110%" }}
                   role="dialog"
@@ -1643,7 +1643,7 @@ export function TeamChat({
                               const a = people.find((p) => p.id === m.author);
                               return (
                                 <button
-                                  className="flex w-full cursor-pointer gap-2.5 rounded-lg p-1.5 text-left outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+                                  className="flex w-full cursor-pointer gap-2.5 rounded-lg p-1.5 text-start outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
                                   key={m.id}
                                   onClick={() => {
                                     setPinsOpen(false);

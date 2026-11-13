@@ -77,11 +77,11 @@ export function LayoutsFocusMode() {
         aria-valuenow={Math.round(progress)}
         aria-valuemin={0}
         aria-valuemax={100}
-        className="fixed top-0 left-0 z-50 h-0.5 bg-foreground transition-[width] duration-150"
+        className="fixed top-0 start-0 z-50 h-0.5 bg-foreground transition-[width] duration-150"
         style={{ width: `${progress}%` }}
       />
 
-      <header className="fixed top-0 right-0 left-0 z-40 flex h-12 items-center justify-between gap-2 border-border/60 border-b bg-background/80 px-3 backdrop-blur sm:px-6">
+      <header className="fixed top-0 end-0 start-0 z-40 flex h-12 items-center justify-between gap-2 border-border/60 border-b bg-background/80 px-3 backdrop-blur sm:px-6">
         {/* Below xl the rails don't fit beside the article: open them as sheets. */}
         {!focused ? (
           <Sheet>
@@ -121,7 +121,7 @@ export function LayoutsFocusMode() {
           <Kbd className="text-[10px] pointer-coarse:hidden">⌘K</Kbd>
         </div>
 
-        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+        <div className="ms-auto flex items-center gap-2 sm:gap-3">
           {!focused ? (
             <Sheet>
               <SheetTrigger className="flex min-h-9 items-center gap-1.5 rounded-md px-2 text-muted-foreground text-xs transition-colors hover:bg-foreground/[0.04] hover:text-foreground xl:hidden pointer-coarse:min-h-11">
@@ -272,7 +272,7 @@ export function LayoutsFocusMode() {
 
           <blockquote
             id="quote"
-            className="!my-10 border-border border-l-4 pl-6 text-foreground/85 italic"
+            className="!my-10 border-border border-s-4 ps-6 text-foreground/85 italic"
           >
             The fastest way to taste is volume. Build a hundred bad layouts and
             the next ten will be quietly excellent — not because you tried
@@ -287,7 +287,7 @@ export function LayoutsFocusMode() {
             the idea out to where real apps live.
           </p>
 
-          <ul className="!my-6 list-disc space-y-2 pl-6 text-foreground/90">
+          <ul className="!my-6 list-disc space-y-2 ps-6 text-foreground/90">
             <li>One idea per file. If two ideas want to merge, fork instead.</li>
             <li>No data layer. Hard-code everything. Real data is later.</li>
             <li>Steal shamelessly from your own past sketches.</li>
@@ -316,7 +316,7 @@ export function LayoutsFocusMode() {
       <button
         type="button"
         onClick={() => setFocused((f) => !f)}
-        className="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex size-11 items-center justify-center rounded-full border border-border/60 bg-card text-foreground shadow-sm transition-all hover:bg-foreground/[0.04] sm:right-6 sm:bottom-6"
+        className="fixed end-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex size-11 items-center justify-center rounded-full border border-border/60 bg-card text-foreground shadow-sm transition-all hover:bg-foreground/[0.04] sm:end-6 sm:bottom-6"
         aria-label={focused ? "Exit focus mode" : "Enter focus mode"}
       >
         {focused ? (
@@ -380,7 +380,7 @@ function TocList() {
         <li key={s.id}>
           <a
             href={`#${s.id}`}
-            className="block w-full rounded-md px-2 py-1.5 text-left text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.03] hover:text-foreground pointer-coarse:py-3"
+            className="block w-full rounded-md px-2 py-1.5 text-start text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.03] hover:text-foreground pointer-coarse:py-3"
           >
             {s.label}
           </a>

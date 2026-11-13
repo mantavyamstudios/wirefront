@@ -44,7 +44,7 @@ A check that fails is fixed at the cause. Nothing is skipped, silenced or retrie
 | `npm run test:phase` | The phase tier, one check after another: bundle budget, install, browser, responsive, visual, with a summary |
 | `npm run test:install` | Failure mode 9 (`--templates=`, `--items=` for a sample) |
 | `npm run test:browser` | Failure modes 10 and 13 (`--design=` for a sample; `--update-a11y-baseline` after fixing accessibility problems) |
-| `npm run audit:responsive -- --strict` | Failure mode 11 (`--design=`, `--viewports=`) |
+| `npm run audit:responsive -- --strict` | Failure mode 11 (`--design=`, `--viewports=`; `--rtl` lays every screen out right-to-left into `report-rtl.json`) |
 | `npm run test:visual` | Failure mode 12 (`--design=`). When a visual change is intended: `npm run snapshot`, review and commit the previews |
 
 ## Servers

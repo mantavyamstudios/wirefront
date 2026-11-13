@@ -84,7 +84,7 @@ function GaugeCard({ g }: { g: Gauge }) {
           <div className="text-center">
             <div className="font-heading text-3xl tracking-tight">
               {g.value}
-              <span className="ml-0.5 text-muted-foreground text-sm">
+              <span className="ms-0.5 text-muted-foreground text-sm">
                 {g.unit}
               </span>
             </div>

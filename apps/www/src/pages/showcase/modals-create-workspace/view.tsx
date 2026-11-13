@@ -137,7 +137,7 @@ function CreateWorkspaceScreen({
     availability === "idle" ? null : (
       <span
         className={cn(
-          "mr-2 inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px]",
+          "me-2 inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px]",
           availability === "available" && "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
           availability === "taken" && "bg-destructive/10 text-destructive-foreground",
           availability === "checking" && "bg-muted text-muted-foreground",
@@ -169,7 +169,7 @@ function CreateWorkspaceScreen({
               <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-foreground/[0.06]">
                 <BuildingIcon className="size-4 opacity-80" />
               </div>
-              <div className="flex flex-col gap-0.5 text-left">
+              <div className="flex flex-col gap-0.5 text-start">
                 <DialogTitle className="text-base">{t.dialogTitle}</DialogTitle>
                 <DialogDescription className="text-xs">{t.dialogDescription}</DialogDescription>
               </div>
@@ -193,7 +193,7 @@ function CreateWorkspaceScreen({
 
                 <div>
                   <div className={label}>{t.url}</div>
-                  <div className="flex h-10 min-w-0 items-center rounded-md border border-border bg-background pl-3">
+                  <div className="flex h-10 min-w-0 items-center rounded-md border border-border bg-background ps-3">
                     <span className="shrink-0 text-muted-foreground text-sm">{urlPrefix}</span>
                     <code className="min-w-0 flex-1 truncate bg-transparent font-mono text-foreground text-sm">{slug || t.slugPlaceholder}</code>
                     <span aria-live="polite">{badge}</span>
@@ -214,7 +214,7 @@ function CreateWorkspaceScreen({
                       const Icon = ICONS[option];
                       return (
                       <Radio.Root
-                        className="flex w-full cursor-pointer items-start gap-3 rounded-lg border border-border/60 px-3 py-2.5 text-left outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/[0.04]"
+                        className="flex w-full cursor-pointer items-start gap-3 rounded-lg border border-border/60 px-3 py-2.5 text-start outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/[0.04]"
                         key={option}
                         value={option}
                       >
@@ -241,7 +241,7 @@ function CreateWorkspaceScreen({
 
               <DialogFooter className="sm:items-center">
                 {step ? (
-                  <span className="text-center text-muted-foreground text-xs sm:me-auto sm:text-left">{interpolate(t.step, step)}</span>
+                  <span className="text-center text-muted-foreground text-xs sm:me-auto sm:text-start">{interpolate(t.step, step)}</span>
                 ) : null}
                 <DialogClose disabled={form.pending} render={<Button type="button" variant="ghost" />}>
                   {t.cancel}

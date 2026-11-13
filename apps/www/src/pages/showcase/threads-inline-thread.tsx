@@ -71,7 +71,7 @@ export function ThreadsInlineThread() {
             <Sheet>
               <SheetTrigger
                 aria-label={`Open thread, ${comments.length} comments`}
-                className="-top-3 -right-2 absolute inline-flex min-h-8 items-center gap-1 rounded-full bg-amber-500 px-2.5 font-mono text-[11px] text-white shadow-sm lg:hidden pointer-coarse:min-h-10"
+                className="-top-3 -end-2 absolute inline-flex min-h-8 items-center gap-1 rounded-full bg-amber-500 px-2.5 font-mono text-[11px] text-white shadow-sm lg:hidden pointer-coarse:min-h-10"
               >
                 <MessageSquareIcon aria-hidden className="size-3" />
                 {comments.length}
@@ -97,7 +97,7 @@ export function ThreadsInlineThread() {
           </p>
         </article>
 
-        <aside aria-label="Comments" className="border-border/60 border-l pl-6 max-lg:hidden">
+        <aside aria-label="Comments" className="border-border/60 border-s ps-6 max-lg:hidden">
           <Thread comments={comments} onReply={add} />
         </aside>
       </div>
@@ -126,7 +126,7 @@ function Thread({
         Thread · {comments.length} comments
       </div>
 
-      <div className="mt-1 flex items-center gap-2 rounded-md bg-amber-500/[0.06] px-2.5 py-1 ring-1 ring-amber-500/20 lg:-ml-6 lg:rounded-l-none">
+      <div className="mt-1 flex items-center gap-2 rounded-md bg-amber-500/[0.06] px-2.5 py-1 ring-1 ring-amber-500/20 lg:-ms-6 lg:rounded-s-none">
         <span aria-hidden className="size-1.5 rounded-full bg-amber-500" />
         <span className="font-mono text-[10px] text-amber-800 uppercase tracking-[0.25em] dark:text-amber-400">
           Anchored
@@ -147,10 +147,10 @@ function Thread({
               {c.time}
             </span>
           </div>
-          <p className="ml-8 text-muted-foreground text-sm leading-relaxed">
+          <p className="ms-8 text-muted-foreground text-sm leading-relaxed">
             {c.body}
           </p>
-          <div className="ml-6 flex items-center gap-1">
+          <div className="ms-6 flex items-center gap-1">
             <button
               type="button"
               aria-label={`React to ${c.name}`}

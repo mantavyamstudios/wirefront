@@ -199,13 +199,13 @@ function Caret({ person, label, layoutId, idle }: { person: Collaborator; label?
       <span className="absolute -inset-x-1.5 -top-1.5 bottom-0" />
       <motion.span
         animate={idle && !reduce ? { opacity: [1, 1, 0.25, 1] } : { opacity: 1 }}
-        className={cn("absolute inset-y-0 -left-px w-0.5 rounded-full", t.caret)}
+        className={cn("absolute inset-y-0 -start-px w-0.5 rounded-full", t.caret)}
         transition={{ duration: 1.4, repeat: Infinity }}
       />
-      <span className={cn("absolute -top-1 -left-px size-1.5 rounded-[calc(var(--radius)*0.2)] transition-opacity duration-200", t.caret, tag ? "opacity-0" : "opacity-100 group-hover/caret:opacity-0")} />
+      <span className={cn("absolute -top-1 -start-px size-1.5 rounded-[calc(var(--radius)*0.2)] transition-opacity duration-200", t.caret, tag ? "opacity-0" : "opacity-100 group-hover/caret:opacity-0")} />
       <span
         className={cn(
-          "pointer-events-none absolute bottom-full -left-px mb-0.5 inline-flex origin-bottom-left items-center gap-1 whitespace-nowrap rounded-md rounded-bl-none px-1.5 py-px font-medium font-sans text-[10px] leading-4 shadow-xs/5 transition-[opacity,scale] duration-200 ease-out motion-reduce:transition-none",
+          "pointer-events-none absolute bottom-full -start-px mb-0.5 inline-flex origin-bottom-left items-center gap-1 whitespace-nowrap rounded-md rounded-es-none px-1.5 py-px font-medium font-sans text-[10px] leading-4 shadow-xs/5 transition-[opacity,scale] duration-200 ease-out motion-reduce:transition-none",
           t.tag,
           tag ? "scale-100 opacity-100" : "scale-95 opacity-0 group-hover/caret:scale-100 group-hover/caret:opacity-100",
         )}
@@ -424,7 +424,7 @@ export function CoWritingDoc({
       <motion.div
         animate={{ opacity: 1, x: 0 }}
         className={cn(
-          "rounded-xl border bg-card px-3 pt-2.5 pb-3 text-left shadow-xs/5 transition-[border-color,box-shadow]",
+          "rounded-xl border bg-card px-3 pt-2.5 pb-3 text-start shadow-xs/5 transition-[border-color,box-shadow]",
           activeComment === c.id && "border-foreground/16 shadow-sm/5",
           compact && "mt-2",
         )}
@@ -679,7 +679,7 @@ export function CoWritingDoc({
                       ) : (
                         <p className="text-[15px] text-foreground/88 leading-7">
                           {b.type === "li" && (
-                            <span aria-hidden className="absolute top-[0.8em] left-1.5 size-1.5 rounded-full bg-muted-foreground/60" />
+                            <span aria-hidden className="absolute top-[0.8em] start-1.5 size-1.5 rounded-full bg-muted-foreground/60" />
                           )}
                           {renderText(b)}
                         </p>

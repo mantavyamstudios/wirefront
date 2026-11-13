@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 "use client";
 
-import { ScrollArea } from "@wirefront/ui/scroll-area";
+import { ScrollRegion } from "@wirefront/ui/wirefront/scroll-region";
 
 const COHORTS = [
   { label: "Apr 2025", size: 412 },
@@ -41,14 +41,14 @@ export function ChartsCohortHeatmap() {
 
         <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-3 sm:p-5">
           {/* Only the grid scrolls; the cohort column stays pinned while it does. */}
-          <ScrollArea aria-label="Retention by cohort" orientation="horizontal">
+          <ScrollRegion aria-label="Retention by cohort" orientation="horizontal">
           <table className="w-full border-separate border-spacing-1 text-xs">
             <thead>
               <tr>
-                <th className="sticky left-0 z-10 bg-background px-2 py-1 text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                <th className="sticky start-0 z-10 bg-background px-2 py-1 text-start font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                   Cohort
                 </th>
-                <th className="px-2 py-1 text-right font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                <th className="px-2 py-1 text-end font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                   Size
                 </th>
                 {Array.from({ length: months }).map((_, i) => (
@@ -66,10 +66,10 @@ export function ChartsCohortHeatmap() {
                 const available = months - ci;
                 return (
                   <tr key={c.label}>
-                    <th scope="row" className="sticky left-0 z-10 whitespace-nowrap bg-background px-2 py-1 text-left font-normal text-muted-foreground">
+                    <th scope="row" className="sticky start-0 z-10 whitespace-nowrap bg-background px-2 py-1 text-start font-normal text-muted-foreground">
                       {c.label}
                     </th>
-                    <td className="px-2 py-1 text-right font-mono text-muted-foreground">
+                    <td className="px-2 py-1 text-end font-mono text-muted-foreground">
                       {c.size}
                     </td>
                     {Array.from({ length: months }).map((_, mi) => {
@@ -92,7 +92,7 @@ export function ChartsCohortHeatmap() {
               })}
             </tbody>
           </table>
-          </ScrollArea>
+          </ScrollRegion>
 
           {/* Legend */}
           <div className="mt-5 flex items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
@@ -103,7 +103,7 @@ export function ChartsCohortHeatmap() {
               ))}
             </div>
             <span>More</span>
-            <span className="ml-auto">
+            <span className="ms-auto">
               Average M3: <span className="text-foreground">64.2%</span>
             </span>
           </div>

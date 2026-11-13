@@ -210,7 +210,7 @@ export function FilterToolbar() {
               <Button size="sm" variant="ghost" disabled>
               <ListFilterIcon />
               More filters
-              <Badge variant="outline" className="h-4.5 rounded-sm px-1 text-[0.625rem] ml-1 font-mono">
+              <Badge variant="outline" className="h-4.5 rounded-sm px-1 text-[0.625rem] ms-1 font-mono">
                 +0
               </Badge>
             </Button>
@@ -225,7 +225,7 @@ export function FilterToolbar() {
                 <ListFilterIcon />
                 Filters
                 {activeCount > 0 ? (
-                  <Badge variant="secondary" className="h-4.5 rounded-sm px-1 text-[0.625rem] ml-1 font-mono">
+                  <Badge variant="secondary" className="h-4.5 rounded-sm px-1 text-[0.625rem] ms-1 font-mono">
                     {activeCount}
                   </Badge>
                 ) : null}
@@ -293,7 +293,7 @@ export function FilterToolbar() {
                   size="xs"
                   variant="ghost"
                   onClick={reset}
-                  className="-mr-2 h-6 px-1.5 text-muted-foreground max-sm:ms-auto pointer-coarse:h-9"
+                  className="-me-2 h-6 px-1.5 text-muted-foreground max-sm:ms-auto pointer-coarse:h-9"
                 >
                   <XIcon /> Clear ({activeCount})
                 </Button>

@@ -130,7 +130,7 @@ export function ProfileHero() {
             </button>
           ))}
           </div>
-          <div className="ml-auto flex shrink-0 items-center gap-4 text-muted-foreground text-xs max-md:hidden">
+          <div className="ms-auto flex shrink-0 items-center gap-4 text-muted-foreground text-xs max-md:hidden">
             {STATS.map((s) => (
               <span key={s.label}>
                 <span className="font-mono text-foreground">{s.value}</span>{" "}
@@ -190,7 +190,7 @@ export function ProfileHero() {
                   <span className="size-1.5 shrink-0 translate-y-[-2px] rounded-full bg-foreground/40" />
                   <span className="shrink-0 text-muted-foreground">{a.what}</span>
                   <span className="min-w-0 truncate">{a.target}</span>
-                  <span className="ml-auto shrink-0 font-mono text-[10px] text-muted-foreground">
+                  <span className="ms-auto shrink-0 font-mono text-[10px] text-muted-foreground">
                     {a.time}
                   </span>
                 </li>

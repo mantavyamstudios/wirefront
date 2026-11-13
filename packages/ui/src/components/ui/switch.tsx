@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 // shadcn/ui (base-nova style) © 2023 shadcn — https://ui.shadcn.com · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
+"use client"
+
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
 import { cn } from "../../lib/utils"
 

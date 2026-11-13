@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { DirectionProvider } from "@base-ui/react/direction-provider";
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTheme } from "@wirefront/ui/theme-provider";
@@ -33,6 +34,8 @@ interface DesignSearch {
   preview?: string;
   /** The screen state to preview (designs that declare `states`). */
   state?: string;
+  /** Lay the previewed screen out right-to-left, as a builder's RTL app would. */
+  dir?: "rtl";
 }
 
 export const Route = createFileRoute("/c/$category/$design")({
@@ -46,6 +49,7 @@ export const Route = createFileRoute("/c/$category/$design")({
         ? String(raw.preview)
         : undefined,
     state: typeof raw.state === "string" ? raw.state : undefined,
+    dir: raw.dir === "rtl" ? "rtl" : undefined,
   }),
   head: ({ params }) => {
     const category = getCategory(params.category as CategorySlug);
@@ -84,7 +88,7 @@ function isTypingTarget(): boolean {
 
 function DesignRoute() {
   const { category, design } = Route.useParams();
-  const { preview, state } = Route.useSearch();
+  const { preview, state, dir } = Route.useSearch();
   const isPreview = preview === "1" || preview === "true";
   const navigate = useNavigate();
   const { toggleLightDark, setPreference, setPalette } = useTheme();
@@ -229,9 +233,11 @@ function DesignRoute() {
   if (isPreview) {
     return (
       <ShowcaseStateProvider value={screenState}>
-        <div className="relative min-h-svh bg-background text-foreground">
-          <Showcase />
-        </div>
+        <DirectionProvider direction={dir ?? "ltr"}>
+          <div className="relative min-h-svh bg-background text-foreground" dir={dir}>
+            <Showcase />
+          </div>
+        </DirectionProvider>
       </ShowcaseStateProvider>
     );
   }

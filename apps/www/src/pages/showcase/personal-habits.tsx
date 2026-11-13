@@ -529,7 +529,7 @@ export function Habits({
                         </abbr>
                       </th>
                     ))}
-                    <th className="w-10 p-0 pb-1 text-right font-normal text-[11px] text-muted-foreground" scope="col">
+                    <th className="w-10 p-0 pb-1 text-end font-normal text-[11px] text-muted-foreground" scope="col">
                       <FlameIcon aria-label="Streak" className="ms-auto size-3" />
                     </th>
                   </tr>
@@ -540,7 +540,7 @@ export function Habits({
                     const s = streakOf(h, todayIndex);
                     return (
                       <tr key={h.id}>
-                        <th className="p-0 pe-2 text-left font-normal" scope="row">
+                        <th className="p-0 pe-2 text-start font-normal" scope="row">
                           <span className="flex min-w-0 items-center gap-2">
                             <span className={cn("flex size-6 shrink-0 items-center justify-center rounded-md", tones[h.tone].tile)}>
                               <Icon aria-hidden className="size-3.5" />
@@ -561,7 +561,7 @@ export function Habits({
                             />
                           </td>
                         ))}
-                        <td className="p-0 text-right font-medium text-xs tabular-nums">
+                        <td className="p-0 text-end font-medium text-xs tabular-nums">
                           <span className={cn(s === 0 && "text-muted-foreground")}>
                             <Tween value={s} />
                           </span>
@@ -589,7 +589,7 @@ export function Habits({
                         transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 200, damping: 30 }}
                       />
                     </span>
-                    <span className="text-right font-medium text-xs tabular-nums">
+                    <span className="text-end font-medium text-xs tabular-nums">
                       <Tween value={t.pct} />%
                     </span>
                   </li>
@@ -835,7 +835,7 @@ function TickButton({
                 <motion.svg
                   animate={reduce ? undefined : { x: ["0%", "-50%"] }}
                   aria-hidden
-                  className="absolute -top-[5px] left-0 h-1.5 w-[200%]"
+                  className="absolute -top-[5px] start-0 h-1.5 w-[200%]"
                   key={`w${value}`}
                   preserveAspectRatio="none"
                   transition={{ duration: 0.9, ease: "easeOut" }}
@@ -880,7 +880,7 @@ function TickButton({
             return (
               <motion.span
                 animate={{ x: Math.cos(a) * 29, y: Math.sin(a) * 29, opacity: 0, scale: 0.5 }}
-                className={cn("absolute top-1/2 left-1/2 -mt-[3px] -ml-[3px] size-1.5 rounded-full", t.fill)}
+                className={cn("absolute top-1/2 left-1/2 -mt-[3px] -ms-[3px] size-1.5 rounded-full", t.fill)}
                 initial={{ x: Math.cos(a) * 19, y: Math.sin(a) * 19, opacity: 1, scale: 1 }}
                 key={i}
                 transition={{ duration: 0.4, ease: easeOut }}
@@ -984,7 +984,7 @@ function AddHabitSheet({
             className={cn(
               "absolute z-50 flex flex-col bg-popover text-popover-foreground shadow-lg/10 outline-none",
               wide
-                ? "inset-y-0 right-0 w-[400px] border-l"
+                ? "inset-y-0 end-0 w-[400px] border-s"
                 : "inset-x-0 bottom-0 max-h-[92%] rounded-t-2xl border-t",
             )}
             exit={reduce ? { opacity: 0 } : motionOut}

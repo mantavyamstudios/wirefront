@@ -231,12 +231,12 @@ function WatchlistTable() {
       {/* Priority columns: sparkline from sm, volume from md. */}
       <table className="w-full">
         <thead>
-          <tr className="border-border/40 border-b text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+          <tr className="border-border/40 border-b text-start font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
             <th className="px-3 py-2 font-normal sm:px-5">Symbol</th>
-            <th className="px-3 py-2 text-right font-normal sm:px-5">Price</th>
-            <th className="px-3 py-2 text-right font-normal sm:px-5">Change</th>
+            <th className="px-3 py-2 text-end font-normal sm:px-5">Price</th>
+            <th className="px-3 py-2 text-end font-normal sm:px-5">Change</th>
             <th className="px-5 py-2 font-normal max-sm:hidden">24h</th>
-            <th className="px-5 py-2 text-right font-normal max-md:hidden">Vol</th>
+            <th className="px-5 py-2 text-end font-normal max-md:hidden">Vol</th>
           </tr>
         </thead>
         <tbody>
@@ -254,10 +254,10 @@ function WatchlistTable() {
                     {t.name}
                   </div>
                 </td>
-                <td className="px-3 py-2.5 text-right font-mono text-sm tabular-nums sm:px-5">
+                <td className="px-3 py-2.5 text-end font-mono text-sm tabular-nums sm:px-5">
                   ${t.price.toFixed(2)}
                 </td>
-                <td className="px-3 py-2.5 text-right font-mono text-sm tabular-nums sm:px-5">
+                <td className="px-3 py-2.5 text-end font-mono text-sm tabular-nums sm:px-5">
                   <span
                     className={
                       positive
@@ -274,7 +274,7 @@ function WatchlistTable() {
                     <Spark values={t.series} color={color} />
                   </div>
                 </td>
-                <td className="px-5 py-2.5 text-right font-mono text-[11px] text-muted-foreground tabular-nums max-md:hidden">
+                <td className="px-5 py-2.5 text-end font-mono text-[11px] text-muted-foreground tabular-nums max-md:hidden">
                   {t.vol}
                 </td>
               </tr>

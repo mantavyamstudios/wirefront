@@ -19,6 +19,9 @@
  *   --viewports=a,b     subset of mobile,tablet,laptop,desktop
  *   --screenshots       save viewport screenshots
  *   --strict            exit 1 if any design fails a gate (see GATES)
+ *   --rtl               lay every screen out right-to-left (preview `dir=rtl`: dir and
+ *                       Base UI's DirectionProvider, as a builder's RTL app would);
+ *                       the report goes to report-rtl.json
  *
  * Env knobs:
  *   APP_URL             audit an already running server instead of starting
@@ -252,6 +255,7 @@ function parseArgs(argv: string[]) {
     designs: get("design"),
     viewports: get("viewports") as ViewportName[] | undefined,
     screenshots: argv.includes("--screenshots"),
+    rtl: argv.includes("--rtl"),
     strict: argv.includes("--strict"),
   };
 }
@@ -298,18 +302,17 @@ async function runWorker(
   results: Record<string, Result>,
   screenshots: boolean,
   total: number,
+  rtl: boolean,
 ): Promise<void> {
   const contexts = new Map<ViewportName, BrowserContext>();
   for (const v of viewports) {
-    contexts.set(
-      v.name,
-      await browser.newContext({
-        viewport: { width: v.width, height: v.height },
-        deviceScaleFactor: 1,
-        hasTouch: v.touch,
-        isMobile: false,
-      }),
-    );
+    const context = await browser.newContext({
+      viewport: { width: v.width, height: v.height },
+      deviceScaleFactor: 1,
+      hasTouch: v.touch,
+      isMobile: false,
+    });
+    contexts.set(v.name, context);
   }
 
   while (queue.length > 0) {
@@ -328,7 +331,7 @@ async function runWorker(
         // JSON-parses search params, so `preview=1` arrives as a number.
         // Pass a JSON string to hide the viewer chrome.
         await page.goto(
-          `${base}/c/${task.category}/${task.design}?preview=%221%22`,
+          `${base}/c/${task.category}/${task.design}?preview=%221%22${rtl ? "&dir=%22rtl%22" : ""}`,
           { waitUntil: "networkidle", timeout: 45_000 },
         );
         // Only a settled layout is measured (scripts/lib/settle.ts).
@@ -396,7 +399,7 @@ async function main(): Promise<void> {
     try {
       await Promise.all(
         Array.from({ length: Math.min(CONCURRENCY, total) }, () =>
-          runWorker(base, progress, browser, [...viewports], queue, results, args.screenshots, total),
+          runWorker(base, progress, browser, [...viewports], queue, results, args.screenshots, total, args.rtl),
         ),
       );
     } finally {
@@ -411,7 +414,7 @@ async function main(): Promise<void> {
     gates: { viewports: GATED_VIEWPORTS, metrics: GATES },
     results,
   };
-  const reportPath = resolve(OUT_DIR, "report.json");
+  const reportPath = resolve(OUT_DIR, args.rtl ? "report-rtl.json" : "report.json");
   await writeFile(reportPath, JSON.stringify(report, null, 2));
 
   const failing = Object.entries(results).filter(([, r]) => failures(r).length > 0);

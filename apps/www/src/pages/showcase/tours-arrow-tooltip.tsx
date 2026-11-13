@@ -101,7 +101,7 @@ export function ToursArrowTooltip() {
               {/* Base UI places the arrow along the edge facing the target (and
                   keeps it aimed at the target when the popup shifts); data-side
                   picks which of the four edges it sits on. */}
-              <Popover.Arrow className="size-3 rotate-45 rounded-[2px] bg-foreground data-[side=bottom]:-top-1.5 data-[side=left]:-right-1.5 data-[side=right]:-left-1.5 data-[side=top]:-bottom-1.5" />
+              <Popover.Arrow className="size-3 rotate-45 rounded-[2px] bg-foreground data-[side=bottom]:-top-1.5 data-[side=left]:-end-1.5 data-[side=right]:-start-1.5 data-[side=top]:-bottom-1.5" />
               {current ? (
                 <>
                   <div className="flex items-start justify-between gap-3">
@@ -115,7 +115,7 @@ export function ToursArrowTooltip() {
                     </div>
                     <Popover.Close
                       aria-label="Close tips"
-                      className="-mt-1 -mr-1 grid size-8 shrink-0 place-items-center rounded-md opacity-60 transition-opacity hover:opacity-100 pointer-coarse:size-10"
+                      className="-mt-1 -me-1 grid size-8 shrink-0 place-items-center rounded-md opacity-60 transition-opacity hover:opacity-100 pointer-coarse:size-10"
                     >
                       <XIcon className="size-3.5" />
                     </Popover.Close>
@@ -185,7 +185,7 @@ function FakeApp({
     active === name ? " ring-2 ring-primary/70 ring-offset-2 ring-offset-background" : "";
   return (
     <div className="grid min-h-svh grid-cols-1 sm:grid-cols-[60px_1fr]">
-      <aside className="border-border/60 border-r bg-foreground/[0.02] max-sm:hidden" />
+      <aside className="border-border/60 border-e bg-foreground/[0.02] max-sm:hidden" />
       <main className="min-w-0 p-4 pb-72 sm:p-6 lg:p-10">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>

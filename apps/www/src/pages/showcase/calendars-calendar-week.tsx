@@ -33,6 +33,7 @@ import { Calendar } from "@wirefront/ui/calendar";
 import { Kbd } from "@wirefront/ui/kbd";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 import { cn } from "@wirefront/ui/lib/utils";
+import { calendarLabels } from "@wirefront/ui/wirefront/calendar-labels";
 
 /** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
 let keySeq = 0;
@@ -285,6 +286,7 @@ function MiniMonth({
     : { from: toDate(selected), to: toDate(selected) };
   return (
     <Calendar
+      labels={calendarLabels()}
       className="mx-auto p-0 [--cell-size:--spacing(8)] sm:[--cell-size:--spacing(8)]"
       classNames={{ day_button: "in-data-outside:text-muted-foreground", weekday: "text-muted-foreground" }}
       mode="range"
@@ -602,7 +604,7 @@ export function CalendarWeek({
               <li key={c.id}>
                 <button
                   aria-pressed={on}
-                  className="flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-lg px-1.5 text-left outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+                  className="flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-lg px-1.5 text-start outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
                   onClick={() => setCalendars((cs) => cs.map((x) => (x.id === c.id ? { ...x, visible: !on } : x)))}
                   type="button"
                 >
@@ -795,7 +797,7 @@ export function CalendarWeek({
                     const isToday = d === today;
                     return (
                       <button
-                        className="flex h-11 cursor-pointer items-center gap-1.5 border-s ps-2.5 text-left outline-none hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                        className="flex h-11 cursor-pointer items-center gap-1.5 border-s ps-2.5 text-start outline-none hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
                         key={d}
                         onClick={() => {
                           setFocusDay(d);
@@ -826,7 +828,7 @@ export function CalendarWeek({
                   return (
                     <button
                       className={cn(
-                        "relative z-10 mx-1 my-px flex h-6 cursor-pointer items-center truncate rounded-md ps-2.5 pe-2 text-left font-medium text-xs outline-none before:absolute before:inset-y-1 before:left-1 before:w-0.5 before:rounded-full focus-visible:ring-2 focus-visible:ring-ring",
+                        "relative z-10 mx-1 my-px flex h-6 cursor-pointer items-center truncate rounded-md ps-2.5 pe-2 text-start font-medium text-xs outline-none before:absolute before:inset-y-1 before:start-1 before:w-0.5 before:rounded-full focus-visible:ring-2 focus-visible:ring-ring",
                         selectedId === e.id ? toneSolid[cal.tone] : toneBlock[cal.tone],
                       )}
                       key={e.id}
@@ -854,7 +856,7 @@ export function CalendarWeek({
                 {Array.from({ length: 23 }, (_, i) => i + 1).map((h) => (
                   <span
                     className={cn(
-                      "absolute right-2 -translate-y-1/2 text-[10px] text-muted-foreground tabular-nums transition-opacity",
+                      "absolute end-2 -translate-y-1/2 text-[10px] text-muted-foreground tabular-nums transition-opacity",
                       todayIdx >= 0 && Math.abs(h * 60 - nowMin) < 24 && "opacity-0",
                     )}
                     key={h}
@@ -865,7 +867,7 @@ export function CalendarWeek({
                 ))}
                 {todayIdx >= 0 && (
                   <span
-                    className="absolute right-1 z-20 -translate-y-1/2 rounded-md bg-red-600 px-1 py-px font-medium text-[10px] text-white tabular-nums"
+                    className="absolute end-1 z-20 -translate-y-1/2 rounded-md bg-red-600 px-1 py-px font-medium text-[10px] text-white tabular-nums"
                     style={{ top: nowTop }}
                   >
                     {fmtTime(nowMin).replace(" AM", "").replace(" PM", "")}
@@ -905,7 +907,7 @@ export function CalendarWeek({
                       {isToday && nowMin <= 24 * 60 && (
                         <div aria-hidden className="pointer-events-none absolute inset-x-0 z-20" style={{ top: nowTop }}>
                           <div className="absolute inset-x-0 h-0.5 -translate-y-1/2 bg-destructive" />
-                          <div className="absolute -left-1.5 size-3 -translate-y-1/2 rounded-full bg-destructive ring-2 ring-background" />
+                          <div className="absolute -start-1.5 size-3 -translate-y-1/2 rounded-full bg-destructive ring-2 ring-background" />
                         </div>
                       )}
                       <AnimatePresence initial={false}>
@@ -921,7 +923,7 @@ export function CalendarWeek({
                             <motion.div
                               animate={{ opacity: 1, scale: 1, y: ev.start * PX }}
                               className={cn(
-                                "group/ev @container absolute top-0 z-10 cursor-grab touch-none overflow-hidden rounded-md bg-clip-padding text-left outline-none before:absolute before:inset-y-1 before:left-1 before:w-0.5 before:rounded-full focus-visible:ring-2 focus-visible:ring-ring",
+                                "group/ev @container absolute top-0 z-10 cursor-grab touch-none overflow-hidden rounded-md bg-clip-padding text-start outline-none before:absolute before:inset-y-1 before:start-1 before:w-0.5 before:rounded-full focus-visible:ring-2 focus-visible:ring-ring",
                                 isSel || isDrag ? toneSolid[cal.tone] : toneBlock[cal.tone],
                                 isDrag && "z-30 cursor-grabbing shadow-lg/20",
                                 faded && "[&>div]:opacity-70 before:opacity-60",
@@ -969,7 +971,7 @@ export function CalendarWeek({
                                 )}
                               </div>
                               {isDrag && height >= 40 && (
-                                <span className="pointer-events-none absolute right-1.5 bottom-1.5 rounded bg-black/20 px-1 font-medium text-[10px] tabular-nums">
+                                <span className="pointer-events-none absolute end-1.5 bottom-1.5 rounded bg-black/20 px-1 font-medium text-[10px] tabular-nums">
                                   {fmtDuration(ev.end - ev.start)}
                                 </span>
                               )}
@@ -1155,7 +1157,7 @@ function EventCard({
             value={ev.title}
           />
         ) : (
-          <button className="min-w-0 flex-1 cursor-text text-left font-medium leading-5 outline-none" onClick={onEdit} type="button">
+          <button className="min-w-0 flex-1 cursor-text text-start font-medium leading-5 outline-none" onClick={onEdit} type="button">
             {ev.title}
           </button>
         )}

@@ -61,7 +61,7 @@ export function ProfileCredentials() {
                 Recovery codes regenerated 14 days ago.
               </div>
             </div>
-            <Button variant="ghost" type="button" className="max-sm:ml-6">
+            <Button variant="ghost" type="button" className="max-sm:ms-6">
               Review
             </Button>
           </div>
@@ -112,7 +112,7 @@ export function ProfileCredentials() {
                     {s.lastActive} · {s.ip}
                   </div>
                 </div>
-                <div className="text-right font-mono text-[10px] text-muted-foreground max-sm:hidden">
+                <div className="text-end font-mono text-[10px] text-muted-foreground max-sm:hidden">
                   <div>{s.lastActive}</div>
                   <div>{s.ip}</div>
                 </div>

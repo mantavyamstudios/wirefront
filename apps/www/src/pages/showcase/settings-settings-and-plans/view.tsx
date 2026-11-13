@@ -405,7 +405,7 @@ function OptionCard({ value, label, hint, extra }: { value: string; label: React
   return (
     <Radio.Root
       className={cn(
-        "relative flex cursor-pointer flex-col items-start gap-0.5 rounded-lg border bg-background px-3 py-2.5 text-left outline-none hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground data-checked:ring-1 data-checked:ring-foreground data-checked:hover:bg-background",
+        "relative flex cursor-pointer flex-col items-start gap-0.5 rounded-lg border bg-background px-3 py-2.5 text-start outline-none hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground data-checked:ring-1 data-checked:ring-foreground data-checked:hover:bg-background",
         press,
       )}
       value={value}
@@ -809,7 +809,7 @@ function MembersPanel({
                   <div className="col-start-1 row-start-2 ps-11 sm:col-start-2 sm:row-start-1 sm:ps-0">
                     <RoleSelect member={m} onRole={onChangeRole ? (next) => void changeRole.run({ memberId: m.id, role: next }, m.id) : undefined} t={t} />
                   </div>
-                  <span className="col-start-2 row-start-2 truncate text-right text-muted-foreground text-xs sm:col-start-3 sm:row-start-1 sm:text-left sm:text-sm">
+                  <span className="col-start-2 row-start-2 truncate text-end text-muted-foreground text-xs sm:col-start-3 sm:row-start-1 sm:text-start sm:text-sm">
                     {lastActive(m)}
                   </span>
                   <div className="col-start-2 row-start-1 flex justify-end sm:col-start-4">
@@ -1111,7 +1111,7 @@ function UsageRow({ item }: { item: PlansUsage }) {
         {projPct > pct ? (
           <motion.div
             animate={{ scaleX: 1 }}
-            className={cn("absolute inset-y-0 left-0 origin-left rounded-full", over ? "bg-warning/32" : "bg-foreground/12")}
+            className={cn("absolute inset-y-0 start-0 origin-left rounded-full", over ? "bg-warning/32" : "bg-foreground/12")}
             initial={false}
             style={{ width: `${projPct}%` }}
             transition={{ ...fill, delay: reduce ? 0 : 0.15 }}
@@ -1119,7 +1119,7 @@ function UsageRow({ item }: { item: PlansUsage }) {
         ) : null}
         <motion.div
           animate={{ scaleX: 1 }}
-          className={cn("absolute inset-y-0 left-0 origin-left rounded-full", pct >= 85 ? "bg-warning" : "bg-primary")}
+          className={cn("absolute inset-y-0 start-0 origin-left rounded-full", pct >= 85 ? "bg-warning" : "bg-primary")}
           initial={false}
           style={{ width: `${pct}%` }}
           transition={fill}
@@ -1358,7 +1358,7 @@ function BillingPanel({
             <span>{t.invoice}</span>
             <span>{t.date}</span>
             <span>{t.status}</span>
-            <span className="text-right">{t.amount}</span>
+            <span className="text-end">{t.amount}</span>
             <span className="sr-only">{t.download}</span>
           </TableHeadRow>
           {invoices.length === 0 ? <p className="px-4 py-10 text-center text-muted-foreground text-xs">{interpolate(t.noInvoices, { date: day(data.renewsAt) })}</p> : null}
@@ -1376,7 +1376,7 @@ function BillingPanel({
                   </Badge>
                 </Swap>
               </span>
-              <span className="text-right text-sm tabular-nums">{money(inv.amount)}</span>
+              <span className="text-end text-sm tabular-nums">{money(inv.amount)}</span>
               {inv.url ? (
                 <a
                   aria-label={interpolate(t.downloadInvoice, { number: inv.number })}

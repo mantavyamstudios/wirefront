@@ -567,7 +567,7 @@ export function Notes({
           <button
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left [&_svg]:size-4 [&_svg]:opacity-80",
+              "relative flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-start [&_svg]:size-4 [&_svg]:opacity-80",
               ring,
               press,
               active ? "font-medium text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -613,7 +613,7 @@ export function Notes({
         <button
           aria-current={active || undefined}
           className={cn(
-            "group/note relative flex w-full cursor-pointer flex-col gap-1 rounded-xl px-3 py-2.5 text-left transition-colors",
+            "group/note relative flex w-full cursor-pointer flex-col gap-1 rounded-xl px-3 py-2.5 text-start transition-colors",
             ring,
             active ? "bg-accent" : "hover:bg-accent/50",
           )}
@@ -682,7 +682,7 @@ export function Notes({
 
   return (
     <div className={cn("@container relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm", className)}>
-      <aside className="hidden w-56 shrink-0 flex-col gap-5 border-r bg-muted/40 p-3 @5xl:flex">
+      <aside className="hidden w-56 shrink-0 flex-col gap-5 border-e bg-muted/40 p-3 @5xl:flex">
         <div className="flex items-center gap-2.5 px-1.5 pt-1">
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <NotebookPenIcon className="size-4" />
@@ -694,7 +694,7 @@ export function Notes({
 
       <section
         aria-label="Notes"
-        className={cn("min-w-0 flex-1 flex-col border-r @3xl:flex @3xl:w-80 @3xl:flex-none", view === "list" ? "flex" : "hidden")}
+        className={cn("min-w-0 flex-1 flex-col border-e @3xl:flex @3xl:w-80 @3xl:flex-none", view === "list" ? "flex" : "hidden")}
       >
         <div className="flex h-14 shrink-0 items-center gap-2 px-3">
           <DropdownMenu>

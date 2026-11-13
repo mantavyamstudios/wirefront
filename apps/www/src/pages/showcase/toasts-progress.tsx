@@ -54,9 +54,9 @@ export function ToastsProgress() {
       {open && total > 0 ? (
         <section
           aria-label="Uploads"
-          className="fixed inset-x-0 bottom-0 z-50 border-border/70 border-t bg-background pb-[env(safe-area-inset-bottom)] shadow-lg sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-96 sm:rounded-xl sm:border sm:pb-0"
+          className="fixed inset-x-0 bottom-0 z-50 border-border/70 border-t bg-background pb-[env(safe-area-inset-bottom)] shadow-lg sm:inset-x-auto sm:end-6 sm:bottom-6 sm:w-96 sm:rounded-xl sm:border sm:pb-0"
         >
-          <div className="flex items-center justify-between gap-2 border-border/60 border-b py-1.5 pr-1.5 pl-3.5">
+          <div className="flex items-center justify-between gap-2 border-border/60 border-b py-1.5 pe-1.5 ps-3.5">
             <div className="flex min-w-0 items-center gap-2">
               {finished ? (
                 <CheckIcon aria-hidden className="size-4 text-emerald-700 dark:text-emerald-400" />
@@ -133,7 +133,7 @@ export function ToastsProgress() {
                             type="button"
                             aria-label={`Cancel ${j.name}`}
                             onClick={() => setJobs((js) => js.filter((x) => x.id !== j.id))}
-                            className="-mr-2 min-h-8 rounded px-2 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors hover:text-foreground pointer-coarse:min-h-10"
+                            className="-me-2 min-h-8 rounded px-2 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors hover:text-foreground pointer-coarse:min-h-10"
                           >
                             Cancel
                           </button>

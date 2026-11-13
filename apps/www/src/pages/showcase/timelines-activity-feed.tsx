@@ -163,16 +163,16 @@ function DaySection({
         </span>
       </div>
 
-      <ol className="relative pl-7">
+      <ol className="relative ps-7">
         <span
           aria-hidden
-          className="absolute top-2 bottom-2 left-[15px] w-px bg-border/40"
+          className="absolute top-2 bottom-2 start-[15px] w-px bg-border/40"
         />
         {events.map((e, i) => (
           <li key={i} className="relative grid grid-cols-1 gap-3 py-2.5">
             <span
               className={
-                "absolute -left-7 top-3 z-10 grid size-[30px] place-items-center rounded-full ring-4 ring-background " +
+                "absolute -start-7 top-3 z-10 grid size-[30px] place-items-center rounded-full ring-4 ring-background " +
                 TONE[e.tone]
               }
             >

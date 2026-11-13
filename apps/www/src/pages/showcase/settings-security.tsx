@@ -273,7 +273,7 @@ export function SettingsSecurity() {
                     {s.browser} · {s.os}
                   </div>
                 </div>
-                <div className="hidden flex-col items-end text-right sm:flex">
+                <div className="hidden flex-col items-end text-end sm:flex">
                   <span className="font-mono text-[11px] text-muted-foreground">
                     {s.ip}
                   </span>
@@ -282,7 +282,7 @@ export function SettingsSecurity() {
                   </span>
                 </div>
                 {s.current ? (
-                  <span className="shrink-0 text-right font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:w-[68px]">
+                  <span className="shrink-0 text-end font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:w-[68px]">
                     Current
                   </span>
                 ) : (

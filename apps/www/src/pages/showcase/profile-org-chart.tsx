@@ -139,7 +139,7 @@ function Tree({ node, highlight = false }: { node: Node; highlight?: boolean }) 
                     aria-hidden
                     className={
                       "absolute top-0 h-px bg-border/70 " +
-                      (i === 0 ? "right-0 left-1/2" : i === all.length - 1 ? "right-1/2 left-0" : "inset-x-0")
+                      (i === 0 ? "end-0 left-1/2" : i === all.length - 1 ? "right-1/2 start-0" : "inset-x-0")
                     }
                   />
                 ) : null}
@@ -168,7 +168,7 @@ function OutlineNode({ node, highlight = false }: { node: Node; highlight?: bool
     >
       <Card node={node} highlight={highlight} fluid />
       {open ? (
-        <ul role="group" className="ml-4 flex flex-col gap-2 border-border/70 border-l pl-3">
+        <ul role="group" className="ms-4 flex flex-col gap-2 border-border/70 border-s ps-3">
           {node.reports!.map((r) => (
             <OutlineNode key={r.name} node={r} />
           ))}
@@ -219,7 +219,7 @@ function Card({
           onClick={hasReports ? () => toggle(node.name) : undefined}
           aria-expanded={hasReports ? open : false}
           aria-label={`${open ? "Hide" : "Show"} ${hidden} reports of ${node.name}`}
-          className="-my-1 -mr-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
+          className="-my-1 -me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
         >
           {open ? (
             <ChevronDownIcon className="size-3.5" />

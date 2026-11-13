@@ -167,7 +167,7 @@ function ChannelRow({
       <button
         aria-controls={panelId}
         aria-expanded={open}
-        className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left outline-none transition-colors hover:bg-accent/40 focus-visible:bg-accent/40"
+        className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-start outline-none transition-colors hover:bg-accent/40 focus-visible:bg-accent/40"
         onClick={onOpen}
         type="button"
       >

@@ -398,7 +398,7 @@ function Templates({
   return (
     // Like the date-range picker's quick ranges: wrapping chips on phones, a
     // vertical list beside the editor from md. Every preset stays visible.
-    <aside className="border-border/60 border-b bg-background p-3 md:row-span-2 md:border-r md:border-b-0 xl:row-span-1">
+    <aside className="border-border/60 border-b bg-background p-3 md:row-span-2 md:border-e md:border-b-0 xl:row-span-1">
       <span
         id="recurrence-presets"
         className="flex items-center gap-1.5 px-1 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] md:px-2"
@@ -417,7 +417,7 @@ function Templates({
               onClick={() => onPick(t.rule)}
               aria-pressed={isActive}
               className={
-                "min-h-8 whitespace-nowrap rounded-full border px-3 py-1 text-left text-sm transition-colors pointer-coarse:min-h-10 md:w-full md:rounded-md md:px-2 " +
+                "min-h-8 whitespace-nowrap rounded-full border px-3 py-1 text-start text-sm transition-colors pointer-coarse:min-h-10 md:w-full md:rounded-md md:px-2 " +
                 (isActive
                   ? "border-foreground bg-foreground text-background"
                   : "border-border/70 bg-background text-foreground/80 hover:border-foreground/40 md:border-transparent md:hover:bg-muted/50")
@@ -581,7 +581,7 @@ function Editor({
               rule.end.type === "until" ? (
                 <button
                   type="button"
-                  className="ml-auto inline-flex min-h-8 items-center gap-2 rounded-md border border-border/70 bg-background px-2 font-mono text-[11px]"
+                  className="ms-auto inline-flex min-h-8 items-center gap-2 rounded-md border border-border/70 bg-background px-2 font-mono text-[11px]"
                 >
                   <CalendarIcon className="size-3 opacity-60" />
                   {new Date(rule.end.date).toLocaleDateString("en-US", {
@@ -611,7 +611,7 @@ function Editor({
                       },
                     })
                   }
-                  className="ml-auto w-20"
+                  className="ms-auto w-20"
                  />
               ) : null
             }
@@ -771,7 +771,7 @@ function Preview({
   setMonthOffset: (n: number) => void;
 }) {
   return (
-    <div className="min-w-0 space-y-5 border-border/60 bg-muted/10 px-4 py-5 max-xl:border-t sm:px-5 md:col-start-2 xl:col-start-3 xl:row-start-1 xl:border-l">
+    <div className="min-w-0 space-y-5 border-border/60 bg-muted/10 px-4 py-5 max-xl:border-t sm:px-5 md:col-start-2 xl:col-start-3 xl:row-start-1 xl:border-s">
       <div>
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           RRULE
@@ -948,7 +948,7 @@ function MiniCalendar({
           <span className="size-2 rounded-sm border border-foreground/40" />
           Today
         </span>
-        <span className="ml-auto tabular-nums">
+        <span className="ms-auto tabular-nums">
           {hits.size} this month
         </span>
       </div>

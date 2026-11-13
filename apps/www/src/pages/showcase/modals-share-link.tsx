@@ -77,7 +77,7 @@ export function ModalsShareLink() {
                 </div>
               </div>
 
-              <div className="flex min-w-0 items-center gap-2 rounded-lg border border-border/60 bg-background py-1 pr-1 pl-3">
+              <div className="flex min-w-0 items-center gap-2 rounded-lg border border-border/60 bg-background py-1 pe-1 ps-3">
                 <LockIcon className="size-3.5 shrink-0 opacity-50" />
                 <code className="min-w-0 flex-1 truncate font-mono text-xs">{LINK}</code>
                 <Button size="sm" variant="ghost" type="button" aria-label="Copy link" className="shrink-0">
@@ -112,7 +112,7 @@ export function ModalsShareLink() {
             </div>
 
             <DialogFooter className="sm:items-center sm:justify-between">
-              <span className="text-center text-muted-foreground text-xs sm:text-left">
+              <span className="text-center text-muted-foreground text-xs sm:text-start">
                 Workspace defaults to viewer access
               </span>
               <DialogClose render={<Button type="button" />}>Done</DialogClose>

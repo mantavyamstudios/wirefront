@@ -857,7 +857,7 @@ const SAMPLE_PROMPTS: BenchPrompt[] = [
 const spring = { type: "spring", duration: 0.3, bounce: 0 } as const;
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 const PRESS = "transition-[box-shadow,transform,background-color] duration-150 ease-out active:scale-[0.97] motion-reduce:active:scale-100";
-const TAB_HIT = "after:absolute after:inset-x-0 after:-inset-y-1 after:content-['']";
+const TAB_HIT = "text-foreground/70 after:absolute after:inset-x-0 after:-inset-y-1 after:content-['']";
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 const fmtPct = (n: number) => `${Math.round(n * 100)}%`;
 const fmtScore = (n: number) => n.toFixed(2);
@@ -1302,8 +1302,8 @@ function PromptDiff({
               <div className="py-1">
                 {ops.map((o, k) => (
                   <div className={cn("flex", lineTone(o.type))} key={k}>
-                    <span className="w-8 shrink-0 select-none pe-1 text-right text-muted-foreground tabular-nums">{o.a ?? ""}</span>
-                    <span className="w-8 shrink-0 select-none pe-1 text-right text-muted-foreground tabular-nums">{o.b ?? ""}</span>
+                    <span className="w-8 shrink-0 select-none pe-1 text-end text-muted-foreground tabular-nums">{o.a ?? ""}</span>
+                    <span className="w-8 shrink-0 select-none pe-1 text-end text-muted-foreground tabular-nums">{o.b ?? ""}</span>
                     <Sign type={o.type} />
                     <span className="min-w-0 flex-1 whitespace-pre-wrap break-words pe-3">{o.text || " "}</span>
                   </div>
@@ -1318,7 +1318,7 @@ function PromptDiff({
                       const n = side === "left" ? o?.a : o?.b;
                       return (
                         <div className={cn("flex min-h-5 min-w-0", o ? lineTone(o.type) : "bg-muted/60")} key={side}>
-                          <span className="w-7 shrink-0 select-none pe-1 text-right text-muted-foreground tabular-nums">{n ?? ""}</span>
+                          <span className="w-7 shrink-0 select-none pe-1 text-end text-muted-foreground tabular-nums">{n ?? ""}</span>
                           <Sign type={o?.type} />
                           <span className="min-w-0 flex-1 whitespace-pre-wrap break-words pe-2">{o?.text ?? ""}</span>
                         </div>
@@ -1442,7 +1442,7 @@ function CaseRow({
         <button
           aria-controls={panelId}
           aria-expanded={open}
-          className="flex min-w-0 cursor-pointer items-start gap-2 rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="flex min-w-0 cursor-pointer items-start gap-2 rounded-lg text-start outline-none focus-visible:ring-2 focus-visible:ring-ring"
           onClick={() => setOpen((o) => !o)}
           type="button"
         >
@@ -1460,7 +1460,7 @@ function CaseRow({
         <span className="hidden truncate text-muted-foreground text-xs @3xl:block">{c.expected}</span>
         <span
           className={cn(
-            "hidden text-right font-mono text-xs @3xl:block",
+            "hidden text-end font-mono text-xs @3xl:block",
             state.status === "fail" ? "text-destructive-foreground" : "text-foreground",
           )}
         >
@@ -1572,7 +1572,7 @@ function SidebarContent({
                   <button
                     aria-current={on ? "page" : undefined}
                     className={cn(
-                      "relative isolate flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left font-mono text-xs outline-none transition-[color,background-color,transform] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] motion-reduce:active:scale-100",
+                      "relative isolate flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-start font-mono text-xs outline-none transition-[color,background-color,transform] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] motion-reduce:active:scale-100",
                       on ? "text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
                     )}
                     key={p.name}
@@ -1619,7 +1619,7 @@ function SidebarContent({
                     type="button"
                   >
                     <l.icon aria-hidden className="size-4" />
-                    <span className="flex-1 text-left">{l.label}</span>
+                    <span className="flex-1 text-start">{l.label}</span>
                     <span className="rounded-md border px-1.5 py-px text-[10px] text-muted-foreground leading-4">Soon</span>
                   </button>
                 }
@@ -1877,7 +1877,7 @@ function PromptBoard({
               ).map((o) => (
                 <TabsTrigger className={cn("gap-1.5 text-xs sm:text-xs", TAB_HIT)} key={o.value} value={o.value}>
                   {o.label}
-                  <span className="min-w-[2ch] text-left text-muted-foreground tabular-nums">{o.count}</span>
+                  <span className="min-w-[2ch] text-start text-muted-foreground tabular-nums">{o.count}</span>
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -1898,7 +1898,7 @@ function PromptBoard({
         >
           <span className="ps-6">Case</span>
           <span>Expected</span>
-          <span className="text-right">Score</span>
+          <span className="text-end">Score</span>
           <span>Status</span>
           <span className="w-8" />
         </div>
@@ -2012,7 +2012,7 @@ export function PromptTestBench({
         className,
       )}
     >
-      <aside className="hidden w-60 shrink-0 border-r bg-muted/40 @3xl:block">{sidebar}</aside>
+      <aside className="hidden w-60 shrink-0 border-e bg-muted/40 @3xl:block">{sidebar}</aside>
 
       <AnimatePresence>
         {drawer && (
@@ -2029,7 +2029,7 @@ export function PromptTestBench({
               animate={{ x: 0 }}
               aria-label="Prompts"
               aria-modal="true"
-              className="absolute inset-y-0 left-0 z-50 w-64 max-w-[85%] border-r bg-background outline-none @3xl:hidden"
+              className="absolute inset-y-0 start-0 z-50 w-64 max-w-[85%] border-e bg-background outline-none @3xl:hidden"
               exit={{ x: "-105%" }}
               initial={{ x: "-105%" }}
               onKeyDown={(e) => e.key === "Escape" && setDrawer(false)}

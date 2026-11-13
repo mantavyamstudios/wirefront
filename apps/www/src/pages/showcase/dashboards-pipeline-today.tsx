@@ -653,7 +653,7 @@ function Burst({ reduce }: { reduce: boolean }) {
         return (
           <motion.span
             animate={{ x: Math.cos(angle) * 15, y: Math.sin(angle) * 15, opacity: [0, 1, 0], scale: [0.6, 1, 0.6] }}
-            className={cn("absolute -top-[2px] -left-[2px] size-1 rounded-full", tone)}
+            className={cn("absolute -top-[2px] -start-[2px] size-1 rounded-full", tone)}
             initial={{ x: 0, y: 0, opacity: 0 }}
             key={i}
             transition={{ duration: 0.6, ease, opacity: { duration: 0.6, times: [0, 0.2, 1] } }}
@@ -1090,7 +1090,7 @@ function DetailPanel({
           <ol className="mt-2 flex flex-col">
             {deal.activity.slice(0, 3).map((a, i, list) => (
               <li className="relative flex gap-3 pb-3 last:pb-0" key={`${a.label}-${a.when}`}>
-                {i < list.length - 1 ? <span aria-hidden className="absolute top-3 bottom-0 left-[3px] w-px bg-border" /> : null}
+                {i < list.length - 1 ? <span aria-hidden className="absolute top-3 bottom-0 start-[3px] w-px bg-border" /> : null}
                 <span
                   aria-hidden
                   className={cn("mt-1.5 size-[7px] shrink-0 rounded-full", i === 0 ? "bg-foreground/70" : "bg-foreground/20")}
@@ -1863,7 +1863,7 @@ export function PipelineToday({
                 >
                   <n.icon className="size-4.5" />
                   {n.badge ? (
-                    <span className="absolute top-2 right-2 size-1.5 rounded-full bg-rose-500 ring-2 ring-background dark:bg-rose-400" />
+                    <span className="absolute top-2 end-2 size-1.5 rounded-full bg-rose-500 ring-2 ring-background dark:bg-rose-400" />
                   ) : null}
                 </TooltipTrigger>
                 <TooltipContent side="right">{n.label}</TooltipContent>
@@ -1913,7 +1913,7 @@ export function PipelineToday({
             <div className="flex items-center gap-1">
               <Button aria-label="Inbox" className="relative" size="icon" variant="ghost">
                 <InboxIcon />
-                <span className="absolute top-2 right-2 size-1.5 rounded-full bg-rose-500 ring-2 ring-background dark:bg-rose-400" />
+                <span className="absolute top-2 end-2 size-1.5 rounded-full bg-rose-500 ring-2 ring-background dark:bg-rose-400" />
               </Button>
               <Avatar aria-label={me?.name} role="img" className="[--avatar-size:--spacing(7)]">
                 <AvatarFallback className={cn("font-semibold text-[10px]", ownerTones[ownerIndex(currentUserId) % ownerTones.length])}>
@@ -1978,7 +1978,7 @@ export function PipelineToday({
                   transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 260, damping: 32 }}
                 />
                 <div
-                  className="absolute inset-y-0 left-0 bg-emerald-500 dark:bg-emerald-400"
+                  className="absolute inset-y-0 start-0 bg-emerald-500 dark:bg-emerald-400"
                   style={{ width: `${Math.min(100, (won / target) * 100)}%` }}
                 />
               </div>
@@ -2129,7 +2129,7 @@ export function PipelineToday({
         {drag && draggedDeal ? (
           <motion.div
             aria-hidden
-            className="pointer-events-none absolute top-0 left-0 z-50"
+            className="pointer-events-none absolute top-0 start-0 z-50"
             style={{ x: dragX, y: dragY, rotate: tilt, width: drag.width }}
           >
             <motion.div

@@ -223,12 +223,12 @@ function NativeSelect({
   return (
     <div className="relative">
       {icon ? (
-        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
+        <span className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2">
           {icon}
         </span>
       ) : null}
       <select
-        className={`h-9 w-full appearance-none rounded-lg border border-input bg-background ${icon ? "pl-8" : "pl-3"} pr-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24 ${className ?? ""}`}
+        className={`h-9 w-full appearance-none rounded-lg border border-input bg-background ${icon ? "ps-8" : "ps-3"} pe-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24 ${className ?? ""}`}
         {...props}
       />
       <svg
@@ -239,7 +239,7 @@ function NativeSelect({
         strokeLinecap="round"
         strokeLinejoin="round"
         aria-hidden
-        className="pointer-events-none absolute right-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
+        className="pointer-events-none absolute end-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
       >
         <polyline points="4 6 8 10 12 6" />
       </svg>

@@ -305,7 +305,7 @@ export function SettingsPermissions() {
                     <tr className="border-b border-border/60">
                       <th
                         scope="col"
-                        className="sticky left-0 z-20 min-w-[150px] bg-background px-3 py-3 text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:min-w-[200px] sm:px-4 lg:min-w-[240px]"
+                        className="sticky start-0 z-20 min-w-[150px] bg-background px-3 py-3 text-start font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:min-w-[200px] sm:px-4 lg:min-w-[240px]"
                       >
                         Capability
                       </th>
@@ -369,7 +369,7 @@ export function SettingsPermissions() {
                 <LegendItem state="yes" label="Allowed" />
                 <LegendItem state="no" label="Not allowed" />
                 <LegendItem state="na" label="Not applicable" />
-                <span className="ml-auto font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                <span className="ms-auto font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                   Editing as{" "}
                   <span className="text-foreground">
                     {ROLES.find((r) => r.id === activeRole)?.name}
@@ -401,7 +401,7 @@ function GroupRows({
         <th
           scope="colgroup"
           colSpan={1}
-          className="sticky left-0 z-10 bg-[color-mix(in_srgb,var(--background),var(--foreground)_2.5%)] px-3 py-2 text-left font-mono font-normal text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4"
+          className="sticky start-0 z-10 bg-[color-mix(in_srgb,var(--background),var(--foreground)_2.5%)] px-3 py-2 text-start font-mono font-normal text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4"
         >
           {group.label}
         </th>
@@ -421,7 +421,7 @@ function GroupRows({
             }`}
           >
             {/* Opaque sticky cell: the row tint is translucent, so bg-inherit let scrolled cells show through. */}
-            <td className="sticky left-0 z-10 min-w-[150px] bg-background px-3 py-2.5 sm:min-w-[200px] sm:px-4 lg:min-w-[240px]">
+            <td className="sticky start-0 z-10 min-w-[150px] bg-background px-3 py-2.5 sm:min-w-[200px] sm:px-4 lg:min-w-[240px]">
               <div className="flex flex-col">
                 <span className="font-medium text-[13px]">{cap.label}</span>
                 {cap.hint ? (

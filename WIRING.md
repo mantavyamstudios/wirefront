@@ -16,6 +16,36 @@ Resolve with nothing or `ok(data)` on success. Resolve with `fail(message, field
 
 After `npx shadcn add`, a screen lives in `components/wirefront/<screen>/`. The snippets below import from there.
 
+## App-wide setup
+
+Wrap your app once in `WirefrontProvider` (links, locale, time zone, currency, copy, permissions and `onError`). Two settings belong next to it:
+
+- **Errors.** Every screen renders inside a `ScreenBoundary`: if it throws while rendering it shows a retry fallback instead of taking your page down. Pass `onError` to report it:
+
+  ```tsx
+  <WirefrontProvider
+    onError={(error, { screen, componentStack }) =>
+      Sentry.captureException(error, { tags: { screen }, extra: { componentStack } })
+    }
+  >
+    {children}
+  </WirefrontProvider>
+  ```
+
+- **Right-to-left languages.** Screens use logical properties (`ms-`, `pe-`, `start-`, `text-start`), so they mirror when the page is RTL. Set `dir` on `<html>` and give Base UI the same direction, so menus, sliders and keyboard navigation follow it:
+
+  ```tsx
+  import { DirectionProvider } from "@base-ui/react/direction-provider";
+
+  <html dir={dir}>
+    <body>
+      <DirectionProvider direction={dir}>
+        <WirefrontProvider locale={locale}>{children}</WirefrontProvider>
+      </DirectionProvider>
+    </body>
+  </html>
+  ```
+
 ## auth/sign-in
 
 The screen calls these props (all optional except `product` and `onSignIn`; options you don't wire are not shown):

@@ -189,7 +189,7 @@ function FooterAnchor() {
 function RightColumn() {
   return (
     <div
-      className="relative hidden items-center justify-center overflow-hidden border-border border-l lg:flex"
+      className="relative hidden items-center justify-center overflow-hidden border-border border-s lg:flex"
       style={{
         background: [
           "radial-gradient(60% 50% at 15% 15%, color-mix(in oklab, var(--primary) 12%, transparent), transparent 65%)",

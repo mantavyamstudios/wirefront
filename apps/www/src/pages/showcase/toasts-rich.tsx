@@ -34,7 +34,7 @@ const SEED: { id: string; title: string; description: string; data: RichData }[]
     },
   },
   {
-    id: "pr",
+    id: "pe",
     title: "PR #128 ready for review",
     description: 'James moved "audit log query rewrite" to ready.',
     data: {
@@ -89,7 +89,7 @@ function RichViewport() {
 
   return (
     <Toast.Portal>
-      <Toast.Viewport className="fixed inset-x-0 top-0 z-50 flex max-h-svh flex-col gap-2 overflow-y-auto px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-4 outline-none sm:inset-x-auto sm:top-6 sm:right-6 sm:w-[380px] sm:overflow-visible sm:px-0 sm:pt-0">
+      <Toast.Viewport className="fixed inset-x-0 top-0 z-50 flex max-h-svh flex-col gap-2 overflow-y-auto px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-4 outline-none sm:inset-x-auto sm:top-6 sm:end-6 sm:w-[380px] sm:overflow-visible sm:px-0 sm:pt-0">
         {list.map((t, i) => {
           const d = t.data!;
           return (
@@ -148,7 +148,7 @@ function RichViewport() {
                 </div>
                 <Toast.Close
                   aria-label="Dismiss"
-                  className="-mt-1.5 -mr-1.5 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
+                  className="-mt-1.5 -me-1.5 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
                 >
                   <XIcon className="size-3.5" />
                 </Toast.Close>

@@ -75,12 +75,53 @@ describe("catalogue", () => {
         for (const source of [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f))) {
           const code = readFileSync(source, "utf8");
           const where = path.relative(SHOWCASE_DIR, source);
+          // shadcn's Skeleton pulses with no reduced-motion variant; screens pass one.
+          for (const tag of code.matchAll(/<Skeleton\b[^>]*>/g))
+            if (!tag[0].includes("motion-reduce:animate-none")) problems.push(`${where}: <Skeleton> without motion-reduce:animate-none`);
           if (/from\s+["']motion\/react["']/.test(code) && !/useReducedMotion|MotionConfig/.test(code))
             problems.push(`${where}: uses motion without useReducedMotion or MotionConfig`);
           for (const m of code.matchAll(/(["'`])((?:(?!\1)[^\\\n]|\\.)*)\1/g)) {
             const classes = m[2] ?? "";
             if (decorative.test(classes) && !/motion-(?:reduce|safe):/.test(classes)) problems.push(`${where}: "${classes.slice(0, 80)}"`);
           }
+        }
+      }
+    }
+    expect(problems).toEqual([]);
+  });
+
+  it("uses logical direction classes so screens mirror in right-to-left languages", () => {
+    // ms/me/ps/pe, start/end, text-start/end, border-s/e, rounded-s/e instead of their left/right forms.
+    // A left/right offset paired with translate-x in the same class string stays physical: centring
+    // (left-1/2 -translate-x-1/2) and slide-ins pair a side with a translate that doesn't mirror.
+    const physical =
+      /(?<![\w[\]/.-])-?(?:m[lr]|p[lr]|scroll-[mp][lr]|border-[lr]|rounded-(?:[lr]|tl|tr|bl|br)|text-(?:left|right)|float-(?:left|right))(?![\w])(?:-[\w[\]./%()#,]+)?(?![\w-])/;
+    const side = /(?<![\w[\]/.-])-?(?:left|right)-(?!1\/2\b)[\w[\]./%()#,-]+/;
+    const problems: string[] = [];
+    for (const map of Object.values(SOURCE_FILES)) {
+      for (const file of Object.values(map ?? {})) {
+        for (const source of [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f))) {
+          for (const m of withoutCodeSamples(readFileSync(source, "utf8")).matchAll(/(["`])((?:(?!\1)[^\\\n])*)\1/g)) {
+            const classes = m[2] ?? "";
+            const hit = classes.match(physical)?.[0] ?? (/translate-x/.test(classes) ? undefined : classes.match(side)?.[0]);
+            if (hit) problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${hit}`);
+          }
+        }
+      }
+    }
+    expect(problems).toEqual([]);
+  });
+
+  it("doesn't ship shadcn primitives that break the templates' typecheck", () => {
+    // shadcn's scroll-area keeps an unused React import that fails the strict typecheck of shadcn's own
+    // Vite and TanStack Start templates; use ScrollRegion (@wirefront/ui/wirefront/scroll-region) instead.
+    const broken = ["scroll-area"];
+    const problems: string[] = [];
+    for (const map of Object.values(SOURCE_FILES)) {
+      for (const file of Object.values(map ?? {})) {
+        for (const source of [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f))) {
+          for (const name of broken)
+            if (readFileSync(source, "utf8").includes(`"@wirefront/ui/${name}"`)) problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${name}`);
         }
       }
     }

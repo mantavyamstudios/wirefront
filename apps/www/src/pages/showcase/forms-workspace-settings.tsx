@@ -50,7 +50,7 @@ export function FormsWorkspaceSettings() {
           <DropdownMenu>
             <DropdownMenuTrigger
               aria-label={`${name} ${section}, switch settings section`}
-              className="flex min-h-11 w-full items-center gap-3 rounded-lg border border-border/60 bg-card px-3 text-left"
+              className="flex min-h-11 w-full items-center gap-3 rounded-lg border border-border/60 bg-card px-3 text-start"
             >
               <CurrentIcon
                 className={`size-4 shrink-0 ${"danger" in current ? "text-destructive" : "opacity-70"}`}
@@ -90,7 +90,7 @@ export function FormsWorkspaceSettings() {
           </DropdownMenu>
         </div>
 
-        <aside className="hidden border-border/60 border-r py-8 md:block md:px-4">
+        <aside className="hidden border-border/60 border-e py-8 md:block md:px-4">
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Workspace
           </div>
@@ -338,7 +338,7 @@ function NativeSelect({
   return (
     <div className="relative">
       <select
-        className={`h-9 w-full appearance-none rounded-lg pointer-coarse:h-11 border border-input bg-background pl-3 pr-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24 ${className ?? ""}`}
+        className={`h-9 w-full appearance-none rounded-lg pointer-coarse:h-11 border border-input bg-background ps-3 pe-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24 ${className ?? ""}`}
         {...props}
       />
       <svg
@@ -349,7 +349,7 @@ function NativeSelect({
         strokeLinecap="round"
         strokeLinejoin="round"
         aria-hidden
-        className="pointer-events-none absolute right-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
+        className="pointer-events-none absolute end-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
       >
         <polyline points="4 6 8 10 12 6" />
       </svg>

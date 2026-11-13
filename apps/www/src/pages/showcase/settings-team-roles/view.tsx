@@ -208,7 +208,7 @@ function CheckCell({
   return (
     <span className="relative inline-flex">
       <Checkbox aria-label={label} checked={checked} className="size-[18px]" disabled={locked} onCheckedChange={onToggle} />
-      {changed ? <span aria-hidden className="-top-1 -right-1 absolute size-1.5 rounded-full bg-warning ring-2 ring-card" /> : null}
+      {changed ? <span aria-hidden className="-top-1 -end-1 absolute size-1.5 rounded-full bg-warning ring-2 ring-card" /> : null}
     </span>
   );
 }
@@ -254,12 +254,12 @@ function PermissionMatrix({
   onRemove: (roleId: string) => void;
   t: Messages;
 }) {
-  const sticky = "sticky left-0 z-10 bg-card";
+  const sticky = "sticky start-0 z-10 bg-card";
   const roleCol = "w-14 min-w-14 px-1 text-center sm:w-[4.75rem] sm:min-w-[4.75rem]";
   return (
     <div className="mt-3 overflow-hidden rounded-xl border bg-card">
       <div className="overflow-x-auto [scrollbar-width:thin]">
-        <table className="w-full min-w-fit border-collapse text-left">
+        <table className="w-full min-w-fit border-collapse text-start">
           <thead>
             <tr className="border-b">
               <th className={cn(sticky, "min-w-[7.5rem] px-4 pb-2.5 align-bottom font-medium text-muted-foreground text-xs sm:min-w-44")} scope="col">

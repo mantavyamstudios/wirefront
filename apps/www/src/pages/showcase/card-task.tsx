@@ -127,7 +127,7 @@ function TaskCard({ task }: { task: Task }) {
           </span>
           <span
             className={
-              "ml-auto rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider " +
+              "ms-auto rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider " +
               PRIORITY_STYLE[task.priority]
             }
           >

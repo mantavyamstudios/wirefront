@@ -315,7 +315,7 @@ export function CalendarsHolidays() {
           >
           <div className="min-w-max">
           <div className="grid grid-cols-[148px_auto] border-border/40 border-b bg-background sm:grid-cols-[220px_auto]">
-            <div className="sticky left-0 z-20 border-border/40 border-r bg-background px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4">
+            <div className="sticky start-0 z-20 border-border/40 border-e bg-background px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4">
               Member · {team.length}
             </div>
             <div>
@@ -330,7 +330,7 @@ export function CalendarsHolidays() {
                     <div
                       key={day}
                       className={
-                        "flex flex-col items-center border-border/40 border-r py-2 font-mono text-[10px] transition-colors " +
+                        "flex flex-col items-center border-border/40 border-e py-2 font-mono text-[10px] transition-colors " +
                         (inBest
                           ? "bg-emerald-500/[0.18] text-emerald-700 dark:text-emerald-300"
                           : overlap
@@ -352,7 +352,7 @@ export function CalendarsHolidays() {
 
           {/* Holiday strip */}
           <div className="grid grid-cols-[148px_auto] border-border/40 border-b bg-amber-500/[0.04] sm:grid-cols-[220px_auto]">
-            <div className="sticky left-0 z-20 flex items-center gap-2 border-border/40 border-r bg-background px-3 py-2 font-mono text-[10px] text-amber-800 uppercase tracking-[0.2em] sm:px-4 sm:tracking-[0.25em] dark:text-amber-400">
+            <div className="sticky start-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-3 py-2 font-mono text-[10px] text-amber-800 uppercase tracking-[0.2em] sm:px-4 sm:tracking-[0.25em] dark:text-amber-400">
               Holidays
             </div>
             <div className="relative h-9">
@@ -367,7 +367,7 @@ export function CalendarsHolidays() {
                       onClick={() => toggleHoliday(day)}
                       aria-label={isHoliday ? `Remove holiday day ${day}` : `Mark day ${day} as holiday`}
                       className={
-                        "border-border/40 border-r transition-colors " +
+                        "border-border/40 border-e transition-colors " +
                         (isHoliday
                           ? "bg-amber-500/30 hover:bg-amber-500/40"
                           : "hover:bg-amber-500/10")
@@ -406,7 +406,7 @@ export function CalendarsHolidays() {
                 key={m.id}
                 className="group grid grid-cols-[148px_auto] border-border/40 border-b last:border-b-0 sm:grid-cols-[220px_auto]"
               >
-                <div className="sticky left-0 z-20 flex items-center gap-2 border-border/40 border-r bg-background px-3 py-3 sm:gap-2.5 sm:px-4">
+                <div className="sticky start-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-3 py-3 sm:gap-2.5 sm:px-4">
                   <Avatar
                     className={
                       "size-7 shrink-0 max-sm:hidden " +
@@ -449,7 +449,7 @@ export function CalendarsHolidays() {
                               : `Mark ${activeType} on day ${day}`
                           }
                           className={
-                            "border-border/30 border-r transition-colors " +
+                            "border-border/30 border-e transition-colors " +
                             (isWeekend
                               ? "bg-foreground/[0.02] hover:bg-foreground/[0.05]"
                               : "hover:bg-foreground/[0.04]")
@@ -491,7 +491,7 @@ export function CalendarsHolidays() {
           <Legend tone="sick" label="Sick" />
           <Legend tone="remote" label="Remote" />
           <Legend tone="holiday" label="Holiday" />
-          <span className="sm:ml-auto">
+          <span className="sm:ms-auto">
             Click a cell to toggle · ⚠ shows when 2+ are out
           </span>
         </div>

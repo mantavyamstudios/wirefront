@@ -112,7 +112,7 @@ export function ThreadsComposeRich() {
           />
 
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <div className="flex max-w-full items-center gap-1.5 rounded-md border border-border/60 bg-background/40 py-0.5 pr-0.5 pl-2 text-xs">
+            <div className="flex max-w-full items-center gap-1.5 rounded-md border border-border/60 bg-background/40 py-0.5 pe-0.5 ps-2 text-xs">
               <PaperclipIcon aria-hidden className="size-3 shrink-0 opacity-60" />
               <span className="min-w-0 truncate font-mono text-[11px]">migration-plan.md</span>
               <button

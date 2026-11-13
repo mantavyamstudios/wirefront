@@ -167,7 +167,7 @@ export function DashboardsEngineering() {
                       />
                     </div>
                   </div>
-                  <div className="text-right font-mono text-[11px] tabular-nums">
+                  <div className="text-end font-mono text-[11px] tabular-nums">
                     <div>
                       <span className="text-foreground">{c.merged}</span>{" "}
                       <span className="text-muted-foreground">merged</span>
@@ -176,7 +176,7 @@ export function DashboardsEngineering() {
                       {c.reviewed} reviewed
                     </div>
                   </div>
-                  <div className="text-right font-mono text-[11px] text-muted-foreground tabular-nums max-sm:hidden">
+                  <div className="text-end font-mono text-[11px] text-muted-foreground tabular-nums max-sm:hidden">
                     {c.leadTime}
                   </div>
                 </li>

@@ -125,9 +125,9 @@ function BillingSettingsScreen({
   } else if (status === "loading" || !billing) {
     content = (
       <div aria-busy="true" className="mt-8 flex flex-col gap-3">
-        <Skeleton className="h-44 rounded-xl" />
-        <Skeleton className="h-32 rounded-xl" />
-        <Skeleton className="h-56 rounded-xl" />
+        <Skeleton className="h-44 rounded-xl motion-reduce:animate-none" />
+        <Skeleton className="h-32 rounded-xl motion-reduce:animate-none" />
+        <Skeleton className="h-56 rounded-xl motion-reduce:animate-none" />
       </div>
     );
   } else {
@@ -158,7 +158,7 @@ function BillingSettingsScreen({
                 {interpolate(t[plan.status], { date: day(plan.periodEnd) })}
               </div>
             </div>
-            <div className="sm:text-right">
+            <div className="sm:text-end">
               <div className="font-heading text-3xl">
                 {format.money(billing.monthlyPrice.amount, billing.monthlyPrice.currency, { maximumFractionDigits: 0 })}
               </div>
@@ -285,7 +285,7 @@ function BillingSettingsScreen({
                   {inv.url ? (
                     <a
                       aria-label={interpolate(t.openInvoice, { number: inv.number })}
-                      className="inline-flex shrink-0 items-center gap-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:p-3 sm:ml-2"
+                      className="inline-flex shrink-0 items-center gap-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:p-3 sm:ms-2"
                       href={inv.url}
                       rel="noreferrer"
                       target="_blank"

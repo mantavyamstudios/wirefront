@@ -480,7 +480,7 @@ function Property({ label, onClick, children }: { label: string; onClick?: () =>
     <div className="flex min-h-8 items-center gap-2">
       <span className="w-20 shrink-0 text-muted-foreground text-xs">{label}</span>
       <button
-        className="-ms-2 flex h-8 min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-lg px-2 text-left outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+        className="-ms-2 flex h-8 min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-lg px-2 text-start outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
         onClick={onClick}
         type="button"
       >
@@ -823,7 +823,7 @@ export function IssueTracker({
         type="button"
       >
         <SearchIcon className="size-4" />
-        <span className="flex-1 text-left">Command</span>
+        <span className="flex-1 text-start">Command</span>
         <Kbd>⌘K</Kbd>
       </button>
       <nav aria-label="Views" className="flex flex-col gap-0.5">
@@ -834,7 +834,7 @@ export function IssueTracker({
             <button
               aria-current={on ? "page" : undefined}
               className={cn(
-                "group/nav relative flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left text-[13px] outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                "group/nav relative flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-start text-[13px] outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 on ? "text-foreground" : "text-muted-foreground hover:text-foreground",
               )}
               key={n.id}
@@ -916,7 +916,7 @@ export function IssueTracker({
                 animate={{ x: 0 }}
                 aria-label="Navigation"
                 aria-modal="true"
-                className="absolute inset-y-2 left-2 z-50 w-[248px] max-w-[calc(100%-3rem)] overflow-hidden rounded-2xl border bg-sidebar shadow-lg/10 @5xl:hidden"
+                className="absolute inset-y-2 start-2 z-50 w-[248px] max-w-[calc(100%-3rem)] overflow-hidden rounded-2xl border bg-sidebar shadow-lg/10 @5xl:hidden"
                 exit={{ x: "-110%" }}
                 initial={{ x: "-110%" }}
                 role="dialog"
@@ -1145,7 +1145,7 @@ export function IssueTracker({
                                       role="row"
                                       tabIndex={isCursor ? 0 : -1}
                                     >
-                                      {isCursor && <span className="absolute inset-y-0 left-0 w-0.5 bg-foreground/70" />}
+                                      {isCursor && <span className="absolute inset-y-0 start-0 w-0.5 bg-foreground/70" />}
                                       <span className="contents" role="gridcell">
                                         <button
                                           aria-label={isPicked ? "Deselect" : "Select"}
@@ -1201,7 +1201,7 @@ export function IssueTracker({
                                           {issue.due}
                                         </span>
                                       )}
-                                      <span className="hidden w-12 shrink-0 text-right text-muted-foreground text-xs tabular-nums @xl:block">{issue.created}</span>
+                                      <span className="hidden w-12 shrink-0 text-end text-muted-foreground text-xs tabular-nums @xl:block">{issue.created}</span>
                                       <span title={a?.name ?? "Unassigned"}>
                                         <PersonAvatar person={a} />
                                       </span>
@@ -1329,7 +1329,7 @@ export function IssueTracker({
                           {open.subtasks.map((s, i) => (
                             <li key={s.title}>
                               <button
-                                className="flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-lg px-1.5 text-left outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+                                className="flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-lg px-1.5 text-start outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
                                 onClick={() =>
                                   update([open.id], (iss) => ({
                                     subtasks: iss.subtasks?.map((x, j) => (j === i ? { ...x, done: !x.done } : x)),
@@ -1348,7 +1348,7 @@ export function IssueTracker({
 
                     <div>
                       <div className="mb-2 font-medium text-muted-foreground text-xs">Activity</div>
-                      <ol className="relative flex flex-col gap-3 before:absolute before:top-2 before:bottom-2 before:left-[9px] before:w-px before:bg-border">
+                      <ol className="relative flex flex-col gap-3 before:absolute before:top-2 before:bottom-2 before:start-[9px] before:w-px before:bg-border">
                         {(open.activity ?? [{ who: open.assignee ?? "jonas", text: "created the issue", when: open.created }]).map((a, i) => {
                           const p = person(a.who);
                           return a.comment ? (

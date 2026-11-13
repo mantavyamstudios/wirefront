@@ -86,7 +86,7 @@ export function ChartsDonut() {
                       />
                     </div>
                   </div>
-                  <span className="shrink-0 text-right font-mono text-foreground text-xs tabular-nums sm:w-20">
+                  <span className="shrink-0 text-end font-mono text-foreground text-xs tabular-nums sm:w-20">
                     ${(s.value * 18400).toLocaleString()}
                   </span>
                 </li>

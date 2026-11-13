@@ -168,7 +168,7 @@ export function LayoutsThreePane() {
   return (
     <div className="min-h-svh bg-background text-foreground md:grid md:grid-cols-[64px_240px_minmax(0,1fr)]">
       {/* Workspace rail: always visible. Pinned to the left edge on phones. */}
-      <aside className="fixed inset-y-0 left-0 z-40 flex w-16 flex-col items-center gap-2 border-border/60 border-r bg-background py-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:sticky md:top-0 md:z-auto md:h-svh md:w-auto md:bg-foreground/[0.02] md:pt-3">
+      <aside className="fixed inset-y-0 start-0 z-40 flex w-16 flex-col items-center gap-2 border-border/60 border-e bg-background py-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:sticky md:top-0 md:z-auto md:h-svh md:w-auto md:bg-foreground/[0.02] md:pt-3">
         {WORKSPACES.map((w) => {
           const isActive = activeWorkspace === w.id;
           return (
@@ -186,7 +186,7 @@ export function LayoutsThreePane() {
                 {w.letter}
               </button>
               {isActive ? (
-                <span aria-hidden className="-translate-y-1/2 absolute top-1/2 left-0 h-5 w-1 rounded-r bg-foreground" />
+                <span aria-hidden className="-translate-y-1/2 absolute top-1/2 start-0 h-5 w-1 rounded-e bg-foreground" />
               ) : null}
             </div>
           );
@@ -219,7 +219,7 @@ export function LayoutsThreePane() {
             <div className="flex size-8 items-center justify-center rounded-full bg-foreground font-medium text-[11px] text-background">
               S
             </div>
-            <span className="absolute right-0 bottom-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
+            <span className="absolute end-0 bottom-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
           </div>
         </div>
       </aside>
@@ -246,7 +246,7 @@ export function LayoutsThreePane() {
           <button
             type="button"
             aria-haspopup="menu"
-            className="flex min-h-6 w-full items-center justify-between gap-2 text-left"
+            className="flex min-h-6 w-full items-center justify-between gap-2 text-start"
           >
             <span className="font-heading text-sm">{workspace.name}</span>
             <ChevronDownIcon className="size-3.5 opacity-60" />
@@ -349,7 +349,7 @@ export function LayoutsThreePane() {
 
       <main
         inert={conversationCovered || undefined}
-        className="flex min-h-svh min-w-0 flex-col max-md:pl-16 md:h-svh"
+        className="flex min-h-svh min-w-0 flex-col max-md:ps-16 md:h-svh"
       >
         <header className="sticky top-0 z-10 flex items-center gap-2 border-b border-border/60 bg-background/95 px-2 py-2 backdrop-blur sm:gap-3 md:static md:px-5 md:py-3">
           <button
@@ -368,7 +368,7 @@ export function LayoutsThreePane() {
               Where the design team hangs out
             </span>
           </div>
-          <div className="ml-auto flex shrink-0 items-center gap-1">
+          <div className="ms-auto flex shrink-0 items-center gap-1">
             <HeaderIconButton label="Pin" className="max-sm:hidden">
               <PinIcon className="size-4" />
             </HeaderIconButton>
@@ -381,7 +381,7 @@ export function LayoutsThreePane() {
             <HeaderIconButton label="Channel settings">
               <SettingsIcon className="size-4" />
             </HeaderIconButton>
-            <span className="ml-2 hidden items-center gap-1.5 rounded-full border border-border/60 bg-card px-2 py-0.5 text-muted-foreground text-xs lg:flex">
+            <span className="ms-2 hidden items-center gap-1.5 rounded-full border border-border/60 bg-card px-2 py-0.5 text-muted-foreground text-xs lg:flex">
               <UsersIcon className="size-3 opacity-70" />
               12 members
             </span>
@@ -407,7 +407,7 @@ export function LayoutsThreePane() {
               {i === 1 ? (
                 <button
                   type="button"
-                  className="flex flex-wrap items-center gap-x-2 gap-y-1 self-start rounded-md border border-border/60 bg-card/60 px-2.5 py-1.5 text-left sm:ml-12 pointer-coarse:min-h-11"
+                  className="flex flex-wrap items-center gap-x-2 gap-y-1 self-start rounded-md border border-border/60 bg-card/60 px-2.5 py-1.5 text-start sm:ms-12 pointer-coarse:min-h-11"
                 >
                   <span className="flex -space-x-1.5">
                     <span className="size-5 rounded-full bg-gradient-to-br from-emerald-500/70 to-emerald-500/30 ring-2 ring-card" />

@@ -244,7 +244,7 @@ function ExpirySelect({
         id="key-expiry"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-9 w-full appearance-none rounded-lg pointer-coarse:h-11 border border-input bg-background pl-3 pr-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24"
+        className="h-9 w-full appearance-none rounded-lg pointer-coarse:h-11 border border-input bg-background ps-3 pe-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24"
       >
         <option value="7">7 days</option>
         <option value="30">30 days</option>
@@ -260,7 +260,7 @@ function ExpirySelect({
         strokeLinecap="round"
         strokeLinejoin="round"
         aria-hidden
-        className="pointer-events-none absolute right-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
+        className="pointer-events-none absolute end-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
       >
         <polyline points="4 6 8 10 12 6" />
       </svg>

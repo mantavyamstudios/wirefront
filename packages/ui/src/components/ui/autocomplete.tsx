@@ -28,7 +28,7 @@ function AutocompleteInput({
       className="relative flex h-8 w-full items-center rounded-lg border border-input bg-transparent transition-colors has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50 dark:bg-input/30"
     >
       {startAddon ? (
-        <span className="pointer-events-none flex shrink-0 items-center pl-2.5 text-muted-foreground [&_svg:not([class*='size-'])]:size-4">
+        <span className="pointer-events-none flex shrink-0 items-center ps-2.5 text-muted-foreground [&_svg:not([class*='size-'])]:size-4">
           {startAddon}
         </span>
       ) : null}
@@ -43,7 +43,7 @@ function AutocompleteInput({
       {showClear ? (
         <AutocompletePrimitive.Clear
           aria-label="Clear"
-          className="mr-1 flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 outline-none [&_svg]:size-3.5"
+          className="me-1 flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 outline-none [&_svg]:size-3.5"
         >
           <XIcon />
         </AutocompletePrimitive.Clear>

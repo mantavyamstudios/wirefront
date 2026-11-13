@@ -114,7 +114,7 @@ export function TimelinesNotifications() {
             </div>
             <button
               type="button"
-              className="-mr-2 min-h-8 rounded-md px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground pointer-coarse:min-h-10"
+              className="-me-2 min-h-8 rounded-md px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] hover:text-foreground pointer-coarse:min-h-10"
             >
               Mark all read
             </button>
@@ -200,7 +200,7 @@ function Item({ n }: { n: Notif }) {
       }
     >
       {n.unread ? (
-        <span aria-hidden className="absolute top-4 left-1.5 size-1.5 rounded-full bg-blue-500" />
+        <span aria-hidden className="absolute top-4 start-1.5 size-1.5 rounded-full bg-blue-500" />
       ) : null}
       <div className="relative shrink-0">
         <Avatar className="size-9">
@@ -208,7 +208,7 @@ function Item({ n }: { n: Notif }) {
             {n.initials}
           </AvatarFallback>
         </Avatar>
-        <span aria-hidden className="absolute -bottom-1 -right-1 grid size-4 place-items-center rounded-full bg-background">
+        <span aria-hidden className="absolute -bottom-1 -end-1 grid size-4 place-items-center rounded-full bg-background">
           <span className="grid size-3.5 place-items-center rounded-full bg-foreground text-background">
             <n.Icon className="size-2" />
           </span>

@@ -134,8 +134,8 @@ function AuditLogScreen({
       <TableRow key={key}>
         <TableCell className="ps-4" colSpan={6}>
           <div className="flex items-center gap-3">
-            <Skeleton className="size-6 rounded-full" />
-            <Skeleton className="h-3.5 w-64" />
+            <Skeleton className="size-6 rounded-full motion-reduce:animate-none" />
+            <Skeleton className="h-3.5 w-64 motion-reduce:animate-none" />
           </div>
         </TableCell>
       </TableRow>

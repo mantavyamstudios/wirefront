@@ -216,7 +216,7 @@ export function SettingsLocalization() {
                             {l.flag}
                           </span>
                           <span>{l.label}</span>
-                          <span className="ml-auto font-mono text-[10px] text-muted-foreground">
+                          <span className="ms-auto font-mono text-[10px] text-muted-foreground">
                             {l.bcp47}
                           </span>
                         </span>

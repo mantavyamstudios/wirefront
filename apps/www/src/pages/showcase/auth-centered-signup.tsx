@@ -188,7 +188,7 @@ export function AuthCenteredSignup() {
                     ))}
                   </div>
                   <span
-                    className={`min-w-[3.5rem] text-right font-mono text-[10px] uppercase tracking-[0.2em] ${meta.text}`}
+                    className={`min-w-[3.5rem] text-end font-mono text-[10px] uppercase tracking-[0.2em] ${meta.text}`}
                   >
                     {meta.label}
                   </span>
@@ -272,8 +272,8 @@ function BenefitPills() {
 function PageBackdrop() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute top-[-10%] left-[-10%] size-[24rem] rounded-full bg-primary/10 blur-3xl sm:size-[40rem]" />
-      <div className="absolute right-[-10%] bottom-[-10%] size-[24rem] rounded-full bg-accent/15 blur-3xl sm:size-[40rem]" />
+      <div className="absolute top-[-10%] start-[-10%] size-[24rem] rounded-full bg-primary/10 blur-3xl sm:size-[40rem]" />
+      <div className="absolute end-[-10%] bottom-[-10%] size-[24rem] rounded-full bg-accent/15 blur-3xl sm:size-[40rem]" />
       <div
         className="absolute inset-0"
         style={{

@@ -117,7 +117,7 @@ export function TimelinesApprovals() {
             <ol className="relative mt-4">
               <span
                 aria-hidden
-                className="absolute top-1 bottom-1 left-[15px] w-px bg-border/50"
+                className="absolute top-1 bottom-1 start-[15px] w-px bg-border/50"
               />
               {EVENTS.map((e, i) => (
                 <li

@@ -132,7 +132,7 @@ function CommentRow({ c }: { c: (typeof COMMENTS)[number] }) {
         <DropdownMenu>
           <DropdownMenuTrigger
             aria-label={`More actions for ${c.name}'s comment`}
-            className="-mr-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 transition-all hover:bg-foreground/[0.05] hover:text-foreground focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100 data-popup-open:opacity-100 pointer-coarse:size-10 pointer-coarse:opacity-100"
+            className="-me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 transition-all hover:bg-foreground/[0.05] hover:text-foreground focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100 data-popup-open:opacity-100 pointer-coarse:size-10 pointer-coarse:opacity-100"
           >
             <MoreHorizontalIcon className="size-4" />
           </DropdownMenuTrigger>
@@ -173,7 +173,7 @@ function CommentRow({ c }: { c: (typeof COMMENTS)[number] }) {
         >
           <SmileIcon className="size-3" />
         </button>
-        <span className="ml-auto inline-flex items-center gap-1 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.15em]">
+        <span className="ms-auto inline-flex items-center gap-1 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.15em]">
           {c.replyCount > 0 ? (
             <button
               type="button"

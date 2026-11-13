@@ -45,20 +45,20 @@ export function ChartsFunnel() {
                   <div className="relative col-span-2 row-start-2 h-10 sm:col-span-1 sm:row-start-auto sm:h-12">
                     <div className="absolute inset-0 rounded-md bg-background" />
                     <div
-                      className="absolute inset-y-0 left-0 rounded-md transition-all"
+                      className="absolute inset-y-0 start-0 rounded-md transition-all"
                       style={{
                         width: `${widthPct}%`,
                         background:
                           "linear-gradient(90deg, color-mix(in srgb, var(--chart-1) 95%, transparent), color-mix(in srgb, var(--chart-1) 55%, transparent))",
                       }}
                     />
-                    <div className="absolute inset-y-0 right-3 flex items-center">
+                    <div className="absolute inset-y-0 end-3 flex items-center">
                       <span className="font-mono text-[11px] text-muted-foreground">
                         {widthPct.toFixed(1)}%
                       </span>
                     </div>
                   </div>
-                  <div className="text-right max-sm:col-start-2 max-sm:row-start-1">
+                  <div className="text-end max-sm:col-start-2 max-sm:row-start-1">
                     <div className="font-heading text-lg tabular-nums">
                       {s.count.toLocaleString()}
                     </div>
@@ -74,7 +74,7 @@ export function ChartsFunnel() {
                   </div>
                 </div>
                 {i > 0 ? (
-                  <div className="absolute -top-3 right-0 inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 font-mono text-[10px] text-rose-700 ring-1 ring-rose-500/20 sm:right-auto sm:left-[196px] md:left-[216px] dark:text-rose-400">
+                  <div className="absolute -top-3 end-0 inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 font-mono text-[10px] text-rose-700 ring-1 ring-rose-500/20 sm:end-auto sm:start-[196px] md:start-[216px] dark:text-rose-400">
                     <ArrowDownRightIcon className="size-3" />
                     -{drop.toFixed(1)}%{" "}
                     <span className="text-muted-foreground">

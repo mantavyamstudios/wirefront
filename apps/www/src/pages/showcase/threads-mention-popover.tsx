@@ -159,7 +159,7 @@ export function ThreadsMentionPopover() {
           />
 
           {open ? (
-            <div className="z-30 mt-2 overflow-hidden rounded-xl border border-border/70 bg-background shadow-2xl sm:absolute sm:top-full sm:left-4 sm:mt-1 sm:w-80">
+            <div className="z-30 mt-2 overflow-hidden rounded-xl border border-border/70 bg-background shadow-2xl sm:absolute sm:top-full sm:start-4 sm:mt-1 sm:w-80">
               <ul
                 id="mention-listbox"
                 role="listbox"

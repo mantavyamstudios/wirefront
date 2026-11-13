@@ -100,7 +100,7 @@ export function ModalsExport() {
               </div>
               <button
                 type="button"
-                className="flex w-full items-center gap-2 rounded-lg border border-border/60 bg-background px-3 py-2 text-left pointer-coarse:min-h-11"
+                className="flex w-full items-center gap-2 rounded-lg border border-border/60 bg-background px-3 py-2 text-start pointer-coarse:min-h-11"
               >
                 <CalendarIcon className="size-4 opacity-60" />
                 <span className="flex-1 text-sm">Mar 27 – Apr 25, 2026</span>
@@ -129,7 +129,7 @@ export function ModalsExport() {
           </div>
 
           <DialogFooter className="sm:items-center">
-            <span className="text-center text-muted-foreground text-xs sm:me-auto sm:text-left">
+            <span className="text-center text-muted-foreground text-xs sm:me-auto sm:text-start">
               Estimated size · ~3.4 MB
             </span>
             <DialogClose render={<Button variant="ghost" type="button" />}>Cancel</DialogClose>

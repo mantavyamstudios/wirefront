@@ -84,14 +84,14 @@ export function ToursChecklist() {
 
       <section
         aria-label="Setup checklist"
-        className="fixed inset-x-0 bottom-0 z-50 flex max-h-[75svh] flex-col rounded-t-2xl border border-border/70 bg-background pb-[env(safe-area-inset-bottom)] shadow-2xl sm:inset-x-auto sm:right-6 sm:bottom-6 sm:max-h-[calc(100svh-3rem)] sm:w-96 sm:rounded-xl sm:pb-0"
+        className="fixed inset-x-0 bottom-0 z-50 flex max-h-[75svh] flex-col rounded-t-2xl border border-border/70 bg-background pb-[env(safe-area-inset-bottom)] shadow-2xl sm:inset-x-auto sm:end-6 sm:bottom-6 sm:max-h-[calc(100svh-3rem)] sm:w-96 sm:rounded-xl sm:pb-0"
       >
         <button
           type="button"
           aria-expanded={open}
           aria-controls="setup-checklist"
           onClick={() => setOpen((o) => !o)}
-          className="flex w-full shrink-0 items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-foreground/[0.02]"
+          className="flex w-full shrink-0 items-center justify-between gap-3 px-4 py-3 text-start transition-colors hover:bg-foreground/[0.02]"
         >
           <div>
             <div className="font-medium text-sm">Get set up</div>
@@ -142,7 +142,7 @@ export function ToursChecklist() {
                   role="checkbox"
                   aria-checked={t.done}
                   onClick={() => toggle(t.id)}
-                  className="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-foreground/[0.02]"
+                  className="flex w-full items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-foreground/[0.02]"
                 >
                   <span
                     aria-hidden
@@ -190,7 +190,7 @@ export function ToursChecklist() {
 function FakeApp() {
   return (
     <div className="grid min-h-svh grid-cols-1 md:grid-cols-[220px_1fr]">
-      <aside className="space-y-2 border-border/60 border-r bg-foreground/[0.02] p-4 max-md:hidden">
+      <aside className="space-y-2 border-border/60 border-e bg-foreground/[0.02] p-4 max-md:hidden">
         <div className="h-3 w-28 rounded bg-foreground/15" />
         <div className="mt-3 h-2 w-32 rounded bg-foreground/10" />
         <div className="h-2 w-28 rounded bg-foreground/10" />

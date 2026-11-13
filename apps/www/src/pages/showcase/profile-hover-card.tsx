@@ -62,7 +62,7 @@ export function ProfileHoverCard() {
           <ProfileCard className="rounded-xl border border-border shadow-2xl" />
 
           {/* Trigger pointer */}
-          <div className="mt-2 ml-8 flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+          <div className="mt-2 ms-8 flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
             <span className="block h-px w-8 bg-border" />
             <span className="pointer-coarse:hidden">hover a mention · 200ms delay</span>
             <span className="hidden pointer-coarse:inline">tap a mention to open</span>
@@ -148,7 +148,7 @@ function ProfileCard({ className }: { className?: string }) {
               </AvatarFallback>
             </Avatar>
           ))}
-          <span className="ml-3 min-w-0 text-muted-foreground text-xs">
+          <span className="ms-3 min-w-0 text-muted-foreground text-xs">
             Followed by James, Riya, Dani and 8 others you follow
           </span>
         </div>

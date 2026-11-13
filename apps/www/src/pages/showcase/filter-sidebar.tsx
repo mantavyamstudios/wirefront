@@ -254,8 +254,11 @@ export function FilterSidebar() {
         {filtersMatch("Price") ? (
           <Section title="Price">
             <div className="px-1 pt-1">
+              <span className="sr-only" id="filter-price-label">
+                Price range
+              </span>
               <Slider
-                getAriaLabel={(i) => (i === 0 ? "Minimum price" : "Maximum price")}
+                aria-labelledby="filter-price-label"
                 value={state.priceRange}
                 min={0}
                 max={200}
@@ -531,7 +534,7 @@ function ProductCard({ product }: { product: Product }) {
         {product.onSale ? (
           <Badge
             variant="secondary"
-            className="absolute top-2 left-2 font-mono text-[10px] uppercase"
+            className="absolute top-2 start-2 font-mono text-[10px] uppercase"
           >
             Sale
           </Badge>
@@ -539,7 +542,7 @@ function ProductCard({ product }: { product: Product }) {
         {product.newArrival ? (
           <Badge
             variant="outline"
-            className="absolute top-2 right-2 border-foreground/20 bg-background/80 font-mono text-[10px] uppercase backdrop-blur"
+            className="absolute top-2 end-2 border-foreground/20 bg-background/80 font-mono text-[10px] uppercase backdrop-blur"
           >
             New
           </Badge>

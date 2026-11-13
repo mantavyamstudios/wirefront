@@ -39,7 +39,7 @@ export function TimelinesReleases() {
           <ol className="relative">
             <span
               aria-hidden
-              className="absolute top-2 bottom-2 left-[15px] w-px bg-border/50"
+              className="absolute top-2 bottom-2 start-[15px] w-px bg-border/50"
             />
             {PIPELINE.map((s) => (
               <li

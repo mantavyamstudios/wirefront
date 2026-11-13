@@ -326,7 +326,7 @@ function AddFilterPopover({
           <Button
             size="xs"
             variant="outline"
-            className="ml-1 border-dashed"
+            className="ms-1 border-dashed"
             disabled={disabled}
           >
             <PlusIcon />
@@ -671,11 +671,11 @@ function CustomerList({ customers }: { customers: Customer[] }) {
           >
             {c.status}
           </Badge>
-          <div className="shrink-0 text-right sm:contents">
+          <div className="shrink-0 text-end sm:contents">
             <span className="block font-mono text-foreground text-xs tabular-nums sm:w-20">
               ${c.mrr.toLocaleString()}
             </span>
-            <span className="block font-mono text-[11px] text-muted-foreground tabular-nums sm:w-16 sm:text-right">
+            <span className="block font-mono text-[11px] text-muted-foreground tabular-nums sm:w-16 sm:text-end">
               <span className="sm:hidden">{c.status} · </span>
               {c.lastSeenDays}d
             </span>

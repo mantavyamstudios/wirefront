@@ -526,7 +526,7 @@ function OAuthButton({
   return (
     <div className="relative">
       {badge ? (
-        <span className="-top-2 absolute right-2 z-10 whitespace-nowrap rounded-sm border border-border bg-muted px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground uppercase tracking-[0.15em]">
+        <span className="-top-2 absolute end-2 z-10 whitespace-nowrap rounded-sm border border-border bg-muted px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground uppercase tracking-[0.15em]">
           {badge}
         </span>
       ) : null}

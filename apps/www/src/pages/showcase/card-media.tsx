@@ -96,7 +96,7 @@ function ArticleCard({ article }: { article: Article }) {
           >
             {article.category}
           </Badge>
-          <span className="ml-auto inline-flex items-center gap-1 text-muted-foreground text-xs">
+          <span className="ms-auto inline-flex items-center gap-1 text-muted-foreground text-xs">
             <ClockIcon className="size-3" />
             {article.read}
           </span>

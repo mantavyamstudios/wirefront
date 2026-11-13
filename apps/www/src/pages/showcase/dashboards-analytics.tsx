@@ -120,7 +120,7 @@ export function DashboardsAnalytics() {
                     <span>{s.label}</span>
                     <span className="font-mono text-xs">
                       <span className="text-foreground">{s.value.toLocaleString()}</span>
-                      <span className="ml-1.5 text-muted-foreground">{s.share}%</span>
+                      <span className="ms-1.5 text-muted-foreground">{s.share}%</span>
                     </span>
                   </div>
                   <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-foreground/[0.06]">
@@ -208,7 +208,7 @@ function BreakdownCard({
         <button
           type="button"
           aria-label={`More options for ${title}`}
-          className="-mr-1.5 flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:size-10"
+          className="-me-1.5 flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:size-10"
         >
           <MoreHorizontalIcon className="size-4" />
         </button>

@@ -56,7 +56,7 @@ export function ChartsLineMulti() {
                 </span>
               </button>
             ))}
-            <div role="tablist" aria-label="Range" className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] max-sm:w-full sm:ml-auto">
+            <div role="tablist" aria-label="Range" className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] max-sm:w-full sm:ms-auto">
               {["7d", "30d", "90d"].map((r) => (
                 <button
                   key={r}

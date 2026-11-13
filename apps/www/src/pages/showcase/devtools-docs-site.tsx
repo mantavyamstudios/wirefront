@@ -37,7 +37,7 @@ import {
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
-import { ScrollArea } from "@wirefront/ui/scroll-area";
+import { ScrollRegion } from "@wirefront/ui/wirefront/scroll-region";
 
 export type DocsLang = "node" | "python" | "go" | "curl";
 
@@ -477,9 +477,9 @@ function CodeTabs({ samples, title, lang, onLang }: { samples: Partial<Record<Do
           </AnimatePresence>
         </button>
       </div>
-      <ScrollArea aria-label={title ?? "Code sample"} orientation="horizontal"><pre className="px-4 py-3 font-mono text-[12.5px] leading-6">
+      <ScrollRegion aria-label={title ?? "Code sample"} orientation="horizontal"><pre className="px-4 py-3 font-mono text-[12.5px] leading-6">
         <code>{highlight(samples[current] ?? "")}</code>
-      </pre></ScrollArea>
+      </pre></ScrollRegion>
     </div>
   );
 }
@@ -522,7 +522,7 @@ function Block({ block, lang, onLang }: { block: DocsBlock; lang: DocsLang; onLa
       );
     case "steps":
       return (
-        <ol className="relative flex flex-col gap-3 before:absolute before:top-3 before:bottom-3 before:left-3 before:w-px before:bg-border">
+        <ol className="relative flex flex-col gap-3 before:absolute before:top-3 before:bottom-3 before:start-3 before:w-px before:bg-border">
           {block.items.map((it, i) => (
             <li className="relative flex gap-3" key={it}>
               <span className="z-10 flex size-6 shrink-0 items-center justify-center rounded-full border bg-background font-medium text-xs tabular-nums">{i + 1}</span>
@@ -555,8 +555,8 @@ function Block({ block, lang, onLang }: { block: DocsBlock; lang: DocsLang; onLa
       return <CodeTabs lang={lang} onLang={onLang} samples={block.samples} title={block.title} />;
     case "table":
       return (
-        <ScrollArea aria-label={block.head.join(", ")} className="rounded-xl border" orientation="horizontal">
-          <table className="w-full min-w-[420px] text-left text-sm">
+        <ScrollRegion aria-label={block.head.join(", ")} className="rounded-xl border" orientation="horizontal">
+          <table className="w-full min-w-[420px] text-start text-sm">
             <thead className="bg-muted/30">
               <tr>
                 {block.head.map((h) => (
@@ -578,7 +578,7 @@ function Block({ block, lang, onLang }: { block: DocsBlock; lang: DocsLang; onLa
               ))}
             </tbody>
           </table>
-        </ScrollArea>
+        </ScrollRegion>
       );
   }
 }
@@ -812,7 +812,7 @@ export function DocsSite({
           <div key={g}>
             <button
               aria-expanded={!closed}
-              className="group/g flex h-6 w-full cursor-pointer items-center justify-between rounded-md px-2.5 mb-1 text-left font-medium text-foreground text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group/g flex h-6 w-full cursor-pointer items-center justify-between rounded-md px-2.5 mb-1 text-start font-medium text-foreground text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
               onClick={() =>
                 setClosedGroups((c) => {
                   const n = new Set(c);
@@ -844,7 +844,7 @@ export function DocsSite({
                           <button
                             aria-current={on ? "page" : undefined}
                             className={cn(
-                              "relative flex h-8 w-full cursor-pointer items-center rounded-lg px-2.5 text-left text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+                              "relative flex h-8 w-full cursor-pointer items-center rounded-lg px-2.5 text-start text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
                               on ? "font-medium text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
                             )}
                             onClick={() => go(p.id)}
@@ -873,10 +873,10 @@ export function DocsSite({
           const on = s.id === activeSection;
           return (
             <li className="relative" key={s.id}>
-              {on && <motion.span className="absolute inset-y-1 -left-px w-0.5 rounded-full bg-foreground" layoutId="toc-rail" transition={spring} />}
+              {on && <motion.span className="absolute inset-y-1 -start-px w-0.5 rounded-full bg-foreground" layoutId="toc-rail" transition={spring} />}
               <button
                 className={cn(
-                  "w-full cursor-pointer rounded-e-md py-1.5 ps-3.5 pe-2 text-left text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+                  "w-full cursor-pointer rounded-e-md py-1.5 ps-3.5 pe-2 text-start text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
                   on ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
                 )}
                 onClick={() => go(page.id, s.id)}
@@ -940,7 +940,7 @@ export function DocsSite({
               type="button"
             >
               <SearchIcon className="size-4" />
-              <span className="sr-only flex-1 text-left @xl:not-sr-only">Search docs</span>
+              <span className="sr-only flex-1 text-start @xl:not-sr-only">Search docs</span>
               <Kbd className="hidden @xl:inline-flex">⌘K</Kbd>
             </button>
             {dashboardHref && (
@@ -1060,7 +1060,7 @@ export function DocsSite({
                 <div className="mt-6 grid grid-cols-1 gap-3 @xl:grid-cols-2">
                   {prev ? (
                     <button
-                      className="group/pn flex cursor-pointer flex-col items-start gap-1 rounded-xl border p-4 text-left outline-none transition-[border-color,scale] duration-150 ease-out hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
+                      className="group/pn flex cursor-pointer flex-col items-start gap-1 rounded-xl border p-4 text-start outline-none transition-[border-color,scale] duration-150 ease-out hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
                       onClick={() => go(prev.id)}
                       type="button"
                     >
@@ -1075,7 +1075,7 @@ export function DocsSite({
                   )}
                   {next && (
                     <button
-                      className="group/pn flex cursor-pointer flex-col items-end gap-1 rounded-xl border p-4 text-right outline-none transition-[border-color,scale] duration-150 ease-out hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
+                      className="group/pn flex cursor-pointer flex-col items-end gap-1 rounded-xl border p-4 text-end outline-none transition-[border-color,scale] duration-150 ease-out hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
                       onClick={() => go(next.id)}
                       type="button"
                     >
@@ -1105,7 +1105,7 @@ export function DocsSite({
                     </a>
                   )}
                   <button
-                    className="flex cursor-pointer items-center gap-1.5 rounded text-left outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                    className="flex cursor-pointer items-center gap-1.5 rounded text-start outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
                     onClick={() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
                     type="button"
                   >
@@ -1133,7 +1133,7 @@ export function DocsSite({
                 animate={{ x: 0 }}
                 aria-label="Documentation"
                 aria-modal="true"
-                className="absolute inset-y-2 left-2 z-50 flex w-[272px] max-w-[calc(100%-3rem)] flex-col overflow-hidden rounded-2xl border bg-background shadow-lg/10 @4xl:hidden"
+                className="absolute inset-y-2 start-2 z-50 flex w-[272px] max-w-[calc(100%-3rem)] flex-col overflow-hidden rounded-2xl border bg-background shadow-lg/10 @4xl:hidden"
                 exit={{ x: "-110%" }}
                 initial={{ x: "-110%" }}
                 role="dialog"

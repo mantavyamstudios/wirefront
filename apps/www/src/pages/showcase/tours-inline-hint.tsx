@@ -18,7 +18,7 @@ export function ToursInlineHint() {
       {open ? (
         <aside
           aria-label="Tip"
-          className="fixed inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-80"
+          className="fixed inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 sm:inset-x-auto sm:end-6 sm:bottom-6 sm:w-80"
         >
           <div className="rounded-xl border border-border/70 bg-background p-4 shadow-xl backdrop-blur">
             <div className="flex items-start gap-3">
@@ -46,7 +46,7 @@ export function ToursInlineHint() {
                 type="button"
                 aria-label="Dismiss tip"
                 onClick={() => setOpen(false)}
-                className="-mt-1.5 -mr-1.5 grid size-8 shrink-0 place-items-center rounded-md pointer-coarse:size-10 text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+                className="-mt-1.5 -me-1.5 grid size-8 shrink-0 place-items-center rounded-md pointer-coarse:size-10 text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
               >
                 <XIcon className="size-3.5" />
               </button>
@@ -55,7 +55,7 @@ export function ToursInlineHint() {
               <span>Tip · 1 of 8</span>
               <button
                 type="button"
-                className="-mr-2 min-h-8 rounded px-2 transition-colors hover:text-foreground pointer-coarse:min-h-10"
+                className="-me-2 min-h-8 rounded px-2 transition-colors hover:text-foreground pointer-coarse:min-h-10"
               >
                 See all tips →
               </button>
@@ -70,7 +70,7 @@ export function ToursInlineHint() {
 function FakeApp({ onShow }: { onShow?: () => void }) {
   return (
     <div className="grid min-h-svh grid-cols-1 md:grid-cols-[220px_1fr]">
-      <aside className="space-y-2 border-border/60 border-r bg-foreground/[0.02] p-4 max-md:hidden">
+      <aside className="space-y-2 border-border/60 border-e bg-foreground/[0.02] p-4 max-md:hidden">
         <div className="h-3 w-28 rounded bg-foreground/15" />
         <div className="mt-3 h-2 w-32 rounded bg-foreground/10" />
         <div className="h-2 w-28 rounded bg-foreground/10" />

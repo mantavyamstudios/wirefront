@@ -188,7 +188,7 @@ function ImageArt({ art = "photo" }: { art?: FolderFile["art"] }) {
   }
   return (
     <div className="absolute inset-0 bg-linear-to-b from-sky-300 to-amber-100 dark:from-sky-800 dark:to-amber-200/60">
-      <span className="absolute top-4 right-6 size-6 rounded-full bg-amber-50/90" />
+      <span className="absolute top-4 end-6 size-6 rounded-full bg-amber-50/90" />
       <span className="absolute inset-x-0 bottom-0 h-2/5 bg-emerald-700/80 [clip-path:polygon(0_40%,30%_10%,60%_45%,100%_0,100%_100%,0_100%)]" />
     </div>
   );
@@ -234,7 +234,7 @@ function Preview({ file }: { file: FolderFile }) {
     case "slides":
       return (
         <div className="absolute inset-x-4 top-1/2 flex aspect-video -translate-y-1/2 flex-col justify-end gap-1.5 overflow-hidden rounded-md bg-card p-3 shadow-xs/5 ring-1 ring-border">
-          <span className="absolute top-3 right-3 size-6 rounded-full bg-violet-500/48" />
+          <span className="absolute top-3 end-3 size-6 rounded-full bg-violet-500/48" />
           <span className="h-2 w-3/5 rounded-full bg-foreground/64" />
           <span className="h-1 w-2/5 rounded-full bg-muted-foreground/28" />
         </div>
@@ -242,7 +242,7 @@ function Preview({ file }: { file: FolderFile }) {
     case "pdf":
       return (
         <div className="absolute inset-x-6 top-4 bottom-0 flex flex-col gap-1.5 rounded-t-md bg-card px-3.5 pt-4 shadow-xs/5 ring-1 ring-border">
-          <span className="absolute top-2.5 right-2.5 rounded-[3px] bg-red-700 px-1 font-bold text-[8px] text-white dark:bg-red-600">PDF</span>
+          <span className="absolute top-2.5 end-2.5 rounded-[3px] bg-red-700 px-1 font-bold text-[8px] text-white dark:bg-red-600">PDF</span>
           <span className="font-heading font-semibold text-foreground/80 text-lg leading-none">Aa</span>
           <span className="h-1 w-1/2 rounded-full bg-muted-foreground/24" />
           <span className="mt-1 grid grid-cols-6 gap-1">
@@ -256,8 +256,8 @@ function Preview({ file }: { file: FolderFile }) {
       return (
         <div className="absolute inset-0 overflow-hidden bg-neutral-900">
           <span className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,var(--color-indigo-500)_0%,transparent_60%)] opacity-50" />
-          <span className="absolute top-4 right-4 left-1/2 aspect-video rounded-sm bg-linear-to-br from-orange-400 to-rose-500 opacity-90" />
-          <svg aria-hidden className="absolute bottom-0 left-[18%] h-3/5 text-neutral-950" viewBox="0 0 40 60">
+          <span className="absolute top-4 end-4 left-1/2 aspect-video rounded-sm bg-linear-to-br from-orange-400 to-rose-500 opacity-90" />
+          <svg aria-hidden className="absolute bottom-0 start-[18%] h-3/5 text-neutral-950" viewBox="0 0 40 60">
             <circle cx="20" cy="14" fill="currentColor" r="8" />
             <path d="M4 60c0-18 7-28 16-28s16 10 16 28Z" fill="currentColor" />
           </svg>
@@ -267,7 +267,7 @@ function Preview({ file }: { file: FolderFile }) {
           <span className="absolute inset-x-2 bottom-1.5 h-0.5 rounded-full bg-white/24">
             <span className="block h-full w-1/3 rounded-full bg-white/80" />
           </span>
-          <span className="absolute right-2 bottom-3 rounded bg-black/60 px-1 font-mono text-[10px] text-white tabular-nums">1:42</span>
+          <span className="absolute end-2 bottom-3 rounded bg-black/60 px-1 font-mono text-[10px] text-white tabular-nums">1:42</span>
         </div>
       );
   }
@@ -460,9 +460,9 @@ export function FolderView({
           if (e.key === "Escape" && selecting) setSelected([]);
         }}
       >
-        <aside className="hidden w-56 shrink-0 flex-col border-r bg-muted/30 px-3 py-3 @3xl:flex">
+        <aside className="hidden w-56 shrink-0 flex-col border-e bg-muted/30 px-3 py-3 @3xl:flex">
           <button
-            className="flex h-9 cursor-pointer items-center gap-2 rounded-lg px-1.5 text-left outline-none hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex h-9 cursor-pointer items-center gap-2 rounded-lg px-1.5 text-start outline-none hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring"
             type="button"
           >
             <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -477,7 +477,7 @@ export function FolderView({
           <nav aria-label="Drive" className="mt-4 flex flex-col gap-px">
             {places.map((p) => (
               <button
-                className="flex h-8 cursor-pointer items-center gap-2.5 rounded-md px-2 text-left text-muted-foreground outline-none hover:bg-accent/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex h-8 cursor-pointer items-center gap-2.5 rounded-md px-2 text-start text-muted-foreground outline-none hover:bg-accent/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
                 key={p.label}
                 type="button"
               >
@@ -493,7 +493,7 @@ export function FolderView({
                 <button
                   aria-current={!sub ? "page" : undefined}
                   className={cn(
-                    "flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-md px-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    "flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-md px-2 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     !sub ? "bg-accent font-medium text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
                   )}
                   onClick={() => open("root")}
@@ -508,7 +508,7 @@ export function FolderView({
                   <button
                     aria-current={at === f.id ? "page" : undefined}
                     className={cn(
-                      "flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-md ps-7 pe-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      "flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-md ps-7 pe-2 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring",
                       at === f.id ? "bg-accent font-medium text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
                     )}
                     onClick={() => open(f.id)}
@@ -527,7 +527,7 @@ export function FolderView({
               <span className="text-muted-foreground tabular-nums">43%</span>
             </div>
             <span className="relative mt-2 block h-1 overflow-hidden rounded-full bg-foreground/8">
-              <span className="absolute inset-y-0 left-0 w-[43%] rounded-full bg-foreground/72" />
+              <span className="absolute inset-y-0 start-0 w-[43%] rounded-full bg-foreground/72" />
             </span>
             <p className="mt-2 text-muted-foreground text-xs tabular-nums">42.6 GB of 100 GB used</p>
           </div>
@@ -712,7 +712,7 @@ export function FolderView({
                             <li key={f.id}>
                               <button
                                 className={cn(
-                                  "flex h-14 w-full cursor-pointer items-center gap-3 rounded-xl border bg-card px-3.5 text-left outline-none hover:border-foreground/16 focus-visible:ring-2 focus-visible:ring-ring",
+                                  "flex h-14 w-full cursor-pointer items-center gap-3 rounded-xl border bg-card px-3.5 text-start outline-none hover:border-foreground/16 focus-visible:ring-2 focus-visible:ring-ring",
                                   press,
                                 )}
                                 onClick={() => open(f.id)}
@@ -754,7 +754,7 @@ export function FolderView({
                                   </motion.div>
                                   <span
                                     className={cn(
-                                      "absolute top-2 left-2 flex size-6 items-center justify-center rounded-md bg-background/88 shadow-xs/5 backdrop-blur transition-opacity duration-150",
+                                      "absolute top-2 start-2 flex size-6 items-center justify-center rounded-md bg-background/88 shadow-xs/5 backdrop-blur transition-opacity duration-150",
                                       on || selecting ? "opacity-100" : "opacity-0 group-hover/file:opacity-100 group-focus-visible/file:opacity-100 pointer-coarse:opacity-100",
                                     )}
                                   >
@@ -798,7 +798,7 @@ export function FolderView({
                           return (
                             <li className="border-b" key={f.id}>
                               <button
-                                className={cn("grid h-12 w-full cursor-pointer items-center gap-3 rounded-md px-2 text-left outline-none hover:bg-accent/48 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", listCols)}
+                                className={cn("grid h-12 w-full cursor-pointer items-center gap-3 rounded-md px-2 text-start outline-none hover:bg-accent/48 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", listCols)}
                                 onClick={() => open(f.id)}
                                 type="button"
                               >
@@ -878,7 +878,7 @@ export function FolderView({
             <motion.div
               animate={{ y: 0, opacity: 1, scale: 1 }}
               aria-label="Bulk actions"
-              className="absolute inset-x-3 bottom-4 z-20 mx-auto flex max-w-fit origin-bottom items-center gap-1 rounded-xl border bg-popover p-1 shadow-lg/10 @3xl:left-56"
+              className="absolute inset-x-3 bottom-4 z-20 mx-auto flex max-w-fit origin-bottom items-center gap-1 rounded-xl border bg-popover p-1 shadow-lg/10 @3xl:start-56"
               exit={{ y: 16, opacity: 0, scale: 0.96, transition: { duration: 0.15, ease: easeOut } }}
               initial={{ y: 16, opacity: 0, scale: 0.96 }}
               role="toolbar"
@@ -926,7 +926,7 @@ export function FolderView({
           {toast && !selecting && (
             <motion.div
               animate={{ y: 0, opacity: 1 }}
-              className="absolute inset-x-3 bottom-4 z-20 mx-auto flex max-w-fit items-center gap-3 rounded-xl border bg-popover py-1.5 ps-3.5 pe-1.5 shadow-lg/10 @3xl:left-56"
+              className="absolute inset-x-3 bottom-4 z-20 mx-auto flex max-w-fit items-center gap-3 rounded-xl border bg-popover py-1.5 ps-3.5 pe-1.5 shadow-lg/10 @3xl:start-56"
               exit={{ y: 12, opacity: 0, transition: { duration: 0.15, ease: easeOut } }}
               initial={{ y: 12, opacity: 0 }}
               role="status"

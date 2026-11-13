@@ -243,7 +243,7 @@ export function CalendarsTimezone() {
           >
           <div className="min-w-max">
           <div className="grid grid-cols-[136px_auto] sm:grid-cols-[220px_auto]">
-            <div className="sticky left-0 z-20 flex items-center border-border/40 border-r border-b bg-background px-2.5 font-mono text-[10px] text-foreground/80 tracking-[0.1em] sm:px-3">
+            <div className="sticky start-0 z-20 flex items-center border-border/40 border-e border-b bg-background px-2.5 font-mono text-[10px] text-foreground/80 tracking-[0.1em] sm:px-3">
               {String(start).padStart(2, "0")}:00–{String(start + duration).padStart(2, "0")}:00 · {duration}h
             </div>
             <div>
@@ -258,7 +258,7 @@ export function CalendarsTimezone() {
                   <div
                     key={h}
                     className={
-                      "border-border/40 border-l py-1.5 text-center font-mono text-[10px] " +
+                      "border-border/40 border-s py-1.5 text-center font-mono text-[10px] " +
                       (h >= start && h < start + duration
                         ? "text-foreground"
                         : "text-muted-foreground")
@@ -279,7 +279,7 @@ export function CalendarsTimezone() {
                   key={z.name}
                   className="group grid grid-cols-[136px_auto] border-border/40 border-b last:border-b-0 sm:grid-cols-[220px_auto]"
                 >
-                  <div className="sticky left-0 z-20 flex items-center gap-2 border-border/40 border-r bg-background px-2.5 py-2 sm:px-3 sm:py-2.5">
+                  <div className="sticky start-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-2.5 py-2 sm:px-3 sm:py-2.5">
                     <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06] font-mono text-[10px] max-lg:hidden">
                       {z.name}
                     </div>
@@ -322,7 +322,7 @@ export function CalendarsTimezone() {
                           <div
                             key={h}
                             className={
-                              "absolute top-0 bottom-0 border-border/40 border-l " +
+                              "absolute top-0 bottom-0 border-border/40 border-s " +
                               (sleeping
                                 ? "bg-indigo-500/[0.18]"
                                 : morning
@@ -351,10 +351,10 @@ export function CalendarsTimezone() {
                           >
                             {String(local).padStart(2, "0")}
                             {local === 0 ? (
-                              <MoonIcon className="ml-1 inline-block size-2.5 opacity-50" />
+                              <MoonIcon className="ms-1 inline-block size-2.5 opacity-50" />
                             ) : null}
                             {local === 12 ? (
-                              <SunIcon className="ml-1 inline-block size-2.5 opacity-50" />
+                              <SunIcon className="ms-1 inline-block size-2.5 opacity-50" />
                             ) : null}
                           </span>
                         );
@@ -380,11 +380,11 @@ export function CalendarsTimezone() {
                       >
                         <div
                           onPointerDown={beginDrag("left")}
-                          className="absolute top-0 bottom-0 left-0 w-1.5 cursor-ew-resize pointer-coarse:w-3 rounded-l-md bg-foreground/20 transition-colors hover:bg-foreground/40"
+                          className="absolute top-0 bottom-0 start-0 w-1.5 cursor-ew-resize pointer-coarse:w-3 rounded-s-md bg-foreground/20 transition-colors hover:bg-foreground/40"
                         />
                         <div
                           onPointerDown={beginDrag("right")}
-                          className="absolute top-0 bottom-0 right-0 w-1.5 cursor-ew-resize pointer-coarse:w-3 rounded-r-md bg-foreground/20 transition-colors hover:bg-foreground/40"
+                          className="absolute top-0 bottom-0 end-0 w-1.5 cursor-ew-resize pointer-coarse:w-3 rounded-e-md bg-foreground/20 transition-colors hover:bg-foreground/40"
                         />
                       </div>
                     </div>
@@ -526,7 +526,7 @@ function ZonePicker({
                     onAdd(z);
                     setQuery("");
                   }}
-                  className="flex w-full items-center gap-3 px-3 py-2 text-left transition-colors hover:bg-foreground/[0.04]"
+                  className="flex w-full items-center gap-3 px-3 py-2 text-start transition-colors hover:bg-foreground/[0.04]"
                 >
                   <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06] font-mono text-[10px]">
                     {z.name}

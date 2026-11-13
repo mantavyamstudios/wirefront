@@ -127,7 +127,7 @@ export function SettingsPrivacy() {
                 email a download link when it's ready.
               </p>
             </div>
-            <div className="max-sm:ms-12 sm:text-right">
+            <div className="max-sm:ms-12 sm:text-end">
               <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 Approx
               </div>
@@ -159,7 +159,7 @@ export function SettingsPrivacy() {
                         {opt.hint}
                       </span>
                     </span>
-                    <span className="shrink-0 text-right font-mono text-xs tabular-nums sm:w-16">
+                    <span className="shrink-0 text-end font-mono text-xs tabular-nums sm:w-16">
                       {opt.size}
                     </span>
                   </label>
@@ -273,8 +273,11 @@ export function SettingsPrivacy() {
                     </span>
                   </div>
                   <div className="mt-3 px-1">
+                    <span className="sr-only" id={`retention-label-${row.key}`}>
+                      {`${row.label} retention`}
+                    </span>
                     <Slider
-                      getAriaLabel={() => `${row.label} retention`}
+                      aria-labelledby={`retention-label-${row.key}`}
                       min={0}
                       max={RETENTION_STOPS.length - 1}
                       step={1}
@@ -311,7 +314,7 @@ export function SettingsPrivacy() {
 
         {/* ── Delete account ── */}
         <section className="relative mt-3 overflow-hidden rounded-xl border border-destructive/40 bg-destructive/[0.025]">
-          <div className="absolute right-3 top-3 z-10 inline-flex items-center gap-2 rounded-md border border-border/60 bg-background/85 px-2 py-1 backdrop-blur">
+          <div className="absolute end-3 top-3 z-10 inline-flex items-center gap-2 rounded-md border border-border/60 bg-background/85 px-2 py-1 backdrop-blur">
             <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-[0.25em]">
               Demo
             </span>
@@ -508,7 +511,7 @@ function DeleteRow({
       <span className="shrink-0 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
         {tag}
       </span>
-      <span className="w-44 text-right text-muted-foreground text-xs max-sm:hidden">
+      <span className="w-44 text-end text-muted-foreground text-xs max-sm:hidden">
         {sub}
       </span>
     </li>

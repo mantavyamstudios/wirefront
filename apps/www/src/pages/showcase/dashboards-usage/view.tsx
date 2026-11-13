@@ -88,12 +88,12 @@ function UsageDashboardScreen({ usage, status = "ready", error, onRetry, warnAt 
     content = (
       <div aria-busy="true" className="flex flex-col gap-3">
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-[2fr_1fr]">
-          <Skeleton className="h-52 rounded-xl" />
-          <Skeleton className="h-52 rounded-xl" />
+          <Skeleton className="h-52 rounded-xl motion-reduce:animate-none" />
+          <Skeleton className="h-52 rounded-xl motion-reduce:animate-none" />
         </div>
         <div className={cn(card, "flex flex-col gap-5")}>
           {SKELETON_ROWS.map((key) => (
-            <Skeleton className="h-8 w-full" key={key} />
+            <Skeleton className="h-8 w-full motion-reduce:animate-none" key={key} />
           ))}
         </div>
       </div>
@@ -115,7 +115,7 @@ function UsageDashboardScreen({ usage, status = "ready", error, onRetry, warnAt 
                   <span className="rounded bg-foreground/[0.08] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">{t[usage.plan.interval]}</span>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-end">
                 <div className="font-heading text-2xl">
                   {format.money(usage.monthlyPrice.amount, usage.monthlyPrice.currency, { maximumFractionDigits: 0 })}
                 </div>
@@ -167,7 +167,7 @@ function UsageDashboardScreen({ usage, status = "ready", error, onRetry, warnAt 
                 <div className="text-foreground/70">{day(usage.cycle.start)}</div>
                 <div className="mt-0.5 normal-case tracking-normal">{t.cycleStart}</div>
               </div>
-              <div className="text-right">
+              <div className="text-end">
                 <div className="text-foreground/70">{day(usage.cycle.end)}</div>
                 <div className="mt-0.5 normal-case tracking-normal">{t.renewsLabel}</div>
               </div>

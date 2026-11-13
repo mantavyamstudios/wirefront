@@ -171,7 +171,7 @@ function PrTitle() {
       <div className="min-w-0">
         <h1 className="font-heading text-xl leading-tight">
           Persist 1y audit-log retention on Business plan
-          <span className="ml-2 whitespace-nowrap font-mono text-base text-muted-foreground tabular-nums">
+          <span className="ms-2 whitespace-nowrap font-mono text-base text-muted-foreground tabular-nums">
             #3284
           </span>
         </h1>
@@ -247,7 +247,7 @@ function Header({
           </span>
         </div>
       </div>
-      <div className="-mr-2 flex shrink-0 items-center gap-1 sm:mr-0">
+      <div className="-me-2 flex shrink-0 items-center gap-1 sm:me-0">
         <IconButton aria-label="Settings">
           <SettingsIcon className="size-4" />
         </IconButton>
@@ -492,7 +492,7 @@ function Notice({
         <div className="font-semibold text-[14px]">{title}</div>
         <p className="mt-0.5 text-[13px] text-muted-foreground">{body}</p>
       </div>
-      <div className="shrink-0 max-sm:ml-12">{action}</div>
+      <div className="shrink-0 max-sm:ms-12">{action}</div>
     </div>
   );
 }
@@ -520,7 +520,7 @@ function SplitButton({ primary }: { primary: string }) {
       <button
         type="button"
         aria-label="More options"
-        className="border-border border-l bg-background px-1.5 hover:bg-muted pointer-coarse:px-3"
+        className="border-border border-s bg-background px-1.5 hover:bg-muted pointer-coarse:px-3"
       >
         <ChevronDownIcon className="size-3.5" />
       </button>

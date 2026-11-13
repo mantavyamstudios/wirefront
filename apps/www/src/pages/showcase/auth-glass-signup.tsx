@@ -92,35 +92,35 @@ function BlobBackground() {
     <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       <style>{styles}</style>
       <div
-        className="glass-bg-blob-1 absolute -top-[20vmax] -left-[15vmax] h-[60vmax] w-[60vmax] rounded-full"
+        className="glass-bg-blob-1 absolute -top-[20vmax] -start-[15vmax] h-[60vmax] w-[60vmax] rounded-full"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, rgba(236,72,153,0.55), rgba(236,72,153,0) 70%)",
         }}
       />
       <div
-        className="glass-bg-blob-2 absolute top-[10vmax] -right-[20vmax] h-[60vmax] w-[60vmax] rounded-full"
+        className="glass-bg-blob-2 absolute top-[10vmax] -end-[20vmax] h-[60vmax] w-[60vmax] rounded-full"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, rgba(139,92,246,0.5), rgba(139,92,246,0) 70%)",
         }}
       />
       <div
-        className="glass-bg-blob-3 absolute -bottom-[25vmax] left-[10vmax] h-[60vmax] w-[60vmax] rounded-full"
+        className="glass-bg-blob-3 absolute -bottom-[25vmax] start-[10vmax] h-[60vmax] w-[60vmax] rounded-full"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, rgba(20,184,166,0.45), rgba(20,184,166,0) 70%)",
         }}
       />
       <div
-        className="glass-bg-blob-4 absolute top-[30vmax] left-[20vmax] h-[60vmax] w-[60vmax] rounded-full"
+        className="glass-bg-blob-4 absolute top-[30vmax] start-[20vmax] h-[60vmax] w-[60vmax] rounded-full"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, rgba(245,158,11,0.4), rgba(245,158,11,0) 70%)",
         }}
       />
       <div
-        className="glass-bg-blob-5 absolute -bottom-[20vmax] -right-[10vmax] h-[60vmax] w-[60vmax] rounded-full"
+        className="glass-bg-blob-5 absolute -bottom-[20vmax] -end-[10vmax] h-[60vmax] w-[60vmax] rounded-full"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, rgba(56,189,248,0.45), rgba(56,189,248,0) 70%)",

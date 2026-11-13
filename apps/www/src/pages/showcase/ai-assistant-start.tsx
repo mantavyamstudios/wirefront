@@ -292,15 +292,15 @@ function GooOrb({ className, busy = false, size = 48 }: { className?: string; bu
         <span className={cn(blob, "inset-[12%] bg-info")} />
         <motion.span
           animate={loop(busy ? 3 : 7, [0, 5, 3, -1, 0], [0, 2, 6, 3, 0])}
-          className={cn(blob, "top-[20%] left-[20%] size-[38%] bg-success")}
+          className={cn(blob, "top-[20%] start-[20%] size-[38%] bg-success")}
         />
         <motion.span
           animate={loop(busy ? 3.4 : 8, [0, -4, -6, -1, 0], [0, -5, -1, 2, 0])}
-          className={cn(blob, "right-[22%] bottom-[22%] size-[34%] bg-info-foreground")}
+          className={cn(blob, "end-[22%] bottom-[22%] size-[34%] bg-info-foreground")}
         />
         <motion.span
           animate={busy ? loop(2.2, [0, 13, 0], [0, -13, 0]) : loop(6, [0, 2, 0], [0, -2, 0])}
-          className={cn(blob, "top-[28%] right-[28%] size-[26%] bg-info")}
+          className={cn(blob, "top-[28%] end-[28%] size-[26%] bg-info")}
         />
       </span>
     </span>
@@ -657,7 +657,7 @@ function SidebarBody({
                 <button
                   aria-pressed={on}
                   className={cn(
-                    "relative flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    "relative flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     on ? "text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
                   )}
                   key={p.id}
@@ -707,7 +707,7 @@ function SidebarBody({
                   <button
                     aria-current={activeChat === c.id ? "true" : undefined}
                     className={cn(
-                      "group/chat flex h-8 w-full cursor-pointer items-center gap-2 rounded-lg px-2.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      "group/chat flex h-8 w-full cursor-pointer items-center gap-2 rounded-lg px-2.5 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring",
                       activeChat === c.id ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
                     )}
                     onClick={() => onOpenChat(c)}
@@ -1090,7 +1090,7 @@ export function AssistantStart({
                 animate={{ x: 0 }}
                 aria-label="Navigation"
                 aria-modal="true"
-                className="absolute inset-y-0 left-0 z-50 w-72 max-w-[85%] border-e bg-background shadow-xs/5 outline-none @3xl:hidden"
+                className="absolute inset-y-0 start-0 z-50 w-72 max-w-[85%] border-e bg-background shadow-xs/5 outline-none @3xl:hidden"
                 exit={{ x: "-104%" }}
                 initial={{ x: "-104%" }}
                 ref={drawerRef}
@@ -1136,7 +1136,7 @@ export function AssistantStart({
                       m.role === "user" ? (
                         <motion.div
                           animate={{ opacity: 1, y: 0 }}
-                          className="ms-auto max-w-[85%] text-pretty rounded-2xl rounded-br-md bg-muted px-4 py-2.5"
+                          className="ms-auto max-w-[85%] text-pretty rounded-2xl rounded-ee-md bg-muted px-4 py-2.5"
                           initial={{ opacity: 0, y: 8 }}
                           key={m.id}
                           transition={softSpring}

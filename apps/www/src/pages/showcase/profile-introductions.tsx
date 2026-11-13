@@ -128,7 +128,7 @@ export function ProfileIntroductions() {
                   <button
                     type="button"
                     aria-label={`Dismiss ${s.name}`}
-                    className="-mt-1 -mr-1 grid size-8 shrink-0 place-items-center rounded-md pointer-coarse:size-10 text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
+                    className="-mt-1 -me-1 grid size-8 shrink-0 place-items-center rounded-md pointer-coarse:size-10 text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
                   >
                     <XIcon className="size-3.5" />
                   </button>
@@ -169,7 +169,7 @@ export function ProfileIntroductions() {
                         </AvatarFallback>
                       </Avatar>
                     ))}
-                    <span className="ml-3 font-mono text-[10px] text-muted-foreground">
+                    <span className="ms-3 font-mono text-[10px] text-muted-foreground">
                       {s.mutuals.length} mutual
                     </span>
                   </div>

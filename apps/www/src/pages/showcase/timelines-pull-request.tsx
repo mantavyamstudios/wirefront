@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
-import { ScrollArea } from "@wirefront/ui/scroll-area";
+import { ScrollRegion } from "@wirefront/ui/wirefront/scroll-region";
 
 type ReviewState = "approved" | "changes" | "pending";
 
@@ -243,7 +243,7 @@ export function TimelinesPullRequest() {
                 Activity
               </div>
               <div className="relative mt-3">
-                <div className="absolute top-2 bottom-2 left-3.5 w-px bg-border/60" />
+                <div className="absolute top-2 bottom-2 start-3.5 w-px bg-border/60" />
                 <ul className="space-y-3">
                   {TIMELINE.map((item, i) => (
                     <TimelineRow key={i} item={item} />
@@ -473,7 +473,7 @@ function Description({
             Closes the compliance gap flagged in #3211 — the read-side already
             supports per-plan retention, this PR only persists it on writes.
           </p>
-          <ul className="mt-3 ml-4 list-disc space-y-1 text-muted-foreground">
+          <ul className="mt-3 ms-4 list-disc space-y-1 text-muted-foreground">
             <li>New <code>retentionFor(plan)</code> helper</li>
             <li>Migration adds <code>retention_days</code> with sensible defaults</li>
             <li>Backfill script in <code>scripts/backfill-retention.ts</code></li>
@@ -548,8 +548,8 @@ function ChecksPanel() {
 
 function TimelineRow({ item }: { item: TimelineItem }) {
   return (
-    <li className="relative pl-10">
-      <div className="absolute top-1.5 left-1.5 flex size-5 items-center justify-center rounded-full border border-border/60 bg-background">
+    <li className="relative ps-10">
+      <div className="absolute top-1.5 start-1.5 flex size-5 items-center justify-center rounded-full border border-border/60 bg-background">
         <TimelineIcon item={item} />
       </div>
       <TimelineBody item={item} />
@@ -627,7 +627,7 @@ function TimelineBody({ item }: { item: TimelineItem }) {
                 <span className="min-w-0 truncate">{item.diff.file}</span>
                 <span className="shrink-0">line {item.diff.line}</span>
               </div>
-              <ScrollArea aria-label={item.diff.file} orientation="horizontal"><pre className="px-3 py-2 font-mono text-[11px]">
+              <ScrollRegion aria-label={item.diff.file} orientation="horizontal"><pre className="px-3 py-2 font-mono text-[11px]">
                 {item.diff.lines.map((l, i) => (
                   <div
                     key={i}
@@ -639,13 +639,13 @@ function TimelineBody({ item }: { item: TimelineItem }) {
                           : "text-muted-foreground"
                     }
                   >
-                    <span className="mr-3 inline-block w-4 select-none text-muted-foreground">
+                    <span className="me-3 inline-block w-4 select-none text-muted-foreground">
                       {l.kind === "add" ? "+" : l.kind === "del" ? "−" : " "}
                     </span>
                     {l.text}
                   </div>
                 ))}
-              </pre></ScrollArea>
+              </pre></ScrollRegion>
             </div>
           )}
           <p className="mt-2 text-foreground/85 text-sm">{item.body}</p>
@@ -695,7 +695,7 @@ function TimelineBody({ item }: { item: TimelineItem }) {
           >
             {item.url}
           </a>
-          <span className="ml-2 font-mono text-[11px] text-muted-foreground">
+          <span className="ms-2 font-mono text-[11px] text-muted-foreground">
             {item.time}
           </span>
         </div>

@@ -48,7 +48,7 @@ export function EmptyInboxZero({ illustration }: { illustration: string }) {
         Inbox · 0 unread
       </div>
 
-      <div className="text-right font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:tracking-[0.3em]">
+      <div className="text-end font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:tracking-[0.3em]">
         <div>This week</div>
         <div className="mt-0.5 font-heading text-xs tracking-normal text-foreground/85 normal-case">
           47 cleared

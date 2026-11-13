@@ -195,7 +195,7 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
   const group = useId();
   const fade = cn("transition-opacity duration-150", collapsed && "pointer-events-none opacity-0");
   const row =
-    "group/row relative flex h-7 w-full cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2.5 text-left text-[13px] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset";
+    "group/row relative flex h-7 w-full cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2.5 text-start text-[13px] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset";
 
   const item = (id: string, label: string, icon: ReactNode, trailing?: ReactNode) => {
     const on = active === id;
@@ -210,7 +210,7 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
         >
           {on && (
             <motion.span
-              className="absolute top-1.5 bottom-1.5 left-0 w-0.5 rounded-full bg-foreground"
+              className="absolute top-1.5 bottom-1.5 start-0 w-0.5 rounded-full bg-foreground"
               layoutId="hairline-active"
               transition={spring}
             />
@@ -229,7 +229,7 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
         <div className="flex h-11 shrink-0 items-center gap-1 border-b px-1.5">
           <DropdownMenu>
             <DropdownMenuTrigger
-              className="flex h-8 min-w-0 flex-1 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2 text-left outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
+              className="flex h-8 min-w-0 flex-1 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2 text-start outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
             >
               <span
                 className={cn(
@@ -286,7 +286,7 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
                 <span className="relative shrink-0">
                   <n.icon className="size-4" />
                   {collapsed && n.count ? (
-                    <span className="absolute -top-0.5 -right-0.5 size-1.5 rounded-full bg-info ring-2 ring-background" />
+                    <span className="absolute -top-0.5 -end-0.5 size-1.5 rounded-full bg-info ring-2 ring-background" />
                   ) : null}
                 </span>,
                 n.count ? <span className="text-muted-foreground text-xs tabular-nums">{n.count}</span> : undefined,
@@ -337,7 +337,7 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
         <div className="flex h-10 shrink-0 items-center gap-1 border-t px-1.5">
           <DropdownMenu>
             <DropdownMenuTrigger
-              className="flex h-7 min-w-0 flex-1 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2 text-left outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
+              className="flex h-7 min-w-0 flex-1 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2 text-start outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
             >
               <Avatar className="size-5 shrink-0">
                 <AvatarFallback className={cn("text-[9px]", people[user.initials] ?? "bg-muted")}>{user.initials}</AvatarFallback>
@@ -433,7 +433,7 @@ function IssueList({ issues, fresh, onAdd }: { issues: HairlineIssue[]; fresh: s
             <div className="sticky top-0 z-10 flex h-9 items-center border-b bg-background pe-2">
               <button
                 aria-expanded={isOpen}
-                className="flex h-full min-w-0 flex-1 cursor-pointer items-center gap-2 ps-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset @3xl:ps-5"
+                className="flex h-full min-w-0 flex-1 cursor-pointer items-center gap-2 ps-4 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset @3xl:ps-5"
                 onClick={() => setClosed((c) => (isOpen ? [...c, g.id] : c.filter((x) => x !== g.id)))}
                 type="button"
               >
@@ -477,7 +477,7 @@ function IssueList({ issues, fresh, onAdd }: { issues: HairlineIssue[]; fresh: s
                         >
                           <button
                             className={cn(
-                              "group/issue relative flex h-10 w-full cursor-pointer items-center gap-3 px-4 text-left outline-none transition-colors duration-150 hover:bg-accent/60 focus-visible:bg-accent @3xl:h-9 @3xl:px-5",
+                              "group/issue relative flex h-10 w-full cursor-pointer items-center gap-3 px-4 text-start outline-none transition-colors duration-150 hover:bg-accent/60 focus-visible:bg-accent @3xl:h-9 @3xl:px-5",
                               focus === issue.id && "bg-accent",
                             )}
                             data-issue={issue.id}
@@ -485,7 +485,7 @@ function IssueList({ issues, fresh, onAdd }: { issues: HairlineIssue[]; fresh: s
                             onFocus={() => setFocus(issue.id)}
                             type="button"
                           >
-                            {focus === issue.id && <span aria-hidden className="absolute inset-y-0 left-0 w-0.5 bg-foreground" />}
+                            {focus === issue.id && <span aria-hidden className="absolute inset-y-0 start-0 w-0.5 bg-foreground" />}
                             <P
                               aria-label={`${issue.priority} priority`}
                               className={cn(
@@ -506,7 +506,7 @@ function IssueList({ issues, fresh, onAdd }: { issues: HairlineIssue[]; fresh: s
                                 {issue.label.name}
                               </span>
                             )}
-                            <span className="hidden w-12 shrink-0 text-right text-muted-foreground text-xs tabular-nums @xl:block">
+                            <span className="hidden w-12 shrink-0 text-end text-muted-foreground text-xs tabular-nums @xl:block">
                               {issue.due ?? ""}
                             </span>
                             <Avatar className="size-5 shrink-0">
@@ -657,7 +657,7 @@ export function HairlineShell({
                 animate={{ x: 0 }}
                 aria-label="Navigation"
                 aria-modal="true"
-                className="absolute inset-y-0 left-0 z-50 w-64 max-w-[85%] border-e bg-background outline-none @3xl:hidden"
+                className="absolute inset-y-0 start-0 z-50 w-64 max-w-[85%] border-e bg-background outline-none @3xl:hidden"
                 exit={{ x: "-100%" }}
                 initial={{ x: "-100%" }}
                 ref={drawerRef}
@@ -854,7 +854,7 @@ function IssueBoard({ issues }: { issues: HairlineIssue[] }) {
               return (
                 <motion.button
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex cursor-pointer flex-col gap-2 rounded-lg border bg-card p-2.5 text-left outline-none transition-[background-color,scale] duration-150 ease-out hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
+                  className="flex cursor-pointer flex-col gap-2 rounded-lg border bg-card p-2.5 text-start outline-none transition-[background-color,scale] duration-150 ease-out hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
                   initial={{ opacity: 0, y: 6 }}
                   key={issue.id}
                   transition={{ ...spring, delay: i * 0.025 }}

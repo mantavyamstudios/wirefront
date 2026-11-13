@@ -113,7 +113,7 @@ export function TimelinesCommits() {
           <div className="relative" style={{ height: totalHeight }}>
             <svg
               aria-hidden
-              className="pointer-events-none absolute top-0 left-4"
+              className="pointer-events-none absolute top-0 start-4"
               width={graphWidth}
               height={totalHeight}
               viewBox={`0 0 ${graphWidth} ${totalHeight}`}
@@ -155,7 +155,7 @@ export function TimelinesCommits() {
                   key={c.hash}
                   // Rows keep a fixed height (the branch graph is drawn against it), so on
                   // phones the meta line drops low-priority bits rather than wrapping.
-                  className="flex items-center gap-2 pr-2 sm:gap-4 sm:pr-4"
+                  className="flex items-center gap-2 pe-2 sm:gap-4 sm:pe-4"
                   style={{
                     height: ROW_H,
                     paddingLeft: 16 + graphWidth + 16,

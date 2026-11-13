@@ -93,15 +93,15 @@ export function CalendarsWeek() {
           <div
             tabIndex={0}
             aria-label="Week schedule"
-            className="@container snap-x snap-mandatory scroll-pl-12 overflow-x-auto overscroll-x-contain sm:overflow-visible"
+            className="@container snap-x snap-mandatory scroll-ps-12 overflow-x-auto overscroll-x-contain sm:overflow-visible"
           >
           {/* Day headers */}
           <div className="grid grid-cols-[48px_repeat(5,minmax(calc((100cqw_-_48px)/2),1fr))] sm:grid-cols-[64px_repeat(5,minmax(0,1fr))] border-border/40 border-b">
-            <div className="sticky left-0 z-20 border-border/40 border-r bg-background" />
+            <div className="sticky start-0 z-20 border-border/40 border-e bg-background" />
             {DAYS.map((d) => (
               <div
                 key={d.label}
-                className="snap-start border-border/40 border-r px-3 py-3 last:border-r-0"
+                className="snap-start border-border/40 border-e px-3 py-3 last:border-e-0"
               >
                 <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                   {d.label}
@@ -121,7 +121,7 @@ export function CalendarsWeek() {
           {/* Grid */}
           <div className="grid grid-cols-[48px_repeat(5,minmax(calc((100cqw_-_48px)/2),1fr))] sm:grid-cols-[64px_repeat(5,minmax(0,1fr))]">
             {/* Hour rail */}
-            <div className="sticky left-0 z-20 border-border/40 border-r bg-background">
+            <div className="sticky start-0 z-20 border-border/40 border-e bg-background">
               {HOURS.map((h) => (
                 <div
                   key={h}
@@ -137,7 +137,7 @@ export function CalendarsWeek() {
             {DAYS.map((d, di) => (
               <div
                 key={d.label}
-                className="relative snap-start border-border/40 border-r last:border-r-0"
+                className="relative snap-start border-border/40 border-e last:border-e-0"
                 style={{ height: HOURS.length * HOUR_PX }}
               >
                 {/* Hour grid lines */}

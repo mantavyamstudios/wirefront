@@ -112,7 +112,7 @@ export function TimelinesAudit() {
           <ol className="relative">
             <span
               aria-hidden
-              className="absolute top-2 bottom-2 left-[1.0625rem] w-px bg-border/50"
+              className="absolute top-2 bottom-2 start-[1.0625rem] w-px bg-border/50"
             />
             {EVENTS.map((e, i) => (
               <li
@@ -170,7 +170,7 @@ export function TimelinesAudit() {
                 <button
                   type="button"
                   aria-label={`View event: ${e.actor} ${e.action}${e.target ? " " + e.target : ""}`}
-                  className="-mr-2 grid min-h-10 min-w-10 place-items-center self-center rounded-md font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:bg-foreground/[0.04] hover:text-foreground sm:mr-0 sm:min-h-8 sm:px-2"
+                  className="-me-2 grid min-h-10 min-w-10 place-items-center self-center rounded-md font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:bg-foreground/[0.04] hover:text-foreground sm:me-0 sm:min-h-8 sm:px-2"
                 >
                   <span aria-hidden className="max-sm:hidden">view</span>
                   <ChevronRightIcon aria-hidden className="size-4 sm:hidden" />

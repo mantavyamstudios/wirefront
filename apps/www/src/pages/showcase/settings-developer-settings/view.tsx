@@ -864,7 +864,7 @@ function DeveloperSettingsScreen({
                     <div className={cn("flex items-center gap-3 py-3 ps-4 pe-3 transition-colors duration-150", active ? "bg-accent/50" : "hover:bg-accent/30")}>
                       <button
                         aria-current={active ? "true" : undefined}
-                        className="flex min-w-0 flex-1 items-center gap-3 text-left outline-none after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-ring focus-visible:after:ring-inset"
+                        className="flex min-w-0 flex-1 items-center gap-3 text-start outline-none after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-ring focus-visible:after:ring-inset"
                         onClick={() => {
                           setSelectedId(e.id);
                           setRevealed(false);
@@ -1039,8 +1039,8 @@ function DeveloperSettingsScreen({
               <div className="hidden grid-cols-[minmax(0,1fr)_4.5rem_4.5rem_6rem_4.5rem] items-center gap-3 border-b px-4 py-2.5 font-medium text-muted-foreground text-xs sm:grid">
                 <span>{t.columnEvent}</span>
                 <span>{t.columnStatus}</span>
-                <span className="text-right">{t.columnLatency}</span>
-                <span className="text-right">{t.columnTime}</span>
+                <span className="text-end">{t.columnLatency}</span>
+                <span className="text-end">{t.columnTime}</span>
                 <span className="sr-only">{t.actions}</span>
               </div>
               <ul>
@@ -1065,14 +1065,14 @@ function DeveloperSettingsScreen({
                           </span>
                           <span
                             className={cn(
-                              "col-start-2 row-start-2 font-mono text-muted-foreground text-xs tabular-nums sm:col-start-auto sm:row-start-auto sm:text-right",
+                              "col-start-2 row-start-2 font-mono text-muted-foreground text-xs tabular-nums sm:col-start-auto sm:row-start-auto sm:text-end",
                               !isBusy && d.latencyMs >= 1000 && "text-warning-foreground",
                             )}
                           >
                             {isBusy ? "…" : formatLatency(d.latencyMs)}
                             <span className="font-sans text-muted-foreground sm:hidden"> · {when}</span>
                           </span>
-                          <span className="hidden text-right text-muted-foreground text-sm sm:block">{when}</span>
+                          <span className="hidden text-end text-muted-foreground text-sm sm:block">{when}</span>
                           <span className="col-start-3 row-span-2 row-start-1 flex justify-end sm:col-start-auto sm:row-span-1 sm:row-start-auto">
                             {!ok && onRetryDeliveries ? (
                               <Button className={press} disabled={isBusy} onClick={() => void retry(endpoint.id, [d.id])} size="xs" variant="outline">
