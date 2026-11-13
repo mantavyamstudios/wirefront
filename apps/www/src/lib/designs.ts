@@ -440,8 +440,9 @@ export const CATEGORIES: Category[] = [
       {
         slug: "admin-users",
         title: "Admin Users",
-        blurb: "A members admin with seat and 2FA stats, role and status filters, a sortable table you can bulk-edit, an invite dialog that checks emails as chips, and a drawer with each person's devices and activity.",
+        blurb: "A members admin with seat and 2FA stats, server-side status, role and search filters, a sortable table you can bulk-edit, an invite dialog that checks emails as chips, and a drawer that loads each person's devices and activity.",
         status: "new",
+        states: ["ready", "loading", "empty", "error"],
       },
     ],
   },

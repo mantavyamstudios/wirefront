@@ -453,12 +453,6 @@
   "apps/www/src/pages/showcase/sidebars-mini-rail.tsx": {
     "lint/style/noNonNullAssertion": 1
   },
-  "apps/www/src/pages/showcase/table-admin-users.tsx": {
-    "lint/a11y/noStaticElementInteractions": 2,
-    "lint/a11y/useKeyWithClickEvents": 1,
-    "lint/a11y/useSemanticElements": 1,
-    "lint/suspicious/noArrayIndexKey": 2
-  },
   "apps/www/src/pages/showcase/table-inventory.tsx": {
     "lint/a11y/useSemanticElements": 1
   },
