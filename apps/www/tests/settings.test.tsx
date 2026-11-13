@@ -12,6 +12,8 @@ import { ok } from "@wirefront/ui/wirefront/types";
 import * as notifyFixtures from "@/pages/showcase/settings-notification-settings/fixtures";
 import * as securityFixtures from "@/pages/showcase/settings-security-settings/fixtures";
 import { SecuritySettings } from "@/pages/showcase/settings-security-settings/view";
+import * as teamFixtures from "@/pages/showcase/settings-team-roles/fixtures";
+import { TeamRoles } from "@/pages/showcase/settings-team-roles/view";
 import { NotificationSettings } from "@/pages/showcase/settings-notification-settings/view";
 
 afterEach(cleanup);
@@ -118,5 +120,43 @@ describe("SecuritySettings", () => {
     expect(screen.queryByRole("button", { name: "View" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Disable" })).toBeNull();
     expect(screen.queryByRole("button", { name: /Sign out Ridgeline/ })).toBeNull();
+  });
+});
+
+describe("TeamRoles", () => {
+  const base = { data: teamFixtures.getTeam, product: "Acme" };
+
+  it("validates and sends an invite, refusing people already here", async () => {
+    const onInvite = vi.fn(async () => ok(teamFixtures.invite));
+    render(<TeamRoles {...base} onInvite={onInvite} />);
+    const email = screen.getByLabelText("Email address");
+    fireEvent.change(email, { target: { value: "theo@ridgeline.app" } });
+    fireEvent.click(screen.getByRole("button", { name: "Invite" }));
+    expect(await screen.findByText("That person is already here or invited.")).toBeTruthy();
+    fireEvent.change(email, { target: { value: "sam@ridgeline.app" } });
+    fireEvent.click(screen.getByRole("button", { name: "Invite" }));
+    await waitFor(() => expect(onInvite).toHaveBeenCalledWith({ email: "sam@ridgeline.app", roleId: "member" }));
+    expect(await screen.findByText("Invite sent to sam@ridgeline.app")).toBeTruthy();
+  });
+
+  it("edits roles as a draft and saves the whole set from the bar", async () => {
+    const onSaveRoles = vi.fn(async (_roles: unknown) => {});
+    render(<TeamRoles {...base} onSaveRoles={onSaveRoles} />);
+    fireEvent.click(screen.getByRole("checkbox", { name: "Viewer: Delete projects" }));
+    expect(await screen.findByText("You have unsaved changes")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() => expect(onSaveRoles).toHaveBeenCalled());
+    const saved = onSaveRoles.mock.calls[0]?.[0] as { id: string; grants: string[] }[];
+    expect(saved.find((r) => r.id === "viewer")?.grants).toContain("projects.delete");
+    expect(saved.some((r) => r.id === "owner")).toBe(false);
+    expect(await screen.findByText("Roles saved")).toBeTruthy();
+  });
+
+  it("is read-only where the builder hasn't wired changes", () => {
+    render(<TeamRoles {...base} />);
+    expect(screen.queryByLabelText("Email address")).toBeNull();
+    expect(screen.queryByRole("button", { name: /Duplicate/ })).toBeNull();
+    expect(screen.getByRole("checkbox", { name: "Viewer: Delete projects" }).getAttribute("aria-disabled") ?? screen.getByRole("checkbox", { name: "Viewer: Delete projects" }).hasAttribute("data-disabled")).toBeTruthy();
+    expect(screen.queryByRole("combobox", { name: "Role for Theo Marsh" })).toBeNull();
   });
 });

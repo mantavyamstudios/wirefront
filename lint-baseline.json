@@ -455,11 +455,6 @@
   "apps/www/src/pages/showcase/settings-sso.tsx": {
     "lint/a11y/noLabelWithoutControl": 1
   },
-  "apps/www/src/pages/showcase/settings-team-roles.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/useFocusableInteractive": 7,
-    "lint/a11y/useSemanticElements": 13
-  },
   "apps/www/src/pages/showcase/settings-webhooks.tsx": {
     "lint/suspicious/noArrayIndexKey": 2
   },
