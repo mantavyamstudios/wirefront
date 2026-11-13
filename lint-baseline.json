@@ -440,10 +440,6 @@
   "apps/www/src/pages/showcase/settings-privacy.tsx": {
     "lint/a11y/noLabelWithoutControl": 1
   },
-  "apps/www/src/pages/showcase/settings-settings-and-plans.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1,
-    "lint/a11y/useSemanticElements": 3
-  },
   "apps/www/src/pages/showcase/settings-sso.tsx": {
     "lint/a11y/noLabelWithoutControl": 1
   },

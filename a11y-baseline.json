@@ -321,12 +321,6 @@
     "color-contrast": 3,
     "label-content-name-mismatch": 1
   },
-  "settings/settings-and-plans@mobile": {
-    "color-contrast": 1
-  },
-  "settings/settings-and-plans@desktop": {
-    "color-contrast": 1
-  },
   "modals/two-factor@desktop": {
     "label": 6
   },

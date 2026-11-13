@@ -13,6 +13,8 @@ import * as devFixtures from "@/pages/showcase/settings-developer-settings/fixtu
 import { DeveloperSettings } from "@/pages/showcase/settings-developer-settings/view";
 import * as profileFixtures from "@/pages/showcase/settings-profile-settings/fixtures";
 import { ProfileSettings } from "@/pages/showcase/settings-profile-settings/view";
+import * as plansFixtures from "@/pages/showcase/settings-settings-and-plans/fixtures";
+import { SettingsAndPlans } from "@/pages/showcase/settings-settings-and-plans/view";
 import * as notifyFixtures from "@/pages/showcase/settings-notification-settings/fixtures";
 import * as securityFixtures from "@/pages/showcase/settings-security-settings/fixtures";
 import { SecuritySettings } from "@/pages/showcase/settings-security-settings/view";
@@ -247,5 +249,43 @@ describe("ProfileSettings", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Save" }));
     expect((await screen.findByRole("alert")).textContent).toBe("That username was just taken.");
     expect((screen.getByLabelText("Public name") as HTMLInputElement).value).toBe("Ada L.");
+  });
+});
+
+describe("SettingsAndPlans", () => {
+  const base = { data: plansFixtures.getSettings, domain: "acme.app" };
+
+  it("saves workspace settings from the bar, validating the URL", async () => {
+    const onSaveWorkspace = vi.fn(async (_w: unknown) => {});
+    render(<SettingsAndPlans {...base} onSaveWorkspace={onSaveWorkspace} tab="workspace" />);
+    fireEvent.change(screen.getByLabelText("URL"), { target: { value: "r" } });
+    expect(await screen.findAllByText("Use 3–32 letters, numbers or dashes.")).not.toHaveLength(0);
+    fireEvent.change(screen.getByLabelText("URL"), { target: { value: "ridgeline-hq" } });
+    fireEvent.click(await screen.findByRole("button", { name: "Save" }));
+    await waitFor(() => expect(onSaveWorkspace).toHaveBeenCalledWith({ name: "Ridgeline", slug: "ridgeline-hq", region: "eu-central" }));
+  });
+
+  it("shows a new key's secret once, and never lists secrets", async () => {
+    const onCreateKey = vi.fn(async () => ok(plansFixtures.createKey));
+    render(<SettingsAndPlans {...base} onCreateKey={onCreateKey} tab="keys" />);
+    expect(screen.getByText("rl_test_…Kd1f")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Create key" }));
+    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Staging worker" } });
+    fireEvent.click(screen.getByRole("radio", { name: /Read & write/ }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Create key" }).at(-1) as HTMLElement);
+    expect(await screen.findByText(plansFixtures.createKey.secret)).toBeTruthy();
+    expect(onCreateKey).toHaveBeenCalledWith({ name: "Staging worker", scope: "write" });
+  });
+
+  it("retries a failed payment and switches plans through the builder's actions", async () => {
+    const onRetryPayment = vi.fn(async () => {});
+    const onChangePlan = vi.fn(async () => {});
+    render(<SettingsAndPlans {...base} onChangePlan={onChangePlan} onRetryPayment={onRetryPayment} tab="billing" />);
+    fireEvent.click(screen.getByRole("button", { name: "Retry payment" }));
+    await waitFor(() => expect(onRetryPayment).toHaveBeenCalledWith("in08"));
+    expect(await screen.findByText("Payment received")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Change plan" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Switch to Scale" }));
+    await waitFor(() => expect(onChangePlan).toHaveBeenCalledWith("scale"));
   });
 });
