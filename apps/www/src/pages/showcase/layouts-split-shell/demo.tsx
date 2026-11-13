@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-// Ported from devl.dev (sean-brydon/devl.dev, registry item `split-shell`).
-"use client";
+// Showcase only: the shell with a sample agent thread and work panel inside it.
+// Not shipped by the registry; builders render their own thread and panel.
 
-import { AnimatePresence, LayoutGroup, MotionConfig, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -13,7 +13,6 @@ import {
   BotIcon,
   CheckIcon,
   ChevronRightIcon,
-  ChevronsUpDownIcon,
   FileTextIcon,
   GlobeIcon,
   InboxIcon,
@@ -21,8 +20,6 @@ import {
   LoaderCircleIcon,
   LockIcon,
   type LucideIcon,
-  MenuIcon,
-  PanelRightIcon,
   PaperclipIcon,
   PlusIcon,
   RotateCwIcon,
@@ -32,20 +29,18 @@ import {
   XIcon,
 } from "lucide-react";
 import {
-  type KeyboardEvent,
-  type PointerEvent,
-  type ReactNode,
-  useCallback,
   useEffect,
   useId,
   useRef,
   useState,
 } from "react";
-import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
+import { DevlFrame } from "../_devl-frame";
+import * as fixtures from "./fixtures";
+import { SplitShell } from "./view";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
-import { Kbd } from "@wirefront/ui/kbd";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@wirefront/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
@@ -62,14 +57,7 @@ type BadgeVariant = "default" | "secondary" | "destructive" | "outline" | "ghost
 const badgeVariant = (v: string): BadgeVariant => (v in TONE_CLASS ? "secondary" : (v as BadgeVariant));
 const badgeTone = (v: string): string | undefined => TONE_CLASS[v as keyof typeof TONE_CLASS];
 
-export interface WorkspaceTask {
-  id: string;
-  title: string;
-  state: "running" | "done" | "idle";
-  time: string;
-}
-
-export interface WorkspaceToolCall {
+interface WorkspaceToolCall {
   id: string;
   tool: string;
   detail: string;
@@ -78,7 +66,7 @@ export interface WorkspaceToolCall {
   output?: string;
 }
 
-export interface WorkspaceSource {
+interface WorkspaceSource {
   id: string;
   title: string;
   domain: string;
@@ -86,26 +74,7 @@ export interface WorkspaceSource {
   tone: string;
 }
 
-export interface SplitShellProps {
-  tasks?: WorkspaceTask[];
-  toolCalls?: WorkspaceToolCall[];
-  sources?: WorkspaceSource[];
-  defaultPanelWidth?: number;
-  minPanelWidth?: number;
-  maxPanelWidth?: number;
-  children?: ReactNode;
-  className?: string;
-}
-
 const spring = { type: "spring", stiffness: 420, damping: 38 } as const;
-
-const defaultTasks: WorkspaceTask[] = [
-  { id: "t1", title: "Competitive scan: note apps", state: "running", time: "now" },
-  { id: "t2", title: "Draft Q4 pricing memo", state: "done", time: "1h" },
-  { id: "t3", title: "Summarise churn interviews", state: "done", time: "Tue" },
-  { id: "t4", title: "Onboarding email rewrite", state: "idle", time: "Mon" },
-  { id: "t5", title: "Clean up the roadmap doc", state: "idle", time: "Oct 18" },
-];
 
 const defaultToolCalls: WorkspaceToolCall[] = [
   { id: "c1", tool: "web.search", detail: "note taking app pricing 2026", icon: SearchIcon, ms: 820, output: "14 results · 6 kept" },
@@ -123,103 +92,6 @@ const defaultSources: WorkspaceSource[] = [
   { id: "s4", title: "churn-interviews.md", domain: "Orbit files", cited: 5, tone: "bg-violet-500/18 text-violet-700 dark:text-violet-400" },
   { id: "s5", title: "The state of note apps, 2026", domain: "fieldnotes.blog", cited: 1, tone: "bg-rose-500/14 text-rose-700 dark:text-rose-400" },
 ];
-
-function Sidebar({ tasks, onClose }: { tasks: WorkspaceTask[]; onClose?: () => void }) {
-  const [active, setActive] = useState(tasks[0]?.id);
-  const group = useId();
-  return (
-    <LayoutGroup id={group}>
-      <div className="flex h-full min-h-0 flex-col">
-        <div className="flex h-13 items-center gap-2 px-3">
-          <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <BotIcon className="size-4" />
-          </span>
-          <span className="font-semibold">Orbit</span>
-          <span className="text-muted-foreground text-xs">Workspace</span>
-          {onClose && (
-            <Button aria-label="Close navigation" className="ms-auto" onClick={onClose} size="icon-sm" variant="ghost">
-              <XIcon />
-            </Button>
-          )}
-        </div>
-        <div className="px-3 pb-2">
-          <Button className="w-full justify-start" variant="outline">
-            <PlusIcon />
-            New task
-          </Button>
-        </div>
-        <nav aria-label="Workspace" className="flex flex-col gap-0.5 px-2 pb-2">
-          {[
-            { label: "Search", icon: SearchIcon, meta: <Kbd>⌘K</Kbd> },
-            { label: "Inbox", icon: InboxIcon, meta: <span className="rounded-full bg-info/14 px-1.5 font-medium text-[11px] text-info-foreground tabular-nums">2</span> },
-            { label: "Library", icon: LibraryIcon },
-          ].map((n) => (
-            <button
-              className="flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-3 text-left text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-              key={n.label}
-              type="button"
-            >
-              <n.icon className="size-4 shrink-0" />
-              <span className="flex-1">{n.label}</span>
-              {n.meta}
-            </button>
-          ))}
-        </nav>
-        <div className="flex items-center justify-between px-5 pt-3 pb-1.5 text-muted-foreground text-xs">
-          <span className="font-medium">Tasks</span>
-          <span className="tabular-nums">{tasks.length}</span>
-        </div>
-        <ul className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2">
-          {tasks.map((t) => {
-            const on = active === t.id;
-            return (
-              <li key={t.id}>
-                <button
-                  aria-current={on ? "page" : undefined}
-                  className={cn(
-                    "relative flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 text-left outline-none transition-transform focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]",
-                    on ? "text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground",
-                  )}
-                  onClick={() => setActive(t.id)}
-                  type="button"
-                >
-                  {on && (
-                    <motion.span
-                      className="absolute inset-0 rounded-lg bg-background shadow-xs/5 ring-1 ring-border dark:bg-accent dark:ring-0"
-                      layoutId="ws-task"
-                      transition={spring}
-                    />
-                  )}
-                  <span className="relative flex size-4 shrink-0 items-center justify-center">
-                    {t.state === "running" ? (
-                      <LoaderCircleIcon className="size-3.5 animate-spin text-info motion-reduce:animate-none" />
-                    ) : t.state === "done" ? (
-                      <CheckIcon className="size-3.5 text-success" />
-                    ) : (
-                      <span className="size-1.5 rounded-full bg-muted-foreground/40" />
-                    )}
-                  </span>
-                  <span className="relative min-w-0 flex-1 truncate">{t.title}</span>
-                  <span className="relative text-muted-foreground text-xs tabular-nums">{t.time}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        <div className="flex items-center gap-2.5 p-3">
-          <Avatar className="size-7">
-            <AvatarFallback className="bg-orange-500/16 text-[11px] text-orange-800 dark:text-orange-400">DA</AvatarFallback>
-          </Avatar>
-          <div className="min-w-0 flex-1 leading-tight">
-            <div className="truncate font-medium">Dara Achebe</div>
-            <div className="truncate text-muted-foreground text-xs">Northwind Labs</div>
-          </div>
-          <ChevronsUpDownIcon className="size-4 text-muted-foreground" />
-        </div>
-      </div>
-    </LayoutGroup>
-  );
-}
 
 const compare = [
   { app: "Quillpad", price: "$8", seats: "Unlimited", ai: "Add-on $5", offline: true },
@@ -260,8 +132,8 @@ function SkeletonLines({ rows, label }: { rows: number; label: string }) {
         <LoaderCircleIcon className="size-3 animate-spin motion-reduce:animate-none" />
         {label}
       </span>
-      {Array.from({ length: rows }, (_, i) => (
-        <span className="h-2 animate-pulse rounded-full bg-muted motion-reduce:animate-none" key={i} style={{ width: `${92 - i * 17}%` }} />
+      {[92, 75, 58, 41, 24].slice(0, rows).map((width) => (
+        <span className="h-2 animate-pulse rounded-full bg-muted motion-reduce:animate-none" key={width} style={{ width: `${width}%` }} />
       ))}
     </div>
   );
@@ -344,7 +216,7 @@ function SampleThread({ running, step, total }: { running: boolean; step: number
                               {r.offline ? (
                                 <CheckIcon aria-label="Yes" className="mx-auto size-4 text-success" />
                               ) : (
-                                <span aria-label="No" className="block text-center text-muted-foreground">—</span>
+                                <span className="block text-center text-muted-foreground"><span aria-hidden>—</span><span className="sr-only">No</span></span>
                               )}
                             </td>
                           </tr>
@@ -639,7 +511,7 @@ function BrowserTab({ reading }: { reading: boolean }) {
             <div className={cn("grid grid-cols-[1.4fr_1fr_1fr_1fr] items-center px-2.5 py-1.5 text-[10px]", r > 0 && "border-t")} key={String(label)}>
               <span className="text-muted-foreground">{label}</span>
               {cells.map((c, k) => (
-                <span className="text-center" key={k}>
+                <span className="text-center" key={["a", "b", "c"][k]}>
                   {c === true ? (
                     <CheckIcon className="mx-auto size-3 text-success" />
                   ) : c === false ? (
@@ -765,157 +637,29 @@ function WorkPanel({
   );
 }
 
-export function SplitShell({
-  tasks = defaultTasks,
-  toolCalls = defaultToolCalls,
-  sources = defaultSources,
-  defaultPanelWidth = 380,
-  minPanelWidth = 300,
-  maxPanelWidth = 600,
-  children,
-  className,
-}: SplitShellProps) {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const drawerRef = useRef<HTMLDivElement>(null);
-  const [rootWidth, setRootWidth] = useState(1280);
-  const [panelOpen, setPanelOpen] = useState(true);
-  const [overlayOpen, setOverlayOpen] = useState(false);
-  const [drawer, setDrawer] = useState(false);
-  const [width, setWidth] = useState(defaultPanelWidth);
-  const [dragging, setDragging] = useState(false);
+const demoNow = () => new Date(fixtures.now);
+
+export function LayoutsSplitShellShowcasePage() {
   const [step, setStep] = useState(3);
-  const panelId = useId();
-  const drag = useRef<{ x: number; w: number } | null>(null);
   const reduce = useReducedMotion();
 
   useEffect(() => {
-    const el = rootRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(([entry]) => setRootWidth(entry.contentRect.width));
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+    if (step >= defaultToolCalls.length) return;
+    const timer = setTimeout(() => setStep((s) => s + 1), reduce ? 400 : (defaultToolCalls[step]?.ms ?? 1500) + 1400);
+    return () => clearTimeout(timer);
+  }, [step, reduce]);
 
-  useEffect(() => {
-    if (drawer) drawerRef.current?.focus();
-  }, [drawer]);
-
-  useEffect(() => {
-    if (step >= toolCalls.length) return;
-    const t = setTimeout(() => setStep((s) => s + 1), reduce ? 400 : (toolCalls[step]?.ms ?? 1500) + 1400);
-    return () => clearTimeout(t);
-  }, [step, toolCalls, reduce]);
-
-  const docked = rootWidth >= 1024;
-  const sidebarWidth = rootWidth >= 768 ? 240 : 0;
-  const maxW = Math.max(minPanelWidth, Math.min(maxPanelWidth, rootWidth - sidebarWidth - 400));
-  const w = Math.min(Math.max(width, minPanelWidth), maxW);
-  const showPanel = docked ? panelOpen : overlayOpen;
-
-  const clamp = useCallback((v: number) => Math.min(Math.max(v, minPanelWidth), maxW), [minPanelWidth, maxW]);
-
-  const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
-    e.currentTarget.setPointerCapture(e.pointerId);
-    drag.current = { x: e.clientX, w };
-    setDragging(true);
-  };
-  const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
-    if (!drag.current) return;
-    setWidth(clamp(drag.current.w + (drag.current.x - e.clientX)));
-  };
-  const onPointerUp = () => {
-    drag.current = null;
-    setDragging(false);
-  };
-  const onHandleKey = (e: KeyboardEvent<HTMLDivElement>) => {
-    const delta = e.shiftKey ? 64 : 16;
-    if (e.key === "ArrowLeft") setWidth(clamp(w + delta));
-    else if (e.key === "ArrowRight") setWidth(clamp(w - delta));
-    else if (e.key === "Home") setWidth(maxW);
-    else if (e.key === "End") setWidth(minPanelWidth);
-    else if (e.key === "Enter") setWidth(defaultPanelWidth);
-    else return;
-    e.preventDefault();
-  };
-
-  const running = step < toolCalls.length;
-  const liveId = tasks.find((t) => t.state === "running")?.id;
-  const liveTasks = tasks.map((t) => (t.id === liveId ? { ...t, state: running ? ("running" as const) : ("done" as const) } : t));
-  const togglePanel = () => (docked ? setPanelOpen((o) => !o) : setOverlayOpen((o) => !o));
+  const running = step < defaultToolCalls.length;
+  const items = fixtures.listTasks.map((task) => (task.id === "t1" ? { ...task, state: running ? ("running" as const) : ("done" as const) } : task));
 
   return (
-    <MotionConfig reducedMotion="user">
-      <div
-        className={cn(
-          "@container relative isolate flex h-[760px] w-full overflow-hidden bg-sidebar text-foreground text-sm",
-          dragging && "cursor-col-resize select-none",
-          className,
-        )}
-        onKeyDown={(e) => {
-          if (e.key !== "Escape") return;
-          if (drawer) setDrawer(false);
-          else if (overlayOpen) setOverlayOpen(false);
-        }}
-        ref={rootRef}
-      >
-        <aside aria-label="Sidebar" className="hidden w-60 shrink-0 @3xl:block">
-          <Sidebar tasks={liveTasks} />
-        </aside>
-
-        <AnimatePresence>
-          {drawer && (
+    <WirefrontProvider now={demoNow}>
+      <DevlFrame>
+        <SplitShell
+          actions={
             <>
-              <motion.div
-                animate={{ opacity: 1 }}
-                aria-hidden
-                className="absolute inset-0 z-40 bg-black/32 @3xl:hidden"
-                exit={{ opacity: 0 }}
-                initial={{ opacity: 0 }}
-                onClick={() => setDrawer(false)}
-              />
-              <motion.div
-                animate={{ x: 0 }}
-                aria-label="Navigation"
-                aria-modal="true"
-                className="absolute inset-y-0 left-0 z-50 w-72 max-w-[85%] border-e bg-sidebar outline-none @3xl:hidden"
-                exit={{ x: "-100%" }}
-                initial={{ x: "-100%" }}
-                ref={drawerRef}
-                role="dialog"
-                tabIndex={-1}
-                transition={spring}
-              >
-                <Sidebar onClose={() => setDrawer(false)} tasks={liveTasks} />
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-
-        <div className="flex min-w-0 flex-1 @3xl:py-2 @3xl:pe-2">
-          <main className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background @3xl:rounded-2xl @3xl:border @3xl:shadow-xs/5">
-            <header className="flex h-13 shrink-0 items-center gap-2 border-b px-3 @3xl:px-4">
-              <Button
-                aria-label="Open navigation"
-                className="@3xl:hidden"
-                onClick={() => setDrawer(true)}
-                size="icon-sm"
-                variant="ghost"
-              >
-                <MenuIcon />
-              </Button>
-              <nav aria-label="Breadcrumb" className="flex min-w-0 flex-1 items-center gap-1.5">
-                <span className="hidden text-muted-foreground @md:inline">Research</span>
-                <ChevronRightIcon aria-hidden className="hidden size-3.5 text-muted-foreground/60 @md:inline" />
-                <span aria-current="page" className="truncate font-medium">
-                  Competitive scan: note apps
-                </span>
-              </nav>
-              <Badge variant={badgeVariant(running ? "info" : "success")} className={cn(badgeTone(running ? "info" : "success"), "hidden gap-1.5 @lg:inline-flex")}>
-                {running ? (
-                  <LoaderCircleIcon className="size-3 animate-spin motion-reduce:animate-none" />
-                ) : (
-                  <CheckIcon className="size-3" />
-                )}
+              <Badge className={cn(badgeTone(running ? "info" : "success"), "hidden gap-1.5 @lg:inline-flex")} variant={badgeVariant(running ? "info" : "success")}>
+                {running ? <LoaderCircleIcon className="size-3 animate-spin motion-reduce:animate-none" /> : <CheckIcon className="size-3" />}
                 {running ? "Running" : "Done"}
               </Badge>
               {!running && (
@@ -924,121 +668,24 @@ export function SplitShell({
                   Re-run
                 </Button>
               )}
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Button
-                      aria-expanded={showPanel}
-                      aria-label={showPanel ? "Hide work panel" : "Show work panel"}
-                      onClick={togglePanel}
-                      size="icon-sm"
-                      variant={showPanel ? "secondary" : "ghost"}
-                    />
-                  }
-                >
-                  <PanelRightIcon />
-                </TooltipTrigger>
-                <TooltipContent>{showPanel ? "Hide work panel" : "Show work panel"}</TooltipContent>
-              </Tooltip>
-            </header>
-            <div className="min-h-0 flex-1">
-              {children ?? <SampleThread running={running} step={step} total={toolCalls.length} />}
-            </div>
-          </main>
-
-          {docked && (
-            <AnimatePresence initial={false}>
-              {panelOpen && (
-                <motion.div
-                  animate={{ width: w + 8, opacity: 1 }}
-                  className="flex shrink-0 overflow-hidden"
-                  exit={{ width: 0, opacity: 0 }}
-                  initial={{ width: 0, opacity: 0 }}
-                  transition={dragging ? { duration: 0 } : spring}
-                >
-                  <div
-                    aria-controls={panelId}
-                    aria-label="Resize work panel"
-                    aria-orientation="vertical"
-                    aria-valuemax={maxW}
-                    aria-valuemin={minPanelWidth}
-                    aria-valuenow={Math.round(w)}
-                    className="group/handle relative flex w-2 shrink-0 cursor-col-resize touch-none items-center justify-center outline-none before:absolute before:inset-y-0 before:-inset-x-2"
-                    onDoubleClick={() => setWidth(defaultPanelWidth)}
-                    onKeyDown={onHandleKey}
-                    onPointerCancel={onPointerUp}
-                    onPointerDown={onPointerDown}
-                    onPointerMove={onPointerMove}
-                    onPointerUp={onPointerUp}
-                    role="separator"
-                    tabIndex={0}
-                  >
-                    <motion.span
-                      animate={{ height: dragging ? 56 : 32 }}
-                      className={cn(
-                        "w-1 rounded-full bg-muted-foreground/24 transition-colors group-hover/handle:bg-muted-foreground/48 group-focus-visible/handle:bg-ring",
-                        dragging && "bg-info!",
-                      )}
-                      transition={spring}
-                    />
-                  </div>
-                  <section
-                    aria-label="Work panel"
-                    className="relative flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border bg-background shadow-xs/5"
-                    id={panelId}
-                    style={{ width: w }}
-                  >
-                    <WorkPanel calls={toolCalls} onClose={() => setPanelOpen(false)} sources={sources} step={step} />
-                    <AnimatePresence>
-                      {dragging && (
-                        <motion.span
-                          animate={{ opacity: 1, y: 0 }}
-                          className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-foreground px-2 py-0.5 font-mono text-[11px] text-background tabular-nums"
-                          exit={{ opacity: 0, y: 4 }}
-                          initial={{ opacity: 0, y: 4 }}
-                        >
-                          {Math.round(w)}px
-                        </motion.span>
-                      )}
-                    </AnimatePresence>
-                  </section>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          )}
-        </div>
-
-        {!docked && (
-          <AnimatePresence>
-            {overlayOpen && (
-              <>
-                <motion.div
-                  animate={{ opacity: 1 }}
-                  aria-hidden
-                  className="absolute inset-0 z-30 bg-black/24"
-                  exit={{ opacity: 0 }}
-                  initial={{ opacity: 0 }}
-                  onClick={() => setOverlayOpen(false)}
-                />
-                <motion.section
-                  animate={{ x: 0 }}
-                  aria-label="Work panel"
-                  className="absolute inset-y-2 right-2 z-30 flex w-[min(400px,calc(100%-1rem))] flex-col overflow-hidden rounded-2xl border bg-background shadow-lg/10"
-                  exit={{ x: "110%" }}
-                  initial={{ x: "110%" }}
-                  transition={spring}
-                >
-                  <WorkPanel calls={toolCalls} onClose={() => setOverlayOpen(false)} sources={sources} step={step} />
-                </motion.section>
-              </>
-            )}
-          </AnimatePresence>
-        )}
-      </div>
-    </MotionConfig>
+            </>
+          }
+          activeId="t1"
+          brand={{ name: "Orbit", subtitle: "Workspace" }}
+          breadcrumbs={[{ label: "Research" }, { label: "Competitive scan: note apps" }]}
+          items={items}
+          nav={[
+            { id: "inbox", label: "Inbox", href: "#inbox", icon: <InboxIcon />, count: 2 },
+            { id: "library", label: "Library", href: "#library", icon: <LibraryIcon /> },
+          ]}
+          newHref="#new"
+          onSearch={() => {}}
+          panel={({ close }) => <WorkPanel calls={defaultToolCalls} onClose={close} sources={defaultSources} step={step} />}
+          user={fixtures.user}
+        >
+          <SampleThread running={running} step={step} total={defaultToolCalls.length} />
+        </SplitShell>
+      </DevlFrame>
+    </WirefrontProvider>
   );
-}
-
-export function SplitShellDemo() {
-  return <SplitShell />;
 }

@@ -184,9 +184,6 @@
   "layouts/hairline-shell@desktop": {
     "label-content-name-mismatch": 2
   },
-  "layouts/split-shell@desktop": {
-    "color-contrast": 2
-  },
   "dashboards/analytics@desktop": {
     "color-contrast": 22
   },
