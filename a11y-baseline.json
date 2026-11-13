@@ -145,12 +145,6 @@
   "layouts/inbox-rail@mobile": {
     "color-contrast": 16
   },
-  "layouts/app-shell@desktop": {
-    "color-contrast": 8
-  },
-  "layouts/app-shell@mobile": {
-    "color-contrast": 5
-  },
   "layouts/two-pane@desktop": {
     "color-contrast": 11
   },

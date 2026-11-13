@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 "use client";
 
-import { Button } from "@wirefront/ui/button";
+import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Card } from "@wirefront/ui/card";
 import { cn } from "@wirefront/ui/lib/utils";
 import { useAction } from "@wirefront/ui/wirefront/action";
@@ -107,16 +107,10 @@ export function MagicLinkSent({ email, onResend, resendAfter = 30, expiresInMinu
           {mailApp || onResend ? (
             <div className="mt-7 flex w-full flex-col gap-2">
               {mailApp ? (
-                <Button
-                  className="w-full"
-                  nativeButton={false}
-                  render={<a href={mailApp.href} rel="noreferrer" target="_blank" />}
-                  size="lg"
-                  variant="outline"
-                >
+                <a className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full")} href={mailApp.href} rel="noreferrer" target="_blank">
                   {interpolate(t.openMailApp, { name: mailApp.name })}
                   <ExternalLinkIcon />
-                </Button>
+                </a>
               ) : null}
               {onResend ? (
                 <Button

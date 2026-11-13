@@ -5,7 +5,7 @@
 
 import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
-import { Button } from "@wirefront/ui/button";
+import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
@@ -197,15 +197,10 @@ export function SignIn({
                 </Button>
               ))}
               {ssoHref ? (
-                <Button
-                  className={optionClass(options - 1)}
-                  nativeButton={false}
-                  render={<WirefrontLink href={ssoHref} />}
-                  variant="outline"
-                >
+                <WirefrontLink className={cn(buttonVariants({ variant: "outline" }), optionClass(options - 1))} href={ssoHref}>
                   <Building2Icon />
                   {t.sso}
-                </Button>
+                </WirefrontLink>
               ) : null}
             </div>
             <div className="my-6 flex w-full items-center gap-3 text-muted-foreground text-xs">

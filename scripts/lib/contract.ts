@@ -53,6 +53,13 @@ export function checkView(source: string): Violation[] {
     ),
     ...each(
       src,
+      /<Button\b[^<]*render=\{<(a|WirefrontLink)\b/g,
+      "link-as-button",
+      (m) =>
+        `renders a Button as <${m[1]}>: Base UI gives it role="button", so the link is announced as a button. Use <${m[1]} className={buttonVariants(...)}> instead`,
+    ),
+    ...each(
+      src,
       /new\s+Promise\s*\([^)]*\)?[\s\S]{0,120}?setTimeout/g,
       "fake-latency",
       () => "fakes latency with setTimeout: actions are the builder's Promises",

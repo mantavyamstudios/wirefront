@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 "use client";
 
-import { Button } from "@wirefront/ui/button";
+import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Label } from "@wirefront/ui/label";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
@@ -287,9 +287,9 @@ export function InviteTeammates({
                 <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">{interpolate(t.autoJoinBody, { domain: autoJoinDomain })}</p>
               </div>
               {manageAutoJoinHref ? (
-                <Button nativeButton={false} render={<WirefrontLink href={manageAutoJoinHref} />} size="sm" variant="ghost">
+                <WirefrontLink className={buttonVariants({ variant: "ghost", size: "sm" })} href={manageAutoJoinHref}>
                   {t.manage}
-                </Button>
+                </WirefrontLink>
               ) : null}
             </div>
           </div>

@@ -3,7 +3,7 @@
 "use client";
 
 import { Badge } from "@wirefront/ui/badge";
-import { Button } from "@wirefront/ui/button";
+import { Button, buttonVariants } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
@@ -244,10 +244,10 @@ export function InvoicesTable({
               </Button>
             ) : null}
             {newInvoiceHref ? (
-              <Button className="pointer-coarse:h-10" nativeButton={false} render={<WirefrontLink href={newInvoiceHref} />} size="sm">
+              <WirefrontLink className={cn(buttonVariants({ size: "sm" }), "pointer-coarse:h-10")} href={newInvoiceHref}>
                 <PlusIcon />
                 {t.newInvoice}
-              </Button>
+              </WirefrontLink>
             ) : null}
           </div>
         </header>

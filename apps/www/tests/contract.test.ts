@@ -56,6 +56,15 @@ describe("checkView", () => {
   });
 });
 
+describe("link-as-button", () => {
+  it("rejects a Button rendered as a link and accepts a styled link", () => {
+    const button = GOOD.replace("return null;", 'return <Button nativeButton={false} render={<WirefrontLink href="/x" />}>Go</Button>;');
+    expect(rules(button)).toEqual(["link-as-button"]);
+    const link = GOOD.replace("return null;", 'return <WirefrontLink className={buttonVariants()} href="/x">Go</WirefrontLink>;');
+    expect(rules(link)).toEqual([]);
+  });
+});
+
 describe("ready-to-wire screens", () => {
   const screens = readyScreens();
 

@@ -4,7 +4,7 @@
 
 import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
-import { Button } from "@wirefront/ui/button";
+import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@wirefront/ui/card";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
@@ -102,9 +102,9 @@ export function ResetPassword({ token, onReset, onSuccess, linkError, forgotPass
         </CardHeader>
         {forgotPasswordHref ? (
           <CardContent>
-            <Button className="w-full" nativeButton={false} render={<WirefrontLink href={forgotPasswordHref} />} size="lg">
+            <WirefrontLink className={cn(buttonVariants({ size: "lg" }), "w-full")} href={forgotPasswordHref}>
               {t.requestNew}
-            </Button>
+            </WirefrontLink>
           </CardContent>
         ) : null}
         {backLink}
@@ -122,9 +122,9 @@ export function ResetPassword({ token, onReset, onSuccess, linkError, forgotPass
         </CardHeader>
         {signInHref ? (
           <CardContent>
-            <Button className="w-full" nativeButton={false} render={<WirefrontLink href={signInHref} />} size="lg">
+            <WirefrontLink className={cn(buttonVariants({ size: "lg" }), "w-full")} href={signInHref}>
               {t.continue}
-            </Button>
+            </WirefrontLink>
           </CardContent>
         ) : null}
       </>

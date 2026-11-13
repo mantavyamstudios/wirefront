@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 "use client";
 
-import { Button } from "@wirefront/ui/button";
+import { Button, buttonVariants } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { interpolate, useFormat, useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
@@ -130,18 +130,18 @@ export function UsageDashboard({ usage, status = "ready", error, onRetry, warnAt
                 </p>
               </div>
               {manageHref ? (
-                <Button nativeButton={false} render={<WirefrontLink href={manageHref} />} size="sm" variant="ghost">
+                <WirefrontLink className={buttonVariants({ variant: "ghost", size: "sm" })} href={manageHref}>
                   {t.manage}
-                </Button>
+                </WirefrontLink>
               ) : null}
             </div>
 
             {upgrade ? (
-              <Button className="mt-4 w-full" nativeButton={false} render={<WirefrontLink href={upgrade.href} />} size="sm" variant="outline">
+              <WirefrontLink className={cn(buttonVariants({ variant: "outline", size: "sm" }), "mt-4 w-full")} href={upgrade.href}>
                 <ZapIcon />
                 {interpolate(t.upgrade, { plan: upgrade.plan })}
                 <ArrowUpRightIcon />
-              </Button>
+              </WirefrontLink>
             ) : null}
           </div>
 
@@ -198,9 +198,9 @@ export function UsageDashboard({ usage, status = "ready", error, onRetry, warnAt
             <h1 className="mt-1 font-heading text-2xl">{t.title}</h1>
           </div>
           {invoiceHref ? (
-            <Button nativeButton={false} render={<WirefrontLink href={invoiceHref} />} size="sm" variant="outline">
+            <WirefrontLink className={buttonVariants({ variant: "outline", size: "sm" })} href={invoiceHref}>
               {t.viewInvoice}
-            </Button>
+            </WirefrontLink>
           ) : null}
         </div>
       </div>

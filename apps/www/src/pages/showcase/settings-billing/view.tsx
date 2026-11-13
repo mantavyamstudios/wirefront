@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@wirefront/ui/alert-dialog";
-import { Button } from "@wirefront/ui/button";
+import { Button, buttonVariants } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Separator } from "@wirefront/ui/separator";
 import { Skeleton } from "@wirefront/ui/skeleton";
@@ -169,9 +169,9 @@ export function BillingSettings({
               <Separator />
               <div className="flex flex-wrap items-center justify-between gap-2 p-3 sm:gap-3 sm:p-4">
                 {comparePlansHref ? (
-                  <Button nativeButton={false} render={<WirefrontLink href={comparePlansHref} />} size="sm" variant="ghost">
+                  <WirefrontLink className={buttonVariants({ variant: "ghost", size: "sm" })} href={comparePlansHref}>
                     {t.comparePlans}
-                  </Button>
+                  </WirefrontLink>
                 ) : (
                   <span />
                 )}
@@ -201,10 +201,10 @@ export function BillingSettings({
                     </AlertDialog>
                   ) : null}
                   {upgradeHref ? (
-                    <Button nativeButton={false} render={<WirefrontLink href={upgradeHref} />} size="sm">
+                    <WirefrontLink className={buttonVariants({ size: "sm" })} href={upgradeHref}>
                       <ZapIcon />
                       {t.upgrade}
-                    </Button>
+                    </WirefrontLink>
                   ) : null}
                 </div>
               </div>
@@ -216,9 +216,9 @@ export function BillingSettings({
           <header className="flex items-center justify-between gap-3">
             <h2 className="font-heading text-base">{t.paymentMethod}</h2>
             {portalHref ? (
-              <Button nativeButton={false} render={<WirefrontLink href={portalHref} />} size="sm" variant="ghost">
+              <WirefrontLink className={buttonVariants({ variant: "ghost", size: "sm" })} href={portalHref}>
                 {t.update}
-              </Button>
+              </WirefrontLink>
             ) : null}
           </header>
           {billing.paymentMethod ? (

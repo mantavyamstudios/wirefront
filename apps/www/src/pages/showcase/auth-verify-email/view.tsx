@@ -3,7 +3,7 @@
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
 "use client";
 
-import { Button } from "@wirefront/ui/button";
+import { Button, buttonVariants } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { OTPField, OTPFieldInput, OTPFieldSeparator } from "@wirefront/ui/otp-field";
 import { Spinner } from "@wirefront/ui/spinner";
@@ -176,9 +176,9 @@ export function VerifyEmail({ email, onVerify, onResend, resendAfter = 30, onSuc
           ) : null}
           {done ? (
             continueHref ? (
-              <Button className="mt-2 w-full" nativeButton={false} render={<WirefrontLink href={continueHref} />}>
+              <WirefrontLink className={cn(buttonVariants(), "mt-2 w-full")} href={continueHref}>
                 {t.continue}
-              </Button>
+              </WirefrontLink>
             ) : null
           ) : (
             <Button aria-busy={busy} className="mt-2 w-full" disabled={code.length < CODE_LENGTH || busy} type="submit">

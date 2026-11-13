@@ -5,7 +5,7 @@
 
 import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
-import { Button } from "@wirefront/ui/button";
+import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
@@ -117,10 +117,10 @@ export function ForgotPassword({ defaultEmail, onSend, resendAfter = 30, expires
             {sentTo ? (
               <div className="mt-8 flex w-full flex-col gap-4">
                 {signInHref ? (
-                  <Button className="w-full" nativeButton={false} render={<WirefrontLink href={signInHref} />} variant="outline">
+                  <WirefrontLink className={cn(buttonVariants({ variant: "outline" }), "w-full")} href={signInHref}>
                     <ArrowLeftIcon />
                     {t.backToSignIn}
-                  </Button>
+                  </WirefrontLink>
                 ) : null}
                 {failure}
                 <p className="text-center text-muted-foreground text-sm">
