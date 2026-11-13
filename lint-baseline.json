@@ -418,19 +418,6 @@
   "apps/www/src/pages/showcase/sidebars-mini-rail.tsx": {
     "lint/style/noNonNullAssertion": 1
   },
-  "apps/www/src/pages/showcase/table-inventory.tsx": {
-    "lint/a11y/useSemanticElements": 1
-  },
-  "apps/www/src/pages/showcase/table-issues.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1
-  },
-  "apps/www/src/pages/showcase/table-logs.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/table-orders.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1,
-    "lint/style/noNonNullAssertion": 1
-  },
   "apps/www/src/pages/showcase/threads-comment-row.tsx": {
     "lint/suspicious/noArrayIndexKey": 2
   },

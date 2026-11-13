@@ -2,10 +2,10 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // @vitest-environment jsdom
 /**
- * The wiring contract of the invoices, API keys, audit log and admin users tables.
+ * The wiring contract of the invoices, API keys, audit log, admin users, inventory, orders, issues, transactions and logs tables.
  */
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
 import { fail, ok } from "@wirefront/ui/wirefront/types";
 import * as adminFixtures from "@/pages/showcase/table-admin-users/fixtures";
@@ -14,6 +14,16 @@ import * as keyFixtures from "@/pages/showcase/table-api-keys/fixtures";
 import { ApiKeysTable } from "@/pages/showcase/table-api-keys/view";
 import * as auditFixtures from "@/pages/showcase/table-audit-log/fixtures";
 import { AuditLog } from "@/pages/showcase/table-audit-log/view";
+import * as inventoryFixtures from "@/pages/showcase/table-inventory/fixtures";
+import { InventoryTable } from "@/pages/showcase/table-inventory/view";
+import * as orderFixtures from "@/pages/showcase/table-orders/fixtures";
+import { OrdersTable } from "@/pages/showcase/table-orders/view";
+import * as issueFixtures from "@/pages/showcase/table-issues/fixtures";
+import { IssuesTable } from "@/pages/showcase/table-issues/view";
+import * as txFixtures from "@/pages/showcase/table-transactions/fixtures";
+import { TransactionsTable } from "@/pages/showcase/table-transactions/view";
+import * as logFixtures from "@/pages/showcase/table-logs/fixtures";
+import { LogsTable } from "@/pages/showcase/table-logs/view";
 import * as invoiceFixtures from "@/pages/showcase/table-invoices/fixtures";
 import { InvoicesTable } from "@/pages/showcase/table-invoices/view";
 
@@ -197,5 +207,225 @@ describe("AdminUsers", () => {
     await waitFor(() => expect(loadDetails).toHaveBeenCalledWith("u2"));
     expect(await screen.findByText("Created API key “CI deploy”")).toBeTruthy();
     expect(screen.getByText("MacBook Pro · Chrome")).toBeTruthy();
+  });
+});
+
+describe("InventoryTable", () => {
+  it("shows stock against capacity with a level, formats prices and sorts by column", () => {
+    const onQueryChange = vi.fn();
+    render(<InventoryTable onQueryChange={onQueryChange} page={inventoryFixtures.listInventory} productHref={(i) => `/p/${i.id}`} query={{ page: 1, pageSize: 6 }} />);
+    expect(screen.getByText("124 products")).toBeTruthy();
+    const meter = screen.getAllByRole("meter", { name: "Pocket notebook stock" })[0] as HTMLMeterElement;
+    expect([meter.value, meter.max]).toEqual([6, 80]);
+    expect(screen.getAllByText("Low stock").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Out of stock").length).toBeGreaterThan(0);
+    expect(screen.getByText("$92.00")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Field hoodie" }).getAttribute("href")).toBe("/p/2");
+    fireEvent.click(screen.getByRole("button", { name: "Stock" }));
+    expect(onQueryChange).toHaveBeenLastCalledWith({ page: 1, pageSize: 6, sort: { id: "stock", direction: "asc" } });
+    fireEvent.click(screen.getByRole("button", { name: "Next page" }));
+    expect(onQueryChange).toHaveBeenLastCalledWith({ page: 2, pageSize: 6 });
+  });
+
+  it("uses the low-stock threshold it is given and hides the add button when unwired", () => {
+    render(<InventoryTable lowStockAt={50} onQueryChange={vi.fn()} page={inventoryFixtures.listInventory} query={{ page: 1, pageSize: 6 }} />);
+    // Hoodie (38) is now low too.
+    expect(screen.getAllByText("Low stock").length).toBe(2 * 2);
+    expect(screen.queryByRole("link", { name: /Product/ })).toBeNull();
+  });
+});
+
+describe("OrdersTable", () => {
+  it("has no selection without bulk actions", () => {
+    render(<OrdersTable onQueryChange={vi.fn()} page={orderFixtures.listOrders} query={{ page: 1, pageSize: 6 }} />);
+    expect(screen.queryByRole("checkbox")).toBeNull();
+    expect(screen.getByText("248 orders")).toBeTruthy();
+    expect(screen.getAllByRole("img", { name: "Stage: Shipped" }).length).toBe(2);
+  });
+
+  it("marks the selected orders shipped and clears the selection", async () => {
+    const onMarkShipped = vi.fn(async () => {});
+    render(<OrdersTable onMarkShipped={onMarkShipped} onQueryChange={vi.fn()} page={orderFixtures.listOrders} query={{ page: 1, pageSize: 6 }} />);
+    fireEvent.click(screen.getByRole("checkbox", { name: "Select #A-2840" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Select #A-2838" }));
+    expect(screen.getAllByText("2 selected").length).toBeGreaterThan(0);
+    fireEvent.click(screen.getAllByRole("button", { name: "Mark shipped" })[0] as HTMLElement);
+    await waitFor(() => expect(onMarkShipped).toHaveBeenCalledWith(["2840", "2838"]));
+    await waitFor(() => expect(screen.queryByText("2 selected")).toBeNull());
+  });
+
+  it("links the label file, and keeps the selection when an action fails", async () => {
+    const onPrintLabels = vi.fn(async () => ok(orderFixtures.printLabels));
+    const onMarkShipped = vi.fn(async () => fail("Carrier API is down."));
+    render(<OrdersTable onMarkShipped={onMarkShipped} onPrintLabels={onPrintLabels} onQueryChange={vi.fn()} page={orderFixtures.listOrders} query={{ page: 1, pageSize: 6 }} />);
+    fireEvent.click(screen.getByRole("checkbox", { name: "Select all" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Print labels" })[0] as HTMLElement);
+    expect((await screen.findByRole("link", { name: "Download" })).getAttribute("href")).toBe(orderFixtures.printLabels.url);
+    expect(onPrintLabels).toHaveBeenCalledWith(orderFixtures.orders.map((o) => o.id));
+    fireEvent.click(screen.getAllByRole("button", { name: "Mark shipped" })[0] as HTMLElement);
+    expect((await screen.findByRole("alert")).textContent).toBe("Carrier API is down.");
+    expect(screen.getAllByText("6 selected").length).toBeGreaterThan(0);
+  });
+});
+
+describe("IssuesTable", () => {
+  const renderIt = (query = issueFixtures.defaultQuery, extra: Partial<Parameters<typeof IssuesTable>[0]> = {}) => {
+    const onQueryChange = vi.fn();
+    render(
+      <WirefrontProvider locale="en-US" now={() => new Date(issueFixtures.now)}>
+        <IssuesTable labels={issueFixtures.listLabels} onQueryChange={onQueryChange} page={issueFixtures.listIssues} people={issueFixtures.listPeople} query={query} {...extra} />
+      </WirefrontProvider>,
+    );
+    return onQueryChange;
+  };
+
+  it("names status, priority, estimate and assignee for screen readers and dates updates from the provider's clock", () => {
+    renderIt();
+    const row = screen.getByText("Migrate billing webhook to v2 schema").closest("tr") as HTMLElement;
+    expect(within(row).getAllByRole("img", { name: "Todo" }).length).toBeGreaterThan(0);
+    expect(within(row).getAllByText("High").length).toBeGreaterThan(0);
+    expect(within(row).getByText("8 points")).toBeTruthy();
+    expect(within(row).getByText("Alan Turing")).toBeTruthy();
+    expect(within(row).getByText("yesterday")).toBeTruthy();
+    const unassigned = screen.getByText(/persist operator/).closest("tr") as HTMLElement;
+    expect(within(unassigned).getByRole("img", { name: "Unassigned" })).toBeTruthy();
+    expect(screen.getByText("1 filter")).toBeTruthy();
+  });
+
+  it("filters by facet, searches and sorts, each from page 1", async () => {
+    const onQueryChange = renderIt({ page: 3, pageSize: 20 });
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search issues" }), { target: { value: "safari" } });
+    expect(onQueryChange).toHaveBeenLastCalledWith({ page: 1, pageSize: 20, search: "safari" });
+    fireEvent.click(screen.getByRole("button", { name: "Filter by Label" }));
+    fireEvent.click(await screen.findByRole("checkbox", { name: "perf" }));
+    expect(onQueryChange).toHaveBeenLastCalledWith({ page: 1, pageSize: 20, filters: { label: ["perf"] } });
+    fireEvent.click(screen.getByRole("button", { name: "Priority" }));
+    expect(onQueryChange).toHaveBeenLastCalledWith({ page: 1, pageSize: 20, sort: { id: "priority", direction: "asc" } });
+  });
+
+  it("offers to clear filters when nothing matches, and links titles", () => {
+    const onQueryChange = renderIt({ page: 1, pageSize: 20, search: "zzz" }, { page: { items: [], total: 0 } });
+    fireEvent.click(screen.getByRole("button", { name: "Clear filters" }));
+    expect(onQueryChange).toHaveBeenLastCalledWith({ page: 1, pageSize: 20, search: undefined, filters: undefined });
+    cleanup();
+    renderIt(undefined, { issueHref: (i) => `/issues/${i.key}` });
+    expect(screen.getByRole("link", { name: /Realtime cursors/ }).getAttribute("href")).toBe("/issues/ENG-218");
+  });
+});
+
+describe("TransactionsTable", () => {
+  const renderIt = (extra: Partial<Parameters<typeof TransactionsTable>[0]> = {}) => {
+    const onQueryChange = vi.fn();
+    render(
+      <WirefrontProvider locale="en-US" timeZone="UTC">
+        <TransactionsTable accounts={txFixtures.listAccounts} onQueryChange={onQueryChange} page={txFixtures.listTransactions} query={txFixtures.defaultQuery} {...extra} />
+      </WirefrontProvider>,
+    );
+    return onQueryChange;
+  };
+
+  it("signs amounts by direction, strikes failed ones and totals from the server's summary", () => {
+    renderIt();
+    expect(screen.getByText("+$13,130.00")).toBeTruthy();
+    expect(screen.getByText("-$2,120.00", { selector: "div.font-heading" })).toBeTruthy();
+    expect(screen.getByText("+$11,010.00")).toBeTruthy();
+    const failed = screen.getByText("Failed charge").closest("tr") as HTMLElement;
+    expect(within(failed).getByText("+$6,420.00").className).toContain("line-through");
+    expect(within(failed).getByRole("img", { name: "Received" })).toBeTruthy();
+    expect(screen.getByText("fee $9.90")).toBeTruthy();
+    expect(screen.getByText("412 results")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Export CSV" })).toBeNull();
+  });
+
+  it("exports the current query and pages", async () => {
+    const onExport = vi.fn(async () => {});
+    const onQueryChange = renderIt({ onExport });
+    fireEvent.click(screen.getByRole("button", { name: "Export CSV" }));
+    await waitFor(() => expect(onExport).toHaveBeenCalledWith(txFixtures.defaultQuery));
+    fireEvent.click(screen.getByRole("button", { name: "Next page" }));
+    expect(onQueryChange).toHaveBeenLastCalledWith({ ...txFixtures.defaultQuery, page: 2 });
+  });
+
+  it("hides the account filter for a single account and clears filters when nothing matches", () => {
+    const onQueryChange = renderIt({ accounts: [{ id: "op", label: "Operating" }], page: { items: [], total: 0, summary: { inflow: 0, outflow: 0, currency: "USD" } } });
+    expect(screen.queryByRole("combobox", { name: "Account" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Clear filters" }));
+    expect(onQueryChange).toHaveBeenLastCalledWith({ page: 1, pageSize: 8, search: undefined, filters: undefined });
+  });
+});
+
+describe("LogsTable", () => {
+  // jsdom has no matchMedia; the sheet picks its side with useMediaQuery. Desktop here.
+  const realMatchMedia = window.matchMedia;
+  beforeAll(() => {
+    window.matchMedia = ((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    })) as typeof window.matchMedia;
+  });
+  afterAll(() => {
+    window.matchMedia = realMatchMedia;
+  });
+  const renderIt = (extra: Partial<Parameters<typeof LogsTable>[0]> = {}) => {
+    const onFilterChange = vi.fn();
+    render(
+      <WirefrontProvider locale="en-US" timeZone="UTC">
+        <LogsTable entries={logFixtures.entries} filter="" onFilterChange={onFilterChange} {...extra} />
+      </WirefrontProvider>,
+    );
+    return onFilterChange;
+  };
+  const open = (message: RegExp) => fireEvent.click(screen.getByRole("button", { name: message }));
+
+  it("formats times in the provider's zone, filters and focuses the filter on Ctrl+K", () => {
+    const onFilterChange = renderIt();
+    expect(screen.getByText("12:48:21.094")).toBeTruthy();
+    fireEvent.change(screen.getByRole("searchbox", { name: "Filter logs" }), { target: { value: "severity:error" } });
+    expect(onFilterChange).toHaveBeenCalledWith("severity:error");
+    fireEvent.keyDown(window, { key: "k", ctrlKey: true });
+    expect(document.activeElement).toBe(screen.getByRole("searchbox", { name: "Filter logs" }));
+    expect(screen.queryByRole("button", { name: "Pause" })).toBeNull();
+  });
+
+  it("pauses and resumes the stream", () => {
+    const onLiveChange = vi.fn();
+    renderIt({ live: true, onLiveChange });
+    expect(screen.getByText("live")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Pause" }));
+    expect(onLiveChange).toHaveBeenCalledWith(false);
+  });
+
+  it("opens a line's details with timing shares, and offers error actions only on errors", async () => {
+    const onRetryRequest = vi.fn(async () => {});
+    renderIt({ onRetryRequest, traceHref: (e) => `/traces/${e.traceId}` });
+    open(/^info at 12:48:21\.094: GET \/v1\/projects 200/);
+    const sheet = await screen.findByRole("dialog");
+    expect(within(sheet).getByText("24ms total")).toBeTruthy();
+    expect(within(sheet).getByRole("link", { name: "Open in tracing" }).getAttribute("href")).toBe("/traces/tr_a91f3c8b6e5d04a1");
+    expect(within(sheet).queryByRole("button", { name: "Retry request" })).toBeNull();
+    fireEvent.keyDown(sheet, { key: "Escape" });
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+
+    open(/^error at 12:48:22\.318/);
+    const errorSheet = await screen.findByRole("dialog");
+    fireEvent.click(within(errorSheet).getByRole("button", { name: "Retry request" }));
+    await waitFor(() => expect(onRetryRequest).toHaveBeenCalledWith(expect.objectContaining({ id: "e_5" })));
+    expect(await within(errorSheet).findByText("Request retried.")).toBeTruthy();
+    expect(within(errorSheet).queryByRole("button", { name: "Notify on-call" })).toBeNull();
+  });
+
+  it("says when copying fails", async () => {
+    Object.assign(navigator, { clipboard: { writeText: vi.fn(async () => Promise.reject(new Error("denied"))) } });
+    renderIt();
+    open(/^warn at 12:48:21\.840/);
+    const sheet = await screen.findByRole("dialog");
+    fireEvent.click(within(sheet).getByRole("button", { name: "Copy" }));
+    expect((await within(sheet).findByRole("alert")).textContent).toContain("Couldn’t copy");
   });
 });
