@@ -184,7 +184,7 @@ export function FormsApiKey() {
                                 {s.id}
                               </span>
                               {s.destructive ? (
-                                <span className="rounded bg-destructive/10 px-1.5 py-0.5 font-mono text-[10px] text-destructive uppercase tracking-[0.2em]">
+                                <span className="rounded bg-destructive/10 px-1.5 py-0.5 font-mono text-[10px] text-destructive-foreground uppercase tracking-[0.2em]">
                                   Destructive
                                 </span>
                               ) : null}

@@ -92,8 +92,8 @@ interface State {
 
 const tone: Record<AgentTone, { dot: string; soft: string; stroke: string }> = {
   orange: { dot: "bg-orange-500", soft: "bg-orange-500/14 text-orange-700 dark:text-orange-300", stroke: "stroke-orange-500" },
-  teal: { dot: "bg-teal-500", soft: "bg-teal-500/14 text-teal-700 dark:text-teal-300", stroke: "stroke-teal-500" },
-  violet: { dot: "bg-violet-500", soft: "bg-violet-500/16 text-violet-700 dark:text-violet-300", stroke: "stroke-violet-500" },
+  teal: { dot: "bg-teal-500", soft: "bg-teal-500/14 text-teal-800 dark:text-teal-300", stroke: "stroke-teal-500" },
+  violet: { dot: "bg-violet-500", soft: "bg-violet-500/16 text-violet-800 dark:text-violet-300", stroke: "stroke-violet-500" },
   rose: { dot: "bg-rose-500", soft: "bg-rose-500/14 text-rose-700 dark:text-rose-300", stroke: "stroke-rose-500" },
   info: { dot: "bg-info", soft: "bg-info/14 text-info-foreground", stroke: "stroke-info" },
 };

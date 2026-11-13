@@ -1044,7 +1044,7 @@ function PostItem({
             </Stat>
             <Action
               active={reposted}
-              activeClass="text-emerald-600 dark:text-emerald-400"
+              activeClass="text-emerald-700 dark:text-emerald-400"
               icon={<Repeat2Icon />}
               label={reposted ? "Undo repost" : "Repost"}
               onClick={() => setReposted((r) => !r)}
@@ -1162,7 +1162,7 @@ function LikeAction({ liked, count, onClick }: { liked: boolean; count: number; 
       className={cn(
         "group/like flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-2 text-xs outline-none hover:bg-rose-500/10 hover:text-rose-600 focus-visible:ring-2 focus-visible:ring-ring dark:hover:text-rose-400",
         press,
-        liked && "text-rose-600 dark:text-rose-400",
+        liked && "text-rose-700 dark:text-rose-400",
       )}
       onClick={() => {
         if (!liked && !reduce) setPop((p) => p + 1);

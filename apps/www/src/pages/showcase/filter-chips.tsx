@@ -384,7 +384,7 @@ function ChipShell({
     tone === "include"
       ? "text-emerald-700 dark:text-emerald-400"
       : tone === "exclude"
-        ? "text-destructive"
+        ? "text-destructive-foreground"
         : "text-muted-foreground";
 
   return (

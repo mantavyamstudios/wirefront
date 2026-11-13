@@ -156,7 +156,7 @@ const press = "transition-[transform,box-shadow,background-color] duration-150 e
 const toolMeta: Record<RunToolKind, { icon: LucideIcon; text: string; bar: string }> = {
   db: { icon: DatabaseIcon, text: "text-teal-600 dark:text-teal-400", bar: "bg-teal-500" },
   search: { icon: SearchIcon, text: "text-info-foreground", bar: "bg-info" },
-  code: { icon: SquareTerminalIcon, text: "text-amber-600 dark:text-amber-400", bar: "bg-amber-500" },
+  code: { icon: SquareTerminalIcon, text: "text-amber-800 dark:text-amber-400", bar: "bg-amber-500" },
   doc: { icon: FileTextIcon, text: "text-orange-600 dark:text-orange-400", bar: "bg-orange-500" },
   send: { icon: SendIcon, text: "text-violet-600 dark:text-violet-400", bar: "bg-violet-500" },
   task: { icon: ListChecksIcon, text: "text-success-foreground", bar: "bg-success" },

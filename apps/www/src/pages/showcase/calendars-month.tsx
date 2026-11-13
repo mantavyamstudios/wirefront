@@ -31,11 +31,11 @@ const EVENTS: Event[] = [
 ];
 
 const TONE: Record<Event["tone"], string> = {
-  indigo: "bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30",
-  teal: "bg-teal-500/15 text-teal-700 dark:text-teal-300 border-teal-500/30",
-  amber: "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30",
+  indigo: "bg-indigo-500/15 text-indigo-800 dark:text-indigo-300 border-indigo-500/30",
+  teal: "bg-teal-500/15 text-teal-800 dark:text-teal-300 border-teal-500/30",
+  amber: "bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/30",
   rose: "bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30",
-  violet: "bg-violet-500/15 text-violet-700 dark:text-violet-300 border-violet-500/30",
+  violet: "bg-violet-500/15 text-violet-800 dark:text-violet-300 border-violet-500/30",
   sky: "bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30",
 };
 

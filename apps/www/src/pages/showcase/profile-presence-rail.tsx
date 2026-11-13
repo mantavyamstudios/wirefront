@@ -125,7 +125,7 @@ function Rail() {
           </Avatar>
           <div className="min-w-0 flex-1">
             <div className="text-sm">Mantavyam</div>
-            <div className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+            <div className="font-mono text-[10px] text-emerald-700 dark:text-emerald-400">
               online
             </div>
           </div>
@@ -215,9 +215,9 @@ function Stat({
   tone: "emerald" | "amber" | "rose";
 }) {
   const map: Record<typeof tone, string> = {
-    emerald: "text-emerald-600 dark:text-emerald-400",
-    amber: "text-amber-600 dark:text-amber-400",
-    rose: "text-rose-600 dark:text-rose-400",
+    emerald: "text-emerald-700 dark:text-emerald-400",
+    amber: "text-amber-800 dark:text-amber-400",
+    rose: "text-rose-700 dark:text-rose-400",
   };
   return (
     <div className="rounded-lg border border-border/60 bg-background px-3 py-2">

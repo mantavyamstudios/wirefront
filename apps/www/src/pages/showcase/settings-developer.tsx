@@ -148,7 +148,7 @@ const STATUS_STYLES: Record<
   experimental: {
     label: "Experimental",
     className:
-      "border-amber-500/25 bg-amber-500/10 text-amber-700 dark:text-amber-400",
+      "border-amber-500/25 bg-amber-500/10 text-amber-800 dark:text-amber-400",
   },
 };
 
@@ -243,7 +243,7 @@ export function SettingsDeveloper() {
                     {group.title}
                   </h3>
                   <span className="h-px flex-1 bg-border/60" />
-                  <span className="font-mono text-[10px] text-muted-foreground/70 tabular-nums">
+                  <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
                     {group.flags.length}
                   </span>
                 </div>
@@ -361,19 +361,19 @@ export function SettingsDeveloper() {
                   value: "production",
                   label: "Production",
                   host: "api.example.dev",
-                  tone: "text-emerald-600 dark:text-emerald-400",
+                  tone: "text-emerald-700 dark:text-emerald-400",
                 },
                 {
                   value: "staging",
                   label: "Staging",
                   host: "api.staging.example.dev",
-                  tone: "text-sky-600 dark:text-sky-400",
+                  tone: "text-sky-700 dark:text-sky-400",
                 },
                 {
                   value: "local",
                   label: "Local",
                   host: "localhost:4000",
-                  tone: "text-amber-600 dark:text-amber-400",
+                  tone: "text-amber-800 dark:text-amber-400",
                 },
               ] as const
             ).map((opt) => {
@@ -411,7 +411,7 @@ export function SettingsDeveloper() {
             })}
           </RadioGroup>
 
-          <p className="mt-3 font-mono text-[10px] text-muted-foreground/80 uppercase tracking-[0.2em]">
+          <p className="mt-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
             Admin-only — contact your workspace owner to change.
           </p>
         </section>

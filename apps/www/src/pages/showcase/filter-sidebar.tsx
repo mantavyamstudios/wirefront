@@ -271,7 +271,7 @@ export function FilterSidebar() {
                 <span className="font-mono text-foreground">
                   ${state.priceRange[0]} – ${state.priceRange[1]}
                 </span>
-                <span className="text-muted-foreground/60">$0 – $200</span>
+                <span className="text-muted-foreground">$0 – $200</span>
               </div>
             </div>
           </Section>
@@ -335,7 +335,7 @@ export function FilterSidebar() {
                 >
                   <Checkbox value={r.value} />
                   <span className="flex-1">
-                    <span className="font-mono text-amber-500">★</span>{" "}
+                    <span className="font-mono text-amber-800 dark:text-amber-400">★</span>{" "}
                     {r.label}
                   </span>
                   <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
@@ -552,7 +552,7 @@ function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="mt-1 flex items-center justify-between text-muted-foreground text-xs">
         <span className="inline-flex items-center gap-1">
-          <span className="font-mono text-amber-500">★</span>
+          <span className="font-mono text-amber-800 dark:text-amber-400">★</span>
           {product.rating.toFixed(1)}
         </span>
         <span className="flex items-center gap-1">
@@ -568,7 +568,7 @@ function ProductCard({ product }: { product: Product }) {
         </span>
       </div>
       {!product.inStock ? (
-        <p className="mt-1 font-mono text-[10px] text-destructive uppercase tracking-wider">
+        <p className="mt-1 font-mono text-[10px] text-destructive-foreground uppercase tracking-wider">
           Out of stock
         </p>
       ) : null}

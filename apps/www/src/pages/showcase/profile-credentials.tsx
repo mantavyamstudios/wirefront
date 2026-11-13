@@ -52,7 +52,7 @@ export function ProfileCredentials() {
 
         <div className="mt-6 rounded-xl border border-border/60 bg-emerald-500/[0.04] p-4">
           <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
-            <ShieldCheckIcon className="mt-0.5 size-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <ShieldCheckIcon className="mt-0.5 size-5 shrink-0 text-emerald-700 dark:text-emerald-400" />
             <div className="min-w-0 flex-1 basis-[calc(100%-2rem)] sm:basis-auto">
               <div className="text-sm">
                 Your account is protected with two-factor and a passkey.
@@ -117,7 +117,7 @@ export function ProfileCredentials() {
                   <div>{s.ip}</div>
                 </div>
                 {s.current ? (
-                  <span aria-label="Current session" className="px-3 font-mono text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em]">
+                  <span aria-label="Current session" className="px-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                     —
                   </span>
                 ) : (

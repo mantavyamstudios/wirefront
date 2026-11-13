@@ -108,7 +108,7 @@ export function ThreadsResolved() {
                 <div className="flex items-start gap-3 px-3 py-3 sm:items-center sm:px-4">
                   <span
                     aria-hidden
-                    className="flex size-7 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                    className="flex size-7 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                   >
                     <CheckCircle2Icon className="size-3.5" />
                   </span>
@@ -124,7 +124,7 @@ export function ThreadsResolved() {
                       <span className="truncate font-medium text-sm">
                         {t.name}
                       </span>
-                      <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
+                      <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                         {t.time}
                       </span>
                       {t.replyCount > 0 ? (

@@ -96,7 +96,7 @@ const hues: Record<CallHue, { wash: string; glowA: string; glowB: string; avatar
     wash: "bg-amber-50 dark:bg-amber-950/60",
     glowA: "bg-amber-300/55 dark:bg-amber-500/22",
     glowB: "bg-orange-200/70 dark:bg-orange-400/14",
-    avatar: "bg-amber-500/15 text-amber-700 dark:bg-amber-400/20 dark:text-amber-200",
+    avatar: "bg-amber-500/15 text-amber-800 dark:bg-amber-400/20 dark:text-amber-200",
     solid: "bg-amber-600 text-white dark:bg-amber-500",
   },
   emerald: {
@@ -117,7 +117,7 @@ const hues: Record<CallHue, { wash: string; glowA: string; glowB: string; avatar
     wash: "bg-violet-50 dark:bg-violet-950/60",
     glowA: "bg-violet-300/55 dark:bg-violet-500/22",
     glowB: "bg-fuchsia-200/70 dark:bg-fuchsia-400/14",
-    avatar: "bg-violet-500/15 text-violet-700 dark:bg-violet-400/20 dark:text-violet-200",
+    avatar: "bg-violet-500/15 text-violet-800 dark:bg-violet-400/20 dark:text-violet-200",
     solid: "bg-violet-600 text-white dark:bg-violet-500",
   },
   orange: {
@@ -131,14 +131,14 @@ const hues: Record<CallHue, { wash: string; glowA: string; glowB: string; avatar
     wash: "bg-teal-50 dark:bg-teal-950/60",
     glowA: "bg-teal-300/55 dark:bg-teal-500/22",
     glowB: "bg-cyan-200/70 dark:bg-cyan-400/14",
-    avatar: "bg-teal-500/15 text-teal-700 dark:bg-teal-400/20 dark:text-teal-200",
+    avatar: "bg-teal-500/15 text-teal-800 dark:bg-teal-400/20 dark:text-teal-200",
     solid: "bg-teal-600 text-white dark:bg-teal-500",
   },
   indigo: {
     wash: "bg-indigo-50 dark:bg-indigo-950/60",
     glowA: "bg-indigo-300/55 dark:bg-indigo-500/22",
     glowB: "bg-violet-200/70 dark:bg-violet-400/14",
-    avatar: "bg-indigo-500/15 text-indigo-700 dark:bg-indigo-400/20 dark:text-indigo-200",
+    avatar: "bg-indigo-500/15 text-indigo-800 dark:bg-indigo-400/20 dark:text-indigo-200",
     solid: "bg-indigo-600 text-white dark:bg-indigo-500",
   },
 };
@@ -843,7 +843,7 @@ export function VideoCall({
                     <span className="truncate text-muted-foreground text-xs">{p.title}</span>
                   </div>
                   <span className="flex items-center gap-1.5 text-muted-foreground [&_svg]:size-4">
-                    {p.hand && <HandIcon aria-label="Hand raised" className="text-amber-500 dark:text-amber-400" />}
+                    {p.hand && <HandIcon aria-label="Hand raised" className="text-amber-800 dark:text-amber-400" />}
                     {p.cameraOff && <VideoOffIcon aria-label="Camera off" />}
                     {p.muted ? (
                       <MicOffIcon aria-label="Muted" className="text-destructive-foreground" />

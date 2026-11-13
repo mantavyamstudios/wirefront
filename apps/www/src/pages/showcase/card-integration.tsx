@@ -138,7 +138,7 @@ function IntegrationCard({ item }: { item: Integration }) {
           ) : null}
           <div className="mt-2 inline-flex items-center gap-1 font-mono text-[11px] text-muted-foreground">
             {status === "ok" ? (
-              <CheckCircle2Icon className="size-3 text-emerald-600" />
+              <CheckCircle2Icon className="size-3 text-emerald-700 dark:text-emerald-400" />
             ) : null}
             {item.lastSync}
           </div>

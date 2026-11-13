@@ -128,9 +128,9 @@ export interface AssistantStartProps {
 
 const tileTone: Record<AssistantTone, string> = {
   orange: "bg-orange-500/12 text-orange-700 dark:bg-orange-400/14 dark:text-orange-300",
-  teal: "bg-teal-500/12 text-teal-700 dark:bg-teal-400/14 dark:text-teal-300",
-  violet: "bg-violet-500/12 text-violet-700 dark:bg-violet-400/14 dark:text-violet-300",
-  amber: "bg-amber-500/12 text-amber-700 dark:bg-amber-400/14 dark:text-amber-300",
+  teal: "bg-teal-500/12 text-teal-800 dark:bg-teal-400/14 dark:text-teal-300",
+  violet: "bg-violet-500/12 text-violet-800 dark:bg-violet-400/14 dark:text-violet-300",
+  amber: "bg-amber-500/12 text-amber-800 dark:bg-amber-400/14 dark:text-amber-300",
   info: "bg-info/12 text-info-foreground",
   success: "bg-success/12 text-success-foreground",
   warning: "bg-warning/16 text-warning-foreground",
@@ -471,7 +471,7 @@ function PromptBox({
           value={value}
         />
         {!value && (
-          <div aria-hidden className="pointer-events-none absolute inset-x-4 top-3.5 overflow-hidden text-muted-foreground/72 text-sm/6">
+          <div aria-hidden className="pointer-events-none absolute inset-x-4 top-3.5 overflow-hidden text-muted-foreground text-sm/6">
             <AnimatePresence initial={false} mode="wait">
               <motion.span
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -725,7 +725,7 @@ function SidebarBody({
 
         <div className="flex items-center gap-2.5 border-t p-3">
           <Avatar className="size-8">
-            <AvatarFallback className="bg-teal-500/12 text-teal-700 dark:bg-teal-400/14 dark:text-teal-300 text-xs">{userInitials}</AvatarFallback>
+            <AvatarFallback className="bg-teal-500/12 text-teal-800 dark:bg-teal-400/14 dark:text-teal-300 text-xs">{userInitials}</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
             <div className="truncate font-medium">{userName}</div>

@@ -165,7 +165,7 @@ export function SettingsSecurity() {
               <p className="mt-1 text-muted-foreground text-xs">
                 Authenticator app · paired with 1Password.
               </p>
-              <div className="mt-2 inline-flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground/80 uppercase tracking-[0.25em]">
+              <div className="mt-2 inline-flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 <ClockIcon className="size-2.5" />
                 Last verified 2 hours ago
               </div>
@@ -208,7 +208,7 @@ export function SettingsSecurity() {
                     {p.meta}
                   </div>
                 </div>
-                <div className="hidden font-mono text-[10px] text-muted-foreground/80 uppercase tracking-[0.2em] sm:block">
+                <div className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:block">
                   {p.lastUsed}
                 </div>
                 <button
@@ -232,7 +232,7 @@ export function SettingsSecurity() {
                 {SESSIONS.length} signed-in devices.
               </p>
             </div>
-            <span className="hidden font-mono text-[10px] text-muted-foreground/80 uppercase tracking-[0.25em] sm:inline">
+            <span className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:inline">
               IP · last active
             </span>
           </header>
@@ -277,12 +277,12 @@ export function SettingsSecurity() {
                   <span className="font-mono text-[11px] text-muted-foreground">
                     {s.ip}
                   </span>
-                  <span className="mt-0.5 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
+                  <span className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                     {s.lastActive}
                   </span>
                 </div>
                 {s.current ? (
-                  <span className="shrink-0 text-right font-mono text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em] sm:w-[68px]">
+                  <span className="shrink-0 text-right font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:w-[68px]">
                     Current
                   </span>
                 ) : (
@@ -308,7 +308,7 @@ export function SettingsSecurity() {
               size="sm"
               variant="outline"
               type="button"
-              className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive max-sm:w-full"
+              className="border-destructive/40 text-destructive-foreground hover:bg-destructive/10 hover:text-destructive max-sm:w-full"
             >
               <LogOutIcon />
               Sign out of all other sessions
@@ -360,7 +360,7 @@ export function SettingsSecurity() {
                   key={code}
                   className="flex items-center gap-2 rounded-md border border-border/50 bg-background/60 px-2.5 py-2 sm:gap-3 sm:px-3"
                 >
-                  <span className="font-mono text-[10px] text-muted-foreground/60 tabular-nums">
+                  <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="font-mono text-[12px] tracking-wide sm:text-[13px] sm:tracking-wider">
@@ -380,7 +380,7 @@ export function SettingsSecurity() {
 
           <div className="mt-5 flex flex-col gap-3 rounded-lg border border-amber-500/30 bg-amber-500/[0.06] p-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-2.5">
-              <AlertTriangleIcon className="mt-0.5 size-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
+              <AlertTriangleIcon className="mt-0.5 size-3.5 shrink-0 text-amber-800 dark:text-amber-400" />
               <p className="text-amber-800 text-xs leading-relaxed dark:text-amber-200/90">
                 Regenerating invalidates all 8 codes above. Store the new set somewhere safe.
               </p>

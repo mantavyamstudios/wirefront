@@ -22,6 +22,7 @@ function Calendar({
   buttonVariant = "ghost",
   locale,
   formatters,
+  labels,
   components,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
@@ -44,6 +45,13 @@ function Calendar({
         formatMonthDropdown: (date) =>
           date.toLocaleString(locale?.code, { month: "short" }),
         ...formatters,
+      }}
+      labels={{
+        // The button shows the day number, so its name starts with it (WCAG 2.5.3,
+        // label in name); react-day-picker's default ("Monday, April 14th") doesn't.
+        labelDayButton: (date, modifiers) =>
+          `${modifiers.today ? "Today, " : ""}${date.getDate()}, ${date.toLocaleDateString(locale?.code, { weekday: "long", month: "long", year: "numeric" })}${modifiers.selected ? ", selected" : ""}`,
+        ...labels,
       }}
       classNames={{
         root: cn("w-fit", defaultClassNames.root),

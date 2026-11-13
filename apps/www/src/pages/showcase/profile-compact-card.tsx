@@ -76,8 +76,8 @@ const STATUS_DOT: Record<Member["status"], string> = {
 };
 
 const PERMISSION_TONE: Record<Member["permission"], string> = {
-  Owner: "bg-violet-500/15 text-violet-700 dark:text-violet-300",
-  Admin: "bg-indigo-500/15 text-indigo-700 dark:text-indigo-300",
+  Owner: "bg-violet-500/15 text-violet-800 dark:text-violet-300",
+  Admin: "bg-indigo-500/15 text-indigo-800 dark:text-indigo-300",
   Member: "bg-foreground/[0.06] text-foreground",
   Viewer: "bg-muted text-muted-foreground",
 };

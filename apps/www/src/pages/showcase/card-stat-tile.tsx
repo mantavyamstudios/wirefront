@@ -83,7 +83,7 @@ function StatTile({ stat }: { stat: Stat }) {
         <div
           className={
             "mt-3 inline-flex items-center gap-1 font-mono text-xs " +
-            (positive ? "text-emerald-600" : "text-destructive")
+            (positive ? "text-emerald-700 dark:text-emerald-400" : "text-destructive-foreground")
           }
         >
           {positive ? (

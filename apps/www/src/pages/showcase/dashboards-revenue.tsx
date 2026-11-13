@@ -231,8 +231,8 @@ function Stat({
 }) {
   const t =
     tone === "ok"
-      ? "text-emerald-600 dark:text-emerald-400"
-      : "text-amber-600 dark:text-amber-400";
+      ? "text-emerald-700 dark:text-emerald-400"
+      : "text-amber-800 dark:text-amber-400";
   return (
     <div>
       <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
@@ -248,8 +248,8 @@ function Stat({
 function Delta({ value, small }: { value: number; small?: boolean }) {
   const positive = value >= 0;
   const cls = positive
-    ? "text-emerald-600 dark:text-emerald-400"
-    : "text-rose-600 dark:text-rose-400";
+    ? "text-emerald-700 dark:text-emerald-400"
+    : "text-rose-700 dark:text-rose-400";
   return (
     <span className={`inline-flex items-baseline gap-0.5 ${cls}`}>
       {positive ? (

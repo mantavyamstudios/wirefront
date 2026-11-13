@@ -55,8 +55,8 @@ const INVOICES: Invoice[] = [
 
 const STATUS_STYLES: Record<Status, string> = {
   paid: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
-  open: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
-  overdue: "bg-destructive/10 text-destructive border-destructive/20",
+  open: "bg-amber-500/10 text-amber-800 dark:text-amber-400 border-amber-500/20",
+  overdue: "bg-destructive/10 text-destructive-foreground border-destructive/20",
   void: "bg-muted text-muted-foreground border-border",
 };
 
@@ -117,7 +117,7 @@ function InvoiceCard({ invoice }: { invoice: Invoice }) {
           </div>
           <div className="text-muted-foreground text-sm sm:truncate">
             <span className="block truncate sm:inline">{invoice.customer}</span>
-            <span className="mx-1.5 text-muted-foreground/50 max-sm:hidden">·</span>
+            <span className="mx-1.5 text-muted-foreground max-sm:hidden">·</span>
             <span className="block text-xs sm:inline sm:text-sm">{invoice.due}</span>
           </div>
         </div>

@@ -191,7 +191,7 @@ function RailContent({
           <li>
             <button
               type="button"
-              className={`${ROW} gap-2 text-muted-foreground/70 text-xs hover:bg-foreground/[0.03] hover:text-foreground`}
+              className={`${ROW} gap-2 text-muted-foreground text-xs hover:bg-foreground/[0.03] hover:text-foreground`}
             >
               <PlusIcon className="size-3.5" />
               New project
@@ -212,7 +212,7 @@ function RailContent({
                   <HashIcon className="size-3.5 opacity-60" />
                   {t.name}
                 </span>
-                <span className="font-mono text-[10px] text-muted-foreground/60">
+                <span className="font-mono text-[10px] text-muted-foreground">
                   {t.count}
                 </span>
               </button>
@@ -247,7 +247,7 @@ function RailContent({
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="mt-5 mb-1 flex items-center justify-between px-2">
-      <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em]">
+      <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
         {children}
       </span>
     </div>

@@ -86,8 +86,8 @@ const RELEASES: Release[] = [
 
 const TONE_BG: Record<string, string> = {
   emerald: "bg-emerald-500/12 text-emerald-700 dark:text-emerald-400",
-  indigo: "bg-indigo-500/12 text-indigo-700 dark:text-indigo-400",
-  amber: "bg-amber-500/12 text-amber-700 dark:text-amber-400",
+  indigo: "bg-indigo-500/12 text-indigo-800 dark:text-indigo-400",
+  amber: "bg-amber-500/12 text-amber-800 dark:text-amber-400",
   rose: "bg-rose-500/12 text-rose-700 dark:text-rose-400",
 };
 

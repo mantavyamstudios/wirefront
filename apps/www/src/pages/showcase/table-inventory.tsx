@@ -37,8 +37,8 @@ const PRODUCTS: Product[] = [
 ];
 
 function stockTone(p: Product): { label: string; cls: string; barCls: string } {
-  if (p.stock === 0) return { label: "Out of stock", cls: "border-destructive/30 text-destructive", barCls: "bg-destructive" };
-  if (p.stock < 10) return { label: "Low stock", cls: "border-amber-500/30 text-amber-700 dark:text-amber-400", barCls: "bg-amber-500" };
+  if (p.stock === 0) return { label: "Out of stock", cls: "border-destructive/30 text-destructive-foreground", barCls: "bg-destructive" };
+  if (p.stock < 10) return { label: "Low stock", cls: "border-amber-500/30 text-amber-800 dark:text-amber-400", barCls: "bg-amber-500" };
   return { label: "In stock", cls: "border-emerald-500/30 text-emerald-700 dark:text-emerald-400", barCls: "bg-emerald-500" };
 }
 
@@ -152,7 +152,7 @@ function StockMeter({
       </div>
       <span className="font-mono text-xs tabular-nums">
         {p.stock}
-        <span className="text-muted-foreground/60">/{p.capacity}</span>
+        <span className="text-muted-foreground">/{p.capacity}</span>
       </span>
       <Badge variant="outline" className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", tone.cls)}>
         {tone.label}

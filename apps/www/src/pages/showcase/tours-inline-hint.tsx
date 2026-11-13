@@ -22,7 +22,7 @@ export function ToursInlineHint() {
         >
           <div className="rounded-xl border border-border/70 bg-background p-4 shadow-xl backdrop-blur">
             <div className="flex items-start gap-3">
-              <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
+              <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-full bg-amber-500/15 text-amber-800 dark:text-amber-400">
                 <LightbulbIcon className="size-3.5" />
               </span>
               <div className="min-w-0 flex-1">

@@ -365,7 +365,7 @@ function QueueRow({
       <button
         aria-label={`Reorder ${track.title}. Use arrow keys to move.`}
         className={cn(
-          "flex h-12 w-7 shrink-0 cursor-grab touch-none items-center justify-center rounded-lg text-muted-foreground/60 hover:text-foreground active:cursor-grabbing",
+          "flex h-12 w-7 shrink-0 cursor-grab touch-none items-center justify-center rounded-lg text-muted-foreground hover:text-foreground active:cursor-grabbing",
           ring,
         )}
         onKeyDown={(e) => {

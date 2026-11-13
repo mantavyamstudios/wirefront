@@ -350,8 +350,8 @@ function MergeReadiness({
             <div
               className={`flex size-9 items-center justify-center rounded-full ${
                 ready
-                  ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                  : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                  ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                  : "bg-amber-500/15 text-amber-800 dark:text-amber-400"
               }`}
             >
               {ready ? (
@@ -441,7 +441,7 @@ function Pill({
       ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
       : tone === "fail"
         ? "bg-rose-500/10 text-rose-700 dark:text-rose-400"
-        : "bg-amber-500/10 text-amber-700 dark:text-amber-400";
+        : "bg-amber-500/10 text-amber-800 dark:text-amber-400";
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] ${cls}`}
@@ -480,10 +480,10 @@ function Description({
             <span className="inline-flex items-center gap-1">
               <FileDiffIcon className="size-3" />8 files
             </span>
-            <span className="text-emerald-600 dark:text-emerald-400">
+            <span className="text-emerald-700 dark:text-emerald-400">
               +{linesAdded}
             </span>
-            <span className="text-rose-600 dark:text-rose-400">
+            <span className="text-rose-700 dark:text-rose-400">
               −{linesRemoved}
             </span>
           </div>
@@ -500,7 +500,7 @@ function ChecksPanel() {
     <details className="group rounded-xl border border-border/60 bg-background/40">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4">
         <div className="flex items-center gap-3">
-          <div className="flex size-7 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+          <div className="flex size-7 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
             <CheckIcon className="size-4" />
           </div>
           <div>
@@ -567,7 +567,7 @@ function TimelineIcon({ item }: { item: TimelineItem }) {
       ) : item.state === "changes" ? (
         <XIcon className="size-3 text-rose-500" />
       ) : (
-        <CircleIcon className="size-3 text-amber-500" />
+        <CircleIcon className="size-3 text-amber-800 dark:text-amber-400" />
       );
     case "ci":
       return <PlayIcon className="size-3 text-foreground/70" />;
@@ -637,7 +637,7 @@ function TimelineBody({ item }: { item: TimelineItem }) {
                           : "text-muted-foreground"
                     }
                   >
-                    <span className="mr-3 inline-block w-4 select-none text-muted-foreground/60">
+                    <span className="mr-3 inline-block w-4 select-none text-muted-foreground">
                       {l.kind === "add" ? "+" : l.kind === "del" ? "−" : " "}
                     </span>
                     {l.text}
@@ -689,7 +689,7 @@ function TimelineBody({ item }: { item: TimelineItem }) {
           <span className="text-muted-foreground">in {item.duration} ·</span>{" "}
           <a
             href={`https://${item.url}`}
-            className="font-mono text-[11px] text-sky-600 hover:underline dark:text-sky-400"
+            className="font-mono text-[11px] text-sky-700 hover:underline dark:text-sky-400"
           >
             {item.url}
           </a>
@@ -743,10 +743,10 @@ function SidebarSection({
 function ReviewerCard({ reviewer }: { reviewer: Reviewer }) {
   const tone =
     reviewer.state === "approved"
-      ? "text-emerald-600 dark:text-emerald-400"
+      ? "text-emerald-700 dark:text-emerald-400"
       : reviewer.state === "changes"
-        ? "text-rose-600 dark:text-rose-400"
-        : "text-amber-600 dark:text-amber-400";
+        ? "text-rose-700 dark:text-rose-400"
+        : "text-amber-800 dark:text-amber-400";
   const Icon =
     reviewer.state === "approved"
       ? CheckIcon
@@ -783,9 +783,9 @@ function Label({
 }) {
   const cls =
     tone === "violet"
-      ? "bg-violet-500/15 text-violet-700 dark:text-violet-300"
+      ? "bg-violet-500/15 text-violet-800 dark:text-violet-300"
       : tone === "amber"
-        ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
+        ? "bg-amber-500/15 text-amber-800 dark:text-amber-300"
         : "bg-sky-500/15 text-sky-700 dark:text-sky-300";
   return (
     <span

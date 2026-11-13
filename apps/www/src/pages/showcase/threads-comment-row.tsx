@@ -119,12 +119,12 @@ function CommentRow({ c }: { c: (typeof COMMENTS)[number] }) {
             <div className="flex items-center gap-2">
               <span className="font-medium text-sm">{c.name}</span>
               {c.edited ? (
-                <span className="font-mono text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em]">
+                <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                   edited
                 </span>
               ) : null}
             </div>
-            <div className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
+            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
               {c.time}
             </div>
           </div>
@@ -173,7 +173,7 @@ function CommentRow({ c }: { c: (typeof COMMENTS)[number] }) {
         >
           <SmileIcon className="size-3" />
         </button>
-        <span className="ml-auto inline-flex items-center gap-1 font-mono text-[11px] text-muted-foreground/80 uppercase tracking-[0.15em]">
+        <span className="ml-auto inline-flex items-center gap-1 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.15em]">
           {c.replyCount > 0 ? (
             <button
               type="button"

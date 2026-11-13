@@ -169,7 +169,7 @@ export function DashboardsSupport() {
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <AlertTriangleIcon className="size-4 text-rose-500" />
-                <span className="font-mono text-[10px] text-rose-600 uppercase tracking-[0.3em] dark:text-rose-400">
+                <span className="font-mono text-[10px] text-rose-700 uppercase tracking-[0.3em] dark:text-rose-400">
                   SLA breaching
                 </span>
                 <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
@@ -191,7 +191,7 @@ export function DashboardsSupport() {
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="font-heading text-2xl tabular-nums">9m</span>
-                <span className="font-mono text-emerald-600 text-xs dark:text-emerald-400">
+                <span className="font-mono text-emerald-700 text-xs dark:text-emerald-400">
                   ↓ 38% vs week
                 </span>
               </div>
@@ -248,7 +248,7 @@ export function DashboardsSupport() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-mono text-sm text-amber-500 tabular-nums">
+                    <div className="font-mono text-sm text-amber-800 tabular-nums dark:text-amber-400">
                       ★ {a.csat.toFixed(1)}
                     </div>
                     <div className="font-mono text-[10px] text-muted-foreground">
@@ -391,7 +391,7 @@ function PriorityChip({ p }: { p: "p0" | "p1" | "p2" }) {
     p === "p0"
       ? "bg-rose-500/15 text-rose-700 dark:text-rose-400"
       : p === "p1"
-        ? "bg-amber-500/15 text-amber-700 dark:text-amber-400"
+        ? "bg-amber-500/15 text-amber-800 dark:text-amber-400"
         : "bg-sky-500/15 text-sky-700 dark:text-sky-400";
   return (
     <span

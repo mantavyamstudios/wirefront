@@ -128,7 +128,7 @@ function Thread({
 
       <div className="mt-1 flex items-center gap-2 rounded-md bg-amber-500/[0.06] px-2.5 py-1 ring-1 ring-amber-500/20 lg:-ml-6 lg:rounded-l-none">
         <span aria-hidden className="size-1.5 rounded-full bg-amber-500" />
-        <span className="font-mono text-[10px] text-amber-700 uppercase tracking-[0.25em] dark:text-amber-400">
+        <span className="font-mono text-[10px] text-amber-800 uppercase tracking-[0.25em] dark:text-amber-400">
           Anchored
         </span>
       </div>
@@ -143,7 +143,7 @@ function Thread({
               {c.initials}
             </div>
             <span className="font-medium text-sm">{c.name}</span>
-            <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
+            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
               {c.time}
             </span>
           </div>
@@ -154,14 +154,14 @@ function Thread({
             <button
               type="button"
               aria-label={`React to ${c.name}`}
-              className="inline-flex min-h-8 items-center gap-1 rounded px-2 font-mono text-[11px] text-muted-foreground/70 transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:min-h-10"
+              className="inline-flex min-h-8 items-center gap-1 rounded px-2 font-mono text-[11px] text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:min-h-10"
             >
               <SmileIcon aria-hidden className="size-3" />
               React
             </button>
             <button
               type="button"
-              className="min-h-8 rounded px-2 font-mono text-[11px] text-muted-foreground/70 transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:min-h-10"
+              className="min-h-8 rounded px-2 font-mono text-[11px] text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:min-h-10"
             >
               Reply
             </button>
@@ -188,7 +188,7 @@ function Thread({
           className="h-9 w-full bg-transparent px-1 text-base outline-none placeholder:text-muted-foreground sm:text-sm"
         />
         <div className="flex items-center justify-between gap-2 border-border/40 border-t pt-2">
-          <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em] pointer-coarse:invisible">
+          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] pointer-coarse:invisible">
             ⌘ + ↵ to send
           </span>
           <Button size="sm" type="submit" disabled={!draft.trim()}>
@@ -199,7 +199,7 @@ function Thread({
 
       <button
         type="button"
-        className="min-h-8 rounded px-1.5 font-mono text-[11px] text-muted-foreground/70 transition-colors hover:text-foreground pointer-coarse:min-h-10"
+        className="min-h-8 rounded px-1.5 font-mono text-[11px] text-muted-foreground transition-colors hover:text-foreground pointer-coarse:min-h-10"
       >
         Resolve thread
       </button>

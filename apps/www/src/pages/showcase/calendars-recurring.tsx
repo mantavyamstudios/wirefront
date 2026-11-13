@@ -780,11 +780,11 @@ function Preview({
           <span className="text-muted-foreground">RRULE:</span>
           {tokens.map((t, i) => (
             <span key={i}>
-              {i > 0 && <span className="text-muted-foreground/60">;</span>}
+              {i > 0 && <span className="text-muted-foreground">;</span>}
               <span className="text-violet-600 dark:text-violet-400">
                 {t.k}
               </span>
-              <span className="text-muted-foreground/70">=</span>
+              <span className="text-muted-foreground">=</span>
               <span className="text-foreground">{t.v}</span>
             </span>
           ))}
@@ -823,7 +823,7 @@ function Preview({
                   className="flex items-baseline justify-between px-3 py-1.5 font-mono text-[12px]"
                 >
                   <span className="flex items-baseline gap-2">
-                    <span className="w-5 text-muted-foreground/60 tabular-nums">
+                    <span className="w-5 text-muted-foreground tabular-nums">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="text-foreground">

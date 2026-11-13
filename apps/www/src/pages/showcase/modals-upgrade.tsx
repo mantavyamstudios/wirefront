@@ -95,7 +95,7 @@ export function ModalsUpgrade() {
                       key={f}
                       className="flex items-center gap-2 text-foreground/85 text-sm"
                     >
-                      <CheckIcon className="size-3.5 text-emerald-600" />
+                      <CheckIcon className="size-3.5 text-emerald-700 dark:text-emerald-400" />
                       {f}
                     </li>
                   ))}

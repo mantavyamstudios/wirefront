@@ -107,8 +107,8 @@ export interface TeamChatProps {
 const avatarTone: Record<ChatTone, string> = {
   blue: "bg-blue-500/14 text-blue-700 dark:text-blue-300",
   orange: "bg-orange-500/14 text-orange-700 dark:text-orange-300",
-  teal: "bg-teal-500/16 text-teal-700 dark:text-teal-300",
-  violet: "bg-violet-500/16 text-violet-700 dark:text-violet-300",
+  teal: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
+  violet: "bg-violet-500/16 text-violet-800 dark:text-violet-300",
   rose: "bg-rose-500/14 text-rose-700 dark:text-rose-300",
   amber: "bg-amber-500/18 text-amber-800 dark:text-amber-300",
   emerald: "bg-emerald-500/16 text-emerald-700 dark:text-emerald-300",
@@ -773,7 +773,7 @@ function MessageRow({
         </p>
         {full.file && (
           <div className="mt-2 flex w-full max-w-sm items-center gap-3 rounded-xl border bg-card p-2.5 shadow-xs/5">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-rose-500/12 text-rose-600 dark:text-rose-400">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-rose-500/12 text-rose-700 dark:text-rose-400">
               <FileTextIcon className="size-5" />
             </span>
             <span className="min-w-0 flex-1 leading-tight">

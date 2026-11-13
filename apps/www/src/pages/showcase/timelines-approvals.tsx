@@ -128,13 +128,13 @@ export function TimelinesApprovals() {
                     className={
                       "z-10 grid size-[32px] place-items-center rounded-full ring-4 ring-background " +
                       (e.state === "approved"
-                        ? "bg-emerald-500/15 text-emerald-600"
+                        ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                         : e.state === "changes"
-                          ? "bg-rose-500/15 text-rose-600"
+                          ? "bg-rose-500/15 text-rose-700 dark:text-rose-400"
                           : e.state === "failing"
-                            ? "bg-rose-500/15 text-rose-600"
+                            ? "bg-rose-500/15 text-rose-700 dark:text-rose-400"
                             : e.state === "passed"
-                              ? "bg-emerald-500/15 text-emerald-600"
+                              ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                               : "bg-foreground/[0.06] text-foreground")
                     }
                   >
@@ -257,8 +257,8 @@ export function TimelinesApprovals() {
 
 function StateGlyph({ state }: { state: State }) {
   if (state === "approved")
-    return <CheckCircle2Icon className="size-4 text-emerald-600 dark:text-emerald-400" />;
+    return <CheckCircle2Icon className="size-4 text-emerald-700 dark:text-emerald-400" />;
   if (state === "changes")
-    return <XCircleIcon className="size-4 text-rose-600 dark:text-rose-400" />;
+    return <XCircleIcon className="size-4 text-rose-700 dark:text-rose-400" />;
   return <CircleIcon className="size-4 opacity-30" />;
 }

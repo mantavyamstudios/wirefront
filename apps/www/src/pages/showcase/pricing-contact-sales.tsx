@@ -153,7 +153,7 @@ function FormCard() {
 
 function Logo({ children }: { children: React.ReactNode }) {
   return (
-    <span className="font-medium text-muted-foreground/60 text-sm tracking-wide">
+    <span className="font-medium text-muted-foreground text-sm tracking-wide">
       {children}
     </span>
   );

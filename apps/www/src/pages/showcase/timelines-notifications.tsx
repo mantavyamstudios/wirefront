@@ -223,7 +223,7 @@ function Item({ n }: { n: Notif }) {
             <span className="text-foreground/85">{n.context}</span>
           ) : null}
         </div>
-        <div className="mt-0.5 font-mono text-[10px] text-muted-foreground/80 uppercase tracking-[0.2em]">
+        <div className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
           {n.time}
         </div>
       </div>

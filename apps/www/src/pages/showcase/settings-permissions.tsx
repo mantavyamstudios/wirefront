@@ -32,28 +32,28 @@ const ROLES: RoleDef[] = [
     name: "Owner",
     members: 2,
     description: "Full control, including billing and deletion.",
-    tone: "bg-rose-500/15 text-rose-600 dark:text-rose-300",
+    tone: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
   },
   {
     id: "admin",
     name: "Admin",
     members: 6,
     description: "Manage members, settings, and integrations.",
-    tone: "bg-amber-500/15 text-amber-600 dark:text-amber-300",
+    tone: "bg-amber-500/15 text-amber-800 dark:text-amber-300",
   },
   {
     id: "editor",
     name: "Editor",
     members: 24,
     description: "Create and edit content. No member or billing access.",
-    tone: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-300",
+    tone: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
   },
   {
     id: "viewer",
     name: "Viewer",
     members: 41,
     description: "Read-only access to documents and dashboards.",
-    tone: "bg-sky-500/15 text-sky-600 dark:text-sky-300",
+    tone: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
   },
   {
     id: "guest",
@@ -332,7 +332,7 @@ export function SettingsPermissions() {
                               >
                                 {role.name}
                               </span>
-                              <span className="font-mono text-[10px] tabular-nums text-muted-foreground/70">
+                              <span className="font-mono text-[10px] tabular-nums text-muted-foreground">
                                 {role.members}
                               </span>
                             </button>
@@ -454,8 +454,9 @@ function PermCell({ state }: { state: CellState }) {
   if (state === "yes") {
     return (
       <span
-        className="inline-flex size-5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+        className="inline-flex size-5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
         aria-label="Allowed"
+        role="img"
       >
         <CheckIcon className="size-3" strokeWidth={3} />
       </span>
@@ -464,8 +465,9 @@ function PermCell({ state }: { state: CellState }) {
   if (state === "na") {
     return (
       <span
-        className="inline-flex size-5 items-center justify-center rounded-full bg-foreground/[0.04] text-muted-foreground/60"
+        className="inline-flex size-5 items-center justify-center rounded-full bg-foreground/[0.04] text-muted-foreground"
         aria-label="Not applicable"
+        role="img"
         title="Not applicable for this role"
       >
         <LockIcon className="size-2.5" />
@@ -474,8 +476,9 @@ function PermCell({ state }: { state: CellState }) {
   }
   return (
     <span
-      className="inline-flex size-5 items-center justify-center text-muted-foreground/40"
+      className="inline-flex size-5 items-center justify-center text-muted-foreground"
       aria-label="Not allowed"
+      role="img"
     >
       <MinusIcon className="size-3.5" />
     </span>

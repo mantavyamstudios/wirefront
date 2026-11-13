@@ -93,7 +93,7 @@ export function TableOrders() {
             {selectedCount > 0 ? (
               <div className="hidden items-center gap-2 rounded-md border bg-card px-2.5 py-1.5 shadow-xs/5 sm:flex">
                 <span className="text-sm">{selectedCount} selected</span>
-                <span className="text-muted-foreground/40">·</span>
+                <span className="text-muted-foreground">·</span>
                 {bulkActions}
               </div>
             ) : null}
@@ -210,7 +210,7 @@ function StageLabel({ stage }: { stage: Stage }) {
 function StageTrack({ stage }: { stage: Stage }) {
   const idx = stageIndex(stage);
   return (
-    <div className="flex items-center gap-1.5" aria-label={`Stage: ${stageLabel(stage)}`}>
+    <div className="flex items-center gap-1.5" aria-label={`Stage: ${stageLabel(stage)}`} role="img">
       {STAGES.map((s, i) => {
         const Icon = s.icon;
         const reached = i <= idx;
@@ -223,10 +223,9 @@ function StageTrack({ stage }: { stage: Stage }) {
                 (current
                   ? "border-primary bg-primary text-primary-foreground"
                   : reached
-                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                    : "border-border bg-muted text-muted-foreground/60")
+                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                    : "border-border bg-muted text-muted-foreground")
               }
-              aria-label={s.label}
               title={s.label}
             >
               <Icon className="size-3" />

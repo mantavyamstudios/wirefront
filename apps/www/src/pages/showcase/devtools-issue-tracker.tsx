@@ -92,8 +92,8 @@ export interface IssueTrackerProps {
 const avatarTone: Record<IssueTone, string> = {
   blue: "bg-blue-500/14 text-blue-700 dark:text-blue-300",
   orange: "bg-orange-500/14 text-orange-700 dark:text-orange-300",
-  teal: "bg-teal-500/16 text-teal-700 dark:text-teal-300",
-  violet: "bg-violet-500/16 text-violet-700 dark:text-violet-300",
+  teal: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
+  violet: "bg-violet-500/16 text-violet-800 dark:text-violet-300",
   rose: "bg-rose-500/14 text-rose-700 dark:text-rose-300",
   amber: "bg-amber-500/18 text-amber-800 dark:text-amber-300",
   emerald: "bg-emerald-500/16 text-emerald-700 dark:text-emerald-300",
@@ -164,7 +164,7 @@ function StatusIcon({ status, className }: { status: IssueStatus; className?: st
     );
   if (status === "in_progress")
     return (
-      <svg aria-hidden className={cn(c, "text-amber-500")} viewBox="0 0 14 14">
+      <svg aria-hidden className={cn(c, "text-amber-800 dark:text-amber-400")} viewBox="0 0 14 14">
         <circle cx="7" cy="7" fill="none" r="5.5" stroke="currentColor" strokeWidth="1.5" />
         <path d="M7 3.5 A3.5 3.5 0 0 1 7 10.5 Z" fill="currentColor" />
       </svg>

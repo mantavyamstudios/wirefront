@@ -413,8 +413,8 @@ function highlight(code: string): ReactNode[] {
       out.push(<span className="text-muted-foreground italic" key={k++}>{tok}</span>);
     else if (m[2]) out.push(<span className="text-emerald-700 dark:text-emerald-300" key={k++}>{tok}</span>);
     else if (m[3]) out.push(<span className="text-sky-700 dark:text-sky-300" key={k++}>{tok}</span>);
-    else if (m[4]) out.push(<span className="text-amber-700 dark:text-amber-300" key={k++}>{tok}</span>);
-    else if (m[5] && KEYWORDS.test(tok)) out.push(<span className="text-violet-700 dark:text-violet-300" key={k++}>{tok}</span>);
+    else if (m[4]) out.push(<span className="text-amber-800 dark:text-amber-300" key={k++}>{tok}</span>);
+    else if (m[5] && KEYWORDS.test(tok)) out.push(<span className="text-violet-800 dark:text-violet-300" key={k++}>{tok}</span>);
     else if (m[5] && /^[A-Z]/.test(tok)) out.push(<span className="text-sky-700 dark:text-sky-300" key={k++}>{tok}</span>);
     else if (m[5] && code[re.lastIndex] === "(") out.push(<span className="text-blue-700 dark:text-blue-300" key={k++}>{tok}</span>);
     else out.push(tok);
@@ -823,7 +823,7 @@ export function DocsSite({
               type="button"
             >
               {g}
-              <ChevronDownIcon className={cn("size-3.5 text-muted-foreground/70 transition-[rotate,color] duration-200 group-hover/g:text-foreground", closed && "-rotate-90")} />
+              <ChevronDownIcon className={cn("size-3.5 text-muted-foreground transition-[rotate,color] duration-200 group-hover/g:text-foreground", closed && "-rotate-90")} />
             </button>
             <AnimatePresence initial={false}>
               {!closed && (

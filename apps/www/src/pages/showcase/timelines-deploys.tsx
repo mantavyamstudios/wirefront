@@ -29,7 +29,7 @@ interface Deploy {
 
 const ENV_TONE: Record<Deploy["env"], string> = {
   production: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  staging: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+  staging: "bg-amber-500/15 text-amber-800 dark:text-amber-400",
   preview: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
 };
 
@@ -142,7 +142,7 @@ function StatusGlyph({ status }: { status: Status }) {
   if (status === "failed")
     return <XCircleIcon className="size-5 text-rose-500" />;
   if (status === "rolled-back")
-    return <CircleAlertIcon className="size-5 text-amber-500" />;
+    return <CircleAlertIcon className="size-5 text-amber-800 dark:text-amber-400" />;
   return (
     <span className="grid size-5 place-items-center">
       <span className="absolute size-3 rounded-full bg-foreground/30 motion-safe:animate-ping" />

@@ -87,8 +87,8 @@ function ErrorViewport() {
                   className={
                     "flex size-7 shrink-0 items-center justify-center rounded-full " +
                     (failed
-                      ? "bg-destructive/15 text-destructive"
-                      : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400")
+                      ? "bg-destructive/15 text-destructive-foreground"
+                      : "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400")
                   }
                 >
                   {failed ? <AlertCircleIcon className="size-4" /> : <CheckIcon className="size-4" />}
@@ -97,7 +97,7 @@ function ErrorViewport() {
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     <Toast.Title className="font-medium text-sm" />
                     {t.data?.code ? (
-                      <span className="rounded bg-destructive/10 px-1.5 py-0.5 font-mono text-[10px] text-destructive uppercase tracking-[0.15em]">
+                      <span className="rounded bg-destructive/10 px-1.5 py-0.5 font-mono text-[10px] text-destructive-foreground uppercase tracking-[0.15em]">
                         <span className="sr-only">Error code </span>
                         {t.data.code}
                       </span>

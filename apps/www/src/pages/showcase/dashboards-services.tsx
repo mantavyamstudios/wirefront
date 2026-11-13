@@ -103,10 +103,10 @@ const SERVICES: Service[] = [
 ];
 
 const HEALTH_TONE: Record<Health, { dot: string; label: string }> = {
-  healthy: { dot: "bg-emerald-500", label: "text-emerald-600 dark:text-emerald-400" },
-  degraded: { dot: "bg-amber-500", label: "text-amber-600 dark:text-amber-400" },
-  down: { dot: "bg-rose-500", label: "text-rose-600 dark:text-rose-400" },
-  deploying: { dot: "bg-sky-500 animate-pulse", label: "text-sky-600 dark:text-sky-400" },
+  healthy: { dot: "bg-emerald-500", label: "text-emerald-700 dark:text-emerald-400" },
+  degraded: { dot: "bg-amber-500", label: "text-amber-800 dark:text-amber-400" },
+  down: { dot: "bg-rose-500", label: "text-rose-700 dark:text-rose-400" },
+  deploying: { dot: "bg-sky-500 animate-pulse", label: "text-sky-700 dark:text-sky-400" },
 };
 
 export function DashboardsServices() {
@@ -281,9 +281,9 @@ function Metric({
 }) {
   const t =
     tone === "fail"
-      ? "text-rose-600 dark:text-rose-400"
+      ? "text-rose-700 dark:text-rose-400"
       : tone === "warn"
-        ? "text-amber-600 dark:text-amber-400"
+        ? "text-amber-800 dark:text-amber-400"
         : "text-foreground";
   return (
     <div className="rounded-md bg-foreground/[0.03] px-2 py-1.5">

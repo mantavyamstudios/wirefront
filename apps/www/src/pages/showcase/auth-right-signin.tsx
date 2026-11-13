@@ -111,7 +111,7 @@ function DashboardMock() {
             <div className="mt-1 font-heading font-semibold text-sm tabular-nums">
               {t.value}
             </div>
-            <div className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+            <div className="font-mono text-[10px] text-emerald-700 dark:text-emerald-400">
               {t.delta}
             </div>
           </div>

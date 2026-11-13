@@ -86,8 +86,8 @@ export interface CodeReviewProps {
 const avatarTone: Record<ReviewTone, string> = {
   blue: "bg-blue-500/14 text-blue-700 dark:text-blue-300",
   orange: "bg-orange-500/14 text-orange-700 dark:text-orange-300",
-  teal: "bg-teal-500/16 text-teal-700 dark:text-teal-300",
-  violet: "bg-violet-500/16 text-violet-700 dark:text-violet-300",
+  teal: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
+  violet: "bg-violet-500/16 text-violet-800 dark:text-violet-300",
   rose: "bg-rose-500/14 text-rose-700 dark:text-rose-300",
   amber: "bg-amber-500/18 text-amber-800 dark:text-amber-300",
   emerald: "bg-emerald-500/16 text-emerald-700 dark:text-emerald-300",
@@ -421,7 +421,7 @@ function highlight(text: string, md: boolean): ReactNode[] {
     if (m[1]) out.push(<span className="text-muted-foreground italic" key={k++}>{tok}</span>);
     else if (m[2]) out.push(<span className="text-emerald-700 dark:text-emerald-300" key={k++}>{tok}</span>);
     else if (m[3]) out.push(<span className="text-amber-800 dark:text-amber-300" key={k++}>{tok}</span>);
-    else if (KEYWORDS.test(tok)) out.push(<span className="text-violet-700 dark:text-violet-300" key={k++}>{tok}</span>);
+    else if (KEYWORDS.test(tok)) out.push(<span className="text-violet-800 dark:text-violet-300" key={k++}>{tok}</span>);
     else if (/^[A-Z]/.test(tok)) out.push(<span className="text-sky-800 dark:text-sky-300" key={k++}>{tok}</span>);
     else if (text[re.lastIndex] === "(") out.push(<span className="text-blue-700 dark:text-blue-300" key={k++}>{tok}</span>);
     else out.push(tok);
@@ -1160,7 +1160,7 @@ export function CodeReview({
                                               {row.left && (
                                                 <>
                                                   <span className={cn(lineNo, numTone(row.left.kind))}>{row.left.old}</span>
-                                                  <span className="w-4 shrink-0 select-none text-center text-muted-foreground/70">{row.left.kind === "del" ? "−" : ""}</span>
+                                                  <span className="w-4 shrink-0 select-none text-center text-muted-foreground">{row.left.kind === "del" ? "−" : ""}</span>
                                                   <span className="min-w-0 flex-1 whitespace-pre-wrap pe-3 [overflow-wrap:anywhere]">
                                                     <CodeText line={row.left} md={md} partner={pairMap.get(row.left)} />
                                                   </span>
@@ -1172,7 +1172,7 @@ export function CodeReview({
                                               {row.right && (
                                                 <>
                                                   <span className={cn(lineNo, numTone(row.right.kind === "ctx" ? undefined : row.right.kind))}>{row.right.new}</span>
-                                                  <span className="w-4 shrink-0 select-none text-center text-muted-foreground/70">{row.right.kind === "add" ? "+" : ""}</span>
+                                                  <span className="w-4 shrink-0 select-none text-center text-muted-foreground">{row.right.kind === "add" ? "+" : ""}</span>
                                                   <span className="min-w-0 flex-1 whitespace-pre-wrap pe-3 [overflow-wrap:anywhere]">
                                                     <CodeText line={row.right} md={md} partner={pairMap.get(row.right)} />
                                                   </span>
@@ -1192,7 +1192,7 @@ export function CodeReview({
                                           <span className={cn(lineNo, "hidden @md:block", numTone(l.kind))}>{l.old ?? ""}</span>
                                           <span className={cn(lineNo, "hidden @md:block", numTone(l.kind))}>{l.new ?? ""}</span>
                                           <span className={cn(lineNo, "@md:hidden", numTone(l.kind))}>{l.new ?? l.old}</span>
-                                          <span className="w-4 shrink-0 select-none text-center text-muted-foreground/70">
+                                          <span className="w-4 shrink-0 select-none text-center text-muted-foreground">
                                             {l.kind === "add" ? "+" : l.kind === "del" ? "−" : ""}
                                           </span>
                                           <span className="min-w-0 flex-1 whitespace-pre-wrap pe-3 [overflow-wrap:anywhere]">

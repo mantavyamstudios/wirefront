@@ -144,7 +144,7 @@ export function ModalsUploadFiles() {
                       className="grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
                     >
                       {f.state === "done" ? (
-                        <CheckIcon className="size-3.5 text-emerald-600" />
+                        <CheckIcon className="size-3.5 text-emerald-700 dark:text-emerald-400" />
                       ) : f.state === "paused" ? (
                         <PauseIcon className="size-3.5" />
                       ) : (

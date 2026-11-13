@@ -51,14 +51,14 @@ interface Issue {
 
 const STATUS_META: Record<Status, { label: string; icon: typeof CheckIcon; cls: string }> = {
   todo: { label: "Todo", icon: CircleIcon, cls: "text-muted-foreground" },
-  "in-progress": { label: "In Progress", icon: CircleDotIcon, cls: "text-amber-500" },
+  "in-progress": { label: "In Progress", icon: CircleDotIcon, cls: "text-amber-800 dark:text-amber-400" },
   "in-review": { label: "In Review", icon: CircleDashedIcon, cls: "text-violet-500" },
   done: { label: "Done", icon: CheckIcon, cls: "text-emerald-500" },
 };
 
 const PRIORITY_META: Record<Priority, { label: string; cls: string }> = {
-  p0: { label: "Urgent", cls: "border-destructive/30 text-destructive" },
-  p1: { label: "High", cls: "border-amber-500/30 text-amber-700 dark:text-amber-400" },
+  p0: { label: "Urgent", cls: "border-destructive/30 text-destructive-foreground" },
+  p1: { label: "High", cls: "border-amber-500/30 text-amber-800 dark:text-amber-400" },
   p2: { label: "Med", cls: "border-sky-500/30 text-sky-700 dark:text-sky-400" },
   p3: { label: "Low", cls: "border-border text-muted-foreground" },
   none: { label: "—", cls: "border-dashed text-muted-foreground" },
@@ -66,8 +66,8 @@ const PRIORITY_META: Record<Priority, { label: string; cls: string }> = {
 
 const LABEL_TONE: Record<string, string> = {
   bug: "bg-red-500/10 text-red-700 border-red-500/20 dark:text-red-400",
-  feature: "bg-violet-500/10 text-violet-700 border-violet-500/20 dark:text-violet-400",
-  infra: "bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-400",
+  feature: "bg-violet-500/10 text-violet-800 border-violet-500/20 dark:text-violet-400",
+  infra: "bg-amber-500/10 text-amber-800 border-amber-500/20 dark:text-amber-400",
   docs: "bg-sky-500/10 text-sky-700 border-sky-500/20 dark:text-sky-400",
   design: "bg-pink-500/10 text-pink-700 border-pink-500/20 dark:text-pink-400",
   perf: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20 dark:text-emerald-400",
@@ -285,7 +285,7 @@ export function TableIssues() {
                           {issue.estimate}
                         </span>
                       ) : (
-                        <span className="text-muted-foreground/60">—</span>
+                        <span className="text-muted-foreground">—</span>
                       )}
                     </TableCell>
                     <TableCell className="max-sm:pe-4">
@@ -299,6 +299,7 @@ export function TableIssues() {
                         <div
                           className="size-6 rounded-full border border-dashed"
                           aria-label="Unassigned"
+                          role="img"
                         />
                       )}
                     </TableCell>

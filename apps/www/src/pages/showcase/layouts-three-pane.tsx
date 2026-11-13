@@ -524,7 +524,7 @@ function ComposerIconButton({
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="mt-4 mb-1 px-2 first:mt-1">
-      <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em]">
+      <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
         {children}
       </span>
     </div>

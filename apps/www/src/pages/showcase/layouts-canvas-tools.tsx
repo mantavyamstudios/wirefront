@@ -1077,7 +1077,7 @@ function Inspector({
                       onToggleVisible(layer.id);
                     }}
                     aria-label={`${layer.visible ? "Hide" : "Show"} ${layer.name}`}
-                    className="grid size-6 place-items-center rounded text-foreground/50 hover:text-foreground pointer-coarse:size-9"
+                    className="grid size-6 place-items-center rounded text-muted-foreground hover:text-foreground pointer-coarse:size-9"
                   >
                     {layer.visible ? (
                       <EyeIcon className="size-3" />
@@ -1094,7 +1094,7 @@ function Inspector({
                       onToggleLocked(layer.id);
                     }}
                     aria-label={`${layer.locked ? "Unlock" : "Lock"} ${layer.name}`}
-                    className="grid size-6 place-items-center rounded text-foreground/50 hover:text-foreground pointer-coarse:size-9"
+                    className="grid size-6 place-items-center rounded text-muted-foreground hover:text-foreground pointer-coarse:size-9"
                   >
                     {layer.locked ? (
                       <LockIcon className="size-3" />

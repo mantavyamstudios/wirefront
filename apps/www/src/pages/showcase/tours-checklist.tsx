@@ -148,7 +148,7 @@ export function ToursChecklist() {
                     aria-hidden
                     className={`flex size-6 shrink-0 items-center justify-center rounded-full transition-colors ${
                       t.done
-                        ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                        ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                         : "border border-foreground/30 text-transparent"
                     }`}
                   >
@@ -168,7 +168,7 @@ export function ToursChecklist() {
                       {t.description}
                     </p>
                   </div>
-                  <t.Icon aria-hidden className="mt-0.5 size-4 shrink-0 text-muted-foreground/60" />
+                  <t.Icon aria-hidden className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                 </button>
               </li>
             ))}

@@ -420,8 +420,7 @@
     "lint/a11y/noLabelWithoutControl": 2
   },
   "apps/www/src/pages/showcase/settings-permissions.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1,
-    "lint/a11y/useAriaPropsSupportedByRole": 3
+    "lint/a11y/noLabelWithoutControl": 1
   },
   "apps/www/src/pages/showcase/settings-privacy.tsx": {
     "lint/a11y/noLabelWithoutControl": 1
@@ -447,15 +446,13 @@
     "lint/a11y/useSemanticElements": 1
   },
   "apps/www/src/pages/showcase/table-issues.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1,
-    "lint/a11y/useAriaPropsSupportedByRole": 1
+    "lint/a11y/noLabelWithoutControl": 1
   },
   "apps/www/src/pages/showcase/table-logs.tsx": {
     "lint/suspicious/noArrayIndexKey": 1
   },
   "apps/www/src/pages/showcase/table-orders.tsx": {
     "lint/a11y/noLabelWithoutControl": 1,
-    "lint/a11y/useAriaPropsSupportedByRole": 2,
     "lint/style/noNonNullAssertion": 1
   },
   "apps/www/src/pages/showcase/threads-comment-row.tsx": {

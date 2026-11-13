@@ -39,7 +39,7 @@ export function AuthCheckEmail({ illustration, actions }: { illustration: string
   return (
     <AuthShell variant="welcome" illustration={illustration} actions={actions}>
       <div className="w-full max-w-lg">
-        <div className="inline-flex size-11 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+        <div className="inline-flex size-11 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
           <CheckCircle2Icon className="size-5" />
         </div>
 

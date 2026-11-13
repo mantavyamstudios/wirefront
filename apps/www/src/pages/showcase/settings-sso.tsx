@@ -302,7 +302,7 @@ function ProviderCard({ provider }: { provider: Provider }) {
           {provider.letter}
         </div>
         {provider.inProgress ? (
-          <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400">
+          <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-amber-800 dark:text-amber-400">
             <span className="size-1.5 animate-pulse rounded-full bg-amber-500" />
             Step {provider.inProgress.step} of {provider.inProgress.total}
           </span>
@@ -445,7 +445,7 @@ function AttributeMappingStep({
                     Required
                   </span>
                 ) : (
-                  <span className="font-mono text-[9px] text-muted-foreground/60 uppercase tracking-[0.2em]">
+                  <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-[0.2em]">
                     Optional
                   </span>
                 )}
@@ -489,7 +489,7 @@ function TestConnectionStep({
       {state === "success" ? (
         <div className="mt-6 rounded-md border border-emerald-500/30 bg-emerald-500/[0.06] p-4">
           <div className="flex items-start gap-3">
-            <div className="grid size-7 shrink-0 place-items-center rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+            <div className="grid size-7 shrink-0 place-items-center rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">
               <CheckIcon className="size-3.5" />
             </div>
             <div className="min-w-0 flex-1">
@@ -575,7 +575,7 @@ function EnforceStep({
 
       <div className="mt-6 rounded-md border border-destructive/30 bg-destructive/[0.06] p-4">
         <div className="flex items-start gap-3">
-          <div className="grid size-7 shrink-0 place-items-center rounded-full bg-destructive/15 text-destructive">
+          <div className="grid size-7 shrink-0 place-items-center rounded-full bg-destructive/15 text-destructive-foreground">
             <AlertTriangleIcon className="size-3.5" />
           </div>
           <div className="min-w-0 flex-1">

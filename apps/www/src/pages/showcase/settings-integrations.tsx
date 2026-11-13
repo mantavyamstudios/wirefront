@@ -197,7 +197,7 @@ function IntegrationCard({ integration }: { integration: Integration }) {
             </span>
           ) : null}
         </div>
-        <div className="mt-0.5 font-mono text-[10px] text-muted-foreground/80 uppercase tracking-[0.2em]">
+        <div className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
           {integration.category}
         </div>
         <p className="mt-2 text-muted-foreground text-xs leading-relaxed">

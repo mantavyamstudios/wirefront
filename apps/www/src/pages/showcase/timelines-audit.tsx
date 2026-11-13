@@ -86,7 +86,7 @@ const EVENTS: Event[] = [
 
 const SEV_RING: Record<Severity, string> = {
   info: "bg-foreground/[0.06] text-foreground",
-  warn: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+  warn: "bg-amber-500/15 text-amber-800 dark:text-amber-400",
   danger: "bg-rose-500/15 text-rose-700 dark:text-rose-400",
 };
 

@@ -150,7 +150,7 @@ const defaultIssues: HairlineIssue[] = [
 ];
 
 const people: Record<string, string> = {
-  IM: "bg-teal-500/16 text-teal-700 dark:text-teal-400",
+  IM: "bg-teal-500/16 text-teal-800 dark:text-teal-400",
   KT: "bg-info/16 text-info-foreground",
   RL: "bg-orange-500/16 text-orange-800 dark:text-orange-400",
   TB: "bg-violet-500/20 text-violet-600 dark:text-violet-400",
@@ -159,7 +159,7 @@ const people: Record<string, string> = {
 const groups = [
   { id: "progress", label: "In progress", icon: CircleDotIcon, tone: "text-warning-foreground" },
   { id: "todo", label: "Todo", icon: CircleIcon, tone: "text-muted-foreground" },
-  { id: "backlog", label: "Backlog", icon: CircleDashedIcon, tone: "text-muted-foreground/72" },
+  { id: "backlog", label: "Backlog", icon: CircleDashedIcon, tone: "text-muted-foreground" },
 ] as const;
 
 const priorityIcon = { high: SignalHighIcon, medium: SignalMediumIcon, low: SignalLowIcon };
@@ -697,7 +697,7 @@ export function HairlineShell({
             )}
             <nav aria-label="Breadcrumb" className="flex min-w-0 flex-1 items-center gap-1 ps-1">
               <span className="hidden text-muted-foreground @md:inline">Northwind</span>
-              <ChevronRightIcon aria-hidden className="hidden size-3.5 text-muted-foreground/60 @md:inline" />
+              <ChevronRightIcon aria-hidden className="hidden size-3.5 text-muted-foreground @md:inline" />
               <span className="flex min-w-0 items-center gap-1.5">
                 {project && <span className={cn("size-2 shrink-0 rounded-[calc(var(--radius)*0.3)]", swatch[project.tone])} />}
                 <AnimatePresence initial={false} mode="popLayout">
@@ -716,7 +716,7 @@ export function HairlineShell({
               </span>
               {project && (
                 <>
-                  <ChevronRightIcon aria-hidden className="hidden size-3.5 text-muted-foreground/60 @lg:inline" />
+                  <ChevronRightIcon aria-hidden className="hidden size-3.5 text-muted-foreground @lg:inline" />
                   <span className="hidden text-muted-foreground @lg:inline">Issues</span>
                 </>
               )}

@@ -97,7 +97,7 @@ export function ThreadsComposeRich() {
                 <SmileIcon className="size-3.5" />
               </button>
             </div>
-            <span className="shrink-0 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em] max-sm:hidden">
+            <span className="shrink-0 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] max-sm:hidden">
               Markdown
             </span>
           </div>
@@ -117,7 +117,7 @@ export function ThreadsComposeRich() {
               <span className="min-w-0 truncate font-mono text-[11px]">migration-plan.md</span>
               <button
                 type="button"
-                className="grid size-7 shrink-0 place-items-center rounded text-muted-foreground/60 transition-colors hover:text-foreground pointer-coarse:size-9"
+                className="grid size-7 shrink-0 place-items-center rounded text-muted-foreground transition-colors hover:text-foreground pointer-coarse:size-9"
                 aria-label="Remove migration-plan.md"
               >
                 ×
@@ -127,7 +127,7 @@ export function ThreadsComposeRich() {
 
           <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-border/40 border-t pt-2">
             <div className="flex min-w-0 items-center gap-2">
-              <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em]">
+              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 Replying to
               </span>
               <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-foreground/85">
@@ -135,7 +135,7 @@ export function ThreadsComposeRich() {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="hidden font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em] sm:flex sm:items-center sm:gap-1.5 pointer-coarse:hidden">
+              <span className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:flex sm:items-center sm:gap-1.5 pointer-coarse:hidden">
                 <Kbd>⌘</Kbd>
                 <Kbd>↵</Kbd>
                 send

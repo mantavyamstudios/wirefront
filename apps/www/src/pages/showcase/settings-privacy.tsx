@@ -290,7 +290,7 @@ export function SettingsPrivacy() {
                           className={
                             idx === stop
                               ? "text-foreground"
-                              : "text-muted-foreground/60"
+                              : "text-muted-foreground"
                           }
                         >
                           {l}
@@ -323,7 +323,7 @@ export function SettingsPrivacy() {
           </div>
 
           <div className="flex items-start gap-3 p-4 sm:gap-4 sm:p-6">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-destructive/10 text-destructive">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-destructive/10 text-destructive-foreground">
               {pending ? (
                 <AlertTriangleIcon className="size-4" />
               ) : (
@@ -392,7 +392,7 @@ function DeleteActive({ onRequest }: { onRequest: () => void }) {
           size="sm"
           variant="outline"
           type="button"
-          className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+          className="border-destructive/40 text-destructive-foreground hover:bg-destructive/10 hover:text-destructive"
           onClick={onRequest}
         >
           Request account deletion
@@ -438,7 +438,7 @@ function DeletePending({ onCancel }: { onCancel: () => void }) {
               strokeLinecap="round"
               strokeDasharray={circumference}
               strokeDashoffset={dashoffset}
-              className="text-destructive transition-[stroke-dashoffset] duration-700"
+              className="text-destructive-foreground transition-[stroke-dashoffset] duration-700"
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">

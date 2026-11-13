@@ -309,7 +309,7 @@ export function CalendarsYearHeatmap() {
         </div>
 
         {error ? (
-          <div className="mt-6 rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-destructive text-sm">
+          <div className="mt-6 rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-destructive-foreground text-sm">
             {error}
           </div>
         ) : null}

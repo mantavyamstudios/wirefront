@@ -47,19 +47,19 @@ const STRENGTH_META: Record<
     label: "Weak",
     segments: 1,
     color: "bg-amber-500",
-    text: "text-amber-600 dark:text-amber-400",
+    text: "text-amber-800 dark:text-amber-400",
   },
   ok: {
     label: "OK",
     segments: 2,
     color: "bg-sky-500",
-    text: "text-sky-600 dark:text-sky-400",
+    text: "text-sky-700 dark:text-sky-400",
   },
   strong: {
     label: "Strong",
     segments: 3,
     color: "bg-emerald-500",
-    text: "text-emerald-600 dark:text-emerald-400",
+    text: "text-emerald-700 dark:text-emerald-400",
   },
 };
 

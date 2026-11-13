@@ -122,7 +122,7 @@ function ProductCard({ product }: { product: Product }) {
           <div className="flex items-center gap-1 text-muted-foreground text-xs">
             <StarIcon className="size-3 fill-current text-foreground/70" />
             {product.rating}{" "}
-            <span className="text-muted-foreground/70">
+            <span className="text-muted-foreground">
               ({product.reviews})
             </span>
           </div>

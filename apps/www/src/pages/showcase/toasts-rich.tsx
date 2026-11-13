@@ -27,7 +27,7 @@ const SEED: { id: string; title: string; description: string; data: RichData }[]
     description: "@mantavyam — same — let's pair on the bouncing invites tomorrow morning.",
     data: {
       Icon: MessageCircleIcon,
-      badgeTone: "bg-sky-500/15 text-sky-600 dark:text-sky-400",
+      badgeTone: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
       meta: "12m ago",
       actions: [{ label: "Reply" }],
       avatar: { initials: "RP", tone: "bg-violet-500/85 text-white" },
@@ -51,7 +51,7 @@ const SEED: { id: string; title: string; description: string; data: RichData }[]
     description: "Auto-joined via @acme.com domain rule. Say hi or assign a project.",
     data: {
       Icon: UserPlusIcon,
-      badgeTone: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+      badgeTone: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
       meta: "just now",
       actions: [{ label: "Assign" }, { label: "Welcome", primary: true }],
       avatar: { initials: "MO", tone: "bg-emerald-500/85 text-white" },
@@ -123,7 +123,7 @@ function RichViewport() {
                   </div>
                   <Toast.Description className="mt-1 text-muted-foreground text-xs leading-relaxed" />
                   <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
+                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                       {d.meta}
                     </span>
                     {d.actions ? (

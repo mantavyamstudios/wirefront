@@ -96,11 +96,11 @@ const icons: Record<HelpIcon, ReactNode> = {
 };
 
 const toneTile: Record<HelpTone, string> = {
-  sky: "border bg-background text-sky-600 dark:bg-input/32 dark:text-sky-400",
-  emerald: "border bg-background text-emerald-600 dark:bg-input/32 dark:text-emerald-400",
-  amber: "border bg-background text-amber-600 dark:bg-input/32 dark:text-amber-400",
+  sky: "border bg-background text-sky-700 dark:bg-input/32 dark:text-sky-400",
+  emerald: "border bg-background text-emerald-700 dark:bg-input/32 dark:text-emerald-400",
+  amber: "border bg-background text-amber-800 dark:bg-input/32 dark:text-amber-400",
   violet: "border bg-background text-violet-600 dark:bg-input/32 dark:text-violet-400",
-  rose: "border bg-background text-rose-600 dark:bg-input/32 dark:text-rose-400",
+  rose: "border bg-background text-rose-700 dark:bg-input/32 dark:text-rose-400",
   teal: "border bg-background text-teal-600 dark:bg-input/32 dark:text-teal-400",
 };
 
@@ -607,7 +607,7 @@ function ArticleRow({ article, category, query = "", onOpen }: { article: HelpAr
           </span>
           {category && <span className="mt-1 text-muted-foreground text-xs">{category.name}</span>}
         </span>
-        <ChevronRightIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground/60 transition-transform duration-150 ease-out [@media(hover:hover)]:group-hover/row:translate-x-0.5" />
+        <ChevronRightIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground transition-transform duration-150 ease-out [@media(hover:hover)]:group-hover/row:translate-x-0.5" />
       </button>
     </li>
   );

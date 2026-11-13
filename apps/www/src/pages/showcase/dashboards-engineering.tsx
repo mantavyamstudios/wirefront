@@ -26,10 +26,10 @@ const DORA: Dora[] = [
 ];
 
 const RATING_TONE: Record<Dora["rating"], string> = {
-  elite: "text-emerald-600 dark:text-emerald-400",
-  high: "text-sky-600 dark:text-sky-400",
-  med: "text-amber-600 dark:text-amber-400",
-  low: "text-rose-600 dark:text-rose-400",
+  elite: "text-emerald-700 dark:text-emerald-400",
+  high: "text-sky-700 dark:text-sky-400",
+  med: "text-amber-800 dark:text-amber-400",
+  low: "text-rose-700 dark:text-rose-400",
 };
 
 const PR_WEEKS: { week: string; merged: number; open: number; closed: number }[] = [
@@ -200,8 +200,8 @@ function DoraTile({ dora }: { dora: Dora }) {
         <span
           className={`inline-flex items-baseline gap-0.5 font-mono text-[11px] tabular-nums ${
             dora.trend > 0 === isHigherBetter(dora.label)
-              ? "text-emerald-600 dark:text-emerald-400"
-              : "text-rose-600 dark:text-rose-400"
+              ? "text-emerald-700 dark:text-emerald-400"
+              : "text-rose-700 dark:text-rose-400"
           }`}
         >
           {dora.trend > 0 ? (
@@ -250,7 +250,7 @@ function MiniSpark({ values }: { values: number[] }) {
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"
-        className="text-foreground/40"
+        className="text-muted-foreground"
       />
     </svg>
   );
@@ -336,9 +336,9 @@ function KV({
 }) {
   const t =
     tone === "ok"
-      ? "text-emerald-600 dark:text-emerald-400"
+      ? "text-emerald-700 dark:text-emerald-400"
       : tone === "warn"
-        ? "text-amber-600 dark:text-amber-400"
+        ? "text-amber-800 dark:text-amber-400"
         : "text-foreground";
   return (
     <div className="flex items-baseline justify-between text-sm">

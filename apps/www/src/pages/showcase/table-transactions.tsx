@@ -65,9 +65,9 @@ const TXS: Tx[] = [
 
 const STATUS_TONE: Record<Tx["status"], string> = {
   succeeded: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-  pending: "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400",
+  pending: "border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-400",
   refunded: "border-border bg-muted text-muted-foreground",
-  failed: "border-destructive/30 bg-destructive/10 text-destructive",
+  failed: "border-destructive/30 bg-destructive/10 text-destructive-foreground",
 };
 
 const METHOD_LABEL: Record<Method, string> = {
@@ -209,7 +209,7 @@ export function TableTransactions() {
                         className={
                           "flex size-7 shrink-0 items-center justify-center rounded-full " +
                           (t.direction === "in"
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                            ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
                             : "bg-muted text-muted-foreground")
                         }
                         aria-hidden
@@ -248,7 +248,7 @@ export function TableTransactions() {
                         (t.status === "failed" || t.status === "refunded"
                           ? "text-muted-foreground line-through"
                           : t.direction === "in"
-                            ? "text-emerald-600 dark:text-emerald-400"
+                            ? "text-emerald-700 dark:text-emerald-400"
                             : "text-foreground")
                       }
                     >
@@ -313,7 +313,7 @@ function SummaryTile({
   const sign = tone === "negative" ? "−" : tone === "positive" ? "+" : amount < 0 ? "−" : "+";
   const cls =
     tone === "positive"
-      ? "text-emerald-600 dark:text-emerald-400"
+      ? "text-emerald-700 dark:text-emerald-400"
       : tone === "negative"
         ? "text-foreground"
         : "text-foreground";

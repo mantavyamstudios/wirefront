@@ -297,7 +297,7 @@ export function CalendarsTimezone() {
                       type="button"
                       onClick={() => removeZone(z.name)}
                       aria-label={`Remove ${z.city}`}
-                      className="inline-flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground/50 opacity-0 transition-all hover:bg-foreground/[0.06] hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
+                      className="inline-flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 transition-all hover:bg-foreground/[0.06] hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
                     >
                       <XIcon className="size-3" />
                     </button>
@@ -344,7 +344,7 @@ export function CalendarsTimezone() {
                             className={
                               "pointer-events-none absolute top-1/2 -translate-y-1/2 font-mono text-[10px] " +
                               (local < 7 || local >= 22
-                                ? "text-foreground/40"
+                                ? "text-muted-foreground"
                                 : "text-foreground/85")
                             }
                             style={{ left: h * HOUR_W + 4 }}
@@ -590,7 +590,7 @@ function VerdictPill({
     edge: {
       Icon: SunIcon,
       label: "Edge",
-      className: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+      className: "bg-amber-500/15 text-amber-800 dark:text-amber-400",
     },
     asleep: {
       Icon: XCircleIcon,

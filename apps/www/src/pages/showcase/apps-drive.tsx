@@ -62,7 +62,7 @@ export interface DriveProps {
 
 const tone: Record<FolderTone, string> = {
   orange: "text-orange-500 dark:text-orange-400",
-  yellow: "text-amber-500 dark:text-amber-400",
+  yellow: "text-amber-800 dark:text-amber-400",
   lime: "text-lime-600",
   teal: "text-teal-600 dark:text-teal-500",
   blue: "text-blue-500 dark:text-blue-400",
@@ -74,9 +74,9 @@ const tone: Record<FolderTone, string> = {
 
 const memberTone: Record<string, string> = {
   AK: "bg-orange-500/16 text-orange-800 dark:text-orange-300",
-  JS: "bg-teal-500/16 text-teal-700 dark:text-teal-300",
+  JS: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
   MV: "bg-blue-500/16 text-blue-700 dark:text-blue-300",
-  LO: "bg-violet-500/18 text-violet-700 dark:text-violet-300",
+  LO: "bg-violet-500/18 text-violet-800 dark:text-violet-300",
   RB: "bg-rose-500/16 text-rose-700 dark:text-rose-300",
 };
 
@@ -642,7 +642,7 @@ export function Drive({
                               className={cn(
                                 "absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-md outline-none transition-opacity hover:bg-accent focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring",
                                 grid ? "top-2 right-2" : "top-2.5 right-2",
-                                f.starred ? "text-amber-500 opacity-100 dark:text-amber-400" : "text-muted-foreground opacity-0 group-hover/folder:opacity-100 pointer-coarse:opacity-100",
+                                f.starred ? "text-amber-800 opacity-100 dark:text-amber-400" : "text-muted-foreground opacity-0 group-hover/folder:opacity-100 pointer-coarse:opacity-100",
                               )}
                               layout="position"
                               onClick={() => toggleStar(f.id)}

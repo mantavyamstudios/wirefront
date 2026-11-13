@@ -460,7 +460,7 @@ const stageDot: Record<DealStage, string> = {
 const engagementMeta: Record<Engagement, { label: string; level: number; bar: string; text: string }> = {
   hot: { label: "Hot", level: 4, bar: "bg-emerald-500 dark:bg-emerald-400", text: "text-emerald-700 dark:text-emerald-300" },
   warm: { label: "Warm", level: 3, bar: "bg-emerald-500 dark:bg-emerald-400", text: "text-muted-foreground" },
-  cooling: { label: "Cooling", level: 2, bar: "bg-amber-500 dark:bg-amber-400", text: "text-amber-700 dark:text-amber-300" },
+  cooling: { label: "Cooling", level: 2, bar: "bg-amber-500 dark:bg-amber-400", text: "text-amber-800 dark:text-amber-300" },
   cold: { label: "Cold", level: 1, bar: "bg-rose-500 dark:bg-rose-400", text: "text-rose-700 dark:text-rose-300" },
 };
 
@@ -469,8 +469,8 @@ const warmer: Record<Engagement, Engagement> = { cold: "cooling", cooling: "warm
 const signalMeta: Record<FocusKind, { icon: LucideIcon; tile: string; text: string }> = {
   quiet: {
     icon: MoonIcon,
-    tile: "bg-amber-500/12 text-amber-700 dark:bg-amber-400/14 dark:text-amber-300",
-    text: "text-amber-700 dark:text-amber-300",
+    tile: "bg-amber-500/12 text-amber-800 dark:bg-amber-400/14 dark:text-amber-300",
+    text: "text-amber-800 dark:text-amber-300",
   },
   opened: {
     icon: EyeIcon,
@@ -711,7 +711,7 @@ function DealFace({ deal, owner, ownerIndex, flag, celebrate, touched, reduce, c
         <span
           className={cn(
             "shrink-0 text-xs tabular-nums",
-            !won && deal.daysInStage >= 14 ? "text-amber-700 dark:text-amber-300" : "text-muted-foreground",
+            !won && deal.daysInStage >= 14 ? "text-amber-800 dark:text-amber-300" : "text-muted-foreground",
           )}
         >
           {won ? deal.closeLabel : deal.daysInStage === 0 ? "Just moved" : `${deal.daysInStage}d in stage`}
@@ -728,7 +728,7 @@ function DealFace({ deal, owner, ownerIndex, flag, celebrate, touched, reduce, c
                 key={`check-${celebrate ?? 0}`}
                 transition={{ type: "spring", stiffness: 500, damping: 18 }}
               >
-                <CircleCheckIcon className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+                <CircleCheckIcon className="size-3.5 text-emerald-700 dark:text-emerald-400" />
               </motion.span>
               {celebrate ? <Burst key={`burst-${celebrate}`} reduce={reduce} /> : null}
             </span>
@@ -1623,7 +1623,7 @@ export function PipelineToday({
             </span>
           </div>
           {isWon ? (
-            <CheckIcon className="mt-0.5 size-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <CheckIcon className="mt-0.5 size-3.5 shrink-0 text-emerald-700 dark:text-emerald-400" />
           ) : (
             <span className="mt-0.5 shrink-0 font-mono text-[11px] text-muted-foreground tabular-nums">
               {Math.round(stage.probability * 100)}%

@@ -79,8 +79,8 @@ const COLUMNS: { name: string; tone: string; tasks: Task[] }[] = [
 const PRIORITY_STYLE: Record<Priority, string> = {
   low: "bg-muted text-muted-foreground",
   med: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
-  high: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
-  urgent: "bg-destructive/15 text-destructive",
+  high: "bg-amber-500/15 text-amber-800 dark:text-amber-400",
+  urgent: "bg-destructive/15 text-destructive-foreground",
 };
 
 export function CardTask() {
@@ -102,7 +102,7 @@ export function CardTask() {
                 <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
                   {col.name}
                 </span>
-                <span className="font-mono text-muted-foreground/70 text-xs">
+                <span className="font-mono text-muted-foreground text-xs">
                   {col.tasks.length}
                 </span>
               </div>

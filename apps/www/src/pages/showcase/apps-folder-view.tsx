@@ -76,9 +76,9 @@ const press = "transition-[box-shadow,scale] duration-150 ease-out active:scale-
 
 const people: Record<string, string> = {
   AK: "bg-orange-500/16 text-orange-800 dark:text-orange-300",
-  JS: "bg-teal-500/16 text-teal-700 dark:text-teal-300",
+  JS: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
   MV: "bg-blue-500/16 text-blue-700 dark:text-blue-300",
-  LO: "bg-violet-500/18 text-violet-700 dark:text-violet-300",
+  LO: "bg-violet-500/18 text-violet-800 dark:text-violet-300",
 };
 
 const defaultFiles: FolderFile[] = [
@@ -133,7 +133,7 @@ const kindDot: Record<FolderFileKind, string> = {
 
 const kindIcon: Record<FolderFileKind, { icon: typeof FileIcon; tint: string }> = {
   doc: { icon: FileTextIcon, tint: "bg-blue-500/12 text-blue-600 dark:text-blue-400" },
-  sheet: { icon: SheetIcon, tint: "bg-emerald-500/12 text-emerald-600 dark:text-emerald-400" },
+  sheet: { icon: SheetIcon, tint: "bg-emerald-500/12 text-emerald-700 dark:text-emerald-400" },
   image: { icon: ImageIcon, tint: "bg-orange-500/12 text-orange-600 dark:text-orange-400" },
   slides: { icon: PresentationIcon, tint: "bg-violet-500/12 text-violet-600 dark:text-violet-400" },
   pdf: { icon: FileIcon, tint: "bg-red-500/12 text-red-600 dark:text-red-400" },
@@ -514,7 +514,7 @@ export function FolderView({
                     onClick={() => open(f.id)}
                     type="button"
                   >
-                    <FolderGlyph className="h-3 w-3.5 text-muted-foreground/72" />
+                    <FolderGlyph className="h-3 w-3.5 text-muted-foreground" />
                     <span className="truncate">{f.name}</span>
                   </button>
                 </li>
@@ -718,12 +718,12 @@ export function FolderView({
                                 onClick={() => open(f.id)}
                                 type="button"
                               >
-                                <FolderGlyph className="h-4 w-5 text-muted-foreground/72" />
+                                <FolderGlyph className="h-4 w-5 text-muted-foreground" />
                                 <span className="flex min-w-0 flex-col">
                                   <span className="truncate font-medium">{f.name}</span>
                                   <span className="text-muted-foreground text-xs tabular-nums">{n ? `${n} ${n === 1 ? "file" : "files"}` : "Empty"}</span>
                                 </span>
-                                <ChevronRightIcon aria-hidden className="ms-auto hidden size-4 shrink-0 text-muted-foreground/60 @md:block" />
+                                <ChevronRightIcon aria-hidden className="ms-auto hidden size-4 shrink-0 text-muted-foreground @md:block" />
                               </button>
                             </li>
                           );

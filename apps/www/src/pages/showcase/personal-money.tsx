@@ -112,7 +112,7 @@ const categories: Record<
   groceries: {
     label: "Groceries",
     icon: ShoppingBasketIcon,
-    tile: "bg-teal-500/12 text-teal-700 dark:bg-teal-400/14 dark:text-teal-300",
+    tile: "bg-teal-500/12 text-teal-800 dark:bg-teal-400/14 dark:text-teal-300",
     dot: "bg-teal-500 dark:bg-teal-400",
     stroke: "stroke-teal-500 dark:stroke-teal-400",
   },
@@ -133,14 +133,14 @@ const categories: Record<
   shopping: {
     label: "Shopping",
     icon: ShoppingBagIcon,
-    tile: "bg-violet-500/12 text-violet-700 dark:bg-violet-400/14 dark:text-violet-300",
+    tile: "bg-violet-500/12 text-violet-800 dark:bg-violet-400/14 dark:text-violet-300",
     dot: "bg-violet-500 dark:bg-violet-400",
     stroke: "stroke-violet-500 dark:stroke-violet-400",
   },
   home: {
     label: "Home & bills",
     icon: HomeIcon,
-    tile: "bg-amber-500/14 text-amber-700 dark:bg-amber-400/14 dark:text-amber-300",
+    tile: "bg-amber-500/14 text-amber-800 dark:bg-amber-400/14 dark:text-amber-300",
     dot: "bg-amber-500 dark:bg-amber-400",
     stroke: "stroke-amber-500 dark:stroke-amber-400",
   },

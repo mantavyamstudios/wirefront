@@ -698,7 +698,7 @@ export function DeliveryTracker({
                               <StarIcon
                                 className={cn(
                                   "size-5 transition-colors duration-150",
-                                  rating >= n ? "fill-amber-400 text-amber-400" : "text-muted-foreground/60",
+                                  rating >= n ? "fill-amber-400 text-amber-400" : "text-muted-foreground",
                                 )}
                               />
                             </motion.span>

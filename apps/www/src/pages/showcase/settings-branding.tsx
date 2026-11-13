@@ -489,7 +489,7 @@ function DomainStatusPill({ status }: { status: DomainStatus }) {
   }
   if (status === "pending") {
     return (
-      <span className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 font-mono text-[10px] text-amber-700 uppercase tracking-[0.25em] dark:text-amber-400">
+      <span className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 font-mono text-[10px] text-amber-800 uppercase tracking-[0.25em] dark:text-amber-400">
         <CircleAlertIcon className="size-3.5" />
         Pending DNS
       </span>

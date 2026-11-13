@@ -47,8 +47,8 @@ function GaugeCard({ g }: { g: Gauge }) {
       ? "rgb(245 158 11)"
       : "rgb(20 184 166)";
   const tone = breached
-    ? "text-rose-600 dark:text-rose-400"
-    : "text-emerald-600 dark:text-emerald-400";
+    ? "text-rose-700 dark:text-rose-400"
+    : "text-emerald-700 dark:text-emerald-400";
 
   const data = [{ name: g.name, value: pct * 100, fill: ringColor }];
 

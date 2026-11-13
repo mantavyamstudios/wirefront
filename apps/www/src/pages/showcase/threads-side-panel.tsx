@@ -151,7 +151,7 @@ export function ThreadsSidePanel() {
                     {c.initials}
                   </div>
                   <span className="font-medium text-sm">{c.name}</span>
-                  <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                     {c.time}
                   </span>
                 </div>
@@ -179,7 +179,7 @@ export function ThreadsSidePanel() {
                     <button
                       type="button"
                       aria-label="Add reaction"
-                      className="ml-1 grid min-h-7 min-w-7 place-items-center rounded-full font-mono text-[11px] pointer-coarse:min-h-9 pointer-coarse:min-w-9 text-muted-foreground/70 uppercase tracking-[0.2em] transition-colors hover:text-foreground"
+                      className="ml-1 grid min-h-7 min-w-7 place-items-center rounded-full font-mono text-[11px] pointer-coarse:min-h-9 pointer-coarse:min-w-9 text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:text-foreground"
                     >
                       +
                     </button>
@@ -198,7 +198,7 @@ export function ThreadsSidePanel() {
                 className="w-full resize-none bg-transparent px-1 text-base outline-none sm:text-sm placeholder:text-muted-foreground"
               />
               <div className="flex items-center justify-between pt-1">
-                <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em] pointer-coarse:invisible">
+                <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] pointer-coarse:invisible">
                   ⌘ + ↵ to send
                 </span>
                 <Button size="sm" type="button">

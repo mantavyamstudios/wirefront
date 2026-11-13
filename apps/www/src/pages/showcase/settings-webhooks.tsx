@@ -94,7 +94,7 @@ const STATUS_TONE: Record<
   },
   failing: {
     dot: "bg-destructive shadow-[0_0_0_2px_--theme(--color-red-500/15%)]",
-    label: "text-destructive",
+    label: "text-destructive-foreground",
     tip: "Failing — 4 of last 10 deliveries returned 5xx",
   },
   paused: {
@@ -184,9 +184,9 @@ const DELIVERIES: Delivery[] = [
 ];
 
 function statusTone(code: number): string {
-  if (code >= 500) return "border-destructive/30 text-destructive";
-  if (code === 429) return "border-amber-500/40 text-amber-600 dark:text-amber-400";
-  if (code >= 400) return "border-amber-500/40 text-amber-600 dark:text-amber-400";
+  if (code >= 500) return "border-destructive/30 text-destructive-foreground";
+  if (code === 429) return "border-amber-500/40 text-amber-800 dark:text-amber-400";
+  if (code >= 400) return "border-amber-500/40 text-amber-800 dark:text-amber-400";
   return "border-emerald-500/30 text-emerald-700 dark:text-emerald-400";
 }
 
@@ -199,11 +199,11 @@ const PRISM_TOKEN_CLASS: Record<string, string> = {
   "string-property": "text-sky-700 dark:text-sky-300",
   property: "text-sky-700 dark:text-sky-300",
   string: "text-emerald-700 dark:text-emerald-300",
-  number: "text-amber-700 dark:text-amber-300",
-  boolean: "text-violet-700 dark:text-violet-300",
-  null: "text-violet-700 dark:text-violet-300",
-  punctuation: "text-muted-foreground/70",
-  operator: "text-muted-foreground/70",
+  number: "text-amber-800 dark:text-amber-300",
+  boolean: "text-violet-800 dark:text-violet-300",
+  null: "text-violet-800 dark:text-violet-300",
+  punctuation: "text-muted-foreground",
+  operator: "text-muted-foreground",
   comment: "text-muted-foreground italic",
 };
 
@@ -272,7 +272,7 @@ export function SettingsWebhooks() {
                 render={
                   <button
                     type="button"
-                    className="inline-flex min-h-8 items-center gap-1 text-amber-700 text-xs underline-offset-4 hover:underline pointer-coarse:min-h-10 dark:text-amber-400"
+                    className="inline-flex min-h-8 items-center gap-1 text-amber-800 text-xs underline-offset-4 hover:underline pointer-coarse:min-h-10 dark:text-amber-400"
                   >
                     <TriangleAlertIcon className="size-3.5" />
                     Rotate
@@ -366,7 +366,7 @@ export function SettingsWebhooks() {
                           {ep.url}
                         </span>
                       </div>
-                      <div className="mt-0.5 flex flex-wrap items-center gap-x-2 font-mono text-[10px] text-muted-foreground/80">
+                      <div className="mt-0.5 flex flex-wrap items-center gap-x-2 font-mono text-[10px] text-muted-foreground">
                         {ep.id}
                         <span className="inline-flex items-center gap-1 sm:hidden">
                           <span className={"size-1.5 rounded-full " + tone.dot} />
@@ -472,7 +472,7 @@ export function SettingsWebhooks() {
           <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b px-4 py-3">
             <div className="flex flex-wrap items-baseline gap-x-2">
               <h2 className="font-heading text-sm">Recent deliveries</h2>
-              <span className="font-mono text-[10px] text-muted-foreground/80 uppercase tracking-[0.2em]">
+              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                 · last 24 hours
               </span>
             </div>
@@ -536,7 +536,7 @@ export function SettingsWebhooks() {
                         <Tooltip>
                           <TooltipTrigger
                             render={
-                              <RotateCwIcon className="size-3 text-amber-500" />
+                              <RotateCwIcon className="size-3 text-amber-800 dark:text-amber-400" />
                             }
                           />
                           <TooltipContent side="top">Retried</TooltipContent>
@@ -680,7 +680,7 @@ function PayloadBlock({
               const lineProps = getLineProps({ line });
               return (
                 <div key={i} {...lineProps} className="table-row">
-                  <span className="table-cell select-none pr-3 text-right text-muted-foreground/40 tabular-nums">
+                  <span className="table-cell select-none pr-3 text-right text-muted-foreground tabular-nums">
                     {i + 1}
                   </span>
                   <span className="table-cell whitespace-pre">

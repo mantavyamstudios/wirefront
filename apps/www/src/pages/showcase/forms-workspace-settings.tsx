@@ -75,7 +75,7 @@ export function FormsWorkspaceSettings() {
                       value={label}
                       closeOnClick
                       className={
-                        "danger" in rest ? "text-destructive" : undefined
+                        "danger" in rest ? "text-destructive-foreground" : undefined
                       }
                     >
                       <span className="flex items-center gap-2">
@@ -111,8 +111,8 @@ export function FormsWorkspaceSettings() {
                     className={`flex w-full items-center gap-2 whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm transition-colors pointer-coarse:min-h-11 ${
                       danger
                         ? active
-                          ? "bg-destructive/[0.08] text-destructive"
-                          : "text-destructive hover:bg-destructive/[0.06]"
+                          ? "bg-destructive/[0.08] text-destructive-foreground"
+                          : "text-destructive-foreground hover:bg-destructive/[0.06]"
                         : active
                           ? "bg-foreground/[0.06] text-foreground"
                           : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"

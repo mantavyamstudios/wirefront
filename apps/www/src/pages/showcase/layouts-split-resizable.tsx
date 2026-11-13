@@ -234,7 +234,7 @@ function EditorPane() {
             >
               {tokens.map((line, i) => (
                 <div key={i} {...getLineProps({ line })} className="table-row">
-                  <span className="table-cell select-none pr-4 text-right font-mono text-muted-foreground/40 text-xs tabular-nums">
+                  <span className="table-cell select-none pr-4 text-right font-mono text-muted-foreground text-xs tabular-nums">
                     {i + 1}
                   </span>
                   <span className="table-cell whitespace-pre">

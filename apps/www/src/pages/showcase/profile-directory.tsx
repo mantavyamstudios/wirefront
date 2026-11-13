@@ -230,7 +230,7 @@ export function ProfileDirectory() {
                     "grid h-5 w-6 place-items-center rounded transition-colors sm:w-5 pointer-coarse:h-[1.375rem] " +
                     (active
                       ? "text-foreground hover:bg-foreground/[0.06]"
-                      : "text-muted-foreground/40")
+                      : "text-muted-foreground")
                   }
                 >
                   {l}

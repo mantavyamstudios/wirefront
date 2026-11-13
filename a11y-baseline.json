@@ -14,17 +14,16 @@
   "auth/centered-signup@desktop": {
     "link-in-text-block": 3
   },
+  "auth/left-signin@mobile": {
+    "link-in-text-block": 1
+  },
   "auth/centered-signup@mobile": {
     "link-in-text-block": 3
   },
   "auth/left-signin@desktop": {
     "link-in-text-block": 1
   },
-  "auth/left-signin@mobile": {
-    "link-in-text-block": 1
-  },
   "auth/right-signin@desktop": {
-    "color-contrast": 3,
     "link-in-text-block": 1
   },
   "auth/right-signin@mobile": {
@@ -36,30 +35,6 @@
   "empty-states/no-team@mobile": {
     "link-in-text-block": 1
   },
-  "cards/stat-tile@desktop": {
-    "color-contrast": 4
-  },
-  "cards/stat-tile@mobile": {
-    "color-contrast": 4
-  },
-  "cards/product@desktop": {
-    "color-contrast": 3
-  },
-  "cards/product@mobile": {
-    "color-contrast": 3
-  },
-  "cards/invoice@desktop": {
-    "color-contrast": 2
-  },
-  "cards/invoice@mobile": {
-    "color-contrast": 1
-  },
-  "cards/task@desktop": {
-    "color-contrast": 2
-  },
-  "cards/task@mobile": {
-    "color-contrast": 2
-  },
   "cards/event@desktop": {
     "color-contrast": 1
   },
@@ -69,51 +44,17 @@
   "cards/payment-method@desktop": {
     "label-content-name-mismatch": 1
   },
-  "forms/workspace-settings@desktop": {
-    "color-contrast": 1
-  },
   "cards/payment-method@mobile": {
     "label-content-name-mismatch": 1
   },
   "forms/workspace-settings@mobile": {
     "label-content-name-mismatch": 1
   },
-  "forms/api-key@desktop": {
-    "color-contrast": 1
-  },
-  "forms/api-key@mobile": {
-    "color-contrast": 1
-  },
-  "tables/orders@desktop": {
-    "aria-prohibited-attr": 24
-  },
-  "tables/logs@desktop": {
-    "color-contrast": 10
-  },
-  "tables/logs@mobile": {
-    "color-contrast": 8
-  },
-  "tables/inventory@desktop": {
-    "color-contrast": 7
-  },
-  "tables/inventory@mobile": {
-    "color-contrast": 7
-  },
-  "tables/issues@desktop": {
-    "aria-prohibited-attr": 1,
-    "color-contrast": 1
-  },
-  "tables/issues@mobile": {
-    "aria-prohibited-attr": 1,
-    "color-contrast": 1
-  },
   "tables/transactions@desktop": {
-    "button-name": 3,
-    "color-contrast": 5
+    "button-name": 3
   },
   "tables/transactions@mobile": {
-    "button-name": 3,
-    "color-contrast": 6
+    "button-name": 3
   },
   "filters/faceted@desktop": {
     "label-content-name-mismatch": 3
@@ -122,28 +63,19 @@
     "label-content-name-mismatch": 3
   },
   "filters/chips@desktop": {
-    "color-contrast": 1,
     "label-content-name-mismatch": 2
   },
   "filters/chips@mobile": {
-    "color-contrast": 1,
     "label-content-name-mismatch": 2
   },
   "filters/sidebar@desktop": {
-    "color-contrast": 5,
     "label": 2
   },
-  "layouts/workspace-rail@desktop": {
-    "color-contrast": 4
-  },
-  "filters/sidebar@mobile": {
-    "color-contrast": 4
-  },
   "layouts/inbox-rail@desktop": {
-    "color-contrast": 16
+    "color-contrast": 7
   },
   "layouts/inbox-rail@mobile": {
-    "color-contrast": 16
+    "color-contrast": 7
   },
   "layouts/two-pane@desktop": {
     "color-contrast": 11
@@ -151,17 +83,11 @@
   "layouts/two-pane@mobile": {
     "color-contrast": 10
   },
-  "layouts/three-pane@desktop": {
-    "color-contrast": 3
-  },
-  "layouts/three-pane@mobile": {
-    "color-contrast": 3
-  },
   "layouts/split-resizable@desktop": {
-    "color-contrast": 15
+    "color-contrast": 5
   },
   "layouts/split-resizable@mobile": {
-    "color-contrast": 15,
+    "color-contrast": 5,
     "scrollable-region-focusable": 1
   },
   "layouts/focus-mode@desktop": {
@@ -184,48 +110,6 @@
   "layouts/hairline-shell@desktop": {
     "label-content-name-mismatch": 2
   },
-  "dashboards/analytics@desktop": {
-    "color-contrast": 22
-  },
-  "dashboards/analytics@mobile": {
-    "color-contrast": 20
-  },
-  "dashboards/home@desktop": {
-    "color-contrast": 5
-  },
-  "dashboards/home@mobile": {
-    "color-contrast": 5
-  },
-  "dashboards/revenue@desktop": {
-    "color-contrast": 11
-  },
-  "dashboards/revenue@mobile": {
-    "color-contrast": 11
-  },
-  "dashboards/services@desktop": {
-    "color-contrast": 8
-  },
-  "dashboards/services@mobile": {
-    "color-contrast": 8
-  },
-  "dashboards/engineering@desktop": {
-    "color-contrast": 9
-  },
-  "dashboards/engineering@mobile": {
-    "color-contrast": 9
-  },
-  "dashboards/support@desktop": {
-    "color-contrast": 7
-  },
-  "dashboards/support@mobile": {
-    "color-contrast": 7
-  },
-  "dashboards/market@desktop": {
-    "color-contrast": 7
-  },
-  "dashboards/market@mobile": {
-    "color-contrast": 7
-  },
   "dashboards/revenue-overview@desktop": {
     "label-content-name-mismatch": 5
   },
@@ -235,17 +119,11 @@
   "dashboards/status-console@mobile": {
     "label-content-name-mismatch": 5
   },
-  "dashboards/pipeline-today@mobile": {
-    "label-content-name-mismatch": 4
-  },
   "dashboards/pipeline-today@desktop": {
     "label-content-name-mismatch": 14
   },
-  "settings/profile@desktop": {
-    "color-contrast": 1
-  },
-  "settings/profile@mobile": {
-    "color-contrast": 1
+  "dashboards/pipeline-today@mobile": {
+    "label-content-name-mismatch": 4
   },
   "settings/appearance@desktop": {
     "color-contrast": 1
@@ -260,55 +138,35 @@
     "color-contrast": 4
   },
   "settings/security@desktop": {
-    "color-contrast": 8
-  },
-  "settings/security@mobile": {
-    "color-contrast": 3
-  },
-  "settings/permissions@mobile": {
-    "aria-prohibited-attr": 73,
     "color-contrast": 1
   },
-  "settings/permissions@desktop": {
-    "aria-prohibited-attr": 73,
-    "color-contrast": 3
-  },
-  "settings/branding@mobile": {
-    "color-contrast": 2
+  "settings/security@mobile": {
+    "color-contrast": 1
   },
   "settings/branding@desktop": {
     "color-contrast": 2
   },
-  "settings/webhooks@mobile": {
-    "color-contrast": 7,
-    "scrollable-region-focusable": 1
+  "settings/branding@mobile": {
+    "color-contrast": 2
   },
   "settings/webhooks@desktop": {
-    "color-contrast": 7,
+    "scrollable-region-focusable": 1
+  },
+  "settings/webhooks@mobile": {
     "scrollable-region-focusable": 1
   },
   "settings/privacy@desktop": {
     "aria-toggle-field-name": 1,
-    "color-contrast": 17,
     "label": 4
   },
   "settings/privacy@mobile": {
     "aria-toggle-field-name": 1,
-    "color-contrast": 17,
     "label": 4
   },
-  "settings/developer@desktop": {
-    "color-contrast": 3
-  },
-  "settings/developer@mobile": {
-    "color-contrast": 3
-  },
   "settings/sso@desktop": {
-    "color-contrast": 3,
     "label-content-name-mismatch": 4
   },
   "settings/sso@mobile": {
-    "color-contrast": 3,
     "label-content-name-mismatch": 1
   },
   "modals/two-factor@desktop": {
@@ -324,82 +182,42 @@
     "color-contrast": 42,
     "scrollable-region-focusable": 1
   },
-  "timelines/commits@desktop": {
-    "color-contrast": 6
-  },
-  "timelines/pull-request@desktop": {
-    "button-name": 3,
-    "color-contrast": 3
-  },
   "timelines/pull-request@mobile": {
     "button-name": 3,
-    "color-contrast": 3,
     "scrollable-region-focusable": 1
   },
-  "timelines/pr-ops-console@mobile": {
-    "color-contrast": 4
-  },
-  "timelines/pr-ops-console@desktop": {
-    "color-contrast": 5
-  },
-  "timelines/status-page@desktop": {
-    "color-contrast": 3
-  },
-  "timelines/status-page@mobile": {
-    "color-contrast": 3
-  },
-  "timelines/deploys@desktop": {
-    "color-contrast": 2
-  },
-  "timelines/deploys@mobile": {
-    "color-contrast": 2
+  "timelines/pull-request@desktop": {
+    "button-name": 3
   },
   "calendars/month@desktop": {
-    "color-contrast": 2,
     "label-content-name-mismatch": 18
   },
-  "calendars/week@desktop": {
-    "color-contrast": 17
-  },
   "calendars/week@mobile": {
-    "color-contrast": 8
+    "color-contrast": 7
   },
-  "calendars/timezone@mobile": {
-    "color-contrast": 13
-  },
-  "calendars/timezone@desktop": {
-    "color-contrast": 50
+  "calendars/week@desktop": {
+    "color-contrast": 15
   },
   "calendars/recurring@desktop": {
-    "button-name": 2,
-    "color-contrast": 8
+    "button-name": 2
   },
   "calendars/recurring@mobile": {
-    "button-name": 2,
-    "color-contrast": 8
+    "button-name": 2
   },
   "calendars/holidays@desktop": {
-    "color-contrast": 9
-  },
-  "calendars/holidays@mobile": {
-    "color-contrast": 1
+    "color-contrast": 6
   },
   "calendars/calendar-week@mobile": {
     "label-content-name-mismatch": 13
   },
   "calendars/calendar-week@desktop": {
-    "label-content-name-mismatch": 56
-  },
-  "profile/presence-rail@desktop": {
-    "color-contrast": 1
-  },
-  "toasts/error-retry@desktop": {
-    "aria-hidden-focus": 1,
-    "color-contrast": 1
+    "label-content-name-mismatch": 21
   },
   "toasts/error-retry@mobile": {
-    "aria-hidden-focus": 1,
-    "color-contrast": 1
+    "aria-hidden-focus": 1
+  },
+  "toasts/error-retry@desktop": {
+    "aria-hidden-focus": 1
   },
   "toasts/info-banner@desktop": {
     "color-contrast": 1
@@ -408,22 +226,10 @@
     "color-contrast": 1
   },
   "toasts/rich@desktop": {
-    "color-contrast": 6
+    "color-contrast": 3
   },
   "toasts/rich@mobile": {
-    "color-contrast": 2
-  },
-  "pricing/slider-seats@desktop": {
-    "color-contrast": 6
-  },
-  "pricing/slider-seats@mobile": {
-    "color-contrast": 6
-  },
-  "pricing/contact-sales@desktop": {
-    "color-contrast": 4
-  },
-  "pricing/contact-sales@mobile": {
-    "color-contrast": 4
+    "color-contrast": 1
   },
   "pricing/monthly-yearly@desktop": {
     "color-contrast": 3
@@ -431,50 +237,32 @@
   "pricing/monthly-yearly@mobile": {
     "color-contrast": 3
   },
-  "tours/beacon@desktop": {
-    "color-contrast": 1
-  },
-  "tours/beacon@mobile": {
-    "color-contrast": 1
-  },
   "threads/inline-thread@desktop": {
-    "color-contrast": 10
-  },
-  "threads/side-panel@desktop": {
-    "color-contrast": 12
+    "color-contrast": 2
   },
   "threads/side-panel@mobile": {
-    "color-contrast": 12
+    "color-contrast": 7
   },
-  "threads/comment-row@mobile": {
+  "threads/side-panel@desktop": {
     "color-contrast": 7
   },
   "threads/comment-row@desktop": {
-    "color-contrast": 7
-  },
-  "threads/mention-popover@mobile": {
-    "color-contrast": 2
-  },
-  "threads/mention-popover@desktop": {
-    "color-contrast": 2
-  },
-  "threads/resolved@desktop": {
-    "color-contrast": 9
-  },
-  "threads/resolved@mobile": {
-    "color-contrast": 6
-  },
-  "threads/compose-rich@desktop": {
     "color-contrast": 3
   },
-  "threads/compose-rich@mobile": {
+  "threads/comment-row@mobile": {
+    "color-contrast": 3
+  },
+  "threads/mention-popover@mobile": {
     "color-contrast": 1
   },
-  "ai/assistant-start@desktop": {
+  "threads/mention-popover@desktop": {
     "color-contrast": 1
   },
-  "ai/assistant-start@mobile": {
-    "color-contrast": 1
+  "threads/resolved@desktop": {
+    "color-contrast": 6
+  },
+  "threads/resolved@mobile": {
+    "color-contrast": 3
   },
   "ai/co-writing-doc@mobile": {
     "button-name": 1
@@ -490,17 +278,17 @@
     "button-name": 1,
     "color-contrast": 1
   },
-  "apps/mail@mobile": {
-    "color-contrast": 1
-  },
   "apps/mail@desktop": {
     "color-contrast": 1
   },
-  "apps/team-chat@mobile": {
+  "apps/mail@mobile": {
     "color-contrast": 1
   },
   "apps/team-chat@desktop": {
     "color-contrast": 2
+  },
+  "apps/team-chat@mobile": {
+    "color-contrast": 1
   },
   "personal/money@mobile": {
     "color-contrast": 1,
@@ -510,10 +298,10 @@
     "color-contrast": 1,
     "label-content-name-mismatch": 1
   },
-  "personal/habits@mobile": {
+  "personal/habits@desktop": {
     "label-content-name-mismatch": 7
   },
-  "personal/habits@desktop": {
+  "personal/habits@mobile": {
     "label-content-name-mismatch": 7
   },
   "commerce/checkout@desktop": {

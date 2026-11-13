@@ -77,7 +77,7 @@ const INCIDENTS: Incident[] = [
 ];
 
 const SEV_TONE: Record<"minor" | "major" | "critical", string> = {
-  minor: "bg-amber-500/15 text-amber-700 dark:text-amber-400 ring-amber-500/20",
+  minor: "bg-amber-500/15 text-amber-800 dark:text-amber-400 ring-amber-500/20",
   major: "bg-rose-500/15 text-rose-700 dark:text-rose-400 ring-rose-500/20",
   critical: "bg-rose-500/15 text-rose-700 dark:text-rose-400 ring-rose-500/20",
 };
@@ -97,7 +97,7 @@ export function TimelinesStatusPage() {
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Acme Status · status.acme.dev
           </div>
-          <div className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-amber-500/15 px-4 py-1.5 text-left font-mono text-[12px] text-amber-700 dark:text-amber-400">
+          <div className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-amber-500/15 px-4 py-1.5 text-left font-mono text-[12px] text-amber-800 dark:text-amber-400">
             <span className="size-2 shrink-0 rounded-full bg-amber-500 motion-safe:animate-pulse" />
             One service is experiencing degraded performance
           </div>

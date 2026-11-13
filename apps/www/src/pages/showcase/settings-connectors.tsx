@@ -88,9 +88,9 @@ export interface ConnectorApp {
 
 const toneClass: Record<AppTone, string> = {
   orange: "bg-orange-500/12 text-orange-700 dark:bg-orange-400/14 dark:text-orange-300",
-  teal: "bg-teal-500/12 text-teal-700 dark:bg-teal-400/14 dark:text-teal-300",
-  violet: "bg-violet-500/12 text-violet-700 dark:bg-violet-400/14 dark:text-violet-300",
-  amber: "bg-amber-500/12 text-amber-700 dark:bg-amber-400/14 dark:text-amber-300",
+  teal: "bg-teal-500/12 text-teal-800 dark:bg-teal-400/14 dark:text-teal-300",
+  violet: "bg-violet-500/12 text-violet-800 dark:bg-violet-400/14 dark:text-violet-300",
+  amber: "bg-amber-500/12 text-amber-800 dark:bg-amber-400/14 dark:text-amber-300",
   rose: "bg-rose-500/12 text-rose-700 dark:bg-rose-400/14 dark:text-rose-300",
   info: "bg-info/12 text-info-foreground",
   success: "bg-success/12 text-success-foreground",
@@ -792,10 +792,10 @@ export function Connectors({
                 transition={quick}
               >
                 <div aria-hidden className="relative mb-5 h-14 w-32">
-                  <span className="absolute start-0 top-3 flex size-10 -rotate-8 items-center justify-center rounded-xl border bg-card text-muted-foreground/60 shadow-xs/5">
+                  <span className="absolute start-0 top-3 flex size-10 -rotate-8 items-center justify-center rounded-xl border bg-card text-muted-foreground shadow-xs/5">
                     <MailIcon className="size-4" />
                   </span>
-                  <span className="absolute end-0 top-3 flex size-10 rotate-8 items-center justify-center rounded-xl border bg-card text-muted-foreground/60 shadow-xs/5">
+                  <span className="absolute end-0 top-3 flex size-10 rotate-8 items-center justify-center rounded-xl border bg-card text-muted-foreground shadow-xs/5">
                     <DatabaseIcon className="size-4" />
                   </span>
                   <span className="absolute start-1/2 top-0 flex size-12 -translate-x-1/2 items-center justify-center rounded-xl border bg-card text-foreground shadow-sm/5">

@@ -64,7 +64,7 @@ export function DashboardsAnalytics() {
               </div>
               <div className="mt-1 flex items-baseline gap-2">
                 <span className="font-heading text-3xl">128,430</span>
-                <span className="inline-flex items-center gap-0.5 rounded bg-emerald-500/12 px-1.5 py-0.5 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+                <span className="inline-flex items-center gap-0.5 rounded bg-emerald-500/12 px-1.5 py-0.5 font-mono text-[10px] text-emerald-700 dark:text-emerald-400">
                   <ArrowUpRightIcon className="size-3" />
                   +18%
                 </span>
@@ -101,7 +101,7 @@ export function DashboardsAnalytics() {
             ))}
           </div>
           {/* Fewer labels on phones so they never collide. */}
-          <div aria-hidden className="mt-3 flex justify-between font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.12em] sm:tracking-[0.2em]">
+          <div aria-hidden className="mt-3 flex justify-between font-mono text-[10px] text-muted-foreground uppercase tracking-[0.12em] sm:tracking-[0.2em]">
             <span>Mar 27</span>
             <span className="max-sm:hidden">Apr 1</span>
             <span>Apr 6</span>
@@ -120,7 +120,7 @@ export function DashboardsAnalytics() {
                     <span>{s.label}</span>
                     <span className="font-mono text-xs">
                       <span className="text-foreground">{s.value.toLocaleString()}</span>
-                      <span className="ml-1.5 text-muted-foreground/70">{s.share}%</span>
+                      <span className="ml-1.5 text-muted-foreground">{s.share}%</span>
                     </span>
                   </div>
                   <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-foreground/[0.06]">
@@ -151,8 +151,8 @@ export function DashboardsAnalytics() {
                       <span
                         className={`w-12 text-right font-mono text-[10px] ${
                           positive
-                            ? "text-emerald-600 dark:text-emerald-400"
-                            : "text-rose-600 dark:text-rose-400"
+                            ? "text-emerald-700 dark:text-emerald-400"
+                            : "text-rose-700 dark:text-rose-400"
                         }`}
                       >
                         {p.change}
@@ -175,7 +175,7 @@ export function DashboardsAnalytics() {
                 <span className="text-base">{c.code}</span>
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-xs">{c.name}</div>
-                  <div className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
+                  <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                     {c.share}%
                   </div>
                 </div>
@@ -208,7 +208,7 @@ function BreakdownCard({
         <button
           type="button"
           aria-label={`More options for ${title}`}
-          className="-mr-1.5 flex size-7 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:size-10"
+          className="-mr-1.5 flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:size-10"
         >
           <MoreHorizontalIcon className="size-4" />
         </button>

@@ -1615,7 +1615,7 @@ function SidebarContent({
                 render={
                   <button
                     aria-disabled="true"
-                    className="flex h-8 cursor-default items-center gap-2.5 rounded-lg px-2.5 text-muted-foreground/70 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="flex h-8 cursor-default items-center gap-2.5 rounded-lg px-2.5 text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     type="button"
                   >
                     <l.icon aria-hidden className="size-4" />

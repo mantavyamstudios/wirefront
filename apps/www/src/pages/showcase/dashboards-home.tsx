@@ -106,7 +106,7 @@ export function DashboardsHome() {
                         <span className="rounded bg-foreground/[0.05] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">
                           {t.project}
                         </span>
-                        <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.15em] sm:w-16 sm:text-right">
+                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:w-16 sm:text-right">
                           {t.due}
                         </span>
                       </span>

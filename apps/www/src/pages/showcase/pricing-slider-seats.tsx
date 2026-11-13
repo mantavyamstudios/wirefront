@@ -37,7 +37,7 @@ export function PricingSliderSeats() {
                 <span className="text-muted-foreground text-sm">/ month</span>
               </div>
               {totalAnnual ? (
-                <p className="mt-1 font-mono text-[10px] text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.25em]">
+                <p className="mt-1 font-mono text-[10px] text-emerald-700 dark:text-emerald-400 uppercase tracking-[0.25em]">
                   ${totalAnnual.toLocaleString()} billed annually · save 20%
                 </p>
               ) : (
@@ -101,7 +101,7 @@ export function PricingSliderSeats() {
               className="mt-3 h-6 w-full cursor-pointer accent-foreground pointer-coarse:h-10"
             />
             {/* Ticks sit at their real slider positions (1–50). */}
-            <div aria-hidden className="relative mt-1 h-4 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.1em]">
+            <div aria-hidden className="relative mt-1 h-4 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.1em]">
               {[1, 10, 20, 30, 40, 50].map((v, i, all) => (
                 <span
                   key={v}
@@ -127,7 +127,7 @@ export function PricingSliderSeats() {
               "Custom roles",
             ].map((f) => (
               <li key={f} className="flex items-start gap-2 text-sm">
-                <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-emerald-700 dark:text-emerald-400" />
                 {f}
               </li>
             ))}

@@ -129,7 +129,7 @@ export function LayoutsFocusMode() {
                 On this page
               </SheetTrigger>
               <SheetContent side="right" className="max-w-[300px] bg-background px-5 py-6">
-                <SheetTitle className="mb-3 px-1 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em]">
+                <SheetTitle className="mb-3 px-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                   On this page
                 </SheetTitle>
                 <TocList />
@@ -186,7 +186,7 @@ export function LayoutsFocusMode() {
         aria-hidden={focused}
         inert={focused}
       >
-        <div className="mb-3 px-1 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em]">
+        <div className="mb-3 px-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           On this page
         </div>
         <TocList />
@@ -348,7 +348,7 @@ function NavPanel() {
       </ul>
 
       <div className="mt-6 mb-1 px-2">
-        <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em]">
+        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           Documents
         </span>
       </div>

@@ -190,7 +190,7 @@ export function ProfileHero() {
                   <span className="size-1.5 shrink-0 translate-y-[-2px] rounded-full bg-foreground/40" />
                   <span className="shrink-0 text-muted-foreground">{a.what}</span>
                   <span className="min-w-0 truncate">{a.target}</span>
-                  <span className="ml-auto shrink-0 font-mono text-[10px] text-muted-foreground/80">
+                  <span className="ml-auto shrink-0 font-mono text-[10px] text-muted-foreground">
                     {a.time}
                   </span>
                 </li>
@@ -226,9 +226,9 @@ function Tag({
   children: React.ReactNode;
 }) {
   const map: Record<typeof color, string> = {
-    indigo: "bg-indigo-500/12 text-indigo-700 dark:text-indigo-400",
-    teal: "bg-teal-500/12 text-teal-700 dark:text-teal-400",
-    amber: "bg-amber-500/12 text-amber-700 dark:text-amber-400",
+    indigo: "bg-indigo-500/12 text-indigo-800 dark:text-indigo-400",
+    teal: "bg-teal-500/12 text-teal-800 dark:text-teal-400",
+    amber: "bg-amber-500/12 text-amber-800 dark:text-amber-400",
     rose: "bg-rose-500/12 text-rose-700 dark:text-rose-400",
   };
   return (

@@ -270,7 +270,7 @@ function SecurityRow({
     >
       <div
         className={`flex size-8 shrink-0 items-center justify-center rounded-md ${
-          destructive ? "bg-destructive/10 text-destructive" : "bg-foreground/[0.06]"
+          destructive ? "bg-destructive/10 text-destructive-foreground" : "bg-foreground/[0.06]"
         }`}
       >
         {icon}
@@ -283,7 +283,7 @@ function SecurityRow({
         variant={destructive ? "outline" : "ghost"}
         size="sm"
         type="button"
-        className={destructive ? "border-destructive/40 text-destructive hover:bg-destructive/10" : ""}
+        className={destructive ? "border-destructive/40 text-destructive-foreground hover:bg-destructive/10" : ""}
       >
         {cta}
       </Button>

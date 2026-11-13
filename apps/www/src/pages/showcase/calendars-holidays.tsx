@@ -38,12 +38,12 @@ interface Holiday {
 }
 
 const TONE: Record<BlockType | "holiday", string> = {
-  vacation: "bg-teal-500/35 border-teal-500/55 text-teal-700 dark:text-teal-300",
+  vacation: "bg-teal-500/35 border-teal-500/55 text-teal-800 dark:text-teal-300",
   sick: "bg-rose-500/30 border-rose-500/55 text-rose-700 dark:text-rose-300",
   remote:
-    "bg-indigo-500/25 border-indigo-500/45 text-indigo-700 dark:text-indigo-300",
+    "bg-indigo-500/25 border-indigo-500/45 text-indigo-800 dark:text-indigo-300",
   holiday:
-    "bg-amber-500/22 border-amber-500/45 text-amber-700 dark:text-amber-300",
+    "bg-amber-500/22 border-amber-500/45 text-amber-800 dark:text-amber-300",
 };
 
 const BLOCK_TYPES: { id: BlockType; label: string }[] = [
@@ -300,7 +300,7 @@ export function CalendarsHolidays() {
               {b.label}
             </button>
           ))}
-          <span className="px-2 text-muted-foreground/70 max-sm:hidden">
+          <span className="px-2 text-muted-foreground max-sm:hidden">
             · click again to remove
           </span>
         </div>
@@ -352,7 +352,7 @@ export function CalendarsHolidays() {
 
           {/* Holiday strip */}
           <div className="grid grid-cols-[148px_auto] border-border/40 border-b bg-amber-500/[0.04] sm:grid-cols-[220px_auto]">
-            <div className="sticky left-0 z-20 flex items-center gap-2 border-border/40 border-r bg-background px-3 py-2 font-mono text-[10px] text-amber-700 uppercase tracking-[0.2em] sm:px-4 sm:tracking-[0.25em] dark:text-amber-400">
+            <div className="sticky left-0 z-20 flex items-center gap-2 border-border/40 border-r bg-background px-3 py-2 font-mono text-[10px] text-amber-800 uppercase tracking-[0.2em] sm:px-4 sm:tracking-[0.25em] dark:text-amber-400">
               Holidays
             </div>
             <div className="relative h-9">
@@ -427,7 +427,7 @@ export function CalendarsHolidays() {
                     type="button"
                     onClick={() => removeMember(m.id)}
                     aria-label={`Remove ${m.name}`}
-                    className="grid size-6 shrink-0 place-items-center rounded-md text-muted-foreground/40 opacity-0 transition-all hover:bg-foreground/[0.05] hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
+                    className="grid size-6 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 transition-all hover:bg-foreground/[0.05] hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
                   >
                     <TrashIcon className="size-3.5" />
                   </button>

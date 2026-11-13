@@ -56,9 +56,9 @@ interface Entry {
 
 const SEVERITY_STYLES: Record<Severity, { dot: string; label: string }> = {
   debug: { dot: "bg-muted-foreground/40", label: "text-muted-foreground" },
-  info: { dot: "bg-sky-500", label: "text-sky-600 dark:text-sky-400" },
-  warn: { dot: "bg-amber-500", label: "text-amber-600 dark:text-amber-400" },
-  error: { dot: "bg-destructive", label: "text-destructive" },
+  info: { dot: "bg-sky-500", label: "text-sky-700 dark:text-sky-400" },
+  warn: { dot: "bg-amber-500", label: "text-amber-800 dark:text-amber-400" },
+  error: { dot: "bg-destructive", label: "text-destructive-foreground" },
 };
 
 const ENTRIES: Entry[] = [
@@ -421,9 +421,9 @@ export function TableLogs() {
                     <TableCell className="w-full max-w-0">
                       <span className="flex items-center gap-2">
                         {e.severity === "error" ? (
-                          <CircleAlertIcon className="size-3.5 shrink-0 text-destructive" />
+                          <CircleAlertIcon className="size-3.5 shrink-0 text-destructive-foreground" />
                         ) : e.severity === "warn" ? (
-                          <FlameIcon className="size-3.5 shrink-0 text-amber-500" />
+                          <FlameIcon className="size-3.5 shrink-0 text-amber-800 dark:text-amber-400" />
                         ) : e.severity === "info" ? (
                           <InfoIcon className="size-3.5 shrink-0 text-sky-500/70" />
                         ) : null}
@@ -434,7 +434,7 @@ export function TableLogs() {
                             className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", 
                               "ml-auto shrink-0 font-mono text-[10px] " +
                               (e.status >= 400
-                                ? "border-destructive/30 text-destructive"
+                                ? "border-destructive/30 text-destructive-foreground"
                                 : "")
                             )}
                           >
@@ -496,7 +496,7 @@ function LogDetailSheet({
                     variant="outline"
                     className={cn("h-4.5 rounded-sm px-1 text-[0.625rem]", 
                       "font-mono text-[9px] " +
-                      (entry.status >= 400 ? "border-destructive/30 text-destructive" : "")
+                      (entry.status >= 400 ? "border-destructive/30 text-destructive-foreground" : "")
                     )}
                   >
                     {entry.status}
@@ -565,7 +565,7 @@ function LogDetailSheet({
                         key={i}
                         className="flex items-baseline gap-3 border-border/40 border-b px-3 py-2 font-mono text-[11px] last:border-b-0"
                       >
-                        <span className="w-5 text-right text-muted-foreground/70 tabular-nums">
+                        <span className="w-5 text-right text-muted-foreground tabular-nums">
                           {i + 1}
                         </span>
                         <span className="flex-1 truncate text-foreground/85">
@@ -626,7 +626,7 @@ function Section({
             {title}
           </h3>
           {hint ? (
-            <span className="font-mono text-[10px] text-muted-foreground/70">
+            <span className="font-mono text-[10px] text-muted-foreground">
               {hint}
             </span>
           ) : null}
@@ -695,7 +695,7 @@ function KeyVal({
             }}
             aria-label={copied ? `${label} copied` : `Copy ${label}`}
             // Hover reveal on desktop; always visible on touch and when focused.
-            className="inline-flex size-6 items-center justify-center rounded text-muted-foreground/40 opacity-0 transition-opacity hover:bg-foreground/[0.05] hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-9 pointer-coarse:opacity-100"
+            className="inline-flex size-6 items-center justify-center rounded text-muted-foreground opacity-0 transition-opacity hover:bg-foreground/[0.05] hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-9 pointer-coarse:opacity-100"
           >
             {copied ? <CheckIcon className="size-3" /> : <CopyIcon className="size-3" />}
           </button>

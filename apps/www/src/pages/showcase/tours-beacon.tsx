@@ -121,7 +121,7 @@ function Beacon({
               {body}
             </Popover.Description>
             <div className="mt-3 flex items-center justify-between gap-2">
-              <span className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.25em]">
+              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                 New · April 26
               </span>
               <Popover.Close

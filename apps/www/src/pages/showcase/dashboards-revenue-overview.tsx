@@ -268,7 +268,7 @@ const KINDS: Record<MomentKind, { label: string; icon: LucideIcon; dot: string; 
     dot: "fill-violet-500 dark:fill-violet-400",
     band: "fill-violet-500/8 dark:fill-violet-400/7",
     stem: "stroke-violet-500/50 dark:stroke-violet-400/50",
-    soft: "bg-violet-500/12 text-violet-700 dark:bg-violet-400/15 dark:text-violet-300",
+    soft: "bg-violet-500/12 text-violet-800 dark:bg-violet-400/15 dark:text-violet-300",
   },
   pricing: {
     label: "Pricing",
@@ -284,7 +284,7 @@ const KINDS: Record<MomentKind, { label: string; icon: LucideIcon; dot: string; 
     dot: "fill-teal-500 dark:fill-teal-400",
     band: "fill-teal-500/8 dark:fill-teal-400/7",
     stem: "stroke-teal-500/50 dark:stroke-teal-400/50",
-    soft: "bg-teal-500/12 text-teal-700 dark:bg-teal-400/15 dark:text-teal-300",
+    soft: "bg-teal-500/12 text-teal-800 dark:bg-teal-400/15 dark:text-teal-300",
   },
   incident: {
     label: "Incident",
@@ -292,7 +292,7 @@ const KINDS: Record<MomentKind, { label: string; icon: LucideIcon; dot: string; 
     dot: "fill-amber-500 dark:fill-amber-400",
     band: "fill-amber-500/10 dark:fill-amber-400/7",
     stem: "stroke-amber-500/60 dark:stroke-amber-400/60",
-    soft: "bg-amber-500/14 text-amber-700 dark:bg-amber-400/15 dark:text-amber-300",
+    soft: "bg-amber-500/14 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300",
   },
 };
 
@@ -1429,7 +1429,7 @@ export function RevenueStory({
             </span>
             <nav aria-label="Breadcrumb" className="flex min-w-0 flex-1 items-center gap-1.5 text-sm">
               <span className="hidden truncate text-muted-foreground @md:inline">{store.name}</span>
-              <ChevronRightIcon aria-hidden className="hidden size-3.5 shrink-0 text-muted-foreground/70 @md:block" />
+              <ChevronRightIcon aria-hidden className="hidden size-3.5 shrink-0 text-muted-foreground @md:block" />
               <span aria-current="page" className="truncate font-medium">
                 {section.label}
               </span>

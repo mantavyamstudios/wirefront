@@ -175,7 +175,7 @@ export function SidebarsInboxRail() {
                         >
                           {t.name}
                         </span>
-                        <span className="shrink-0 font-mono text-[10px] text-muted-foreground/70">
+                        <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
                           {t.time}
                         </span>
                       </div>
@@ -254,7 +254,7 @@ function Tab({
       className={`min-h-7 rounded px-2 py-1 transition-colors pointer-coarse:min-h-11 ${
         active
           ? "bg-foreground/[0.08] text-foreground"
-          : "text-muted-foreground/70 hover:bg-foreground/[0.03] hover:text-foreground"
+          : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"
       }`}
     >
       {children}

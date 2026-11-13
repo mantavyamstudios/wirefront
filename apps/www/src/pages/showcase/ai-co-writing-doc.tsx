@@ -89,9 +89,9 @@ const toneCls: Record<CollaboratorTone, { caret: string; tag: string; soft: stri
     caret: "bg-violet-500",
     tag: "bg-violet-600 text-white",
     soft: "bg-violet-500/14",
-    avatar: "bg-violet-500/16 text-violet-700 dark:text-violet-300",
+    avatar: "bg-violet-500/16 text-violet-800 dark:text-violet-300",
     mark: "decoration-violet-500/60",
-    text: "text-violet-700 dark:text-violet-300",
+    text: "text-violet-800 dark:text-violet-300",
     border: "border-violet-500/32",
   },
   warning: {

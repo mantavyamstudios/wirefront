@@ -203,7 +203,7 @@ export function ThreadsMentionPopover() {
                             @{o.m.handle}
                           </span>
                         </div>
-                        <div className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
+                        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                           {o.m.team}
                         </div>
                       </div>
@@ -245,7 +245,7 @@ export function ThreadsMentionPopover() {
                           <div className="font-medium text-sm">
                             @{o.g.handle}
                           </div>
-                          <div className="font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
+                          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                             {o.g.description}
                           </div>
                         </div>
