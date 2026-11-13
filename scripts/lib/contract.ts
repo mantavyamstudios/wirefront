@@ -72,6 +72,18 @@ export function checkView(source: string): Violation[] {
     ),
     ...each(
       src,
+      /\bhref=["']#["']/g,
+      "placeholder-link",
+      () => 'href="#" goes nowhere: take the href as a prop (and hide the link when it isn\'t given)',
+    ),
+    ...each(
+      src,
+      /<(?:input|Input|Field\.Control)\b(?:(?!autoComplete)[^>])*?\btype=["'](email|password|tel)["'](?:(?!autoComplete)[^>])*>/g,
+      "autocomplete",
+      (m) => `a type="${m[1]}" input without autoComplete: set it (e.g. "email", "current-password", "tel") so browsers and password managers can fill it`,
+    ),
+    ...each(
+      src,
       /\bMath\.random\s*\(|\bDate\.now\s*\(|\bnew\s+Date\s*\(\s*\)/g,
       "deterministic",
       (m) => `${m[0].replace(/\s+/g, "")} makes the render differ between server and browser: take time and randomness from props or useWirefront().now()`,

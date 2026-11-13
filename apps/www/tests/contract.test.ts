@@ -56,6 +56,24 @@ describe("checkView", () => {
   });
 });
 
+describe("placeholder links and autofill", () => {
+  const withMarkup = (jsx: string) => GOOD.replace("return null;", `return (${jsx});`);
+
+  it("rejects href=\"#\" and accepts a real href", () => {
+    expect(rules(withMarkup('<a href="#">Terms</a>'))).toEqual(["placeholder-link"]);
+    expect(rules(withMarkup("<a href={termsHref}>Terms</a>"))).toEqual([]);
+  });
+
+  it("requires autoComplete on email, password and tel inputs, in any attribute order", () => {
+    expect(rules(withMarkup('<Input type="email" name="email" />'))).toEqual(["autocomplete"]);
+    expect(rules(withMarkup('<Field.Control name="pw" type="password" />'))).toEqual(["autocomplete"]);
+    expect(rules(withMarkup('<input type="tel" />'))).toEqual(["autocomplete"]);
+    expect(rules(withMarkup('<Input autoComplete="email" type="email" />'))).toEqual([]);
+    expect(rules(withMarkup('<Input type="password" autoComplete="new-password" />'))).toEqual([]);
+    expect(rules(withMarkup('<Input type="text" />'))).toEqual([]);
+  });
+});
+
 describe("link-as-button", () => {
   it("rejects a Button rendered as a link and accepts a styled link", () => {
     const button = GOOD.replace("return null;", 'return <Button nativeButton={false} render={<WirefrontLink href="/x" />}>Go</Button>;');
