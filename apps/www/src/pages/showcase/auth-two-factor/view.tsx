@@ -21,6 +21,7 @@ import { CODE_LENGTH, type Session, TwoFactorInput } from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("twoFactor.<key>"). */
 export const TWO_FACTOR_MESSAGES = {
+  recoveryPlaceholder: "xxxxx-xxxxx",
   step: "Step 2 of 2",
   title: "Two-factor authentication",
   codeHint: "Open your authenticator app and enter the {length}-digit code.",
@@ -185,7 +186,7 @@ function TwoFactorScreen({ onVerify, onSuccess, rememberDays, supportHref, class
                     setRecoveryCode(e.target.value);
                     setInvalid(undefined);
                   }}
-                  placeholder="xxxxx-xxxxx"
+                  placeholder={t.recoveryPlaceholder}
                   type="text"
                   value={recoveryCode}
                 />

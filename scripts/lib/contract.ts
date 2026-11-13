@@ -9,6 +9,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 
 export const SHOWCASE_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "../../apps/www/src/pages/showcase");
 
@@ -32,6 +33,33 @@ function code(source: string): string {
 }
 
 /** The contract's rules for a screen's view.tsx. */
+/** User-facing attributes whose values are copy. */
+const COPY_ATTRIBUTES = new Set(["aria-label", "aria-description", "aria-roledescription", "placeholder", "title", "alt"]);
+
+/**
+ * Copy written into the markup instead of the screen's *_MESSAGES object: JSX text with a word in it, or a
+ * literal user-facing attribute. Symbols and single letters (⌘K, ·, —) aren't copy.
+ */
+function hardCodedCopy(source: string): Violation[] {
+  const file = ts.createSourceFile("view.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const out: Violation[] = [];
+  const at = (node: ts.Node) => file.getLineAndCharacterOfPosition(node.getStart(file)).line + 1;
+  const visit = (node: ts.Node) => {
+    if (ts.isJsxText(node)) {
+      const text = node.text.replace(/&#?\w+;/g, " ").replace(/\s+/g, " ").trim();
+      if (/[A-Za-z]{2,}/.test(text))
+        out.push({ rule: "copy", line: at(node), message: `"${text.slice(0, 40)}" is hard-coded: put it in the screen's messages object` });
+    } else if (ts.isJsxAttribute(node) && COPY_ATTRIBUTES.has(node.name.getText(file))) {
+      const value = node.initializer;
+      if (value && ts.isStringLiteral(value) && /[A-Za-z]{2,}/.test(value.text))
+        out.push({ rule: "copy", line: at(node), message: `${node.name.getText(file)}="${value.text.slice(0, 40)}" is hard-coded: put it in the screen's messages object` });
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(file);
+  return out;
+}
+
 export function checkView(source: string): Violation[] {
   const src = code(source);
   const v: Violation[] = [];
@@ -93,6 +121,7 @@ export function checkView(source: string): Violation[] {
   const isFrame = /\bchildren\s*:\s*ReactNode\b/.test(src);
   if (!isFrame && !/<ScreenBoundary\b/.test(src))
     v.push({ rule: "boundary", message: "render the screen inside <ScreenBoundary name=\"…\"> so a crash shows a retry fallback and reaches onError" });
+  v.push(...hardCodedCopy(src));
   if (!/export\s+(?:interface|type)\s+\w+Props\b/.test(src))
     v.push({ rule: "props", message: "exports no …Props type: the screen's data and callbacks are its contract" });
   return v;

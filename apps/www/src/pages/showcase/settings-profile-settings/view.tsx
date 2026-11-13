@@ -79,6 +79,7 @@ export const PROFILE_SETTINGS_MESSAGES = {
   saved: "Profile saved",
   cropTitle: "Adjust picture",
   cropDescription: "Drag to reposition, then zoom to frame it.",
+  cropHint: "Drag to reposition",
   cropStage: "Picture framing. Drag or use the arrow keys to move, plus and minus to zoom.",
   cropRole: "picture framer",
   cropStyle: "Colour",
@@ -283,12 +284,15 @@ function CropStage({
   initials,
   label,
   roleDescription,
+  hint,
   onChange,
 }: {
   crop: AvatarCrop;
   initials: string;
   label: string;
   roleDescription: string;
+  /** The "drag to reposition" hint over the image. */
+  hint: string;
   onChange: (crop: AvatarCrop) => void;
 }) {
   const uid = useSafeId();
@@ -380,7 +384,7 @@ function CropStage({
         )}
       >
         <MoveIcon className="size-3" />
-        Drag to reposition
+        {hint}
       </span>
     </button>
   );
@@ -418,7 +422,7 @@ function CropDialog({
         </DialogHeader>
         <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 flex flex-col gap-5">
           <div className="mx-auto w-full max-w-64">
-            <CropStage crop={crop} initials={initials} label={t.cropStage} onChange={setCrop} roleDescription={t.cropRole} />
+            <CropStage crop={crop} initials={initials} label={t.cropStage} onChange={setCrop} roleDescription={t.cropRole} hint={t.cropHint} />
           </div>
           <div className="flex items-center gap-2">
             <Button

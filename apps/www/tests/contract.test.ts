@@ -73,8 +73,8 @@ describe("placeholder links and autofill", () => {
   const withMarkup = (jsx: string) => GOOD.replace("return null;", `return (${jsx});`);
 
   it("rejects href=\"#\" and accepts a real href", () => {
-    expect(rules(withMarkup('<a href="#">Terms</a>'))).toEqual(["placeholder-link"]);
-    expect(rules(withMarkup("<a href={termsHref}>Terms</a>"))).toEqual([]);
+    expect(rules(withMarkup('<a href="#">{terms}</a>'))).toEqual(["placeholder-link"]);
+    expect(rules(withMarkup("<a href={termsHref}>{terms}</a>"))).toEqual([]);
   });
 
   it("requires autoComplete on email, password and tel inputs, in any attribute order", () => {
@@ -87,11 +87,27 @@ describe("placeholder links and autofill", () => {
   });
 });
 
+describe("copy", () => {
+  const withMarkup = (jsx: string) => GOOD.replace("return null;", `return (${jsx});`);
+
+  it("rejects text and user-facing attributes written into the markup", () => {
+    expect(rules(withMarkup("<p>Invite people</p>"))).toEqual(["copy"]);
+    expect(rules(withMarkup('<nav aria-label="Pagination" />'))).toEqual(["copy"]);
+    expect(rules(withMarkup('<input placeholder="Search members" />'))).toEqual(["copy"]);
+  });
+
+  it("accepts messages, symbols and entities", () => {
+    expect(rules(withMarkup("<p>{t.invite}</p>"))).toEqual([]);
+    expect(rules(withMarkup('<kbd aria-label={t.shortcut}>⌘K</kbd>'))).toEqual([]);
+    expect(rules(withMarkup("<span>&nbsp;·&nbsp;</span>"))).toEqual([]);
+  });
+});
+
 describe("link-as-button", () => {
   it("rejects a Button rendered as a link and accepts a styled link", () => {
-    const button = GOOD.replace("return null;", 'return <Button nativeButton={false} render={<WirefrontLink href="/x" />}>Go</Button>;');
+    const button = GOOD.replace("return null;", 'return <Button nativeButton={false} render={<WirefrontLink href="/x" />}>{label}</Button>;');
     expect(rules(button)).toEqual(["link-as-button"]);
-    const link = GOOD.replace("return null;", 'return <WirefrontLink className={buttonVariants()} href="/x">Go</WirefrontLink>;');
+    const link = GOOD.replace("return null;", 'return <WirefrontLink className={buttonVariants()} href="/x">{label}</WirefrontLink>;');
     expect(rules(link)).toEqual([]);
   });
 });

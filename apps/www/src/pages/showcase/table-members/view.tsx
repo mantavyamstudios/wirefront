@@ -106,6 +106,7 @@ export const MEMBERS_TABLE_MESSAGES = {
   clearFilters: "Clear filters",
   errorTitle: "Couldn’t load members",
   retry: "Try again",
+  pagination: "Pagination",
   previous: "Previous page",
   next: "Next page",
   range: "{from}–{to} of {total}",
@@ -385,7 +386,7 @@ function MembersTableScreen({
         </div>
 
         {status === "ready" && pages > 1 ? (
-          <nav aria-label="Pagination" className="mt-3 flex items-center justify-end gap-2 text-muted-foreground text-sm">
+          <nav aria-label={t.pagination} className="mt-3 flex items-center justify-end gap-2 text-muted-foreground text-sm">
             <span className="tabular-nums">{interpolate(t.range, { from, to, total })}</span>
             <Button
               aria-label={t.previous}
