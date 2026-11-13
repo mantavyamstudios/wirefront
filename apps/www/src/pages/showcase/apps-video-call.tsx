@@ -936,7 +936,7 @@ export function VideoCall({
             {!left && (
               <span className="flex h-6 shrink-0 items-center gap-1.5 rounded-md bg-destructive/10 px-2 font-medium text-destructive-foreground text-xs tabular-nums">
                 <span className="relative flex size-1.5">
-                  {!reduce && <span className="absolute inset-0 animate-ping rounded-full bg-destructive/60" />}
+                  {!reduce && <span className="absolute inset-0 animate-ping rounded-full bg-destructive/60 motion-reduce:animate-none" />}
                   <span className="relative size-1.5 rounded-full bg-destructive" />
                 </span>
                 {clock(elapsed)}

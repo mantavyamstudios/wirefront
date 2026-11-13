@@ -115,7 +115,7 @@ function EventCard({ event }: { event: Event }) {
             </h3>
             {event.status === "live" ? (
               <Badge className="gap-1 bg-red-700 font-mono text-[10px] text-white">
-                <span className="size-1.5 animate-pulse rounded-full bg-white" />
+                <span className="size-1.5 animate-pulse rounded-full bg-white motion-reduce:animate-none" />
                 LIVE
               </Badge>
             ) : null}

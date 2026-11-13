@@ -132,7 +132,7 @@ function SaveStatus({ state, reduce, t }: { state: "idle" | "saving" | "saved"; 
             key={state}
             transition={{ duration: 0.15, ease: easeOut }}
           >
-            {state === "saved" ? <CheckIcon className="size-3.5" /> : <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground" />}
+            {state === "saved" ? <CheckIcon className="size-3.5" /> : <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground motion-reduce:animate-none" />}
             {state === "saved" ? t.saved : t.saving}
           </motion.span>
         )}

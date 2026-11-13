@@ -759,7 +759,7 @@ export function AppearanceSettings({
                       transition={{ duration: 0.16, ease: easeOut }}
                     >
                       {saveState === "saving" ? (
-                        <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground" />
+                        <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground motion-reduce:animate-none" />
                       ) : (
                         <CheckIcon className="size-3.5 text-success-foreground" />
                       )}

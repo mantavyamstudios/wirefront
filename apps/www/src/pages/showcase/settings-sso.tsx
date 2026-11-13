@@ -306,7 +306,7 @@ function ProviderCard({ provider }: { provider: Provider }) {
         </div>
         {provider.inProgress ? (
           <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-amber-800 dark:text-amber-400">
-            <span className="size-1.5 animate-pulse rounded-full bg-amber-500" />
+            <span className="size-1.5 animate-pulse rounded-full bg-amber-500 motion-reduce:animate-none" />
             Step {provider.inProgress.step} of {provider.inProgress.total}
           </span>
         ) : null}

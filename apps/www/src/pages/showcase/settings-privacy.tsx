@@ -193,7 +193,7 @@ export function SettingsPrivacy() {
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="inline-flex items-center gap-2">
-                    <HourglassIcon className="size-3.5 animate-pulse text-muted-foreground" />
+                    <HourglassIcon className="size-3.5 animate-pulse text-muted-foreground motion-reduce:animate-none" />
                     Preparing archive…
                   </span>
                   <span className="font-mono text-xs tabular-nums">

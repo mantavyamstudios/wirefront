@@ -319,7 +319,7 @@ export function TableLogs() {
               <span
                 className={
                   "size-1.5 rounded-full " +
-                  (paused ? "bg-muted-foreground/60" : "animate-pulse bg-emerald-500")
+                  (paused ? "bg-muted-foreground/60" : "animate-pulse bg-emerald-500 motion-reduce:animate-none")
                 }
               />
               {paused ? "paused" : "live"}

@@ -312,7 +312,7 @@ export function SettingsDeveloper() {
             <div className="mt-3 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-xs/5">
               <div className="flex items-center justify-between border-zinc-800 border-b bg-zinc-900/60 px-3 py-1.5">
                 <div className="flex items-center gap-2 font-mono text-[10px] text-zinc-400 uppercase tracking-[0.25em]">
-                  <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
+                  <span className="size-1.5 animate-pulse rounded-full bg-emerald-500 motion-reduce:animate-none" />
                   console · live
                 </div>
                 <span className="font-mono text-[10px] text-zinc-500 tabular-nums">

@@ -66,6 +66,27 @@ describe("catalogue", () => {
     expect(problems).toEqual([]);
   });
 
+  it("respects prefers-reduced-motion: Motion screens check it, decorative CSS animations stop", () => {
+    // animate-spin is allowed: a spinner conveys that something is loading (WCAG's "essential" case).
+    const decorative = /(?<![\w:/-])animate-(?!spin\b|none\b|in\b|out\b)[\w[\]-]+/;
+    const problems: string[] = [];
+    for (const map of Object.values(SOURCE_FILES)) {
+      for (const file of Object.values(map ?? {})) {
+        for (const source of [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f))) {
+          const code = readFileSync(source, "utf8");
+          const where = path.relative(SHOWCASE_DIR, source);
+          if (/from\s+["']motion\/react["']/.test(code) && !/useReducedMotion|MotionConfig/.test(code))
+            problems.push(`${where}: uses motion without useReducedMotion or MotionConfig`);
+          for (const m of code.matchAll(/(["'`])((?:(?!\1)[^\\\n]|\\.)*)\1/g)) {
+            const classes = m[2] ?? "";
+            if (decorative.test(classes) && !/motion-(?:reduce|safe):/.test(classes)) problems.push(`${where}: "${classes.slice(0, 80)}"`);
+          }
+        }
+      }
+    }
+    expect(problems).toEqual([]);
+  });
+
   it("strips only the text of multi-line code samples when scanning for clock reads", () => {
     const sample = "const code = `line one\nparkedAt: new Date(),`;";
     expect(withoutCodeSamples(sample)).not.toContain("new Date()");

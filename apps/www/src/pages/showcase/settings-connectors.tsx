@@ -1106,7 +1106,7 @@ function DetailPanel({
             >
               <span className={cn("relative flex size-2 shrink-0 rounded-full", statusCopy[status].dot)}>
                 {status === "connecting" && !reduce && (
-                  <span className="absolute inset-0 animate-ping rounded-full bg-info/60" />
+                  <span className="absolute inset-0 animate-ping rounded-full bg-info/60 motion-reduce:animate-none" />
                 )}
               </span>
               <span className="min-w-0">
