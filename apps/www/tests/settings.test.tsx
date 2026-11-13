@@ -11,6 +11,8 @@ import { fail } from "@wirefront/ui/wirefront/types";
 import { ok } from "@wirefront/ui/wirefront/types";
 import * as devFixtures from "@/pages/showcase/settings-developer-settings/fixtures";
 import { DeveloperSettings } from "@/pages/showcase/settings-developer-settings/view";
+import * as profileFixtures from "@/pages/showcase/settings-profile-settings/fixtures";
+import { ProfileSettings } from "@/pages/showcase/settings-profile-settings/view";
 import * as notifyFixtures from "@/pages/showcase/settings-notification-settings/fixtures";
 import * as securityFixtures from "@/pages/showcase/settings-security-settings/fixtures";
 import { SecuritySettings } from "@/pages/showcase/settings-security-settings/view";
@@ -210,5 +212,40 @@ describe("DeveloperSettings", () => {
     fireEvent.click(within(dialog).getByRole("button", { name: "Add endpoint" }));
     expect(await within(dialog).findByText("Use a full https:// address.")).toBeTruthy();
     expect(onCreateEndpoint).not.toHaveBeenCalled();
+  });
+});
+
+describe("ProfileSettings", () => {
+  const base = {
+    domain: "acme.app",
+    product: "Acme",
+    profile: profileFixtures.getProfile,
+    timeZones: profileFixtures.timeZones,
+  };
+
+  it("checks a new username with the builder and offers its suggestions", async () => {
+    const checkUsername = vi.fn(async () => ({ available: false, suggestions: ["ada-hq"] }));
+    render(<ProfileSettings {...base} checkUsername={checkUsername} onSave={vi.fn()} />);
+    fireEvent.change(screen.getByLabelText("Username"), { target: { value: "ada" } });
+    expect(await screen.findByRole("button", { name: "ada-hq" }, { timeout: 2000 })).toBeTruthy();
+    expect(checkUsername).toHaveBeenCalledWith("ada");
+    expect(screen.getByRole("button", { name: "Save" }).hasAttribute("disabled")).toBe(true);
+  });
+
+  it("saves the edited profile from the bar", async () => {
+    const onSave = vi.fn(async (_p: typeof profileFixtures.getProfile) => {});
+    render(<ProfileSettings {...base} checkUsername={vi.fn()} onSave={onSave} />);
+    fireEvent.change(screen.getByLabelText("Public name"), { target: { value: "Ada L." } });
+    fireEvent.click(await screen.findByRole("button", { name: "Save" }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledWith({ ...profileFixtures.getProfile, publicName: "Ada L." }));
+    expect(await screen.findByText("Profile saved")).toBeTruthy();
+  });
+
+  it("keeps the edits and shows why when saving fails", async () => {
+    render(<ProfileSettings {...base} checkUsername={vi.fn()} onSave={async () => fail("That username was just taken.")} />);
+    fireEvent.change(screen.getByLabelText("Public name"), { target: { value: "Ada L." } });
+    fireEvent.click(await screen.findByRole("button", { name: "Save" }));
+    expect((await screen.findByRole("alert")).textContent).toBe("That username was just taken.");
+    expect((screen.getByLabelText("Public name") as HTMLInputElement).value).toBe("Ada L.");
   });
 });
