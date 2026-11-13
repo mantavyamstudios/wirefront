@@ -14,7 +14,7 @@ import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { LifeBuoyIcon } from "lucide-react";
-import { type FormEvent, useId, useState } from "react";
+import { useId, useState } from "react";
 
 import { CODE_LENGTH, type Session, TwoFactorInput } from "./schema";
 
@@ -98,7 +98,7 @@ export function TwoFactor({ onVerify, onSuccess, rememberDays, supportHref, clas
     setInvalid(undefined);
   };
 
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = (event: { preventDefault(): void }) => {
     event.preventDefault();
     if (verify.isPending()) return;
     const input =

@@ -75,15 +75,7 @@
   "cards/payment-method@mobile": {
     "label-content-name-mismatch": 1
   },
-  "forms/invite-teammates@desktop": {
-    "color-contrast": 2,
-    "label-content-name-mismatch": 1
-  },
   "forms/workspace-settings@mobile": {
-    "label-content-name-mismatch": 1
-  },
-  "forms/invite-teammates@mobile": {
-    "color-contrast": 2,
     "label-content-name-mismatch": 1
   },
   "forms/api-key@desktop": {

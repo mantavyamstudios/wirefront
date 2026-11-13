@@ -301,10 +301,6 @@
   "apps/www/src/pages/showcase/forms-api-key.tsx": {
     "lint/a11y/noLabelWithoutControl": 1
   },
-  "apps/www/src/pages/showcase/forms-invite-teammates.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/style/noNonNullAssertion": 1
-  },
   "apps/www/src/pages/showcase/forms-notifications.tsx": {
     "lint/a11y/noLabelWithoutControl": 2,
     "lint/style/noNonNullAssertion": 3
