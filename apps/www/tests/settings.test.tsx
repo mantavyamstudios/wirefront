@@ -9,6 +9,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { SettingsShell } from "@wirefront/ui/settings-shell";
 import { fail } from "@wirefront/ui/wirefront/types";
 import { ok } from "@wirefront/ui/wirefront/types";
+import * as devFixtures from "@/pages/showcase/settings-developer-settings/fixtures";
+import { DeveloperSettings } from "@/pages/showcase/settings-developer-settings/view";
 import * as notifyFixtures from "@/pages/showcase/settings-notification-settings/fixtures";
 import * as securityFixtures from "@/pages/showcase/settings-security-settings/fixtures";
 import { SecuritySettings } from "@/pages/showcase/settings-security-settings/view";
@@ -158,5 +160,55 @@ describe("TeamRoles", () => {
     expect(screen.queryByRole("button", { name: /Duplicate/ })).toBeNull();
     expect(screen.getByRole("checkbox", { name: "Viewer: Delete projects" }).getAttribute("aria-disabled") ?? screen.getByRole("checkbox", { name: "Viewer: Delete projects" }).hasAttribute("data-disabled")).toBeTruthy();
     expect(screen.queryByRole("combobox", { name: "Role for Theo Marsh" })).toBeNull();
+  });
+});
+
+describe("DeveloperSettings", () => {
+  const base = { data: devFixtures.getDeveloper, product: "Acme" };
+
+  it("creates a key with scopes and expiry and shows its secret once", async () => {
+    const onCreateKey = vi.fn(async () => ok(devFixtures.createKey));
+    render(<DeveloperSettings {...base} onCreateKey={onCreateKey} />);
+    fireEvent.click(screen.getByRole("button", { name: "Create key" }));
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.change(within(dialog).getByLabelText("Name"), { target: { value: "Release pipeline" } });
+    fireEvent.click(within(dialog).getByRole("checkbox", { name: "Domains: write" }));
+    fireEvent.click(within(dialog).getByRole("button", { name: "Create key" }));
+    expect(await screen.findByText(devFixtures.createKey.secret)).toBeTruthy();
+    expect(onCreateKey).toHaveBeenCalledWith({
+      name: "Release pipeline",
+      scopes: ["write:domains", "read:projects", "read:deployments", "read:domains"],
+      expiresInDays: 90,
+    });
+  });
+
+  it("fetches the signing secret only when revealed", async () => {
+    const onRevealSecret = vi.fn(async () => ok(devFixtures.getSigningSecret));
+    render(<DeveloperSettings {...base} onRevealSecret={onRevealSecret} />);
+    expect(screen.queryByText(devFixtures.getSigningSecret.secret)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Reveal secret" }));
+    expect(await screen.findByText(devFixtures.getSigningSecret.secret)).toBeTruthy();
+    expect(onRevealSecret).toHaveBeenCalledWith("e1");
+  });
+
+  it("retries failed deliveries and shows the server's results", async () => {
+    const onRetryDeliveries = vi.fn(async ({ deliveryIds }: { endpointId: string; deliveryIds: string[] }) =>
+      ok(deliveryIds.map((id) => ({ ...devFixtures.sendTest, id, event: "deployment.failed" }))),
+    );
+    render(<DeveloperSettings {...base} onRetryDeliveries={onRetryDeliveries} />);
+    fireEvent.click(screen.getByRole("button", { name: "Retry failed" }));
+    await waitFor(() => expect(onRetryDeliveries).toHaveBeenCalledWith({ endpointId: "e1", deliveryIds: ["d1", "d2"] }));
+    await waitFor(() => expect(screen.queryByText("503")).toBeNull());
+  });
+
+  it("validates a new endpoint's URL", async () => {
+    const onCreateEndpoint = vi.fn(async () => ok(devFixtures.createEndpoint));
+    render(<DeveloperSettings {...base} onCreateEndpoint={onCreateEndpoint} />);
+    fireEvent.click(screen.getByRole("button", { name: "Add endpoint" }));
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.change(within(dialog).getByLabelText("Endpoint URL"), { target: { value: "http://insecure.example.com/hook" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Add endpoint" }));
+    expect(await within(dialog).findByText("Use a full https:// address.")).toBeTruthy();
+    expect(onCreateEndpoint).not.toHaveBeenCalled();
   });
 });

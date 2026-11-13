@@ -423,10 +423,6 @@
     "lint/correctness/useExhaustiveDependencies": 2,
     "lint/suspicious/useIterableCallbackReturn": 1
   },
-  "apps/www/src/pages/showcase/settings-developer-settings.tsx": {
-    "lint/a11y/noLabelWithoutControl": 4,
-    "lint/suspicious/useIterableCallbackReturn": 1
-  },
   "apps/www/src/pages/showcase/settings-developer.tsx": {
     "lint/a11y/noLabelWithoutControl": 3,
     "lint/suspicious/noArrayIndexKey": 1
