@@ -6,7 +6,7 @@
  *
  *   npm run test:phase
  *
- * install → browser → responsive audit → visual. Every check starts and
+ * bundle budget → install → browser → responsive audit → visual. Every check starts and
  * retires its own server, so only one runs at a time. All checks run even if
  * one fails; the summary lists each result and the exit code is non-zero if
  * any failed. Output streams through, including `[alert]` lines.
@@ -19,6 +19,7 @@ import { trackProgress } from "./lib/progress";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const CHECKS: [name: string, args: string[]][] = [
+  ["bundle", ["run", "test:bundle"]],
   ["install", ["run", "test:install"]],
   ["browser", ["run", "test:browser"]],
   ["responsive", ["run", "audit:responsive", "--", "--strict"]],

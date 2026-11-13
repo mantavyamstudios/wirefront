@@ -24,6 +24,8 @@ A check that fails is fixed at the cause. Nothing is skipped, silenced or retrie
 | 11 | Layout breaks at some width: overflow, clipping, squeezed text, small tap targets | `npm run audit:responsive -- --strict` at 375 / 768 / 1024 / 1440px | Phase |
 | 12 | A change accidentally alters how a screen looks | `npm run test:visual`: compares every screen against its committed preview and fails on unintended pixel changes | Phase |
 | 13 | Accessibility regressions a linter can't see (contrast, names, roles, landmarks) | axe in `npm run test:browser`, with a per-screen baseline that may only shrink | Phase |
+| 14 | A screen quietly grows what it costs a builder's bundle | `npm run test:bundle`: bundles each shipped screen like an app would (minified, React external) and fails when its gzipped size grows past `bundle-budget.json` by more than 10% + 2 KB; `--update` records new sizes | Fast (CI) |
+| 15 | Screens read the wall clock, animate under reduced motion, crash the page or miss tap-target size | `tests/catalogue.test.ts` (clock and motion rules), the contract checker (`ScreenBoundary`, placeholder links, autofill) and WCAG 2.5.8 in the responsive audit | Fast / Phase |
 | 14 | A browser check measures a screen before it's ready, or waits forever on one that crashed | The settle trigger (`scripts/lib/settle.ts`) measures only settled layouts and fails immediately when the design reports an error | Phase |
 | 15 | A browser check runs against stale code, or leaves servers behind | Browser checks start their own fresh dev server (dependencies re-optimised), warm it up, and retire it when they finish (`scripts/lib/app-server.ts`) | Phase |
 
@@ -39,7 +41,7 @@ A check that fails is fixed at the cause. Nothing is skipped, silenced or retrie
 | Command | What it runs |
 |---|---|
 | `git push` (pre-push hook) | The fast tier: typecheck, licence headers, lint gate, unit tests |
-| `npm run test:phase` | The phase tier, one check after another: install, browser, responsive, visual, with a summary |
+| `npm run test:phase` | The phase tier, one check after another: bundle budget, install, browser, responsive, visual, with a summary |
 | `npm run test:install` | Failure mode 9 (`--templates=`, `--items=` for a sample) |
 | `npm run test:browser` | Failure modes 10 and 13 (`--design=` for a sample; `--update-a11y-baseline` after fixing accessibility problems) |
 | `npm run audit:responsive -- --strict` | Failure mode 11 (`--design=`, `--viewports=`) |

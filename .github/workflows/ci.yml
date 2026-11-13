@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   checks:
-    name: Typecheck, licence headers, tests, build
+    name: Typecheck, licence headers, tests, build, bundle budget
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -27,6 +27,8 @@ jobs:
       - run: npm run spdx:check
       - run: npm test
       - run: npm run build
+      - name: Per-screen bundle budget (gzipped size vs bundle-budget.json)
+        run: npm run test:bundle
 
   lint:
     name: Lint
