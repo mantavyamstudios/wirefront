@@ -19,7 +19,7 @@
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/react-router": "^1.138.0",
     "@tanstack/react-start": "^1.138.0",
-    "@vercel/og": "^0.10.0",
+    "@vercel/og": "^0.10.1",
     "@wirefront/ui": "*",
     "motion": "^14.9.1",
     "nitro": "^3.0.260415-beta",
