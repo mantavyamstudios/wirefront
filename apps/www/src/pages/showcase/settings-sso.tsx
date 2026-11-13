@@ -90,7 +90,7 @@ const INITIAL_MAPPINGS: Mapping[] = [
   { id: "m4", source: "groups", target: "groups" },
 ];
 
-export function SettingsSsoShowcasePage() {
+export function SettingsSso() {
   const [currentStep, setCurrentStep] = useState(2);
   // Steps 1..currentStep-1 are completed when navigating forward; we track
   // the highest step the user has reached so the rail shows checks correctly.

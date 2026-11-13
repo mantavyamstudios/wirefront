@@ -55,7 +55,7 @@ const STEPS: Step[] = [
 // The tooltip is a non-modal Popover anchored to the real target, so Base UI
 // handles placement: right of the target when there's room, flipping or
 // dropping below it on narrow screens. The arrow follows the chosen side.
-export function ToursArrowTooltipShowcasePage() {
+export function ToursArrowTooltip() {
   const [step, setStep] = useState<number | null>(0);
   const current = step == null ? null : STEPS[step]!;
   // The real element for this step. Passing the element itself (not a lookup

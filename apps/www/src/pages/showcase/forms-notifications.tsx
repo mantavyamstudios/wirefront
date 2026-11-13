@@ -89,7 +89,7 @@ const SECTIONS: { id: string; title: string; description: string; prefs: Pref[] 
   },
 ];
 
-export function FormsNotificationsShowcasePage() {
+export function FormsNotifications() {
   const [prefs, setPrefs] = useState<Record<string, { email: boolean; push: boolean }>>(
     () => {
       const out: Record<string, { email: boolean; push: boolean }> = {};

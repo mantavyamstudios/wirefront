@@ -11,7 +11,7 @@ const FEED = [
   { id: 3, who: "Priya", what: "opened a PR for billing webhooks", when: "2h" },
 ];
 
-export function EmptyEndOfFeedShowcasePage() {
+export function EmptyEndOfFeed() {
   return (
     <div className="min-h-svh bg-background">
       <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-12">

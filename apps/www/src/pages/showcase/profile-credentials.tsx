@@ -37,7 +37,7 @@ const KEYS = [
   { label: "MacBook · Touch ID", added: "Aug 2024", lastUsed: "today" },
 ];
 
-export function ProfileCredentialsShowcasePage() {
+export function ProfileCredentials() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-3xl">

@@ -60,7 +60,7 @@ const STATUS_STYLES: Record<Status, string> = {
   void: "bg-muted text-muted-foreground border-border",
 };
 
-export function CardInvoiceShowcasePage() {
+export function CardInvoice() {
   return (
     <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-2xl">

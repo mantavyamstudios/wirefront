@@ -82,7 +82,7 @@ const PERMISSION_TONE: Record<Member["permission"], string> = {
   Viewer: "bg-muted text-muted-foreground",
 };
 
-export function ProfileCompactCardShowcasePage() {
+export function ProfileCompactCard() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-2xl">

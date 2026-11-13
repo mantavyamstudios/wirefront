@@ -102,7 +102,7 @@ const FIRST_RESP_HOURS = [
   18, 14, 16, 12, 10, 14, 11, 9, 8, 10, 7, 8, 6, 8, 9, 7, 6, 8, 7, 6, 5, 7, 6, 8,
 ];
 
-export function DashboardsSupportShowcasePage() {
+export function DashboardsSupport() {
   const totalActive = STATES.filter((s) => s.label !== "resolved").reduce(
     (acc, s) => acc + s.count,
     0,

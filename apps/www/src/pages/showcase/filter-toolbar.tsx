@@ -85,7 +85,7 @@ const INITIAL = {
   density: "rows" as "rows" | "grid",
 };
 
-export function FilterToolbarShowcasePage() {
+export function FilterToolbar() {
   const [query, setQuery] = useState(INITIAL.query);
   const [status, setStatus] = useState(INITIAL.status);
   const [owner, setOwner] = useState(INITIAL.owner);

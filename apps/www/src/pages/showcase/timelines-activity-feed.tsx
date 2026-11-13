@@ -116,7 +116,7 @@ const TONE: Record<string, string> = {
   rose: "bg-rose-500/15 text-rose-600 dark:text-rose-400",
 };
 
-export function TimelinesActivityFeedShowcasePage() {
+export function TimelinesActivityFeed() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-2xl">

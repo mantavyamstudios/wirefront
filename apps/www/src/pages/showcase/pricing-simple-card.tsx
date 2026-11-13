@@ -14,7 +14,7 @@ const FEATURES = [
   "Cancel any time",
 ];
 
-export function PricingSimpleCardShowcasePage() {
+export function PricingSimpleCard() {
   return (
     <div className="relative min-h-svh overflow-hidden bg-background text-foreground">
       <div

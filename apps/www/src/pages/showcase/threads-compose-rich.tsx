@@ -27,7 +27,7 @@ const TOOLS = [
   { Icon: ListIcon, label: "List" },
 ];
 
-export function ThreadsComposeRichShowcasePage() {
+export function ThreadsComposeRich() {
   const [draft, setDraft] = useState(
     "Sounds good. I'll land it tonight after CI passes — should be a clean migration.",
   );

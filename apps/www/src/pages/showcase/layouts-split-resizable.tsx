@@ -38,7 +38,7 @@ const KEY_STEP = 5;
 
 type MobilePane = "code" | "preview";
 
-export function LayoutsSplitResizableShowcasePage() {
+export function LayoutsSplitResizable() {
   const [leftPct, setLeftPct] = useState(50);
   const [dragging, setDragging] = useState(false);
   const [mobilePane, setMobilePane] = useState<MobilePane>("code");

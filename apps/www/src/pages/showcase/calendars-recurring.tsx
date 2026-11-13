@@ -309,7 +309,7 @@ function expandOccurrences(rule: Rule, start: Date, max: number): Date[] {
   return out;
 }
 
-export function CalendarsRecurringShowcasePage() {
+export function CalendarsRecurring() {
   const [rule, setRule] = useState<Rule>(DEFAULT_RULE);
   const [monthOffset, setMonthOffset] = useState(0);
 

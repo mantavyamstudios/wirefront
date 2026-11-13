@@ -52,7 +52,7 @@ const RETENTION_ROWS: ReadonlyArray<{
 
 type ExportPhase = "idle" | "running" | "done";
 
-export function SettingsPrivacyShowcasePage() {
+export function SettingsPrivacy() {
   // ── Export state ────────────────────────────────────────────────────────
   const [include, setInclude] = useState<Record<IncludeKey, boolean>>({
     messages: true,

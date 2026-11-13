@@ -14,7 +14,7 @@ import {
 } from "@wirefront/ui/empty";
 import { Separator } from "@wirefront/ui/separator";
 
-export function EmptyFirstProjectShowcasePage() {
+export function EmptyFirstProject() {
   return (
     <div className="min-h-svh bg-background">
       <header className="border-border/60 border-b">

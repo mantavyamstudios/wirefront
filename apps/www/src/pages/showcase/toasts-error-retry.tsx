@@ -49,7 +49,7 @@ function retry() {
   }, 1200);
 }
 
-export function ToastsErrorRetryShowcasePage() {
+export function ToastsErrorRetry() {
   useEffect(() => notifyFailed(), []);
 
   return (

@@ -91,7 +91,7 @@ const TONE_BG: Record<string, string> = {
   rose: "bg-rose-500/12 text-rose-700 dark:text-rose-400",
 };
 
-export function TimelinesChangelogShowcasePage() {
+export function TimelinesChangelog() {
   return (
     <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12">
       <div className="mx-auto max-w-3xl">

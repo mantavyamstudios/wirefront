@@ -54,7 +54,7 @@ const ORDERS: Order[] = [
 const stageIndex = (s: Stage) => STAGES.findIndex((x) => x.key === s);
 const stageLabel = (s: Stage) => STAGES[stageIndex(s)]!.label;
 
-export function TableOrdersShowcasePage() {
+export function TableOrders() {
   const [selected, setSelected] = useState<Set<string>>(
     () => new Set(ORDERS.filter((o) => o.selected).map((o) => o.id)),
   );

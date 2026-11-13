@@ -60,7 +60,7 @@ function jumpTo(letter: string) {
 // Rows: name + role/email always get the width. Actions show on hover/focus
 // for mouse users and collapse to a ⋯ menu on touch. The A–Z rail supports
 // press-and-drag scrubbing on touch screens.
-export function ProfileDirectoryShowcasePage() {
+export function ProfileDirectory() {
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
   const people = PEOPLE.filter(

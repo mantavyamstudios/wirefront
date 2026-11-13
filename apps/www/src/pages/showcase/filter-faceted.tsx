@@ -90,7 +90,7 @@ const ISSUES: Issue[] = [
   { id: "DSN-79", title: "Card: stat tile sparklines", status: "done", priority: "p3", assignee: "grace", labels: ["design", "feature"] },
 ];
 
-export function FilterFacetedShowcasePage() {
+export function FilterFaceted() {
   const [status, setStatus] = useState<StatusKey[]>(["todo", "in-progress"]);
   const [priority, setPriority] = useState<PriorityKey[]>(["p1"]);
   const [assignee, setAssignee] = useState<AssigneeKey[]>([]);

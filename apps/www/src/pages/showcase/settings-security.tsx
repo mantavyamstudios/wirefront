@@ -134,7 +134,7 @@ const RECOVERY_CODES = [
   "X1U7-AC6T-BG3F",
 ];
 
-export function SettingsSecurityShowcasePage() {
+export function SettingsSecurity() {
   const [revealCodes, setRevealCodes] = useState(false);
 
   return (

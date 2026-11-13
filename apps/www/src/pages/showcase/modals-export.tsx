@@ -29,7 +29,7 @@ const FIELDS = [
   { id: "raw", label: "Raw payloads", default: false },
 ];
 
-export function ModalsExportShowcasePage() {
+export function ModalsExport() {
   const [format, setFormat] = useState<Format>("csv");
 
   return (

@@ -109,7 +109,7 @@ const HEALTH_TONE: Record<Health, { dot: string; label: string }> = {
   deploying: { dot: "bg-sky-500 animate-pulse", label: "text-sky-600 dark:text-sky-400" },
 };
 
-export function DashboardsServicesShowcasePage() {
+export function DashboardsServices() {
   const total = SERVICES.length;
   const healthy = SERVICES.filter((s) => s.health === "healthy").length;
   const degraded = SERVICES.filter((s) => s.health === "degraded").length;

@@ -35,7 +35,7 @@ const TAB_TITLES: Record<TabKey, string> = {
   profile: "Profile",
 };
 
-export function LayoutsBottomNavShowcasePage() {
+export function LayoutsBottomNav() {
   const [activeTab, setActiveTab] = useState<TabKey>("home");
 
   return (

@@ -95,7 +95,7 @@ function matches(n: Notif, f: Filter) {
 
 // On phones the notification centre is a full-screen panel (no card chrome);
 // from sm up it's the familiar popover-sized card.
-export function TimelinesNotificationsShowcasePage() {
+export function TimelinesNotifications() {
   const [filter, setFilter] = useState<Filter>("all");
   const today = TODAY.filter((n) => matches(n, filter));
   const earlier = EARLIER.filter((n) => matches(n, filter));

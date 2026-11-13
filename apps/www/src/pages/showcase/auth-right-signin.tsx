@@ -16,7 +16,7 @@ import {
 } from "@wirefront/ui/input-group";
 import { Separator } from "@wirefront/ui/separator";
 
-export function AuthRightSigninShowcasePage() {
+export function AuthRightSignin() {
   return (
     <div className="grid min-h-svh grid-cols-1 bg-background text-foreground lg:grid-cols-[1.2fr_minmax(440px,1fr)]">
       <HeroColumn />

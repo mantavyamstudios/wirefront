@@ -83,7 +83,7 @@ const ISSUES: Issue[] = [
   { id: "ENG-212", title: "Onboarding: reorder workspace steps", status: "done", priority: "p3", assignee: { initials: "ED", tone: "bg-indigo-500/15" }, labels: ["design"], updated: "Apr 19", estimate: 3 },
 ];
 
-export function TableIssuesShowcasePage() {
+export function TableIssues() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-6xl">

@@ -7,7 +7,7 @@ import { FileTextIcon, ImageIcon, UploadCloudIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
 
-export function EmptyNoFilesShowcasePage() {
+export function EmptyNoFiles() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const [filename, setFilename] = useState<string | null>(null);

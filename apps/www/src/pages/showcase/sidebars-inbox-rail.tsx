@@ -83,7 +83,7 @@ const THREADS: Thread[] = [
 
 const TABS = ["Unread · 3", "All", "Mentions"] as const;
 
-export function SidebarsInboxRailShowcasePage() {
+export function SidebarsInboxRail() {
   const [selectedId, setSelectedId] = useState(
     THREADS.find((t) => t.active)?.id ?? THREADS[0]!.id,
   );

@@ -62,7 +62,7 @@ const SEED: Task[] = [
   },
 ];
 
-export function ToursChecklistShowcasePage() {
+export function ToursChecklist() {
   const [tasks, setTasks] = useState(SEED);
   const [open, setOpen] = useState(true);
   // Phones start with the checklist collapsed to a pill so it doesn't cover

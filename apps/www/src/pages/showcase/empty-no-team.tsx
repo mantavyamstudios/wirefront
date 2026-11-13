@@ -10,7 +10,7 @@ import {
   InputGroupInput,
 } from "@wirefront/ui/input-group";
 
-export function EmptyNoTeamShowcasePage() {
+export function EmptyNoTeam() {
   const inviteUrl = "https://orbit.so/invite/8f3a2c";
   return (
     <div className="relative min-h-svh overflow-x-clip bg-background">

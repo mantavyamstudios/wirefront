@@ -94,7 +94,7 @@ function useOsScheme(): "light" | "dark" {
   );
 }
 
-export function SettingsAppearanceShowcasePage() {
+export function SettingsAppearance() {
   const [mode, setMode] = useState<Mode>("system");
   const [density, setDensity] = useState<Density>("cozy");
   const [palette, setPalette] = useState<Palette>("graphite");

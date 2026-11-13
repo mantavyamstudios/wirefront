@@ -52,7 +52,7 @@ const SECTIONS: { title: string; rows: Row[] }[] = [
 // Phones: pick one plan with the switcher and compare it against the feature
 // names (two columns). md+: the full table in a horizontal scroller with a
 // sticky feature column.
-export function PricingComparisonTableShowcasePage() {
+export function PricingComparisonTable() {
   const [plan, setPlan] = useState("pro");
   // Every plan column hides below md unless it's the picked one.
   const col = (id: string) => (id === plan ? "" : "max-md:hidden ");

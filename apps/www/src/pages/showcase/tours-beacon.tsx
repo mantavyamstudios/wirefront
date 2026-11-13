@@ -10,7 +10,7 @@ import { Button } from "@wirefront/ui/button";
 // Beacons live *inside* the element they point at (a relative wrapper), so they
 // move with the layout. Each one is a Popover trigger with a 40px hit area
 // around the visible dot; Base UI positions the hint and keeps it on screen.
-export function ToursBeaconShowcasePage() {
+export function ToursBeacon() {
   const [seen, setSeen] = useState<string[]>([]);
   const dismiss = (id: string) => setSeen((s) => [...s, id]);
 

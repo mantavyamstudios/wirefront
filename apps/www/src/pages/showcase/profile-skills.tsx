@@ -29,7 +29,7 @@ const SKILLS: Skill[] = [
   { name: "Threat modeling", level: 3, endorsements: 4, endorsers: ["MO"], category: "Security" },
 ];
 
-export function ProfileSkillsShowcasePage() {
+export function ProfileSkills() {
   const [endorsed, setEndorsed] = useState<Set<string>>(() => new Set());
   const toggleEndorse = (name: string) =>
     setEndorsed((prev) => {

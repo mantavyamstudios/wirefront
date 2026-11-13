@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 
-export function ProfileHoverCardShowcasePage() {
+export function ProfileHoverCard() {
   return (
     <div className="grid min-h-svh place-items-center bg-background px-4 py-8 sm:px-8 sm:py-10">
       <div className="grid w-full max-w-5xl grid-cols-1 gap-8 lg:grid-cols-[1fr_360px]">

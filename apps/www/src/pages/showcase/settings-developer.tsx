@@ -183,7 +183,7 @@ const LEVEL_TONE: Record<LogLevel, string> = {
   error: "text-rose-400",
 };
 
-export function SettingsDeveloperShowcasePage() {
+export function SettingsDeveloper() {
   const [flags, setFlags] = useState<Record<string, boolean>>(() => {
     const out: Record<string, boolean> = {};
     for (const g of GROUPS) for (const f of g.flags) out[f.key] = f.defaultOn;

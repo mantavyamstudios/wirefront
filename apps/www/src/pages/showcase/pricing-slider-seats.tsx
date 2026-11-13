@@ -8,7 +8,7 @@ import { Button } from "@wirefront/ui/button";
 
 const PER_SEAT = 24;
 
-export function PricingSliderSeatsShowcasePage() {
+export function PricingSliderSeats() {
   const [seats, setSeats] = useState(8);
   const [annual, setAnnual] = useState(true);
   const monthly = seats * PER_SEAT;

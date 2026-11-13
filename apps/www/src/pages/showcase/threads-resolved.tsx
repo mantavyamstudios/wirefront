@@ -65,7 +65,7 @@ const THREADS: Thread[] = [
   },
 ];
 
-export function ThreadsResolvedShowcasePage() {
+export function ThreadsResolved() {
   const [expanded, setExpanded] = useState<number[]>([]);
   return (
     <div className="min-h-svh bg-background text-foreground">

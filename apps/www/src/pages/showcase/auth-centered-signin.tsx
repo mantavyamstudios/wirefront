@@ -16,7 +16,7 @@ import {
 } from "@wirefront/ui/input-group";
 import { Separator } from "@wirefront/ui/separator";
 
-export function AuthCenteredSigninShowcasePage() {
+export function AuthCenteredSignin() {
   return (
     <div className="relative flex min-h-svh items-center-safe justify-center bg-background px-4 py-12 text-foreground">
       <PageBackdrop />

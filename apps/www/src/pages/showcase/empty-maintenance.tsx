@@ -10,7 +10,7 @@ import { Progress } from "@wirefront/ui/progress";
 
 const TOTAL_SECONDS = 18 * 60;
 
-export function EmptyMaintenanceShowcasePage() {
+export function EmptyMaintenance() {
   const [remaining, setRemaining] = useState(TOTAL_SECONDS);
 
   useEffect(() => {

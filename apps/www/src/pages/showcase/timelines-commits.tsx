@@ -69,7 +69,7 @@ function pathFor(e: Edge) {
   ].join(" ");
 }
 
-export function TimelinesCommitsShowcasePage() {
+export function TimelinesCommits() {
   const numLanes = Math.max(...COMMITS.map((c) => c.lane)) + 1;
   const graphWidth = LANE_X_BASE * 2 + (numLanes - 1) * LANE_GAP;
   const totalHeight = COMMITS.length * ROW_H;

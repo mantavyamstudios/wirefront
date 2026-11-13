@@ -6,7 +6,7 @@ import { useState } from "react";
 import { LightbulbIcon, XIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
 
-export function ToursInlineHintShowcasePage() {
+export function ToursInlineHint() {
   const [open, setOpen] = useState(true);
 
   return (

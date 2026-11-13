@@ -83,7 +83,7 @@ const PRIORITY_STYLE: Record<Priority, string> = {
   urgent: "bg-destructive/15 text-destructive",
 };
 
-export function CardTaskShowcasePage() {
+export function CardTask() {
   return (
     <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">

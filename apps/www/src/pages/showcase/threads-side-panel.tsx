@@ -71,7 +71,7 @@ const PARTICIPANTS = [
 // A real Sheet (focus trap, Esc, labelled) that opens on load for the
 // showcase: full-width on phones, 420px from sm. The composer sits above the
 // home indicator.
-export function ThreadsSidePanelShowcasePage() {
+export function ThreadsSidePanel() {
   return (
     <div className="relative min-h-svh bg-background text-foreground">
       <Sheet defaultOpen>

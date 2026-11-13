@@ -151,7 +151,7 @@ const MESSAGES_BOTTOM: Message[] = [
   },
 ];
 
-export function LayoutsThreePaneShowcasePage() {
+export function LayoutsThreePane() {
   const [activeWorkspace, setActiveWorkspace] = useState(WORKSPACES[0].id);
   const [activeChannel, setActiveChannel] = useState("design");
   // Phones (< md) use Discord's drawer model: the rail + channel list slide over

@@ -126,7 +126,7 @@ const MIN_TO_RATING_VALUE: Record<number, string> = {
   3: "3+",
 };
 
-export function FilterSidebarShowcasePage() {
+export function FilterSidebar() {
   const [state, setState] = useState<FilterState>(INITIAL_STATE);
 
   const filtered = useMemo(() => {

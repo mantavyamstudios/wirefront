@@ -137,7 +137,7 @@ const AVATAR_COLORS: Record<string, string> = {
   OP: "bg-indigo-500/80",
 };
 
-export function LayoutsTwoPaneShowcasePage() {
+export function LayoutsTwoPane() {
   const [selectedId, setSelectedId] = useState<string>("3");
   const [activeTab, setActiveTab] = useState<Tab>("All");
   // Below md, list and message are separate stacked views.

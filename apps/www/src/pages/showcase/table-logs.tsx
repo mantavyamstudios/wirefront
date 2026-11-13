@@ -303,7 +303,7 @@ const ENTRIES: Entry[] = [
   },
 ];
 
-export function TableLogsShowcasePage() {
+export function TableLogs() {
   const [paused, setPaused] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = ENTRIES.find((e) => e.id === selectedId) ?? null;

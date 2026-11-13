@@ -35,7 +35,7 @@ const BARS = [
   72, 84, 90, 86, 95, 100,
 ];
 
-export function DashboardsAnalyticsShowcasePage() {
+export function DashboardsAnalytics() {
   return (
     <div className="min-h-svh bg-background text-foreground">
       <div className="border-b border-border/60 px-4 py-5 sm:px-6 sm:py-6 lg:px-10">

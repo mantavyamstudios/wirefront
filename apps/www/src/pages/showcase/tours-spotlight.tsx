@@ -84,7 +84,7 @@ function useTargetRect(target: string | null) {
 // The spotlight is computed from the real target, so it follows the layout at
 // every breakpoint. sm+: the step card sits below (or above) the target,
 // clamped to the viewport. Phones: the card is a bottom sheet.
-export function ToursSpotlightShowcasePage() {
+export function ToursSpotlight() {
   const [step, setStep] = useState<number | null>(0);
   const current = step == null ? null : STEPS[step]!;
   const rect = useTargetRect(current?.target ?? null);

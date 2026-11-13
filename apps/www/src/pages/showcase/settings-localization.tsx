@@ -108,7 +108,7 @@ const NUMBER_FORMATS: {
   { id: "fr", example: "1 234,56", locale: "fr-FR", hint: "FR / SE" },
 ];
 
-export function SettingsLocalizationShowcasePage() {
+export function SettingsLocalization() {
   const [language, setLanguage] = useState("en-US");
   const [timezone, setTimezone] = useState("America/Los_Angeles");
   const [firstDay, setFirstDay] = useState<FirstDay>("sun");

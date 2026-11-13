@@ -74,7 +74,7 @@ const Collapse = createContext<{
 
 // md+: the classic top-down tree in a horizontal scroller. Phones: an indented,
 // collapsible outline (no sideways panning to find siblings).
-export function ProfileOrgChartShowcasePage() {
+export function ProfileOrgChart() {
   const [closed, setClosed] = useState<Set<string>>(() => new Set());
   // Start the wide tree centred on the root instead of its left edge.
   const scrollerRef = useRef<HTMLDivElement | null>(null);

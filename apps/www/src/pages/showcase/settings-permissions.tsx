@@ -179,7 +179,7 @@ const GROUPS: CapabilityGroup[] = [
   },
 ];
 
-export function SettingsPermissionsShowcasePage() {
+export function SettingsPermissions() {
   const [activeRole, setActiveRole] = useState<RoleId>("admin");
   const [query, setQuery] = useState("");
   const [diffOnly, setDiffOnly] = useState(false);

@@ -65,7 +65,7 @@ type Option =
 // A working mention combobox: typing "@…" at the end of the reply filters
 // people and groups. ↑/↓/Enter/Esc on a keyboard, tap on touch. Phones get the
 // suggestions docked full-width under the composer; sm+ a 20rem popover.
-export function ThreadsMentionPopoverShowcasePage() {
+export function ThreadsMentionPopover() {
   const [value, setValue] = useState(
     "Hey @james — what do you think? Also @jam",
   );

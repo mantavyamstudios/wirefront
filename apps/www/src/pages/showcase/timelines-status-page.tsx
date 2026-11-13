@@ -89,7 +89,7 @@ const STATE_DOT: Record<Severity, string> = {
   resolved: "bg-emerald-500",
 };
 
-export function TimelinesStatusPageShowcasePage() {
+export function TimelinesStatusPage() {
   return (
     <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12">
       <div className="mx-auto max-w-3xl">

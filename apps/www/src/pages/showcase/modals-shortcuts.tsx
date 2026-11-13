@@ -49,7 +49,7 @@ const GROUPS: { name: string; items: { keys: string[]; label: string }[] }[] = [
   },
 ];
 
-export function ModalsShortcutsShowcasePage() {
+export function ModalsShortcuts() {
   return (
     // Real Dialog. The trigger is hidden on touch-only devices, where
     // keyboard shortcuts don't apply (the dialog still opens for the showcase).

@@ -13,7 +13,7 @@ const STAGES = [
   { name: "Invited a teammate", count: 1864, kind: "Conversion" },
 ];
 
-export function ChartsFunnelShowcasePage() {
+export function ChartsFunnel() {
   const max = STAGES[0].count;
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">

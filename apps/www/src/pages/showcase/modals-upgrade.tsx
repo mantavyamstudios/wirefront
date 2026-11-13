@@ -33,7 +33,7 @@ const PLANS = [
   },
 ];
 
-export function ModalsUpgradeShowcasePage() {
+export function ModalsUpgrade() {
   return (
     // Real Dialog. Tall content scrolls inside DialogPanel (the old centred
     // overlay pushed the heading off-screen); bottom sheet on phones.

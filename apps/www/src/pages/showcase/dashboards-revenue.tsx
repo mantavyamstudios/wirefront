@@ -33,7 +33,7 @@ const TOP_ACCOUNTS = [
   { name: "Cal.com", initials: "CL", mrr: 3800, plan: "Business", change: 0.08 },
 ];
 
-export function DashboardsRevenueShowcasePage() {
+export function DashboardsRevenue() {
   const totalMrr = PLANS.reduce((acc, p) => acc + p.mrr, 0);
   const arr = totalMrr * 12;
   const lastMonth = MRR_SERIES[MRR_SERIES.length - 2];

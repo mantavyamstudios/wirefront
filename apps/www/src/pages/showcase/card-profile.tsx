@@ -9,7 +9,7 @@ import { Button } from "@wirefront/ui/button";
 import { Card, CardFooter, CardHeader, CardContent, CardTitle } from "@wirefront/ui/card";
 import { Separator } from "@wirefront/ui/separator";
 
-export function CardProfileShowcasePage() {
+export function CardProfile() {
   return (
     <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-16">
       <div className="mx-auto max-w-md">

@@ -10,7 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { CATEGORIES } from "@/lib/designs";
-import { getShowcase } from "@/pages/showcase/registry";
+import { componentName, getShowcase } from "@/pages/showcase/registry";
 import { SOURCE_FILES } from "@/pages/showcase/source-files";
 import { must } from "./must";
 
@@ -50,7 +50,23 @@ describe("catalogue", () => {
     expect(problems).toEqual([]);
   });
 
-  it("finds a *ShowcasePage component for every listed design", () => {
+  it("ships each flat screen as a component named for it, keeping *ShowcasePage out of shipped files", () => {
+    const problems: string[] = [];
+    for (const map of Object.values(SOURCE_FILES)) {
+      for (const file of Object.values(map ?? {})) {
+        const flat = path.join(SHOWCASE_DIR, `${file}.tsx`);
+        if (!existsSync(flat)) continue;
+        const source = readFileSync(flat, "utf8");
+        if (/\bexport\s+function\s+\w+ShowcasePage\b/.test(source)) problems.push(`${file}.tsx exports a *ShowcasePage`);
+        const hasCompanion = existsSync(path.join(SHOWCASE_DIR, `${file}.showcase.tsx`));
+        if (!hasCompanion && !new RegExp(`\\bexport\\s+function\\s+${componentName(file)}\\b`).test(source))
+          problems.push(`${file}.tsx doesn't export ${componentName(file)}`);
+      }
+    }
+    expect(problems).toEqual([]);
+  });
+
+  it("finds a showcase component for every listed design", () => {
     const missing = designs.filter((d) => !getShowcase(d.category, d.slug));
     expect(missing.map((d) => `${d.category}/${d.slug}`)).toEqual([]);
   });

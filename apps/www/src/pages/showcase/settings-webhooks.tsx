@@ -215,7 +215,7 @@ function prismClass(types: string[]): string {
   return "text-foreground/85";
 }
 
-export function SettingsWebhooksShowcasePage() {
+export function SettingsWebhooks() {
   const [revealed, setRevealed] = useState(false);
   const [copiedSecret, setCopiedSecret] = useState(false);
   const [deliveryFilter, setDeliveryFilter] = useState<"all" | "failed">("all");

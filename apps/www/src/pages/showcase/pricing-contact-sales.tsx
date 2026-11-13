@@ -18,7 +18,7 @@ const FEATURES = [
   "99.99% uptime SLA",
 ];
 
-export function PricingContactSalesShowcasePage() {
+export function PricingContactSales() {
   return (
     <div className="min-h-svh bg-background text-foreground">
       {/* Phones: short pitch → form → proof points, so the form is reachable

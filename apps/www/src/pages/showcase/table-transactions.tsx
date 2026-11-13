@@ -97,7 +97,7 @@ const RANGES = [
 const inflow = TXS.filter((t) => t.direction === "in" && t.status === "succeeded").reduce((a, b) => a + b.amount, 0);
 const outflow = TXS.filter((t) => t.direction === "out" && t.status === "succeeded").reduce((a, b) => a + b.amount, 0);
 
-export function TableTransactionsShowcasePage() {
+export function TableTransactions() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-6xl">

@@ -85,7 +85,7 @@ const INITIAL_CHIPS: ChipState = {
   mrr: { min: 500 },
 };
 
-export function FilterChipsShowcasePage() {
+export function FilterChips() {
   const [query, setQuery] = useState("");
   const [chips, setChips] = useState<ChipState>(INITIAL_CHIPS);
 

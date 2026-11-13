@@ -44,7 +44,7 @@ const DEPARTMENTS: Department[] = [
   },
 ];
 
-export function ProfileTeamGridShowcasePage() {
+export function ProfileTeamGrid() {
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
   const departments = DEPARTMENTS.map((d) => ({

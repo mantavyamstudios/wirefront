@@ -46,7 +46,7 @@ const KINDS: {
   },
 ];
 
-export function ModalsFeedbackShowcasePage() {
+export function ModalsFeedback() {
   const [kind, setKind] = useState<Kind>("idea");
 
   return (

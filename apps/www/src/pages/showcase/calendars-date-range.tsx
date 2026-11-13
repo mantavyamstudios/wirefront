@@ -43,7 +43,7 @@ const before = (a: Day, b: Day) => toDate(a) < toDate(b);
 // md+: popover-style card with a presets rail and two months side by side.
 // Phones: a full-screen sheet — presets become a scrolling chip row, the months
 // stack vertically, and Apply sits in a sticky footer above the home indicator.
-export function CalendarsDateRangeShowcasePage() {
+export function CalendarsDateRange() {
   const [preset, setPreset] = useState<string | null>("Last 14 days");
   const [start, setStart] = useState<Day>({ month: 0, day: 27 });
   const [end, setEnd] = useState<Day | null>({ month: 1, day: 9 });

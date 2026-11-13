@@ -29,7 +29,7 @@ const FILES: UploadFile[] = [
   { name: "moodboard-04.zip", size: "144 MB", progress: 12, state: "paused", kind: "file" },
 ];
 
-export function ModalsUploadFilesShowcasePage() {
+export function ModalsUploadFiles() {
   const total = FILES.length;
   const done = FILES.filter((f) => f.state === "done").length;
   const overall = Math.round(

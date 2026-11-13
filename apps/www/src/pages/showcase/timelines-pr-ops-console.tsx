@@ -83,7 +83,7 @@ const PASSED: Check[] = [
   { app: "linear", name: "Linear / link issue", detail: "Linked ENG-4821", status: "passed" },
 ];
 
-export function TimelinesPrOpsConsoleShowcasePage() {
+export function TimelinesPrOpsConsole() {
   const total = FAILING.length + SKIPPED.length + PASSED.length;
   const passedPct = (PASSED.length / total) * 100;
   const failedPct = (FAILING.length / total) * 100;

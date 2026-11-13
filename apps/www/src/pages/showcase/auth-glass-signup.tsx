@@ -15,7 +15,7 @@ import {
 } from "@wirefront/ui/input-group";
 import { Separator } from "@wirefront/ui/separator";
 
-export function AuthGlassSignupShowcasePage() {
+export function AuthGlassSignup() {
   return (
     <div className="dark relative min-h-svh overflow-hidden bg-[#0a0a0c] text-white flex items-center-safe justify-center px-4 py-10">
       <BlobBackground />

@@ -38,7 +38,7 @@ const METHODS: PaymentMethod[] = [
   },
 ];
 
-export function CardPaymentMethodShowcasePage() {
+export function CardPaymentMethod() {
   const [primaryId, setPrimaryId] = useState(
     METHODS.find((m) => m.primary)?.id,
   );

@@ -35,7 +35,7 @@ const ACTIVITY = [
   { what: "released", target: "v3.4 in @acme/orbit-ui", time: "3d" },
 ];
 
-export function ProfileHeroShowcasePage() {
+export function ProfileHero() {
   return (
     <div className="min-h-svh bg-background text-foreground">
       {/* Cover banner */}

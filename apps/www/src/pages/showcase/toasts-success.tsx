@@ -21,7 +21,7 @@ function notifySaved(timeout?: number) {
   });
 }
 
-export function ToastsSuccessShowcasePage() {
+export function ToastsSuccess() {
   // Shown on load for the showcase (and kept until dismissed).
   useEffect(() => notifySaved(0), []);
 

@@ -89,7 +89,7 @@ const EVENTS: {
   },
 ];
 
-export function TimelinesApprovalsShowcasePage() {
+export function TimelinesApprovals() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-4xl">

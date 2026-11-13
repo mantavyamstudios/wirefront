@@ -27,7 +27,7 @@ const INITIAL: Job[] = [
 // A persistent upload dock rather than a transient toast: it lives until the
 // uploads finish or the user closes it. Phones: full-width above the home
 // indicator. sm+: a 24rem panel bottom-right. Collapsible on both.
-export function ToastsProgressShowcasePage() {
+export function ToastsProgress() {
   const [jobs, setJobs] = useState<Job[]>(INITIAL);
   const [open, setOpen] = useState(true);
   const [collapsed, setCollapsed] = useState(false);

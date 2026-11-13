@@ -24,7 +24,7 @@ const DEMO_SETUP_KEY = ["H7K3", "9F2N", "P8L4", "RTYQ"];
 const otpauthUrl = (key: string) =>
   `otpauth://totp/Orbit:you@example.com?${new URLSearchParams({ secret: key, issuer: "Orbit" })}`;
 
-export function ModalsTwoFactorShowcasePage() {
+export function ModalsTwoFactor() {
   return (
     // Real Dialog; bottom sheet with a scrolling body on phones. Scanning a
     // QR on the same phone is impossible, so phones get an "Open authenticator"

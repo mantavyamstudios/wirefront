@@ -43,7 +43,7 @@ const STATUS_DOT: Record<Person["status"], string> = {
 
 // md+: intro card with the presence rail beside it. Phones: the intro card
 // gets an "Online now" avatar strip, and the full rail opens in a bottom sheet.
-export function ProfilePresenceRailShowcasePage() {
+export function ProfilePresenceRail() {
   return (
     <div className="min-h-svh bg-background p-4 sm:p-6 lg:p-8">
       <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-[minmax(0,1fr)_280px]">

@@ -26,7 +26,7 @@ const LINK = "https://acme.dev/d/onboarding-handbook-v3-3b9f2a";
 
 // Real Dialog: focus trap, Esc, scroll lock, labelled title. Opens by default
 // for the showcase; on phones it becomes a bottom sheet with a scrolling body.
-export function ModalsShareLinkShowcasePage() {
+export function ModalsShareLink() {
   return (
     <div className="relative min-h-svh bg-background">
       <div className="flex flex-col gap-4 px-4 py-8 sm:flex-row sm:items-start sm:justify-between sm:px-10 sm:py-10">

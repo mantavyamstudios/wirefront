@@ -60,7 +60,7 @@ const STEPS: Step[] = [
 // A real Dialog (focus trap, Esc, scroll lock) that opens on load for the
 // showcase. Swipe left/right on touch, or use ←/→ on a keyboard, to move
 // between steps. On phones it becomes a bottom sheet.
-export function ToursWelcomeCarouselShowcasePage() {
+export function ToursWelcomeCarousel() {
   const [step, setStep] = useState(0);
   const last = step === STEPS.length - 1;
   const current = STEPS[step]!;

@@ -23,7 +23,7 @@ function decay(month: number) {
   return base[month] ?? null;
 }
 
-export function ChartsCohortHeatmapShowcasePage() {
+export function ChartsCohortHeatmap() {
   const months = 12;
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">

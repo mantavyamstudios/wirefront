@@ -35,7 +35,7 @@ const COMMENTS: Comment[] = [
 // lg+: document with the thread in a margin rail. Below lg: one column; the
 // anchored paragraph carries a comment badge that opens the same thread in a
 // bottom sheet.
-export function ThreadsInlineThreadShowcasePage() {
+export function ThreadsInlineThread() {
   const [comments, setComments] = useState(COMMENTS);
   const add = (body: string) =>
     setComments((c) => [

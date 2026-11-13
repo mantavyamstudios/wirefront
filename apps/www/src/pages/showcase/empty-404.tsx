@@ -5,7 +5,7 @@
 import { ArrowLeftIcon, HomeIcon } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
 
-export function Empty404ShowcasePage() {
+export function Empty404() {
   return (
     <div className="relative min-h-svh overflow-hidden bg-background">
       <Grid />

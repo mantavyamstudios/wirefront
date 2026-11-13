@@ -27,7 +27,7 @@ const EDGE = 8;
 // SSR-safe layout effect.
 const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-export function LayoutsFloatingToolbarShowcasePage() {
+export function LayoutsFloatingToolbar() {
   const docRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
   const rangeRef = useRef<Range | null>(null);

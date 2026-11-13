@@ -39,14 +39,14 @@ Every design page has a floating panel: all designs (`Esc`), previous/next desig
 
 - `apps/www/src/lib/designs.ts` — categories and the designs in each (slug, title, blurb).
 - `apps/www/src/pages/showcase/source-files.ts` — maps `(category, design-slug)` → showcase file; `registry.tsx` and the registry build read it.
-- `apps/www/src/pages/showcase/` — one file per design, exporting a `…ShowcasePage` component.
+- `apps/www/src/pages/showcase/` — one file per design, exporting a component named after the file (`tables-invoices.tsx` → `TablesInvoices`); ready-to-wire screens are folders (see `SCREEN-CONTRACT.md`).
 - `apps/www/src/components/wireframe-icons.tsx` — mini SVG wireframes used as category icons.
 
 A design lives at `/c/<category>/<design-slug>`.
 
 ### Adding a new design
 
-1. Add the showcase component in `apps/www/src/pages/showcase/<my-design>.tsx`, exporting `<Name>ShowcasePage`.
+1. Add the screen as a folder `apps/www/src/pages/showcase/<category>-<my-design>/` with `view.tsx`, `schema.ts`, `fixtures.ts` and a `demo.tsx` exporting `<Name>ShowcasePage` (see `SCREEN-CONTRACT.md`).
 2. Map it in `source-files.ts` under the right category.
 3. Add a `{ slug, title, blurb }` entry to that category in `designs.ts`.
 4. Run `SNAPSHOT_ONLY_MISSING=1 npm run snapshot` with the dev server running to add its preview.

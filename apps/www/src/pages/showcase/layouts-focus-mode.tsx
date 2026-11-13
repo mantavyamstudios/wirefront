@@ -41,7 +41,7 @@ const TOC = [
   { id: "closing", label: "Closing thoughts" },
 ];
 
-export function LayoutsFocusModeShowcasePage() {
+export function LayoutsFocusMode() {
   const [focused, setFocused] = useState(true);
   const [progress, setProgress] = useState(0);
 

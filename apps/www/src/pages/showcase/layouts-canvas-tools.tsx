@@ -145,7 +145,7 @@ function defaultName(type: ShapeType, n: number): string {
   return `Text ${n}`;
 }
 
-export function LayoutsCanvasToolsShowcasePage() {
+export function LayoutsCanvasTools() {
   const [shapes, setShapes] = useState<Shape[]>(SEED_SHAPES);
   const [selectedId, setSelectedId] = useState<string | null>("hero");
   const [tool, setTool] = useState<Tool>("move");

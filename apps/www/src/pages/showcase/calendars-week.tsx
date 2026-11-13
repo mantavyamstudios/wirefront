@@ -54,7 +54,7 @@ const DAYS = [
 
 // Five equal day columns from sm up. On phones the grid scrolls horizontally,
 // two days per screen with scroll-snap, while the hour rail stays pinned.
-export function CalendarsWeekShowcasePage() {
+export function CalendarsWeek() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto max-w-6xl">

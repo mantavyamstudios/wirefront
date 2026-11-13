@@ -24,7 +24,7 @@ const DATA = [
   { quarter: "Q4", y2024: 191, y2025: 281, y2026: null },
 ];
 
-export function ChartsBarGroupedShowcasePage() {
+export function ChartsBarGrouped() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">

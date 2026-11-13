@@ -79,7 +79,7 @@ function findTitle(docs: Doc[], id: string): string | undefined {
   return undefined;
 }
 
-export function SidebarsDocsTreeShowcasePage() {
+export function SidebarsDocsTree() {
   const [active, setActive] = useState<string>("events-projector");
   const [navOpen, setNavOpen] = useState(false);
   const [open, setOpen] = useState<Record<string, boolean>>({

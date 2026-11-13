@@ -33,7 +33,7 @@ const NAV = [
 
 type SectionLabel = (typeof NAV)[number]["label"];
 
-export function FormsWorkspaceSettingsShowcasePage() {
+export function FormsWorkspaceSettings() {
   const [name, setName] = useState("Acme inc.");
   const [slug, setSlug] = useState("acme");
   const [dirty, setDirty] = useState(false);

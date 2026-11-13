@@ -42,7 +42,7 @@ function stockTone(p: Product): { label: string; cls: string; barCls: string } {
   return { label: "In stock", cls: "border-emerald-500/30 text-emerald-700 dark:text-emerald-400", barCls: "bg-emerald-500" };
 }
 
-export function TableInventoryShowcasePage() {
+export function TableInventory() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">

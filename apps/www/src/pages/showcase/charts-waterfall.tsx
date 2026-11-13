@@ -76,7 +76,7 @@ function buildBars(): Bar[] {
 
 const BARS = buildBars();
 
-export function ChartsWaterfallShowcasePage() {
+export function ChartsWaterfall() {
   const isPhone = useMediaQuery("max-sm");
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">

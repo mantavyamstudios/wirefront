@@ -64,7 +64,7 @@ const MAX_DURATION = 8;
 
 type DragMode = "move" | "left" | "right";
 
-export function CalendarsTimezoneShowcasePage() {
+export function CalendarsTimezone() {
   const [zones, setZones] = useState<Zone[]>(DEFAULT_ZONES);
   const [start, setStart] = useState(13);
   const [duration, setDuration] = useState(3);

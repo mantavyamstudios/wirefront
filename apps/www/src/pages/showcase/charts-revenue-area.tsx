@@ -35,7 +35,7 @@ const DATA = MONTHS.map((m, i) => ({
   total: SUBS[i] + ADDONS[i] + SERVICES[i],
 }));
 
-export function ChartsRevenueAreaShowcasePage() {
+export function ChartsRevenueArea() {
   const total = DATA[DATA.length - 1].total;
 
   return (

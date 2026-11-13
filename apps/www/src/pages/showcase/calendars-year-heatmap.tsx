@@ -152,7 +152,7 @@ function sampleData(login: string): {
   };
 }
 
-export function CalendarsYearHeatmapShowcasePage() {
+export function CalendarsYearHeatmap() {
   const sample = useMemo(() => sampleData(DEFAULT_USERNAME), []);
   const [input, setInput] = useState(DEFAULT_USERNAME);
   // null = show the seeded sample; a string = fetch that user live.

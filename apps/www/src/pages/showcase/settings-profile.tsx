@@ -17,7 +17,7 @@ import { Label } from "@wirefront/ui/label";
 import { Separator } from "@wirefront/ui/separator";
 import { Textarea } from "@wirefront/ui/textarea";
 
-export function SettingsProfileShowcasePage() {
+export function SettingsProfile() {
   const [dirty, setDirty] = useState(false);
 
   return (

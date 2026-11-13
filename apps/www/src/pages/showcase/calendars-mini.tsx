@@ -21,7 +21,7 @@ const EVENTS_BY_DAY: Record<number, { count: number; tones: string[] }> = {
   30: { count: 1, tones: ["bg-violet-500"] },
 };
 
-export function CalendarsMiniShowcasePage() {
+export function CalendarsMini() {
   const offset = 2; // April 1 = Wed
   const total = 30;
   const cells = offset + total;

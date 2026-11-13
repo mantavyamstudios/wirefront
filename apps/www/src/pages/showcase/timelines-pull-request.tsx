@@ -174,7 +174,7 @@ const TIMELINE: TimelineItem[] = [
   },
 ];
 
-export function TimelinesPullRequestShowcasePage() {
+export function TimelinesPullRequest() {
   const approvals = REVIEWERS.filter((r) => r.state === "approved").length;
   const totalChecks = CHECKS.length;
   const passedChecks = CHECKS.filter((c) => c.status === "passed").length;

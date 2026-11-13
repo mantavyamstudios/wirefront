@@ -58,7 +58,7 @@ const CI_HEALTH = {
   totalRuns: 8421,
 };
 
-export function DashboardsEngineeringShowcasePage() {
+export function DashboardsEngineering() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-6xl space-y-6">

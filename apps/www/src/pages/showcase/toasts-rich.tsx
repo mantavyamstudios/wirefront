@@ -68,7 +68,7 @@ function seed() {
   for (const t of SEED) toasts.add({ ...t, timeout: 0 });
 }
 
-export function ToastsRichShowcasePage() {
+export function ToastsRich() {
   useEffect(() => seed(), []);
   return (
     <Toast.Provider toastManager={toasts} limit={5}>

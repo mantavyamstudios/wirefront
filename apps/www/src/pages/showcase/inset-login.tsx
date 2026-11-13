@@ -21,7 +21,7 @@ import {
 } from "@wirefront/ui/input-group";
 import { Separator } from "@wirefront/ui/separator";
 
-export function InsetLoginShowcasePage() {
+export function InsetLogin() {
   return (
     <div className="relative min-h-svh bg-background text-foreground">
       <PageBackdrop />

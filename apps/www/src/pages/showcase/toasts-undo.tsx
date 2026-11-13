@@ -17,7 +17,7 @@ const toasts = Toast.createToastManager<{ undo: () => void }>();
 // Archive → snackbar with Undo. The undo window is the toast's own timeout,
 // so it pauses while the snackbar is hovered or focused, and the progress
 // bar pauses with it. The window is announced once, not every tick.
-export function ToastsUndoShowcasePage() {
+export function ToastsUndo() {
   const [archived, setArchived] = useState<string[]>([]);
 
   const archive = (name: string) => {

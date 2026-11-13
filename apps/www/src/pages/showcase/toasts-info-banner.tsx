@@ -9,7 +9,7 @@ import { Button } from "@wirefront/ui/button";
 // A system banner is persistent, page-level and dismissible — not a toast.
 // The message wraps instead of truncating (it's the whole point), and on
 // phones "Learn more" drops under the text.
-export function ToastsInfoBannerShowcasePage() {
+export function ToastsInfoBanner() {
   const [visible, setVisible] = useState(true);
 
   return (

@@ -60,7 +60,7 @@ const DEFAULT_COLORS: Record<SwatchKey, string> = {
   foreground: "#0a0a0a",
 };
 
-export function SettingsBrandingShowcasePage() {
+export function SettingsBranding() {
   const [colors, setColors] = useState<Record<SwatchKey, string>>(
     DEFAULT_COLORS,
   );

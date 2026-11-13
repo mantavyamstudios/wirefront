@@ -58,7 +58,7 @@ function eventsOn(day: number) {
 
 // Month grid with chips from sm up. On phones the cells shrink to a date + dots
 // and tapping a day lists its events below the grid (Google/Fantastical-style).
-export function CalendarsMonthShowcasePage() {
+export function CalendarsMonth() {
   // April 2026 — starts on Wed (day 1)
   const offset = 2; // days before April 1 (Mon=0, Tue=1, Wed=2)
   const totalDays = 30;

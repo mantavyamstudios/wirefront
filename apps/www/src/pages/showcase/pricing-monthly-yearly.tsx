@@ -55,7 +55,7 @@ const PLANS: Plan[] = [
   },
 ];
 
-export function PricingMonthlyYearlyShowcasePage() {
+export function PricingMonthlyYearly() {
   const [annual, setAnnual] = useState(true);
 
   return (

@@ -99,7 +99,7 @@ const ALL: Integration[] = [
 
 const FILTERS = ["All", "Connected", "Source", "Notify", "Observability", "Design"];
 
-export function SettingsIntegrationsShowcasePage() {
+export function SettingsIntegrations() {
   const [filter, setFilter] = useState("All");
   const [query, setQuery] = useState("");
 

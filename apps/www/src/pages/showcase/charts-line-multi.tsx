@@ -28,7 +28,7 @@ const DATA = WEB.map((_, i) => ({
   android: ANDROID[i],
 }));
 
-export function ChartsLineMultiShowcasePage() {
+export function ChartsLineMulti() {
   return (
     <div className="min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-5xl">

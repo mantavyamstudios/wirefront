@@ -36,7 +36,7 @@ const WORKSPACES = [
 // Bottom tab bars fit five destinations; the rest stay in the rail/overflow.
 const MOBILE_TABS = ITEMS.slice(0, 5);
 
-export function SidebarsMiniRailShowcasePage() {
+export function SidebarsMiniRail() {
   const active = WORKSPACES.find((w) => w.active)!;
 
   return (

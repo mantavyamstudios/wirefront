@@ -140,7 +140,7 @@ const DAYS_TOTAL = 31;
 const dw = (n: number, extra = 0) =>
   `calc(var(--day-w) * ${n}${extra ? ` + ${extra}px` : ""})`;
 
-export function CalendarsHolidaysShowcasePage() {
+export function CalendarsHolidays() {
   const [team, setTeam] = useState<Member[]>(SEED_TEAM);
   const [holidays, setHolidays] = useState<Holiday[]>(SEED_HOLIDAYS);
   const [activeType, setActiveType] = useState<BlockType>("vacation");

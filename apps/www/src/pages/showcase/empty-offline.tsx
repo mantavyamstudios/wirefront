@@ -13,7 +13,7 @@ const TIPS = [
   "Drafts you typed offline will sync when you're back",
 ];
 
-export function EmptyOfflineShowcasePage() {
+export function EmptyOffline() {
   const [tipIndex, setTipIndex] = useState(0);
   const [retrying, setRetrying] = useState(false);
 

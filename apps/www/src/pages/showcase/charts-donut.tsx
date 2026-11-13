@@ -13,7 +13,7 @@ const SLICES = [
   { name: "Other", value: 3.0, color: chartColor(4) },
 ];
 
-export function ChartsDonutShowcasePage() {
+export function ChartsDonut() {
   const total = SLICES.reduce((acc, s) => acc + s.value, 0);
 
   return (

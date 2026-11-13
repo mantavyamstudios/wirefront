@@ -55,7 +55,7 @@ const SCOPES: { group: string; items: Scope[] }[] = [
   },
 ];
 
-export function FormsApiKeyShowcasePage() {
+export function FormsApiKey() {
   const [name, setName] = useState("");
   const [expiry, setExpiry] = useState("90");
   const [scopes, setScopes] = useState<Set<string>>(

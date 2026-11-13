@@ -70,7 +70,7 @@ const STATUS_DOT: Record<Integration["status"], string> = {
   off: "bg-muted-foreground/40",
 };
 
-export function CardIntegrationShowcasePage() {
+export function CardIntegration() {
   return (
     <div className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-2xl">
