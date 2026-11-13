@@ -144,7 +144,6 @@ export function LayoutsFocusMode() {
                 ? "opacity-100"
                 : "pointer-events-none hidden translate-x-2 opacity-0"
             }`}
-            aria-label="Exit focus mode"
           >
             <Minimize2Icon className="size-3.5" />
             <span>Exit focus</span>

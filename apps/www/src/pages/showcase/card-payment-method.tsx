@@ -92,7 +92,7 @@ export function CardPaymentMethod() {
                     <Button
                       size="xs"
                       variant="ghost"
-                      aria-label={`Make card ending ${m.last4} primary`}
+                      aria-label={`Make primary: card ending ${m.last4}`}
                       onClick={() => setPrimaryId(m.id)}
                     >
                       <span className="max-[360px]:hidden">Make primary</span>

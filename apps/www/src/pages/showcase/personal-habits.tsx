@@ -383,7 +383,7 @@ export function Habits({
                 const active = i === day;
                 return (
                   <button
-                    aria-label={`${dayName(i)}${i === todayIndex ? ", today" : ""}${future ? "" : `, ${doneOn(i)} of ${activeOn(i).length} done`}`}
+                    aria-label={`${dayName(i, "short")} ${d.getDate()}${i === todayIndex ? ", today" : ""}${future ? "" : `, ${doneOn(i)} of ${activeOn(i).length} done`}`}
                     aria-pressed={active}
                     className={cn(
                       "relative flex cursor-pointer flex-col items-center gap-1.5 rounded-xl py-2 outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default",
@@ -404,8 +404,8 @@ export function Habits({
                       />
                     )}
                     <span className={cn("text-xs", active ? "font-medium text-foreground" : "text-muted-foreground")}>
-                      {dayName(i, "short").slice(0, 2)}
-                    </span>
+                      {dayName(i, "short")}
+                    </span>{" "}
                     <span className="relative flex size-8 items-center justify-center">
                       <Ring className="absolute inset-0" size={32} stroke={2.5} value={future ? 0 : dayRatio(i)} />
                       <span className={cn("font-medium text-xs tabular-nums", i === todayIndex && "text-foreground")}>

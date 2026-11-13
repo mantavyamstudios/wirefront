@@ -1260,7 +1260,6 @@ function BudgetRow({
   const left = limit - spent;
   return (
     <button
-      aria-label={`${c.label}: ${money0(spent)} of ${money0(limit)}${over ? `, ${money0(-left)} over` : `, ${money0(left)} left`}`}
       className={cn(
         "flex w-full cursor-pointer items-center gap-3 rounded-xl px-2 py-2.5 text-left outline-none hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring",
         press,
@@ -1279,6 +1278,7 @@ function BudgetRow({
               <Tween format={money0} value={spent} />
             </span>
             <span className="text-muted-foreground"> of {money0(limit)}</span>
+            <span className="sr-only">{over ? `, ${money0(-left)} over` : `, ${money0(left)} left`}</span>
           </span>
         </span>
         <span className="relative h-1.5 rounded-full bg-muted">

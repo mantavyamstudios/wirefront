@@ -5,27 +5,6 @@
   "cards/event@mobile": {
     "color-contrast": 1
   },
-  "cards/payment-method@desktop": {
-    "label-content-name-mismatch": 1
-  },
-  "cards/payment-method@mobile": {
-    "label-content-name-mismatch": 1
-  },
-  "forms/workspace-settings@mobile": {
-    "label-content-name-mismatch": 1
-  },
-  "filters/faceted@desktop": {
-    "label-content-name-mismatch": 3
-  },
-  "filters/faceted@mobile": {
-    "label-content-name-mismatch": 3
-  },
-  "filters/chips@desktop": {
-    "label-content-name-mismatch": 2
-  },
-  "filters/chips@mobile": {
-    "label-content-name-mismatch": 2
-  },
   "layouts/inbox-rail@desktop": {
     "color-contrast": 7
   },
@@ -44,35 +23,11 @@
   "layouts/split-resizable@mobile": {
     "color-contrast": 5
   },
-  "layouts/focus-mode@desktop": {
-    "label-content-name-mismatch": 1
-  },
-  "layouts/focus-mode@mobile": {
-    "label-content-name-mismatch": 1
-  },
   "layouts/canvas-tools@desktop": {
     "color-contrast": 4
   },
   "layouts/canvas-tools@mobile": {
     "color-contrast": 2
-  },
-  "layouts/hairline-shell@desktop": {
-    "label-content-name-mismatch": 2
-  },
-  "dashboards/revenue-overview@desktop": {
-    "label-content-name-mismatch": 5
-  },
-  "dashboards/status-console@mobile": {
-    "label-content-name-mismatch": 5
-  },
-  "dashboards/status-console@desktop": {
-    "label-content-name-mismatch": 9
-  },
-  "dashboards/pipeline-today@mobile": {
-    "label-content-name-mismatch": 4
-  },
-  "dashboards/pipeline-today@desktop": {
-    "label-content-name-mismatch": 14
   },
   "settings/appearance@desktop": {
     "color-contrast": 1
@@ -86,10 +41,10 @@
   "settings/integrations@mobile": {
     "color-contrast": 4
   },
-  "settings/security@desktop": {
+  "settings/security@mobile": {
     "color-contrast": 1
   },
-  "settings/security@mobile": {
+  "settings/security@desktop": {
     "color-contrast": 1
   },
   "settings/branding@mobile": {
@@ -97,15 +52,6 @@
   },
   "settings/branding@desktop": {
     "color-contrast": 2
-  },
-  "settings/sso@mobile": {
-    "label-content-name-mismatch": 1
-  },
-  "settings/sso@desktop": {
-    "label-content-name-mismatch": 4
-  },
-  "calendars/month@desktop": {
-    "label-content-name-mismatch": 18
   },
   "calendars/week@desktop": {
     "color-contrast": 15
@@ -116,16 +62,10 @@
   "calendars/holidays@desktop": {
     "color-contrast": 6
   },
-  "calendars/calendar-week@mobile": {
-    "label-content-name-mismatch": 13
-  },
-  "calendars/calendar-week@desktop": {
-    "label-content-name-mismatch": 21
-  },
-  "toasts/error-retry@desktop": {
+  "toasts/error-retry@mobile": {
     "aria-hidden-focus": 1
   },
-  "toasts/error-retry@mobile": {
+  "toasts/error-retry@desktop": {
     "aria-hidden-focus": 1
   },
   "toasts/info-banner@desktop": {
@@ -149,16 +89,16 @@
   "threads/inline-thread@desktop": {
     "color-contrast": 2
   },
-  "threads/side-panel@mobile": {
-    "color-contrast": 7
-  },
   "threads/side-panel@desktop": {
     "color-contrast": 7
   },
-  "threads/comment-row@mobile": {
-    "color-contrast": 3
+  "threads/side-panel@mobile": {
+    "color-contrast": 7
   },
   "threads/comment-row@desktop": {
+    "color-contrast": 3
+  },
+  "threads/comment-row@mobile": {
     "color-contrast": 3
   },
   "threads/mention-popover@desktop": {
@@ -167,16 +107,16 @@
   "threads/mention-popover@mobile": {
     "color-contrast": 1
   },
-  "threads/resolved@mobile": {
-    "color-contrast": 3
-  },
   "threads/resolved@desktop": {
     "color-contrast": 6
   },
-  "dev-tools/issue-tracker@mobile": {
-    "color-contrast": 1
+  "threads/resolved@mobile": {
+    "color-contrast": 3
   },
   "dev-tools/issue-tracker@desktop": {
+    "color-contrast": 1
+  },
+  "dev-tools/issue-tracker@mobile": {
     "color-contrast": 1
   },
   "apps/mail@mobile": {
@@ -185,25 +125,17 @@
   "apps/mail@desktop": {
     "color-contrast": 1
   },
-  "apps/team-chat@mobile": {
-    "color-contrast": 1
-  },
   "apps/team-chat@desktop": {
     "color-contrast": 2
   },
+  "apps/team-chat@mobile": {
+    "color-contrast": 1
+  },
   "personal/money@mobile": {
-    "color-contrast": 1,
-    "label-content-name-mismatch": 1
+    "color-contrast": 1
   },
   "personal/money@desktop": {
-    "color-contrast": 1,
-    "label-content-name-mismatch": 1
-  },
-  "personal/habits@desktop": {
-    "label-content-name-mismatch": 7
-  },
-  "personal/habits@mobile": {
-    "label-content-name-mismatch": 7
+    "color-contrast": 1
   },
   "commerce/checkout@desktop": {
     "color-contrast": 3

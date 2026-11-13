@@ -229,7 +229,6 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
         <div className="flex h-11 shrink-0 items-center gap-1 border-b px-1.5">
           <DropdownMenu>
             <DropdownMenuTrigger
-              aria-label={`Workspace: ${ws.name}`}
               className="flex h-8 min-w-0 flex-1 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2 text-left outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
             >
               <span
@@ -338,7 +337,6 @@ function HairlineSidebar({ collapsed, workspaces, nav, projects, user, active, o
         <div className="flex h-10 shrink-0 items-center gap-1 border-t px-1.5">
           <DropdownMenu>
             <DropdownMenuTrigger
-              aria-label={`Account: ${user.name}`}
               className="flex h-7 min-w-0 flex-1 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2 text-left outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
             >
               <Avatar className="size-5 shrink-0">

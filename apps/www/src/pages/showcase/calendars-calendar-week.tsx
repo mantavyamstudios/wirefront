@@ -768,8 +768,8 @@ export function CalendarWeek({
                       />
                     )}
                     <span className={cn("relative text-[11px]", isToday ? "font-medium text-destructive-foreground" : "text-muted-foreground")}>
-                      {DOW[weekday(d)].slice(0, 2)}
-                    </span>
+                      {DOW[weekday(d)]}
+                    </span>{" "}
                     <span className={cn("relative font-medium tabular-nums", isToday && "text-destructive-foreground")}>{parse(d).getUTCDate()}</span>
                     {busy.has(d) && <span className="absolute bottom-1 size-1 rounded-full bg-muted-foreground/60" />}
                   </button>
@@ -920,7 +920,6 @@ export function CalendarWeek({
                           return (
                             <motion.div
                               animate={{ opacity: 1, scale: 1, y: ev.start * PX }}
-                              aria-label={`${ev.title || "New event"}, ${fmtRange(ev.start, ev.end)}`}
                               className={cn(
                                 "group/ev @container absolute top-0 z-10 cursor-grab touch-none overflow-hidden rounded-md bg-clip-padding text-left outline-none before:absolute before:inset-y-1 before:left-1 before:w-0.5 before:rounded-full focus-visible:ring-2 focus-visible:ring-ring",
                                 isSel || isDrag ? toneSolid[cal.tone] : toneBlock[cal.tone],
@@ -961,6 +960,7 @@ export function CalendarWeek({
                                 <span className={cn("truncate text-[11px] tabular-nums leading-4", !faded && "opacity-75", short && "hidden shrink-0 @[8rem]:inline")}>
                                   {short ? fmtTime(ev.start) : fmtRange(ev.start, ev.end)}
                                 </span>
+                                {short ? <span className="sr-only">{`, ${fmtRange(ev.start, ev.end)}`}</span> : null}
                                 {!short && height > 64 && ev.location && (
                                   <span className={cn("mt-0.5 flex items-center gap-1 truncate text-[11px] leading-4", !faded && "opacity-75")}>
                                     <MapPinIcon className="size-3 shrink-0" />

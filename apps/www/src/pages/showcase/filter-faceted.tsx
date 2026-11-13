@@ -339,12 +339,6 @@ function FacetTrigger({
           <Button
             size="sm"
             variant="outline"
-            // The selected values are only shown inline from lg; announce them always.
-            aria-label={
-              count > 0
-                ? `${label}: ${selected.map((s) => labelFor(s) ?? s).join(", ")}`
-                : `Filter by ${label.toLowerCase()}`
-            }
             className={
               count > 0
                 ? "border-foreground/20 bg-foreground/5"
@@ -352,7 +346,10 @@ function FacetTrigger({
             }
           >
             {icon ?? <PlusCircleIcon />}
+            {count > 0 ? null : <span className="sr-only">Filter by </span>}
             {label}
+            {/* The selected values are only shown inline from lg; announce them always. */}
+            {count > 0 ? <span className="sr-only">{`: ${selected.map((s) => labelFor(s) ?? s).join(", ")}, `}</span> : null}
             {count > 0 ? (
               <>
                 <Separator orientation="vertical" className="mx-1 h-3" />

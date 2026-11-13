@@ -164,7 +164,6 @@ export function CalendarsMonth() {
                       type="button"
                       onClick={() => setSelected(day)}
                       aria-pressed={isSelected}
-                      aria-label={`April ${day}${all.length ? `, ${all.length} event${all.length > 1 ? "s" : ""}` : ""}`}
                       aria-current={isToday ? "date" : undefined}
                       className={
                         "flex h-full w-full flex-col items-center gap-1 p-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:items-stretch sm:p-1.5 " +
@@ -181,6 +180,7 @@ export function CalendarsMonth() {
                               : "text-foreground/80")
                         }
                       >
+                        <span className="sr-only">April </span>
                         {day}
                       </span>
                       {/* Phones: one dot per event (max 3). */}
@@ -191,7 +191,7 @@ export function CalendarsMonth() {
                           ))}
                         </span>
                       ) : null}
-                      <span aria-hidden className="flex flex-col gap-0.5 max-sm:hidden">
+                      <span className="flex flex-col gap-0.5 max-sm:hidden">
                         {dayEvents.map((e, ei) => (
                           <span
                             key={ei}
@@ -209,6 +209,7 @@ export function CalendarsMonth() {
                           </span>
                         ) : null}
                       </span>
+                      {all.length ? <span className="sr-only">{`, ${all.length} event${all.length > 1 ? "s" : ""}`}</span> : null}
                     </button>
                   ) : null}
                 </div>

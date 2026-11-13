@@ -49,7 +49,7 @@ export function FormsWorkspaceSettings() {
         <div className="sticky top-0 z-20 border-border/60 border-b bg-background/95 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger
-              aria-label={`Settings section: ${section}`}
+              aria-label={`${name} ${section}, switch settings section`}
               className="flex min-h-11 w-full items-center gap-3 rounded-lg border border-border/60 bg-card px-3 text-left"
             >
               <CurrentIcon

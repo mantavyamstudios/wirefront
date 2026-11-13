@@ -1648,18 +1648,12 @@ export function PipelineToday({
             const isSelected = selectedId === deal.id;
             const flag = flagFor(deal.id);
             const owner = ownerOf(deal.ownerId);
-            const engagement = engagementMeta[deal.engagement].label.toLowerCase();
             return (
               <FlipSlot flipKey={deal.id} getScale={getScale} key={deal.id} reduce={reduce} rects={rects}>
                 <div
                   aria-controls={isSelected ? ids.detail : undefined}
                   aria-describedby={ids.instructions}
                   aria-expanded={isSelected}
-                  aria-label={`${deal.company}, ${money(deal.value)}, ${stage.label}, ${
-                    deal.stage === "won"
-                      ? `closed ${deal.closeLabel}`
-                      : `${deal.daysInStage === 0 ? "just moved here" : `${deal.daysInStage} days in stage`}, ${engagement}`
-                  }, owner ${owner?.name ?? "unassigned"}${flag ? `, ${flag.tag}` : ""}`}
                   aria-roledescription="draggable deal"
                   className={cn(
                     "group/card block cursor-grab touch-pan-y select-none rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:cursor-grabbing",
@@ -1907,9 +1901,11 @@ export function PipelineToday({
                 className="flex h-9 cursor-pointer items-center gap-2 rounded-lg px-1.5 font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 type="button"
               >
-                <span className="flex size-7 items-center justify-center rounded-lg bg-primary font-heading font-semibold text-primary-foreground text-xs">
-                  {workspace[0]}
-                </span>
+                <span
+                  aria-hidden
+                  className="flex size-7 items-center justify-center rounded-lg bg-primary font-heading font-semibold text-primary-foreground text-xs before:content-[attr(data-initial)]"
+                  data-initial={workspace[0]}
+                />
                 {workspace}
                 <ChevronDownIcon className="size-3.5 text-muted-foreground" />
               </button>,

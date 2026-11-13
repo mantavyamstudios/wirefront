@@ -183,7 +183,6 @@ export function SettingsSso() {
                       type="button"
                       onClick={() => goTo(s.id)}
                       aria-current={isCurrent ? "step" : undefined}
-                      aria-label={`Step ${s.id}: ${s.title}`}
                       className={`flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-left transition-colors pointer-coarse:min-h-11 ${
                         isCurrent
                           ? "bg-foreground/[0.06]"
@@ -199,8 +198,12 @@ export function SettingsSso() {
                               : "border border-border/70 text-muted-foreground"
                         }`}
                       >
+                        <span className="sr-only">Step </span>
                         {isComplete ? (
-                          <CheckIcon className="size-3" />
+                          <>
+                            <CheckIcon className="size-3" />
+                            <span className="sr-only">{s.id}, done:</span>
+                          </>
                         ) : (
                           s.id
                         )}

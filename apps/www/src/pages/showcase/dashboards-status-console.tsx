@@ -555,7 +555,6 @@ export function StatusConsole({
                           const calm = s.health === "operational";
                           return (
                             <button
-                              aria-label={`${s.name}, ${healthLabel[s.health]}, p95 ${fmtMs(now)}`}
                               aria-selected={on}
                               className={cn(
                                 "group/row relative flex h-11 min-w-0 cursor-pointer items-center gap-4 px-3 text-left outline-none transition-[background-color,opacity] duration-150 ease-out focus-visible:bg-accent/60",
@@ -579,15 +578,26 @@ export function StatusConsole({
                                   <span className={cn("relative size-2 rounded-full transition-colors duration-500", healthDot[s.health])} />
                                 </span>
                                 <span className="truncate font-medium">{s.name}</span>
-                                {!calm && <span className={cn("shrink-0 text-xs transition-colors duration-500", healthText[s.health])}>{healthLabel[s.health]}</span>}
+                                {calm ? (
+                                  <span className="sr-only">, {healthLabel[s.health]}</span>
+                                ) : (
+                                  <span className={cn("shrink-0 text-xs transition-colors duration-500", healthText[s.health])}>{healthLabel[s.health]}</span>
+                                )}
                                 <span className="ms-auto hidden shrink-0 font-mono text-[11px] text-muted-foreground @md:inline @xl:hidden @3xl:inline">{s.region}</span>
                               </span>
                               <span className="hidden w-32 shrink-0 @xl:block @4xl:w-40">
                                 <Sparkline health={s.health} max={s.p95} values={values} />
                               </span>
-                              <span className={cn("w-14 shrink-0 text-right font-medium tabular-nums transition-colors duration-500", calm ? "text-foreground" : healthText[s.health])}>{fmtMs(now)}</span>
-                              <span className="hidden w-14 shrink-0 text-right text-muted-foreground tabular-nums @md:block">{s.errorRate.toFixed(2)}%</span>
-                              <span className="hidden w-16 shrink-0 text-right text-muted-foreground tabular-nums @xl:block">{s.uptime.toFixed(2)}%</span>
+                              <span className={cn("w-14 shrink-0 text-right font-medium tabular-nums transition-colors duration-500", calm ? "text-foreground" : healthText[s.health])}>
+                                <span className="sr-only">, p95 </span>
+                                {fmtMs(now)}
+                              </span>
+                              <span className="hidden w-14 shrink-0 text-right text-muted-foreground tabular-nums @md:block">
+                                {s.errorRate.toFixed(2)}%<span className="sr-only"> errors</span>
+                              </span>
+                              <span className="hidden w-16 shrink-0 text-right text-muted-foreground tabular-nums @xl:block">
+                                {s.uptime.toFixed(2)}%<span className="sr-only"> uptime</span>
+                              </span>
                             </button>
                           );
                         })}

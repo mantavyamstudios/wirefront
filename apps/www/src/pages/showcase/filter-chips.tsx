@@ -403,7 +403,7 @@ function ChipShell({
           render={
             <button
               type="button"
-              aria-label={`Edit ${field}: ${values.join(", ")}`}
+              aria-label={`Edit ${field}: ${values[0]}${values.length > 1 ? ` +${values.length - 1} (${values.slice(1).join(", ")})` : ""}`}
               className="flex min-h-7 min-w-0 cursor-pointer items-center gap-1 px-2 py-1 hover:bg-accent/60 pointer-coarse:min-h-10"
             >
               {values.length > 1 ? (

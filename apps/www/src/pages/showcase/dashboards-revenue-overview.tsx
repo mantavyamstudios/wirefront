@@ -662,7 +662,7 @@ function RangeSwitch({ value, onChange }: { value: RangeKey; onChange: (v: Range
         return (
           <SegmentedControlItem
             aria-checked={checked}
-            aria-label={r.long}
+            aria-label={`${r.label}, ${r.long}`}
             className="min-w-11 px-2.5 text-muted-foreground text-xs tabular-nums focus-visible:ring-2 focus-visible:ring-ring"
             data-checked={checked ? "" : undefined}
             key={r.value}
@@ -1070,7 +1070,7 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                   animate={{ x: spot.left, y: spot.row * 30 + 4, opacity: 1, scale: 1 }}
                   aria-controls={isOpen ? cardId : undefined}
                   aria-expanded={isOpen}
-                  aria-label={`Chart note: ${m.title}, ${momentDates(m)}`}
+                  aria-label={`${spot.compact ? "" : `${text.label}${text.delta ? ` ${text.delta}` : ""}, `}chart note: ${m.title}, ${momentDates(m)}`}
                   className={cn(
                     "absolute top-0 left-0 z-10 inline-flex h-6 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border bg-background text-xs shadow-xs/5 outline-none before:absolute before:-inset-x-1 before:-inset-y-1 focus-visible:ring-2 focus-visible:ring-ring",
                     "transition-[background-color,border-color,scale] duration-150 ease-out active:scale-[0.97] [@media(hover:hover)]:hover:bg-accent",
