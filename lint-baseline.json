@@ -300,16 +300,6 @@
     "lint/a11y/useSemanticElements": 1,
     "lint/suspicious/noArrayIndexKey": 2
   },
-  "apps/www/src/pages/showcase/modals-export.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1
-  },
-  "apps/www/src/pages/showcase/modals-feedback.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1,
-    "lint/a11y/useSemanticElements": 1
-  },
-  "apps/www/src/pages/showcase/modals-shortcuts.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
   "apps/www/src/pages/showcase/onboarding.tsx": {
     "lint/a11y/noStaticElementInteractions": 1,
     "lint/suspicious/noArrayIndexKey": 1
