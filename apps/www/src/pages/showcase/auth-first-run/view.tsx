@@ -1,9 +1,22 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-// Ported from devl.dev (sean-brydon/devl.dev, registry item `first-run`).
 "use client";
 
+import { Radio } from "@base-ui/react/radio";
+import { RadioGroup } from "@base-ui/react/radio-group";
+import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
+import { Badge } from "@wirefront/ui/badge";
+import { Button, buttonVariants } from "@wirefront/ui/button";
+import { Input } from "@wirefront/ui/input";
+import { cn } from "@wirefront/ui/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import { Spinner } from "@wirefront/ui/spinner";
+import { Textarea } from "@wirefront/ui/textarea";
+import { useAction } from "@wirefront/ui/wirefront/action";
+import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import type { Action } from "@wirefront/ui/wirefront/types";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -11,36 +24,146 @@ import {
   CalendarCheckIcon,
   CheckIcon,
   FlameIcon,
-  GitBranchIcon,
   LifeBuoyIcon,
   type LucideIcon,
-  MailIcon,
-  MessagesSquareIcon,
-  NotebookPenIcon,
-  PenToolIcon,
   PlugIcon,
   PlusIcon,
-  RotateCcwIcon,
   SparklesIcon,
-  TableIcon,
-  TelescopeIcon,
   UserPlusIcon,
   UsersIcon,
   XIcon,
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { type KeyboardEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { cn } from "@wirefront/ui/lib/utils";
-import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
-import { Badge } from "@wirefront/ui/badge";
-import { Button } from "@wirefront/ui/button";
-import { Input } from "@wirefront/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
-import { Spinner } from "@wirefront/ui/spinner";
-import { Textarea } from "@wirefront/ui/textarea";
+import { type KeyboardEvent, type ReactNode, useEffect, useId, useState } from "react";
 
-export type FirstRunTone = "orange" | "teal" | "violet" | "amber" | "rose" | "info" | "success" | "destructive";
+import { type AgentInput, type FirstRunTone, type InviteRole, type InviteStepInput, slugify, type WorkspaceColor, type WorkspaceStepInput } from "./schema";
+
+/** Every string on the screen; override any of them with WirefrontProvider `messages` ("firstRun.<key>"). */
+export const FIRST_RUN_MESSAGES = {
+  setUp: "Set up your workspace",
+  takesMinutes: "Takes about three minutes.",
+  setUpCrumb: "/ Set up",
+  stepOf: "Step {n} of {total}",
+  allDone: "All done",
+  progress: "Your progress",
+  ofTotal: "of {total}",
+  checkName: "Name your workspace",
+  checkNamePending: "Pick a name and URL",
+  checkTools: "Connect a tool",
+  checkToolsMore: "{names} and more",
+  skipped: "Skipped for now",
+  checkTeam: "Invite a teammate",
+  checkTeamSentOne: "1 invite sent",
+  checkTeamSent: "{count} invites sent",
+  checkTeamPending: "Work is better together",
+  checkAgent: "Create your first agent",
+  checkAgentLive: "{name} is live",
+  checkAgentPending: "Start from a template",
+  workspaceTitle: "Name your workspace",
+  workspaceSub: "This is where your agents and your team will live.",
+  colour: "Workspace colour",
+  orange: "Orange",
+  teal: "Teal",
+  violet: "Violet",
+  amber: "Amber",
+  info: "Blue",
+  rose: "Rose",
+  workspaceName: "Workspace name",
+  workspaceNamePlaceholder: "Acme Inc.",
+  nameHint: "Teammates see this in invites and emails.",
+  nameMissing: "Give your workspace a name to continue.",
+  workspaceUrl: "Workspace URL",
+  taken: "Taken",
+  available: "Available",
+  checking: "Checking",
+  slugMissing: "Pick a URL for your workspace.",
+  slugTaken: "{url} is taken. Try another.",
+  slugChecking: "Checking the URL…",
+  slugEdited: "Lowercase letters, numbers and dashes.",
+  slugFromName: "Filled in from the name. Edit it if you like.",
+  useFor: "What will you use {product} for?",
+  toolsTitle: "Connect your tools",
+  toolsSub: "Agents can read and act in the tools you connect. You can change this later.",
+  connect: "Connect",
+  connecting: "Connecting",
+  connected: "Connected",
+  connectLabel: "Connect {name}",
+  connectedLabel: "Connected, disconnect {name}",
+  connectingLabel: "Connecting {name}",
+  toolsCount: "of {total} connected · read-only until you grant more",
+  teamTitle: "Invite your team",
+  teamSub: "Invite people now or later. They’ll get an email with a link.",
+  emails: "Email addresses",
+  addAnother: "Add another",
+  emailPlaceholder: "name@company.com",
+  role: "Role",
+  admin: "Admin",
+  member: "Member",
+  viewer: "Viewer",
+  invite: "Invite",
+  notEmail: "“{value}” doesn’t look like an email",
+  emailHint: "Press Enter or comma to add each address.",
+  removeEmail: "Remove {email}",
+  suggested: "Suggested from your domain",
+  pendingInvites: "Pending invites",
+  noInvites: "No invites yet. You can always do this later.",
+  invitePending: "Invite sent · pending",
+  cancelInvite: "Cancel invite for {email}",
+  agentTitle: "Create your first agent",
+  agentSub: "Pick a starting point. You can tune everything after.",
+  template: "Template",
+  agentName: "Agent name",
+  agentNameHint: "Shown when it posts or replies. You can rename it later.",
+  agentNameMissing: "Your agent needs a name.",
+  defaultAgentName: "My agent",
+  instructions: "Instructions",
+  instructionsPlaceholder: "Describe what this agent should do, in plain words.",
+  preview: "Preview",
+  untitled: "Untitled agent",
+  inWorkspace: "in {name}",
+  yourWorkspace: "your workspace",
+  draft: "Draft",
+  noInstructions: "No instructions yet.",
+  noTools: "No tools connected yet",
+  back: "Back",
+  openWorkspace: "Open workspace",
+  createAgent: "Create agent",
+  skip: "Skip for now",
+  continue: "Continue",
+  needHand: "Need a hand?",
+  needHandBody: "Set up your first agents with us on a 15 minute call.",
+  booked: "Walkthrough booked",
+  bookedBody: "{when}. We’ll send a calendar invite.",
+  changeTime: "Change time",
+  bookWalkthrough: "Book a walkthrough",
+  pickTime: "Pick a time",
+  pickTimeHint: "15 min video call, in your time zone",
+  keepTime: "Keep this time",
+  bookCall: "Book call",
+  ready: "{name} is ready",
+  readySub: "Here’s what you set up. You can change any of it later.",
+  rowWorkspace: "Workspace",
+  rowTools: "Tools",
+  rowTeam: "Team",
+  rowAgent: "Agent",
+  toolsConnected: "{count} connected",
+  noToolsYet: "No tools yet",
+  toolsAdvice: "Agents work best with at least one",
+  invitesPendingOne: "1 invite pending",
+  invitesPending: "{count} invites pending",
+  justYou: "Just you for now",
+  invitesEmail: "They’ll get an email with a link",
+  inviteLater: "Invite people any time from Settings",
+  live: "Live",
+  firstTask: "Picks up its first task in a moment",
+  add: "Add",
+  edit: "Edit",
+  addRow: "Add {row}",
+  editRow: "Edit {row}",
+  genericError: "Something went wrong. Try again.",
+};
+
+type Messages = typeof FIRST_RUN_MESSAGES;
 
 export interface FirstRunTool {
   id: string;
@@ -81,82 +204,14 @@ const tileTone: Record<FirstRunTone, string> = {
   destructive: "bg-red-700",
 };
 
-const defaultTools: FirstRunTool[] = [
-  { id: "relay", name: "Relay", blurb: "Team chat", icon: MessagesSquareIcon, tone: "info" },
-  { id: "forge", name: "Forge", blurb: "Code & reviews", icon: GitBranchIcon, tone: "violet" },
-  { id: "postbox", name: "Postbox", blurb: "Shared inbox", icon: MailIcon, tone: "orange" },
-  { id: "gridline", name: "Gridline", blurb: "Spreadsheets", icon: TableIcon, tone: "success" },
-  { id: "harbor", name: "Harbor Desk", blurb: "Support tickets", icon: LifeBuoyIcon, tone: "teal" },
-  { id: "inkwell", name: "Inkwell", blurb: "Design files", icon: PenToolIcon, tone: "rose" },
-];
-
-const defaultTemplates: AgentTemplate[] = [
-  {
-    id: "triage",
-    name: "Support triage",
-    description: "Tags and drafts first replies",
-    icon: LifeBuoyIcon,
-    tone: "teal",
-    instructions:
-      "Read every new ticket. Tag it by product area and urgency, draft a friendly first reply, and escalate anything about billing to a human.",
-  },
-  {
-    id: "research",
-    name: "Research analyst",
-    description: "Digs up sources, cites them",
-    icon: TelescopeIcon,
-    tone: "info",
-    instructions:
-      "When asked a question, search our docs and the web, compare at least three sources and answer with a short summary plus citations.",
-  },
-  {
-    id: "standup",
-    name: "Standup writer",
-    description: "Daily digest from your tools",
-    icon: NotebookPenIcon,
-    tone: "orange",
-    instructions:
-      "Every weekday at 9:00, collect yesterday's merged work and open blockers, then post a three-bullet standup per person in #team.",
-  },
-  {
-    id: "blank",
-    name: "Start blank",
-    description: "Write your own brief",
-    icon: SparklesIcon,
-    tone: "amber",
-    instructions: "",
-  },
-];
-
-const defaultUseCases = ["Support", "Engineering", "Sales", "Research", "Operations", "Marketing"];
-const defaultSuggestions = ["maya@northwind.io", "theo@northwind.io", "ines@northwind.io"];
-const swatches: { tone: FirstRunTone; label: string }[] = [
-  { tone: "orange", label: "Orange" },
-  { tone: "teal", label: "Teal" },
-  { tone: "violet", label: "Violet" },
-  { tone: "amber", label: "Amber" },
-  { tone: "info", label: "Blue" },
-  { tone: "rose", label: "Rose" },
-];
-const defaultTakenSlugs = ["northwind", "acme", "hearth", "admin"];
-const defaultSlots = ["Tue, Oct 28 · 10:00", "Tue, Oct 28 · 14:30", "Wed, Oct 29 · 09:30", "Thu, Oct 30 · 16:00"];
-const roleItems = { admin: "Admin", member: "Member", viewer: "Viewer" };
-type Role = keyof typeof roleItems;
-type ToolStatus = "idle" | "connecting" | "connected";
+const SWATCHES = ["orange", "teal", "violet", "amber", "info", "rose"] as const;
+const ROLES: InviteRole[] = ["admin", "member", "viewer"];
 
 const spring = { type: "spring", stiffness: 420, damping: 38 } as const;
 const easeOut = [0.23, 1, 0.32, 1] as const;
 const press = "transition-[box-shadow,transform,background-color] duration-150 ease-out active:scale-[0.97]";
-const STEPS = ["Workspace", "Tools", "Team", "Agent"];
-
-function slugify(v: string) {
-  return v
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 32);
-}
+const STEPS = ["workspace", "tools", "team", "agent"] as const;
+const STEP_COUNT = STEPS.length;
 
 function initials(v: string) {
   const parts = v.trim().split(/[\s@._-]+/).filter(Boolean);
@@ -227,7 +282,7 @@ interface ChecklistItem {
   step: number;
 }
 
-function Checklist({ items, current, onGo }: { items: ChecklistItem[]; current: number | null; onGo: (step: number) => void }) {
+function Checklist({ items, current, onGo, t }: { items: ChecklistItem[]; current: number | null; onGo: (step: number) => void; t: Messages }) {
   const reduce = useReducedMotionAfterMount();
   const doneCount = items.filter((i) => i.done).length;
 
@@ -235,10 +290,10 @@ function Checklist({ items, current, onGo }: { items: ChecklistItem[]; current: 
     <div className="flex flex-col">
       <div className="px-2">
         <div className="flex items-baseline justify-between text-xs">
-          <span className="font-medium">{doneCount === items.length ? "All done" : "Your progress"}</span>
+          <span className="font-medium">{doneCount === items.length ? t.allDone : t.progress}</span>
           <span className="flex text-muted-foreground tabular-nums">
             <Rolling value={doneCount} />
-            &nbsp;of {items.length}
+            &nbsp;{interpolate(t.ofTotal, { total: items.length })}
           </span>
         </div>
         <span className="mt-2 block h-1 overflow-hidden rounded-full bg-foreground/8">
@@ -296,147 +351,216 @@ function FieldLabelText({ children, htmlFor }: { children: ReactNode; htmlFor?: 
 }
 
 export interface FirstRunProps {
-  productName?: string;
-  domain?: string;
+  /** Your product's name, shown in the header and copy. */
+  product: string;
+  /** The host workspace URLs live under, e.g. "hearth.app". */
+  domain: string;
   defaultWorkspaceName?: string;
-  useCases?: string[];
-  tools?: FirstRunTool[];
-  templates?: AgentTemplate[];
+  defaultUseCases?: string[];
+  /** Use-case chips on step 1. */
+  useCases: string[];
+  tools: FirstRunTool[];
+  /** Tools already connected, e.g. after returning from an OAuth redirect. */
+  connectedToolIds?: string[];
+  templates: AgentTemplate[];
+  /** Addresses to suggest on the invite step, e.g. colleagues on the signup domain. */
   inviteSuggestions?: string[];
-  takenSlugs?: string[];
+  /** Walkthrough call slots as ISO date-times; the card shows when there are slots and `onBookWalkthrough`. */
   walkthroughSlots?: string[];
-  connectDelay?: number;
-  onFinish?: (summary: { workspace: string; tools: string[]; invites: number; agent: string }) => void;
+  /** Where "Open workspace" goes once setup is done; the link is hidden without it. */
+  workspaceHref?: string;
+  /** Whether a workspace URL is free; checked as the user types. */
+  checkSlug: (slug: string) => Promise<boolean>;
+  /** Saves step 1. Fail with `fieldErrors.slug` if the URL was taken meanwhile. */
+  onSaveWorkspace: Action<WorkspaceStepInput>;
+  /** Connects a tool, e.g. after your OAuth flow. Resolve once it's connected. */
+  onConnectTool: Action<string>;
+  onDisconnectTool?: Action<string>;
+  onInvite: Action<InviteStepInput>;
+  onCancelInvite?: Action<string>;
+  /** Creates the agent on the last step; the finish view shows once it resolves. */
+  onCreateAgent: Action<AgentInput, unknown>;
+  onBookWalkthrough?: Action<string>;
   className?: string;
 }
 
+const failMessage = (result: { error?: string; fieldErrors?: Record<string, string | string[]> }, fallback: string) =>
+  Object.values(result.fieldErrors ?? {}).flat()[0] ?? result.error ?? fallback;
+
+const noAction = async () => {};
+
 export function FirstRun({
-  productName = "Hearth",
-  domain = "hearth.app",
-  defaultWorkspaceName = "Northwind Labs",
-  useCases = defaultUseCases,
-  tools = defaultTools,
-  templates = defaultTemplates,
-  inviteSuggestions = defaultSuggestions,
-  takenSlugs = defaultTakenSlugs,
-  walkthroughSlots = defaultSlots,
-  connectDelay = 1000,
-  onFinish,
+  product,
+  domain,
+  defaultWorkspaceName = "",
+  defaultUseCases = [],
+  useCases,
+  tools,
+  connectedToolIds = [],
+  templates,
+  inviteSuggestions = [],
+  walkthroughSlots = [],
+  workspaceHref,
+  checkSlug,
+  onSaveWorkspace,
+  onConnectTool,
+  onDisconnectTool,
+  onInvite,
+  onCancelInvite,
+  onCreateAgent,
+  onBookWalkthrough,
   className,
 }: FirstRunProps) {
+  const t = useMessages("firstRun", FIRST_RUN_MESSAGES);
   const reduce = useReducedMotionAfterMount();
   const ids = useId();
   const [step, setStep] = useState(0);
   const [dir, setDir] = useState(1);
   const [finished, setFinished] = useState(false);
   const [left, setLeft] = useState<number[]>([]);
+  const [stepError, setStepError] = useState("");
 
   const [name, setName] = useState(defaultWorkspaceName);
-  const [slug, setSlug] = useState(slugify(defaultWorkspaceName));
+  const [slug, setSlug] = useState(() => slugify(defaultWorkspaceName));
   const [slugEdited, setSlugEdited] = useState(false);
-  const [picked, setPicked] = useState<string[]>(["Support"]);
-  const [color, setColor] = useState<FirstRunTone>("teal");
+  const [availability, setAvailability] = useState<"idle" | "checking" | "available" | "taken">("idle");
+  const [picked, setPicked] = useState<string[]>(defaultUseCases);
+  const [color, setColor] = useState<WorkspaceColor>("teal");
 
-  const [toolStatus, setToolStatus] = useState<Record<string, ToolStatus>>({});
-  const timers = useRef<number[]>([]);
+  const [connected, setConnected] = useState<string[]>(connectedToolIds);
 
   const [draft, setDraft] = useState<string[]>([]);
   const [emailText, setEmailText] = useState("");
   const [emailError, setEmailError] = useState("");
   const [shake, setShake] = useState(0);
-  const [role, setRole] = useState<Role>("member");
-  const [invites, setInvites] = useState<{ email: string; role: Role }[]>([]);
+  const [role, setRole] = useState<InviteRole>("member");
+  const [invites, setInvites] = useState<{ email: string; role: InviteRole }[]>([]);
 
   const [templateId, setTemplateId] = useState(templates[0]?.id ?? "");
-  const [agentName, setAgentName] = useState(templates[0]?.name ?? "My agent");
+  const [agentName, setAgentName] = useState(templates[0]?.name ?? "");
   const [agentNameEdited, setAgentNameEdited] = useState(false);
   const [instructions, setInstructions] = useState(templates[0]?.instructions ?? "");
 
+  // Ask the backend straight away for the starting URL, then once typing
+  // pauses; ignore answers for an older slug.
+  const initialSlug = useState(() => slugify(defaultWorkspaceName))[0];
   useEffect(() => {
-    const list = timers.current;
-    return () => list.forEach((t) => window.clearTimeout(t));
-  }, []);
-
-  const connectedTools = tools.filter((t) => toolStatus[t.id] === "connected");
-  const template = templates.find((t) => t.id === templateId) ?? templates[0];
-  const slugTaken = takenSlugs.includes(slug);
-  const workspaceValid = !!name.trim() && !!slug && !slugTaken;
-
-  const doneByStep = [
-    workspaceValid && (left.includes(0) || finished),
-    connectedTools.length > 0,
-    invites.length > 0,
-    finished,
-  ];
-
-  const checklist: ChecklistItem[] = [
-    {
-      label: "Name your workspace",
-      hint: name.trim() ? `${domain}/${slug || "…"}` : "Pick a name and URL",
-      done: doneByStep[0],
-      step: 0,
-    },
-    {
-      label: "Connect a tool",
-      hint: connectedTools.length
-        ? connectedTools.map((t) => t.name).join(", ")
-        : left.includes(1)
-          ? "Skipped for now"
-          : `${tools
-            .slice(0, 2)
-            .map((t) => t.name)
-            .join(", ")} and more`,
-      done: doneByStep[1],
-      step: 1,
-    },
-    {
-      label: "Invite a teammate",
-      hint: invites.length
-        ? `${invites.length} invite${invites.length > 1 ? "s" : ""} sent`
-        : left.includes(2)
-          ? "Skipped for now"
-          : "Work is better together",
-      done: doneByStep[2],
-      step: 2,
-    },
-    {
-      label: "Create your first agent",
-      hint: finished ? `${agentName} is live` : "Start from a template",
-      done: doneByStep[3],
-      step: 3,
-    },
-  ];
+    if (!slug) {
+      setAvailability("idle");
+      return;
+    }
+    let current = true;
+    setAvailability("checking");
+    const timer = setTimeout(
+      () => {
+        checkSlug(slug).then(
+          (free) => current && setAvailability(free ? "available" : "taken"),
+          () => current && setAvailability("idle"),
+        );
+      },
+      slug === initialSlug ? 0 : 300,
+    );
+    return () => {
+      current = false;
+      clearTimeout(timer);
+    };
+  }, [checkSlug, slug, initialSlug]);
 
   const go = (target: number) => {
     setDir(finished || target > step ? 1 : -1);
     setFinished(false);
+    setStepError("");
     setStep(target);
   };
-
-  const next = () => {
+  const advance = () => {
     setLeft((l) => (l.includes(step) ? l : [...l, step]));
-    if (step === STEPS.length - 1) {
-      setDir(1);
-      setFinished(true);
-      onFinish?.({
-        workspace: name,
-        tools: connectedTools.map((t) => t.name),
-        invites: invites.length,
-        agent: agentName,
-      });
-      return;
-    }
     go(step + 1);
   };
 
-  const restart = () => {
-    setFinished(false);
-    setLeft([]);
-    setToolStatus({});
-    setInvites([]);
-    setDraft([]);
-    setDir(-1);
-    setStep(0);
+  const save = useAction(onSaveWorkspace);
+  const connect = useAction(onConnectTool, {
+    onSuccess: (_, id) => setConnected((c) => (c.includes(id) ? c : [...c, id])),
+    onError: setStepError,
+  });
+  const disconnect = useAction(onDisconnectTool ?? noAction, {
+    optimistic: (id) => {
+      setConnected((c) => c.filter((x) => x !== id));
+      return () => setConnected((c) => (c.includes(id) ? c : [...c, id]));
+    },
+    onError: setStepError,
+  });
+  const invite = useAction(onInvite);
+  const cancelInvite = useAction(onCancelInvite ?? noAction, {
+    optimistic: (email) => {
+      const before = invites;
+      setInvites((l) => l.filter((x) => x.email !== email));
+      return () => setInvites(before);
+    },
+    onError: setStepError,
+  });
+  const create = useAction(onCreateAgent);
+
+  const connectedTools = tools.filter((tool) => connected.includes(tool.id));
+  const template = templates.find((x) => x.id === templateId) ?? templates[0];
+  const slugTaken = availability === "taken";
+  const workspaceValid = !!name.trim() && !!slug && availability === "available";
+
+  const doneByStep = [left.includes(0) || finished, connectedTools.length > 0, invites.length > 0, finished];
+
+  const checklist: ChecklistItem[] = [
+    { label: t.checkName, hint: name.trim() ? `${domain}/${slug || "…"}` : t.checkNamePending, done: doneByStep[0], step: 0 },
+    {
+      label: t.checkTools,
+      hint: connectedTools.length
+        ? connectedTools.map((x) => x.name).join(", ")
+        : left.includes(1)
+          ? t.skipped
+          : interpolate(t.checkToolsMore, {
+              names: tools
+                .slice(0, 2)
+                .map((x) => x.name)
+                .join(", "),
+            }),
+      done: doneByStep[1],
+      step: 1,
+    },
+    {
+      label: t.checkTeam,
+      hint: invites.length
+        ? invites.length === 1
+          ? t.checkTeamSentOne
+          : interpolate(t.checkTeamSent, { count: invites.length })
+        : left.includes(2)
+          ? t.skipped
+          : t.checkTeamPending,
+      done: doneByStep[2],
+      step: 2,
+    },
+    { label: t.checkAgent, hint: finished ? interpolate(t.checkAgentLive, { name: agentName }) : t.checkAgentPending, done: doneByStep[3], step: 3 },
+  ];
+
+  const next = async () => {
+    setStepError("");
+    if (step === 0) {
+      const result = await save.run({ name: name.trim(), slug, color, useCases: picked });
+      if (!result.ok) {
+        if (result.fieldErrors?.slug) setAvailability("taken");
+        setStepError(failMessage(result, t.genericError));
+        return;
+      }
+    }
+    if (step === STEP_COUNT - 1) {
+      const result = await create.run({ templateId, name: agentName.trim(), instructions });
+      if (!result.ok) {
+        setStepError(failMessage(result, t.genericError));
+        return;
+      }
+      setLeft((l) => (l.includes(step) ? l : [...l, step]));
+      setDir(1);
+      setFinished(true);
+      return;
+    }
+    advance();
   };
 
   const onName = (v: string) => {
@@ -445,21 +569,17 @@ export function FirstRun({
   };
 
   const toggleTool = (id: string) => {
-    const s = toolStatus[id] ?? "idle";
-    if (s === "connecting") return;
-    if (s === "connected") {
-      setToolStatus((m) => ({ ...m, [id]: "idle" }));
-      return;
-    }
-    setToolStatus((m) => ({ ...m, [id]: "connecting" }));
-    timers.current.push(window.setTimeout(() => setToolStatus((m) => ({ ...m, [id]: "connected" })), connectDelay));
+    if (connect.isPending(id) || disconnect.isPending(id)) return;
+    setStepError("");
+    if (connected.includes(id)) disconnect.run(id, id);
+    else connect.run(id, id);
   };
 
   const commitEmail = (raw: string) => {
     const v = raw.trim().replace(/,$/, "");
     if (!v) return true;
     if (!isEmail(v)) {
-      setEmailError(`“${v}” doesn't look like an email`);
+      setEmailError(interpolate(t.notEmail, { value: v }));
       setShake((n) => n + 1);
       return false;
     }
@@ -478,27 +598,39 @@ export function FirstRun({
     }
   };
 
-  const sendInvites = () => {
-    const ok = commitEmail(emailText);
-    if (!ok) return;
-    const pending = [...draft, ...(isEmail(emailText.trim()) ? [emailText.trim()] : [])];
+  const sendInvites = async () => {
+    if (!commitEmail(emailText)) return;
+    const typed = emailText.trim();
+    const pending = [...draft, ...(isEmail(typed) && !draft.includes(typed) ? [typed] : [])].filter(
+      (email) => !invites.some((i) => i.email === email),
+    );
     if (!pending.length) return;
-    setInvites((list) => [
-      ...pending.filter((e) => !list.some((i) => i.email === e)).map((email) => ({ email, role })),
-      ...list,
-    ]);
+    setStepError("");
+    const invitations = pending.map((email) => ({ email, role }));
+    const result = await invite.run({ invitations });
+    if (!result.ok) {
+      setStepError(failMessage(result, t.genericError));
+      return;
+    }
+    setInvites((list) => [...invitations, ...list]);
     setDraft([]);
     setEmailText("");
   };
 
-  const pickTemplate = (t: AgentTemplate) => {
-    setTemplateId(t.id);
-    setInstructions(t.instructions);
-    if (!agentNameEdited) setAgentName(t.id === "blank" ? "My agent" : t.name);
+  const pickTemplate = (id: string) => {
+    const chosen = templates.find((x) => x.id === id);
+    if (!chosen) return;
+    setTemplateId(chosen.id);
+    setInstructions(chosen.instructions);
+    if (!agentNameEdited) setAgentName(chosen.instructions ? chosen.name : t.defaultAgentName);
   };
 
-  const canNext = step === 0 ? workspaceValid : step === 3 ? !!agentName.trim() : true;
+  const busy = save.isPending() || create.isPending();
+  const canNext = (step === 0 ? workspaceValid : step === 3 ? !!agentName.trim() : true) && !busy;
   const skipping = (step === 1 && !connectedTools.length) || (step === 2 && !invites.length);
+  const showWalkthrough = !!onBookWalkthrough && walkthroughSlots.length > 0;
+  const roleLabel = (r: InviteRole) => t[r];
+  const roleItems = Object.fromEntries(ROLES.map((r) => [r, roleLabel(r)]));
 
   const variants = {
     enter: (d: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: d * 32 }),
@@ -507,27 +639,22 @@ export function FirstRun({
   };
 
   return (
-    <div
-      className={cn(
-        "@container/screen relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm",
-        className,
-      )}
-    >
+    <div className={cn("@container/screen relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm", className)}>
       <aside className="hidden w-64 shrink-0 flex-col border-e bg-muted/30 px-3 py-4 @3xl/screen:flex">
         <div className="flex h-8 items-center gap-2 px-2">
           <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <FlameIcon className="size-3.5" />
           </span>
-          <span className="font-medium">{productName}</span>
+          <span className="font-medium">{product}</span>
         </div>
         <div className="mt-8 px-2">
-          <p className="font-medium">Set up your workspace</p>
-          <p className="mt-0.5 text-muted-foreground text-xs">Takes about three minutes.</p>
+          <p className="font-medium">{t.setUp}</p>
+          <p className="mt-0.5 text-muted-foreground text-xs">{t.takesMinutes}</p>
         </div>
         <div className="mt-6">
-          <Checklist current={finished ? null : step} items={checklist} onGo={go} />
+          <Checklist current={finished ? null : step} items={checklist} onGo={go} t={t} />
         </div>
-        <WalkthroughCard slots={walkthroughSlots} />
+        {showWalkthrough ? <WalkthroughCard onBook={onBookWalkthrough} slots={walkthroughSlots} t={t} /> : null}
       </aside>
 
       <div className="@container flex min-w-0 flex-1 flex-col">
@@ -535,20 +662,18 @@ export function FirstRun({
           <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <FlameIcon className="size-3.5" />
           </span>
-          <span className="font-medium">{productName}</span>
-          <span className="truncate text-muted-foreground">/ Set up</span>
+          <span className="font-medium">{product}</span>
+          <span className="truncate text-muted-foreground">{t.setUpCrumb}</span>
         </header>
 
         <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
           <div className="mx-auto flex max-w-2xl flex-col px-5 pt-8 pb-10 @2xl:px-6 @3xl/screen:pt-16">
             {!finished && (
               <div className="mb-6 flex items-center gap-3">
-                <span className="shrink-0 text-muted-foreground text-xs tabular-nums">
-                  Step {step + 1} of {STEPS.length}
-                </span>
+                <span className="shrink-0 text-muted-foreground text-xs tabular-nums">{interpolate(t.stepOf, { n: step + 1, total: STEP_COUNT })}</span>
                 <div aria-hidden className="flex w-28 gap-1">
-                  {STEPS.map((sName, i) => (
-                    <span className="h-1 flex-1 overflow-hidden rounded-full bg-foreground/10" key={sName}>
+                  {STEPS.map((key, i) => (
+                    <span className="h-1 flex-1 overflow-hidden rounded-full bg-foreground/10" key={key}>
                       <motion.span
                         animate={{ scaleX: i <= step ? 1 : 0 }}
                         className="block h-full origin-left rounded-full bg-primary/80"
@@ -568,6 +693,7 @@ export function FirstRun({
                   invites={invites.length}
                   key="finish"
                   onEdit={go}
+                  t={t}
                   tools={connectedTools}
                   url={`${domain}/${slug}`}
                   workspace={name}
@@ -584,7 +710,7 @@ export function FirstRun({
                 >
                   {step === 0 && (
                     <>
-                      <StepTitle sub="This is where your agents and your team will live." title="Name your workspace" />
+                      <StepTitle sub={t.workspaceSub} title={t.workspaceTitle} />
                       <div className="flex flex-col gap-5">
                         <div className="flex items-center gap-4">
                           <span
@@ -596,70 +722,58 @@ export function FirstRun({
                             {initials(name)}
                           </span>
                           <div>
-                            <p className="mb-1.5 font-medium">Workspace colour</p>
-                            <div aria-label="Workspace colour" className="-ms-1 flex flex-wrap gap-0.5" role="radiogroup">
-                              {swatches.map((sw) => (
-                                <button
-                                  aria-checked={color === sw.tone}
-                                  aria-label={sw.label}
+                            <p className="mb-1.5 font-medium" id={`${ids}-colour`}>
+                              {t.colour}
+                            </p>
+                            <RadioGroup
+                              aria-labelledby={`${ids}-colour`}
+                              className="-ms-1 flex flex-wrap gap-0.5"
+                              onValueChange={(value) => setColor(value as WorkspaceColor)}
+                              value={color}
+                            >
+                              {SWATCHES.map((tone) => (
+                                <Radio.Root
+                                  aria-label={t[tone]}
                                   className="relative flex size-8 cursor-pointer items-center justify-center rounded-full outline-none transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.92]"
-                                  key={sw.tone}
-                                  onClick={() => setColor(sw.tone)}
-                                  role="radio"
-                                  tabIndex={color === sw.tone ? 0 : -1}
-                                  onKeyDown={(e) => {
-                                    const d = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
-                                    if (!d) return;
-                                    e.preventDefault();
-                                    const idx = swatches.findIndex((x) => x.tone === color);
-                                    const nextTone = swatches[(idx + d + swatches.length) % swatches.length].tone;
-                                    setColor(nextTone);
-                                    const btns = e.currentTarget.parentElement?.querySelectorAll("button");
-                                    btns?.[(idx + d + swatches.length) % swatches.length]?.focus();
-                                  }}
-                                  type="button"
+                                  key={tone}
+                                  value={tone}
                                 >
-                                  {color === sw.tone && (
+                                  {color === tone && (
                                     <motion.span
                                       className="absolute inset-0.5 rounded-full border-2 border-foreground/70"
                                       layoutId={`${ids}-swatch`}
                                       transition={reduce ? { duration: 0 } : spring}
                                     />
                                   )}
-                                  <span className={cn("size-5 rounded-full", tileTone[sw.tone])} />
-                                </button>
+                                  <span className={cn("size-5 rounded-full", tileTone[tone])} />
+                                </Radio.Root>
                               ))}
-                            </div>
+                            </RadioGroup>
                           </div>
                         </div>
                         <div>
-                          <FieldLabelText htmlFor={`${ids}-name`}>Workspace name</FieldLabelText>
+                          <FieldLabelText htmlFor={`${ids}-name`}>{t.workspaceName}</FieldLabelText>
                           <Input
                             aria-describedby={`${ids}-name-hint`}
                             aria-invalid={!name.trim() || undefined}
                             id={`${ids}-name`}
                             onChange={(e) => onName(e.target.value)}
-                            placeholder="Acme Inc."
+                            placeholder={t.workspaceNamePlaceholder}
                             value={name}
-                           />
-                          <p
-                            className={cn("mt-1.5 text-xs", name.trim() ? "text-muted-foreground" : "text-destructive-foreground")}
-                            id={`${ids}-name-hint`}
-                          >
-                            {name.trim() ? "Teammates see this in invites and emails." : "Give your workspace a name to continue."}
+                          />
+                          <p className={cn("mt-1.5 text-xs", name.trim() ? "text-muted-foreground" : "text-destructive-foreground")} id={`${ids}-name-hint`}>
+                            {name.trim() ? t.nameHint : t.nameMissing}
                           </p>
                         </div>
                         <div>
-                          <FieldLabelText htmlFor={`${ids}-slug`}>Workspace URL</FieldLabelText>
+                          <FieldLabelText htmlFor={`${ids}-slug`}>{t.workspaceUrl}</FieldLabelText>
                           <div
                             className={cn(
                               "flex w-full items-center overflow-hidden rounded-lg border border-input bg-background shadow-xs/5 focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/24",
                               (slugTaken || !slug) && "border-destructive/48 focus-within:border-destructive/64 focus-within:ring-destructive/16",
                             )}
                           >
-                            <span className="shrink-0 border-e bg-muted px-2.5 py-1.5 text-muted-foreground">
-                              {domain}/
-                            </span>
+                            <span className="shrink-0 border-e bg-muted px-2.5 py-1.5 text-muted-foreground">{domain}/</span>
                             <input
                               aria-describedby={`${ids}-slug-hint`}
                               aria-invalid={slugTaken || !slug || undefined}
@@ -672,39 +786,46 @@ export function FirstRun({
                               value={slug}
                             />
                             <AnimatePresence initial={false} mode="popLayout">
-                              {slug && (
+                              {availability !== "idle" && (
                                 <motion.span
                                   animate={{ scale: 1, opacity: 1 }}
                                   className={cn(
                                     "me-2.5 flex items-center gap-1 text-xs",
-                                    slugTaken ? "text-destructive-foreground" : "text-success-foreground",
+                                    availability === "taken" && "text-destructive-foreground",
+                                    availability === "available" && "text-success-foreground",
+                                    availability === "checking" && "text-muted-foreground",
                                   )}
                                   exit={{ scale: 0.95, opacity: 0, transition: { duration: 0.1 } }}
                                   initial={reduce ? { opacity: 0 } : { scale: 0.95, opacity: 0 }}
-                                  key={slugTaken ? "taken" : "free"}
+                                  key={availability}
                                   transition={{ duration: 0.18, ease: easeOut }}
                                 >
-                                  {slugTaken ? <XIcon className="size-3.5" /> : <CheckIcon className="size-3.5" />}
-                                  <span className="hidden @md:inline">{slugTaken ? "Taken" : "Available"}</span>
+                                  {availability === "checking" ? (
+                                    <Spinner className="size-3.5" />
+                                  ) : availability === "taken" ? (
+                                    <XIcon className="size-3.5" />
+                                  ) : (
+                                    <CheckIcon className="size-3.5" />
+                                  )}
+                                  <span className="hidden @md:inline">
+                                    {availability === "checking" ? t.checking : availability === "taken" ? t.taken : t.available}
+                                  </span>
                                 </motion.span>
                               )}
                             </AnimatePresence>
                           </div>
-                          <p
-                            className={cn("mt-1.5 text-xs", slugTaken || !slug ? "text-destructive-foreground" : "text-muted-foreground")}
-                            id={`${ids}-slug-hint`}
-                          >
+                          <p className={cn("mt-1.5 text-xs", slugTaken || !slug ? "text-destructive-foreground" : "text-muted-foreground")} id={`${ids}-slug-hint`}>
                             {!slug
-                              ? "Pick a URL for your workspace."
+                              ? t.slugMissing
                               : slugTaken
-                                ? `${domain}/${slug} is taken. Try ${slug}-team?`
+                                ? interpolate(t.slugTaken, { url: `${domain}/${slug}` })
                                 : slugEdited
-                                  ? "Lowercase letters, numbers and dashes."
-                                  : "Filled in from the name. Edit it if you like."}
+                                  ? t.slugEdited
+                                  : t.slugFromName}
                           </p>
                         </div>
                         <div>
-                          <p className="mb-2 font-medium">What will you use {productName} for?</p>
+                          <p className="mb-2 font-medium">{interpolate(t.useFor, { product })}</p>
                           <div className="flex flex-wrap gap-1.5">
                             {useCases.map((u) => {
                               const on = picked.includes(u);
@@ -713,9 +834,7 @@ export function FirstRun({
                                   aria-pressed={on}
                                   className={cn(
                                     "flex h-8 cursor-pointer items-center gap-1 rounded-full border px-3 outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ring",
-                                    on
-                                      ? "border-primary bg-primary text-primary-foreground"
-                                      : "bg-background text-muted-foreground hover:text-foreground",
+                                    on ? "border-primary bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:text-foreground",
                                   )}
                                   key={u}
                                   layout={!reduce}
@@ -749,66 +868,80 @@ export function FirstRun({
 
                   {step === 1 && (
                     <>
-                      <StepTitle sub="Agents can read and act in the tools you connect. You can change this later." title="Connect your tools" />
+                      <StepTitle sub={t.toolsSub} title={t.toolsTitle} />
                       <div className="divide-y overflow-hidden rounded-xl border bg-card">
-                        {tools.map((t, i) => {
-                          const s = toolStatus[t.id] ?? "idle";
-                          const Icon = t.icon;
+                        {tools.map((tool, i) => {
+                          const busyTool = connect.isPending(tool.id) || disconnect.isPending(tool.id);
+                          const isOn = connected.includes(tool.id);
+                          const Icon = tool.icon;
+                          const look = cn(
+                            "flex h-8 w-28 shrink-0 items-center justify-center gap-1 overflow-hidden rounded-lg border px-2.5 font-medium text-xs shadow-xs/5",
+                            isOn ? "border-success/32 bg-success/8 text-success-foreground dark:bg-success/16" : "bg-background text-foreground",
+                          );
+                          const content = (
+                            <>
+                              {busyTool && <Spinner className="size-3.5" />}
+                              {isOn && !busyTool && (
+                                <motion.span
+                                  animate={{ scale: 1, opacity: 1 }}
+                                  initial={reduce ? { opacity: 0 } : { scale: 0.8, opacity: 0 }}
+                                  transition={{ duration: 0.18, ease: easeOut }}
+                                >
+                                  <CheckIcon className="size-3.5" strokeWidth={3} />
+                                </motion.span>
+                              )}
+                              {!isOn && !busyTool && <PlusIcon className="size-3.5" />}
+                              {busyTool ? t.connecting : isOn ? t.connected : t.connect}
+                            </>
+                          );
                           return (
                             <motion.div
                               animate={{ opacity: 1, y: 0 }}
                               className="flex items-center gap-3 px-4 py-3"
                               initial={reduce ? false : { opacity: 0, y: 6 }}
-                              key={t.id}
+                              key={tool.id}
                               transition={{ duration: 0.22, ease: easeOut, delay: i * 0.03 }}
                             >
-                              <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg", softTone[t.tone])}>
+                              <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg", softTone[tool.tone])}>
                                 <Icon className="size-4.5" />
                               </span>
                               <span className="min-w-0 flex-1">
-                                <span className="block truncate font-medium">{t.name}</span>
-                                <span className="block truncate text-muted-foreground text-xs">{t.blurb}</span>
+                                <span className="block truncate font-medium">{tool.name}</span>
+                                <span className="block truncate text-muted-foreground text-xs">{tool.blurb}</span>
                               </span>
-                              <button
-                                aria-label={s === "connected" ? `Disconnect ${t.name}` : `Connect ${t.name}`}
-                                className={cn(
-                                  "flex h-8 w-28 shrink-0 cursor-pointer items-center justify-center gap-1 overflow-hidden rounded-lg border px-2.5 font-medium text-xs shadow-xs/5 outline-none transition-[background-color,border-color,color,transform] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] disabled:cursor-default",
-                                  s === "connected"
-                                    ? "border-success/32 bg-success/8 text-success-foreground hover:bg-success/14 dark:bg-success/16"
-                                    : "bg-background text-foreground hover:bg-accent",
-                                )}
-                                disabled={s === "connecting"}
-                                onClick={() => toggleTool(t.id)}
-                                type="button"
-                              >
-                                {s === "connecting" && <Spinner className="size-3.5" />}
-                                {s === "connected" && (
-                                  <motion.span
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    initial={reduce ? { opacity: 0 } : { scale: 0.8, opacity: 0 }}
-                                    transition={{ duration: 0.18, ease: easeOut }}
-                                  >
-                                    <CheckIcon className="size-3.5" strokeWidth={3} />
-                                  </motion.span>
-                                )}
-                                {s === "idle" && <PlusIcon className="size-3.5" />}
-                                {s === "connecting" ? "Connecting" : s === "connected" ? "Connected" : "Connect"}
-                              </button>
+                              {isOn && !onDisconnectTool ? (
+                                <span className={look}>{content}</span>
+                              ) : (
+                                <button
+                                  aria-label={interpolate(busyTool ? t.connectingLabel : isOn ? t.connectedLabel : t.connectLabel, { name: tool.name })}
+                                  className={cn(
+                                    look,
+                                    "cursor-pointer outline-none transition-[background-color,border-color,color,transform] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] disabled:cursor-default",
+                                    isOn ? "hover:bg-success/14" : "hover:bg-accent",
+                                  )}
+                                  disabled={busyTool}
+                                  onClick={() => toggleTool(tool.id)}
+                                  type="button"
+                                >
+                                  {content}
+                                </button>
+                              )}
                             </motion.div>
                           );
                         })}
                       </div>
-                      <p className="mt-3 text-muted-foreground text-xs tabular-nums">
-                        <Rolling value={connectedTools.length} /> of {tools.length} connected · read-only until you grant more
+                      <p className="mt-3 flex text-muted-foreground text-xs tabular-nums">
+                        <Rolling value={connectedTools.length} />
+                        &nbsp;{interpolate(t.toolsCount, { total: tools.length })}
                       </p>
                     </>
                   )}
 
                   {step === 2 && (
                     <>
-                      <StepTitle sub="Invite people now or later. They'll get an email with a link." title="Invite your team" />
+                      <StepTitle sub={t.teamSub} title={t.teamTitle} />
                       <div className="flex flex-col gap-2">
-                        <FieldLabelText htmlFor={`${ids}-email`}>Email addresses</FieldLabelText>
+                        <FieldLabelText htmlFor={`${ids}-email`}>{t.emails}</FieldLabelText>
                         <div className="flex flex-col gap-2 @md:flex-row">
                           <motion.div
                             animate={shake && !reduce ? { x: shake % 2 ? [0, -6, 6, -4, 4, 0] : [0, 6, -6, 4, -4, 0] } : { x: 0 }}
@@ -831,7 +964,7 @@ export function FirstRun({
                                 >
                                   {d}
                                   <button
-                                    aria-label={`Remove ${d}`}
+                                    aria-label={interpolate(t.removeEmail, { email: d })}
                                     className="relative flex size-5 cursor-pointer items-center justify-center rounded-full text-muted-foreground outline-none transition-colors before:absolute before:-inset-1.5 before:rounded-full hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
                                     onClick={() => setDraft((x) => x.filter((y) => y !== d))}
                                     type="button"
@@ -842,7 +975,7 @@ export function FirstRun({
                               ))}
                             </AnimatePresence>
                             <input
-                              aria-describedby={emailError ? `${ids}-email-err` : undefined}
+                              aria-describedby={`${ids}-email-err`}
                               aria-invalid={!!emailError || undefined}
                               className="h-6 min-w-32 flex-1 bg-transparent px-1 outline-none placeholder:text-muted-foreground/72"
                               id={`${ids}-email`}
@@ -852,44 +985,41 @@ export function FirstRun({
                                 if (emailError) setEmailError("");
                               }}
                               onKeyDown={onEmailKey}
-                              placeholder={draft.length ? "Add another" : "name@company.com"}
+                              placeholder={draft.length ? t.addAnother : t.emailPlaceholder}
                               value={emailText}
                             />
                           </motion.div>
                           <div className="flex gap-2">
-                            <Select items={roleItems} onValueChange={(v) => v && setRole(v as Role)} value={role}>
-                              <SelectTrigger aria-label="Role" className="w-28">
+                            <Select items={roleItems} onValueChange={(v) => v && setRole(v as InviteRole)} value={role}>
+                              <SelectTrigger aria-label={t.role} className="w-28">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent align="start">
-                                {Object.entries(roleItems).map(([v, l]) => (
-                                  <SelectItem key={v} value={v}>
-                                    {l}
+                                {ROLES.map((r) => (
+                                  <SelectItem key={r} value={r}>
+                                    {roleLabel(r)}
                                   </SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
                             <Button
                               className={cn("flex-1 @md:flex-none", press)}
-                              disabled={!draft.length && !emailText.trim()}
+                              disabled={(!draft.length && !emailText.trim()) || invite.isPending()}
                               onClick={sendInvites}
                             >
-                              <UserPlusIcon />
-                              Invite
+                              {invite.isPending() ? <Spinner /> : <UserPlusIcon />}
+                              {t.invite}
                             </Button>
                           </div>
                         </div>
-                        <p
-                          className={cn("text-xs", emailError ? "text-destructive-foreground" : "text-muted-foreground")}
-                          id={`${ids}-email-err`}
-                        >
-                          {emailError || "Press Enter or comma to add each address."}
+                        <p className={cn("text-xs", emailError ? "text-destructive-foreground" : "text-muted-foreground")} id={`${ids}-email-err`}>
+                          {emailError || t.emailHint}
                         </p>
                       </div>
 
                       {inviteSuggestions.some((s) => !invites.some((i) => i.email === s) && !draft.includes(s)) && (
                         <div className="mt-4">
-                          <p className="mb-2 font-medium">Suggested from your domain</p>
+                          <p className="mb-2 font-medium">{t.suggested}</p>
                           <div className="flex flex-wrap gap-1.5">
                             {inviteSuggestions
                               .filter((s) => !invites.some((i) => i.email === s) && !draft.includes(s))
@@ -913,7 +1043,7 @@ export function FirstRun({
 
                       <div className="mt-5 rounded-xl border">
                         <div className="flex items-center justify-between border-b px-3 py-2">
-                          <span className="font-medium text-xs">Pending invites</span>
+                          <span className="font-medium text-xs">{t.pendingInvites}</span>
                           <span className="text-muted-foreground text-xs">
                             <Rolling value={invites.length} />
                           </span>
@@ -928,7 +1058,7 @@ export function FirstRun({
                                 initial={{ opacity: 0 }}
                                 key="empty"
                               >
-                                No invites yet. You can always do this later.
+                                {t.noInvites}
                               </motion.li>
                             )}
                             {invites.map((inv) => (
@@ -946,18 +1076,21 @@ export function FirstRun({
                                   </Avatar>
                                   <span className="min-w-0 flex-1">
                                     <span className="block truncate">{inv.email}</span>
-                                    <span className="block text-muted-foreground text-xs">Invite sent · pending</span>
+                                    <span className="block text-muted-foreground text-xs">{t.invitePending}</span>
                                   </span>
-                                  <Badge variant="outline">{roleItems[inv.role]}</Badge>
-                                  <Button
-                                    aria-label={`Cancel invite for ${inv.email}`}
-                                    onClick={() => setInvites((l) => l.filter((x) => x.email !== inv.email))}
-                                    className={press}
-                                    size="icon-sm"
-                                    variant="ghost"
-                                  >
-                                    <XIcon />
-                                  </Button>
+                                  <Badge variant="outline">{roleLabel(inv.role)}</Badge>
+                                  {onCancelInvite ? (
+                                    <Button
+                                      aria-label={interpolate(t.cancelInvite, { email: inv.email })}
+                                      className={press}
+                                      disabled={cancelInvite.isPending(inv.email)}
+                                      onClick={() => cancelInvite.run(inv.email, inv.email)}
+                                      size="icon-sm"
+                                      variant="ghost"
+                                    >
+                                      <XIcon />
+                                    </Button>
+                                  ) : null}
                                 </div>
                               </motion.li>
                             ))}
@@ -969,72 +1102,65 @@ export function FirstRun({
 
                   {step === 3 && template && (
                     <>
-                      <StepTitle sub="Pick a starting point. You can tune everything after." title="Create your first agent" />
+                      <StepTitle sub={t.agentSub} title={t.agentTitle} />
                       <div className="grid grid-cols-1 gap-6 @3xl:grid-cols-[1fr_16rem]">
                         <div className="flex min-w-0 flex-col gap-4">
-                          <div aria-label="Template" className="grid grid-cols-2 gap-2" role="radiogroup">
-                            {templates.map((t) => {
-                              const on = t.id === templateId;
-                              const Icon = t.icon;
+                          <RadioGroup aria-label={t.template} className="grid grid-cols-2 gap-2" onValueChange={(v) => pickTemplate(v as string)} value={templateId}>
+                            {templates.map((x) => {
+                              const Icon = x.icon;
                               return (
-                                <button
-                                  aria-checked={on}
+                                <Radio.Root
                                   className="relative flex cursor-pointer flex-col items-start gap-2 rounded-xl border bg-card p-3 text-start outline-none transition-[background-color,transform] duration-150 ease-out hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
-                                  key={t.id}
-                                  onClick={() => pickTemplate(t)}
-                                  role="radio"
-                                  type="button"
+                                  key={x.id}
+                                  value={x.id}
                                 >
-                                  {on && (
+                                  {x.id === templateId && (
                                     <motion.span
                                       className="absolute -inset-px rounded-xl border-2 border-primary"
                                       layoutId={`${ids}-template`}
                                       transition={reduce ? { duration: 0 } : spring}
                                     />
                                   )}
-                                  <span className={cn("relative flex size-8 items-center justify-center rounded-lg", softTone[t.tone])}>
+                                  <span className={cn("relative flex size-8 items-center justify-center rounded-lg", softTone[x.tone])}>
                                     <Icon className="size-4" />
                                   </span>
                                   <span className="relative min-w-0">
-                                    <span className="block font-medium leading-tight">{t.name}</span>
-                                    <span className="block text-muted-foreground text-xs leading-snug">{t.description}</span>
+                                    <span className="block font-medium leading-tight">{x.name}</span>
+                                    <span className="block text-muted-foreground text-xs leading-snug">{x.description}</span>
                                   </span>
-                                </button>
+                                </Radio.Root>
                               );
                             })}
-                          </div>
+                          </RadioGroup>
                           <div>
-                            <FieldLabelText htmlFor={`${ids}-agent`}>Agent name</FieldLabelText>
+                            <FieldLabelText htmlFor={`${ids}-agent`}>{t.agentName}</FieldLabelText>
                             <Input
+                              aria-describedby={`${ids}-agent-hint`}
+                              aria-invalid={!agentName.trim() || undefined}
                               id={`${ids}-agent`}
                               onChange={(e) => {
                                 setAgentNameEdited(true);
                                 setAgentName(e.target.value);
                               }}
-                              aria-describedby={`${ids}-agent-hint`}
-                              aria-invalid={!agentName.trim() || undefined}
                               value={agentName}
-                             />
-                            <p
-                              className={cn("mt-1.5 text-xs", agentName.trim() ? "text-muted-foreground" : "text-destructive-foreground")}
-                              id={`${ids}-agent-hint`}
-                            >
-                              {agentName.trim() ? "Shown when it posts or replies. You can rename it later." : "Your agent needs a name."}
+                            />
+                            <p className={cn("mt-1.5 text-xs", agentName.trim() ? "text-muted-foreground" : "text-destructive-foreground")} id={`${ids}-agent-hint`}>
+                              {agentName.trim() ? t.agentNameHint : t.agentNameMissing}
                             </p>
                           </div>
                           <div>
-                            <FieldLabelText htmlFor={`${ids}-instr`}>Instructions</FieldLabelText>
+                            <FieldLabelText htmlFor={`${ids}-instr`}>{t.instructions}</FieldLabelText>
                             <Textarea
                               id={`${ids}-instr`}
                               onChange={(e) => setInstructions(e.target.value)}
-                              placeholder="Describe what this agent should do, in plain words."
+                              placeholder={t.instructionsPlaceholder}
                               value={instructions}
                             />
                           </div>
                         </div>
 
                         <div className="@3xl:sticky @3xl:top-0 @3xl:self-start">
-                          <p className="mb-2 font-medium">Preview</p>
+                          <p className="mb-2 font-medium">{t.preview}</p>
                           <div className="rounded-xl border bg-card p-4">
                             <div className="flex items-center gap-2.5">
                               <AnimatePresence initial={false} mode="popLayout">
@@ -1050,27 +1176,27 @@ export function FirstRun({
                                 </motion.span>
                               </AnimatePresence>
                               <span className="min-w-0 flex-1">
-                                <span className="block truncate font-medium">{agentName || "Untitled agent"}</span>
-                                <span className="block truncate text-muted-foreground text-xs">in {name || "your workspace"}</span>
+                                <span className="block truncate font-medium">{agentName || t.untitled}</span>
+                                <span className="block truncate text-muted-foreground text-xs">{interpolate(t.inWorkspace, { name: name || t.yourWorkspace })}</span>
                               </span>
-                              <Badge variant="secondary" className="bg-warning/8 text-warning-foreground dark:bg-warning/16">Draft</Badge>
+                              <Badge className="bg-warning/8 text-warning-foreground dark:bg-warning/16" variant="secondary">
+                                {t.draft}
+                              </Badge>
                             </div>
-                            <p className="mt-3 line-clamp-4 text-muted-foreground text-xs leading-relaxed">
-                              {instructions || "No instructions yet."}
-                            </p>
+                            <p className="mt-3 line-clamp-4 text-muted-foreground text-xs leading-relaxed">{instructions || t.noInstructions}</p>
                             <div className="mt-3 flex flex-wrap gap-1">
                               {connectedTools.length ? (
-                                connectedTools.map((t) => {
-                                  const Icon = t.icon;
+                                connectedTools.map((x) => {
+                                  const Icon = x.icon;
                                   return (
-                                    <span className="flex h-6 items-center gap-1 rounded-full bg-muted px-2 text-xs" key={t.id}>
+                                    <span className="flex h-6 items-center gap-1 rounded-full bg-muted px-2 text-xs" key={x.id}>
                                       <Icon className="size-3" />
-                                      {t.name}
+                                      {x.name}
                                     </span>
                                   );
                                 })
                               ) : (
-                                <span className="text-muted-foreground text-xs">No tools connected yet</span>
+                                <span className="text-muted-foreground text-xs">{t.noTools}</span>
                               )}
                             </div>
                           </div>
@@ -1085,36 +1211,34 @@ export function FirstRun({
         </div>
 
         <footer className="shrink-0 border-t bg-background">
+          {stepError ? (
+            <p className="mx-auto max-w-2xl px-5 pt-2 text-destructive-foreground text-xs @2xl:px-6" role="alert">
+              {stepError}
+            </p>
+          ) : null}
           <div className="mx-auto flex h-14 max-w-2xl items-center gap-2 px-5 @2xl:px-6">
-          {finished ? (
-            <Button className={cn("-ms-2.5", press)} onClick={restart} variant="ghost">
-              <RotateCcwIcon />
-              Start over
-            </Button>
-          ) : (
-            <Button className={cn("-ms-2.5", press)} disabled={step === 0} onClick={() => go(step - 1)} variant="ghost">
-              <ArrowLeftIcon />
-              Back
-            </Button>
-          )}
-          <div className="ms-auto">
-            {finished ? (
-              <Button className={cn("min-w-32", press)}>
-                Open workspace
-                <ArrowRightIcon />
-              </Button>
-            ) : (
-              <Button
-                className={cn("min-w-32", press)}
-                disabled={!canNext}
-                onClick={next}
-                variant={skipping ? "outline" : "default"}
-              >
-                {step === STEPS.length - 1 ? "Create agent" : skipping ? "Skip for now" : "Continue"}
-                {step === STEPS.length - 1 ? <SparklesIcon /> : <ArrowRightIcon />}
+            {finished ? null : (
+              <Button className={cn("-ms-2.5", press)} disabled={step === 0 || busy} onClick={() => go(step - 1)} variant="ghost">
+                <ArrowLeftIcon />
+                {t.back}
               </Button>
             )}
-          </div>
+            <div className="ms-auto">
+              {finished ? (
+                workspaceHref ? (
+                  <WirefrontLink className={cn(buttonVariants(), "min-w-32", press)} href={workspaceHref}>
+                    {t.openWorkspace}
+                    <ArrowRightIcon />
+                  </WirefrontLink>
+                ) : null
+              ) : (
+                <Button className={cn("min-w-32", press)} disabled={!canNext} onClick={next} variant={skipping ? "outline" : "default"}>
+                  {busy ? <Spinner /> : null}
+                  {step === STEP_COUNT - 1 ? t.createAgent : skipping ? t.skip : t.continue}
+                  {busy ? null : step === STEP_COUNT - 1 ? <SparklesIcon /> : <ArrowRightIcon />}
+                </Button>
+              )}
+            </div>
           </div>
         </footer>
       </div>
@@ -1122,11 +1246,19 @@ export function FirstRun({
   );
 }
 
-function WalkthroughCard({ slots }: { slots: string[] }) {
+function WalkthroughCard({ slots, onBook, t }: { slots: string[]; onBook: Action<string>; t: Messages }) {
   const ids = useId();
+  const format = useFormat();
   const [open, setOpen] = useState(false);
   const [choice, setChoice] = useState(slots[0] ?? "");
   const [booked, setBooked] = useState<string | null>(null);
+  const book = useAction(onBook, {
+    onSuccess: (_, slot) => {
+      setBooked(slot);
+      setOpen(false);
+    },
+  });
+  const when = (slot: string) => format.date(slot, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 
   return (
     <div className="mt-auto rounded-xl border bg-card p-2">
@@ -1140,51 +1272,46 @@ function WalkthroughCard({ slots }: { slots: string[] }) {
           {booked ? <CalendarCheckIcon className="size-4" /> : <LifeBuoyIcon className="size-4" />}
         </span>
         <div className="min-w-0">
-          <p className="font-medium text-xs">{booked ? "Walkthrough booked" : "Need a hand?"}</p>
+          <p className="font-medium text-xs">{booked ? t.booked : t.needHand}</p>
           <p className="mt-0.5 text-pretty text-muted-foreground text-xs tabular-nums">
-            {booked ? `${booked}. We'll send a calendar invite.` : "Set up your first agents with us on a 15 minute call."}
+            {booked ? interpolate(t.bookedBody, { when: when(booked) }) : t.needHandBody}
           </p>
         </div>
       </div>
       <Popover onOpenChange={setOpen} open={open}>
         <PopoverTrigger render={<Button className={cn("w-full", press)} size="sm" variant="outline" />}>
-          {booked ? "Change time" : "Book a walkthrough"}
+          {booked ? t.changeTime : t.bookWalkthrough}
         </PopoverTrigger>
         <PopoverContent align="end" className="w-64" side="top" sideOffset={6}>
           <p className="font-medium text-sm" id={`${ids}-title`}>
-            Pick a time
+            {t.pickTime}
           </p>
-          <p className="mt-0.5 text-muted-foreground text-xs">15 min video call, in your time zone</p>
-          <div aria-labelledby={`${ids}-title`} className="mt-3 flex flex-col gap-1" role="radiogroup">
-            {slots.map((slot) => {
-              const on = slot === choice;
-              return (
-                <button
-                  aria-checked={on}
-                  className={cn(
-                    "flex h-8 cursor-pointer items-center justify-between rounded-md border px-2.5 text-start text-xs tabular-nums outline-none transition-[background-color,border-color,transform] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]",
-                    on ? "border-border bg-accent font-medium" : "border-transparent hover:bg-accent/60",
-                  )}
-                  key={slot}
-                  onClick={() => setChoice(slot)}
-                  role="radio"
-                  type="button"
-                >
-                  {slot}
-                  {on && <CheckIcon className="size-3.5" />}
-                </button>
-              );
-            })}
-          </div>
+          <p className="mt-0.5 text-muted-foreground text-xs">{t.pickTimeHint}</p>
+          <RadioGroup aria-labelledby={`${ids}-title`} className="mt-3 flex flex-col gap-1" onValueChange={(v) => setChoice(v as string)} value={choice}>
+            {slots.map((slot) => (
+              <Radio.Root
+                className="flex h-8 cursor-pointer items-center justify-between rounded-md border border-transparent px-2.5 text-start text-xs tabular-nums outline-none transition-[background-color,border-color,transform] duration-150 ease-out hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] data-checked:border-border data-checked:bg-accent data-checked:font-medium"
+                key={slot}
+                value={slot}
+              >
+                {when(slot)}
+                {slot === choice && <CheckIcon className="size-3.5" />}
+              </Radio.Root>
+            ))}
+          </RadioGroup>
+          {book.error ? (
+            <p className="mt-2 text-destructive-foreground text-xs" role="alert">
+              {book.error}
+            </p>
+          ) : null}
           <Button
             className={cn("mt-3 w-full", press)}
-            onClick={() => {
-              setBooked(choice);
-              setOpen(false);
-            }}
+            disabled={book.isPending()}
+            onClick={() => (booked === choice ? setOpen(false) : book.run(choice))}
             size="sm"
           >
-            {booked === choice ? "Keep this time" : "Book call"}
+            {book.isPending() ? <Spinner /> : null}
+            {booked === choice ? t.keepTime : t.bookCall}
           </Button>
         </PopoverContent>
       </Popover>
@@ -1200,20 +1327,22 @@ function FinishView({
   invites,
   agentName,
   onEdit,
+  t,
 }: {
   workspace: string;
   url: string;
-  color: FirstRunTone;
+  color: WorkspaceColor;
   tools: FirstRunTool[];
   invites: number;
   agentName: string;
   onEdit: (step: number) => void;
+  t: Messages;
 }) {
   const reduce = useReducedMotionAfterMount();
   const rows: { step: number; label: string; value: ReactNode; icon: ReactNode; empty?: boolean }[] = [
     {
       step: 0,
-      label: "Workspace",
+      label: t.rowWorkspace,
       icon: (
         <span className={cn("flex size-8 items-center justify-center rounded-lg font-semibold text-[11px] text-white", tileTone[color])}>
           {initials(workspace)}
@@ -1221,14 +1350,14 @@ function FinishView({
       ),
       value: (
         <>
-          <span className="block truncate font-medium">{workspace || "Your workspace"}</span>
+          <span className="block truncate font-medium">{workspace || t.yourWorkspace}</span>
           <span className="block truncate font-mono text-muted-foreground text-xs">{url}</span>
         </>
       ),
     },
     {
       step: 1,
-      label: "Tools",
+      label: t.rowTools,
       empty: !tools.length,
       icon: (
         <span className="flex size-8 items-center justify-center rounded-lg bg-muted text-muted-foreground">
@@ -1238,17 +1367,17 @@ function FinishView({
       value: (
         <>
           <span className="block truncate font-medium tabular-nums">
-            {tools.length ? `${tools.length} connected` : "No tools yet"}
+            {tools.length ? interpolate(t.toolsConnected, { count: tools.length }) : t.noToolsYet}
           </span>
           <span className="block truncate text-muted-foreground text-xs">
-            {tools.length ? tools.map((t) => t.name).join(", ") : "Agents work best with at least one"}
+            {tools.length ? tools.map((x) => x.name).join(", ") : t.toolsAdvice}
           </span>
         </>
       ),
     },
     {
       step: 2,
-      label: "Team",
+      label: t.rowTeam,
       empty: !invites,
       icon: (
         <span className="flex size-8 items-center justify-center rounded-lg bg-muted text-muted-foreground">
@@ -1258,17 +1387,17 @@ function FinishView({
       value: (
         <>
           <span className="block truncate font-medium tabular-nums">
-            {invites ? `${invites} invite${invites > 1 ? "s" : ""} pending` : "Just you for now"}
+            {invites ? (invites === 1 ? t.invitesPendingOne : interpolate(t.invitesPending, { count: invites })) : t.justYou}
           </span>
           <span className="block truncate text-muted-foreground text-xs">
-            {invites ? "They'll get an email with a link" : "Invite people any time from Settings"}
+            {invites ? t.invitesEmail : t.inviteLater}
           </span>
         </>
       ),
     },
     {
       step: 3,
-      label: "Agent",
+      label: t.rowAgent,
       icon: (
         <span className="flex size-8 items-center justify-center rounded-lg bg-muted text-muted-foreground">
           <BotIcon className="size-4" />
@@ -1279,10 +1408,10 @@ function FinishView({
           <span className="flex min-w-0 items-center gap-2">
             <span className="truncate font-medium">{agentName}</span>
             <Badge className="bg-success/8 text-success-foreground dark:bg-success/16 shrink-0" variant="secondary">
-              Live
+              {t.live}
             </Badge>
           </span>
-          <span className="block truncate text-muted-foreground text-xs">Picks up its first task in a moment</span>
+          <span className="block truncate text-muted-foreground text-xs">{t.firstTask}</span>
         </>
       ),
     },
@@ -1327,9 +1456,9 @@ function FinishView({
         </motion.span>
       </div>
       <h2 className="mt-4 text-balance font-heading font-semibold text-lg tracking-tight">
-        {workspace || "Your workspace"} is ready
+        {interpolate(t.ready, { name: workspace || t.yourWorkspace })}
       </h2>
-      <p className="mt-1 text-pretty text-muted-foreground">Here's what you set up. You can change any of it later.</p>
+      <p className="mt-1 text-pretty text-muted-foreground">{t.readySub}</p>
 
       <ul className="mt-6 w-full divide-y rounded-xl border bg-card text-start">
         {rows.map((r, i) => (
@@ -1343,13 +1472,13 @@ function FinishView({
             <span className="shrink-0">{r.icon}</span>
             <span className="min-w-0 flex-1">{r.value}</span>
             {r.empty ? (
-              <Button aria-label={`Add ${r.label.toLowerCase()}`} className={press} onClick={() => onEdit(r.step)} size="sm" variant="outline">
+              <Button aria-label={interpolate(t.addRow, { row: r.label.toLowerCase() })} className={press} onClick={() => onEdit(r.step)} size="sm" variant="outline">
                 <PlusIcon />
-                Add
+                {t.add}
               </Button>
             ) : (
-              <Button aria-label={`Edit ${r.label.toLowerCase()}`} className={press} onClick={() => onEdit(r.step)} size="sm" variant="ghost">
-                Edit
+              <Button aria-label={interpolate(t.editRow, { row: r.label.toLowerCase() })} className={press} onClick={() => onEdit(r.step)} size="sm" variant="ghost">
+                {t.edit}
               </Button>
             )}
           </motion.li>
@@ -1358,8 +1487,4 @@ function FinishView({
 
     </motion.section>
   );
-}
-
-export function FirstRunDemo() {
-  return <FirstRun defaultWorkspaceName="Northwind Labs" productName="Hearth" />;
 }

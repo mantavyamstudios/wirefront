@@ -188,6 +188,8 @@ async function main(): Promise<void> {
   const items = readdirSync(REGISTRY_DIR)
     .filter((f) => f.endsWith(".json") && f !== "registry.json")
     .filter((f) => !onlyItems || onlyItems.includes(f.replace(/\.json$/, "")));
+  const unknown = onlyItems?.filter((i) => !items.includes(`${i}.json`)) ?? [];
+  if (unknown.length) throw new Error(`[install] no registry item named ${unknown.join(", ")}; names match public/r/<name>.json`);
   const server = await serveRegistry();
   const failures: string[] = [];
   const progress = trackProgress("install", { total: templates.length, slowUnitMs: 5 * 60_000, stallMs: 10 * 60_000 });

@@ -129,10 +129,6 @@
   "apps/www/src/pages/showcase/auth-check-email.tsx": {
     "lint/a11y/useValidAnchor": 2
   },
-  "apps/www/src/pages/showcase/auth-first-run.tsx": {
-    "lint/a11y/useSemanticElements": 3,
-    "lint/suspicious/useIterableCallbackReturn": 1
-  },
   "apps/www/src/pages/showcase/auth-glass-signup.tsx": {
     "lint/a11y/useValidAnchor": 1
   },
