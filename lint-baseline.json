@@ -320,10 +320,6 @@
     "lint/a11y/noStaticElementInteractions": 2,
     "lint/a11y/useSemanticElements": 1
   },
-  "apps/www/src/pages/showcase/layouts-inset-shell.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
   "apps/www/src/pages/showcase/layouts-split-resizable.tsx": {
     "lint/a11y/useSemanticElements": 1,
     "lint/suspicious/noArrayIndexKey": 2

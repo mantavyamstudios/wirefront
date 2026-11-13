@@ -1,48 +1,34 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-// Ported from devl.dev (sean-brydon/devl.dev, registry item `inset-shell`).
-"use client";
+// Showcase only: the shell with demo navigation and sample pages inside it.
+// Not shipped by the registry; builders pass their own nav and render their pages as children.
 
-import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
+import { LayoutGroup, motion } from "motion/react";
 import {
-  BellIcon,
   CalendarIcon,
   ChartColumnIcon,
-  ChevronDownIcon,
   ChevronRightIcon,
-  ChevronsUpDownIcon,
   CircleDotIcon,
   FileTextIcon,
   HouseIcon,
   InboxIcon,
   KeyboardIcon,
   LayoutGridIcon,
-  LifeBuoyIcon,
-  LogOutIcon,
   type LucideIcon,
-  MenuIcon,
-  PanelLeftIcon,
   PlusIcon,
-  SearchIcon,
   SettingsIcon,
   Share2Icon,
   UserRoundIcon,
-  XIcon,
 } from "lucide-react";
-import { type ReactElement, type ReactNode, useEffect, useId, useRef, useState } from "react";
+import { type AnchorHTMLAttributes, createContext, type ReactNode, useContext, useId, useState } from "react";
+import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
+import { DevlFrame } from "../_devl-frame";
+import * as fixtures from "./fixtures";
+import { InsetShell, type NavSection } from "./view";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
-import {
-  Breadcrumb,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "@wirefront/ui/breadcrumb";
 import { Button } from "@wirefront/ui/button";
-import { Kbd } from "@wirefront/ui/kbd";
-import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
 // shadcn's Badge has no status tones; render them as a secondary badge with
@@ -57,45 +43,13 @@ type BadgeVariant = "default" | "secondary" | "destructive" | "outline" | "ghost
 const badgeVariant = (v: string): BadgeVariant => (v in TONE_CLASS ? "secondary" : (v as BadgeVariant));
 const badgeTone = (v: string): string | undefined => TONE_CLASS[v as keyof typeof TONE_CLASS];
 
-export type ShellTone = "orange" | "teal" | "cyan" | "violet" | "rose" | "info" | "success" | "warning";
+type ShellTone = "orange" | "teal" | "cyan" | "violet" | "rose" | "info" | "success" | "warning";
 
-export interface ShellWorkspace {
-  id: string;
-  name: string;
-  plan: string;
-  initials: string;
-  tone: ShellTone;
-}
-
-export interface ShellNavItem {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  count?: number;
-}
-
-export interface ShellProject {
+interface ShellProject {
   id: string;
   name: string;
   tone: ShellTone;
   open?: number;
-}
-
-export interface ShellUser {
-  name: string;
-  email: string;
-  initials: string;
-}
-
-export interface InsetShellProps {
-  workspaces?: ShellWorkspace[];
-  nav?: ShellNavItem[];
-  projects?: ShellProject[];
-  user?: ShellUser;
-  breadcrumbs?: string[];
-  defaultCollapsed?: boolean;
-  children?: ReactNode;
-  className?: string;
 }
 
 const dot: Record<ShellTone, string> = {
@@ -107,17 +61,6 @@ const dot: Record<ShellTone, string> = {
   info: "bg-info",
   success: "bg-success",
   warning: "bg-warning",
-};
-
-const tile: Record<ShellTone, string> = {
-  "orange": "bg-orange-700",
-  "teal": "bg-teal-700",
-  "cyan": "bg-cyan-700",
-  "violet": "bg-violet-600",
-  "rose": "bg-rose-700",
-  info: "bg-blue-600",
-  success: "bg-emerald-700",
-  warning: "bg-amber-700",
 };
 
 const soft: Record<ShellTone, string> = {
@@ -132,15 +75,8 @@ const soft: Record<ShellTone, string> = {
 };
 
 const spring = { type: "spring", stiffness: 420, damping: 36 } as const;
-const widthSpring = { type: "spring", stiffness: 380, damping: 38 } as const;
 
-const defaultWorkspaces: ShellWorkspace[] = [
-  { id: "northwind", name: "Northwind Labs", plan: "Team", initials: "NL", tone: "info" },
-  { id: "fable", name: "Fable & Co", plan: "Free", initials: "FC", tone: "orange" },
-  { id: "pilot", name: "Pilot Studio", plan: "Business", initials: "PS", tone: "teal" },
-];
-
-const defaultNav: ShellNavItem[] = [
+const demoNav: { id: string; label: string; icon: LucideIcon; count?: number }[] = [
   { id: "home", label: "Home", icon: HouseIcon },
   { id: "inbox", label: "Inbox", icon: InboxIcon, count: 4 },
   { id: "issues", label: "My issues", icon: CircleDotIcon, count: 6 },
@@ -156,348 +92,6 @@ const defaultProjects: ShellProject[] = [
   { id: "growth", name: "Growth experiments", tone: "violet", open: 6 },
   { id: "infra", name: "Infra hardening", tone: "rose", open: 3 },
 ];
-
-const defaultUser: ShellUser = { name: "Ines Moreau", email: "ines@northwind.dev", initials: "IM" };
-
-function SidebarRow({
-  collapsed,
-  label,
-  tip,
-  children,
-}: {
-  collapsed: boolean;
-  label: string;
-  tip?: ReactNode;
-  children: (props: { "aria-label"?: string }) => ReactNode;
-}) {
-  return (
-    <Tooltip disabled={!collapsed}>
-      <TooltipTrigger render={children({ "aria-label": collapsed ? label : undefined }) as ReactElement} />
-      <TooltipContent side="right" sideOffset={10}>
-        {tip ?? label}
-      </TooltipContent>
-    </Tooltip>
-  );
-}
-
-function Label({ collapsed, children, className }: { collapsed: boolean; children: ReactNode; className?: string }) {
-  return (
-    <span
-      aria-hidden={collapsed || undefined}
-      className={cn(
-        "min-w-0 truncate transition-[opacity,translate] duration-200",
-        collapsed && "pointer-events-none -translate-x-1 opacity-0",
-        className,
-      )}
-    >
-      {children}
-    </span>
-  );
-}
-
-interface SidebarProps {
-  collapsed: boolean;
-  workspaces: ShellWorkspace[];
-  workspace: string;
-  onWorkspace: (id: string) => void;
-  nav: ShellNavItem[];
-  active: string;
-  onNavigate: (id: string, label: string) => void;
-  projects: ShellProject[];
-  user: ShellUser;
-  onClose?: () => void;
-}
-
-function SidebarBody({
-  collapsed,
-  workspaces,
-  workspace,
-  onWorkspace,
-  nav,
-  active,
-  onNavigate,
-  projects,
-  user,
-  onClose,
-}: SidebarProps) {
-  const [projectsOpen, setProjectsOpen] = useState(true);
-  const ws = workspaces.find((w) => w.id === workspace) ?? workspaces[0];
-  const pill = useId();
-  const row =
-    "group/row relative flex h-8 w-full cursor-pointer items-center gap-2.5 overflow-hidden rounded-lg px-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring";
-
-  return (
-    <LayoutGroup id={pill}>
-      <div className="flex h-full min-h-0 flex-col whitespace-nowrap">
-        <div className="flex items-center gap-1 p-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              aria-label={`Workspace: ${ws.name}`}
-              className="flex h-11 min-w-0 flex-1 cursor-pointer items-center gap-2.5 overflow-hidden rounded-xl px-1.5 text-left outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
-            >
-              <span
-                className={cn(
-                  "flex size-7 shrink-0 items-center justify-center rounded-lg font-semibold text-[11px] text-white",
-                  tile[ws.tone],
-                )}
-              >
-                {ws.initials}
-              </span>
-              <span className={cn("flex min-w-0 flex-1 flex-col transition-opacity duration-200", collapsed && "opacity-0")}>
-                <span className="truncate font-medium leading-tight">{ws.name}</span>
-                <span className="truncate text-muted-foreground text-xs leading-tight">{ws.plan} plan</span>
-              </span>
-              <ChevronsUpDownIcon className={cn("size-4 shrink-0 text-muted-foreground", collapsed && "opacity-0")} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-60">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
-                <DropdownMenuRadioGroup onValueChange={(v) => onWorkspace(v as string)} value={workspace}>
-                  {workspaces.map((w) => (
-                    <DropdownMenuRadioItem key={w.id} value={w.id}>
-                      <span className="flex items-center gap-2">
-                        <span className={cn("size-2 rounded-full", tile[w.tone])} />
-                        {w.name}
-                        <span className="text-muted-foreground text-xs">{w.plan}</span>
-                      </span>
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <PlusIcon />
-                Create workspace
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <SettingsIcon />
-                Workspace settings
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          {onClose && (
-            <Button aria-label="Close navigation" onClick={onClose} size="icon-sm" variant="ghost">
-              <XIcon />
-            </Button>
-          )}
-        </div>
-
-        <div className="px-2 pb-2">
-          <SidebarRow collapsed={collapsed} label="Search" tip={<span>Search <Kbd className="ms-1">⌘K</Kbd></span>}>
-            {(a) => (
-              <button
-                {...a}
-                className={cn(
-                  row,
-                  "border bg-background text-muted-foreground shadow-xs/5 hover:text-foreground dark:bg-input/32",
-                  collapsed && "border-transparent bg-transparent shadow-none dark:bg-transparent",
-                )}
-                type="button"
-              >
-                <SearchIcon className="size-4 shrink-0" />
-                <Label collapsed={collapsed}>Search</Label>
-                <Kbd className={cn("ms-auto transition-opacity", collapsed && "opacity-0")}>⌘K</Kbd>
-              </button>
-            )}
-          </SidebarRow>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2 [scrollbar-width:thin]">
-          <nav aria-label="Primary" className="flex flex-col gap-0.5">
-            {nav.map((n) => {
-              const on = active === n.id;
-              return (
-                <SidebarRow collapsed={collapsed} key={n.id} label={n.label}>
-                  {(a) => (
-                    <button
-                      {...a}
-                      aria-current={on ? "page" : undefined}
-                      className={cn(row, on ? "text-foreground" : "text-muted-foreground hover:text-foreground")}
-                      onClick={() => onNavigate(n.id, n.label)}
-                      type="button"
-                    >
-                      {on && (
-                        <motion.span
-                          className="absolute inset-0 rounded-lg bg-background shadow-xs/5 ring-1 ring-border dark:bg-accent dark:ring-0"
-                          layoutId="shell-nav-pill"
-                          transition={spring}
-                        />
-                      )}
-                      {!on && <span className="absolute inset-0 rounded-lg transition-colors group-hover/row:bg-accent" />}
-                      <n.icon className="relative size-4 shrink-0" />
-                      <Label className="relative font-medium" collapsed={collapsed}>
-                        {n.label}
-                      </Label>
-                      {n.count !== undefined && (
-                        <span
-                          className={cn(
-                            "relative ms-auto rounded-full px-1.5 text-xs tabular-nums transition-opacity",
-                            n.id === "inbox" ? "bg-info/12 font-medium text-info-foreground" : "text-muted-foreground",
-                            collapsed && "opacity-0",
-                          )}
-                        >
-                          {n.count}
-                        </span>
-                      )}
-                      {collapsed && n.id === "inbox" && (
-                        <span className="absolute top-1.5 left-7 size-1.5 rounded-full bg-info ring-2 ring-sidebar" />
-                      )}
-                    </button>
-                  )}
-                </SidebarRow>
-              );
-            })}
-          </nav>
-
-          <div className="mt-5">
-            <div className="relative flex h-7 items-center px-3">
-              <button
-                aria-expanded={projectsOpen}
-                className={cn(
-                  "flex cursor-pointer items-center gap-1 rounded font-medium text-muted-foreground text-xs outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring",
-                  collapsed && "pointer-events-none opacity-0",
-                )}
-                onClick={() => setProjectsOpen((o) => !o)}
-                tabIndex={collapsed ? -1 : 0}
-                type="button"
-              >
-                Projects
-                <ChevronDownIcon
-                  className={cn("size-3 transition-transform duration-200", !projectsOpen && "-rotate-90")}
-                />
-              </button>
-              {collapsed && <span className="absolute left-4 h-px w-6 bg-border" />}
-              <Button
-                aria-label="New project"
-                className={cn("ms-auto", collapsed && "pointer-events-none opacity-0")}
-                size="icon-xs"
-                tabIndex={collapsed ? -1 : 0}
-                variant="ghost"
-              >
-                <PlusIcon />
-              </Button>
-            </div>
-            <AnimatePresence initial={false}>
-              {(projectsOpen || collapsed) && (
-                <motion.ul
-                  animate={{ height: "auto", opacity: 1 }}
-                  className="flex flex-col gap-0.5 overflow-hidden"
-                  exit={{ height: 0, opacity: 0 }}
-                  initial={{ height: 0, opacity: 0 }}
-                  transition={spring}
-                >
-                  {projects.map((p) => {
-                    const on = active === `project-${p.id}`;
-                    return (
-                      <li key={p.id}>
-                        <SidebarRow collapsed={collapsed} label={p.name}>
-                          {(a) => (
-                            <button
-                              {...a}
-                              aria-current={on ? "page" : undefined}
-                              className={cn(row, on ? "text-foreground" : "text-muted-foreground hover:text-foreground")}
-                              onClick={() => onNavigate(`project-${p.id}`, p.name)}
-                              type="button"
-                            >
-                              {on && (
-                                <motion.span
-                                  className="absolute inset-0 rounded-lg bg-background shadow-xs/5 ring-1 ring-border dark:bg-accent dark:ring-0"
-                                  layoutId="shell-nav-pill"
-                                  transition={spring}
-                                />
-                              )}
-                              {!on && (
-                                <span className="absolute inset-0 rounded-lg transition-colors group-hover/row:bg-accent" />
-                              )}
-                              <span className="relative flex size-4 shrink-0 items-center justify-center">
-                                <span className={cn("size-2 rounded-full ring-3 ring-current/0", dot[p.tone])} />
-                              </span>
-                              <Label className="relative" collapsed={collapsed}>
-                                {p.name}
-                              </Label>
-                              {p.open !== undefined && (
-                                <span
-                                  className={cn(
-                                    "relative ms-auto text-muted-foreground text-xs tabular-nums opacity-0 transition-opacity group-hover/row:opacity-100",
-                                    on && "opacity-100",
-                                    collapsed && "opacity-0!",
-                                  )}
-                                >
-                                  {p.open}
-                                </span>
-                              )}
-                            </button>
-                          )}
-                        </SidebarRow>
-                      </li>
-                    );
-                  })}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-0.5 p-2">
-          <SidebarRow collapsed={collapsed} label="Help & support">
-            {(a) => (
-              <button {...a} className={cn(row, "text-muted-foreground hover:bg-accent hover:text-foreground")} type="button">
-                <LifeBuoyIcon className="size-4 shrink-0" />
-                <Label collapsed={collapsed}>Help &amp; support</Label>
-              </button>
-            )}
-          </SidebarRow>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              aria-label={`Account: ${user.name}`}
-              className="mt-1 flex h-12 w-full cursor-pointer items-center gap-2.5 overflow-hidden rounded-xl px-1.5 text-left outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
-            >
-              <Avatar className="size-7 shrink-0">
-                <AvatarFallback className="bg-teal-500/16 text-[11px] text-teal-800 dark:text-teal-400">{user.initials}</AvatarFallback>
-              </Avatar>
-              <span className={cn("flex min-w-0 flex-1 flex-col transition-opacity duration-200", collapsed && "opacity-0")}>
-                <span className="truncate font-medium leading-tight">{user.name}</span>
-                <span className="truncate text-muted-foreground text-xs leading-tight">{user.email}</span>
-              </span>
-              <ChevronsUpDownIcon className={cn("size-4 shrink-0 text-muted-foreground", collapsed && "opacity-0")} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56" side="top">
-              <div className="flex items-center gap-2.5 px-2 py-1.5">
-                <Avatar className="size-8">
-                  <AvatarFallback className="bg-teal-500/16 text-teal-800 dark:text-teal-400 text-xs">{user.initials}</AvatarFallback>
-                </Avatar>
-                <div className="min-w-0">
-                  <div className="truncate font-medium text-sm">{user.name}</div>
-                  <div className="truncate text-muted-foreground text-xs">{user.email}</div>
-                </div>
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <UserRoundIcon />
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <SettingsIcon />
-                Preferences
-                <DropdownMenuShortcut>⌘,</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <KeyboardIcon />
-                Shortcuts
-                <DropdownMenuShortcut>?</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <LogOutIcon />
-                Sign out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-    </LayoutGroup>
-  );
-}
 
 type Status = "on-track" | "at-risk" | "done";
 
@@ -517,8 +111,8 @@ interface ProjectDetail {
 
 const people: Record<string, { initials: string; tone: string }> = {
   "Kai Tanaka": { initials: "KT", tone: "bg-blue-500/14 text-blue-700 dark:text-blue-300" },
-  "Rosa Lind": { initials: "RL", tone: "bg-orange-500/14 text-orange-700 dark:text-orange-300" },
-  "Ines Moreau": { initials: "IM", tone: "bg-teal-500/16 text-teal-700 dark:text-teal-300" },
+  "Rosa Lind": { initials: "RL", tone: "bg-orange-500/14 text-orange-800 dark:text-orange-300" },
+  "Ines Moreau": { initials: "IM", tone: "bg-teal-500/16 text-teal-800 dark:text-teal-300" },
   "Theo Brandt": { initials: "TB", tone: "bg-violet-500/16 text-violet-700 dark:text-violet-300" },
 };
 
@@ -1053,214 +647,117 @@ function NavPage({ id, label, icon: Icon, projects, onOpenProject }: { id: strin
   );
 }
 
-export function InsetShell({
-  workspaces = defaultWorkspaces,
-  nav = defaultNav,
-  projects = defaultProjects,
-  user = defaultUser,
-  breadcrumbs,
-  defaultCollapsed = false,
-  children,
-  className,
-}: InsetShellProps) {
-  const [collapsed, setCollapsed] = useState(defaultCollapsed);
-  const [drawer, setDrawer] = useState(false);
-  const [workspace, setWorkspace] = useState(workspaces[0]?.id ?? "");
-  const [active, setActive] = useState(`project-${projects[0]?.id ?? ""}`);
-  const [pageTitle, setPageTitle] = useState(projects[0]?.name ?? "Home");
-  const drawerRef = useRef<HTMLDivElement>(null);
-  const ws = workspaces.find((w) => w.id === workspace) ?? workspaces[0];
+const projectColor: Record<ShellTone, string> = {
+  orange: "var(--color-orange-500)",
+  teal: "var(--color-teal-500)",
+  cyan: "var(--color-cyan-500)",
+  violet: "var(--color-violet-500)",
+  rose: "var(--color-rose-500)",
+  info: "var(--color-info)",
+  success: "var(--color-success)",
+  warning: "var(--color-warning)",
+};
 
-  useEffect(() => {
-    if (drawer) drawerRef.current?.focus();
-  }, [drawer]);
+const sections: NavSection[] = [
+  {
+    id: "main",
+    items: demoNav.map((n) => ({ id: n.id, label: n.label, href: `#${n.id}`, icon: <n.icon />, count: n.count, attention: n.id === "inbox" })),
+  },
+  {
+    id: "projects",
+    label: "Projects",
+    addHref: "#new-project",
+    items: defaultProjects.map((p) => ({ id: `project-${p.id}`, label: p.name, href: `#project-${p.id}`, color: projectColor[p.tone], count: p.open })),
+  },
+];
 
-  const trail = breadcrumbs ?? [ws?.name ?? "Orbit", active.startsWith("project-") ? "Projects" : null, pageTitle].filter(
-    (x): x is string => Boolean(x),
-  );
+const GoContext = createContext<(id: string) => void>(() => {});
 
-  const navigate = (id: string, label: string) => {
-    setActive(id);
-    setPageTitle(label);
-    setDrawer(false);
-  };
-
-  const currentProject = projects.find((p) => `project-${p.id}` === active);
-  const currentNav = nav.find((n) => n.id === active);
-  const page = currentProject ? (
-    <ProjectOverview project={currentProject} />
-  ) : currentNav ? (
-    <NavPage
-      icon={currentNav.icon}
-      id={currentNav.id}
-      label={currentNav.label}
-      onOpenProject={(p) => navigate(`project-${p.id}`, p.name)}
-      projects={projects}
-    />
-  ) : null;
-
-  const sidebarProps = {
-    workspaces,
-    workspace,
-    onWorkspace: setWorkspace,
-    nav,
-    active,
-    onNavigate: navigate,
-    projects,
-    user,
-  };
-
+/** Hash links switch the demo's page instead of navigating. */
+function DemoLink({ href, onClick, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  const go = useContext(GoContext);
   return (
-    <MotionConfig reducedMotion="user">
-      <TooltipProvider delay={400}>
-      <div
-        className={cn(
-          "@container relative isolate flex h-[760px] w-full overflow-hidden bg-sidebar text-foreground text-sm",
-          className,
-        )}
-        onKeyDown={(e) => {
-          if (e.key === "Escape" && drawer) setDrawer(false);
-        }}
-      >
-        <motion.aside
-          animate={{ width: collapsed ? 56 : 248 }}
-          aria-label="Sidebar"
-          className="hidden shrink-0 overflow-hidden @3xl:block"
-          initial={false}
-          transition={widthSpring}
-        >
-          <div className="h-full w-full">
-            <SidebarBody {...sidebarProps} collapsed={collapsed} />
-          </div>
-        </motion.aside>
-
-        <AnimatePresence>
-          {drawer && (
-            <>
-              <motion.div
-                animate={{ opacity: 1 }}
-                aria-hidden
-                className="absolute inset-0 z-40 bg-black/32 backdrop-blur-[1px] @3xl:hidden"
-                exit={{ opacity: 0 }}
-                initial={{ opacity: 0 }}
-                onClick={() => setDrawer(false)}
-              />
-              <motion.div
-                animate={{ x: 0 }}
-                aria-label="Navigation"
-                aria-modal="true"
-                className="absolute inset-y-2 left-2 z-50 w-[272px] max-w-[calc(100%-3rem)] overflow-hidden rounded-2xl border bg-sidebar shadow-lg/10 outline-none @3xl:hidden"
-                exit={{ x: "-110%" }}
-                initial={{ x: "-110%" }}
-                ref={drawerRef}
-                role="dialog"
-                tabIndex={-1}
-                transition={spring}
-              >
-                <SidebarBody {...sidebarProps} collapsed={false} onClose={() => setDrawer(false)} />
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-
-        <div className="flex min-w-0 flex-1 flex-col @3xl:py-2 @3xl:pe-2">
-          <main className="flex min-h-0 flex-1 flex-col overflow-hidden bg-background @3xl:rounded-2xl @3xl:border @3xl:shadow-xs/5">
-            <header className="flex h-13 shrink-0 items-center gap-2 border-b px-3 @3xl:px-4">
-              <Button
-                aria-label="Open navigation"
-                className="@3xl:hidden"
-                onClick={() => setDrawer(true)}
-                size="icon-sm"
-                variant="ghost"
-              >
-                <MenuIcon />
-              </Button>
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Button
-                      aria-expanded={!collapsed}
-                      aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                      className="hidden @3xl:inline-flex"
-                      onClick={() => setCollapsed((c) => !c)}
-                      size="icon-sm"
-                      variant="ghost"
-                    />
-                  }
-                >
-                  <PanelLeftIcon />
-                </TooltipTrigger>
-                <TooltipContent>{collapsed ? "Expand sidebar" : "Collapse sidebar"}</TooltipContent>
-              </Tooltip>
-              <span className="h-4 w-px bg-border" />
-              <Breadcrumb className="min-w-0 flex-1">
-                <BreadcrumbList className="flex-nowrap gap-1.5 sm:gap-1.5">
-                  {trail.map((crumb, i) => {
-                    const last = i === trail.length - 1;
-                    return (
-                      <motion.li className={cn("flex min-w-0 items-center gap-1.5", !last && "hidden @md:flex")} key={`${i}-${crumb}`} layout="position">
-                        {last ? (
-                          <AnimatePresence initial={false} mode="popLayout">
-                            <motion.span
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -6 }}
-                              initial={{ opacity: 0, y: 6 }}
-                              key={crumb}
-                              transition={spring}
-                            >
-                              <BreadcrumbPage className="truncate font-medium">{crumb}</BreadcrumbPage>
-                            </motion.span>
-                          </AnimatePresence>
-                        ) : (
-                          <>
-                            <BreadcrumbLink className="truncate" href="#" onClick={(e) => e.preventDefault()}>
-                              {crumb}
-                            </BreadcrumbLink>
-                            <ChevronRightIcon aria-hidden className="size-3.5 shrink-0 text-muted-foreground/60" />
-                          </>
-                        )}
-                      </motion.li>
-                    );
-                  })}
-                </BreadcrumbList>
-              </Breadcrumb>
-              <div className="flex items-center gap-1.5">
-                <div className="me-1 hidden -space-x-1 @lg:flex">
-                  {[
-                    ["KT", "bg-info/16 text-info-foreground"],
-                    ["RL", "bg-orange-500/16 text-orange-800 dark:text-orange-400"],
-                    ["TB", "bg-violet-500/20 text-violet-700 dark:text-violet-400"],
-                  ].map(([i, t]) => (
-                    <Avatar className="size-6 bg-background ring-2 ring-background" key={i}>
-                      <AvatarFallback className={cn("text-[10px]", t)}>{i}</AvatarFallback>
-                    </Avatar>
-                  ))}
-                </div>
-                <Button className="hidden @md:inline-flex" size="sm" variant="outline">
-                  <Share2Icon />
-                  Share
-                </Button>
-                <Button aria-label="Notifications" className="relative" size="icon-sm" variant="ghost">
-                  <BellIcon />
-                  <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-info" />
-                </Button>
-              </div>
-            </header>
-            <div className="min-h-0 flex-1 overflow-y-auto" key={children ? undefined : active}>
-              {children ?? (
-                <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} transition={{ duration: 0.15, ease: "easeOut" }}>
-                  {page}
-                </motion.div>
-              )}
-            </div>
-          </main>
-        </div>
-      </div>
-      </TooltipProvider>
-    </MotionConfig>
+    <a
+      {...props}
+      href={href}
+      onClick={(e) => {
+        onClick?.(e);
+        if (href?.startsWith("#")) {
+          e.preventDefault();
+          go(href.slice(1));
+        }
+      }}
+    />
   );
 }
 
-export function InsetShellDemo() {
-  return <InsetShell />;
+export function LayoutsInsetShellShowcasePage() {
+  const ctx = fixtures.getShellContext;
+  const [active, setActive] = useState("project-atlas");
+  const [workspaceId, setWorkspaceId] = useState(ctx.workspace.id);
+  const workspace = ctx.workspaces.find((w) => w.id === workspaceId) ?? ctx.workspace;
+  const project = defaultProjects.find((p) => `project-${p.id}` === active);
+  const nav = demoNav.find((n) => n.id === active);
+  const go = (id: string) => (id === "new-project" ? undefined : setActive(id));
+
+  return (
+    <GoContext.Provider value={go}>
+      <WirefrontProvider link={DemoLink}>
+        <DevlFrame>
+        <InsetShell
+          accountLinks={[
+            { label: "Profile", href: "#profile", icon: <UserRoundIcon /> },
+            { label: "Preferences", href: "#preferences", icon: <SettingsIcon /> },
+            { label: "Shortcuts", href: "#shortcuts", icon: <KeyboardIcon /> },
+          ]}
+          actions={
+            <>
+              <div className="me-1 hidden -space-x-1 @lg:flex">
+                {[
+                  ["KT", "bg-info/16 text-info-foreground"],
+                  ["RL", "bg-orange-500/16 text-orange-800 dark:text-orange-400"],
+                  ["TB", "bg-violet-500/20 text-violet-700 dark:text-violet-400"],
+                ].map(([i, t]) => (
+                  <Avatar className="size-6 bg-background ring-2 ring-background" key={i}>
+                    <AvatarFallback className={cn("text-[10px]", t)}>{i}</AvatarFallback>
+                  </Avatar>
+                ))}
+              </div>
+              <Button className="hidden @md:inline-flex" size="sm" variant="outline">
+                <Share2Icon />
+                Share
+              </Button>
+            </>
+          }
+          activeId={active}
+          breadcrumbs={[
+            { label: workspace.name, href: "#home" },
+            ...(project ? [{ label: "Projects", href: "#projects" }] : []),
+            { label: project?.name ?? nav?.label ?? "Home" },
+          ]}
+          createWorkspaceHref="#new-workspace"
+          helpHref="#help"
+          notificationsHref="#inbox"
+          onSearch={() => {}}
+          onSignOut={async () => {}}
+          onSwitchWorkspace={setWorkspaceId}
+          sections={sections}
+          unread={ctx.unread}
+          user={ctx.user}
+          workspace={workspace}
+          workspaceSettingsHref="#settings"
+          workspaces={ctx.workspaces}
+        >
+          <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} key={active} transition={{ duration: 0.15, ease: "easeOut" }}>
+            {project ? (
+              <ProjectOverview project={project} />
+            ) : nav ? (
+              <NavPage icon={nav.icon} id={nav.id} label={nav.label} onOpenProject={(p) => setActive(`project-${p.id}`)} projects={defaultProjects} />
+            ) : null}
+          </motion.div>
+        </InsetShell>
+        </DevlFrame>
+      </WirefrontProvider>
+    </GoContext.Provider>
+  );
 }

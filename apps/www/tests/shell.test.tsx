@@ -2,13 +2,14 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // @vitest-environment jsdom
 /**
- * The app shell's wiring contract: a frame around the builder's page.
+ * The shells' wiring contract: frames around the builder's page.
  */
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import type { AnchorHTMLAttributes } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
 import { AppShell } from "@/pages/showcase/layouts-app-shell/view";
+import { InsetShell } from "@/pages/showcase/layouts-inset-shell/view";
 
 afterEach(cleanup);
 
@@ -54,5 +55,61 @@ describe("AppShell", () => {
     fireEvent.click(screen.getAllByRole("button", { name: /Search/ })[0] as HTMLElement);
     expect(onSearch).toHaveBeenCalled();
     expect(screen.getByRole("link", { name: "Notifications, 3 unread" }).getAttribute("href")).toBe("/n");
+  });
+});
+
+describe("InsetShell", () => {
+  const inset = {
+    user: { name: "Ines Moreau", email: "ines@northwind.dev" },
+    workspace: { id: "nw", name: "Northwind Labs", plan: "Team" },
+    sections: [
+      { id: "main", items: [{ id: "inbox", label: "Inbox", href: "/inbox", count: 4, attention: true }] },
+      { id: "projects", label: "Projects", addHref: "/projects/new", items: [{ id: "atlas", label: "Atlas", href: "/p/atlas", color: "orange" }] },
+    ],
+  };
+
+  it("frames the page, links through the builder's router and shows breadcrumbs", () => {
+    render(
+      <WirefrontProvider link={AppLink}>
+        <InsetShell {...inset} activeId="atlas" breadcrumbs={[{ label: "Projects", href: "/projects" }, { label: "Atlas" }]}>
+          <p>Page body</p>
+        </InsetShell>
+      </WirefrontProvider>,
+    );
+    expect(screen.getByText("Page body")).toBeTruthy();
+    const primary = within(screen.getByRole("navigation", { name: "Primary" }));
+    const atlas = primary.getByRole("link", { name: "Atlas" });
+    expect(atlas.getAttribute("aria-current")).toBe("page");
+    expect(atlas.hasAttribute("data-app-link")).toBe(true);
+    expect(primary.getByRole("link", { name: "New in Projects" }).getAttribute("href")).toBe("/projects/new");
+    expect(screen.getByRole("link", { name: "Projects" }).getAttribute("href")).toBe("/projects");
+  });
+
+  it("collapses a labelled section and hides everything unwired", () => {
+    render(<InsetShell {...inset}>x</InsetShell>);
+    expect(screen.queryByRole("button", { name: /Search/ })).toBeNull();
+    expect(screen.queryByRole("link", { name: /Notifications/ })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Help & support" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Ines Moreau/ })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Projects" }));
+    expect(screen.getByRole("button", { name: "Projects" }).getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("switches workspace and signs out through the builder's actions", async () => {
+    const onSwitchWorkspace = vi.fn();
+    const onSignOut = vi.fn(async () => {});
+    const workspaces = [inset.workspace, { id: "fable", name: "Fable & Co" }];
+    render(
+      <InsetShell {...inset} notificationsHref="/inbox" onSignOut={onSignOut} onSwitchWorkspace={onSwitchWorkspace} unread={4} workspaces={workspaces}>
+        x
+      </InsetShell>,
+    );
+    expect(screen.getByRole("link", { name: "Notifications, 4 unread" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: /Northwind Labs/ }));
+    fireEvent.click(await screen.findByRole("menuitemradio", { name: /Fable & Co/ }));
+    expect(onSwitchWorkspace).toHaveBeenCalledWith("fable");
+    fireEvent.click(screen.getByRole("button", { name: /Ines Moreau/ }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Sign out" }));
+    expect(onSignOut).toHaveBeenCalled();
   });
 });

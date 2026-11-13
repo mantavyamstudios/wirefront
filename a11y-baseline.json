@@ -181,15 +181,8 @@
   "layouts/bottom-nav@desktop": {
     "scrollable-region-focusable": 1
   },
-  "layouts/inset-shell@desktop": {
-    "color-contrast": 1,
-    "label-content-name-mismatch": 2
-  },
   "layouts/hairline-shell@desktop": {
     "label-content-name-mismatch": 2
-  },
-  "layouts/inset-shell@mobile": {
-    "color-contrast": 1
   },
   "layouts/split-shell@desktop": {
     "color-contrast": 2
