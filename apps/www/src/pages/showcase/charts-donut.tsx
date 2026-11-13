@@ -55,7 +55,7 @@ export function ChartsDonut() {
                   <div className="mt-0.5 font-heading text-3xl tracking-tight">
                     $1.84M
                   </div>
-                  <div className="mt-1 font-mono text-[10px] text-emerald-700 uppercase tracking-[0.2em] dark:text-emerald-400">
+                  <div className="mt-1 font-mono text-[10px] text-category-2-foreground uppercase tracking-[0.2em]">
                     +14.2% vs Q4
                   </div>
                 </div>

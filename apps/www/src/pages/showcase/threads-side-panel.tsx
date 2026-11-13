@@ -25,7 +25,7 @@ const THREAD: Comment[] = [
   {
     id: 1,
     initials: "MO",
-    tone: "bg-emerald-700 text-white",
+    tone: "bg-category-2-strong text-white",
     name: "Maya Okafor",
     time: "1h",
     body: "I rewrote the audit log query — should we land it tonight or wait for the freeze to lift on Tuesday?",
@@ -37,7 +37,7 @@ const THREAD: Comment[] = [
   {
     id: 2,
     initials: "JL",
-    tone: "bg-amber-700 text-white",
+    tone: "bg-category-3-strong text-white",
     name: "James Lin",
     time: "52m",
     body: "Tonight if it's idempotent. Otherwise I'd wait — I don't want to chase down a partial backfill on Saturday.",
@@ -45,7 +45,7 @@ const THREAD: Comment[] = [
   {
     id: 3,
     initials: "MO",
-    tone: "bg-emerald-700 text-white",
+    tone: "bg-category-2-strong text-white",
     name: "Maya Okafor",
     time: "44m",
     body: "Idempotent — re-runs will skip seen entries. Tested against staging this morning.",
@@ -53,7 +53,7 @@ const THREAD: Comment[] = [
   {
     id: 4,
     initials: "RP",
-    tone: "bg-violet-700 text-white",
+    tone: "bg-category-5-strong text-white",
     name: "Riya Patel",
     time: "39m",
     body: "+1 from me. Also: can you tag the migration with `audit-q3` so we can roll back cleanly if needed?",
@@ -62,9 +62,9 @@ const THREAD: Comment[] = [
 ];
 
 const PARTICIPANTS = [
-  { initials: "MO", tone: "bg-emerald-700 text-white" },
-  { initials: "JL", tone: "bg-amber-700 text-white" },
-  { initials: "RP", tone: "bg-violet-700 text-white" },
+  { initials: "MO", tone: "bg-category-2-strong text-white" },
+  { initials: "JL", tone: "bg-category-3-strong text-white" },
+  { initials: "RP", tone: "bg-category-5-strong text-white" },
   { initials: "SC", tone: "bg-foreground text-background" },
 ];
 

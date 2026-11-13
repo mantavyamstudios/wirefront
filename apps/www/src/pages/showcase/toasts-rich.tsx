@@ -27,10 +27,10 @@ const SEED: { id: string; title: string; description: string; data: RichData }[]
     description: "@mantavyam — same — let's pair on the bouncing invites tomorrow morning.",
     data: {
       Icon: MessageCircleIcon,
-      badgeTone: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
+      badgeTone: "bg-category-1/15 text-category-1-foreground",
       meta: "12m ago",
       actions: [{ label: "Reply" }],
-      avatar: { initials: "RP", tone: "bg-violet-700 text-white" },
+      avatar: { initials: "RP", tone: "bg-category-5-strong text-white" },
     },
   },
   {
@@ -39,10 +39,10 @@ const SEED: { id: string; title: string; description: string; data: RichData }[]
     description: 'James moved "audit log query rewrite" to ready.',
     data: {
       Icon: GitPullRequestIcon,
-      badgeTone: "bg-violet-500/15 text-violet-600 dark:text-violet-400",
+      badgeTone: "bg-category-5/15 text-category-5-foreground",
       meta: "2m ago",
       actions: [{ label: "Snooze" }, { label: "Review", primary: true }],
-      avatar: { initials: "JL", tone: "bg-amber-700 text-white" },
+      avatar: { initials: "JL", tone: "bg-category-3-strong text-white" },
     },
   },
   {
@@ -51,10 +51,10 @@ const SEED: { id: string; title: string; description: string; data: RichData }[]
     description: "Auto-joined via @acme.com domain rule. Say hi or assign a project.",
     data: {
       Icon: UserPlusIcon,
-      badgeTone: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
+      badgeTone: "bg-category-2/15 text-category-2-foreground",
       meta: "just now",
       actions: [{ label: "Assign" }, { label: "Welcome", primary: true }],
-      avatar: { initials: "MO", tone: "bg-emerald-700 text-white" },
+      avatar: { initials: "MO", tone: "bg-category-2-strong text-white" },
     },
   },
 ];

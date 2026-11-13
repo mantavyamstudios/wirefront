@@ -27,12 +27,12 @@ interface Task {
 const COLUMNS: { name: string; tone: string; tasks: Task[] }[] = [
   {
     name: "In progress",
-    tone: "bg-amber-500",
+    tone: "bg-category-3",
     tasks: [
       {
         id: "ENG-204",
         title: "Migrate billing webhooks to v3",
-        labels: [{ name: "infra", color: "bg-violet-500" }],
+        labels: [{ name: "infra", color: "bg-category-5" }],
         assignees: ["LR", "MK"],
         priority: "high",
         due: "Apr 28",
@@ -44,8 +44,8 @@ const COLUMNS: { name: string; tone: string; tasks: Task[] }[] = [
         id: "DSN-91",
         title: "Onboarding particle field micro-anim",
         labels: [
-          { name: "design", color: "bg-pink-500" },
-          { name: "polish", color: "bg-sky-500" },
+          { name: "design", color: "bg-category-4" },
+          { name: "polish", color: "bg-category-1" },
         ],
         assignees: ["PJ"],
         priority: "med",
@@ -57,14 +57,14 @@ const COLUMNS: { name: string; tone: string; tasks: Task[] }[] = [
   },
   {
     name: "Review",
-    tone: "bg-sky-500",
+    tone: "bg-category-1",
     tasks: [
       {
         id: "ENG-198",
         title: "Audit log retention policy",
         labels: [
-          { name: "infra", color: "bg-violet-500" },
-          { name: "security", color: "bg-red-500" },
+          { name: "infra", color: "bg-category-5" },
+          { name: "security", color: "bg-category-4" },
         ],
         assignees: ["SC"],
         priority: "urgent",
@@ -78,8 +78,8 @@ const COLUMNS: { name: string; tone: string; tasks: Task[] }[] = [
 
 const PRIORITY_STYLE: Record<Priority, string> = {
   low: "bg-muted text-muted-foreground",
-  med: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
-  high: "bg-amber-500/15 text-amber-800 dark:text-amber-400",
+  med: "bg-category-1/15 text-category-1-foreground",
+  high: "bg-category-3/15 text-category-3-foreground",
   urgent: "bg-destructive/15 text-destructive-foreground",
 };
 

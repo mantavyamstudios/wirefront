@@ -200,7 +200,7 @@ function Item({ n }: { n: Notif }) {
       }
     >
       {n.unread ? (
-        <span aria-hidden className="absolute top-4 start-1.5 size-1.5 rounded-full bg-blue-500" />
+        <span aria-hidden className="absolute top-4 start-1.5 size-1.5 rounded-full bg-category-1" />
       ) : null}
       <div className="relative shrink-0">
         <Avatar className="size-9">

@@ -216,10 +216,10 @@ function Tween({ value }: { value: number }) {
 
 function ProductArt({ art, className }: { art: CheckoutArt; className?: string }) {
   const tile: Record<CheckoutArt, string> = {
-    mug: "bg-amber-500/14 dark:bg-amber-400/12",
-    tote: "bg-emerald-600/14 dark:bg-emerald-400/12",
-    candle: "bg-rose-500/12 dark:bg-rose-400/12",
-    notebook: "bg-sky-500/12 dark:bg-sky-400/12",
+    mug: "bg-category-3/14",
+    tote: "bg-category-2-strong/14",
+    candle: "bg-category-4/12",
+    notebook: "bg-category-1/12",
   };
   return (
     <span aria-hidden className={cn("flex items-center justify-center overflow-hidden rounded-xl", tile[art], className)}>
@@ -227,16 +227,16 @@ function ProductArt({ art, className }: { art: CheckoutArt; className?: string }
         {art === "mug" && (
           <>
             <path
-              className="fill-none stroke-amber-800/70 dark:stroke-amber-200/70"
+              className="fill-none stroke-category-3-strong/70"
               d="M33 20h3.5a4.5 4.5 0 0 1 0 9H33"
               strokeWidth="3"
             />
             <path
-              className="fill-amber-50 stroke-amber-900/30 dark:fill-amber-100/90 dark:stroke-transparent"
+              className="fill-category-3/8 stroke-category-3-strong/30 dark:stroke-transparent"
               d="M12 15h22v19a6 6 0 0 1-6 6H18a6 6 0 0 1-6-6z"
               strokeWidth="1.25"
             />
-            <path className="fill-amber-800/15" d="M12 15h22v4H12z" />
+            <path className="fill-category-3-strong/15" d="M12 15h22v4H12z" />
             {[
               [17, 24],
               [24, 29],
@@ -245,35 +245,35 @@ function ProductArt({ art, className }: { art: CheckoutArt; className?: string }
               [29, 34],
               [15, 30],
             ].map(([x, y]) => (
-              <circle className="fill-amber-900/40" cx={x} cy={y} key={`${x}-${y}`} r="0.9" />
+              <circle className="fill-category-3-strong/40" cx={x} cy={y} key={`${x}-${y}`} r="0.9" />
             ))}
           </>
         )}
         {art === "tote" && (
           <>
             <path
-              className="fill-none stroke-emerald-900/60 dark:stroke-emerald-200/70"
+              className="fill-none stroke-category-2-strong/60"
               d="M18 18v-4a6 6 0 0 1 12 0v4"
               strokeWidth="2.5"
             />
-            <path className="fill-emerald-700 dark:fill-emerald-500" d="M11 18h26l-2 22H13z" />
-            <path className="fill-emerald-900/25" d="M11 18h26l-.3 3H11.3z" />
-            <rect className="fill-amber-100/90" height="5" rx="1" width="9" x="19.5" y="27" />
+            <path className="fill-category-2-strong" d="M11 18h26l-2 22H13z" />
+            <path className="fill-category-2-strong/25" d="M11 18h26l-.3 3H11.3z" />
+            <rect className="fill-category-3/11" height="5" rx="1" width="9" x="19.5" y="27" />
           </>
         )}
         {art === "candle" && (
           <>
-            <path className="fill-amber-400 dark:fill-amber-300" d="M24 8c2.5 3 3 5 0 8-3-3-2.5-5 0-8z" />
-            <rect className="fill-rose-950/60 dark:fill-rose-100/70" height="4" rx="0.5" width="1.5" x="23.25" y="15" />
-            <rect className="fill-rose-200 dark:fill-rose-200/90" height="22" rx="5" width="22" x="13" y="18" />
-            <rect className="fill-rose-900/20" height="2" width="22" x="13" y="22" />
+            <path className="fill-category-3/60" d="M24 8c2.5 3 3 5 0 8-3-3-2.5-5 0-8z" />
+            <rect className="fill-category-4-strong/60" height="4" rx="0.5" width="1.5" x="23.25" y="15" />
+            <rect className="fill-category-4/20" height="22" rx="5" width="22" x="13" y="18" />
+            <rect className="fill-category-4-strong/20" height="2" width="22" x="13" y="22" />
             <rect className="fill-white/80 dark:fill-white/70" height="8" rx="1" width="12" x="18" y="27" />
           </>
         )}
         {art === "notebook" && (
           <>
-            <rect className="fill-sky-700 dark:fill-sky-400" height="30" rx="2" width="22" x="13" y="9" />
-            <rect className="fill-sky-900/30" height="30" width="3" x="13" y="9" />
+            <rect className="fill-category-1-strong" height="30" rx="2" width="22" x="13" y="9" />
+            <rect className="fill-category-1-strong/30" height="30" width="3" x="13" y="9" />
             <rect className="fill-white/80" height="5" rx="1" width="10" x="20" y="16" />
           </>
         )}
@@ -1110,12 +1110,12 @@ function CardPreview({
         transition={{ duration: 0.45, ease: [0.645, 0.045, 0.355, 1] }}
       >
         <div
-          className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-xl bg-linear-to-br from-neutral-700 via-neutral-800 to-neutral-950 p-4 text-white shadow-lg/16 ring-1 ring-white/10"
+          className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-xl bg-linear-to-br from-muted-foreground via-muted-foreground to-muted-foreground p-4 text-white shadow-lg/16 ring-1 ring-white/10"
           style={{ backfaceVisibility: "hidden" }}
         >
           <span className="pointer-events-none absolute -top-16 -end-12 size-44 rounded-full bg-white/6" />
           <div className="relative flex items-center justify-between">
-            <span className="h-6 w-8 rounded-md bg-gradient-to-br from-amber-200 to-amber-400 ring-1 ring-black/10" />
+            <span className="h-6 w-8 rounded-md bg-gradient-to-br from-category-3/20 to-category-3/60 ring-1 ring-black/10" />
             <NfcIcon className="size-5 opacity-80" />
           </div>
           <div className="relative flex justify-between font-mono text-[15px] tabular-nums tracking-wider">
@@ -1135,13 +1135,13 @@ function CardPreview({
           </div>
         </div>
         <div
-          className="absolute inset-0 flex flex-col overflow-hidden rounded-xl bg-linear-to-br from-neutral-800 to-neutral-950 pt-5 text-white shadow-lg/16 ring-1 ring-white/10"
+          className="absolute inset-0 flex flex-col overflow-hidden rounded-xl bg-linear-to-br from-muted-foreground to-muted-foreground pt-5 text-white shadow-lg/16 ring-1 ring-white/10"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <span className="h-9 w-full bg-black/70" />
           <div className="mt-4 flex items-center gap-2 px-4">
             <span className="h-7 flex-1 rounded-sm bg-white/85" />
-            <span className="flex h-7 w-12 items-center justify-center rounded-sm bg-white font-mono text-indigo-950 text-sm tabular-nums">
+            <span className="flex h-7 w-12 items-center justify-center rounded-sm bg-white font-mono text-category-8-foreground text-sm tabular-nums">
               {cvc || "•••"}
             </span>
           </div>

@@ -37,12 +37,12 @@ const CATEGORIES: { value: CategoryVal; label: string }[] = [
 ];
 
 const COLORS: { value: ColorVal; label: string; color: string }[] = [
-  { value: "bone", label: "Bone", color: "bg-stone-200" },
-  { value: "moss", label: "Moss", color: "bg-emerald-700" },
-  { value: "dune", label: "Dune", color: "bg-amber-300" },
-  { value: "night", label: "Night", color: "bg-zinc-900" },
-  { value: "rust", label: "Rust", color: "bg-orange-700" },
-  { value: "sky", label: "Sky", color: "bg-sky-400" },
+  { value: "bone", label: "Bone", color: "bg-muted" },
+  { value: "moss", label: "Moss", color: "bg-category-2-strong" },
+  { value: "dune", label: "Dune", color: "bg-category-3/35" },
+  { value: "night", label: "Night", color: "bg-foreground" },
+  { value: "rust", label: "Rust", color: "bg-category-7-strong" },
+  { value: "sky", label: "Sky", color: "bg-category-1/60" },
 ];
 
 const RATINGS = [
@@ -339,7 +339,7 @@ export function FilterSidebar() {
                 >
                   <Checkbox value={r.value} />
                   <span className="flex-1">
-                    <span className="font-mono text-amber-800 dark:text-amber-400">★</span>{" "}
+                    <span className="font-mono text-category-3-foreground">★</span>{" "}
                     {r.label}
                   </span>
                   <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
@@ -556,7 +556,7 @@ function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="mt-1 flex items-center justify-between text-muted-foreground text-xs">
         <span className="inline-flex items-center gap-1">
-          <span className="font-mono text-amber-800 dark:text-amber-400">★</span>
+          <span className="font-mono text-category-3-foreground">★</span>
           {product.rating.toFixed(1)}
         </span>
         <span className="flex items-center gap-1">

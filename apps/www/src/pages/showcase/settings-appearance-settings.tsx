@@ -85,39 +85,39 @@ const accents: Record<
 > = {
   indigo: {
     label: "Indigo",
-    swatch: "bg-indigo-600 dark:bg-indigo-500",
-    light: { solid: "var(--color-indigo-600)", ink: "var(--color-indigo-700)" },
-    dark: { solid: "var(--color-indigo-500)", ink: "var(--color-indigo-300)" },
+    swatch: "bg-category-8-strong",
+    light: { solid: "var(--category-8)", ink: "var(--category-8-strong)" },
+    dark: { solid: "var(--category-8)", ink: "var(--category-8)" },
   },
   violet: {
     label: "Violet",
-    swatch: "bg-violet-600 dark:bg-violet-500",
-    light: { solid: "var(--color-violet-600)", ink: "var(--color-violet-700)" },
-    dark: { solid: "var(--color-violet-500)", ink: "var(--color-violet-300)" },
+    swatch: "bg-category-5-strong",
+    light: { solid: "var(--category-5)", ink: "var(--category-5-strong)" },
+    dark: { solid: "var(--category-5)", ink: "var(--category-5)" },
   },
   rose: {
     label: "Rose",
-    swatch: "bg-rose-600 dark:bg-rose-500",
-    light: { solid: "var(--color-rose-600)", ink: "var(--color-rose-700)" },
-    dark: { solid: "var(--color-rose-500)", ink: "var(--color-rose-300)" },
+    swatch: "bg-category-4-strong",
+    light: { solid: "var(--category-4)", ink: "var(--category-4-strong)" },
+    dark: { solid: "var(--category-4)", ink: "var(--category-4)" },
   },
   orange: {
     label: "Orange",
-    swatch: "bg-orange-600 dark:bg-orange-500",
-    light: { solid: "var(--color-orange-600)", ink: "var(--color-orange-700)" },
-    dark: { solid: "var(--color-orange-500)", ink: "var(--color-orange-300)" },
+    swatch: "bg-category-7-strong",
+    light: { solid: "var(--category-7)", ink: "var(--category-7-strong)" },
+    dark: { solid: "var(--category-7)", ink: "var(--category-7)" },
   },
   emerald: {
     label: "Emerald",
-    swatch: "bg-emerald-600 dark:bg-emerald-500",
-    light: { solid: "var(--color-emerald-600)", ink: "var(--color-emerald-700)" },
-    dark: { solid: "var(--color-emerald-600)", ink: "var(--color-emerald-300)" },
+    swatch: "bg-category-2-strong",
+    light: { solid: "var(--category-2)", ink: "var(--category-2-strong)" },
+    dark: { solid: "var(--category-2)", ink: "var(--category-2)" },
   },
   sky: {
     label: "Sky",
-    swatch: "bg-sky-600 dark:bg-sky-500",
-    light: { solid: "var(--color-sky-600)", ink: "var(--color-sky-700)" },
-    dark: { solid: "var(--color-sky-600)", ink: "var(--color-sky-300)" },
+    swatch: "bg-category-1-strong",
+    light: { solid: "var(--category-1)", ink: "var(--category-1-strong)" },
+    dark: { solid: "var(--category-1)", ink: "var(--category-1)" },
   },
 };
 
@@ -169,11 +169,11 @@ const defaultTasks: AppearanceTask[] = [
 ];
 
 const ownerHues = [
-  "bg-teal-700 text-white",
-  "bg-amber-500 text-amber-950",
-  "bg-fuchsia-600 text-white",
-  "bg-sky-700 text-white",
-  "bg-lime-500 text-lime-950",
+  "bg-category-6-strong text-white",
+  "bg-category-3-strong text-white",
+  "bg-category-5-strong text-white",
+  "bg-category-1-strong text-white",
+  "bg-category-2-strong text-white",
 ];
 
 const densityRow: Record<Density, string> = {

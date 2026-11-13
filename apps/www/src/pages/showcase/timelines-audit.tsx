@@ -86,14 +86,14 @@ const EVENTS: Event[] = [
 
 const SEV_RING: Record<Severity, string> = {
   info: "bg-foreground/[0.06] text-foreground",
-  warn: "bg-amber-500/15 text-amber-800 dark:text-amber-400",
-  danger: "bg-rose-500/15 text-rose-700 dark:text-rose-400",
+  warn: "bg-warning/15 text-warning-foreground",
+  danger: "bg-destructive/15 text-destructive-foreground",
 };
 
 const SEV_DOT: Record<Severity, string> = {
   info: "bg-foreground/40",
-  warn: "bg-amber-500",
-  danger: "bg-rose-500",
+  warn: "bg-warning",
+  danger: "bg-destructive",
 };
 
 export function TimelinesAudit() {
@@ -150,10 +150,10 @@ export function TimelinesAudit() {
                         diff
                       </summary>
                       <div className="mt-2 overflow-hidden rounded-md border border-border/60 font-mono text-[11px] [&>div]:break-all">
-                        <div className="border-rose-500/20 border-b bg-rose-500/[0.06] px-2 py-1 text-rose-700 dark:text-rose-400">
+                        <div className="border-category-4/20 border-b bg-category-4/[0.06] px-2 py-1 text-category-4-foreground">
                           - {e.diff.before}
                         </div>
-                        <div className="bg-emerald-500/[0.06] px-2 py-1 text-emerald-700 dark:text-emerald-400">
+                        <div className="bg-category-2/[0.06] px-2 py-1 text-category-2-foreground">
                           + {e.diff.after}
                         </div>
                       </div>

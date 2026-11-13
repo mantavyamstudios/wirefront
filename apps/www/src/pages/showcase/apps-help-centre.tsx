@@ -96,12 +96,12 @@ const icons: Record<HelpIcon, ReactNode> = {
 };
 
 const toneTile: Record<HelpTone, string> = {
-  sky: "border bg-background text-sky-700 dark:bg-input/32 dark:text-sky-400",
-  emerald: "border bg-background text-emerald-700 dark:bg-input/32 dark:text-emerald-400",
-  amber: "border bg-background text-amber-800 dark:bg-input/32 dark:text-amber-400",
-  violet: "border bg-background text-violet-600 dark:bg-input/32 dark:text-violet-400",
-  rose: "border bg-background text-rose-700 dark:bg-input/32 dark:text-rose-400",
-  teal: "border bg-background text-teal-600 dark:bg-input/32 dark:text-teal-400",
+  sky: "border bg-background text-category-1-foreground dark:bg-input/32",
+  emerald: "border bg-background text-category-2-foreground dark:bg-input/32",
+  amber: "border bg-background text-category-3-foreground dark:bg-input/32",
+  violet: "border bg-background text-category-5-foreground dark:bg-input/32",
+  rose: "border bg-background text-category-4-foreground dark:bg-input/32",
+  teal: "border bg-background text-category-6-foreground dark:bg-input/32",
 };
 
 const defaultCategories: HelpCategory[] = [

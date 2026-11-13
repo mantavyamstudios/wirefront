@@ -50,9 +50,9 @@ export function ProfileCredentials() {
           new devices.
         </p>
 
-        <div className="mt-6 rounded-xl border border-border/60 bg-emerald-500/[0.04] p-4">
+        <div className="mt-6 rounded-xl border border-border/60 bg-category-2/[0.04] p-4">
           <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
-            <ShieldCheckIcon className="mt-0.5 size-5 shrink-0 text-emerald-700 dark:text-emerald-400" />
+            <ShieldCheckIcon className="mt-0.5 size-5 shrink-0 text-category-2-foreground" />
             <div className="min-w-0 flex-1 basis-[calc(100%-2rem)] sm:basis-auto">
               <div className="text-sm">
                 Your account is protected with two-factor and a passkey.
@@ -95,7 +95,7 @@ export function ProfileCredentials() {
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                     {s.device}
                     {s.current ? (
-                      <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 font-mono text-[10px] text-emerald-700 uppercase tracking-[0.2em] dark:text-emerald-400">
+                      <span className="rounded-full bg-category-2/15 px-2 py-0.5 font-mono text-[10px] text-category-2-foreground uppercase tracking-[0.2em]">
                         This device
                       </span>
                     ) : null}
@@ -124,7 +124,7 @@ export function ProfileCredentials() {
                   <button
                     type="button"
                     aria-label={`Sign out ${s.device}`}
-                    className="min-h-8 whitespace-nowrap rounded-md border border-border/60 px-3 py-1 font-mono text-[10px] pointer-coarse:min-h-10 text-muted-foreground uppercase tracking-[0.2em] hover:border-rose-500/40 hover:text-rose-600 dark:hover:text-rose-400"
+                    className="min-h-8 whitespace-nowrap rounded-md border border-border/60 px-3 py-1 font-mono text-[10px] pointer-coarse:min-h-10 text-muted-foreground uppercase tracking-[0.2em] hover:border-category-4/40 hover:text-category-4-foreground"
                   >
                     Sign out
                   </button>
@@ -160,7 +160,7 @@ export function ProfileCredentials() {
                 <button
                   type="button"
                   aria-label={`Remove ${k.label}`}
-                  className="min-h-8 rounded-md border border-border/60 px-3 py-1 font-mono text-[10px] pointer-coarse:min-h-10 text-muted-foreground uppercase tracking-[0.2em] hover:border-rose-500/40 hover:text-rose-600 dark:hover:text-rose-400"
+                  className="min-h-8 rounded-md border border-border/60 px-3 py-1 font-mono text-[10px] pointer-coarse:min-h-10 text-muted-foreground uppercase tracking-[0.2em] hover:border-category-4/40 hover:text-category-4-foreground"
                 >
                   Remove
                 </button>

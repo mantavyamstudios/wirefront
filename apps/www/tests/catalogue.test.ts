@@ -128,6 +128,28 @@ describe("catalogue", () => {
     expect(problems).toEqual([]);
   });
 
+  it("colours with theme tokens, not raw palette classes", () => {
+    // Status: success / warning / info / destructive. Categories (labels, avatars, calendars, series):
+    // category-1..8 with -strong (fills under white text) and -foreground (text on tints). Builders theme
+    // both through CSS variables the registry ships; white and black stay allowed.
+    const hues = "slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose";
+    const raw = new RegExp(
+      `(?<![\\w-])(?:bg|text|border|ring|fill|stroke|from|via|to|outline|divide|decoration|caret|accent|shadow|placeholder)(?:-[xytrblse])?-(?:${hues})-\\d{2,3}\\b|var\\(--color-(?:${hues})-\\d{2,3}\\)`,
+      "g",
+    );
+    const problems: string[] = [];
+    for (const map of Object.values(SOURCE_FILES)) {
+      for (const file of Object.values(map ?? {})) {
+        for (const source of [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f))) {
+          // Lines that define a token ("--foreground": "var(--color-neutral-800)", a theme preview) may use the palette.
+          const code = withoutCodeSamples(readFileSync(source, "utf8")).replace(/^\s*["']--[\w-]+["']\s*:.*$/gm, "");
+          for (const m of code.matchAll(raw)) problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${m[0]}`);
+        }
+      }
+    }
+    expect(problems).toEqual([]);
+  });
+
   it("strips only the text of multi-line code samples when scanning for clock reads", () => {
     const sample = "const code = `line one\nparkedAt: new Date(),`;";
     expect(withoutCodeSamples(sample)).not.toContain("new Date()");

@@ -46,20 +46,20 @@ const STRENGTH_META: Record<
   weak: {
     label: "Weak",
     segments: 1,
-    color: "bg-amber-500",
-    text: "text-amber-800 dark:text-amber-400",
+    color: "bg-category-3",
+    text: "text-category-3-foreground",
   },
   ok: {
     label: "OK",
     segments: 2,
-    color: "bg-sky-500",
-    text: "text-sky-700 dark:text-sky-400",
+    color: "bg-category-1",
+    text: "text-category-1-foreground",
   },
   strong: {
     label: "Strong",
     segments: 3,
-    color: "bg-emerald-500",
-    text: "text-emerald-700 dark:text-emerald-400",
+    color: "bg-category-2",
+    text: "text-category-2-foreground",
   },
 };
 
@@ -261,7 +261,7 @@ function BenefitPills() {
           key={label}
           className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-2.5 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] backdrop-blur-sm"
         >
-          <CheckIcon className="size-3 text-emerald-500" />
+          <CheckIcon className="size-3 text-category-2-foreground" />
           {label}
         </span>
       ))}

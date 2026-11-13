@@ -52,7 +52,7 @@ function SuccessViewport() {
           >
             <span
               aria-hidden
-              className="flex size-7 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+              className="flex size-7 shrink-0 items-center justify-center rounded-full bg-category-2/15 text-category-2-foreground"
             >
               <CheckIcon className="size-4" />
             </span>

@@ -78,8 +78,8 @@ export interface InvoicesTableProps {
 }
 
 const STATUS_STYLE: Record<InvoiceStatus, { className: string; dot: string }> = {
-  paid: { className: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400", dot: "bg-emerald-500" },
-  open: { className: "border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-400", dot: "bg-amber-500" },
+  paid: { className: "border-success/20 bg-success/10 text-success-foreground", dot: "bg-success" },
+  open: { className: "border-category-3/20 bg-category-3/10 text-category-3-foreground", dot: "bg-category-3" },
   overdue: { className: "border-destructive/20 bg-destructive/10 text-destructive-foreground", dot: "bg-destructive" },
   void: { className: "border-border bg-muted text-muted-foreground", dot: "bg-muted-foreground/50" },
 };

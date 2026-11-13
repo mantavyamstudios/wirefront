@@ -102,15 +102,15 @@ const easeOut = [0.23, 1, 0.32, 1] as const;
 const press = "transition-[color,background-color,box-shadow,scale,opacity] duration-150 ease-out active:scale-[0.97]";
 
 const hues: Record<ProfileHue, { art: string; avatar: string }> = {
-  amber: { art: "from-amber-200 via-amber-300 to-orange-400", avatar: "from-amber-300 to-orange-500" },
-  rose: { art: "from-rose-200 via-rose-300 to-pink-500", avatar: "from-rose-300 to-pink-500" },
-  violet: { art: "from-violet-300 via-violet-400 to-indigo-500", avatar: "from-violet-400 to-indigo-500" },
-  teal: { art: "from-teal-200 via-teal-300 to-emerald-500", avatar: "from-teal-300 to-emerald-500" },
-  sky: { art: "from-sky-200 via-sky-300 to-blue-500", avatar: "from-sky-300 to-blue-500" },
-  orange: { art: "from-orange-200 via-orange-300 to-red-400", avatar: "from-orange-300 to-red-500" },
-  emerald: { art: "from-emerald-200 via-emerald-300 to-teal-600", avatar: "from-emerald-300 to-teal-600" },
-  indigo: { art: "from-indigo-300 via-indigo-400 to-violet-700", avatar: "from-indigo-400 to-violet-700" },
-  fuchsia: { art: "from-fuchsia-200 via-fuchsia-300 to-purple-500", avatar: "from-fuchsia-300 to-purple-500" },
+  amber: { art: "from-category-3/20 via-category-3/35 to-category-7/60", avatar: "from-category-3/35 to-category-7" },
+  rose: { art: "from-category-4/20 via-category-4/35 to-category-4", avatar: "from-category-4/35 to-category-4" },
+  violet: { art: "from-category-5/35 via-category-5/60 to-category-8", avatar: "from-category-5/60 to-category-8" },
+  teal: { art: "from-category-6/20 via-category-6/35 to-category-2", avatar: "from-category-6/35 to-category-2" },
+  sky: { art: "from-category-1/20 via-category-1/35 to-category-1", avatar: "from-category-1/35 to-category-1" },
+  orange: { art: "from-category-7/20 via-category-7/35 to-category-4/60", avatar: "from-category-7/35 to-category-4" },
+  emerald: { art: "from-category-2/20 via-category-2/35 to-category-6", avatar: "from-category-2/35 to-category-6" },
+  indigo: { art: "from-category-8/35 via-category-8/60 to-category-5-strong", avatar: "from-category-8/60 to-category-5-strong" },
+  fuchsia: { art: "from-category-5/20 via-category-5/35 to-category-5", avatar: "from-category-5/35 to-category-5" },
 };
 
 const defaultUser: ProfileUser = {
@@ -302,7 +302,7 @@ function Art({ art, className, large }: { art: ProfileArt; className?: string; l
           <span
             className={cn(
               "absolute top-[28%] left-1/2 aspect-square w-[26%] -translate-x-1/2 rounded-full",
-              art.hue === "indigo" ? "bg-amber-100/90 shadow-[0_0_40px_10px] shadow-amber-100/30" : "bg-amber-100 shadow-[0_0_60px_20px] shadow-amber-50/60",
+              art.hue === "indigo" ? "bg-category-3/11 shadow-[0_0_40px_10px] shadow-category-3/4" : "bg-category-3/12 shadow-[0_0_60px_20px] shadow-category-3/5",
             )}
           />
           <svg className="absolute inset-x-0 bottom-0 h-[46%] w-full" preserveAspectRatio="none" viewBox="0 0 100 40">
@@ -750,10 +750,10 @@ export function Profile({
                       i > 51
                         ? "bg-muted"
                         : i === 51
-                          ? "bg-amber-400 ring-2 ring-amber-400/30"
+                          ? "bg-category-3/60 ring-2 ring-category-3/18"
                           : i % 7 === 3 && i < 49
                             ? "bg-muted"
-                            : "bg-violet-500/80 dark:bg-violet-400/80",
+                            : "bg-category-5/80",
                     )}
                     key={i}
                   />
@@ -795,7 +795,7 @@ function Cover() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(55% 90% at 10% 15%, var(--color-amber-200) 0%, transparent 60%), radial-gradient(45% 80% at 88% 0%, var(--color-rose-300) 0%, transparent 65%), radial-gradient(70% 90% at 62% 115%, var(--color-violet-400) 0%, transparent 60%), linear-gradient(120deg, var(--color-orange-200), var(--color-rose-300) 50%, var(--color-violet-300))",
+            "radial-gradient(55% 90% at 10% 15%, var(--category-3) 0%, transparent 60%), radial-gradient(45% 80% at 88% 0%, var(--category-4) 0%, transparent 65%), radial-gradient(70% 90% at 62% 115%, var(--category-5) 0%, transparent 60%), linear-gradient(120deg, var(--category-7), var(--category-4) 50%, var(--category-5))",
         }}
       />
       <svg className="absolute inset-0 size-full opacity-30 mix-blend-soft-light" preserveAspectRatio="none" viewBox="0 0 600 200">
@@ -1028,7 +1028,7 @@ function PostItem({
               onClick={(e) => e.preventDefault()}
             >
               <span aria-hidden className={cn("flex w-24 shrink-0 items-end gap-0.5 bg-gradient-to-br p-2.5 @md:w-32", hues[post.link.hue].art)}>
-                {["bg-amber-100", "bg-orange-500", "bg-red-700", "bg-teal-700", "bg-indigo-950"].map((c) => (
+                {["bg-category-3/12", "bg-category-7", "bg-category-4-strong", "bg-category-6-strong", "bg-category-8-strong"].map((c) => (
                   <span className={cn("h-7 flex-1 rounded-sm ring-1 ring-black/10", c)} key={c} />
                 ))}
               </span>
@@ -1044,7 +1044,7 @@ function PostItem({
             </Stat>
             <Action
               active={reposted}
-              activeClass="text-emerald-700 dark:text-emerald-400"
+              activeClass="text-category-2-foreground"
               icon={<Repeat2Icon />}
               label={reposted ? "Undo repost" : "Repost"}
               onClick={() => setReposted((r) => !r)}
@@ -1160,9 +1160,9 @@ function LikeAction({ liked, count, onClick }: { liked: boolean; count: number; 
       aria-label={liked ? "Unlike" : "Like"}
       aria-pressed={liked}
       className={cn(
-        "group/like flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-2 text-xs outline-none hover:bg-rose-500/10 hover:text-rose-600 focus-visible:ring-2 focus-visible:ring-ring dark:hover:text-rose-400",
+        "group/like flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-2 text-xs outline-none hover:bg-category-4/10 hover:text-category-4-foreground focus-visible:ring-2 focus-visible:ring-ring",
         press,
-        liked && "text-rose-700 dark:text-rose-400",
+        liked && "text-category-4-foreground",
       )}
       onClick={() => {
         if (!liked && !reduce) setPop((p) => p + 1);
@@ -1182,7 +1182,7 @@ function LikeAction({ liked, count, onClick }: { liked: boolean; count: number; 
           <motion.span
             animate={{ scale: 1.9, opacity: 0 }}
             aria-hidden
-            className="absolute inset-0 rounded-full border-2 border-rose-500 dark:border-rose-400"
+            className="absolute inset-0 rounded-full border-2 border-category-4"
             initial={{ scale: 0.6, opacity: 0.8 }}
             key={`ring-${pop}`}
             transition={{ duration: 0.4, ease: easeOut }}

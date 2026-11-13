@@ -108,12 +108,12 @@ const EARLIER: Event[] = [
 ];
 
 const TONE: Record<string, string> = {
-  emerald: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  indigo: "bg-indigo-500/15 text-indigo-600 dark:text-indigo-400",
-  sky: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
-  pink: "bg-pink-500/15 text-pink-600 dark:text-pink-400",
-  violet: "bg-violet-500/15 text-violet-600 dark:text-violet-400",
-  rose: "bg-rose-500/15 text-rose-700 dark:text-rose-400",
+  emerald: "bg-category-2/15 text-category-2-foreground",
+  indigo: "bg-category-8/15 text-category-8-foreground",
+  sky: "bg-category-1/15 text-category-1-foreground",
+  pink: "bg-category-4/15 text-category-4-foreground",
+  violet: "bg-category-5/15 text-category-5-foreground",
+  rose: "bg-category-4/15 text-category-4-foreground",
 };
 
 export function TimelinesActivityFeed() {

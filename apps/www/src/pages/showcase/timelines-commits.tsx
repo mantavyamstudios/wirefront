@@ -204,10 +204,10 @@ export function TimelinesCommits() {
                             {c.filesChanged}{" "}
                             {c.filesChanged === 1 ? "file" : "files"}
                           </span>
-                          <span className="text-emerald-700 max-md:hidden dark:text-emerald-400">
+                          <span className="text-category-2-foreground max-md:hidden">
                             +{c.additions}
                           </span>
-                          <span className="text-rose-700 max-md:hidden dark:text-rose-400">
+                          <span className="text-category-4-foreground max-md:hidden">
                             -{c.deletions}
                           </span>
                         </>

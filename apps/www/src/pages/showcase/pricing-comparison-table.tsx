@@ -153,7 +153,7 @@ export function PricingComparisonTable() {
                           {typeof v === "boolean" ? (
                             v ? (
                               <>
-                                <CheckIcon aria-hidden className="size-4 text-emerald-700 dark:text-emerald-400" />
+                                <CheckIcon aria-hidden className="size-4 text-category-2-foreground" />
                                 <span className="sr-only">Included</span>
                               </>
                             ) : (

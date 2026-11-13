@@ -124,23 +124,23 @@ const artBleed = 1.3;
 const palettes: Record<AvatarPalette, { label: string; stops: [string, string, string]; swatch: string }> = {
   dusk: {
     label: "Dusk",
-    stops: ["text-indigo-600", "text-fuchsia-500", "text-amber-300"],
-    swatch: "from-indigo-600 via-fuchsia-500 to-amber-300",
+    stops: ["text-category-8-foreground", "text-category-5-foreground", "text-category-3"],
+    swatch: "from-category-8 via-category-5 to-category-3/35",
   },
   tide: {
     label: "Tide",
-    stops: ["text-blue-700", "text-teal-400", "text-lime-200"],
-    swatch: "from-blue-700 via-teal-400 to-lime-200",
+    stops: ["text-category-1-foreground", "text-category-6", "text-category-2"],
+    swatch: "from-category-1-strong via-category-6/60 to-category-2/20",
   },
   ember: {
     label: "Ember",
-    stops: ["text-rose-700", "text-orange-500", "text-yellow-300"],
-    swatch: "from-rose-700 via-orange-500 to-yellow-300",
+    stops: ["text-category-4-foreground", "text-category-7-foreground", "text-category-3"],
+    swatch: "from-category-4-strong via-category-7 to-category-3/35",
   },
   moss: {
     label: "Moss",
-    stops: ["text-emerald-800", "text-emerald-500", "text-lime-300"],
-    swatch: "from-emerald-800 via-emerald-500 to-lime-300",
+    stops: ["text-category-2-foreground", "text-category-2-foreground", "text-category-2"],
+    swatch: "from-category-2-strong via-category-2 to-category-2/35",
   },
 };
 
@@ -545,7 +545,7 @@ function MiniClock({ hours, minutes }: { hours: number | null; minutes: number |
       aria-hidden
       className={cn(
         "relative flex size-8 shrink-0 items-center justify-center rounded-full border shadow-xs/5 transition-colors duration-300",
-        night ? "border-indigo-900 bg-indigo-950 text-indigo-100" : "bg-background text-foreground",
+        night ? "border-category-8-strong bg-category-8-strong text-category-8" : "bg-background text-foreground",
       )}
     >
       <motion.span

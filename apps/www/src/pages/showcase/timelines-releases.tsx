@@ -50,7 +50,7 @@ export function TimelinesReleases() {
                   className={
                     "z-10 grid size-[32px] place-items-center rounded-full ring-4 ring-background transition-all " +
                     (s.state === "done"
-                      ? "bg-emerald-500 text-white"
+                      ? "bg-category-2 text-white"
                       : s.state === "active"
                         ? "bg-foreground text-background"
                         : "border border-border/70 bg-background text-muted-foreground")
@@ -125,7 +125,7 @@ export function TimelinesReleases() {
               </button>
               <button
                 type="button"
-                className="min-h-9 rounded-md bg-rose-500/15 px-3 py-1.5 font-mono text-[10px] text-rose-700 uppercase tracking-[0.25em] dark:text-rose-400"
+                className="min-h-9 rounded-md bg-category-4/15 px-3 py-1.5 font-mono text-[10px] text-category-4-foreground uppercase tracking-[0.25em]"
               >
                 Roll back
               </button>

@@ -21,14 +21,14 @@ const THREADS: Thread[] = [
   {
     id: 1,
     initials: "MO",
-    tone: "bg-emerald-700 text-white",
+    tone: "bg-category-2-strong text-white",
     name: "Maya Okafor",
     time: "yesterday",
     preview:
       "Should we keep this paragraph? It's nicely written but covers the same ground as the diagram below.",
     resolvedBy: {
       initials: "JL",
-      tone: "bg-amber-700 text-white",
+      tone: "bg-category-3-strong text-white",
       name: "James",
     },
     replyCount: 3,
@@ -36,14 +36,14 @@ const THREADS: Thread[] = [
   {
     id: 2,
     initials: "RP",
-    tone: "bg-violet-700 text-white",
+    tone: "bg-category-5-strong text-white",
     name: "Riya Patel",
     time: "Mon",
     preview:
       "+1 from me. Also: can you tag the migration with audit-q3 so we can roll back cleanly if needed?",
     resolvedBy: {
       initials: "MO",
-      tone: "bg-emerald-700 text-white",
+      tone: "bg-category-2-strong text-white",
       name: "Maya",
     },
     replyCount: 1,
@@ -51,14 +51,14 @@ const THREADS: Thread[] = [
   {
     id: 3,
     initials: "DK",
-    tone: "bg-sky-700 text-white",
+    tone: "bg-category-1-strong text-white",
     name: "Dani Kim",
     time: "Apr 21",
     preview:
       "Tightened the corner radius on the empty-state cards — I think it reads better now.",
     resolvedBy: {
       initials: "DK",
-      tone: "bg-sky-700 text-white",
+      tone: "bg-category-1-strong text-white",
       name: "Dani",
     },
     replyCount: 0,
@@ -108,7 +108,7 @@ export function ThreadsResolved() {
                 <div className="flex items-start gap-3 px-3 py-3 sm:items-center sm:px-4">
                   <span
                     aria-hidden
-                    className="flex size-7 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                    className="flex size-7 shrink-0 items-center justify-center rounded-full bg-category-2/15 text-category-2-foreground"
                   >
                     <CheckCircle2Icon className="size-3.5" />
                   </span>

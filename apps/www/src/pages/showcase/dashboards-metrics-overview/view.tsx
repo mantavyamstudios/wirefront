@@ -118,7 +118,7 @@ function MetricsOverviewScreen({
           <div className="flex flex-wrap items-center gap-2">
             {ready ? (
               <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-md border border-border/70 bg-background/40 px-3 py-1.5 font-mono text-muted-foreground text-xs">
-                <span className="size-1.5 rounded-full bg-emerald-500" />
+                <span className="size-1.5 rounded-full bg-category-2" />
                 {format.date(data.period.start, { month: "short", day: "numeric" })} – {format.date(data.period.end, { month: "short", day: "numeric" })}
               </span>
             ) : null}
@@ -156,8 +156,8 @@ function MetricsOverviewScreen({
                           className={cn(
                             "inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 font-mono text-[10px]",
                             good(m)
-                              ? "bg-emerald-500/12 text-emerald-700 dark:text-emerald-400"
-                              : "bg-rose-500/12 text-rose-700 dark:text-rose-400",
+                              ? "bg-success/12 text-success-foreground"
+                              : "bg-destructive/12 text-destructive-foreground",
                           )}
                         >
                           {m.change >= 0 ? <ArrowUpRightIcon className="size-3" /> : <ArrowDownRightIcon className="size-3" />}
@@ -191,8 +191,8 @@ function MetricsOverviewScreen({
                             className={cn(
                               "inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 font-mono text-[10px]",
                               good(chartMetric)
-                                ? "bg-emerald-500/12 text-emerald-700 dark:text-emerald-400"
-                                : "bg-rose-500/12 text-rose-700 dark:text-rose-400",
+                                ? "bg-success/12 text-success-foreground"
+                                : "bg-destructive/12 text-destructive-foreground",
                             )}
                           >
                             {change(chartMetric)}

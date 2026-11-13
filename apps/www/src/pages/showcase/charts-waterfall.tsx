@@ -93,11 +93,11 @@ export function ChartsWaterfall() {
               start / end
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="size-2.5 rounded-sm bg-emerald-500" />
+              <span className="size-2.5 rounded-sm bg-category-2" />
               addition
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="size-2.5 rounded-sm bg-rose-500" />
+              <span className="size-2.5 rounded-sm bg-category-4" />
               loss
             </span>
             <span className="text-foreground sm:ms-auto">

@@ -88,11 +88,11 @@ const menuPop =
   "transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 data-ending-style:duration-100";
 
 const tones: Record<NoteFolderTone, string> = {
-  amber: "bg-amber-500 dark:bg-amber-400",
-  sky: "bg-sky-500 dark:bg-sky-400",
-  rose: "bg-rose-500 dark:bg-rose-400",
-  emerald: "bg-emerald-500 dark:bg-emerald-400",
-  violet: "bg-violet-500 dark:bg-violet-400",
+  amber: "bg-category-3",
+  sky: "bg-category-1",
+  rose: "bg-category-4",
+  emerald: "bg-category-2",
+  violet: "bg-category-5",
 };
 
 const defaultFolders: NoteFolder[] = [

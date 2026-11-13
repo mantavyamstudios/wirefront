@@ -264,7 +264,7 @@ function InviteTeammatesScreen({
               {send.error}
             </p>
           ) : sentCount !== undefined ? (
-            <p className="mt-4 text-emerald-700 text-sm dark:text-emerald-400" role="status">
+            <p className="mt-4 text-category-2-foreground text-sm" role="status">
               {interpolate(t.sent, { count: sentCount })}
             </p>
           ) : null}
@@ -322,7 +322,7 @@ function ChipPill({
       className={cn(
         "group inline-flex h-7 items-center gap-1.5 rounded-full border pe-1 ps-1 text-xs",
         !valid && "border-destructive/50 bg-destructive/8 text-destructive-foreground",
-        valid && autoJoin && "border-emerald-500/30 bg-emerald-500/8 text-foreground",
+        valid && autoJoin && "border-category-2/30 bg-category-2/8 text-foreground",
         valid && !autoJoin && "border-border bg-foreground/[0.03] text-foreground",
       )}
     >
@@ -330,7 +330,7 @@ function ChipPill({
         aria-hidden
         className={cn(
           "flex size-5 shrink-0 items-center justify-center rounded-full font-mono text-[9px] uppercase",
-          autoJoin ? "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300" : valid ? "bg-foreground/[0.06] text-muted-foreground" : "bg-destructive/15 text-destructive-foreground",
+          autoJoin ? "bg-category-2/15 text-category-2-foreground" : valid ? "bg-foreground/[0.06] text-muted-foreground" : "bg-destructive/15 text-destructive-foreground",
         )}
       >
         {valid ? initials(chip.email) : "!"}
@@ -338,7 +338,7 @@ function ChipPill({
       <span className="truncate">{chip.email}</span>
 
       {autoJoin ? (
-        <span className="flex items-center gap-0.5 font-mono text-[10px] text-emerald-700 uppercase tracking-[0.2em] dark:text-emerald-400">
+        <span className="flex items-center gap-0.5 font-mono text-[10px] text-category-2-foreground uppercase tracking-[0.2em]">
           <SparklesIcon className="size-2.5" />
           {t.auto}
         </span>
@@ -403,7 +403,7 @@ function CopyLinkButton({ link, t }: { link: string; t: Messages }) {
       onClick={() => void navigator.clipboard?.writeText(link).then(() => setCopied(true))}
       type="button"
     >
-      {copied ? <CheckIcon className="size-3.5 text-emerald-700 dark:text-emerald-400" /> : <LinkIcon className="size-3.5 opacity-60 group-hover:opacity-100" />}
+      {copied ? <CheckIcon className="size-3.5 text-category-2-foreground" /> : <LinkIcon className="size-3.5 opacity-60 group-hover:opacity-100" />}
       <span className="truncate">{link.replace(/^https?:\/\//, "")}</span>
       <span className="flex items-center gap-1">
         <CopyIcon className="size-3" />

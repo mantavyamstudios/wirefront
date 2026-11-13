@@ -451,17 +451,17 @@ const land = { type: "spring", stiffness: 380, damping: 30 } as const;
 
 const stageDot: Record<DealStage, string> = {
   lead: "bg-muted-foreground/50",
-  qualified: "bg-sky-500 dark:bg-sky-400",
-  proposal: "bg-amber-500 dark:bg-amber-400",
-  negotiation: "bg-violet-500 dark:bg-violet-400",
-  won: "bg-emerald-500 dark:bg-emerald-400",
+  qualified: "bg-category-1",
+  proposal: "bg-category-3",
+  negotiation: "bg-category-5",
+  won: "bg-category-2",
 };
 
 const engagementMeta: Record<Engagement, { label: string; level: number; bar: string; text: string }> = {
-  hot: { label: "Hot", level: 4, bar: "bg-emerald-500 dark:bg-emerald-400", text: "text-emerald-700 dark:text-emerald-300" },
-  warm: { label: "Warm", level: 3, bar: "bg-emerald-500 dark:bg-emerald-400", text: "text-muted-foreground" },
-  cooling: { label: "Cooling", level: 2, bar: "bg-amber-500 dark:bg-amber-400", text: "text-amber-800 dark:text-amber-300" },
-  cold: { label: "Cold", level: 1, bar: "bg-rose-500 dark:bg-rose-400", text: "text-rose-700 dark:text-rose-300" },
+  hot: { label: "Hot", level: 4, bar: "bg-category-2", text: "text-category-2-foreground" },
+  warm: { label: "Warm", level: 3, bar: "bg-category-2", text: "text-muted-foreground" },
+  cooling: { label: "Cooling", level: 2, bar: "bg-category-3", text: "text-category-3-foreground" },
+  cold: { label: "Cold", level: 1, bar: "bg-category-4", text: "text-category-4-foreground" },
 };
 
 const warmer: Record<Engagement, Engagement> = { cold: "cooling", cooling: "warm", warm: "hot", hot: "hot" };
@@ -469,55 +469,55 @@ const warmer: Record<Engagement, Engagement> = { cold: "cooling", cooling: "warm
 const signalMeta: Record<FocusKind, { icon: LucideIcon; tile: string; text: string }> = {
   quiet: {
     icon: MoonIcon,
-    tile: "bg-amber-500/12 text-amber-800 dark:bg-amber-400/14 dark:text-amber-300",
-    text: "text-amber-800 dark:text-amber-300",
+    tile: "bg-category-3/12 text-category-3-foreground",
+    text: "text-category-3-foreground",
   },
   opened: {
     icon: EyeIcon,
-    tile: "bg-sky-500/12 text-sky-700 dark:bg-sky-400/14 dark:text-sky-300",
-    text: "text-sky-700 dark:text-sky-300",
+    tile: "bg-category-1/12 text-category-1-foreground",
+    text: "text-category-1-foreground",
   },
   champion: {
     icon: UserMinusIcon,
-    tile: "bg-rose-500/12 text-rose-700 dark:bg-rose-400/14 dark:text-rose-300",
-    text: "text-rose-700 dark:text-rose-300",
+    tile: "bg-category-4/12 text-category-4-foreground",
+    text: "text-category-4-foreground",
   },
   overdue: {
     icon: CalendarClockIcon,
-    tile: "bg-orange-500/12 text-orange-700 dark:bg-orange-400/14 dark:text-orange-300",
-    text: "text-orange-700 dark:text-orange-300",
+    tile: "bg-category-7/12 text-category-7-foreground",
+    text: "text-category-7-foreground",
   },
   replied: {
     icon: ReplyIcon,
-    tile: "bg-emerald-500/12 text-emerald-700 dark:bg-emerald-400/14 dark:text-emerald-300",
-    text: "text-emerald-700 dark:text-emerald-300",
+    tile: "bg-category-2/12 text-category-2-foreground",
+    text: "text-category-2-foreground",
   },
 };
 
 const monogramTones = [
-  "bg-amber-500/15 text-amber-800 dark:bg-amber-400/15 dark:text-amber-200",
-  "bg-sky-500/15 text-sky-800 dark:bg-sky-400/15 dark:text-sky-200",
-  "bg-violet-500/15 text-violet-800 dark:bg-violet-400/15 dark:text-violet-200",
-  "bg-emerald-500/15 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-200",
-  "bg-rose-500/15 text-rose-800 dark:bg-rose-400/15 dark:text-rose-200",
-  "bg-teal-500/15 text-teal-800 dark:bg-teal-400/15 dark:text-teal-200",
-  "bg-orange-500/15 text-orange-800 dark:bg-orange-400/15 dark:text-orange-200",
+  "bg-category-3/15 text-category-3-foreground",
+  "bg-category-1/15 text-category-1-foreground",
+  "bg-category-5/15 text-category-5-foreground",
+  "bg-category-2/15 text-category-2-foreground",
+  "bg-category-4/15 text-category-4-foreground",
+  "bg-category-6/15 text-category-6-foreground",
+  "bg-category-7/15 text-category-7-foreground",
 ];
 
 const ownerTones = [
-  "bg-orange-500/20 text-orange-900 dark:bg-orange-400/25 dark:text-orange-100",
-  "bg-teal-500/20 text-teal-900 dark:bg-teal-400/25 dark:text-teal-100",
-  "bg-violet-500/20 text-violet-900 dark:bg-violet-400/25 dark:text-violet-100",
-  "bg-sky-500/20 text-sky-900 dark:bg-sky-400/25 dark:text-sky-100",
+  "bg-category-7/20 text-category-7-foreground",
+  "bg-category-6/20 text-category-6-foreground",
+  "bg-category-5/20 text-category-5-foreground",
+  "bg-category-1/20 text-category-1-foreground",
 ];
 
 const burstTones = [
-  "bg-emerald-500 dark:bg-emerald-400",
-  "bg-amber-500 dark:bg-amber-400",
-  "bg-sky-500 dark:bg-sky-400",
-  "bg-violet-500 dark:bg-violet-400",
-  "bg-rose-500 dark:bg-rose-400",
-  "bg-emerald-500 dark:bg-emerald-400",
+  "bg-category-2",
+  "bg-category-3",
+  "bg-category-1",
+  "bg-category-5",
+  "bg-category-4",
+  "bg-category-2",
 ];
 
 const fullMoney = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -689,7 +689,7 @@ function DealFace({ deal, owner, ownerIndex, flag, celebrate, touched, reduce, c
         <motion.span
           animate={{ opacity: 0 }}
           aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-[inherit] bg-emerald-500/12 dark:bg-emerald-400/12"
+          className="pointer-events-none absolute inset-0 rounded-[inherit] bg-category-2/12"
           initial={{ opacity: 1 }}
           key={`c${celebrate}`}
           transition={{ duration: 1.1, ease: "easeOut", delay: 0.2 }}
@@ -699,7 +699,7 @@ function DealFace({ deal, owner, ownerIndex, flag, celebrate, touched, reduce, c
         <motion.span
           animate={{ opacity: 0 }}
           aria-hidden
-          className="pointer-events-none absolute -inset-px rounded-[inherit] ring-2 ring-sky-500/50 dark:ring-sky-400/50"
+          className="pointer-events-none absolute -inset-px rounded-[inherit] ring-2 ring-category-1/50"
           initial={{ opacity: 1 }}
           key={`t${touched}`}
           transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
@@ -711,7 +711,7 @@ function DealFace({ deal, owner, ownerIndex, flag, celebrate, touched, reduce, c
         <span
           className={cn(
             "shrink-0 text-xs tabular-nums",
-            !won && deal.daysInStage >= 14 ? "text-amber-800 dark:text-amber-300" : "text-muted-foreground",
+            !won && deal.daysInStage >= 14 ? "text-category-3-foreground" : "text-muted-foreground",
           )}
         >
           {won ? deal.closeLabel : deal.daysInStage === 0 ? "Just moved" : `${deal.daysInStage}d in stage`}
@@ -728,11 +728,11 @@ function DealFace({ deal, owner, ownerIndex, flag, celebrate, touched, reduce, c
                 key={`check-${celebrate ?? 0}`}
                 transition={{ type: "spring", stiffness: 500, damping: 18 }}
               >
-                <CircleCheckIcon className="size-3.5 text-emerald-700 dark:text-emerald-400" />
+                <CircleCheckIcon className="size-3.5 text-category-2-foreground" />
               </motion.span>
               {celebrate ? <Burst key={`burst-${celebrate}`} reduce={reduce} /> : null}
             </span>
-            <span className="truncate text-emerald-700 dark:text-emerald-300">Closed won</span>
+            <span className="truncate text-category-2-foreground">Closed won</span>
             <OwnerAvatar className="ms-auto [--avatar-size:18px]" index={ownerIndex} owner={owner} />
           </>
         ) : (
@@ -922,7 +922,7 @@ function SignalItem({
                     "flex size-7 shrink-0 items-center justify-center rounded-full",
                     resolving === "snooze"
                       ? "bg-muted text-muted-foreground"
-                      : "bg-emerald-500/14 text-emerald-700 dark:bg-emerald-400/16 dark:text-emerald-300",
+                      : "bg-category-2/14 text-category-2-foreground",
                   )}
                   initial={{ scale: 0.7 }}
                   transition={{ type: "spring", stiffness: 520, damping: 20 }}
@@ -1072,8 +1072,8 @@ function DetailPanel({
                   <span
                     className={cn(
                       "shrink-0 rounded-full px-2 py-0.5 font-medium text-[11px]",
-                      c.tag.tone === "good" && "bg-emerald-500/12 text-emerald-700 dark:bg-emerald-400/14 dark:text-emerald-300",
-                      c.tag.tone === "bad" && "bg-rose-500/12 text-rose-700 dark:bg-rose-400/14 dark:text-rose-300",
+                      c.tag.tone === "good" && "bg-category-2/12 text-category-2-foreground",
+                      c.tag.tone === "bad" && "bg-category-4/12 text-category-4-foreground",
                       c.tag.tone === "neutral" && "bg-muted text-muted-foreground",
                     )}
                   >
@@ -1118,7 +1118,7 @@ function DetailPanel({
             {next.id === "won" ? "Mark as won" : `Move to ${next.label}`}
           </Button>
         ) : (
-          <span className="flex h-8 flex-1 items-center gap-2 font-medium text-emerald-700 dark:text-emerald-300">
+          <span className="flex h-8 flex-1 items-center gap-2 font-medium text-category-2-foreground">
             <CircleCheckIcon className="size-4" />
             Closed won
           </span>
@@ -1602,7 +1602,7 @@ export function PipelineToday({
         aria-label={`${stage.label}: ${list.length} ${list.length === 1 ? "deal" : "deals"}, ${shortMoney(weighted)} ${isWon ? "closed" : "weighted"}`}
         className={cn(
           "flex min-h-0 min-w-0 flex-col rounded-2xl bg-muted/50 p-1 transition-colors duration-150 dark:bg-muted/30",
-          isOver && (isWon ? "bg-emerald-500/10 dark:bg-emerald-400/10" : "bg-accent dark:bg-accent/70"),
+          isOver && (isWon ? "bg-category-2/10" : "bg-accent dark:bg-accent/70"),
           stage.id !== mobileStage && "hidden @5xl:flex",
         )}
         data-drop-stage={stage.id}
@@ -1616,14 +1616,14 @@ export function PipelineToday({
               <span className="text-muted-foreground text-xs tabular-nums">{list.length}</span>
             </span>
             <span className="text-muted-foreground text-xs">
-              <span className={cn("font-medium", isWon ? "text-emerald-700 dark:text-emerald-300" : "text-foreground/80")}>
+              <span className={cn("font-medium", isWon ? "text-category-2-foreground" : "text-foreground/80")}>
                 <Rolling format={shortMoney} reduce={reduce} value={weighted} />
               </span>{" "}
               {isWon ? "closed" : "weighted"}
             </span>
           </div>
           {isWon ? (
-            <CheckIcon className="mt-0.5 size-3.5 shrink-0 text-emerald-700 dark:text-emerald-400" />
+            <CheckIcon className="mt-0.5 size-3.5 shrink-0 text-category-2-foreground" />
           ) : (
             <span className="mt-0.5 shrink-0 font-mono text-[11px] text-muted-foreground tabular-nums">
               {Math.round(stage.probability * 100)}%
@@ -1863,7 +1863,7 @@ export function PipelineToday({
                 >
                   <n.icon className="size-4.5" />
                   {n.badge ? (
-                    <span className="absolute top-2 end-2 size-1.5 rounded-full bg-rose-500 ring-2 ring-background dark:bg-rose-400" />
+                    <span className="absolute top-2 end-2 size-1.5 rounded-full bg-category-4 ring-2 ring-background" />
                   ) : null}
                 </TooltipTrigger>
                 <TooltipContent side="right">{n.label}</TooltipContent>
@@ -1913,7 +1913,7 @@ export function PipelineToday({
             <div className="flex items-center gap-1">
               <Button aria-label="Inbox" className="relative" size="icon" variant="ghost">
                 <InboxIcon />
-                <span className="absolute top-2 end-2 size-1.5 rounded-full bg-rose-500 ring-2 ring-background dark:bg-rose-400" />
+                <span className="absolute top-2 end-2 size-1.5 rounded-full bg-category-4 ring-2 ring-background" />
               </Button>
               <Avatar aria-label={me?.name} role="img" className="[--avatar-size:--spacing(7)]">
                 <AvatarFallback className={cn("font-semibold text-[10px]", ownerTones[ownerIndex(currentUserId) % ownerTones.length])}>
@@ -1950,7 +1950,7 @@ export function PipelineToday({
                       className={cn(
                         "rounded-full px-2 py-0.5 font-medium text-xs tabular-nums",
                         delta.amount > 0
-                          ? "bg-emerald-500/12 text-emerald-700 dark:bg-emerald-400/14 dark:text-emerald-300"
+                          ? "bg-category-2/12 text-category-2-foreground"
                           : "bg-muted text-muted-foreground",
                       )}
                       exit={{ opacity: 0, transition: { duration: 0.2 } }}
@@ -1978,12 +1978,12 @@ export function PipelineToday({
                   transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 260, damping: 32 }}
                 />
                 <div
-                  className="absolute inset-y-0 start-0 bg-emerald-500 dark:bg-emerald-400"
+                  className="absolute inset-y-0 start-0 bg-category-2"
                   style={{ width: `${Math.min(100, (won / target) * 100)}%` }}
                 />
               </div>
               <span className="text-muted-foreground text-xs tabular-nums">
-                {progress}% of {shortMoney(target)} target · <span className="text-emerald-700 dark:text-emerald-300">{shortMoney(won)} won</span>
+                {progress}% of {shortMoney(target)} target · <span className="text-category-2-foreground">{shortMoney(won)} won</span>
               </span>
             </div>
           </header>

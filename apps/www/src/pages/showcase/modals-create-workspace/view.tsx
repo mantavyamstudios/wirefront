@@ -138,12 +138,12 @@ function CreateWorkspaceScreen({
       <span
         className={cn(
           "me-2 inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px]",
-          availability === "available" && "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
+          availability === "available" && "bg-success/15 text-success-foreground",
           availability === "taken" && "bg-destructive/10 text-destructive-foreground",
           availability === "checking" && "bg-muted text-muted-foreground",
         )}
       >
-        <span className={cn("size-1 rounded-full", availability === "taken" ? "bg-destructive" : availability === "available" ? "bg-emerald-500" : "bg-muted-foreground")} />
+        <span className={cn("size-1 rounded-full", availability === "taken" ? "bg-destructive" : availability === "available" ? "bg-success" : "bg-muted-foreground")} />
         {t[availability]}
       </span>
     );

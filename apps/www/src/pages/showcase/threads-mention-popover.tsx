@@ -17,14 +17,14 @@ interface Member {
 const MEMBERS: Member[] = [
   {
     initials: "MO",
-    tone: "bg-emerald-700 text-white",
+    tone: "bg-category-2-strong text-white",
     name: "Maya Okafor",
     handle: "maya",
     team: "Engineering",
   },
   {
     initials: "JL",
-    tone: "bg-amber-700 text-white",
+    tone: "bg-category-3-strong text-white",
     name: "James Lin",
     handle: "james",
     team: "Engineering",
@@ -32,21 +32,21 @@ const MEMBERS: Member[] = [
   },
   {
     initials: "RP",
-    tone: "bg-violet-700 text-white",
+    tone: "bg-category-5-strong text-white",
     name: "Riya Patel",
     handle: "riya",
     team: "Product",
   },
   {
     initials: "DK",
-    tone: "bg-sky-700 text-white",
+    tone: "bg-category-1-strong text-white",
     name: "Dani Kim",
     handle: "dani",
     team: "Design",
   },
   {
     initials: "AT",
-    tone: "bg-rose-700 text-white",
+    tone: "bg-category-4-strong text-white",
     name: "Alex Tran",
     handle: "alex",
     team: "Marketing",

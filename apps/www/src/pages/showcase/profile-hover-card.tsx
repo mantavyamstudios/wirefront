@@ -82,7 +82,7 @@ function ProfileCard({ className }: { className?: string }) {
       }
     >
       {/* Cover */}
-      <div className="h-16 bg-gradient-to-br from-indigo-500/30 via-foreground/[0.04] to-teal-500/30" />
+      <div className="h-16 bg-gradient-to-br from-category-8/30 via-foreground/[0.04] to-category-6/30" />
 
       <div className="relative px-4 pb-4">
         <Avatar className="-mt-7 size-14 border-4 border-background bg-foreground">
@@ -95,7 +95,7 @@ function ProfileCard({ className }: { className?: string }) {
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
               <span className="font-heading text-base">Maya Okafor</span>
-              <span className="grid size-4 shrink-0 place-items-center rounded-full bg-blue-500 text-white">
+              <span className="grid size-4 shrink-0 place-items-center rounded-full bg-category-1 text-white">
                 <span className="sr-only">Verified</span>
                 <CheckIcon aria-hidden className="size-2.5" />
               </span>

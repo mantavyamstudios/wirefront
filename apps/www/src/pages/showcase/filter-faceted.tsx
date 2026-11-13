@@ -46,18 +46,18 @@ const PRIORITY_FACETS = [
 ];
 
 const ASSIGNEE_FACETS = [
-  { value: "ada" as AssigneeKey, label: "Ada Lovelace", initials: "AL", tone: "bg-rose-500/15" },
-  { value: "grace" as AssigneeKey, label: "Grace Hopper", initials: "GH", tone: "bg-amber-500/15" },
-  { value: "alan" as AssigneeKey, label: "Alan Turing", initials: "AT", tone: "bg-sky-500/15" },
-  { value: "linus" as AssigneeKey, label: "Linus Torvalds", initials: "LT", tone: "bg-emerald-500/15" },
+  { value: "ada" as AssigneeKey, label: "Ada Lovelace", initials: "AL", tone: "bg-category-4/15" },
+  { value: "grace" as AssigneeKey, label: "Grace Hopper", initials: "GH", tone: "bg-category-3/15" },
+  { value: "alan" as AssigneeKey, label: "Alan Turing", initials: "AT", tone: "bg-category-1/15" },
+  { value: "linus" as AssigneeKey, label: "Linus Torvalds", initials: "LT", tone: "bg-category-2/15" },
 ];
 
 const LABEL_FACETS = [
-  { value: "bug" as LabelKey, label: "Bug", color: "bg-red-500" },
-  { value: "feature" as LabelKey, label: "Feature", color: "bg-violet-500" },
-  { value: "infra" as LabelKey, label: "Infra", color: "bg-amber-500" },
-  { value: "docs" as LabelKey, label: "Docs", color: "bg-sky-500" },
-  { value: "design" as LabelKey, label: "Design", color: "bg-pink-500" },
+  { value: "bug" as LabelKey, label: "Bug", color: "bg-category-4" },
+  { value: "feature" as LabelKey, label: "Feature", color: "bg-category-5" },
+  { value: "infra" as LabelKey, label: "Infra", color: "bg-category-3" },
+  { value: "docs" as LabelKey, label: "Docs", color: "bg-category-1" },
+  { value: "design" as LabelKey, label: "Design", color: "bg-category-4" },
 ];
 
 interface Issue {
@@ -309,9 +309,9 @@ function PriorityDot({ value }: { value: PriorityKey }) {
     value === "p0"
       ? "bg-destructive"
       : value === "p1"
-        ? "bg-amber-500"
+        ? "bg-category-3"
         : value === "p2"
-          ? "bg-sky-500"
+          ? "bg-category-1"
           : "bg-muted-foreground/40";
   return <span className={"size-2 rounded-full " + tone} />;
 }

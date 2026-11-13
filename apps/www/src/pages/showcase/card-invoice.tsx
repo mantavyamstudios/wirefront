@@ -54,8 +54,8 @@ const INVOICES: Invoice[] = [
 ];
 
 const STATUS_STYLES: Record<Status, string> = {
-  paid: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
-  open: "bg-amber-500/10 text-amber-800 dark:text-amber-400 border-amber-500/20",
+  paid: "bg-success/10 text-success-foreground border-success/20",
+  open: "bg-category-3/10 text-category-3-foreground border-category-3/20",
   overdue: "bg-destructive/10 text-destructive-foreground border-destructive/20",
   void: "bg-muted text-muted-foreground border-border",
 };

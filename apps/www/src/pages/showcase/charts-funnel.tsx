@@ -74,7 +74,7 @@ export function ChartsFunnel() {
                   </div>
                 </div>
                 {i > 0 ? (
-                  <div className="absolute -top-3 end-0 inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 font-mono text-[10px] text-rose-700 ring-1 ring-rose-500/20 sm:end-auto sm:start-[196px] md:start-[216px] dark:text-rose-400">
+                  <div className="absolute -top-3 end-0 inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 font-mono text-[10px] text-category-4-foreground ring-1 ring-category-4/20 sm:end-auto sm:start-[196px] md:start-[216px]">
                     <ArrowDownRightIcon className="size-3" />
                     -{drop.toFixed(1)}%{" "}
                     <span className="text-muted-foreground">
@@ -107,9 +107,9 @@ function Stat({
   tone: "emerald" | "amber" | "rose";
 }) {
   const tones: Record<typeof tone, string> = {
-    emerald: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-    amber: "bg-amber-500/10 text-amber-800 dark:text-amber-400",
-    rose: "bg-rose-500/10 text-rose-700 dark:text-rose-400",
+    emerald: "bg-category-2/10 text-category-2-foreground",
+    amber: "bg-category-3/10 text-category-3-foreground",
+    rose: "bg-category-4/10 text-category-4-foreground",
   };
   return (
     <div className="rounded-xl border border-border/60 bg-background/40 p-4">

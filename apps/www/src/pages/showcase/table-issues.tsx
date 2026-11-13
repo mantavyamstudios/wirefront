@@ -51,36 +51,36 @@ interface Issue {
 
 const STATUS_META: Record<Status, { label: string; icon: typeof CheckIcon; cls: string }> = {
   todo: { label: "Todo", icon: CircleIcon, cls: "text-muted-foreground" },
-  "in-progress": { label: "In Progress", icon: CircleDotIcon, cls: "text-amber-800 dark:text-amber-400" },
-  "in-review": { label: "In Review", icon: CircleDashedIcon, cls: "text-violet-500" },
-  done: { label: "Done", icon: CheckIcon, cls: "text-emerald-500" },
+  "in-progress": { label: "In Progress", icon: CircleDotIcon, cls: "text-category-3-foreground" },
+  "in-review": { label: "In Review", icon: CircleDashedIcon, cls: "text-category-5-foreground" },
+  done: { label: "Done", icon: CheckIcon, cls: "text-success-foreground" },
 };
 
 const PRIORITY_META: Record<Priority, { label: string; cls: string }> = {
   p0: { label: "Urgent", cls: "border-destructive/30 text-destructive-foreground" },
-  p1: { label: "High", cls: "border-amber-500/30 text-amber-800 dark:text-amber-400" },
-  p2: { label: "Med", cls: "border-sky-500/30 text-sky-700 dark:text-sky-400" },
+  p1: { label: "High", cls: "border-category-3/30 text-category-3-foreground" },
+  p2: { label: "Med", cls: "border-category-1/30 text-category-1-foreground" },
   p3: { label: "Low", cls: "border-border text-muted-foreground" },
   none: { label: "—", cls: "border-dashed text-muted-foreground" },
 };
 
 const LABEL_TONE: Record<string, string> = {
-  bug: "bg-red-500/10 text-red-700 border-red-500/20 dark:text-red-400",
-  feature: "bg-violet-500/10 text-violet-800 border-violet-500/20 dark:text-violet-400",
-  infra: "bg-amber-500/10 text-amber-800 border-amber-500/20 dark:text-amber-400",
-  docs: "bg-sky-500/10 text-sky-700 border-sky-500/20 dark:text-sky-400",
-  design: "bg-pink-500/10 text-pink-700 border-pink-500/20 dark:text-pink-400",
-  perf: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20 dark:text-emerald-400",
+  bug: "bg-category-4/10 text-category-4-foreground border-category-4/20",
+  feature: "bg-category-5/10 text-category-5-foreground border-category-5/20",
+  infra: "bg-category-3/10 text-category-3-foreground border-category-3/20",
+  docs: "bg-category-1/10 text-category-1-foreground border-category-1/20",
+  design: "bg-category-4/10 text-category-4-foreground border-category-4/20",
+  perf: "bg-category-2/10 text-category-2-foreground border-category-2/20",
 };
 
 const ISSUES: Issue[] = [
-  { id: "ENG-218", title: "Realtime cursors flicker on Safari 17 after WS reconnect", status: "in-progress", priority: "p0", assignee: { initials: "AL", tone: "bg-rose-500/15" }, labels: ["bug", "perf"], updated: "12m", estimate: 5 },
-  { id: "ENG-217", title: "Add cycle progress chart to project sidebar", status: "in-review", priority: "p2", assignee: { initials: "GH", tone: "bg-amber-500/15" }, labels: ["feature", "design"], updated: "2h", estimate: 3 },
-  { id: "ENG-216", title: "Migrate billing webhook to v2 schema", status: "todo", priority: "p1", assignee: { initials: "AT", tone: "bg-sky-500/15" }, labels: ["infra"], updated: "Yesterday", estimate: 8 },
+  { id: "ENG-218", title: "Realtime cursors flicker on Safari 17 after WS reconnect", status: "in-progress", priority: "p0", assignee: { initials: "AL", tone: "bg-category-4/15" }, labels: ["bug", "perf"], updated: "12m", estimate: 5 },
+  { id: "ENG-217", title: "Add cycle progress chart to project sidebar", status: "in-review", priority: "p2", assignee: { initials: "GH", tone: "bg-category-3/15" }, labels: ["feature", "design"], updated: "2h", estimate: 3 },
+  { id: "ENG-216", title: "Migrate billing webhook to v2 schema", status: "todo", priority: "p1", assignee: { initials: "AT", tone: "bg-category-1/15" }, labels: ["infra"], updated: "Yesterday", estimate: 8 },
   { id: "ENG-215", title: "Filter chips: persist operator across pages", status: "todo", priority: "p3", assignee: null, labels: ["bug"], updated: "Apr 22", estimate: 2 },
-  { id: "ENG-214", title: "Document new `useFilters()` hook + ergonomics", status: "in-progress", priority: "p2", assignee: { initials: "LT", tone: "bg-emerald-500/15" }, labels: ["docs"], updated: "Apr 22" },
-  { id: "ENG-213", title: "Reduce p99 latency on `/v1/search` ≤ 180ms", status: "in-review", priority: "p1", assignee: { initials: "MH", tone: "bg-violet-500/15" }, labels: ["perf", "infra"], updated: "Apr 21", estimate: 13 },
-  { id: "ENG-212", title: "Onboarding: reorder workspace steps", status: "done", priority: "p3", assignee: { initials: "ED", tone: "bg-indigo-500/15" }, labels: ["design"], updated: "Apr 19", estimate: 3 },
+  { id: "ENG-214", title: "Document new `useFilters()` hook + ergonomics", status: "in-progress", priority: "p2", assignee: { initials: "LT", tone: "bg-category-2/15" }, labels: ["docs"], updated: "Apr 22" },
+  { id: "ENG-213", title: "Reduce p99 latency on `/v1/search` ≤ 180ms", status: "in-review", priority: "p1", assignee: { initials: "MH", tone: "bg-category-5/15" }, labels: ["perf", "infra"], updated: "Apr 21", estimate: 13 },
+  { id: "ENG-212", title: "Onboarding: reorder workspace steps", status: "done", priority: "p3", assignee: { initials: "ED", tone: "bg-category-8/15" }, labels: ["design"], updated: "Apr 19", estimate: 3 },
 ];
 
 export function TableIssues() {

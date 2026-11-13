@@ -98,7 +98,7 @@ export function AppShell({
 
   const workspaceLabel = (
     <>
-      <span className="size-6 shrink-0 rounded bg-gradient-to-br from-emerald-500/80 to-sky-500/70" />
+      <span className="size-6 shrink-0 rounded bg-gradient-to-br from-category-2/80 to-category-1/70" />
       <span className="truncate whitespace-nowrap font-medium text-sm">{workspace.name}</span>
     </>
   );

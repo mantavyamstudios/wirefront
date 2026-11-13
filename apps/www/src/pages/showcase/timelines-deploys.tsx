@@ -28,9 +28,9 @@ interface Deploy {
 }
 
 const ENV_TONE: Record<Deploy["env"], string> = {
-  production: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  staging: "bg-amber-500/15 text-amber-800 dark:text-amber-400",
-  preview: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
+  production: "bg-category-2/15 text-category-2-foreground",
+  staging: "bg-category-3/15 text-category-3-foreground",
+  preview: "bg-category-1/15 text-category-1-foreground",
 };
 
 const DEPLOYS: Deploy[] = [
@@ -138,11 +138,11 @@ export function TimelinesDeploys() {
 
 function StatusGlyph({ status }: { status: Status }) {
   if (status === "succeeded")
-    return <CheckCircle2Icon className="size-5 text-emerald-500" />;
+    return <CheckCircle2Icon className="size-5 text-category-2-foreground" />;
   if (status === "failed")
-    return <XCircleIcon className="size-5 text-rose-500" />;
+    return <XCircleIcon className="size-5 text-category-4-foreground" />;
   if (status === "rolled-back")
-    return <CircleAlertIcon className="size-5 text-amber-800 dark:text-amber-400" />;
+    return <CircleAlertIcon className="size-5 text-category-3-foreground" />;
   return (
     <span className="grid size-5 place-items-center">
       <span className="absolute size-3 rounded-full bg-foreground/30 motion-safe:animate-ping" />

@@ -69,15 +69,15 @@ const MEMBERS: Member[] = [
 ];
 
 const STATUS_DOT: Record<Member["status"], string> = {
-  online: "bg-emerald-500",
-  away: "bg-amber-500",
-  dnd: "bg-rose-500",
+  online: "bg-success",
+  away: "bg-category-3",
+  dnd: "bg-category-4",
   off: "bg-muted-foreground/40",
 };
 
 const PERMISSION_TONE: Record<Member["permission"], string> = {
-  Owner: "bg-violet-500/15 text-violet-800 dark:text-violet-300",
-  Admin: "bg-indigo-500/15 text-indigo-800 dark:text-indigo-300",
+  Owner: "bg-category-5/15 text-category-5-foreground",
+  Admin: "bg-category-8/15 text-category-8-foreground",
   Member: "bg-foreground/[0.06] text-foreground",
   Viewer: "bg-muted text-muted-foreground",
 };

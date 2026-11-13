@@ -35,9 +35,9 @@ const OFFLINE: Person[] = [
 ];
 
 const STATUS_DOT: Record<Person["status"], string> = {
-  online: "bg-emerald-500",
-  idle: "bg-amber-500",
-  dnd: "bg-rose-500",
+  online: "bg-success",
+  idle: "bg-category-3",
+  dnd: "bg-category-4",
   offline: "bg-muted-foreground/40",
 };
 
@@ -125,7 +125,7 @@ function Rail() {
           </Avatar>
           <div className="min-w-0 flex-1">
             <div className="text-sm">Mantavyam</div>
-            <div className="font-mono text-[10px] text-emerald-700 dark:text-emerald-400">
+            <div className="font-mono text-[10px] text-category-2-foreground">
               online
             </div>
           </div>
@@ -215,9 +215,9 @@ function Stat({
   tone: "emerald" | "amber" | "rose";
 }) {
   const map: Record<typeof tone, string> = {
-    emerald: "text-emerald-700 dark:text-emerald-400",
-    amber: "text-amber-800 dark:text-amber-400",
-    rose: "text-rose-700 dark:text-rose-400",
+    emerald: "text-category-2-foreground",
+    amber: "text-category-3-foreground",
+    rose: "text-category-4-foreground",
   };
   return (
     <div className="rounded-lg border border-border/60 bg-background px-3 py-2">

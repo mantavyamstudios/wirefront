@@ -128,40 +128,40 @@ function initials(name: string) {
 
 function ItemArt({ art }: { art: DeliveryItem["art"] }) {
   const tile = {
-    bread: "bg-amber-500/14 dark:bg-amber-400/12",
-    milk: "bg-sky-500/12 dark:bg-sky-400/12",
-    fruit: "bg-orange-500/14 dark:bg-orange-400/12",
-    flowers: "bg-rose-500/12 dark:bg-rose-400/12",
+    bread: "bg-category-3/14",
+    milk: "bg-category-1/12",
+    fruit: "bg-category-7/14",
+    flowers: "bg-category-4/12",
   }[art];
   return (
     <span aria-hidden className={cn("flex size-10 shrink-0 items-center justify-center rounded-lg", tile)}>
       <svg className="size-6" viewBox="0 0 32 32">
         {art === "bread" && (
           <>
-            <path className="fill-amber-600 dark:fill-amber-500" d="M5 18c0-6 5-10 11-10s11 4 11 10v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" />
-            <path className="fill-none stroke-amber-200/80" d="M11 13l2 3M16 12l1 3.5M21 13l-1 3" strokeLinecap="round" strokeWidth="1.5" />
+            <path className="fill-category-3" d="M5 18c0-6 5-10 11-10s11 4 11 10v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" />
+            <path className="fill-none stroke-category-3/16" d="M11 13l2 3M16 12l1 3.5M21 13l-1 3" strokeLinecap="round" strokeWidth="1.5" />
           </>
         )}
         {art === "milk" && (
           <>
-            <path className="fill-white dark:fill-sky-100" d="M11 9h10v4l2 3v11a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1V16l2-3z" />
-            <rect className="fill-sky-500 dark:fill-sky-400" height="5" rx="1" width="14" x="9" y="18" />
-            <rect className="fill-sky-700/70 dark:fill-sky-600" height="3" rx="0.5" width="10" x="11" y="5" />
+            <path className="fill-white" d="M11 9h10v4l2 3v11a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1V16l2-3z" />
+            <rect className="fill-category-1" height="5" rx="1" width="14" x="9" y="18" />
+            <rect className="fill-category-1-strong/70" height="3" rx="0.5" width="10" x="11" y="5" />
           </>
         )}
         {art === "fruit" && (
           <>
-            <circle className="fill-orange-500 dark:fill-orange-400" cx="12" cy="19" r="6.5" />
-            <circle className="fill-orange-400 dark:fill-orange-300" cx="20.5" cy="17" r="6" />
-            <path className="fill-emerald-600 dark:fill-emerald-500" d="M20 11c1-3 4-4 6-3-1 2-3 3.5-6 3z" />
+            <circle className="fill-category-7" cx="12" cy="19" r="6.5" />
+            <circle className="fill-category-7/60" cx="20.5" cy="17" r="6" />
+            <path className="fill-category-2" d="M20 11c1-3 4-4 6-3-1 2-3 3.5-6 3z" />
           </>
         )}
         {art === "flowers" && (
           <>
-            <path className="fill-none stroke-emerald-600 dark:stroke-emerald-500" d="M16 28V15M16 22l-5-6M16 20l5-5" strokeLinecap="round" strokeWidth="1.6" />
-            <circle className="fill-rose-500 dark:fill-rose-400" cx="16" cy="10" r="4" />
-            <circle className="fill-rose-400 dark:fill-rose-300" cx="10" cy="14" r="3" />
-            <circle className="fill-amber-400 dark:fill-amber-300" cx="22" cy="13" r="3" />
+            <path className="fill-none stroke-category-2" d="M16 28V15M16 22l-5-6M16 20l5-5" strokeLinecap="round" strokeWidth="1.6" />
+            <circle className="fill-category-4" cx="16" cy="10" r="4" />
+            <circle className="fill-category-4/60" cx="10" cy="14" r="3" />
+            <circle className="fill-category-3/60" cx="22" cy="13" r="3" />
           </>
         )}
       </svg>
@@ -378,7 +378,7 @@ export function DeliveryTracker({
                   const park = i === 2 && j === 1;
                   return (
                     <rect
-                      className={park ? "fill-emerald-500/18 dark:fill-emerald-400/10" : "fill-foreground/[0.025]"}
+                      className={park ? "fill-category-2/18" : "fill-foreground/[0.025]"}
                       height={y1 - y0 - 22}
                       key={`${x0}-${y0}`}
                       rx={park ? 14 : 5}
@@ -416,10 +416,10 @@ export function DeliveryTracker({
                 [270, 180],
                 [372, 168],
               ].map(([x, y]) => (
-                <circle className="fill-emerald-500/30 dark:fill-emerald-400/20" cx={x} cy={y} key={`${x}-${y}`} r={9} />
+                <circle className="fill-category-2/30" cx={x} cy={y} key={`${x}-${y}`} r={9} />
               ))}
               <path
-                className="fill-none stroke-sky-400/35 dark:stroke-sky-400/18"
+                className="fill-none stroke-category-1/21"
                 d="M-20 310 C 120 270, 220 330, 360 296 S 600 262, 820 300"
                 strokeLinecap="round"
                 strokeWidth={34}
@@ -452,10 +452,10 @@ export function DeliveryTracker({
                 <text x={420} y={352}>
                   QUAY RD
                 </text>
-                <text className="fill-emerald-700/70 dark:fill-emerald-300/60" fontSize={10} x={262} y={208}>
+                <text className="fill-category-2-strong/70" fontSize={10} x={262} y={208}>
                   FERNWOOD PARK
                 </text>
-                <text className="fill-sky-700/60 italic dark:fill-sky-300/50" fontSize={11} x={60} y={296}>
+                <text className="fill-category-1-strong/60 italic" fontSize={11} x={60} y={296}>
                   Calder River
                 </text>
               </g>
@@ -621,14 +621,14 @@ export function DeliveryTracker({
             <section aria-label="Your courier" className="flex flex-col gap-4 px-5 py-4">
               <div className="flex items-center gap-3">
                 <Avatar className="[--avatar-size:--spacing(10)]">
-                  <AvatarFallback className="bg-gradient-to-br from-teal-400 to-sky-500 font-semibold text-white">
+                  <AvatarFallback className="bg-gradient-to-br from-category-6/60 to-category-1 font-semibold text-white">
                     {initials(courier.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                   <span className="truncate font-medium">{courier.name}</span>
                   <span className="flex items-center gap-1 truncate text-muted-foreground text-xs">
-                    <StarIcon aria-hidden className="size-3 fill-amber-400 text-amber-400" />
+                    <StarIcon aria-hidden className="size-3 fill-category-3/60 text-category-3" />
                     <span className="text-foreground tabular-nums">{courier.rating.toFixed(1)}</span>
                     <span aria-hidden>·</span>
                     <span className="truncate">{courier.vehicle}</span>
@@ -698,7 +698,7 @@ export function DeliveryTracker({
                               <StarIcon
                                 className={cn(
                                   "size-5 transition-colors duration-150",
-                                  rating >= n ? "fill-amber-400 text-amber-400" : "text-muted-foreground",
+                                  rating >= n ? "fill-category-3/60 text-category-3" : "text-muted-foreground",
                                 )}
                               />
                             </motion.span>
@@ -986,7 +986,7 @@ function CourierChat({
           >
             <div className="flex items-center gap-3 border-b px-4 py-3">
               <Avatar className="[--avatar-size:--spacing(8)]">
-                <AvatarFallback className="bg-gradient-to-br from-teal-400 to-sky-500 font-semibold text-white text-xs">
+                <AvatarFallback className="bg-gradient-to-br from-category-6/60 to-category-1 font-semibold text-white text-xs">
                   {initials(courier.name)}
                 </AvatarFallback>
               </Avatar>

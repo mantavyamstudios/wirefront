@@ -154,11 +154,11 @@ const enter = { duration: 0.2, ease: easeOut } as const;
 const press = "transition-[transform,box-shadow,background-color] duration-150 ease-out active:scale-[0.97]";
 
 const toolMeta: Record<RunToolKind, { icon: LucideIcon; text: string; bar: string }> = {
-  db: { icon: DatabaseIcon, text: "text-teal-600 dark:text-teal-400", bar: "bg-teal-500" },
+  db: { icon: DatabaseIcon, text: "text-category-6-foreground", bar: "bg-category-6" },
   search: { icon: SearchIcon, text: "text-info-foreground", bar: "bg-info" },
-  code: { icon: SquareTerminalIcon, text: "text-amber-800 dark:text-amber-400", bar: "bg-amber-500" },
-  doc: { icon: FileTextIcon, text: "text-orange-600 dark:text-orange-400", bar: "bg-orange-500" },
-  send: { icon: SendIcon, text: "text-violet-600 dark:text-violet-400", bar: "bg-violet-500" },
+  code: { icon: SquareTerminalIcon, text: "text-category-3-foreground", bar: "bg-category-3" },
+  doc: { icon: FileTextIcon, text: "text-category-7-foreground", bar: "bg-category-7" },
+  send: { icon: SendIcon, text: "text-category-5-foreground", bar: "bg-category-5" },
   task: { icon: ListChecksIcon, text: "text-success-foreground", bar: "bg-success" },
 };
 
@@ -953,7 +953,7 @@ function DraftOutput({
   return (
     <div className="rounded-2xl border bg-card">
       <div className="flex items-center gap-3 border-b p-4">
-        <span className="flex size-8 items-center justify-center rounded-lg bg-orange-500/12 text-orange-700 dark:bg-orange-400/14 dark:text-orange-300">
+        <span className="flex size-8 items-center justify-center rounded-lg bg-category-7/12 text-category-7-foreground">
           <FileTextIcon className="size-4" />
         </span>
         <div className="min-w-0 flex-1">

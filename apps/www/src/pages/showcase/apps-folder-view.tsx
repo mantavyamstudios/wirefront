@@ -75,10 +75,10 @@ const easeOut = [0.23, 1, 0.32, 1] as const;
 const press = "transition-[box-shadow,scale] duration-150 ease-out active:scale-[0.97]";
 
 const people: Record<string, string> = {
-  AK: "bg-orange-500/16 text-orange-800 dark:text-orange-300",
-  JS: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
-  MV: "bg-blue-500/16 text-blue-700 dark:text-blue-300",
-  LO: "bg-violet-500/18 text-violet-800 dark:text-violet-300",
+  AK: "bg-category-7/16 text-category-7-foreground",
+  JS: "bg-category-6/16 text-category-6-foreground",
+  MV: "bg-category-1/16 text-category-1-foreground",
+  LO: "bg-category-5/18 text-category-5-foreground",
 };
 
 const defaultFiles: FolderFile[] = [
@@ -123,21 +123,21 @@ const kindLabel: Record<FolderFileKind, string> = {
 };
 
 const kindDot: Record<FolderFileKind, string> = {
-  doc: "bg-blue-500",
-  sheet: "bg-emerald-500",
-  image: "bg-orange-500",
-  slides: "bg-violet-500",
-  pdf: "bg-red-500",
-  video: "bg-pink-500",
+  doc: "bg-category-1",
+  sheet: "bg-category-2",
+  image: "bg-category-7",
+  slides: "bg-category-5",
+  pdf: "bg-category-4",
+  video: "bg-category-4",
 };
 
 const kindIcon: Record<FolderFileKind, { icon: typeof FileIcon; tint: string }> = {
-  doc: { icon: FileTextIcon, tint: "bg-blue-500/12 text-blue-600 dark:text-blue-400" },
-  sheet: { icon: SheetIcon, tint: "bg-emerald-500/12 text-emerald-700 dark:text-emerald-400" },
-  image: { icon: ImageIcon, tint: "bg-orange-500/12 text-orange-600 dark:text-orange-400" },
-  slides: { icon: PresentationIcon, tint: "bg-violet-500/12 text-violet-600 dark:text-violet-400" },
-  pdf: { icon: FileIcon, tint: "bg-red-500/12 text-red-600 dark:text-red-400" },
-  video: { icon: FilmIcon, tint: "bg-pink-500/12 text-pink-600 dark:text-pink-400" },
+  doc: { icon: FileTextIcon, tint: "bg-category-1/12 text-category-1-foreground" },
+  sheet: { icon: SheetIcon, tint: "bg-category-2/12 text-category-2-foreground" },
+  image: { icon: ImageIcon, tint: "bg-category-7/12 text-category-7-foreground" },
+  slides: { icon: PresentationIcon, tint: "bg-category-5/12 text-category-5-foreground" },
+  pdf: { icon: FileIcon, tint: "bg-category-4/12 text-category-4-foreground" },
+  video: { icon: FilmIcon, tint: "bg-category-4/12 text-category-4-foreground" },
 };
 
 const places = [
@@ -152,19 +152,19 @@ function ImageArt({ art = "photo" }: { art?: FolderFile["art"] }) {
   if (art === "logos") {
     return (
       <div className="absolute inset-0 grid grid-cols-2 gap-1.5 p-3">
-        <span className="flex items-center justify-center rounded-lg bg-orange-500">
+        <span className="flex items-center justify-center rounded-lg bg-category-7">
           <span className="size-5 rounded-full border-4 border-white" />
         </span>
         <span className="flex items-center justify-center rounded-lg bg-card ring-1 ring-border">
-          <span className="size-4 rotate-45 rounded-[5px] border-[3px] border-orange-500" />
+          <span className="size-4 rotate-45 rounded-[5px] border-[3px] border-category-7" />
         </span>
-        <span className="flex items-center justify-center rounded-lg bg-neutral-900 dark:bg-neutral-950 dark:ring-1 dark:ring-border">
-          <span className="font-heading font-semibold text-orange-400 text-sm tracking-tight">orb</span>
+        <span className="flex items-center justify-center rounded-lg bg-foreground dark:ring-1 dark:ring-border">
+          <span className="font-heading font-semibold text-category-7 text-sm tracking-tight">orb</span>
         </span>
-        <span className="flex items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-500/20">
+        <span className="flex items-center justify-center rounded-lg bg-category-7/12">
           <span className="flex gap-0.5">
-            <span className="size-2.5 rounded-full bg-orange-600 dark:bg-orange-400" />
-            <span className="size-2.5 rounded-full bg-orange-600/40 dark:bg-orange-400/40" />
+            <span className="size-2.5 rounded-full bg-category-7-strong" />
+            <span className="size-2.5 rounded-full bg-category-7-strong/40" />
           </span>
         </span>
       </div>
@@ -173,13 +173,13 @@ function ImageArt({ art = "photo" }: { art?: FolderFile["art"] }) {
   if (art === "moodboard") {
     return (
       <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-1.5 p-3">
-        <span className="row-span-2 rounded-lg bg-linear-to-b from-amber-300 via-orange-400 to-rose-500" />
-        <span className="rounded-lg bg-linear-to-br from-rose-200 to-orange-300 dark:from-rose-300 dark:to-orange-400" />
-        <span className="flex items-end rounded-lg bg-stone-800 p-1.5 dark:ring-1 dark:ring-border">
-          <span className="font-heading font-semibold text-[11px] text-amber-200 leading-none">Aa</span>
+        <span className="row-span-2 rounded-lg bg-linear-to-b from-category-3/35 via-category-7/60 to-category-4" />
+        <span className="rounded-lg bg-linear-to-br from-category-4/20 to-category-7/35" />
+        <span className="flex items-end rounded-lg bg-foreground p-1.5 dark:ring-1 dark:ring-border">
+          <span className="font-heading font-semibold text-[11px] text-category-3 leading-none">Aa</span>
         </span>
         <span className="col-span-2 flex overflow-hidden rounded-lg">
-          {["bg-amber-200", "bg-orange-400", "bg-rose-500", "bg-red-800", "bg-stone-800"].map((c) => (
+          {["bg-category-3/20", "bg-category-7/60", "bg-category-4", "bg-category-4-strong", "bg-foreground"].map((c) => (
             <span className={cn("flex-1", c)} key={c} />
           ))}
         </span>
@@ -187,9 +187,9 @@ function ImageArt({ art = "photo" }: { art?: FolderFile["art"] }) {
     );
   }
   return (
-    <div className="absolute inset-0 bg-linear-to-b from-sky-300 to-amber-100 dark:from-sky-800 dark:to-amber-200/60">
-      <span className="absolute top-4 end-6 size-6 rounded-full bg-amber-50/90" />
-      <span className="absolute inset-x-0 bottom-0 h-2/5 bg-emerald-700/80 [clip-path:polygon(0_40%,30%_10%,60%_45%,100%_0,100%_100%,0_100%)]" />
+    <div className="absolute inset-0 bg-linear-to-b from-category-1/35 to-category-3/12">
+      <span className="absolute top-4 end-6 size-6 rounded-full bg-category-3/7" />
+      <span className="absolute inset-x-0 bottom-0 h-2/5 bg-category-2-strong/80 [clip-path:polygon(0_40%,30%_10%,60%_45%,100%_0,100%_100%,0_100%)]" />
     </div>
   );
 }
@@ -234,7 +234,7 @@ function Preview({ file }: { file: FolderFile }) {
     case "slides":
       return (
         <div className="absolute inset-x-4 top-1/2 flex aspect-video -translate-y-1/2 flex-col justify-end gap-1.5 overflow-hidden rounded-md bg-card p-3 shadow-xs/5 ring-1 ring-border">
-          <span className="absolute top-3 end-3 size-6 rounded-full bg-violet-500/48" />
+          <span className="absolute top-3 end-3 size-6 rounded-full bg-category-5/48" />
           <span className="h-2 w-3/5 rounded-full bg-foreground/64" />
           <span className="h-1 w-2/5 rounded-full bg-muted-foreground/28" />
         </div>
@@ -242,7 +242,7 @@ function Preview({ file }: { file: FolderFile }) {
     case "pdf":
       return (
         <div className="absolute inset-x-6 top-4 bottom-0 flex flex-col gap-1.5 rounded-t-md bg-card px-3.5 pt-4 shadow-xs/5 ring-1 ring-border">
-          <span className="absolute top-2.5 end-2.5 rounded-[3px] bg-red-700 px-1 font-bold text-[8px] text-white dark:bg-red-600">PDF</span>
+          <span className="absolute top-2.5 end-2.5 rounded-[3px] bg-category-4-strong px-1 font-bold text-[8px] text-white">PDF</span>
           <span className="font-heading font-semibold text-foreground/80 text-lg leading-none">Aa</span>
           <span className="h-1 w-1/2 rounded-full bg-muted-foreground/24" />
           <span className="mt-1 grid grid-cols-6 gap-1">
@@ -254,14 +254,14 @@ function Preview({ file }: { file: FolderFile }) {
       );
     case "video":
       return (
-        <div className="absolute inset-0 overflow-hidden bg-neutral-900">
-          <span className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,var(--color-indigo-500)_0%,transparent_60%)] opacity-50" />
-          <span className="absolute top-4 end-4 left-1/2 aspect-video rounded-sm bg-linear-to-br from-orange-400 to-rose-500 opacity-90" />
-          <svg aria-hidden className="absolute bottom-0 start-[18%] h-3/5 text-neutral-950" viewBox="0 0 40 60">
+        <div className="absolute inset-0 overflow-hidden bg-foreground">
+          <span className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,var(--category-8)_0%,transparent_60%)] opacity-50" />
+          <span className="absolute top-4 end-4 left-1/2 aspect-video rounded-sm bg-linear-to-br from-category-7/60 to-category-4 opacity-90" />
+          <svg aria-hidden className="absolute bottom-0 start-[18%] h-3/5 text-muted-foreground" viewBox="0 0 40 60">
             <circle cx="20" cy="14" fill="currentColor" r="8" />
             <path d="M4 60c0-18 7-28 16-28s16 10 16 28Z" fill="currentColor" />
           </svg>
-          <span className="absolute top-1/2 left-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-900 shadow-xs/5">
+          <span className="absolute top-1/2 left-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-muted-foreground shadow-xs/5">
             <PlayIcon className="ms-0.5 size-4 fill-current" />
           </span>
           <span className="absolute inset-x-2 bottom-1.5 h-0.5 rounded-full bg-white/24">
@@ -499,7 +499,7 @@ export function FolderView({
                   onClick={() => open("root")}
                   type="button"
                 >
-                  <FolderGlyph className="h-3 w-3.5 text-orange-500 dark:text-orange-400" />
+                  <FolderGlyph className="h-3 w-3.5 text-category-7-foreground" />
                   <span className="truncate">{name}</span>
                 </button>
               </li>
@@ -588,7 +588,7 @@ export function FolderView({
             <span
               className={cn(
                 "flex size-10 shrink-0 items-center justify-center rounded-xl",
-                sub ? "bg-muted text-muted-foreground" : "bg-orange-500/12 text-orange-500 dark:text-orange-400",
+                sub ? "bg-muted text-muted-foreground" : "bg-category-7/12 text-category-7-foreground",
               )}
             >
               <FolderGlyph className="h-4 w-5" />

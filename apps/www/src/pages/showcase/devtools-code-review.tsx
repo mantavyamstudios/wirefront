@@ -84,14 +84,14 @@ export interface CodeReviewProps {
 }
 
 const avatarTone: Record<ReviewTone, string> = {
-  blue: "bg-blue-500/14 text-blue-700 dark:text-blue-300",
-  orange: "bg-orange-500/14 text-orange-700 dark:text-orange-300",
-  teal: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
-  violet: "bg-violet-500/16 text-violet-800 dark:text-violet-300",
-  rose: "bg-rose-500/14 text-rose-700 dark:text-rose-300",
-  amber: "bg-amber-500/18 text-amber-800 dark:text-amber-300",
-  emerald: "bg-emerald-500/16 text-emerald-700 dark:text-emerald-300",
-  sky: "bg-sky-500/16 text-sky-700 dark:text-sky-300",
+  blue: "bg-category-1/14 text-category-1-foreground",
+  orange: "bg-category-7/14 text-category-7-foreground",
+  teal: "bg-category-6/16 text-category-6-foreground",
+  violet: "bg-category-5/16 text-category-5-foreground",
+  rose: "bg-category-4/14 text-category-4-foreground",
+  amber: "bg-category-3/18 text-category-3-foreground",
+  emerald: "bg-category-2/16 text-category-2-foreground",
+  sky: "bg-category-1/16 text-category-1-foreground",
 };
 
 const ease = [0.23, 1, 0.32, 1] as const;
@@ -406,7 +406,7 @@ const KEYWORDS =
 
 function highlight(text: string, md: boolean): ReactNode[] {
   if (md) {
-    if (text.startsWith("#")) return [<span className="font-semibold text-sky-800 dark:text-sky-300" key="h">{text}</span>];
+    if (text.startsWith("#")) return [<span className="font-semibold text-category-1-foreground" key="h">{text}</span>];
     return [text];
   }
   const out: ReactNode[] = [];
@@ -419,11 +419,11 @@ function highlight(text: string, md: boolean): ReactNode[] {
     if (m.index > last) out.push(text.slice(last, m.index));
     const [tok] = m;
     if (m[1]) out.push(<span className="text-muted-foreground italic" key={k++}>{tok}</span>);
-    else if (m[2]) out.push(<span className="text-emerald-700 dark:text-emerald-300" key={k++}>{tok}</span>);
-    else if (m[3]) out.push(<span className="text-amber-800 dark:text-amber-300" key={k++}>{tok}</span>);
-    else if (KEYWORDS.test(tok)) out.push(<span className="text-violet-800 dark:text-violet-300" key={k++}>{tok}</span>);
-    else if (/^[A-Z]/.test(tok)) out.push(<span className="text-sky-800 dark:text-sky-300" key={k++}>{tok}</span>);
-    else if (text[re.lastIndex] === "(") out.push(<span className="text-blue-700 dark:text-blue-300" key={k++}>{tok}</span>);
+    else if (m[2]) out.push(<span className="text-category-2-foreground" key={k++}>{tok}</span>);
+    else if (m[3]) out.push(<span className="text-category-3-foreground" key={k++}>{tok}</span>);
+    else if (KEYWORDS.test(tok)) out.push(<span className="text-category-5-foreground" key={k++}>{tok}</span>);
+    else if (/^[A-Z]/.test(tok)) out.push(<span className="text-category-1-foreground" key={k++}>{tok}</span>);
+    else if (text[re.lastIndex] === "(") out.push(<span className="text-category-1-foreground" key={k++}>{tok}</span>);
     else out.push(tok);
     last = re.lastIndex;
   }

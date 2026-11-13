@@ -115,8 +115,8 @@ function ResetPasswordScreen({ token, onReset, onSuccess, linkError, forgotPassw
     content = (
       <>
         <CardHeader className="items-center text-center">
-          <div className="flex size-14 items-center justify-center rounded-full bg-emerald-500/15">
-            <CheckIcon className="size-6 text-emerald-700 dark:text-emerald-400" />
+          <div className="flex size-14 items-center justify-center rounded-full bg-category-2/15">
+            <CheckIcon className="size-6 text-category-2-foreground" />
           </div>
           <CardTitle className="mt-4 font-heading text-2xl tracking-tight">{t.doneTitle}</CardTitle>
           <CardDescription className="text-sm">{t.doneDescription}</CardDescription>

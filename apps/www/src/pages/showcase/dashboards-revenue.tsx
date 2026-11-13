@@ -18,10 +18,10 @@ const MRR_SERIES = [
 ];
 
 const PLANS = [
-  { name: "Enterprise", mrr: 78.2, accounts: 41, color: "bg-violet-500" },
-  { name: "Business", mrr: 41.6, accounts: 312, color: "bg-sky-500" },
-  { name: "Pro", mrr: 18.4, accounts: 1284, color: "bg-emerald-500" },
-  { name: "Starter", mrr: 4.2, accounts: 4126, color: "bg-amber-500" },
+  { name: "Enterprise", mrr: 78.2, accounts: 41, color: "bg-category-5" },
+  { name: "Business", mrr: 41.6, accounts: 312, color: "bg-category-1" },
+  { name: "Pro", mrr: 18.4, accounts: 1284, color: "bg-category-2" },
+  { name: "Starter", mrr: 4.2, accounts: 4126, color: "bg-category-3" },
 ];
 
 const TOP_ACCOUNTS = [
@@ -113,7 +113,7 @@ export function DashboardsRevenue() {
                 className="mt-3 h-2 overflow-hidden rounded-full bg-foreground/[0.06]"
               >
                 <div
-                  className="h-full bg-emerald-500"
+                  className="h-full bg-category-2"
                   style={{ width: "112%", maxWidth: "100%" }}
                 />
               </div>
@@ -231,8 +231,8 @@ function Stat({
 }) {
   const t =
     tone === "ok"
-      ? "text-emerald-700 dark:text-emerald-400"
-      : "text-amber-800 dark:text-amber-400";
+      ? "text-category-2-foreground"
+      : "text-category-3-foreground";
   return (
     <div>
       <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
@@ -248,8 +248,8 @@ function Stat({
 function Delta({ value, small }: { value: number; small?: boolean }) {
   const positive = value >= 0;
   const cls = positive
-    ? "text-emerald-700 dark:text-emerald-400"
-    : "text-rose-700 dark:text-rose-400";
+    ? "text-category-2-foreground"
+    : "text-category-4-foreground";
   return (
     <span className={`inline-flex items-baseline gap-0.5 ${cls}`}>
       {positive ? (
@@ -281,7 +281,7 @@ function AreaChart({ values }: { values: number[] }) {
     // 2px at any size. Unique gradient id per instance.
     <svg
       viewBox={`0 0 ${w} ${h}`}
-      className="h-32 w-full text-emerald-500 sm:h-40"
+      className="h-32 w-full text-category-2-foreground sm:h-40"
       preserveAspectRatio="none"
       role="img"
       aria-label={`Monthly recurring revenue over ${values.length} months`}

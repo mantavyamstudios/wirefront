@@ -101,7 +101,7 @@ export function PricingMonthlyYearly() {
               Yearly
               <span
                 className={`ml-2 rounded px-1.5 py-0.5 font-mono text-[11px] normal-case tracking-normal ${
-                  annual ? "bg-background/15 text-background" : "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"
+                  annual ? "bg-background/15 text-background" : "bg-category-2/20 text-category-2-foreground"
                 }`}
               >
                 save 20%
@@ -153,7 +153,7 @@ export function PricingMonthlyYearly() {
                 <ul className="mt-6 flex flex-1 flex-col gap-2.5">
                   {p.features.map((f) => (
                     <li key={f} className="flex items-start gap-2 text-sm">
-                      <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-emerald-700 dark:text-emerald-400" />
+                      <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-category-2-foreground" />
                       {f}
                     </li>
                   ))}

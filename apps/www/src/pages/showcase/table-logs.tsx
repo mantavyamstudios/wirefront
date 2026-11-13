@@ -56,8 +56,8 @@ interface Entry {
 
 const SEVERITY_STYLES: Record<Severity, { dot: string; label: string }> = {
   debug: { dot: "bg-muted-foreground/40", label: "text-muted-foreground" },
-  info: { dot: "bg-sky-500", label: "text-sky-700 dark:text-sky-400" },
-  warn: { dot: "bg-amber-500", label: "text-amber-800 dark:text-amber-400" },
+  info: { dot: "bg-info", label: "text-info-foreground" },
+  warn: { dot: "bg-warning", label: "text-warning-foreground" },
   error: { dot: "bg-destructive", label: "text-destructive-foreground" },
 };
 
@@ -319,7 +319,7 @@ export function TableLogs() {
               <span
                 className={
                   "size-1.5 rounded-full " +
-                  (paused ? "bg-muted-foreground/60" : "animate-pulse bg-emerald-500 motion-reduce:animate-none")
+                  (paused ? "bg-muted-foreground/60" : "animate-pulse bg-category-2 motion-reduce:animate-none")
                 }
               />
               {paused ? "paused" : "live"}
@@ -423,9 +423,9 @@ export function TableLogs() {
                         {e.severity === "error" ? (
                           <CircleAlertIcon className="size-3.5 shrink-0 text-destructive-foreground" />
                         ) : e.severity === "warn" ? (
-                          <FlameIcon className="size-3.5 shrink-0 text-amber-800 dark:text-amber-400" />
+                          <FlameIcon className="size-3.5 shrink-0 text-category-3-foreground" />
                         ) : e.severity === "info" ? (
-                          <InfoIcon className="size-3.5 shrink-0 text-sky-500/70" />
+                          <InfoIcon className="size-3.5 shrink-0 text-category-1-foreground/70" />
                         ) : null}
                         <span className="min-w-0 truncate">{e.message}</span>
                         {e.status ? (

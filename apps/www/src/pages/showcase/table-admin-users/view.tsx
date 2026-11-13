@@ -276,11 +276,11 @@ type StatusTab = (typeof STATUS_TABS)[number];
 const SKELETON_ROWS = ["s1", "s2", "s3", "s4", "s5", "s6"];
 
 const ROLE_PILL: Record<AdminRole, string> = {
-  owner: "bg-violet-500/10 text-violet-700 dark:bg-violet-400/16 dark:text-violet-300",
-  admin: "bg-sky-500/10 text-sky-700 dark:bg-sky-400/16 dark:text-sky-300",
+  owner: "bg-category-5/10 text-category-5-foreground",
+  admin: "bg-category-1/10 text-category-1-foreground",
   member: "bg-muted text-foreground/80",
   viewer: "bg-transparent text-muted-foreground ring-1 ring-border ring-inset",
-  billing: "bg-amber-500/12 text-amber-800 dark:bg-amber-400/16 dark:text-amber-300",
+  billing: "bg-category-3/12 text-category-3-foreground",
 };
 
 const STATUS_LOOK: Record<AdminStatus, { dot: string; text: string }> = {
@@ -300,13 +300,13 @@ const ACTIVITY_ICON: Record<AdminActivityKind, ReactNode> = {
 };
 
 const AVATAR_TONES = [
-  "bg-orange-500/16 text-orange-800 dark:bg-orange-400/18 dark:text-orange-200",
-  "bg-teal-500/16 text-teal-800 dark:bg-teal-400/18 dark:text-teal-200",
-  "bg-violet-500/16 text-violet-800 dark:bg-violet-400/18 dark:text-violet-200",
-  "bg-sky-500/16 text-sky-800 dark:bg-sky-400/18 dark:text-sky-200",
-  "bg-rose-500/16 text-rose-800 dark:bg-rose-400/18 dark:text-rose-200",
-  "bg-amber-500/20 text-amber-900 dark:bg-amber-400/18 dark:text-amber-200",
-  "bg-emerald-500/16 text-emerald-800 dark:bg-emerald-400/18 dark:text-emerald-200",
+  "bg-category-7/16 text-category-7-foreground",
+  "bg-category-6/16 text-category-6-foreground",
+  "bg-category-5/16 text-category-5-foreground",
+  "bg-category-1/16 text-category-1-foreground",
+  "bg-category-4/16 text-category-4-foreground",
+  "bg-category-3/20 text-category-3-foreground",
+  "bg-category-2/16 text-category-2-foreground",
 ];
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

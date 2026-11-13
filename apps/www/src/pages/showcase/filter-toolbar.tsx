@@ -284,7 +284,7 @@ export function FilterToolbar() {
                   "size-1.5 rounded-full " +
                   (filtered.length === 0
                     ? "bg-destructive"
-                    : "bg-emerald-500")
+                    : "bg-category-2")
                 }
               />
               Showing {filtered.length} of {PROJECTS.length} projects
@@ -386,9 +386,9 @@ function ProjectCard({ project }: { project: Project }) {
 function StatusDot({ status }: { status: Status }) {
   const tone =
     status === "active"
-      ? "bg-emerald-500"
+      ? "bg-category-2"
       : status === "paused"
-        ? "bg-amber-500"
+        ? "bg-category-3"
         : "bg-muted-foreground/40";
   return <span className={"size-1.5 shrink-0 rounded-full " + tone} />;
 }

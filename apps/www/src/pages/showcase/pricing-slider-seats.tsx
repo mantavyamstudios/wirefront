@@ -37,7 +37,7 @@ export function PricingSliderSeats() {
                 <span className="text-muted-foreground text-sm">/ month</span>
               </div>
               {totalAnnual ? (
-                <p className="mt-1 font-mono text-[10px] text-emerald-700 dark:text-emerald-400 uppercase tracking-[0.25em]">
+                <p className="mt-1 font-mono text-[10px] text-category-2-foreground uppercase tracking-[0.25em]">
                   ${totalAnnual.toLocaleString()} billed annually · save 20%
                 </p>
               ) : (
@@ -127,7 +127,7 @@ export function PricingSliderSeats() {
               "Custom roles",
             ].map((f) => (
               <li key={f} className="flex items-start gap-2 text-sm">
-                <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-emerald-700 dark:text-emerald-400" />
+                <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-category-2-foreground" />
                 {f}
               </li>
             ))}

@@ -151,7 +151,7 @@ function BillingSettingsScreen({
               <div
                 className={cn(
                   "mt-3 inline-flex items-center gap-2 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.2em]",
-                  healthy ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400" : "bg-destructive/10 text-destructive-foreground",
+                  healthy ? "bg-success/10 text-success-foreground" : "bg-destructive/10 text-destructive-foreground",
                 )}
               >
                 {healthy ? <CheckCircle2Icon className="size-3" /> : <CircleAlertIcon className="size-3" />}
@@ -276,7 +276,7 @@ function BillingSettingsScreen({
                   <span
                     className={cn(
                       "inline-flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] max-sm:hidden",
-                      inv.status === "paid" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400" : "bg-muted text-muted-foreground",
+                      inv.status === "paid" ? "bg-success/10 text-success-foreground" : "bg-muted text-muted-foreground",
                     )}
                   >
                     {inv.status === "paid" ? <CheckCircle2Icon className="size-2.5" /> : null}

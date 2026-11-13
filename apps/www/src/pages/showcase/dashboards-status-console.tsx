@@ -79,14 +79,14 @@ export interface StatusConsoleProps {
 }
 
 const avatarTone: Record<ConsoleTone, string> = {
-  blue: "bg-blue-500/14 text-blue-700 dark:text-blue-300",
-  orange: "bg-orange-500/14 text-orange-700 dark:text-orange-300",
-  teal: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
-  violet: "bg-violet-500/16 text-violet-800 dark:text-violet-300",
-  rose: "bg-rose-500/14 text-rose-700 dark:text-rose-300",
-  amber: "bg-amber-500/18 text-amber-800 dark:text-amber-300",
-  emerald: "bg-emerald-500/16 text-emerald-700 dark:text-emerald-300",
-  sky: "bg-sky-500/16 text-sky-700 dark:text-sky-300",
+  blue: "bg-category-1/14 text-category-1-foreground",
+  orange: "bg-category-7/14 text-category-7-foreground",
+  teal: "bg-category-6/16 text-category-6-foreground",
+  violet: "bg-category-5/16 text-category-5-foreground",
+  rose: "bg-category-4/14 text-category-4-foreground",
+  amber: "bg-category-3/18 text-category-3-foreground",
+  emerald: "bg-category-2/16 text-category-2-foreground",
+  sky: "bg-category-1/16 text-category-1-foreground",
 };
 
 const healthDot: Record<ServiceHealth, string> = {
@@ -114,7 +114,7 @@ const healthLabel: Record<ServiceHealth, string> = { operational: "Operational",
 const stateMeta: Record<IncidentUpdate["state"], { label: string; dot: string; text: string }> = {
   alert: { label: "Alert", dot: "bg-destructive", text: "text-destructive-foreground" },
   investigating: { label: "Investigating", dot: "bg-warning", text: "text-warning-foreground" },
-  identified: { label: "Identified", dot: "bg-orange-500", text: "text-orange-700 dark:text-orange-300" },
+  identified: { label: "Identified", dot: "bg-category-7", text: "text-category-7-foreground" },
   monitoring: { label: "Monitoring", dot: "bg-info", text: "text-info-foreground" },
   resolved: { label: "Resolved", dot: "bg-success", text: "text-success-foreground" },
   note: { label: "Note", dot: "bg-muted-foreground", text: "text-muted-foreground" },

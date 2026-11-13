@@ -283,7 +283,7 @@ export function LayoutsFloatingToolbar() {
           <ToolbarButton label="Highlight">
             <span className="relative inline-flex">
               <HighlighterIcon className="size-4" />
-              <span className="-bottom-0.5 absolute end-0 size-1.5 rounded-full bg-yellow-400" />
+              <span className="-bottom-0.5 absolute end-0 size-1.5 rounded-full bg-category-3/60" />
             </span>
           </ToolbarButton>
           <Separator orientation="vertical" className="h-4" />

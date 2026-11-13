@@ -100,8 +100,8 @@ export function TimelinesApprovals() {
           Persist 1y audit log retention on Business plan
         </h1>
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2 py-0.5 text-emerald-700 dark:text-emerald-400">
-            <span className="size-1.5 rounded-full bg-emerald-500" /> Open
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-category-2/15 px-2 py-0.5 text-category-2-foreground">
+            <span className="size-1.5 rounded-full bg-category-2" /> Open
           </span>
           <span className="inline-flex min-w-0 items-center gap-1 break-all">
             <GitBranchIcon className="size-3 shrink-0" /> feat/audit-log → main
@@ -128,13 +128,13 @@ export function TimelinesApprovals() {
                     className={
                       "z-10 grid size-[32px] place-items-center rounded-full ring-4 ring-background " +
                       (e.state === "approved"
-                        ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                        ? "bg-category-2/15 text-category-2-foreground"
                         : e.state === "changes"
-                          ? "bg-rose-500/15 text-rose-700 dark:text-rose-400"
+                          ? "bg-category-4/15 text-category-4-foreground"
                           : e.state === "failing"
-                            ? "bg-rose-500/15 text-rose-700 dark:text-rose-400"
+                            ? "bg-category-4/15 text-category-4-foreground"
                             : e.state === "passed"
-                              ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                              ? "bg-category-2/15 text-category-2-foreground"
                               : "bg-foreground/[0.06] text-foreground")
                     }
                   >
@@ -221,8 +221,8 @@ export function TimelinesApprovals() {
                       className={
                         "size-1.5 shrink-0 rounded-full " +
                         (c.status === "passed"
-                          ? "bg-emerald-500"
-                          : "bg-rose-500")
+                          ? "bg-category-2"
+                          : "bg-category-4")
                       }
                     />
                     <span className="min-w-0 flex-1 truncate font-mono">
@@ -257,8 +257,8 @@ export function TimelinesApprovals() {
 
 function StateGlyph({ state }: { state: State }) {
   if (state === "approved")
-    return <CheckCircle2Icon className="size-4 text-emerald-700 dark:text-emerald-400" />;
+    return <CheckCircle2Icon className="size-4 text-category-2-foreground" />;
   if (state === "changes")
-    return <XCircleIcon className="size-4 text-rose-700 dark:text-rose-400" />;
+    return <XCircleIcon className="size-4 text-category-4-foreground" />;
   return <CircleIcon className="size-4 opacity-30" />;
 }

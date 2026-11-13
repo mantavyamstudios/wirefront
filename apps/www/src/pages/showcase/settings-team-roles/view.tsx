@@ -126,14 +126,14 @@ const spring = { type: "spring", stiffness: 500, damping: 40 } as const;
 const press = "transition-[color,background-color,box-shadow,scale] duration-150 ease-out active:scale-[0.97]";
 
 const avatarHues: Record<TeamHue, string> = {
-  amber: "from-amber-300 to-orange-500",
-  rose: "from-rose-300 to-pink-500",
-  violet: "from-violet-400 to-indigo-500",
-  teal: "from-teal-300 to-emerald-500",
-  sky: "from-sky-300 to-blue-500",
-  emerald: "from-emerald-300 to-teal-600",
-  indigo: "from-indigo-400 to-violet-700",
-  orange: "from-orange-300 to-red-500",
+  amber: "from-category-3/35 to-category-7",
+  rose: "from-category-4/35 to-category-4",
+  violet: "from-category-5/60 to-category-8",
+  teal: "from-category-6/35 to-category-2",
+  sky: "from-category-1/35 to-category-1",
+  emerald: "from-category-2/35 to-category-6",
+  indigo: "from-category-8/60 to-category-5-strong",
+  orange: "from-category-7/35 to-category-4",
 };
 
 function initials(name: string) {

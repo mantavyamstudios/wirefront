@@ -75,12 +75,12 @@ export interface AuditLogProps {
 }
 
 const OUTCOME: Record<Outcome, { cls: string; Icon: typeof CircleCheckIcon }> = {
-  success: { cls: "border-emerald-500/30 text-emerald-700 dark:text-emerald-400", Icon: CircleCheckIcon },
-  denied: { cls: "border-amber-500/30 text-amber-700 dark:text-amber-400", Icon: CircleSlashIcon },
+  success: { cls: "border-success/30 text-success-foreground", Icon: CircleCheckIcon },
+  denied: { cls: "border-category-3/30 text-category-3-foreground", Icon: CircleSlashIcon },
   alert: { cls: "border-destructive/30 text-destructive-foreground", Icon: CircleAlertIcon },
 };
 const CHIP_TONE: Record<AuditFilter["tone"], { chip: string; op: string }> = {
-  include: { chip: "border-emerald-500/30 bg-emerald-500/5", op: "text-emerald-700 dark:text-emerald-400" },
+  include: { chip: "border-category-2/30 bg-category-2/5", op: "text-category-2-foreground" },
   exclude: { chip: "border-destructive/30 bg-destructive/5", op: "text-destructive-foreground" },
   neutral: { chip: "border-border bg-background", op: "text-muted-foreground" },
 };
@@ -163,7 +163,7 @@ function AuditLogScreen({
           </TableCell>
           <TableCell className="w-full max-w-0 max-sm:ps-4 sm:w-auto sm:max-w-none">
             <div className="flex items-center gap-2">
-              <Avatar className={cn("size-6", e.actor ? "bg-sky-500/15" : "bg-muted")}>
+              <Avatar className={cn("size-6", e.actor ? "bg-category-1/15" : "bg-muted")}>
                 <AvatarFallback className="bg-transparent font-medium text-[10px]">{e.actor ? initials(e.actor.name) : "?"}</AvatarFallback>
               </Avatar>
               <span className={cn("truncate text-sm", !e.actor && "text-muted-foreground")}>{name}</span>

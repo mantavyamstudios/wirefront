@@ -29,8 +29,8 @@ const ITEMS = [
 
 const WORKSPACES = [
   { letter: "A", name: "Acme inc.", color: "bg-gradient-to-br from-primary/70 to-primary/30", active: true },
-  { letter: "B", name: "Bluefin", color: "bg-gradient-to-br from-emerald-500/70 to-emerald-500/30" },
-  { letter: "M", name: "Moonbase", color: "bg-gradient-to-br from-amber-500/70 to-amber-500/30" },
+  { letter: "B", name: "Bluefin", color: "bg-gradient-to-br from-category-2/70 to-category-2/30" },
+  { letter: "M", name: "Moonbase", color: "bg-gradient-to-br from-category-3/70 to-category-3/30" },
 ];
 
 // Bottom tab bars fit five destinations; the rest stay in the rail/overflow.

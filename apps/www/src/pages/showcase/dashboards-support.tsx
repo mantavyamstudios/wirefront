@@ -90,12 +90,12 @@ const AGENTS: Agent[] = [
 ];
 
 const TAGS = [
-  { name: "billing", count: 62, color: "bg-amber-500" },
-  { name: "auth", count: 48, color: "bg-violet-500" },
-  { name: "api", count: 41, color: "bg-sky-500" },
-  { name: "webhooks", count: 28, color: "bg-emerald-500" },
-  { name: "ui-bug", count: 22, color: "bg-pink-500" },
-  { name: "perf", count: 14, color: "bg-rose-500" },
+  { name: "billing", count: 62, color: "bg-category-3" },
+  { name: "auth", count: 48, color: "bg-category-5" },
+  { name: "api", count: 41, color: "bg-category-1" },
+  { name: "webhooks", count: 28, color: "bg-category-2" },
+  { name: "ui-bug", count: 22, color: "bg-category-4" },
+  { name: "perf", count: 14, color: "bg-category-4" },
 ];
 
 const FIRST_RESP_HOURS = [
@@ -168,8 +168,8 @@ export function DashboardsSupport() {
           <div className="bg-background p-4 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <AlertTriangleIcon className="size-4 text-rose-500" />
-                <span className="font-mono text-[10px] text-rose-700 uppercase tracking-[0.3em] dark:text-rose-400">
+                <AlertTriangleIcon className="size-4 text-category-4-foreground" />
+                <span className="font-mono text-[10px] text-category-4-foreground uppercase tracking-[0.3em]">
                   SLA breaching
                 </span>
                 <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
@@ -191,7 +191,7 @@ export function DashboardsSupport() {
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="font-heading text-2xl tabular-nums">9m</span>
-                <span className="font-mono text-emerald-700 text-xs dark:text-emerald-400">
+                <span className="font-mono text-category-2-foreground text-xs">
                   ↓ 38% vs week
                 </span>
               </div>
@@ -228,8 +228,8 @@ export function DashboardsSupport() {
                       <div
                         className={`h-full ${
                           a.load > 0.75
-                            ? "bg-amber-500"
-                            : "bg-emerald-500/60"
+                            ? "bg-category-3"
+                            : "bg-category-2/60"
                         }`}
                         style={{ width: `${a.load * 100}%` }}
                       />
@@ -248,7 +248,7 @@ export function DashboardsSupport() {
                     </div>
                   </div>
                   <div className="text-end">
-                    <div className="font-mono text-sm text-amber-800 tabular-nums dark:text-amber-400">
+                    <div className="font-mono text-sm text-category-3-foreground tabular-nums">
                       ★ {a.csat.toFixed(1)}
                     </div>
                     <div className="font-mono text-[10px] text-muted-foreground">
@@ -378,7 +378,7 @@ function BreachTable({ breaches }: { breaches: Breach[] }) {
 function OverdueBadge({ minutes, className }: { minutes: number; className?: string }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-md bg-rose-500/10 px-2 py-1 font-mono text-[11px] text-rose-700 normal-case tracking-normal tabular-nums dark:text-rose-400 ${className ?? ""}`}
+      className={`inline-flex items-center gap-1 rounded-md bg-category-4/10 px-2 py-1 font-mono text-[11px] text-category-4-foreground normal-case tracking-normal tabular-nums ${className ?? ""}`}
     >
       <ClockIcon className="size-3" />
       {minutes}m over
@@ -389,10 +389,10 @@ function OverdueBadge({ minutes, className }: { minutes: number; className?: str
 function PriorityChip({ p }: { p: "p0" | "p1" | "p2" }) {
   const cls =
     p === "p0"
-      ? "bg-rose-500/15 text-rose-700 dark:text-rose-400"
+      ? "bg-category-4/15 text-category-4-foreground"
       : p === "p1"
-        ? "bg-amber-500/15 text-amber-800 dark:text-amber-400"
-        : "bg-sky-500/15 text-sky-700 dark:text-sky-400";
+        ? "bg-category-3/15 text-category-3-foreground"
+        : "bg-category-1/15 text-category-1-foreground";
   return (
     <span
       className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] ${cls}`}
@@ -414,7 +414,7 @@ function BarSeries({ values }: { values: number[] }) {
           <div
             key={i}
             className={`flex-1 rounded-sm ${
-              isLatest ? "bg-emerald-500" : "bg-foreground/15"
+              isLatest ? "bg-category-2" : "bg-foreground/15"
             }`}
             style={{ height: `${h}%` }}
           />

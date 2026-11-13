@@ -209,9 +209,9 @@ export function SettingsPrivacy() {
             ) : null}
 
             {phase === "done" ? (
-              <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-emerald-500/[0.08] px-3 py-2">
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-category-2/[0.08] px-3 py-2">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2Icon className="size-4 text-emerald-700 dark:text-emerald-400" />
+                  <CheckCircle2Icon className="size-4 text-category-2-foreground" />
                   <div>
                     <div className="font-medium text-sm">Archive ready</div>
                     <p className="text-muted-foreground text-xs">
@@ -492,7 +492,7 @@ function DeleteRow({
     tone === "now"
       ? "bg-destructive"
       : tone === "grace"
-        ? "bg-amber-500"
+        ? "bg-category-3"
         : "bg-muted-foreground/60";
   const tag =
     tone === "now"

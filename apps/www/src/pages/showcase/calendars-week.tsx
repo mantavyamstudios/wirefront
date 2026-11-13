@@ -33,12 +33,12 @@ const EVENTS: Event[] = [
 ];
 
 const TONE_BG: Record<Event["tone"], string> = {
-  indigo: "bg-indigo-500/15 border-indigo-500/40 text-indigo-800 dark:text-indigo-300",
-  teal: "bg-teal-500/15 border-teal-500/40 text-teal-800 dark:text-teal-300",
-  amber: "bg-amber-500/15 border-amber-500/40 text-amber-800 dark:text-amber-300",
-  rose: "bg-rose-500/15 border-rose-500/40 text-rose-800 dark:text-rose-300",
-  violet: "bg-violet-500/15 border-violet-500/40 text-violet-800 dark:text-violet-300",
-  sky: "bg-sky-500/15 border-sky-500/40 text-sky-800 dark:text-sky-300",
+  indigo: "bg-category-8/15 border-category-8/40 text-category-8-foreground",
+  teal: "bg-category-6/15 border-category-6/40 text-category-6-foreground",
+  amber: "bg-category-3/15 border-category-3/40 text-category-3-foreground",
+  rose: "bg-category-4/15 border-category-4/40 text-category-4-foreground",
+  violet: "bg-category-5/15 border-category-5/40 text-category-5-foreground",
+  sky: "bg-category-1/15 border-category-1/40 text-category-1-foreground",
 };
 
 const HOURS = Array.from({ length: 11 }, (_, i) => 8 + i); // 08:00 – 18:00
@@ -155,8 +155,8 @@ export function CalendarsWeek() {
                     className="absolute inset-x-0 z-10 flex items-center"
                     style={{ top: HOUR_PX * 1.5 }}
                   >
-                    <span className="size-2 rounded-full bg-rose-500 ring-2 ring-rose-500/30" />
-                    <span className="h-px flex-1 bg-rose-500" />
+                    <span className="size-2 rounded-full bg-category-4 ring-2 ring-category-4/30" />
+                    <span className="h-px flex-1 bg-category-4" />
                   </div>
                 ) : null}
 

@@ -148,7 +148,7 @@ export function ToursChecklist() {
                     aria-hidden
                     className={`flex size-6 shrink-0 items-center justify-center rounded-full transition-colors ${
                       t.done
-                        ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                        ? "bg-category-2/15 text-category-2-foreground"
                         : "border border-foreground/30 text-transparent"
                     }`}
                   >

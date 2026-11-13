@@ -85,10 +85,10 @@ const RELEASES: Release[] = [
 ];
 
 const TONE_BG: Record<string, string> = {
-  emerald: "bg-emerald-500/12 text-emerald-700 dark:text-emerald-400",
-  indigo: "bg-indigo-500/12 text-indigo-800 dark:text-indigo-400",
-  amber: "bg-amber-500/12 text-amber-800 dark:text-amber-400",
-  rose: "bg-rose-500/12 text-rose-700 dark:text-rose-400",
+  emerald: "bg-category-2/12 text-category-2-foreground",
+  indigo: "bg-category-8/12 text-category-8-foreground",
+  amber: "bg-category-3/12 text-category-3-foreground",
+  rose: "bg-category-4/12 text-category-4-foreground",
 };
 
 export function TimelinesChangelog() {
@@ -141,7 +141,7 @@ export function TimelinesChangelog() {
 
               <div>
                 {i === 0 ? (
-                  <div className="mb-5 aspect-[16/7] w-full overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-indigo-500/10 via-foreground/[0.04] to-teal-500/10">
+                  <div className="mb-5 aspect-[16/7] w-full overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-category-8/10 via-foreground/[0.04] to-category-6/10">
                     <div className="grid h-full place-items-center">
                       <div className="text-center">
                         <SparklesIcon className="mx-auto size-6 opacity-50" />

@@ -86,60 +86,60 @@ const REACTIONS = ["👏", "🎉", "❤️", "😂", "👍", "🤔"];
 
 const hues: Record<CallHue, { wash: string; glowA: string; glowB: string; avatar: string; solid: string }> = {
   rose: {
-    wash: "bg-rose-50 dark:bg-rose-950/60",
-    glowA: "bg-rose-300/55 dark:bg-rose-500/22",
-    glowB: "bg-orange-200/70 dark:bg-orange-400/14",
-    avatar: "bg-rose-500/15 text-rose-700 dark:bg-rose-400/20 dark:text-rose-200",
-    solid: "bg-rose-600 text-white dark:bg-rose-500",
+    wash: "bg-category-4/8",
+    glowA: "bg-category-4/19",
+    glowB: "bg-category-7/14",
+    avatar: "bg-category-4/15 text-category-4-foreground",
+    solid: "bg-category-4-strong text-white",
   },
   amber: {
-    wash: "bg-amber-50 dark:bg-amber-950/60",
-    glowA: "bg-amber-300/55 dark:bg-amber-500/22",
-    glowB: "bg-orange-200/70 dark:bg-orange-400/14",
-    avatar: "bg-amber-500/15 text-amber-800 dark:bg-amber-400/20 dark:text-amber-200",
-    solid: "bg-amber-600 text-white dark:bg-amber-500",
+    wash: "bg-category-3/8",
+    glowA: "bg-category-3/19",
+    glowB: "bg-category-7/14",
+    avatar: "bg-category-3/15 text-category-3-foreground",
+    solid: "bg-category-3-strong text-white",
   },
   emerald: {
-    wash: "bg-emerald-50 dark:bg-emerald-950/60",
-    glowA: "bg-emerald-300/55 dark:bg-emerald-500/22",
-    glowB: "bg-teal-200/70 dark:bg-teal-400/14",
-    avatar: "bg-emerald-500/15 text-emerald-700 dark:bg-emerald-400/20 dark:text-emerald-200",
-    solid: "bg-emerald-600 text-white dark:bg-emerald-500",
+    wash: "bg-category-2/8",
+    glowA: "bg-category-2/19",
+    glowB: "bg-category-6/14",
+    avatar: "bg-category-2/15 text-category-2-foreground",
+    solid: "bg-category-2-strong text-white",
   },
   sky: {
-    wash: "bg-sky-50 dark:bg-sky-950/60",
-    glowA: "bg-sky-300/55 dark:bg-sky-500/22",
-    glowB: "bg-indigo-200/70 dark:bg-indigo-400/14",
-    avatar: "bg-sky-500/15 text-sky-700 dark:bg-sky-400/20 dark:text-sky-200",
-    solid: "bg-sky-600 text-white dark:bg-sky-500",
+    wash: "bg-category-1/8",
+    glowA: "bg-category-1/19",
+    glowB: "bg-category-8/14",
+    avatar: "bg-category-1/15 text-category-1-foreground",
+    solid: "bg-category-1-strong text-white",
   },
   violet: {
-    wash: "bg-violet-50 dark:bg-violet-950/60",
-    glowA: "bg-violet-300/55 dark:bg-violet-500/22",
-    glowB: "bg-fuchsia-200/70 dark:bg-fuchsia-400/14",
-    avatar: "bg-violet-500/15 text-violet-800 dark:bg-violet-400/20 dark:text-violet-200",
-    solid: "bg-violet-600 text-white dark:bg-violet-500",
+    wash: "bg-category-5/8",
+    glowA: "bg-category-5/19",
+    glowB: "bg-category-5/14",
+    avatar: "bg-category-5/15 text-category-5-foreground",
+    solid: "bg-category-5-strong text-white",
   },
   orange: {
-    wash: "bg-orange-50 dark:bg-orange-950/60",
-    glowA: "bg-orange-300/55 dark:bg-orange-500/22",
-    glowB: "bg-rose-200/70 dark:bg-rose-400/14",
-    avatar: "bg-orange-500/15 text-orange-700 dark:bg-orange-400/20 dark:text-orange-200",
-    solid: "bg-orange-600 text-white dark:bg-orange-500",
+    wash: "bg-category-7/8",
+    glowA: "bg-category-7/19",
+    glowB: "bg-category-4/14",
+    avatar: "bg-category-7/15 text-category-7-foreground",
+    solid: "bg-category-7-strong text-white",
   },
   teal: {
-    wash: "bg-teal-50 dark:bg-teal-950/60",
-    glowA: "bg-teal-300/55 dark:bg-teal-500/22",
-    glowB: "bg-cyan-200/70 dark:bg-cyan-400/14",
-    avatar: "bg-teal-500/15 text-teal-800 dark:bg-teal-400/20 dark:text-teal-200",
-    solid: "bg-teal-600 text-white dark:bg-teal-500",
+    wash: "bg-category-6/8",
+    glowA: "bg-category-6/19",
+    glowB: "bg-category-6/14",
+    avatar: "bg-category-6/15 text-category-6-foreground",
+    solid: "bg-category-6-strong text-white",
   },
   indigo: {
-    wash: "bg-indigo-50 dark:bg-indigo-950/60",
-    glowA: "bg-indigo-300/55 dark:bg-indigo-500/22",
-    glowB: "bg-violet-200/70 dark:bg-violet-400/14",
-    avatar: "bg-indigo-500/15 text-indigo-800 dark:bg-indigo-400/20 dark:text-indigo-200",
-    solid: "bg-indigo-600 text-white dark:bg-indigo-500",
+    wash: "bg-category-8/8",
+    glowA: "bg-category-8/19",
+    glowB: "bg-category-5/14",
+    avatar: "bg-category-8/15 text-category-8-foreground",
+    solid: "bg-category-8-strong text-white",
   },
 };
 
@@ -234,7 +234,7 @@ function SpeakingBars({ reduce }: { reduce: boolean | null }) {
       {[0, 1, 2].map((i) => (
         <motion.span
           animate={reduce ? { scaleY: 0.7 } : { scaleY: [0.35, 1, 0.5, 0.85, 0.35] }}
-          className="h-3 w-[3px] origin-center rounded-full bg-emerald-500 dark:bg-emerald-400"
+          className="h-3 w-[3px] origin-center rounded-full bg-category-2"
           key={i}
           transition={reduce ? { duration: 0 } : { duration: 0.9, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 }}
         />
@@ -262,7 +262,7 @@ function TileAvatar({ person, live, speaking, compact }: { person: CallPerson; l
           <motion.span
             animate={{ opacity: [0.45, 0], scale: [1, 1.45] }}
             aria-hidden
-            className={cn("absolute inset-0 rounded-full", live ? hues[person.hue].solid : "bg-emerald-500/40")}
+            className={cn("absolute inset-0 rounded-full", live ? hues[person.hue].solid : "bg-category-2/40")}
             key={i}
             transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut", delay: i * 0.8 }}
           />
@@ -285,7 +285,7 @@ function ScreenShare() {
     <div className="absolute inset-0 flex items-center justify-center bg-muted p-[6%]">
       <div className="flex aspect-video max-h-full w-full max-w-full flex-col gap-[5%] overflow-hidden rounded-lg border bg-card p-[4%] shadow-xs/5">
         <div className="flex items-center gap-2">
-          <span className="size-2 rounded-full bg-orange-500 dark:bg-orange-400" />
+          <span className="size-2 rounded-full bg-category-7" />
           <span className="truncate font-medium text-[clamp(9px,1.6cqw,14px)]">Onboarding v3 · flow review</span>
         </div>
         <div className="flex flex-1 items-center gap-[4%]">
@@ -299,7 +299,7 @@ function ScreenShare() {
               <span
                 className={cn(
                   "mt-auto h-[14%] rounded-sm",
-                  i === 2 ? "bg-orange-500/70 dark:bg-orange-400/60" : "bg-primary/15",
+                  i === 2 ? "bg-category-7/70" : "bg-primary/15",
                 )}
               />
             </div>
@@ -390,7 +390,7 @@ function CallTile({
         {p?.hand && (
           <motion.span
             animate={{ opacity: 1, y: 0 }}
-            className="absolute top-2 start-2 flex h-6 items-center gap-1 rounded-full bg-amber-400 px-2 font-medium text-amber-950 text-xs"
+            className="absolute top-2 start-2 flex h-6 items-center gap-1 rounded-full bg-category-3/60 px-2 font-medium text-category-3-foreground text-xs"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: -4 }}
             layout={!reduce}
             transition={{ duration: 0.2, ease: easeOut }}
@@ -427,7 +427,7 @@ function CallTile({
       <motion.span
         animate={{ opacity: speaking ? 1 : 0 }}
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-10 rounded-[inherit] ring-2 ring-emerald-500 ring-inset dark:ring-emerald-400"
+        className="pointer-events-none absolute inset-0 z-10 rounded-[inherit] ring-2 ring-category-2 ring-inset"
         initial={false}
         transition={{ duration: reduce ? 0 : 0.2, ease: easeOut }}
       />
@@ -843,7 +843,7 @@ export function VideoCall({
                     <span className="truncate text-muted-foreground text-xs">{p.title}</span>
                   </div>
                   <span className="flex items-center gap-1.5 text-muted-foreground [&_svg]:size-4">
-                    {p.hand && <HandIcon aria-label="Hand raised" className="text-amber-800 dark:text-amber-400" />}
+                    {p.hand && <HandIcon aria-label="Hand raised" className="text-category-3-foreground" />}
                     {p.cameraOff && <VideoOffIcon aria-label="Camera off" />}
                     {p.muted ? (
                       <MicOffIcon aria-label="Muted" className="text-destructive-foreground" />

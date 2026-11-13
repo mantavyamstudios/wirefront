@@ -153,7 +153,7 @@ function CreditCardArt({
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] opacity-80">
               Orbit · primary
             </div>
-            <div className="size-7 rounded-md bg-amber-300/80 shadow-inner" />
+            <div className="size-7 rounded-md bg-category-3/28 shadow-inner" />
           </div>
           <BrandPill brand={brand} variant="card" />
         </div>

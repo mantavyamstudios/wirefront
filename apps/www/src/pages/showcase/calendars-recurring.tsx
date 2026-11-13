@@ -781,7 +781,7 @@ function Preview({
           {tokens.map((t, i) => (
             <span key={i}>
               {i > 0 && <span className="text-muted-foreground">;</span>}
-              <span className="text-violet-600 dark:text-violet-400">
+              <span className="text-category-5-foreground">
                 {t.k}
               </span>
               <span className="text-muted-foreground">=</span>

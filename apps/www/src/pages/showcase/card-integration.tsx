@@ -29,7 +29,7 @@ const INTEGRATIONS: Integration[] = [
     blurb: "Post task updates to channels.",
     status: "ok",
     lastSync: "synced 2m ago",
-    tone: "from-emerald-500/20 to-teal-500/10",
+    tone: "from-category-2/20 to-category-6/10",
     enabled: true,
     scopes: ["#eng-platform", "#design-crit", "+3 channels"],
   },
@@ -40,7 +40,7 @@ const INTEGRATIONS: Integration[] = [
     blurb: "Link PRs to issues automatically.",
     status: "warn",
     lastSync: "rate-limited · retrying",
-    tone: "from-slate-500/20 to-slate-500/5",
+    tone: "from-muted-foreground/20 to-muted-foreground/5",
     enabled: true,
     scopes: ["org/scratchpad", "org/wirefront"],
   },
@@ -51,7 +51,7 @@ const INTEGRATIONS: Integration[] = [
     blurb: "Two-way sync with Linear issues.",
     status: "off",
     lastSync: "Not connected",
-    tone: "from-violet-500/20 to-fuchsia-500/10",
+    tone: "from-category-5/20 to-category-5/10",
     enabled: false,
     scopes: [],
   },
@@ -64,8 +64,8 @@ const STATUS_LABEL: Record<Integration["status"], string> = {
   off: "Disconnected",
 };
 const STATUS_DOT: Record<Integration["status"], string> = {
-  ok: "bg-emerald-500",
-  warn: "bg-amber-500",
+  ok: "bg-category-2",
+  warn: "bg-warning",
   error: "bg-destructive",
   off: "bg-muted-foreground/40",
 };
@@ -138,7 +138,7 @@ function IntegrationCard({ item }: { item: Integration }) {
           ) : null}
           <div className="mt-2 inline-flex items-center gap-1 font-mono text-[11px] text-muted-foreground">
             {status === "ok" ? (
-              <CheckCircle2Icon className="size-3 text-emerald-700 dark:text-emerald-400" />
+              <CheckCircle2Icon className="size-3 text-category-2-foreground" />
             ) : null}
             {item.lastSync}
           </div>

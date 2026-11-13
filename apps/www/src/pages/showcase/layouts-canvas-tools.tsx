@@ -112,10 +112,10 @@ const SEED_SHAPES: Shape[] = [
 ];
 
 const COLLAB = [
-  { initials: "SK", tone: "bg-rose-700" },
-  { initials: "MR", tone: "bg-emerald-700" },
-  { initials: "JL", tone: "bg-sky-700" },
-  { initials: "DV", tone: "bg-amber-700" },
+  { initials: "SK", tone: "bg-category-4-strong" },
+  { initials: "MR", tone: "bg-category-2-strong" },
+  { initials: "JL", tone: "bg-category-1-strong" },
+  { initials: "DV", tone: "bg-category-3-strong" },
 ];
 
 interface Point {
@@ -578,7 +578,7 @@ export function LayoutsCanvasTools() {
                 }}
               />
               <div
-                className="pointer-events-none absolute inset-0 border-2 border-blue-500 border-dashed"
+                className="pointer-events-none absolute inset-0 border-2 border-category-1 border-dashed"
                 style={{
                   borderRadius:
                     previewRect.type === "ellipse" ? "9999px" : "6px",
@@ -718,7 +718,7 @@ function SelectionFrame({ shape, zoom }: { shape: Shape; zoom: number }) {
       {handles.map((p, i) => (
         <div
           key={i}
-          className="pointer-events-none absolute bg-blue-500"
+          className="pointer-events-none absolute bg-category-1"
           style={{
             left: p.left - handle / 2,
             top: p.top - handle / 2,
@@ -1060,7 +1060,7 @@ function Inspector({
                   className={cn(
                     "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-start text-[11px] transition-colors pointer-coarse:min-h-11 pointer-coarse:text-xs",
                     isActive
-                      ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                      ? "bg-category-1/10 text-category-1-foreground"
                       : "hover:bg-foreground/[0.05]",
                   )}
                 >

@@ -61,23 +61,23 @@ export interface DriveProps {
 }
 
 const tone: Record<FolderTone, string> = {
-  orange: "text-orange-500 dark:text-orange-400",
-  yellow: "text-amber-800 dark:text-amber-400",
-  lime: "text-lime-600",
-  teal: "text-teal-600 dark:text-teal-500",
-  blue: "text-blue-500 dark:text-blue-400",
-  violet: "text-violet-500 dark:text-violet-400",
-  rose: "text-rose-500 dark:text-rose-400",
-  slate: "text-slate-500 dark:text-slate-400",
+  orange: "text-category-7-foreground",
+  yellow: "text-category-3-foreground",
+  lime: "text-category-2-foreground",
+  teal: "text-category-6-foreground",
+  blue: "text-category-1-foreground",
+  violet: "text-category-5-foreground",
+  rose: "text-category-4-foreground",
+  slate: "text-muted-foreground",
   neutral: "text-muted-foreground/64",
 };
 
 const memberTone: Record<string, string> = {
-  AK: "bg-orange-500/16 text-orange-800 dark:text-orange-300",
-  JS: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
-  MV: "bg-blue-500/16 text-blue-700 dark:text-blue-300",
-  LO: "bg-violet-500/18 text-violet-800 dark:text-violet-300",
-  RB: "bg-rose-500/16 text-rose-700 dark:text-rose-300",
+  AK: "bg-category-7/16 text-category-7-foreground",
+  JS: "bg-category-6/16 text-category-6-foreground",
+  MV: "bg-category-1/16 text-category-1-foreground",
+  LO: "bg-category-5/18 text-category-5-foreground",
+  RB: "bg-category-4/16 text-category-4-foreground",
 };
 
 const spring = { type: "spring", stiffness: 380, damping: 34 } as const;
@@ -140,7 +140,7 @@ function TemplatePreview({ kind }: { kind: FileTemplate["kind"] }) {
     case "brief":
       return (
         <span className="flex flex-col gap-1">
-          <span className="h-2.5 w-full rounded-[calc(var(--radius)*0.3)] bg-orange-500/20" />
+          <span className="h-2.5 w-full rounded-[calc(var(--radius)*0.3)] bg-category-7/20" />
           <span className="h-1 w-1/2 rounded-full bg-foreground/40" />
           <span className={line} style={{ width: "80%" }} />
         </span>
@@ -149,7 +149,7 @@ function TemplatePreview({ kind }: { kind: FileTemplate["kind"] }) {
       return (
         <span className="grid grid-cols-4 gap-px overflow-hidden rounded-[calc(var(--radius)*0.3)]">
           {Array.from({ length: 12 }, (_, i) => (
-            <span className={cn("h-1.5", i < 4 ? "bg-foreground/20" : i === 6 ? "bg-emerald-500/40" : "bg-foreground/8")} key={i} />
+            <span className={cn("h-1.5", i < 4 ? "bg-foreground/20" : i === 6 ? "bg-category-2/40" : "bg-foreground/8")} key={i} />
           ))}
         </span>
       );
@@ -157,9 +157,9 @@ function TemplatePreview({ kind }: { kind: FileTemplate["kind"] }) {
       return (
         <span className="flex flex-col gap-1">
           {[
-            [0, 50, "bg-blue-500/40"],
-            [24, 48, "bg-teal-500/40"],
-            [50, 44, "bg-violet-500/40"],
+            [0, 50, "bg-category-1/40"],
+            [24, 48, "bg-category-6/40"],
+            [50, 44, "bg-category-5/40"],
           ].map(([l, w, c]) => (
             <span className={cn("h-1.5 rounded-full", c as string)} key={String(c)} style={{ marginLeft: `${l}%`, width: `${w}%` }} />
           ))}
@@ -168,7 +168,7 @@ function TemplatePreview({ kind }: { kind: FileTemplate["kind"] }) {
     case "board":
       return (
         <span className="grid grid-cols-3 gap-1">
-          {["bg-amber-400/40", "bg-teal-500/30", "bg-violet-500/30", "bg-violet-500/30", "bg-amber-400/40", "bg-foreground/10"].map((c, i) => (
+          {["bg-category-3/24", "bg-category-6/30", "bg-category-5/30", "bg-category-5/30", "bg-category-3/24", "bg-foreground/10"].map((c, i) => (
             <span className={cn("h-2 rounded-[calc(var(--radius)*0.2)]", c)} key={i} />
           ))}
         </span>
@@ -176,10 +176,10 @@ function TemplatePreview({ kind }: { kind: FileTemplate["kind"] }) {
     case "moodboard":
       return (
         <span className="grid h-full grid-cols-3 grid-rows-2 gap-0.5">
-          <span className="row-span-2 rounded-[calc(var(--radius)*0.2)] bg-linear-to-b from-amber-400/60 to-rose-500/50" />
-          <span className="rounded-[calc(var(--radius)*0.2)] bg-teal-500/40" />
+          <span className="row-span-2 rounded-[calc(var(--radius)*0.2)] bg-linear-to-b from-category-3/36 to-category-4/50" />
+          <span className="rounded-[calc(var(--radius)*0.2)] bg-category-6/40" />
           <span className="rounded-[calc(var(--radius)*0.2)] bg-foreground/16" />
-          <span className="col-span-2 rounded-[calc(var(--radius)*0.2)] bg-blue-500/30" />
+          <span className="col-span-2 rounded-[calc(var(--radius)*0.2)] bg-category-1/30" />
         </span>
       );
   }
@@ -642,7 +642,7 @@ export function Drive({
                               className={cn(
                                 "absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-md outline-none transition-opacity hover:bg-accent focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring",
                                 grid ? "top-2 end-2" : "top-2.5 end-2",
-                                f.starred ? "text-amber-800 opacity-100 dark:text-amber-400" : "text-muted-foreground opacity-0 group-hover/folder:opacity-100 pointer-coarse:opacity-100",
+                                f.starred ? "text-category-3-foreground opacity-100" : "text-muted-foreground opacity-0 group-hover/folder:opacity-100 pointer-coarse:opacity-100",
                               )}
                               layout="position"
                               onClick={() => toggleStar(f.id)}

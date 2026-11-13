@@ -33,8 +33,8 @@ export function EmptyMaintenance() {
           className="gap-2 font-mono text-[10px] uppercase tracking-[0.25em]"
         >
           <span className="relative inline-flex">
-            <span className="size-2 rounded-full bg-amber-500" />
-            <span className="absolute inset-0 size-2 rounded-full bg-amber-500/60 motion-safe:animate-ping" />
+            <span className="size-2 rounded-full bg-category-3" />
+            <span className="absolute inset-0 size-2 rounded-full bg-category-3/60 motion-safe:animate-ping" />
           </span>
           Scheduled maintenance
         </Badge>

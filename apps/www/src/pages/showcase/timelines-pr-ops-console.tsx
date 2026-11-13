@@ -149,7 +149,7 @@ export function TimelinesPrOpsConsole() {
               You can also merge this with the command line.{" "}
               <a
                 href="#"
-                className="inline-flex items-center gap-1 text-sky-700 hover:underline dark:text-sky-400"
+                className="inline-flex items-center gap-1 text-category-1-foreground hover:underline"
               >
                 <TerminalIcon className="size-3" />
                 View command line instructions
@@ -165,7 +165,7 @@ export function TimelinesPrOpsConsole() {
 function PrTitle() {
   return (
     <div className="flex items-start gap-3 px-1">
-      <span className="mt-0.5 inline-flex size-9 items-center justify-center rounded-full bg-amber-500/15 text-amber-800 dark:text-amber-400">
+      <span className="mt-0.5 inline-flex size-9 items-center justify-center rounded-full bg-category-3/15 text-category-3-foreground">
         <GitPullRequestIcon className="size-5" />
       </span>
       <div className="min-w-0">
@@ -176,7 +176,7 @@ function PrTitle() {
           </span>
         </h1>
         <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-muted-foreground">
-          <span className="inline-flex items-center gap-1 rounded bg-amber-500/15 px-1.5 py-0.5 font-mono text-[11px] text-amber-800 uppercase tracking-wider dark:text-amber-400">
+          <span className="inline-flex items-center gap-1 rounded bg-category-3/15 px-1.5 py-0.5 font-mono text-[11px] text-category-3-foreground uppercase tracking-wider">
             Draft
           </span>
           <span>
@@ -234,13 +234,13 @@ function Header({
         </div>
         <div className="mt-0.5 flex flex-wrap items-center gap-3 text-[13px] text-muted-foreground">
           <span>
-            <span className="font-medium text-rose-700 dark:text-rose-400">
+            <span className="font-medium text-category-4-foreground">
               {failing} failing
             </span>
             ,{" "}
             <span className="font-medium text-foreground">{skipped} skipped</span>
             ,{" "}
-            <span className="font-medium text-emerald-700 dark:text-emerald-400">
+            <span className="font-medium text-category-2-foreground">
               {passed} successful
             </span>{" "}
             checks
@@ -286,7 +286,7 @@ function StatusRing({
           cx="18"
           cy="18"
           r={r}
-          className="fill-none stroke-emerald-500"
+          className="fill-none stroke-category-2"
           strokeWidth="4"
           strokeDasharray={`${passLen} ${c}`}
           strokeDashoffset={0}
@@ -295,7 +295,7 @@ function StatusRing({
           cx="18"
           cy="18"
           r={r}
-          className="fill-none stroke-rose-500"
+          className="fill-none stroke-category-4"
           strokeWidth="4"
           strokeDasharray={`${failLen} ${c}`}
           strokeDashoffset={-passLen}
@@ -327,9 +327,9 @@ function CheckGroup({
 }) {
   const labelTone =
     tone === "fail"
-      ? "text-rose-700 dark:text-rose-400"
+      ? "text-category-4-foreground"
       : tone === "ok"
-        ? "text-emerald-700 dark:text-emerald-400"
+        ? "text-category-2-foreground"
         : "text-foreground";
 
   return (
@@ -365,7 +365,7 @@ function CheckRow({ check }: { check: Check }) {
       <a
         href="#"
         aria-label={`Details for ${check.name}`}
-        className="hidden min-h-6 items-center text-[12px] text-sky-700 hover:underline sm:inline-flex dark:text-sky-400"
+        className="hidden min-h-6 items-center text-[12px] text-category-1-foreground hover:underline sm:inline-flex"
       >
         Details
       </a>
@@ -384,14 +384,14 @@ function CheckRow({ check }: { check: Check }) {
 function StatusIcon({ status }: { status: Status }) {
   if (status === "failed") {
     return (
-      <span className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-rose-500 text-white">
+      <span className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-category-4 text-white">
         <XIcon className="size-3 stroke-[3]" />
       </span>
     );
   }
   if (status === "passed") {
     return (
-      <span className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
+      <span className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-category-2 text-white">
         <CheckIcon className="size-3 stroke-[3]" />
       </span>
     );
@@ -430,18 +430,18 @@ function AppIcon({ app }: { app: Check["app"] }) {
     );
   if (app === "mintlify")
     return (
-      <span className={`${base} bg-emerald-600 text-white`}>
+      <span className={`${base} bg-category-2-strong text-white`}>
         <BookOpenIcon className="size-3" />
       </span>
     );
   if (app === "linear")
     return (
-      <span className={`${base} bg-indigo-500 text-white`}>
+      <span className={`${base} bg-category-8 text-white`}>
         <CircleDotIcon className="size-3" />
       </span>
     );
   return (
-    <span className={`${base} bg-violet-600 text-white`}>
+    <span className={`${base} bg-category-5-strong text-white`}>
       <ShieldIcon className="size-3" />
     </span>
   );
@@ -477,7 +477,7 @@ function Notice({
 }) {
   const ring =
     tone === "warn"
-      ? "bg-amber-500/15 text-amber-800 dark:text-amber-400"
+      ? "bg-category-3/15 text-category-3-foreground"
       : "bg-foreground/10 text-foreground";
 
   return (

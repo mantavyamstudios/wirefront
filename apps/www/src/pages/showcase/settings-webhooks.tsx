@@ -88,8 +88,8 @@ const STATUS_TONE: Record<
   { dot: string; label: string; tip: string }
 > = {
   success: {
-    dot: "bg-emerald-500 shadow-[0_0_0_2px_--theme(--color-emerald-500/15%)]",
-    label: "text-emerald-700 dark:text-emerald-400",
+    dot: "bg-category-2 shadow-[0_0_0_2px_--theme(--color-emerald-500/15%)]",
+    label: "text-category-2-foreground",
     tip: "Healthy — last 100 deliveries succeeded",
   },
   failing: {
@@ -185,9 +185,9 @@ const DELIVERIES: Delivery[] = [
 
 function statusTone(code: number): string {
   if (code >= 500) return "border-destructive/30 text-destructive-foreground";
-  if (code === 429) return "border-amber-500/40 text-amber-800 dark:text-amber-400";
-  if (code >= 400) return "border-amber-500/40 text-amber-800 dark:text-amber-400";
-  return "border-emerald-500/30 text-emerald-700 dark:text-emerald-400";
+  if (code === 429) return "border-category-3/40 text-category-3-foreground";
+  if (code >= 400) return "border-category-3/40 text-category-3-foreground";
+  return "border-category-2/30 text-category-2-foreground";
 }
 
 // Theme-adaptive Prism: tokens get Tailwind classes (which respect the dark
@@ -196,12 +196,12 @@ function statusTone(code: number): string {
 const PRISM_BLANK: PrismTheme = { plain: {}, styles: [] };
 
 const PRISM_TOKEN_CLASS: Record<string, string> = {
-  "string-property": "text-sky-700 dark:text-sky-300",
-  property: "text-sky-700 dark:text-sky-300",
-  string: "text-emerald-700 dark:text-emerald-300",
-  number: "text-amber-800 dark:text-amber-300",
-  boolean: "text-violet-800 dark:text-violet-300",
-  null: "text-violet-800 dark:text-violet-300",
+  "string-property": "text-category-1-foreground",
+  property: "text-category-1-foreground",
+  string: "text-category-2-foreground",
+  number: "text-category-3-foreground",
+  boolean: "text-category-5-foreground",
+  null: "text-category-5-foreground",
   punctuation: "text-muted-foreground",
   operator: "text-muted-foreground",
   comment: "text-muted-foreground italic",
@@ -272,7 +272,7 @@ export function SettingsWebhooks() {
                 render={
                   <button
                     type="button"
-                    className="inline-flex min-h-8 items-center gap-1 text-amber-800 text-xs underline-offset-4 hover:underline pointer-coarse:min-h-10 dark:text-amber-400"
+                    className="inline-flex min-h-8 items-center gap-1 text-category-3-foreground text-xs underline-offset-4 hover:underline pointer-coarse:min-h-10"
                   >
                     <TriangleAlertIcon className="size-3.5" />
                     Rotate
@@ -320,7 +320,7 @@ export function SettingsWebhooks() {
               }}
             >
               {copiedSecret ? (
-                <CheckIcon className="!size-3 text-emerald-500" />
+                <CheckIcon className="!size-3 text-category-2-foreground" />
               ) : (
                 <CopyIcon className="!size-3" />
               )}
@@ -536,7 +536,7 @@ export function SettingsWebhooks() {
                         <Tooltip>
                           <TooltipTrigger
                             render={
-                              <RotateCwIcon className="size-3 text-amber-800 dark:text-amber-400" />
+                              <RotateCwIcon className="size-3 text-category-3-foreground" />
                             }
                           />
                           <TooltipContent side="top">Retried</TooltipContent>
@@ -666,7 +666,7 @@ function PayloadBlock({
           className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
         >
           {copied ? (
-            <CheckIcon className="size-3 text-emerald-500" />
+            <CheckIcon className="size-3 text-category-2-foreground" />
           ) : (
             <CopyIcon className="size-3" />
           )}

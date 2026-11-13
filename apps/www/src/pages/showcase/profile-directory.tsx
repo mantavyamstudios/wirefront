@@ -40,8 +40,8 @@ const PEOPLE: Person[] = [
 ];
 
 const STATUS_DOT: Record<Person["status"], string> = {
-  online: "bg-emerald-500",
-  away: "bg-amber-500",
+  online: "bg-success",
+  away: "bg-category-3",
   off: "bg-muted-foreground/40",
 };
 

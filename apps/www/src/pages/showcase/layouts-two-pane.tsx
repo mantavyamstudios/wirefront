@@ -125,16 +125,16 @@ const TABS = ["All", "Unread", "Mentions"] as const;
 type Tab = (typeof TABS)[number];
 
 const AVATAR_COLORS: Record<string, string> = {
-  MO: "bg-emerald-700",
-  JL: "bg-amber-700",
-  RP: "bg-violet-700",
-  DK: "bg-sky-700",
-  AT: "bg-rose-700",
-  BF: "bg-orange-700",
-  SQ: "bg-cyan-700",
-  TH: "bg-teal-700",
-  NB: "bg-fuchsia-700",
-  OP: "bg-indigo-700",
+  MO: "bg-category-2-strong",
+  JL: "bg-category-3-strong",
+  RP: "bg-category-5-strong",
+  DK: "bg-category-1-strong",
+  AT: "bg-category-4-strong",
+  BF: "bg-category-7-strong",
+  SQ: "bg-category-6-strong",
+  TH: "bg-category-6-strong",
+  NB: "bg-category-5-strong",
+  OP: "bg-category-8-strong",
 };
 
 export function LayoutsTwoPane() {
@@ -223,7 +223,7 @@ export function LayoutsTwoPane() {
                     <div className="flex items-center justify-between gap-2">
                       <span className="flex min-w-0 items-center gap-1.5">
                         {m.unread ? (
-                          <span className="size-2 shrink-0 rounded-full bg-blue-500">
+                          <span className="size-2 shrink-0 rounded-full bg-category-1">
                             <span className="sr-only">Unread</span>
                           </span>
                         ) : null}

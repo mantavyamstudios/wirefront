@@ -138,17 +138,17 @@ const STATUS_STYLES: Record<
   stable: {
     label: "Stable",
     className:
-      "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+      "border-category-2/20 bg-category-2/10 text-category-2-foreground",
   },
   beta: {
     label: "Beta",
     className:
-      "border-sky-500/20 bg-sky-500/10 text-sky-700 dark:text-sky-400",
+      "border-category-1/20 bg-category-1/10 text-category-1-foreground",
   },
   experimental: {
     label: "Experimental",
     className:
-      "border-amber-500/25 bg-amber-500/10 text-amber-800 dark:text-amber-400",
+      "border-category-3/25 bg-category-3/10 text-category-3-foreground",
   },
 };
 
@@ -177,10 +177,10 @@ const LOG_LINES: LogLine[] = [
 ];
 
 const LEVEL_TONE: Record<LogLevel, string> = {
-  debug: "text-zinc-500",
-  info: "text-sky-300",
-  warn: "text-amber-300",
-  error: "text-rose-400",
+  debug: "text-muted-foreground",
+  info: "text-info-foreground",
+  warn: "text-warning-foreground",
+  error: "text-destructive-foreground",
 };
 
 export function SettingsDeveloper() {
@@ -309,20 +309,20 @@ export function SettingsDeveloper() {
           </label>
 
           {debug ? (
-            <div className="mt-3 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-xs/5">
-              <div className="flex items-center justify-between border-zinc-800 border-b bg-zinc-900/60 px-3 py-1.5">
-                <div className="flex items-center gap-2 font-mono text-[10px] text-zinc-400 uppercase tracking-[0.25em]">
-                  <span className="size-1.5 animate-pulse rounded-full bg-emerald-500 motion-reduce:animate-none" />
+            <div className="mt-3 overflow-hidden rounded-xl border border-border bg-foreground shadow-xs/5">
+              <div className="flex items-center justify-between border-border border-b bg-foreground/60 px-3 py-1.5">
+                <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+                  <span className="size-1.5 animate-pulse rounded-full bg-category-2 motion-reduce:animate-none" />
                   console · live
                 </div>
-                <span className="font-mono text-[10px] text-zinc-500 tabular-nums">
+                <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
                   {LOG_LINES.length} lines
                 </span>
               </div>
-              <pre className="max-h-72 overflow-auto px-3 py-2.5 font-mono text-[11px] leading-relaxed text-zinc-300">
+              <pre className="max-h-72 overflow-auto px-3 py-2.5 font-mono text-[11px] leading-relaxed text-muted-foreground">
                 {LOG_LINES.map((line, i) => (
                   <div key={i} className="flex gap-3 whitespace-pre">
-                    <span className="text-zinc-600 tabular-nums">{line.ts}</span>
+                    <span className="text-muted-foreground tabular-nums">{line.ts}</span>
                     <span
                       className={
                         "uppercase tracking-wider " + LEVEL_TONE[line.level]
@@ -330,8 +330,8 @@ export function SettingsDeveloper() {
                     >
                       {line.level.padEnd(5, " ")}
                     </span>
-                    <span className="text-zinc-400">{line.channel}</span>
-                    <span className="text-zinc-200">{line.body}</span>
+                    <span className="text-muted-foreground">{line.channel}</span>
+                    <span className="text-muted-foreground">{line.body}</span>
                   </div>
                 ))}
               </pre>
@@ -361,19 +361,19 @@ export function SettingsDeveloper() {
                   value: "production",
                   label: "Production",
                   host: "api.example.dev",
-                  tone: "text-emerald-700 dark:text-emerald-400",
+                  tone: "text-category-2-foreground",
                 },
                 {
                   value: "staging",
                   label: "Staging",
                   host: "api.staging.example.dev",
-                  tone: "text-sky-700 dark:text-sky-400",
+                  tone: "text-category-1-foreground",
                 },
                 {
                   value: "local",
                   label: "Local",
                   host: "localhost:4000",
-                  tone: "text-amber-800 dark:text-amber-400",
+                  tone: "text-category-3-foreground",
                 },
               ] as const
             ).map((opt) => {
@@ -394,10 +394,10 @@ export function SettingsDeveloper() {
                       <span className="font-medium text-sm">{opt.label}</span>
                       <span className={"size-1.5 rounded-full " +
                         (opt.value === "production"
-                          ? "bg-emerald-500"
+                          ? "bg-category-2"
                           : opt.value === "staging"
-                            ? "bg-sky-500"
-                            : "bg-amber-500")}
+                            ? "bg-category-1"
+                            : "bg-category-3")}
                       />
                     </div>
                     <code

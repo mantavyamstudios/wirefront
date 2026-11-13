@@ -91,7 +91,7 @@ function PricingScreen({ plans, onChoosePlan, currentPlanId, className }: Pricin
                 <ul className="mt-6 flex flex-1 flex-col gap-2.5">
                   {p.features.map((f) => (
                     <li className="flex items-start gap-2 text-sm" key={f}>
-                      <CheckIcon aria-hidden className={cn("mt-0.5 size-4 shrink-0", p.featured ? "text-foreground" : "text-emerald-700 dark:text-emerald-400")} />
+                      <CheckIcon aria-hidden className={cn("mt-0.5 size-4 shrink-0", p.featured ? "text-foreground" : "text-category-2-foreground")} />
                       {f}
                     </li>
                   ))}

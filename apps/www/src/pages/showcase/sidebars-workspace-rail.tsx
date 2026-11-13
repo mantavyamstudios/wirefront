@@ -29,10 +29,10 @@ const PRIMARY = [
 ];
 
 const PROJECTS = [
-  { name: "Onboarding redesign", color: "bg-emerald-500/80" },
-  { name: "Q3 planning", color: "bg-amber-500/80", active: true },
-  { name: "Marketing site", color: "bg-violet-500/80" },
-  { name: "Dust storm", color: "bg-sky-500/80" },
+  { name: "Onboarding redesign", color: "bg-category-2/80" },
+  { name: "Q3 planning", color: "bg-category-3/80", active: true },
+  { name: "Marketing site", color: "bg-category-5/80" },
+  { name: "Dust storm", color: "bg-category-1/80" },
 ];
 
 const TEAMS = [
@@ -228,7 +228,7 @@ function RailContent({
         <div className="min-w-0 flex-1">
           <div className="truncate font-medium text-sm">Mantavyam</div>
           <div className="flex items-center gap-1.5 truncate text-muted-foreground text-xs">
-            <span className="size-1.5 rounded-full bg-emerald-500" />
+            <span className="size-1.5 rounded-full bg-category-2" />
             Online
           </div>
         </div>

@@ -39,7 +39,7 @@ export function ModalsTwoFactor() {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader className="flex-row items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-category-2/15 text-category-2-foreground">
               <ShieldCheckIcon className="size-4" />
             </div>
             <div className="flex flex-col gap-0.5 text-start">

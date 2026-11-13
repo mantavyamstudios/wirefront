@@ -26,10 +26,10 @@ const DORA: Dora[] = [
 ];
 
 const RATING_TONE: Record<Dora["rating"], string> = {
-  elite: "text-emerald-700 dark:text-emerald-400",
-  high: "text-sky-700 dark:text-sky-400",
-  med: "text-amber-800 dark:text-amber-400",
-  low: "text-rose-700 dark:text-rose-400",
+  elite: "text-category-2-foreground",
+  high: "text-category-1-foreground",
+  med: "text-category-3-foreground",
+  low: "text-category-4-foreground",
 };
 
 const PR_WEEKS: { week: string; merged: number; open: number; closed: number }[] = [
@@ -162,7 +162,7 @@ export function DashboardsEngineering() {
                     <div className="truncate text-sm">{c.name}</div>
                     <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-foreground/[0.04]">
                       <div
-                        className="h-full bg-emerald-500/70"
+                        className="h-full bg-category-2/70"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -200,8 +200,8 @@ function DoraTile({ dora }: { dora: Dora }) {
         <span
           className={`inline-flex items-baseline gap-0.5 font-mono text-[11px] tabular-nums ${
             dora.trend > 0 === isHigherBetter(dora.label)
-              ? "text-emerald-700 dark:text-emerald-400"
-              : "text-rose-700 dark:text-rose-400"
+              ? "text-category-2-foreground"
+              : "text-category-4-foreground"
           }`}
         >
           {dora.trend > 0 ? (
@@ -260,15 +260,15 @@ function Legend() {
   return (
     <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
       <span className="flex items-center gap-1.5">
-        <span className="size-2 rounded-sm bg-emerald-500" />
+        <span className="size-2 rounded-sm bg-category-2" />
         merged
       </span>
       <span className="flex items-center gap-1.5">
-        <span className="size-2 rounded-sm bg-sky-500/60" />
+        <span className="size-2 rounded-sm bg-category-1/60" />
         open
       </span>
       <span className="flex items-center gap-1.5">
-        <span className="size-2 rounded-sm bg-rose-500/60" />
+        <span className="size-2 rounded-sm bg-category-4/60" />
         closed
       </span>
     </div>
@@ -302,15 +302,15 @@ function PrChart({
             >
               <div className="flex h-full w-full flex-col">
                 <div
-                  className="bg-rose-500/60"
+                  className="bg-category-4/60"
                   style={{ height: `${closedPct}%` }}
                 />
                 <div
-                  className="bg-sky-500/60"
+                  className="bg-category-1/60"
                   style={{ height: `${openPct}%` }}
                 />
                 <div
-                  className="bg-emerald-500"
+                  className="bg-category-2"
                   style={{ height: `${mergedPct}%` }}
                 />
               </div>
@@ -336,9 +336,9 @@ function KV({
 }) {
   const t =
     tone === "ok"
-      ? "text-emerald-700 dark:text-emerald-400"
+      ? "text-category-2-foreground"
       : tone === "warn"
-        ? "text-amber-800 dark:text-amber-400"
+        ? "text-category-3-foreground"
         : "text-foreground";
   return (
     <div className="flex items-baseline justify-between text-sm">

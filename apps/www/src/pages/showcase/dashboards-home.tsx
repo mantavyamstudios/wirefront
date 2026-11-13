@@ -21,10 +21,10 @@ const TASKS = [
 ];
 
 const SCHEDULE = [
-  { time: "10:00", title: "Eng standup", subtitle: "Daily · 15m", color: "bg-emerald-500/80" },
-  { time: "11:30", title: "1:1 with Maya", subtitle: "Weekly · 30m", color: "bg-amber-500/80" },
-  { time: "14:00", title: "Design crit", subtitle: "Squad · 45m", color: "bg-violet-500/80" },
-  { time: "16:00", title: "Customer call: BigCorp", subtitle: "Sales · 30m", color: "bg-sky-500/80" },
+  { time: "10:00", title: "Eng standup", subtitle: "Daily · 15m", color: "bg-category-2/80" },
+  { time: "11:30", title: "1:1 with Maya", subtitle: "Weekly · 30m", color: "bg-category-3/80" },
+  { time: "14:00", title: "Design crit", subtitle: "Squad · 45m", color: "bg-category-5/80" },
+  { time: "16:00", title: "Customer call: BigCorp", subtitle: "Sales · 30m", color: "bg-category-1/80" },
 ];
 
 const SHORTCUTS = [

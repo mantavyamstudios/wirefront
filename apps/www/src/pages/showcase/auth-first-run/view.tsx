@@ -184,25 +184,25 @@ export interface AgentTemplate {
 }
 
 const softTone: Record<FirstRunTone, string> = {
-  orange: "bg-orange-500/12 text-orange-700 dark:bg-orange-400/14 dark:text-orange-300",
-  teal: "bg-teal-500/12 text-teal-700 dark:bg-teal-400/14 dark:text-teal-300",
-  violet: "bg-violet-500/12 text-violet-700 dark:bg-violet-400/14 dark:text-violet-300",
-  amber: "bg-amber-500/12 text-amber-700 dark:bg-amber-400/14 dark:text-amber-300",
-  rose: "bg-rose-500/12 text-rose-700 dark:bg-rose-400/14 dark:text-rose-300",
+  orange: "bg-category-7/12 text-category-7-foreground",
+  teal: "bg-category-6/12 text-category-6-foreground",
+  violet: "bg-category-5/12 text-category-5-foreground",
+  amber: "bg-category-3/12 text-category-3-foreground",
+  rose: "bg-category-4/12 text-category-4-foreground",
   info: "bg-info/12 text-info-foreground",
   success: "bg-success/12 text-success-foreground",
   destructive: "bg-destructive/12 text-destructive-foreground",
 };
 
 const tileTone: Record<FirstRunTone, string> = {
-  orange: "bg-orange-700",
-  teal: "bg-teal-700",
-  violet: "bg-violet-600",
-  amber: "bg-amber-700",
-  rose: "bg-rose-700",
-  info: "bg-blue-600",
-  success: "bg-emerald-700",
-  destructive: "bg-red-700",
+  orange: "bg-category-7-strong",
+  teal: "bg-category-6-strong",
+  violet: "bg-category-5-strong",
+  amber: "bg-category-3-strong",
+  rose: "bg-category-4-strong",
+  info: "bg-category-1-strong",
+  success: "bg-category-2-strong",
+  destructive: "bg-category-4-strong",
 };
 
 const SWATCHES = ["orange", "teal", "violet", "amber", "info", "rose"] as const;

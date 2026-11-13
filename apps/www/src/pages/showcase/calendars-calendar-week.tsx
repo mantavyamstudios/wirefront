@@ -70,35 +70,35 @@ export interface CalendarWeekProps {
 }
 
 const toneDot: Record<CalendarTone, string> = {
-  teal: "bg-teal-500",
-  violet: "bg-violet-500",
-  sky: "bg-sky-500",
-  amber: "bg-amber-500",
-  rose: "bg-rose-500",
+  teal: "bg-category-6",
+  violet: "bg-category-5",
+  sky: "bg-category-1",
+  amber: "bg-category-3",
+  rose: "bg-category-4",
 };
 
 const toneBlock: Record<CalendarTone, string> = {
-  teal: "bg-[color-mix(in_oklab,var(--color-teal-500)_14%,var(--background))] text-teal-950 before:bg-teal-500 dark:bg-[color-mix(in_oklab,var(--color-teal-400)_16%,var(--background))] dark:text-teal-50",
-  violet: "bg-[color-mix(in_oklab,var(--color-violet-500)_14%,var(--background))] text-violet-950 before:bg-violet-500 dark:bg-[color-mix(in_oklab,var(--color-violet-400)_18%,var(--background))] dark:text-violet-50",
-  sky: "bg-[color-mix(in_oklab,var(--color-sky-500)_14%,var(--background))] text-sky-950 before:bg-sky-500 dark:bg-[color-mix(in_oklab,var(--color-sky-400)_16%,var(--background))] dark:text-sky-50",
-  amber: "bg-[color-mix(in_oklab,var(--color-amber-500)_18%,var(--background))] text-amber-950 before:bg-amber-500 dark:bg-[color-mix(in_oklab,var(--color-amber-400)_16%,var(--background))] dark:text-amber-50",
-  rose: "bg-[color-mix(in_oklab,var(--color-rose-500)_14%,var(--background))] text-rose-950 before:bg-rose-500 dark:bg-[color-mix(in_oklab,var(--color-rose-400)_16%,var(--background))] dark:text-rose-50",
+  teal: "bg-[color-mix(in_oklab,var(--category-6)_14%,var(--background))] text-foreground before:bg-category-6 dark:bg-[color-mix(in_oklab,var(--category-6)_16%,var(--background))]",
+  violet: "bg-[color-mix(in_oklab,var(--category-5)_14%,var(--background))] text-foreground before:bg-category-5 dark:bg-[color-mix(in_oklab,var(--category-5)_18%,var(--background))]",
+  sky: "bg-[color-mix(in_oklab,var(--category-1)_14%,var(--background))] text-foreground before:bg-category-1 dark:bg-[color-mix(in_oklab,var(--category-1)_16%,var(--background))]",
+  amber: "bg-[color-mix(in_oklab,var(--category-3)_18%,var(--background))] text-foreground before:bg-category-3 dark:bg-[color-mix(in_oklab,var(--category-3)_16%,var(--background))]",
+  rose: "bg-[color-mix(in_oklab,var(--category-4)_14%,var(--background))] text-foreground before:bg-category-4 dark:bg-[color-mix(in_oklab,var(--category-4)_16%,var(--background))]",
 };
 
 const toneSolid: Record<CalendarTone, string> = {
-  teal: "bg-teal-600 text-white before:bg-teal-800 dark:bg-teal-500",
-  violet: "bg-violet-600 text-white before:bg-violet-800 dark:bg-violet-500",
-  sky: "bg-sky-600 text-white before:bg-sky-800 dark:bg-sky-500",
-  amber: "bg-amber-500 text-amber-950 before:bg-amber-700",
-  rose: "bg-rose-600 text-white before:bg-rose-800 dark:bg-rose-500",
+  teal: "bg-category-6-strong text-white before:bg-category-6-strong",
+  violet: "bg-category-5-strong text-white before:bg-category-5-strong",
+  sky: "bg-category-1-strong text-white before:bg-category-1-strong",
+  amber: "bg-category-3 text-category-3-foreground before:bg-category-3-strong",
+  rose: "bg-category-4-strong text-white before:bg-category-4-strong",
 };
 
 const toneCheck: Record<CalendarTone, string> = {
-  teal: "border-teal-500 bg-teal-500",
-  violet: "border-violet-500 bg-violet-500",
-  sky: "border-sky-500 bg-sky-500",
-  amber: "border-amber-500 bg-amber-500",
-  rose: "border-rose-500 bg-rose-500",
+  teal: "border-category-6 bg-category-6",
+  violet: "border-category-5 bg-category-5",
+  sky: "border-category-1 bg-category-1",
+  amber: "border-category-3 bg-category-3",
+  rose: "border-category-4 bg-category-4",
 };
 
 const HOUR = 48;
@@ -809,7 +809,7 @@ export function CalendarWeek({
                         <span
                           className={cn(
                             "flex h-6 min-w-6 items-center justify-center rounded-full px-1 font-medium tabular-nums",
-                            isToday && "bg-red-600 text-white",
+                            isToday && "bg-category-4-strong text-white",
                           )}
                         >
                           {parse(d).getUTCDate()}
@@ -867,7 +867,7 @@ export function CalendarWeek({
                 ))}
                 {todayIdx >= 0 && (
                   <span
-                    className="absolute end-1 z-20 -translate-y-1/2 rounded-md bg-red-600 px-1 py-px font-medium text-[10px] text-white tabular-nums"
+                    className="absolute end-1 z-20 -translate-y-1/2 rounded-md bg-category-4-strong px-1 py-px font-medium text-[10px] text-white tabular-nums"
                     style={{ top: nowTop }}
                   >
                     {fmtTime(nowMin).replace(" AM", "").replace(" PM", "")}

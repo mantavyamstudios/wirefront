@@ -8,17 +8,17 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 const DAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
 const EVENTS_BY_DAY: Record<number, { count: number; tones: string[] }> = {
-  3: { count: 1, tones: ["bg-indigo-500"] },
-  7: { count: 2, tones: ["bg-amber-500", "bg-rose-500"] },
-  9: { count: 1, tones: ["bg-teal-500"] },
-  12: { count: 1, tones: ["bg-rose-500"] },
-  14: { count: 3, tones: ["bg-indigo-500", "bg-violet-500", "bg-sky-500"] },
-  18: { count: 1, tones: ["bg-teal-500"] },
-  22: { count: 1, tones: ["bg-violet-500"] },
-  24: { count: 2, tones: ["bg-amber-500", "bg-indigo-500"] },
-  26: { count: 4, tones: ["bg-indigo-500", "bg-rose-500", "bg-teal-500", "bg-amber-500"] },
-  28: { count: 1, tones: ["bg-sky-500"] },
-  30: { count: 1, tones: ["bg-violet-500"] },
+  3: { count: 1, tones: ["bg-category-8"] },
+  7: { count: 2, tones: ["bg-category-3", "bg-category-4"] },
+  9: { count: 1, tones: ["bg-category-6"] },
+  12: { count: 1, tones: ["bg-category-4"] },
+  14: { count: 3, tones: ["bg-category-8", "bg-category-5", "bg-category-1"] },
+  18: { count: 1, tones: ["bg-category-6"] },
+  22: { count: 1, tones: ["bg-category-5"] },
+  24: { count: 2, tones: ["bg-category-3", "bg-category-8"] },
+  26: { count: 4, tones: ["bg-category-8", "bg-category-4", "bg-category-6", "bg-category-3"] },
+  28: { count: 1, tones: ["bg-category-1"] },
+  30: { count: 1, tones: ["bg-category-5"] },
 };
 
 export function CalendarsMini() {
@@ -57,9 +57,9 @@ export function CalendarsMini() {
             </div>
             <ul className="flex flex-col gap-1.5 text-sm">
               {[
-                { time: "09:30", tone: "bg-indigo-500", title: "Eng standup" },
-                { time: "13:00", tone: "bg-rose-500", title: "Design crit" },
-                { time: "16:00", tone: "bg-teal-500", title: "Audit log review" },
+                { time: "09:30", tone: "bg-category-8", title: "Eng standup" },
+                { time: "13:00", tone: "bg-category-4", title: "Design crit" },
+                { time: "16:00", tone: "bg-category-6", title: "Audit log review" },
               ].map((e) => (
                 <li key={e.time} className="flex items-center gap-3">
                   <span className={"size-1.5 rounded-full " + e.tone} />

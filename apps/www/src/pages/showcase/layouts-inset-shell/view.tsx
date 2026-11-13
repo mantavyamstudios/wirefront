@@ -169,7 +169,7 @@ function UserAvatar({ user, className }: { user: ShellUser; className?: string }
   return (
     <Avatar className={cn("size-7 shrink-0", className)}>
       {user.avatarUrl ? <AvatarImage alt="" src={user.avatarUrl} /> : null}
-      <AvatarFallback className="bg-teal-500/16 text-[11px] text-teal-800 dark:text-teal-400">{initials(user.name)}</AvatarFallback>
+      <AvatarFallback className="bg-category-6/16 text-[11px] text-category-6-foreground">{initials(user.name)}</AvatarFallback>
     </Avatar>
   );
 }

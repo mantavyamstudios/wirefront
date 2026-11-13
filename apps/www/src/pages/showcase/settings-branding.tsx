@@ -481,7 +481,7 @@ function BrandWordmark({ color }: { color: string }) {
 function DomainStatusPill({ status }: { status: DomainStatus }) {
   if (status === "verified") {
     return (
-      <span className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 font-mono text-[10px] text-emerald-700 uppercase tracking-[0.25em] dark:text-emerald-400">
+      <span className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-category-2/30 bg-category-2/10 px-3 font-mono text-[10px] text-category-2-foreground uppercase tracking-[0.25em]">
         <CheckCircle2Icon className="size-3.5" />
         Verified
       </span>
@@ -489,7 +489,7 @@ function DomainStatusPill({ status }: { status: DomainStatus }) {
   }
   if (status === "pending") {
     return (
-      <span className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 font-mono text-[10px] text-amber-800 uppercase tracking-[0.25em] dark:text-amber-400">
+      <span className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-category-3/30 bg-category-3/10 px-3 font-mono text-[10px] text-category-3-foreground uppercase tracking-[0.25em]">
         <CircleAlertIcon className="size-3.5" />
         Pending DNS
       </span>

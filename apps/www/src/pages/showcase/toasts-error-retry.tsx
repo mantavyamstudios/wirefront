@@ -88,7 +88,7 @@ function ErrorViewport() {
                     "flex size-7 shrink-0 items-center justify-center rounded-full " +
                     (failed
                       ? "bg-destructive/15 text-destructive-foreground"
-                      : "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400")
+                      : "bg-category-2/15 text-category-2-foreground")
                   }
                 >
                   {failed ? <AlertCircleIcon className="size-4" /> : <CheckIcon className="size-4" />}

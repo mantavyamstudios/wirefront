@@ -105,14 +105,14 @@ export interface TeamChatProps {
 }
 
 const avatarTone: Record<ChatTone, string> = {
-  blue: "bg-blue-500/14 text-blue-700 dark:text-blue-300",
-  orange: "bg-orange-500/14 text-orange-800 dark:text-orange-300",
-  teal: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
-  violet: "bg-violet-500/16 text-violet-800 dark:text-violet-300",
-  rose: "bg-rose-500/14 text-rose-700 dark:text-rose-300",
-  amber: "bg-amber-500/18 text-amber-800 dark:text-amber-300",
-  emerald: "bg-emerald-500/16 text-emerald-700 dark:text-emerald-300",
-  sky: "bg-sky-500/16 text-sky-700 dark:text-sky-300",
+  blue: "bg-category-1/14 text-category-1-foreground",
+  orange: "bg-category-7/14 text-category-7-foreground",
+  teal: "bg-category-6/16 text-category-6-foreground",
+  violet: "bg-category-5/16 text-category-5-foreground",
+  rose: "bg-category-4/14 text-category-4-foreground",
+  amber: "bg-category-3/18 text-category-3-foreground",
+  emerald: "bg-category-2/16 text-category-2-foreground",
+  sky: "bg-category-1/16 text-category-1-foreground",
 };
 
 const spring = { type: "spring", stiffness: 520, damping: 42 } as const;
@@ -501,7 +501,7 @@ function ChannelNav({
                       <span className={cn("relative min-w-0 flex-1 truncate", loud ? "font-semibold" : "font-medium")}>{c.name}</span>
                       {c.muted && <BellOffIcon aria-label="Muted" className="relative size-3 shrink-0" />}
                       {c.mentions ? (
-                        <span className="relative flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-red-600 px-1 font-semibold text-[11px] text-white tabular-nums">
+                        <span className="relative flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-category-4-strong px-1 font-semibold text-[11px] text-white tabular-nums">
                           {c.mentions}
                         </span>
                       ) : c.unread && kind === "dm" ? (
@@ -553,7 +553,7 @@ function ChannelNav({
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex items-center gap-2 px-3 pt-3 pb-2">
-        <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-teal-600 font-semibold text-[11px] text-white">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-category-6-strong font-semibold text-[11px] text-white">
           {initials(workspace)}
         </span>
         <div className="min-w-0 flex-1 leading-tight">
@@ -773,7 +773,7 @@ function MessageRow({
         </p>
         {full.file && (
           <div className="mt-2 flex w-full max-w-sm items-center gap-3 rounded-xl border bg-card p-2.5 shadow-xs/5">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-rose-500/12 text-rose-700 dark:text-rose-400">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-category-4/12 text-category-4-foreground">
               <FileTextIcon className="size-5" />
             </span>
             <span className="min-w-0 flex-1 leading-tight">

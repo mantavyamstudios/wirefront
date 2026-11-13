@@ -37,7 +37,7 @@ const EVENTS: Event[] = [
     location: "Main hall, 3F",
     attendees: ["LR", "MK", "PJ", "SC", "AB", "TG"],
     status: "upcoming",
-    tone: "from-violet-500/20 to-pink-500/10",
+    tone: "from-category-5/20 to-category-4/10",
   },
   {
     id: "weekly-sync",
@@ -52,7 +52,7 @@ const EVENTS: Event[] = [
     remote: true,
     attendees: ["LR", "MK", "PJ"],
     status: "live",
-    tone: "from-sky-500/20 to-emerald-500/10",
+    tone: "from-category-1/20 to-category-2/10",
   },
   {
     id: "design-crit",
@@ -66,7 +66,7 @@ const EVENTS: Event[] = [
     location: "Studio",
     attendees: ["PJ", "AB"],
     status: "upcoming",
-    tone: "from-amber-500/20 to-rose-500/10",
+    tone: "from-category-3/20 to-category-4/10",
   },
 ];
 
@@ -114,7 +114,7 @@ function EventCard({ event }: { event: Event }) {
               {event.title}
             </h3>
             {event.status === "live" ? (
-              <Badge className="gap-1 bg-red-700 font-mono text-[10px] text-white">
+              <Badge className="gap-1 bg-category-4-strong font-mono text-[10px] text-white">
                 <span className="size-1.5 animate-pulse rounded-full bg-white motion-reduce:animate-none" />
                 LIVE
               </Badge>

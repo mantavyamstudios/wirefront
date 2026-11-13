@@ -100,45 +100,45 @@ const icons: Record<HabitIcon, { icon: LucideIcon; label: string }> = {
 
 const tones: Record<HabitTone, { tile: string; fill: string; soft: string; on: string; label: string }> = {
   sky: {
-    tile: "bg-sky-500/12 text-sky-700 dark:bg-sky-400/14 dark:text-sky-300",
-    fill: "bg-sky-500 dark:bg-sky-400",
-    soft: "bg-sky-500/30 dark:bg-sky-400/40",
-    on: "text-white dark:text-sky-950",
+    tile: "bg-category-1/12 text-category-1-foreground",
+    fill: "bg-category-1",
+    soft: "bg-category-1/30",
+    on: "text-white",
     label: "Sky",
   },
   amber: {
-    tile: "bg-amber-500/14 text-amber-800 dark:bg-amber-400/14 dark:text-amber-300",
-    fill: "bg-amber-500 dark:bg-amber-400",
-    soft: "bg-amber-500/30 dark:bg-amber-400/40",
-    on: "text-white dark:text-amber-950",
+    tile: "bg-category-3/14 text-category-3-foreground",
+    fill: "bg-category-3",
+    soft: "bg-category-3/30",
+    on: "text-white",
     label: "Amber",
   },
   violet: {
-    tile: "bg-violet-500/12 text-violet-800 dark:bg-violet-400/14 dark:text-violet-300",
-    fill: "bg-violet-500 dark:bg-violet-400",
-    soft: "bg-violet-500/30 dark:bg-violet-400/40",
-    on: "text-white dark:text-violet-950",
+    tile: "bg-category-5/12 text-category-5-foreground",
+    fill: "bg-category-5",
+    soft: "bg-category-5/30",
+    on: "text-white",
     label: "Violet",
   },
   teal: {
-    tile: "bg-teal-500/12 text-teal-800 dark:bg-teal-400/14 dark:text-teal-300",
-    fill: "bg-teal-500 dark:bg-teal-400",
-    soft: "bg-teal-500/30 dark:bg-teal-400/40",
-    on: "text-white dark:text-teal-950",
+    tile: "bg-category-6/12 text-category-6-foreground",
+    fill: "bg-category-6",
+    soft: "bg-category-6/30",
+    on: "text-white",
     label: "Teal",
   },
   orange: {
-    tile: "bg-orange-500/12 text-orange-700 dark:bg-orange-400/14 dark:text-orange-300",
-    fill: "bg-orange-500 dark:bg-orange-400",
-    soft: "bg-orange-500/30 dark:bg-orange-400/40",
-    on: "text-white dark:text-orange-950",
+    tile: "bg-category-7/12 text-category-7-foreground",
+    fill: "bg-category-7",
+    soft: "bg-category-7/30",
+    on: "text-white",
     label: "Orange",
   },
   rose: {
-    tile: "bg-rose-500/12 text-rose-700 dark:bg-rose-400/14 dark:text-rose-300",
-    fill: "bg-rose-500 dark:bg-rose-400",
-    soft: "bg-rose-500/30 dark:bg-rose-400/40",
-    on: "text-white dark:text-rose-950",
+    tile: "bg-category-4/12 text-category-4-foreground",
+    fill: "bg-category-4",
+    soft: "bg-category-4/30",
+    on: "text-white",
     label: "Rose",
   },
 };
@@ -493,7 +493,7 @@ export function Habits({
                 value={
                   <span className="flex items-center gap-1">
                     <Tween value={best.s} />
-                    <FlameIcon aria-hidden className="size-3.5 text-orange-500 dark:text-orange-400" />
+                    <FlameIcon aria-hidden className="size-3.5 text-category-7-foreground" />
                   </span>
                 }
               />
@@ -744,7 +744,7 @@ function HabitRow({
           <span className="truncate tabular-nums">{sub}</span>
           {streak > 0 && (
             <span className="flex shrink-0 items-center gap-0.5 text-foreground">
-              <FlameIcon aria-hidden className="size-3 text-orange-500 dark:text-orange-400" />
+              <FlameIcon aria-hidden className="size-3 text-category-7-foreground" />
               <Tween value={streak} />
               <span className="sr-only"> day streak</span>
             </span>
@@ -895,12 +895,12 @@ function TickButton({
 }
 
 const waveFill: Record<HabitTone, string> = {
-  sky: "fill-sky-500/30 dark:fill-sky-400/40",
-  amber: "fill-amber-500/30 dark:fill-amber-400/40",
-  violet: "fill-violet-500/30 dark:fill-violet-400/40",
-  teal: "fill-teal-500/30 dark:fill-teal-400/40",
-  orange: "fill-orange-500/30 dark:fill-orange-400/40",
-  rose: "fill-rose-500/30 dark:fill-rose-400/40",
+  sky: "fill-category-1/30",
+  amber: "fill-category-3/30",
+  violet: "fill-category-5/30",
+  teal: "fill-category-6/30",
+  orange: "fill-category-7/30",
+  rose: "fill-category-4/30",
 };
 
 function AddHabitSheet({

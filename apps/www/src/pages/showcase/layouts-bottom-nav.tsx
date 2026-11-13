@@ -139,7 +139,7 @@ const FEED = [
     content: "Shipped a new onboarding flow today. Conversion up 14%.",
     likes: 128,
     comments: 12,
-    tone: "from-rose-300 to-amber-200",
+    tone: "from-category-4/35 to-category-3/20",
   },
   {
     name: "Theo Park",
@@ -147,7 +147,7 @@ const FEED = [
     content: "Trying out a new typography stack — feels much sharper.",
     likes: 64,
     comments: 8,
-    tone: "from-sky-300 to-indigo-300",
+    tone: "from-category-1/35 to-category-8/35",
   },
   {
     name: "Mira Solis",
@@ -155,7 +155,7 @@ const FEED = [
     content: "Weekend studio dump. Sketches becoming real components.",
     likes: 212,
     comments: 24,
-    tone: "from-emerald-300 to-teal-200",
+    tone: "from-category-2/35 to-category-6/20",
   },
   {
     name: "Jonas Reed",
@@ -163,7 +163,7 @@ const FEED = [
     content: "First draft of the bottom-nav pattern. Feedback welcome.",
     likes: 41,
     comments: 5,
-    tone: "from-violet-300 to-fuchsia-300",
+    tone: "from-category-5/35 to-category-5/35",
   },
   {
     name: "Lin Hayes",
@@ -171,7 +171,7 @@ const FEED = [
     content: "Pair-design session was unreasonably productive.",
     likes: 89,
     comments: 14,
-    tone: "from-orange-300 to-rose-300",
+    tone: "from-category-7/35 to-category-4/35",
   },
 ];
 
@@ -219,12 +219,12 @@ function HomeFeed() {
 }
 
 const DISCOVER = [
-  { title: "Type & motion", tone: "from-amber-300 to-rose-300" },
-  { title: "Editorial grids", tone: "from-sky-300 to-violet-300" },
-  { title: "Color systems", tone: "from-emerald-300 to-cyan-300" },
-  { title: "Iconography", tone: "from-fuchsia-300 to-orange-300" },
-  { title: "Mobile patterns", tone: "from-indigo-300 to-teal-300" },
-  { title: "Micro-interactions", tone: "from-rose-300 to-yellow-200" },
+  { title: "Type & motion", tone: "from-category-3/35 to-category-4/35" },
+  { title: "Editorial grids", tone: "from-category-1/35 to-category-5/35" },
+  { title: "Color systems", tone: "from-category-2/35 to-category-6/35" },
+  { title: "Iconography", tone: "from-category-5/35 to-category-7/35" },
+  { title: "Mobile patterns", tone: "from-category-8/35 to-category-6/35" },
+  { title: "Micro-interactions", tone: "from-category-4/35 to-category-3/20" },
 ];
 
 function DiscoverGrid() {

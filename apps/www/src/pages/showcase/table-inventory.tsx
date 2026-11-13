@@ -28,18 +28,18 @@ interface Product {
 }
 
 const PRODUCTS: Product[] = [
-  { sku: "FRJ-001", name: "Dune buggy mug", variant: "12oz · Sand", category: "Drinkware", price: 24, stock: 124, capacity: 200, thumb: "◐", bg: "from-amber-300/40 to-orange-500/30" },
-  { sku: "FRJ-014", name: "Field hoodie", variant: "Heavyweight · Moss", category: "Apparel", price: 92, stock: 38, capacity: 150, thumb: "▲", bg: "from-emerald-400/40 to-teal-600/30" },
-  { sku: "FRJ-022", name: "Pocket notebook", variant: "Hardcover · Bone", category: "Stationery", price: 18, stock: 6, capacity: 80, thumb: "▭", bg: "from-stone-300/50 to-stone-500/30" },
-  { sku: "FRJ-031", name: "Foldable lantern", variant: "USB-C · Night", category: "Hardware", price: 64, stock: 0, capacity: 50, thumb: "◇", bg: "from-indigo-400/40 to-violet-600/30" },
-  { sku: "FRJ-040", name: "Ceramic planter", variant: "Med · Dune", category: "Home", price: 38, stock: 72, capacity: 100, thumb: "◯", bg: "from-rose-300/40 to-rose-600/30" },
-  { sku: "FRJ-052", name: "Slate playing cards", variant: "Dual deck", category: "Games", price: 14, stock: 410, capacity: 500, thumb: "▷", bg: "from-zinc-400/40 to-zinc-700/30" },
+  { sku: "FRJ-001", name: "Dune buggy mug", variant: "12oz · Sand", category: "Drinkware", price: 24, stock: 124, capacity: 200, thumb: "◐", bg: "from-category-3/14 to-category-7/30" },
+  { sku: "FRJ-014", name: "Field hoodie", variant: "Heavyweight · Moss", category: "Apparel", price: 92, stock: 38, capacity: 150, thumb: "▲", bg: "from-category-2/24 to-category-6/30" },
+  { sku: "FRJ-022", name: "Pocket notebook", variant: "Hardcover · Bone", category: "Stationery", price: 18, stock: 6, capacity: 80, thumb: "▭", bg: "from-muted-foreground/50 to-muted-foreground/30" },
+  { sku: "FRJ-031", name: "Foldable lantern", variant: "USB-C · Night", category: "Hardware", price: 64, stock: 0, capacity: 50, thumb: "◇", bg: "from-category-8/24 to-category-5/30" },
+  { sku: "FRJ-040", name: "Ceramic planter", variant: "Med · Dune", category: "Home", price: 38, stock: 72, capacity: 100, thumb: "◯", bg: "from-category-4/14 to-category-4/30" },
+  { sku: "FRJ-052", name: "Slate playing cards", variant: "Dual deck", category: "Games", price: 14, stock: 410, capacity: 500, thumb: "▷", bg: "from-muted-foreground/40 to-muted-foreground/30" },
 ];
 
 function stockTone(p: Product): { label: string; cls: string; barCls: string } {
   if (p.stock === 0) return { label: "Out of stock", cls: "border-destructive/30 text-destructive-foreground", barCls: "bg-destructive" };
-  if (p.stock < 10) return { label: "Low stock", cls: "border-amber-500/30 text-amber-800 dark:text-amber-400", barCls: "bg-amber-500" };
-  return { label: "In stock", cls: "border-emerald-500/30 text-emerald-700 dark:text-emerald-400", barCls: "bg-emerald-500" };
+  if (p.stock < 10) return { label: "Low stock", cls: "border-category-3/30 text-category-3-foreground", barCls: "bg-category-3" };
+  return { label: "In stock", cls: "border-category-2/30 text-category-2-foreground", barCls: "bg-category-2" };
 }
 
 export function TableInventory() {

@@ -85,14 +85,14 @@ const press = "transition-[color,background-color,box-shadow,scale] duration-150
 const ring = "outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 const arts: Record<CoverArt, string> = {
-  sunset: "from-amber-300 via-orange-500 to-rose-700",
-  ocean: "from-sky-300 via-blue-600 to-indigo-950",
-  forest: "from-lime-300 via-emerald-600 to-teal-950",
-  dusk: "from-fuchsia-400 via-violet-700 to-indigo-950",
-  citrus: "from-yellow-200 via-lime-400 to-emerald-600",
-  rose: "from-pink-200 via-rose-400 to-red-700",
-  aurora: "from-teal-200 via-cyan-500 to-violet-800",
-  slate: "from-stone-200 via-stone-500 to-stone-900",
+  sunset: "from-category-3/35 via-category-7 to-category-4-strong",
+  ocean: "from-category-1/35 via-category-1 to-category-8-strong",
+  forest: "from-category-2/35 via-category-2 to-category-6-strong",
+  dusk: "from-category-5/60 via-category-5-strong to-category-8-strong",
+  citrus: "from-category-3/20 via-category-2/60 to-category-2",
+  rose: "from-category-4/20 via-category-4/60 to-category-4-strong",
+  aurora: "from-category-6/20 via-category-6 to-category-5-strong",
+  slate: "from-muted-foreground via-muted-foreground to-muted-foreground",
 };
 
 function Motif({ art }: { art: CoverArt }) {
@@ -101,15 +101,15 @@ function Motif({ art }: { art: CoverArt }) {
     case "sunset":
       return (
         <svg {...common}>
-          <circle className="fill-amber-100/90" cx="50" cy="62" r="22" />
-          <rect className="fill-rose-950/35" height="36" width="100" x="0" y="66" />
+          <circle className="fill-category-3/11" cx="50" cy="62" r="22" />
+          <rect className="fill-category-4-strong/35" height="36" width="100" x="0" y="66" />
           {[
             [72, 34],
             [78, 24],
             [84, 15],
             [90, 7],
           ].map(([y, w]) => (
-            <rect className="fill-amber-100/50" height="1.6" key={y} rx="0.8" width={w} x={50 - w / 2} y={y} />
+            <rect className="fill-category-3/6" height="1.6" key={y} rx="0.8" width={w} x={50 - w / 2} y={y} />
           ))}
         </svg>
       );
@@ -148,8 +148,8 @@ function Motif({ art }: { art: CoverArt }) {
           ].map(([x, y]) => (
             <circle className="fill-white/70" cx={x} cy={y} key={`${x}-${y}`} r="0.9" />
           ))}
-          <circle className="fill-amber-50/90" cx="58" cy="58" r="20" />
-          <circle className="fill-violet-700" cx="66" cy="52" r="17" />
+          <circle className="fill-category-3/7" cx="58" cy="58" r="20" />
+          <circle className="fill-category-5-strong" cx="66" cy="52" r="17" />
         </svg>
       );
     case "citrus":
@@ -158,7 +158,7 @@ function Motif({ art }: { art: CoverArt }) {
           {[34, 26, 18, 10].map((r) => (
             <circle className="fill-none stroke-white/45" cx="36" cy="64" key={r} r={r} strokeWidth="1.6" />
           ))}
-          <circle className="fill-yellow-100/80" cx="36" cy="64" r="5" />
+          <circle className="fill-category-3/10" cx="36" cy="64" r="5" />
         </svg>
       );
     case "rose":
@@ -172,7 +172,7 @@ function Motif({ art }: { art: CoverArt }) {
       return (
         <svg {...common}>
           <path className="fill-none stroke-white/35" d="M-5 40 C 25 20, 55 60, 105 30" strokeWidth="9" />
-          <path className="fill-none stroke-emerald-200/40" d="M-5 58 C 30 38, 60 76, 105 50" strokeWidth="6" />
+          <path className="fill-none stroke-category-2/8" d="M-5 58 C 30 38, 60 76, 105 50" strokeWidth="6" />
           <path className="fill-black/30" d="M0 100 L0 84 L18 76 L34 86 L52 72 L70 84 L86 74 L100 82 L100 100Z" />
         </svg>
       );
@@ -821,7 +821,7 @@ export function MusicPlayer({
           }}
           type="button"
         >
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-linear-to-br from-rose-400 to-fuchsia-600 text-white">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-linear-to-br from-category-4/60 to-category-5 text-white">
             <HeartIcon className="size-4 fill-current" />
           </span>
           <span className="flex min-w-0 flex-1 flex-col">
@@ -907,7 +907,7 @@ export function MusicPlayer({
             "flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full hover:bg-accent",
             ring,
             press,
-            isLiked ? "text-rose-500 dark:text-rose-400" : "text-muted-foreground hover:text-foreground",
+            isLiked ? "text-category-4-foreground" : "text-muted-foreground hover:text-foreground",
           )}
           onClick={toggleLike}
           type="button"

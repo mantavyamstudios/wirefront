@@ -51,9 +51,9 @@ type AppRow = {
 
 const WORKSPACES: Workspace[] = [
   { id: "acme", letter: "A", name: "Acme", color: "bg-gradient-to-br from-primary/70 to-primary/30" },
-  { id: "moss", letter: "M", name: "Moss", color: "bg-gradient-to-br from-emerald-500/70 to-emerald-500/30" },
-  { id: "north", letter: "N", name: "North", color: "bg-gradient-to-br from-amber-500/70 to-amber-500/30" },
-  { id: "violet", letter: "V", name: "Violet", color: "bg-gradient-to-br from-violet-500/70 to-violet-500/30" },
+  { id: "moss", letter: "M", name: "Moss", color: "bg-gradient-to-br from-category-2/70 to-category-2/30" },
+  { id: "north", letter: "N", name: "North", color: "bg-gradient-to-br from-category-3/70 to-category-3/30" },
+  { id: "violet", letter: "V", name: "Violet", color: "bg-gradient-to-br from-category-5/70 to-category-5/30" },
 ];
 
 const CHANNELS: Channel[] = [
@@ -73,8 +73,8 @@ const DMS: Dm[] = [
 
 const APPS: AppRow[] = [
   { slug: "github", name: "GitHub", color: "bg-foreground/80 text-background", letter: "G" },
-  { slug: "linear", name: "Linear", color: "bg-violet-500/80 text-white", letter: "L" },
-  { slug: "figma", name: "Figma", color: "bg-rose-500/80 text-white", letter: "F" },
+  { slug: "linear", name: "Linear", color: "bg-category-5/80 text-white", letter: "L" },
+  { slug: "figma", name: "Figma", color: "bg-category-4/80 text-white", letter: "F" },
 ];
 
 type Message = {
@@ -92,7 +92,7 @@ const MESSAGES_TOP: Message[] = [
     id: "m1",
     author: "Lina Park",
     initials: "LP",
-    color: "bg-gradient-to-br from-emerald-500/70 to-emerald-500/30",
+    color: "bg-gradient-to-br from-category-2/70 to-category-2/30",
     time: "9:14 AM",
     body: "Pushed the new spacing tokens to the design system branch. Let me know if anything looks off in the audit doc — I tried to keep the migration story tight.",
   },
@@ -100,7 +100,7 @@ const MESSAGES_TOP: Message[] = [
     id: "m2",
     author: "Marc Webber",
     initials: "MW",
-    color: "bg-gradient-to-br from-sky-500/70 to-sky-500/30",
+    color: "bg-gradient-to-br from-category-1/70 to-category-1/30",
     time: "9:21 AM",
     body: "Quick heads-up: the navigation prototype is on staging now. Could use some eyes on the mobile breakpoint before the review at 2.",
     followUp: "Filed two small follow-ups in the tracker.",
@@ -109,7 +109,7 @@ const MESSAGES_TOP: Message[] = [
     id: "m3",
     author: "Priya Shah",
     initials: "PS",
-    color: "bg-gradient-to-br from-amber-500/70 to-amber-500/30",
+    color: "bg-gradient-to-br from-category-3/70 to-category-3/30",
     time: "10:02 AM",
     body: "Loving the new icon set. The 16px variants finally feel balanced against our type ramp.",
   },
@@ -120,7 +120,7 @@ const MESSAGES_BOTTOM: Message[] = [
     id: "m4",
     author: "Ada Okafor",
     initials: "AO",
-    color: "bg-gradient-to-br from-violet-500/70 to-violet-500/30",
+    color: "bg-gradient-to-br from-category-5/70 to-category-5/30",
     time: "11:40 AM",
     body: "Posting the usability test recordings here once they're trimmed. Three of five participants stalled on the empty state — worth a session next week?",
   },
@@ -128,7 +128,7 @@ const MESSAGES_BOTTOM: Message[] = [
     id: "m5",
     author: "Lina Park",
     initials: "LP",
-    color: "bg-gradient-to-br from-emerald-500/70 to-emerald-500/30",
+    color: "bg-gradient-to-br from-category-2/70 to-category-2/30",
     time: "12:08 PM",
     body: "Yes please. I'll prep a couple of quick directions tomorrow morning so we have something to react to.",
     followUp: "Will share Figma links in the thread.",
@@ -137,7 +137,7 @@ const MESSAGES_BOTTOM: Message[] = [
     id: "m6",
     author: "Marc Webber",
     initials: "MW",
-    color: "bg-gradient-to-br from-sky-500/70 to-sky-500/30",
+    color: "bg-gradient-to-br from-category-1/70 to-category-1/30",
     time: "12:31 PM",
     body: "Heads up — pulling the staging deploy briefly to swap the analytics key. Back in five.",
   },
@@ -145,7 +145,7 @@ const MESSAGES_BOTTOM: Message[] = [
     id: "m7",
     author: "Priya Shah",
     initials: "PS",
-    color: "bg-gradient-to-br from-amber-500/70 to-amber-500/30",
+    color: "bg-gradient-to-br from-category-3/70 to-category-3/30",
     time: "12:47 PM",
     body: "Settings rework is ready for review. Tried the segmented header pattern we sketched — feels a lot calmer.",
   },
@@ -219,7 +219,7 @@ export function LayoutsThreePane() {
             <div className="flex size-8 items-center justify-center rounded-full bg-foreground font-medium text-[11px] text-background">
               S
             </div>
-            <span className="absolute end-0 bottom-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
+            <span className="absolute end-0 bottom-0 size-2.5 rounded-full bg-category-2 ring-2 ring-background" />
           </div>
         </div>
       </aside>
@@ -307,9 +307,9 @@ export function LayoutsThreePane() {
                       <span
                         className={`absolute -right-0.5 -bottom-0.5 size-1.5 rounded-full ring-2 ring-background ${
                           d.presence === "online"
-                            ? "bg-emerald-500"
+                            ? "bg-category-2"
                             : d.presence === "away"
-                              ? "bg-amber-500"
+                              ? "bg-category-3"
                               : "bg-muted-foreground/40"
                         }`}
                       />
@@ -410,9 +410,9 @@ export function LayoutsThreePane() {
                   className="flex flex-wrap items-center gap-x-2 gap-y-1 self-start rounded-md border border-border/60 bg-card/60 px-2.5 py-1.5 text-start sm:ms-12 pointer-coarse:min-h-11"
                 >
                   <span className="flex -space-x-1.5">
-                    <span className="size-5 rounded-full bg-gradient-to-br from-emerald-500/70 to-emerald-500/30 ring-2 ring-card" />
-                    <span className="size-5 rounded-full bg-gradient-to-br from-sky-500/70 to-sky-500/30 ring-2 ring-card" />
-                    <span className="size-5 rounded-full bg-gradient-to-br from-violet-500/70 to-violet-500/30 ring-2 ring-card" />
+                    <span className="size-5 rounded-full bg-gradient-to-br from-category-2/70 to-category-2/30 ring-2 ring-card" />
+                    <span className="size-5 rounded-full bg-gradient-to-br from-category-1/70 to-category-1/30 ring-2 ring-card" />
+                    <span className="size-5 rounded-full bg-gradient-to-br from-category-5/70 to-category-5/30 ring-2 ring-card" />
                   </span>
                   <span className="text-foreground text-xs">3 replies</span>
                   <span className="text-muted-foreground text-xs">·</span>

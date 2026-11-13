@@ -147,12 +147,12 @@ export interface MembersTableProps {
 const SKELETON_ROWS = ["s1", "s2", "s3", "s4", "s5"];
 const ASSIGNABLE: AssignableRole[] = ["admin", "member", "viewer"];
 const TONES = [
-  "bg-rose-500/15 text-rose-600 dark:text-rose-300",
-  "bg-amber-500/15 text-amber-600 dark:text-amber-300",
-  "bg-sky-500/15 text-sky-600 dark:text-sky-300",
-  "bg-emerald-500/15 text-emerald-600 dark:text-emerald-300",
-  "bg-violet-500/15 text-violet-600 dark:text-violet-300",
-  "bg-indigo-500/15 text-indigo-600 dark:text-indigo-300",
+  "bg-category-4/15 text-category-4-foreground",
+  "bg-category-3/15 text-category-3-foreground",
+  "bg-category-1/15 text-category-1-foreground",
+  "bg-category-2/15 text-category-2-foreground",
+  "bg-category-5/15 text-category-5-foreground",
+  "bg-category-8/15 text-category-8-foreground",
 ];
 
 /** A stable colour per member, from their id. */
@@ -463,7 +463,7 @@ function MemberRow({
   const owner = m.role === "owner";
   const editable = !owner && onRoleChange;
   const twoFactor = (
-    <span className={cn("size-1.5 rounded-full", m.twoFactor ? "bg-emerald-500" : "bg-muted-foreground/40")} />
+    <span className={cn("size-1.5 rounded-full", m.twoFactor ? "bg-category-2" : "bg-muted-foreground/40")} />
   );
   return (
     <TableRow aria-busy={pending || undefined} className={cn(pending && "opacity-60")}>

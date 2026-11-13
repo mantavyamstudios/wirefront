@@ -39,11 +39,11 @@ const TOMORROW: Slot[] = [
 ];
 
 const TONE_BG: Record<NonNullable<Slot["tone"]>, string> = {
-  indigo: "bg-indigo-500",
-  teal: "bg-teal-500",
-  amber: "bg-amber-500",
-  rose: "bg-rose-500",
-  violet: "bg-violet-500",
+  indigo: "bg-category-8",
+  teal: "bg-category-6",
+  amber: "bg-category-3",
+  rose: "bg-category-4",
+  violet: "bg-category-5",
 };
 
 export function CalendarsAgenda() {

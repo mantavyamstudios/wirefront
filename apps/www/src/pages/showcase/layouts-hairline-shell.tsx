@@ -88,11 +88,11 @@ export interface HairlineShellProps {
 }
 
 const swatch: Record<HairlineTone, string> = {
-  "orange": "bg-orange-500",
-  "teal": "bg-teal-500",
-  "cyan": "bg-cyan-500",
-  "violet": "bg-violet-500",
-  "rose": "bg-rose-500",
+  "orange": "bg-category-7",
+  "teal": "bg-category-6",
+  "cyan": "bg-category-6",
+  "violet": "bg-category-5",
+  "rose": "bg-category-4",
   info: "bg-info",
   success: "bg-success",
   warning: "bg-warning",
@@ -150,10 +150,10 @@ const defaultIssues: HairlineIssue[] = [
 ];
 
 const people: Record<string, string> = {
-  IM: "bg-teal-500/16 text-teal-800 dark:text-teal-400",
+  IM: "bg-category-6/16 text-category-6-foreground",
   KT: "bg-info/16 text-info-foreground",
-  RL: "bg-orange-500/16 text-orange-800 dark:text-orange-400",
-  TB: "bg-violet-500/20 text-violet-600 dark:text-violet-400",
+  RL: "bg-category-7/16 text-category-7-foreground",
+  TB: "bg-category-5/20 text-category-5-foreground",
 };
 
 const groups = [

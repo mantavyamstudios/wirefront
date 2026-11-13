@@ -222,7 +222,7 @@ function QuietTrack({ from, to }: { from: number; to: number }) {
       <div className="relative h-1.5 overflow-hidden rounded-full bg-muted">
         {segments.map(([a = 0, b = 0]) => (
           <span
-            className="absolute inset-y-0 rounded-full bg-indigo-500 transition-[left,width] duration-200 ease-out dark:bg-indigo-400"
+            className="absolute inset-y-0 rounded-full bg-category-8 transition-[left,width] duration-200 ease-out"
             key={`${a}-${b}`}
             style={{ left: `${(a / 24) * 100}%`, width: `${((b - a) / 24) * 100}%` }}
           />

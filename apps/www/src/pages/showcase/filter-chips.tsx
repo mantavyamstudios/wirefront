@@ -376,13 +376,13 @@ function ChipShell({
 }) {
   const toneClass =
     tone === "include"
-      ? "border-emerald-500/30 bg-emerald-500/5 text-foreground"
+      ? "border-category-2/30 bg-category-2/5 text-foreground"
       : tone === "exclude"
         ? "border-destructive/30 bg-destructive/5 text-foreground"
         : "border-border bg-background text-foreground";
   const opTone =
     tone === "include"
-      ? "text-emerald-700 dark:text-emerald-400"
+      ? "text-category-2-foreground"
       : tone === "exclude"
         ? "text-destructive-foreground"
         : "text-muted-foreground";
@@ -650,11 +650,11 @@ function CustomerList({ customers }: { customers: Customer[] }) {
             className={
               "size-1.5 shrink-0 rounded-full " +
               (c.status === "active"
-                ? "bg-emerald-500"
+                ? "bg-category-2"
                 : c.status === "trial"
-                  ? "bg-sky-500"
+                  ? "bg-category-1"
                   : c.status === "paused"
-                    ? "bg-amber-500"
+                    ? "bg-category-3"
                     : "bg-muted-foreground/40")
             }
           />

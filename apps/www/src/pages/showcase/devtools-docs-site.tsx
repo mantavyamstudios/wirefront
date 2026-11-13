@@ -412,12 +412,12 @@ function highlight(code: string): ReactNode[] {
     const tok = m[0];
     if (m[1] && (m[1].startsWith("//") || /(^|\s)#/.test(code.slice(Math.max(0, m.index - 1), m.index + 1))))
       out.push(<span className="text-muted-foreground italic" key={k++}>{tok}</span>);
-    else if (m[2]) out.push(<span className="text-emerald-700 dark:text-emerald-300" key={k++}>{tok}</span>);
-    else if (m[3]) out.push(<span className="text-sky-700 dark:text-sky-300" key={k++}>{tok}</span>);
-    else if (m[4]) out.push(<span className="text-amber-800 dark:text-amber-300" key={k++}>{tok}</span>);
-    else if (m[5] && KEYWORDS.test(tok)) out.push(<span className="text-violet-800 dark:text-violet-300" key={k++}>{tok}</span>);
-    else if (m[5] && /^[A-Z]/.test(tok)) out.push(<span className="text-sky-700 dark:text-sky-300" key={k++}>{tok}</span>);
-    else if (m[5] && code[re.lastIndex] === "(") out.push(<span className="text-blue-700 dark:text-blue-300" key={k++}>{tok}</span>);
+    else if (m[2]) out.push(<span className="text-category-2-foreground" key={k++}>{tok}</span>);
+    else if (m[3]) out.push(<span className="text-category-1-foreground" key={k++}>{tok}</span>);
+    else if (m[4]) out.push(<span className="text-category-3-foreground" key={k++}>{tok}</span>);
+    else if (m[5] && KEYWORDS.test(tok)) out.push(<span className="text-category-5-foreground" key={k++}>{tok}</span>);
+    else if (m[5] && /^[A-Z]/.test(tok)) out.push(<span className="text-category-1-foreground" key={k++}>{tok}</span>);
+    else if (m[5] && code[re.lastIndex] === "(") out.push(<span className="text-category-1-foreground" key={k++}>{tok}</span>);
     else out.push(tok);
     last = re.lastIndex;
   }

@@ -200,7 +200,7 @@ function StageLabel({ stage }: { stage: Stage }) {
   return (
     <Badge
       variant="outline"
-      className={done ? "border-emerald-500/30 text-emerald-700 dark:text-emerald-400" : ""}
+      className={done ? "border-success/30 text-success-foreground" : ""}
     >
       {stageLabel(stage)}
     </Badge>
@@ -223,7 +223,7 @@ function StageTrack({ stage }: { stage: Stage }) {
                 (current
                   ? "border-primary bg-primary text-primary-foreground"
                   : reached
-                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                    ? "border-category-2/30 bg-category-2/10 text-category-2-foreground"
                     : "border-border bg-muted text-muted-foreground")
               }
               title={s.label}
@@ -233,7 +233,7 @@ function StageTrack({ stage }: { stage: Stage }) {
             {i < STAGES.length - 1 ? (
               <div
                 className={
-                  "h-px w-3 " + (i < idx ? "bg-emerald-500/40" : "bg-border")
+                  "h-px w-3 " + (i < idx ? "bg-category-2/40" : "bg-border")
                 }
               />
             ) : null}

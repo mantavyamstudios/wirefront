@@ -42,8 +42,8 @@ describe("UsageDashboard", () => {
       </WirefrontProvider>,
     );
     expect(screen.getByRole("progressbar", { name: "Billing cycle elapsed" }).getAttribute("aria-valuenow")).toBe("12");
-    expect(screen.getByText("94% used").className).toContain("amber");
-    expect(screen.getByText("61% used").className).not.toContain("amber");
+    expect(screen.getByText("94% used").className).toContain("warning");
+    expect(screen.getByText("61% used").className).not.toContain("warning");
     expect(screen.getByText("612K")).toBeTruthy();
     expect(screen.queryByText("View invoice")).toBeNull();
   });

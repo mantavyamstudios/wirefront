@@ -52,7 +52,7 @@ export function ChartsRevenueArea() {
               <div className="font-heading text-3xl tracking-tight">
                 ${total}.4k
               </div>
-              <div className="mt-1 inline-flex items-center gap-1 rounded bg-emerald-500/12 px-1.5 py-0.5 font-mono text-[10px] text-emerald-700 dark:text-emerald-400">
+              <div className="mt-1 inline-flex items-center gap-1 rounded bg-category-2/12 px-1.5 py-0.5 font-mono text-[10px] text-category-2-foreground">
                 <TrendingUpIcon className="size-3" />
                 +18.4% vs prev. 12mo
               </div>

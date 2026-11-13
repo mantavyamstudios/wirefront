@@ -89,25 +89,25 @@ export interface MailProps {
 }
 
 const avatarTone: Record<MailTone, string> = {
-  blue: "bg-blue-500/14 text-blue-700 dark:text-blue-300",
-  orange: "bg-orange-500/14 text-orange-800 dark:text-orange-300",
-  teal: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
-  violet: "bg-violet-500/16 text-violet-800 dark:text-violet-300",
-  rose: "bg-rose-500/14 text-rose-700 dark:text-rose-300",
-  amber: "bg-amber-500/18 text-amber-800 dark:text-amber-300",
-  emerald: "bg-emerald-500/16 text-emerald-700 dark:text-emerald-300",
-  sky: "bg-sky-500/16 text-sky-700 dark:text-sky-300",
+  blue: "bg-category-1/14 text-category-1-foreground",
+  orange: "bg-category-7/14 text-category-7-foreground",
+  teal: "bg-category-6/16 text-category-6-foreground",
+  violet: "bg-category-5/16 text-category-5-foreground",
+  rose: "bg-category-4/14 text-category-4-foreground",
+  amber: "bg-category-3/18 text-category-3-foreground",
+  emerald: "bg-category-2/16 text-category-2-foreground",
+  sky: "bg-category-1/16 text-category-1-foreground",
 };
 
 const dotTone: Record<MailTone, string> = {
-  blue: "bg-blue-500",
-  orange: "bg-orange-500",
-  teal: "bg-teal-500",
-  violet: "bg-violet-500",
-  rose: "bg-rose-500",
-  amber: "bg-amber-500",
-  emerald: "bg-emerald-500",
-  sky: "bg-sky-500",
+  blue: "bg-category-1",
+  orange: "bg-category-7",
+  teal: "bg-category-6",
+  violet: "bg-category-5",
+  rose: "bg-category-4",
+  amber: "bg-category-3",
+  emerald: "bg-category-2",
+  sky: "bg-category-1",
 };
 
 const spring = { type: "spring", stiffness: 520, damping: 42 } as const;
@@ -697,7 +697,7 @@ function ThreadRow({
         aria-pressed={!!thread.starred}
         className={cn(
           "absolute top-1.5 end-1.5 flex size-8 cursor-pointer items-center justify-center rounded-md outline-none transition-[opacity,color,scale] duration-150 ease-out hover:bg-background/80 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
-          thread.starred ? "text-amber-800 dark:text-amber-400" : "text-muted-foreground opacity-0 group-hover/thread:opacity-100",
+          thread.starred ? "text-category-3-foreground" : "text-muted-foreground opacity-0 group-hover/thread:opacity-100",
         )}
         onClick={onStar}
         type="button"
@@ -1371,7 +1371,7 @@ export function Mail({ account = me, threads: initialThreads = defaultThreads, l
                         size="icon-sm"
                         variant="ghost"
                       >
-                        <StarIcon className={cn(selected.starred && "fill-amber-500 text-amber-800 opacity-100 dark:text-amber-400")} />
+                        <StarIcon className={cn(selected.starred && "fill-category-3 text-category-3-foreground opacity-100")} />
                       </Button>
                     </Tip>
                     <span className="ms-auto me-1 text-muted-foreground text-xs tabular-nums">

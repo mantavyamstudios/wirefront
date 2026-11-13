@@ -77,16 +77,16 @@ const INCIDENTS: Incident[] = [
 ];
 
 const SEV_TONE: Record<"minor" | "major" | "critical", string> = {
-  minor: "bg-amber-500/15 text-amber-800 dark:text-amber-400 ring-amber-500/20",
-  major: "bg-rose-500/15 text-rose-700 dark:text-rose-400 ring-rose-500/20",
-  critical: "bg-rose-500/15 text-rose-700 dark:text-rose-400 ring-rose-500/20",
+  minor: "bg-category-3/15 text-category-3-foreground ring-category-3/20",
+  major: "bg-category-4/15 text-category-4-foreground ring-category-4/20",
+  critical: "bg-destructive/15 text-destructive-foreground ring-destructive/20",
 };
 
 const STATE_DOT: Record<Severity, string> = {
-  investigating: "bg-rose-500",
-  identified: "bg-amber-500",
-  monitoring: "bg-sky-500",
-  resolved: "bg-emerald-500",
+  investigating: "bg-category-4",
+  identified: "bg-category-3",
+  monitoring: "bg-category-1",
+  resolved: "bg-success",
 };
 
 export function TimelinesStatusPage() {
@@ -97,8 +97,8 @@ export function TimelinesStatusPage() {
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
             Acme Status · status.acme.dev
           </div>
-          <div className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-amber-500/15 px-4 py-1.5 text-start font-mono text-[12px] text-amber-800 dark:text-amber-400">
-            <span className="size-2 shrink-0 rounded-full bg-amber-500 motion-safe:animate-pulse" />
+          <div className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-category-3/15 px-4 py-1.5 text-start font-mono text-[12px] text-category-3-foreground">
+            <span className="size-2 shrink-0 rounded-full bg-category-3 motion-safe:animate-pulse" />
             One service is experiencing degraded performance
           </div>
           <h1 className="mt-4 font-heading text-3xl tracking-tight">
@@ -119,7 +119,7 @@ export function TimelinesStatusPage() {
                   aria-hidden
                   className={
                     "size-2 shrink-0 rounded-full " +
-                    (c.status === "operational" ? "bg-emerald-500" : "bg-amber-500")
+                    (c.status === "operational" ? "bg-success" : "bg-category-3")
                   }
                 />
                 <div className="min-w-0 flex-1">
@@ -165,7 +165,7 @@ export function TimelinesStatusPage() {
                   </div>
                 </div>
                 {inc.state === "resolved" ? (
-                  <CheckCircle2Icon className="size-5 text-emerald-500" />
+                  <CheckCircle2Icon className="size-5 text-category-2-foreground" />
                 ) : null}
               </div>
 
@@ -220,7 +220,7 @@ function UptimeBars({ degraded }: { degraded: boolean }) {
               // Phones show the most recent 30 days as flexible bars.
               "h-6 min-w-0 flex-1 rounded-sm sm:h-7 sm:w-[3px] sm:flex-none " +
               (i < 30 ? "max-sm:hidden " : "") +
-              (bad ? "bg-amber-500" : "bg-emerald-500/80")
+              (bad ? "bg-category-3" : "bg-category-2/80")
             }
           />
         );

@@ -123,9 +123,9 @@ export function ModalsUploadFiles() {
                           className={
                             "h-full " +
                             (f.state === "done"
-                              ? "bg-emerald-500"
+                              ? "bg-category-2"
                               : f.state === "paused"
-                                ? "bg-amber-500"
+                                ? "bg-category-3"
                                 : "bg-foreground")
                           }
                           style={{ width: `${f.progress}%` }}
@@ -144,7 +144,7 @@ export function ModalsUploadFiles() {
                       className="grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
                     >
                       {f.state === "done" ? (
-                        <CheckIcon className="size-3.5 text-emerald-700 dark:text-emerald-400" />
+                        <CheckIcon className="size-3.5 text-category-2-foreground" />
                       ) : f.state === "paused" ? (
                         <PauseIcon className="size-3.5" />
                       ) : (

@@ -113,9 +113,9 @@ export function ProfileTeamGrid() {
                         className={
                           "absolute end-0 bottom-0 size-3 rounded-full border-2 border-background " +
                           (m.status === "online"
-                            ? "bg-emerald-500"
+                            ? "bg-category-2"
                             : m.status === "away"
-                              ? "bg-amber-500"
+                              ? "bg-category-3"
                               : "bg-muted-foreground")
                         }
                       />

@@ -59,7 +59,7 @@ export function ToastsProgress() {
           <div className="flex items-center justify-between gap-2 border-border/60 border-b py-1.5 pe-1.5 ps-3.5">
             <div className="flex min-w-0 items-center gap-2">
               {finished ? (
-                <CheckIcon aria-hidden className="size-4 text-emerald-700 dark:text-emerald-400" />
+                <CheckIcon aria-hidden className="size-4 text-category-2-foreground" />
               ) : (
                 <span aria-hidden className="size-2 rounded-full bg-primary motion-safe:animate-pulse" />
               )}

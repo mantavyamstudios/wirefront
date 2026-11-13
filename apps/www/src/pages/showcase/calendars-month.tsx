@@ -31,21 +31,21 @@ const EVENTS: Event[] = [
 ];
 
 const TONE: Record<Event["tone"], string> = {
-  indigo: "bg-indigo-500/15 text-indigo-800 dark:text-indigo-300 border-indigo-500/30",
-  teal: "bg-teal-500/15 text-teal-800 dark:text-teal-300 border-teal-500/30",
-  amber: "bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/30",
-  rose: "bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30",
-  violet: "bg-violet-500/15 text-violet-800 dark:text-violet-300 border-violet-500/30",
-  sky: "bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30",
+  indigo: "bg-category-8/15 text-category-8-foreground border-category-8/30",
+  teal: "bg-category-6/15 text-category-6-foreground border-category-6/30",
+  amber: "bg-category-3/15 text-category-3-foreground border-category-3/30",
+  rose: "bg-category-4/15 text-category-4-foreground border-category-4/30",
+  violet: "bg-category-5/15 text-category-5-foreground border-category-5/30",
+  sky: "bg-category-1/15 text-category-1-foreground border-category-1/30",
 };
 
 const DOT: Record<Event["tone"], string> = {
-  indigo: "bg-indigo-500",
-  teal: "bg-teal-500",
-  amber: "bg-amber-500",
-  rose: "bg-rose-500",
-  violet: "bg-violet-500",
-  sky: "bg-sky-500",
+  indigo: "bg-category-8",
+  teal: "bg-category-6",
+  amber: "bg-category-3",
+  rose: "bg-category-4",
+  violet: "bg-category-5",
+  sky: "bg-category-1",
 };
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];

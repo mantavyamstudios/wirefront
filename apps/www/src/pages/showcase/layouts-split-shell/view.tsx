@@ -111,7 +111,7 @@ function Sidebar({
     <>
       <Avatar className="size-7">
         {user.avatarUrl ? <AvatarImage alt="" src={user.avatarUrl} /> : null}
-        <AvatarFallback className="bg-orange-500/16 text-[11px] text-orange-800 dark:text-orange-400">{initials(user.name)}</AvatarFallback>
+        <AvatarFallback className="bg-category-7/16 text-[11px] text-category-7-foreground">{initials(user.name)}</AvatarFallback>
       </Avatar>
       <div className="min-w-0 flex-1 leading-tight">
         <div className="truncate font-medium">{user.name}</div>

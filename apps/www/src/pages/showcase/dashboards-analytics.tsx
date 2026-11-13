@@ -64,7 +64,7 @@ export function DashboardsAnalytics() {
               </div>
               <div className="mt-1 flex items-baseline gap-2">
                 <span className="font-heading text-3xl">128,430</span>
-                <span className="inline-flex items-center gap-0.5 rounded bg-emerald-500/12 px-1.5 py-0.5 font-mono text-[10px] text-emerald-700 dark:text-emerald-400">
+                <span className="inline-flex items-center gap-0.5 rounded bg-category-2/12 px-1.5 py-0.5 font-mono text-[10px] text-category-2-foreground">
                   <ArrowUpRightIcon className="size-3" />
                   +18%
                 </span>
@@ -151,8 +151,8 @@ export function DashboardsAnalytics() {
                       <span
                         className={`w-12 text-right font-mono text-[10px] ${
                           positive
-                            ? "text-emerald-700 dark:text-emerald-400"
-                            : "text-rose-700 dark:text-rose-400"
+                            ? "text-category-2-foreground"
+                            : "text-category-4-foreground"
                         }`}
                       >
                         {p.change}

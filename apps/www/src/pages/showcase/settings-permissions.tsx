@@ -32,28 +32,28 @@ const ROLES: RoleDef[] = [
     name: "Owner",
     members: 2,
     description: "Full control, including billing and deletion.",
-    tone: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
+    tone: "bg-category-4/15 text-category-4-foreground",
   },
   {
     id: "admin",
     name: "Admin",
     members: 6,
     description: "Manage members, settings, and integrations.",
-    tone: "bg-amber-500/15 text-amber-800 dark:text-amber-300",
+    tone: "bg-category-3/15 text-category-3-foreground",
   },
   {
     id: "editor",
     name: "Editor",
     members: 24,
     description: "Create and edit content. No member or billing access.",
-    tone: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+    tone: "bg-category-2/15 text-category-2-foreground",
   },
   {
     id: "viewer",
     name: "Viewer",
     members: 41,
     description: "Read-only access to documents and dashboards.",
-    tone: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
+    tone: "bg-category-1/15 text-category-1-foreground",
   },
   {
     id: "guest",
@@ -454,7 +454,7 @@ function PermCell({ state }: { state: CellState }) {
   if (state === "yes") {
     return (
       <span
-        className="inline-flex size-5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+        className="inline-flex size-5 items-center justify-center rounded-full bg-category-2/15 text-category-2-foreground"
         aria-label="Allowed"
         role="img"
       >

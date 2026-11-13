@@ -164,7 +164,7 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
               <Badge
                 className={cn(
                   "h-4.5 shrink-0 rounded-sm px-1 font-mono text-[10px] uppercase",
-                  k.env === "live" ? "border-emerald-500/30 text-emerald-700 dark:text-emerald-400" : "border-violet-500/30 text-violet-700 dark:text-violet-400",
+                  k.env === "live" ? "border-category-2/30 text-category-2-foreground" : "border-category-5/30 text-category-5-foreground",
                 )}
                 variant="outline"
               >
@@ -172,7 +172,7 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
               </Badge>
             </div>
             <div className="mt-0.5 truncate font-mono text-muted-foreground text-xs sm:hidden">{masked(k)}</div>
-            {k.expiresAt ? <div className="text-amber-700 text-xs dark:text-amber-400">{interpolate(t.expires, { date: day(k.expiresAt) })}</div> : null}
+            {k.expiresAt ? <div className="text-category-3-foreground text-xs">{interpolate(t.expires, { date: day(k.expiresAt) })}</div> : null}
             <div className="mt-1 text-muted-foreground text-xs max-sm:hidden md:hidden">{interpolate(t.lastUsed, { when: lastUsed })}</div>
           </TableCell>
           <TableCell className="max-sm:hidden">
@@ -237,7 +237,7 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
           ) : null}
         </header>
 
-        <p className="mb-6 max-w-prose rounded-md border border-amber-500/20 bg-amber-500/5 p-3 text-amber-800 text-xs dark:text-amber-300">{t.warning}</p>
+        <p className="mb-6 max-w-prose rounded-md border border-warning/20 bg-warning/5 p-3 text-warning-foreground text-xs">{t.warning}</p>
 
         {actionError ? (
           <p className="mb-3 text-destructive-foreground text-sm" role="alert">

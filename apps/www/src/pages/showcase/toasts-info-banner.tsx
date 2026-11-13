@@ -18,17 +18,17 @@ export function ToastsInfoBanner() {
         <div
           role="region"
           aria-label="System announcement"
-          className="sticky top-0 z-50 border-amber-500/40 border-b bg-amber-500/10 pt-[env(safe-area-inset-top)] backdrop-blur dark:bg-amber-500/[0.08]"
+          className="sticky top-0 z-50 border-category-3/40 border-b bg-category-3/10 pt-[env(safe-area-inset-top)] backdrop-blur"
         >
           <div className="mx-auto flex max-w-6xl items-start gap-3 py-2 pe-2 ps-4 sm:items-center sm:pe-4 sm:ps-6">
             <InfoIcon
               aria-hidden
-              className="mt-0.5 size-4 shrink-0 text-amber-800 sm:mt-0 dark:text-amber-400"
+              className="mt-0.5 size-4 shrink-0 text-category-3-foreground sm:mt-0"
             />
             <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
-              <p className="min-w-0 flex-1 text-amber-900 text-sm dark:text-amber-100">
+              <p className="min-w-0 flex-1 text-category-3-foreground text-sm">
                 <span className="font-medium">Scheduled maintenance</span>{" "}
-                <span className="text-amber-800 dark:text-amber-200/80">
+                <span className="text-category-3-foreground">
                   · Tue Apr 29 from 2:00–2:30 UTC. Brief downtime expected.
                 </span>
               </p>
@@ -36,7 +36,7 @@ export function ToastsInfoBanner() {
                 size="sm"
                 variant="ghost"
                 type="button"
-                className="-ms-2.5 self-start text-amber-900 hover:bg-amber-500/15 sm:ms-0 sm:self-auto dark:text-amber-100"
+                className="-ms-2.5 self-start text-category-3-foreground hover:bg-category-3/15 sm:ms-0 sm:self-auto"
               >
                 Learn more
               </Button>
@@ -45,7 +45,7 @@ export function ToastsInfoBanner() {
               type="button"
               aria-label="Dismiss announcement"
               onClick={() => setVisible(false)}
-              className="grid size-8 shrink-0 place-items-center rounded-md text-amber-900/70 transition-colors hover:bg-amber-500/10 hover:text-amber-900 pointer-coarse:size-10 dark:text-amber-100/70 dark:hover:text-amber-100"
+              className="grid size-8 shrink-0 place-items-center rounded-md text-category-3-foreground/70 transition-colors hover:bg-category-3/10 hover:text-category-3-foreground pointer-coarse:size-10"
             >
               <XIcon className="size-4" />
             </button>

@@ -38,12 +38,12 @@ interface Holiday {
 }
 
 const TONE: Record<BlockType | "holiday", string> = {
-  vacation: "bg-teal-500/35 border-teal-500/55 text-teal-800 dark:text-teal-300",
-  sick: "bg-rose-500/30 border-rose-500/55 text-rose-700 dark:text-rose-300",
+  vacation: "bg-category-6/35 border-category-6/55 text-category-6-foreground",
+  sick: "bg-category-4/30 border-category-4/55 text-category-4-foreground",
   remote:
-    "bg-indigo-500/25 border-indigo-500/45 text-indigo-800 dark:text-indigo-300",
+    "bg-category-8/25 border-category-8/45 text-category-8-foreground",
   holiday:
-    "bg-amber-500/22 border-amber-500/45 text-amber-800 dark:text-amber-300",
+    "bg-category-3/22 border-category-3/45 text-category-3-foreground",
 };
 
 const BLOCK_TYPES: { id: BlockType; label: string }[] = [
@@ -53,14 +53,14 @@ const BLOCK_TYPES: { id: BlockType; label: string }[] = [
 ];
 
 const TONES = [
-  "bg-emerald-700 text-white",
-  "bg-amber-700 text-white",
-  "bg-violet-700 text-white",
-  "bg-sky-700 text-white",
-  "bg-rose-700 text-white",
-  "bg-orange-700 text-white",
-  "bg-cyan-700 text-white",
-  "bg-pink-700 text-white",
+  "bg-category-2-strong text-white",
+  "bg-category-3-strong text-white",
+  "bg-category-5-strong text-white",
+  "bg-category-1-strong text-white",
+  "bg-category-4-strong text-white",
+  "bg-category-7-strong text-white",
+  "bg-category-6-strong text-white",
+  "bg-category-4-strong text-white",
 ];
 
 function initialsOf(name: string) {
@@ -332,9 +332,9 @@ export function CalendarsHolidays() {
                       className={
                         "flex flex-col items-center border-border/40 border-e py-2 font-mono text-[10px] transition-colors " +
                         (inBest
-                          ? "bg-emerald-500/[0.18] text-emerald-700 dark:text-emerald-300"
+                          ? "bg-category-2/[0.18] text-category-2-foreground"
                           : overlap
-                            ? "bg-rose-500/[0.08] text-rose-700 dark:text-rose-400"
+                            ? "bg-category-4/[0.08] text-category-4-foreground"
                             : isWeekend
                               ? "bg-foreground/[0.02] text-muted-foreground"
                               : "text-foreground/85")
@@ -351,8 +351,8 @@ export function CalendarsHolidays() {
           </div>
 
           {/* Holiday strip */}
-          <div className="grid grid-cols-[148px_auto] border-border/40 border-b bg-amber-500/[0.04] sm:grid-cols-[220px_auto]">
-            <div className="sticky start-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-3 py-2 font-mono text-[10px] text-amber-800 uppercase tracking-[0.2em] sm:px-4 sm:tracking-[0.25em] dark:text-amber-400">
+          <div className="grid grid-cols-[148px_auto] border-border/40 border-b bg-category-3/[0.04] sm:grid-cols-[220px_auto]">
+            <div className="sticky start-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-3 py-2 font-mono text-[10px] text-category-3-foreground uppercase tracking-[0.2em] sm:px-4 sm:tracking-[0.25em]">
               Holidays
             </div>
             <div className="relative h-9">
@@ -369,8 +369,8 @@ export function CalendarsHolidays() {
                       className={
                         "border-border/40 border-e transition-colors " +
                         (isHoliday
-                          ? "bg-amber-500/30 hover:bg-amber-500/40"
-                          : "hover:bg-amber-500/10")
+                          ? "bg-category-3/30 hover:bg-category-3/40"
+                          : "hover:bg-category-3/10")
                       }
                       style={{ width: dw(1) }}
                     />

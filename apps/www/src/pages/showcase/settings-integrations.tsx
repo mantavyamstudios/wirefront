@@ -34,7 +34,7 @@ const ALL: Integration[] = [
     description: "Two-way sync issues and projects.",
     connected: true,
     glyph: "LN",
-    glyphTone: "bg-violet-700 text-white",
+    glyphTone: "bg-category-5-strong text-white",
   },
   {
     id: "slack",
@@ -43,7 +43,7 @@ const ALL: Integration[] = [
     description: "Pipe activity and alerts into channels.",
     connected: true,
     glyph: "SL",
-    glyphTone: "bg-pink-700 text-white",
+    glyphTone: "bg-category-4-strong text-white",
   },
   {
     id: "stripe",
@@ -51,7 +51,7 @@ const ALL: Integration[] = [
     category: "Billing",
     description: "Customer + subscription state in real time.",
     glyph: "ST",
-    glyphTone: "bg-indigo-700 text-white",
+    glyphTone: "bg-category-8-strong text-white",
     badge: "New",
   },
   {
@@ -68,7 +68,7 @@ const ALL: Integration[] = [
     category: "Observability",
     description: "Send domain events as DD metrics.",
     glyph: "DD",
-    glyphTone: "bg-purple-600 text-white",
+    glyphTone: "bg-category-5-strong text-white",
   },
   {
     id: "sentry",
@@ -76,7 +76,7 @@ const ALL: Integration[] = [
     category: "Observability",
     description: "Attach traces to user activity.",
     glyph: "SY",
-    glyphTone: "bg-amber-700 text-white",
+    glyphTone: "bg-category-3-strong text-white",
   },
   {
     id: "notion",
@@ -92,7 +92,7 @@ const ALL: Integration[] = [
     category: "Design",
     description: "Embed frames and watch components.",
     glyph: "FG",
-    glyphTone: "bg-rose-700 text-white",
+    glyphTone: "bg-category-4-strong text-white",
     badge: "Beta",
   },
 ];
@@ -191,7 +191,7 @@ function IntegrationCard({ integration }: { integration: Integration }) {
         <div className="flex items-center gap-2">
           <span className="font-medium">{integration.name}</span>
           {integration.connected ? (
-            <span className="inline-flex items-center gap-1 rounded bg-emerald-500/10 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
+            <span className="inline-flex items-center gap-1 rounded bg-category-2/10 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-category-2-foreground">
               <CheckIcon className="size-2.5" />
               On
             </span>

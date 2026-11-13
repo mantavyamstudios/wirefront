@@ -124,8 +124,8 @@ function FeaturedPane() {
             <span
               className={`inline-flex items-baseline gap-0.5 font-mono tabular-nums ${
                 positive
-                  ? "text-emerald-700 dark:text-emerald-400"
-                  : "text-rose-700 dark:text-rose-400"
+                  ? "text-category-2-foreground"
+                  : "text-category-4-foreground"
               }`}
             >
               {positive ? (
@@ -178,7 +178,7 @@ function PortfolioPane() {
           ${total.toLocaleString()}
         </span>
       </div>
-      <div className="mt-1 inline-flex items-baseline gap-1 font-mono text-emerald-700 text-sm tabular-nums dark:text-emerald-400">
+      <div className="mt-1 inline-flex items-baseline gap-1 font-mono text-category-2-foreground text-sm tabular-nums">
         <ArrowUpRightIcon className="size-3.5" />+${change.toLocaleString()} ·{" "}
         {changePct.toFixed(2)}%
       </div>
@@ -261,8 +261,8 @@ function WatchlistTable() {
                   <span
                     className={
                       positive
-                        ? "text-emerald-700 dark:text-emerald-400"
-                        : "text-rose-700 dark:text-rose-400"
+                        ? "text-category-2-foreground"
+                        : "text-category-4-foreground"
                     }
                   >
                     {positive ? "+" : ""}

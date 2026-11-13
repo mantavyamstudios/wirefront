@@ -238,10 +238,10 @@ function UsageMeter({ limit, warnAt, t }: { limit: UsageLimit; warnAt: number; t
         className="mt-2 h-1.5 overflow-hidden rounded-full bg-foreground/[0.06]"
         role="progressbar"
       >
-        <div className={cn("h-full rounded-full transition-all", warn ? "bg-amber-500" : "bg-foreground/70")} style={{ width: `${Math.min(1, share) * 100}%` }} />
+        <div className={cn("h-full rounded-full transition-all", warn ? "bg-warning" : "bg-foreground/70")} style={{ width: `${Math.min(1, share) * 100}%` }} />
       </div>
       <div className="mt-1 flex justify-end text-xs">
-        <span className={cn("font-mono text-[10px] uppercase tracking-[0.25em]", warn ? "text-amber-700 dark:text-amber-400" : "text-muted-foreground")}>
+        <span className={cn("font-mono text-[10px] uppercase tracking-[0.25em]", warn ? "text-warning-foreground" : "text-muted-foreground")}>
           {interpolate(t.used, { percent })}
         </span>
       </div>

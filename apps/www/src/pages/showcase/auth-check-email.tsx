@@ -39,7 +39,7 @@ export function AuthCheckEmail({ illustration, actions }: { illustration: string
   return (
     <AuthShell variant="welcome" illustration={illustration} actions={actions}>
       <div className="w-full max-w-lg">
-        <div className="inline-flex size-11 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
+        <div className="inline-flex size-11 items-center justify-center rounded-full bg-category-2/15 text-category-2-foreground">
           <CheckCircle2Icon className="size-5" />
         </div>
 
@@ -77,7 +77,7 @@ export function AuthCheckEmail({ illustration, actions }: { illustration: string
         </div>
 
         {resendCount > 0 ? (
-          <div role="status" className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-emerald-500/10 px-2 py-1 font-mono text-[10px] text-emerald-700 uppercase tracking-[0.25em] dark:text-emerald-400">
+          <div role="status" className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-category-2/10 px-2 py-1 font-mono text-[10px] text-category-2-foreground uppercase tracking-[0.25em]">
             <CheckCircle2Icon className="size-3" />
             Sent again · {resendCount}
           </div>

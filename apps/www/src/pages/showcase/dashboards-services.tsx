@@ -103,10 +103,10 @@ const SERVICES: Service[] = [
 ];
 
 const HEALTH_TONE: Record<Health, { dot: string; label: string }> = {
-  healthy: { dot: "bg-emerald-500", label: "text-emerald-700 dark:text-emerald-400" },
-  degraded: { dot: "bg-amber-500", label: "text-amber-800 dark:text-amber-400" },
-  down: { dot: "bg-rose-500", label: "text-rose-700 dark:text-rose-400" },
-  deploying: { dot: "bg-sky-500 animate-pulse motion-reduce:animate-none", label: "text-sky-700 dark:text-sky-400" },
+  healthy: { dot: "bg-success", label: "text-success-foreground" },
+  degraded: { dot: "bg-warning", label: "text-warning-foreground" },
+  down: { dot: "bg-destructive", label: "text-destructive-foreground" },
+  deploying: { dot: "bg-info animate-pulse motion-reduce:animate-none", label: "text-info-foreground" },
 };
 
 export function DashboardsServices() {
@@ -140,13 +140,13 @@ export function DashboardsServices() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <SummaryTile label="Healthy" value={`${healthy}/${total}`} dot="bg-emerald-500" />
-          <SummaryTile label="Degraded" value={`${degraded}`} dot="bg-amber-500" />
-          <SummaryTile label="Down" value={`${down}`} dot="bg-rose-500" />
+          <SummaryTile label="Healthy" value={`${healthy}/${total}`} dot="bg-success" />
+          <SummaryTile label="Degraded" value={`${degraded}`} dot="bg-warning" />
+          <SummaryTile label="Down" value={`${down}`} dot="bg-destructive" />
           <SummaryTile
             label="Total RPS"
             value={`${(totalRps / 1000).toFixed(1)}k`}
-            dot="bg-sky-500"
+            dot="bg-category-1"
           />
         </div>
 
@@ -251,10 +251,10 @@ function ServiceCard({ service: s }: { service: Service }) {
           <div
             className={`h-full ${
               s.sloBudget > 0.5
-                ? "bg-emerald-500"
+                ? "bg-category-2"
                 : s.sloBudget > 0.2
-                  ? "bg-amber-500"
-                  : "bg-rose-500"
+                  ? "bg-category-3"
+                  : "bg-category-4"
             }`}
             style={{ width: `${s.sloBudget * 100}%` }}
           />
@@ -281,9 +281,9 @@ function Metric({
 }) {
   const t =
     tone === "fail"
-      ? "text-rose-700 dark:text-rose-400"
+      ? "text-category-4-foreground"
       : tone === "warn"
-        ? "text-amber-800 dark:text-amber-400"
+        ? "text-category-3-foreground"
         : "text-foreground";
   return (
     <div className="rounded-md bg-foreground/[0.03] px-2 py-1.5">

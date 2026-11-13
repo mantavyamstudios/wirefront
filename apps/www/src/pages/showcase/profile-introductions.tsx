@@ -77,10 +77,10 @@ const SUGGESTIONS: Suggestion[] = [
 ];
 
 const CONTEXT_TONE: Record<Suggestion["contextType"], string> = {
-  shared: "bg-indigo-500/12 text-indigo-800 dark:text-indigo-400",
-  team: "bg-emerald-500/12 text-emerald-700 dark:text-emerald-400",
-  topic: "bg-amber-500/12 text-amber-800 dark:text-amber-400",
-  repo: "bg-violet-500/12 text-violet-800 dark:text-violet-400",
+  shared: "bg-category-8/12 text-category-8-foreground",
+  team: "bg-category-2/12 text-category-2-foreground",
+  topic: "bg-category-3/12 text-category-3-foreground",
+  repo: "bg-category-5/12 text-category-5-foreground",
 };
 
 const CONTEXT_GLYPH: Record<Suggestion["contextType"], typeof MessageCircleIcon> = {

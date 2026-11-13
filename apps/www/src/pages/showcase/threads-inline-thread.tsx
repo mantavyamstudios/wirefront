@@ -18,14 +18,14 @@ interface Comment {
 const COMMENTS: Comment[] = [
   {
     initials: "MO",
-    tone: "bg-emerald-700 text-white",
+    tone: "bg-category-2-strong text-white",
     name: "Maya Okafor",
     time: "10m",
     body: "Should we keep this paragraph? It's nicely written but covers the same ground as the diagram below.",
   },
   {
     initials: "JL",
-    tone: "bg-amber-700 text-white",
+    tone: "bg-category-3-strong text-white",
     name: "James Lin",
     time: "8m",
     body: "I'd keep it. New readers don't always parse the diagram on first pass — the prose is the safety net.",
@@ -40,7 +40,7 @@ export function ThreadsInlineThread() {
   const add = (body: string) =>
     setComments((c) => [
       ...c,
-      { initials: "MS", tone: "bg-violet-700 text-white", name: "You", time: "now", body },
+      { initials: "MS", tone: "bg-category-5-strong text-white", name: "You", time: "now", body },
     ]);
 
   return (
@@ -62,7 +62,7 @@ export function ThreadsInlineThread() {
           <div className="relative mt-4">
             <p
               id="anchored-paragraph"
-              className="rounded-md bg-amber-500/[0.08] px-3 py-2 text-foreground/90 text-sm leading-relaxed ring-1 ring-amber-500/30"
+              className="rounded-md bg-category-3/[0.08] px-3 py-2 text-foreground/90 text-sm leading-relaxed ring-1 ring-category-3/30"
             >
               We've been able to move quickly because the kernel is small and
               the scope of each change is narrow. When something fails, the blast
@@ -71,7 +71,7 @@ export function ThreadsInlineThread() {
             <Sheet>
               <SheetTrigger
                 aria-label={`Open thread, ${comments.length} comments`}
-                className="-top-3 -end-2 absolute inline-flex min-h-8 items-center gap-1 rounded-full bg-amber-500 px-2.5 font-mono text-[11px] text-white shadow-sm lg:hidden pointer-coarse:min-h-10"
+                className="-top-3 -end-2 absolute inline-flex min-h-8 items-center gap-1 rounded-full bg-category-3 px-2.5 font-mono text-[11px] text-white shadow-sm lg:hidden pointer-coarse:min-h-10"
               >
                 <MessageSquareIcon aria-hidden className="size-3" />
                 {comments.length}
@@ -126,9 +126,9 @@ function Thread({
         Thread · {comments.length} comments
       </div>
 
-      <div className="mt-1 flex items-center gap-2 rounded-md bg-amber-500/[0.06] px-2.5 py-1 ring-1 ring-amber-500/20 lg:-ms-6 lg:rounded-s-none">
-        <span aria-hidden className="size-1.5 rounded-full bg-amber-500" />
-        <span className="font-mono text-[10px] text-amber-800 uppercase tracking-[0.25em] dark:text-amber-400">
+      <div className="mt-1 flex items-center gap-2 rounded-md bg-category-3/[0.06] px-2.5 py-1 ring-1 ring-category-3/20 lg:-ms-6 lg:rounded-s-none">
+        <span aria-hidden className="size-1.5 rounded-full bg-category-3" />
+        <span className="font-mono text-[10px] text-category-3-foreground uppercase tracking-[0.25em]">
           Anchored
         </span>
       </div>

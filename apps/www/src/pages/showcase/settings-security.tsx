@@ -149,15 +149,15 @@ export function SettingsSecurity() {
         </p>
 
         {/* 2FA banner */}
-        <section className="mt-8 overflow-hidden rounded-xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.07] to-emerald-500/[0.02]">
+        <section className="mt-8 overflow-hidden rounded-xl border border-category-2/30 bg-gradient-to-br from-category-2/[0.07] to-category-2/[0.02]">
           <div className="flex flex-wrap items-start gap-3 p-4 sm:flex-nowrap sm:gap-4 sm:p-5">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-800 dark:text-emerald-400">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-category-2/15 text-category-2-foreground">
               <ShieldCheckIcon className="size-5" />
             </div>
             <div className="min-w-0 flex-1 max-sm:basis-[calc(100%-3.25rem)]">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-medium text-sm">Two-factor authentication</span>
-                <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-800 dark:text-emerald-400">
+                <span className="inline-flex items-center gap-1 rounded bg-category-2/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-category-2-foreground">
                   <CheckCircle2Icon className="size-2.5" />
                   Enabled
                 </span>
@@ -243,14 +243,14 @@ export function SettingsSecurity() {
                 key={s.id}
                 className={`flex items-center gap-3 rounded-lg px-3 py-3 sm:gap-4 ${
                   s.current
-                    ? "bg-emerald-500/[0.06] ring-1 ring-emerald-500/25"
+                    ? "bg-category-2/[0.06] ring-1 ring-category-2/25"
                     : "transition-colors hover:bg-foreground/[0.03]"
                 }`}
               >
                 <div
                   className={`flex size-9 shrink-0 items-center justify-center rounded-md ${
                     s.current
-                      ? "bg-emerald-500/15 text-emerald-800 dark:text-emerald-400"
+                      ? "bg-category-2/15 text-category-2-foreground"
                       : "bg-foreground/[0.06] text-muted-foreground"
                   }`}
                 >
@@ -263,7 +263,7 @@ export function SettingsSecurity() {
                       {s.location}
                     </span>
                     {s.current ? (
-                      <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-800 dark:text-emerald-400">
+                      <span className="inline-flex items-center gap-1 rounded bg-category-2/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-category-2-foreground">
                         <CheckCircle2Icon className="size-2.5" />
                         This device
                       </span>
@@ -378,10 +378,10 @@ export function SettingsSecurity() {
             ) : null}
           </div>
 
-          <div className="mt-5 flex flex-col gap-3 rounded-lg border border-amber-500/30 bg-amber-500/[0.06] p-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-5 flex flex-col gap-3 rounded-lg border border-category-3/30 bg-category-3/[0.06] p-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-2.5">
-              <AlertTriangleIcon className="mt-0.5 size-3.5 shrink-0 text-amber-800 dark:text-amber-400" />
-              <p className="text-amber-800 text-xs leading-relaxed dark:text-amber-200/90">
+              <AlertTriangleIcon className="mt-0.5 size-3.5 shrink-0 text-category-3-foreground" />
+              <p className="text-category-3-foreground text-xs leading-relaxed">
                 Regenerating invalidates all 8 codes above. Store the new set somewhere safe.
               </p>
             </div>
@@ -389,7 +389,7 @@ export function SettingsSecurity() {
               size="sm"
               variant="outline"
               type="button"
-              className="shrink-0 border-amber-500/40 text-amber-800 hover:bg-amber-500/10 dark:text-amber-200"
+              className="shrink-0 border-category-3/40 text-category-3-foreground hover:bg-category-3/10"
             >
               <RefreshCwIcon />
               Regenerate codes

@@ -225,7 +225,7 @@ export function CalendarsTimezone() {
             size="sm"
             onClick={findBest}
             disabled={zones.length === 0}
-            className={"self-start sm:self-auto " + (bestPulse ? "ring-2 ring-emerald-500/40" : "")}
+            className={"self-start sm:self-auto " + (bestPulse ? "ring-2 ring-category-2/40" : "")}
           >
             <SparklesIcon />
             Find best
@@ -324,11 +324,11 @@ export function CalendarsTimezone() {
                             className={
                               "absolute top-0 bottom-0 border-border/40 border-s " +
                               (sleeping
-                                ? "bg-indigo-500/[0.18]"
+                                ? "bg-category-8/[0.18]"
                                 : morning
-                                  ? "bg-amber-500/[0.08]"
+                                  ? "bg-category-3/[0.08]"
                                   : evening
-                                    ? "bg-rose-500/[0.06]"
+                                    ? "bg-category-4/[0.06]"
                                     : "")
                             }
                             style={{ left: h * HOUR_W, width: HOUR_W }}
@@ -366,12 +366,12 @@ export function CalendarsTimezone() {
                           // touch-none: dragging the window must not scroll the grid.
                           "absolute top-1 bottom-1 touch-none select-none rounded-md border-2 transition-all " +
                           (v.tone === "asleep"
-                            ? "border-rose-500/70 bg-rose-500/[0.08]"
+                            ? "border-category-4/70 bg-category-4/[0.08]"
                             : v.tone === "edge"
-                              ? "border-amber-500/70 bg-amber-500/[0.08]"
+                              ? "border-category-3/70 bg-category-3/[0.08]"
                               : "border-foreground bg-foreground/[0.06]") +
                           " cursor-grab active:cursor-grabbing shadow-sm" +
-                          (bestPulse ? " ring-2 ring-emerald-500/60" : "")
+                          (bestPulse ? " ring-2 ring-category-2/60" : "")
                         }
                         style={{
                           left: start * HOUR_W,
@@ -416,13 +416,13 @@ export function CalendarsTimezone() {
             </span>
             <span className="flex flex-wrap items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
               <span className="flex items-center gap-1.5">
-                <span className="size-2.5 rounded bg-amber-500/40" /> morning
+                <span className="size-2.5 rounded bg-category-3/40" /> morning
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="size-2.5 rounded bg-rose-500/30" /> evening
+                <span className="size-2.5 rounded bg-category-4/30" /> evening
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="size-2.5 rounded bg-indigo-500/40" /> asleep
+                <span className="size-2.5 rounded bg-category-8/40" /> asleep
               </span>
             </span>
           </div>
@@ -585,17 +585,17 @@ function VerdictPill({
     ok: {
       Icon: CheckCircle2Icon,
       label: "Working",
-      className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
+      className: "bg-category-2/15 text-category-2-foreground",
     },
     edge: {
       Icon: SunIcon,
       label: "Edge",
-      className: "bg-amber-500/15 text-amber-800 dark:text-amber-400",
+      className: "bg-category-3/15 text-category-3-foreground",
     },
     asleep: {
       Icon: XCircleIcon,
       label: "Asleep",
-      className: "bg-rose-500/15 text-rose-700 dark:text-rose-400",
+      className: "bg-category-4/15 text-category-4-foreground",
     },
   }[tone];
   // Compact: icon-only, shown under the city on phones.

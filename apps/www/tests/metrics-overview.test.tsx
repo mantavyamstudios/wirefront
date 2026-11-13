@@ -36,9 +36,9 @@ describe("MetricsOverview", () => {
     expect(screen.getByText("1.8%")).toBeTruthy();
     expect(screen.getByText("6m 22s")).toBeTruthy();
     // Churn fell (-0.3%) and lower churn is good: shown as good news.
-    expect(screen.getByText("-0.3%").className).toContain("emerald");
+    expect(screen.getByText("-0.3%").className).toContain("success");
     // Sessions got shorter (-1.1%): bad news.
-    expect(screen.getByText("-1.1%").className).toContain("rose");
+    expect(screen.getByText("-1.1%").className).toContain("destructive");
   });
 
   it("uses the builder's locale and currency", () => {

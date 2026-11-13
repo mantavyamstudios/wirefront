@@ -90,25 +90,25 @@ export interface IssueTrackerProps {
 }
 
 const avatarTone: Record<IssueTone, string> = {
-  blue: "bg-blue-500/14 text-blue-700 dark:text-blue-300",
-  orange: "bg-orange-500/14 text-orange-800 dark:text-orange-300",
-  teal: "bg-teal-500/16 text-teal-800 dark:text-teal-300",
-  violet: "bg-violet-500/16 text-violet-800 dark:text-violet-300",
-  rose: "bg-rose-500/14 text-rose-700 dark:text-rose-300",
-  amber: "bg-amber-500/18 text-amber-800 dark:text-amber-300",
-  emerald: "bg-emerald-500/16 text-emerald-700 dark:text-emerald-300",
-  sky: "bg-sky-500/16 text-sky-700 dark:text-sky-300",
+  blue: "bg-category-1/14 text-category-1-foreground",
+  orange: "bg-category-7/14 text-category-7-foreground",
+  teal: "bg-category-6/16 text-category-6-foreground",
+  violet: "bg-category-5/16 text-category-5-foreground",
+  rose: "bg-category-4/14 text-category-4-foreground",
+  amber: "bg-category-3/18 text-category-3-foreground",
+  emerald: "bg-category-2/16 text-category-2-foreground",
+  sky: "bg-category-1/16 text-category-1-foreground",
 };
 
 const dotTone: Record<IssueTone, string> = {
-  blue: "bg-blue-500",
-  orange: "bg-orange-500",
-  teal: "bg-teal-500",
-  violet: "bg-violet-500",
-  rose: "bg-rose-500",
-  amber: "bg-amber-500",
-  emerald: "bg-emerald-500",
-  sky: "bg-sky-500",
+  blue: "bg-category-1",
+  orange: "bg-category-7",
+  teal: "bg-category-6",
+  violet: "bg-category-5",
+  rose: "bg-category-4",
+  amber: "bg-category-3",
+  emerald: "bg-category-2",
+  sky: "bg-category-1",
 };
 
 const ease = [0.23, 1, 0.32, 1] as const;
@@ -117,9 +117,9 @@ const glide = { type: "spring", stiffness: 500, damping: 44 } as const;
 const groupTone: Record<IssueStatus, string> = {
   backlog: "from-muted/80 to-muted/80 dark:from-muted/60 dark:to-muted/60",
   todo: "from-muted/80 to-muted/80 dark:from-muted/60 dark:to-muted/60",
-  in_progress: "from-amber-500/6 to-amber-500/6 dark:from-amber-400/7 dark:to-amber-400/7",
-  in_review: "from-emerald-500/6 to-emerald-500/6 dark:from-emerald-400/7 dark:to-emerald-400/7",
-  done: "from-blue-500/6 to-blue-500/6 dark:from-blue-400/7 dark:to-blue-400/7",
+  in_progress: "from-category-3/6 to-category-3/6",
+  in_review: "from-category-2/6 to-category-2/6",
+  done: "from-category-1/6 to-category-1/6",
 };
 
 const STATUSES: { id: IssueStatus; label: string }[] = [
@@ -164,20 +164,20 @@ function StatusIcon({ status, className }: { status: IssueStatus; className?: st
     );
   if (status === "in_progress")
     return (
-      <svg aria-hidden className={cn(c, "text-amber-800 dark:text-amber-400")} viewBox="0 0 14 14">
+      <svg aria-hidden className={cn(c, "text-category-3-foreground")} viewBox="0 0 14 14">
         <circle cx="7" cy="7" fill="none" r="5.5" stroke="currentColor" strokeWidth="1.5" />
         <path d="M7 3.5 A3.5 3.5 0 0 1 7 10.5 Z" fill="currentColor" />
       </svg>
     );
   if (status === "in_review")
     return (
-      <svg aria-hidden className={cn(c, "text-emerald-500")} viewBox="0 0 14 14">
+      <svg aria-hidden className={cn(c, "text-category-2-foreground")} viewBox="0 0 14 14">
         <circle cx="7" cy="7" fill="none" r="5.5" stroke="currentColor" strokeWidth="1.5" />
         <path d="M7 3.5 A3.5 3.5 0 1 1 3.5 7 L7 7 Z" fill="currentColor" />
       </svg>
     );
   return (
-    <svg aria-hidden className={cn(c, "text-blue-500")} viewBox="0 0 14 14">
+    <svg aria-hidden className={cn(c, "text-category-1-foreground")} viewBox="0 0 14 14">
       <circle cx="7" cy="7" fill="currentColor" r="6.25" />
       <path d="M4.4 7.2 6.2 9 9.7 5.3" fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
     </svg>
@@ -189,7 +189,7 @@ function PriorityIcon({ priority, className }: { priority: IssuePriority; classN
     return (
       <span
         aria-hidden
-        className={cn("flex size-3.5 shrink-0 items-center justify-center rounded-[calc(var(--radius)*0.3)] bg-orange-500 font-bold text-[10px] text-white leading-none", className)}
+        className={cn("flex size-3.5 shrink-0 items-center justify-center rounded-[calc(var(--radius)*0.3)] bg-category-7 font-bold text-[10px] text-white leading-none", className)}
       >
         !
       </span>
@@ -803,7 +803,7 @@ export function IssueTracker({
   const sidebar = (onClose?: () => void) => (
     <div className="flex h-full flex-col px-2 pt-3 pb-3">
       <div className="flex items-center gap-2 px-1.5 pb-3">
-        <span className="flex size-7 items-center justify-center rounded-lg bg-sky-700 font-semibold text-[11px] text-white">{team.key.slice(0, 2)}</span>
+        <span className="flex size-7 items-center justify-center rounded-lg bg-category-1-strong font-semibold text-[11px] text-white">{team.key.slice(0, 2)}</span>
         <div className="min-w-0 flex-1 leading-tight">
           <div className="truncate font-medium">Kestrel</div>
           <div className="truncate text-muted-foreground text-xs">{team.name} team</div>
@@ -860,9 +860,9 @@ export function IssueTracker({
       <div className="mt-6 px-2.5 font-medium text-muted-foreground text-xs">Cycle 42 · ends Oct 30</div>
       <div className="mx-2.5 mt-2">
         <div className="flex h-1.5 overflow-hidden rounded-full bg-muted">
-          <div className="h-full bg-blue-500" style={{ width: `${(issues.filter((i) => i.status === "done").length / Math.max(1, issues.length)) * 100}%` }} />
-          <div className="h-full bg-emerald-500" style={{ width: `${(issues.filter((i) => i.status === "in_review").length / Math.max(1, issues.length)) * 100}%` }} />
-          <div className="h-full bg-amber-500" style={{ width: `${(issues.filter((i) => i.status === "in_progress").length / Math.max(1, issues.length)) * 100}%` }} />
+          <div className="h-full bg-category-1" style={{ width: `${(issues.filter((i) => i.status === "done").length / Math.max(1, issues.length)) * 100}%` }} />
+          <div className="h-full bg-category-2" style={{ width: `${(issues.filter((i) => i.status === "in_review").length / Math.max(1, issues.length)) * 100}%` }} />
+          <div className="h-full bg-category-3" style={{ width: `${(issues.filter((i) => i.status === "in_progress").length / Math.max(1, issues.length)) * 100}%` }} />
         </div>
         <div className="mt-2 flex justify-between text-muted-foreground text-xs tabular-nums">
           <span>

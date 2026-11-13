@@ -39,7 +39,7 @@ export function ProfileHero() {
   return (
     <div className="min-h-svh bg-background text-foreground">
       {/* Cover banner */}
-      <div className="relative h-32 w-full overflow-hidden sm:h-48 bg-gradient-to-br from-indigo-500/30 via-foreground/[0.04] to-teal-500/30">
+      <div className="relative h-32 w-full overflow-hidden sm:h-48 bg-gradient-to-br from-category-8/30 via-foreground/[0.04] to-category-6/30">
         <div
           aria-hidden
           className="absolute inset-0"
@@ -160,7 +160,7 @@ export function ProfileHero() {
                   </p>
                   <div className="mt-3 flex items-center gap-3 font-mono text-[11px] text-muted-foreground">
                     <span className="flex items-center gap-1.5">
-                      <span className="size-2 rounded-full bg-blue-500" />
+                      <span className="size-2 rounded-full bg-category-1" />
                       {p.lang}
                     </span>
                     <span className="inline-flex items-center gap-1">
@@ -226,10 +226,10 @@ function Tag({
   children: React.ReactNode;
 }) {
   const map: Record<typeof color, string> = {
-    indigo: "bg-indigo-500/12 text-indigo-800 dark:text-indigo-400",
-    teal: "bg-teal-500/12 text-teal-800 dark:text-teal-400",
-    amber: "bg-amber-500/12 text-amber-800 dark:text-amber-400",
-    rose: "bg-rose-500/12 text-rose-700 dark:text-rose-400",
+    indigo: "bg-category-8/12 text-category-8-foreground",
+    teal: "bg-category-6/12 text-category-6-foreground",
+    amber: "bg-category-3/12 text-category-3-foreground",
+    rose: "bg-category-4/12 text-category-4-foreground",
   };
   return (
     <span

@@ -204,7 +204,7 @@ export function TimelinesPullRequest() {
               Persist 1y audit-log retention on Business plan
             </h1>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-muted-foreground text-sm">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2 py-0.5 font-medium text-emerald-700 text-xs dark:text-emerald-400">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-category-2/15 px-2 py-0.5 font-medium text-category-2-foreground text-xs">
                 <GitPullRequestIcon className="size-3" />
                 Open
               </span>
@@ -279,7 +279,7 @@ export function TimelinesPullRequest() {
             <SidebarSection title="Linked issues">
               <ul className="space-y-1.5 text-sm">
                 <li className="flex items-center gap-2">
-                  <CircleIcon className="size-3.5 text-emerald-500" />
+                  <CircleIcon className="size-3.5 text-category-2-foreground" />
                   <span className="font-mono text-muted-foreground text-xs">
                     #3211
                   </span>
@@ -288,7 +288,7 @@ export function TimelinesPullRequest() {
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CircleIcon className="size-3.5 text-emerald-500" />
+                  <CircleIcon className="size-3.5 text-category-2-foreground" />
                   <span className="font-mono text-muted-foreground text-xs">
                     #3198
                   </span>
@@ -351,8 +351,8 @@ function MergeReadiness({
             <div
               className={`flex size-9 items-center justify-center rounded-full ${
                 ready
-                  ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                  : "bg-amber-500/15 text-amber-800 dark:text-amber-400"
+                  ? "bg-category-2/15 text-category-2-foreground"
+                  : "bg-category-3/15 text-category-3-foreground"
               }`}
             >
               {ready ? (
@@ -410,7 +410,7 @@ function MergeReadiness({
         <div className="flex items-center gap-2">
           <Button
             disabled={!ready}
-            className="gap-2 bg-emerald-600 text-white hover:bg-emerald-500 disabled:bg-foreground/10 disabled:text-muted-foreground"
+            className="gap-2 bg-category-2-strong text-white hover:bg-category-2 disabled:bg-foreground/10 disabled:text-muted-foreground"
           >
             <GitMergeIcon className="size-4" />
             Squash & merge
@@ -440,10 +440,10 @@ function Pill({
 }) {
   const cls =
     tone === "ok"
-      ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+      ? "bg-category-2/10 text-category-2-foreground"
       : tone === "fail"
-        ? "bg-rose-500/10 text-rose-700 dark:text-rose-400"
-        : "bg-amber-500/10 text-amber-800 dark:text-amber-400";
+        ? "bg-category-4/10 text-category-4-foreground"
+        : "bg-category-3/10 text-category-3-foreground";
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] ${cls}`}
@@ -482,10 +482,10 @@ function Description({
             <span className="inline-flex items-center gap-1">
               <FileDiffIcon className="size-3" />8 files
             </span>
-            <span className="text-emerald-700 dark:text-emerald-400">
+            <span className="text-category-2-foreground">
               +{linesAdded}
             </span>
-            <span className="text-rose-700 dark:text-rose-400">
+            <span className="text-category-4-foreground">
               −{linesRemoved}
             </span>
           </div>
@@ -502,7 +502,7 @@ function ChecksPanel() {
     <details className="group rounded-xl border border-border/60 bg-background/40">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4">
         <div className="flex items-center gap-3">
-          <div className="flex size-7 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
+          <div className="flex size-7 items-center justify-center rounded-full bg-category-2/15 text-category-2-foreground">
             <CheckIcon className="size-4" />
           </div>
           <div>
@@ -524,13 +524,13 @@ function ChecksPanel() {
           >
             <div className="flex min-w-0 flex-wrap items-center gap-x-2">
               {c.status === "passed" && (
-                <CheckIcon className="size-3.5 text-emerald-500" />
+                <CheckIcon className="size-3.5 text-category-2-foreground" />
               )}
               {c.status === "failed" && (
-                <XIcon className="size-3.5 text-rose-500" />
+                <XIcon className="size-3.5 text-category-4-foreground" />
               )}
               {c.status === "running" && (
-                <span className="size-2 rounded-full bg-amber-500 motion-safe:animate-pulse" />
+                <span className="size-2 rounded-full bg-category-3 motion-safe:animate-pulse" />
               )}
               <span>{c.name}</span>
               <span className="text-muted-foreground">/</span>
@@ -565,16 +565,16 @@ function TimelineIcon({ item }: { item: TimelineItem }) {
       return <MessageSquareIcon className="size-3 text-foreground/70" />;
     case "review":
       return item.state === "approved" ? (
-        <CheckIcon className="size-3 text-emerald-500" />
+        <CheckIcon className="size-3 text-category-2-foreground" />
       ) : item.state === "changes" ? (
-        <XIcon className="size-3 text-rose-500" />
+        <XIcon className="size-3 text-category-4-foreground" />
       ) : (
-        <CircleIcon className="size-3 text-amber-800 dark:text-amber-400" />
+        <CircleIcon className="size-3 text-category-3-foreground" />
       );
     case "ci":
       return <PlayIcon className="size-3 text-foreground/70" />;
     case "deploy":
-      return <RocketIcon className="size-3 text-sky-500" />;
+      return <RocketIcon className="size-3 text-category-1-foreground" />;
     case "status":
       return <TagIcon className="size-3 text-foreground/70" />;
   }
@@ -633,9 +633,9 @@ function TimelineBody({ item }: { item: TimelineItem }) {
                     key={i}
                     className={
                       l.kind === "add"
-                        ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                        ? "bg-category-2/10 text-category-2-foreground"
                         : l.kind === "del"
-                          ? "bg-rose-500/10 text-rose-700 dark:text-rose-300"
+                          ? "bg-category-4/10 text-category-4-foreground"
                           : "text-muted-foreground"
                     }
                   >
@@ -691,7 +691,7 @@ function TimelineBody({ item }: { item: TimelineItem }) {
           <span className="text-muted-foreground">in {item.duration} ·</span>{" "}
           <a
             href={`https://${item.url}`}
-            className="font-mono text-[11px] text-sky-700 hover:underline dark:text-sky-400"
+            className="font-mono text-[11px] text-category-1-foreground hover:underline"
           >
             {item.url}
           </a>
@@ -746,10 +746,10 @@ function SidebarSection({
 function ReviewerCard({ reviewer }: { reviewer: Reviewer }) {
   const tone =
     reviewer.state === "approved"
-      ? "text-emerald-700 dark:text-emerald-400"
+      ? "text-category-2-foreground"
       : reviewer.state === "changes"
-        ? "text-rose-700 dark:text-rose-400"
-        : "text-amber-800 dark:text-amber-400";
+        ? "text-category-4-foreground"
+        : "text-category-3-foreground";
   const Icon =
     reviewer.state === "approved"
       ? CheckIcon
@@ -786,10 +786,10 @@ function Label({
 }) {
   const cls =
     tone === "violet"
-      ? "bg-violet-500/15 text-violet-800 dark:text-violet-300"
+      ? "bg-category-5/15 text-category-5-foreground"
       : tone === "amber"
-        ? "bg-amber-500/15 text-amber-800 dark:text-amber-300"
-        : "bg-sky-500/15 text-sky-700 dark:text-sky-300";
+        ? "bg-category-3/15 text-category-3-foreground"
+        : "bg-category-1/15 text-category-1-foreground";
   return (
     <span
       className={`inline-flex rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em] ${cls}`}

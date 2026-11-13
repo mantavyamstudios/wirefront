@@ -112,44 +112,44 @@ const categories: Record<
   groceries: {
     label: "Groceries",
     icon: ShoppingBasketIcon,
-    tile: "bg-teal-500/12 text-teal-800 dark:bg-teal-400/14 dark:text-teal-300",
-    dot: "bg-teal-500 dark:bg-teal-400",
-    stroke: "stroke-teal-500 dark:stroke-teal-400",
+    tile: "bg-category-6/12 text-category-6-foreground",
+    dot: "bg-category-6",
+    stroke: "stroke-category-6",
   },
   dining: {
     label: "Eating out",
     icon: UtensilsIcon,
-    tile: "bg-orange-500/12 text-orange-700 dark:bg-orange-400/14 dark:text-orange-300",
-    dot: "bg-orange-500 dark:bg-orange-400",
-    stroke: "stroke-orange-500 dark:stroke-orange-400",
+    tile: "bg-category-7/12 text-category-7-foreground",
+    dot: "bg-category-7",
+    stroke: "stroke-category-7",
   },
   transport: {
     label: "Transport",
     icon: TramFrontIcon,
-    tile: "bg-sky-500/12 text-sky-700 dark:bg-sky-400/14 dark:text-sky-300",
-    dot: "bg-sky-500 dark:bg-sky-400",
-    stroke: "stroke-sky-500 dark:stroke-sky-400",
+    tile: "bg-category-1/12 text-category-1-foreground",
+    dot: "bg-category-1",
+    stroke: "stroke-category-1",
   },
   shopping: {
     label: "Shopping",
     icon: ShoppingBagIcon,
-    tile: "bg-violet-500/12 text-violet-800 dark:bg-violet-400/14 dark:text-violet-300",
-    dot: "bg-violet-500 dark:bg-violet-400",
-    stroke: "stroke-violet-500 dark:stroke-violet-400",
+    tile: "bg-category-5/12 text-category-5-foreground",
+    dot: "bg-category-5",
+    stroke: "stroke-category-5",
   },
   home: {
     label: "Home & bills",
     icon: HomeIcon,
-    tile: "bg-amber-500/14 text-amber-800 dark:bg-amber-400/14 dark:text-amber-300",
-    dot: "bg-amber-500 dark:bg-amber-400",
-    stroke: "stroke-amber-500 dark:stroke-amber-400",
+    tile: "bg-category-3/14 text-category-3-foreground",
+    dot: "bg-category-3",
+    stroke: "stroke-category-3",
   },
   fun: {
     label: "Going out",
     icon: TicketIcon,
-    tile: "bg-rose-500/12 text-rose-700 dark:bg-rose-400/14 dark:text-rose-300",
-    dot: "bg-rose-500 dark:bg-rose-400",
-    stroke: "stroke-rose-500 dark:stroke-rose-400",
+    tile: "bg-category-4/12 text-category-4-foreground",
+    dot: "bg-category-4",
+    stroke: "stroke-category-4",
   },
   income: {
     label: "Income",
@@ -583,7 +583,7 @@ export function Money({
       </div>
       <div className="mt-auto flex items-center gap-2.5 rounded-xl border bg-card p-2.5">
         <Avatar className="[--avatar-size:--spacing(7)]">
-          <AvatarFallback className="bg-teal-500/20 dark:bg-teal-400/20">{initials(userName)}</AvatarFallback>
+          <AvatarFallback className="bg-category-6/20">{initials(userName)}</AvatarFallback>
         </Avatar>
         <div className="flex min-w-0 flex-col">
           <span className="truncate font-medium text-xs">{userName}</span>
@@ -956,7 +956,7 @@ export function Money({
           <span className="font-heading font-semibold">{productName}</span>
           <span className="truncate text-muted-foreground">/ {viewLabel}</span>
           <Avatar className="ms-auto [--avatar-size:--spacing(7)]">
-            <AvatarFallback className="bg-teal-500/20 text-xs dark:bg-teal-400/20">{initials(userName)}</AvatarFallback>
+            <AvatarFallback className="bg-category-6/20 text-xs">{initials(userName)}</AvatarFallback>
           </Avatar>
         </header>
 
