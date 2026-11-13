@@ -113,12 +113,12 @@ A screen gets the **Ready to wire** badge when all of these hold:
 
 - [ ] `schema.ts`, `view.tsx`, `fixtures.ts`, `demo.tsx` exist and typecheck, including under the strictest template settings (`tsconfig.shipped.json`)
 - [ ] Fixtures satisfy the schemas
-- [ ] `view.tsx` passes the contract checker (no hard-coded data, `setTimeout`, router or framework imports)
+- [ ] `view.tsx` passes the contract checker (no hard-coded data, `setTimeout`, router or framework imports, `href="#"`, or email/password/tel inputs without `autoComplete`)
 - [ ] All states reachable from the interaction panel's state switcher
 - [ ] Every action is a Promise callback with pending, success and error handling
 - [ ] Wiring tests (`apps/www/tests/<screen>.test.tsx`) cover what each action receives and what the screen shows for success, returned failures and thrown errors
 - [ ] Semantic tokens only; logical properties; strings through messages
-- [ ] axe clean in every declared state (zero violations, nothing baselined); icon buttons labelled; tap targets ≥ 24px; keyboard path works; reduced motion respected
+- [ ] axe clean in every declared state (zero violations, nothing baselined); icon buttons labelled; tap targets meet WCAG 2.2 SC 2.5.8 (24px, or spaced so a 24px circle touches nothing; the responsive audit gates it); keyboard path works; reduced motion respected
 - [ ] Responsive audit passes at 375 / 768 / 1024 / 1440px
 - [ ] Installs and builds in fresh Next.js, TanStack Start and Vite apps
 - [ ] Props table and at least one typechecked wiring recipe (in [WIRING.md](WIRING.md) until each screen has its docs page)
