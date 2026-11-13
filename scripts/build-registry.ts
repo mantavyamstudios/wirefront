@@ -64,6 +64,7 @@ const LOCAL_INLINES: Record<string, string> = {
   command: "components/ui/command.tsx",
   "otp-field": "components/ui/otp-field.tsx",
   "segmented-control": "components/ui/segmented-control.tsx",
+  "settings-shell": "components/ui/settings-shell.tsx",
   "particle-field": "components/particle-field.tsx",
   "theme-provider": "components/theme-provider.tsx",
 };
@@ -90,7 +91,7 @@ interface RegistryItem {
 }
 
 // Wirefront's own components, also published as standalone items.
-const WIREFRONT_COMPONENTS = ["autocomplete", "checkbox-group", "command", "otp-field", "segmented-control"] as const;
+const WIREFRONT_COMPONENTS = ["autocomplete", "checkbox-group", "command", "otp-field", "segmented-control", "settings-shell"] as const;
 const SITE_HOMEPAGE = "https://github.com/mantavyamstudios/wirefront";
 
 interface InlinedFile {
@@ -492,7 +493,19 @@ async function main() {
 
   for (const name of WIREFRONT_COMPONENTS) {
     const absPath = resolve(UI_PKG_DIR, LOCAL_INLINES[name] ?? "");
-    const { rewritten, registryDeps, npmDeps } = rewriteLibraryFile(absPath, await readFile(absPath, "utf8"));
+    const { rewritten, registryDeps, npmDeps, follow } = rewriteLibraryFile(absPath, await readFile(absPath, "utf8"));
+    // Ship what the component imports from Wirefront (e.g. the provider), as screen items do.
+    const extra = new Map<string, InlinedFile>();
+    const queue = [...follow];
+    for (let next = queue.shift(); next; next = queue.shift()) {
+      const { output, type } = mapLibraryPath(next);
+      if (!output || extra.has(output)) continue;
+      const lib = rewriteLibraryFile(next, await readFile(next, "utf8"));
+      for (const d of lib.registryDeps) registryDeps.add(d);
+      for (const d of lib.npmDeps) npmDeps.add(d);
+      queue.push(...lib.follow);
+      extra.set(output, { outputPath: output, type, content: lib.rewritten });
+    }
     const item = withDeps(
       {
         $schema: "https://ui.shadcn.com/schema/registry-item.json",
@@ -500,7 +513,10 @@ async function main() {
         type: "registry:ui",
         title: titleCase(name),
         description: `Wirefront's ${name.replace(/-/g, " ")} component, built on Base UI.`,
-        files: [{ path: `components/wirefront/${name}.tsx`, content: rewritten, type: "registry:component" }],
+        files: [
+          { path: `components/wirefront/${name}.tsx`, content: rewritten, type: "registry:component" },
+          ...[...extra.values()].map((f) => ({ path: f.outputPath, content: f.content, type: f.type })),
+        ],
       },
       registryDeps,
       npmDeps,

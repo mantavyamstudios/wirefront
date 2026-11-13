@@ -77,7 +77,7 @@ function unresolvedImports(item: Item): string[] {
 
 let items: Item[] = [];
 let index: unknown;
-const COMPONENTS = ["autocomplete", "checkbox-group", "command", "otp-field", "segmented-control"];
+const COMPONENTS = ["autocomplete", "checkbox-group", "command", "otp-field", "segmented-control", "settings-shell"];
 
 beforeAll(() => {
   execFileSync("npx", ["tsx", "scripts/build-registry.ts"], { cwd: ROOT, stdio: "pipe" });

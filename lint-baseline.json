@@ -437,11 +437,6 @@
   "apps/www/src/pages/showcase/settings-localization.tsx": {
     "lint/a11y/noLabelWithoutControl": 2
   },
-  "apps/www/src/pages/showcase/settings-notification-settings.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1,
-    "lint/correctness/useExhaustiveDependencies": 1,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
   "apps/www/src/pages/showcase/settings-permissions.tsx": {
     "lint/a11y/noLabelWithoutControl": 1,
     "lint/a11y/useAriaPropsSupportedByRole": 3
