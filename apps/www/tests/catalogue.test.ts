@@ -10,6 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { CATEGORIES } from "@/lib/designs";
+import { readinessOf } from "@/lib/readiness";
 import { componentName, getShowcase } from "@/pages/showcase/registry";
 import { SOURCE_FILES } from "@/pages/showcase/source-files";
 import { must } from "./must";
@@ -148,6 +149,19 @@ describe("catalogue", () => {
       }
     }
     expect(problems).toEqual([]);
+  });
+
+  it("badges a screen Ready to wire exactly when it has a ready-to-wire folder", () => {
+    const wrong: string[] = [];
+    let ready = 0;
+    for (const d of designs) {
+      const file = SOURCE_FILES[d.category]?.[d.slug];
+      const expected = file && existsSync(path.join(SHOWCASE_DIR, file, "view.tsx")) ? "ready" : "preview";
+      if (expected === "ready") ready++;
+      if (readinessOf(d.category, d.slug) !== expected) wrong.push(`${d.category}/${d.slug}`);
+    }
+    expect(wrong).toEqual([]);
+    expect(ready).toBeGreaterThan(0);
   });
 
   it("strips only the text of multi-line code samples when scanning for clock reads", () => {

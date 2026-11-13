@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { ReadinessBadge } from "@/components/readiness-badge";
 import { useEffect, useState } from "react";
 import { Highlight, themes } from "prism-react-renderer";
 import { CheckIcon, ChevronDownIcon, CopyIcon } from "lucide-react";
@@ -83,7 +84,10 @@ export function CodeStage({ category, design, title }: CodeStageProps) {
       >
         <div className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b px-4 py-2 sm:px-5">
           <div className="flex min-w-0 flex-col">
-            <h2 className="truncate font-heading font-semibold text-[15px] leading-tight">{title}</h2>
+            <div className="flex min-w-0 items-center gap-2">
+              <h2 className="truncate font-heading font-semibold text-[15px] leading-tight">{title}</h2>
+              <ReadinessBadge category={category} design={design} />
+            </div>
             {source ? (
               <span className="truncate font-mono text-[11px] text-muted-foreground">{source.filename}</span>
             ) : null}

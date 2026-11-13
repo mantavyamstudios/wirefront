@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { ReadinessBadge } from "@/components/readiness-badge";
 import { useEffect, useMemo, useState } from "react";
 import type { ComponentType } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
@@ -284,6 +285,7 @@ function DesignTile({
                 {design.title}
               </h3>
               {design.status && <StatusBadge status={design.status} />}
+              <ReadinessBadge category={category.slug} design={design.slug} />
             </div>
             <div className="mt-1 font-mono text-[11px] text-muted-foreground tracking-[0.05em]">
               {design.slug}.tsx
@@ -319,6 +321,7 @@ function DesignTile({
               {design.title}
             </div>
             {design.status && <StatusBadge status={design.status} />}
+              <ReadinessBadge category={category.slug} design={design.slug} />
           </div>
           <div className="mt-0.5 truncate font-mono text-[10px] text-muted-foreground tracking-[0.05em]">
             {design.slug}.tsx
