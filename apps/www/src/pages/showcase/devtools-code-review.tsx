@@ -36,6 +36,10 @@ import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
 
+/** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
+let keySeq = 0;
+const nextKey = () => ++keySeq;
+
 export type ReviewTone = "blue" | "orange" | "teal" | "violet" | "rose" | "amber" | "emerald" | "sky";
 
 export interface ReviewPerson {
@@ -756,7 +760,7 @@ export function CodeReview({
     });
 
   const addComment = (file: string, line: number, side: "new" | "old", body: string) => {
-    setThreads((ts) => [...ts, { id: `t${Date.now()}`, file, line, side, comments: [{ id: `c${Date.now()}`, author: me, body, time: "now" }] }]);
+    setThreads((ts) => [...ts, { id: `t${nextKey()}`, file, line, side, comments: [{ id: `c${nextKey()}`, author: me, body, time: "now" }] }]);
     setComposer(null);
   };
 
@@ -764,7 +768,7 @@ export function CodeReview({
     setSubmitted(verdict);
     setReviewOpen(false);
     setToast({
-      key: Date.now(),
+      key: nextKey(),
       text: verdict === "approve" ? "Approved. Sam can merge when ready." : verdict === "changes" ? "Changes requested" : "Review submitted",
     });
     setSummary("");
@@ -894,7 +898,7 @@ export function CodeReview({
             key={t.id}
             me={me}
             onReply={(body) =>
-              setThreads((all) => all.map((x) => (x.id === t.id ? { ...x, comments: [...x.comments, { id: `c${Date.now()}`, author: me, body, time: "now" }] } : x)))
+              setThreads((all) => all.map((x) => (x.id === t.id ? { ...x, comments: [...x.comments, { id: `c${nextKey()}`, author: me, body, time: "now" }] } : x)))
             }
             onResolve={(resolved) => setThreads((all) => all.map((x) => (x.id === t.id ? { ...x, resolved } : x)))}
             people={people}

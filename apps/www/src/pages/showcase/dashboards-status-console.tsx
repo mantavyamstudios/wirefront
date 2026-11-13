@@ -27,6 +27,10 @@ import { Kbd } from "@wirefront/ui/kbd";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
+/** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
+let keySeq = 0;
+const nextKey = () => ++keySeq;
+
 export type ServiceHealth = "operational" | "degraded" | "down";
 export type ConsoleTone = "blue" | "orange" | "teal" | "violet" | "rose" | "amber" | "emerald" | "sky";
 
@@ -369,19 +373,19 @@ export function StatusConsole({
   const page = (who: string) => {
     setPaged(who);
     const p = person(who);
-    setUpdates((u) => [...u, { id: `n${Date.now()}`, time: "now", state: "note", text: `Paged ${p?.name}. Acknowledged in 40s.`, by: "maya" }]);
-    setToast({ key: Date.now(), text: `Paged ${p?.name.split(" ")[0]}` });
+    setUpdates((u) => [...u, { id: `n${nextKey()}`, time: "now", state: "note", text: `Paged ${p?.name}. Acknowledged in 40s.`, by: "maya" }]);
+    setToast({ key: nextKey(), text: `Paged ${p?.name.split(" ")[0]}` });
   };
 
   const postNote = () => {
     if (!note.trim()) return;
-    setUpdates((u) => [...u, { id: `n${Date.now()}`, time: "now", state: "note", text: note.trim(), by: "maya" }]);
+    setUpdates((u) => [...u, { id: `n${nextKey()}`, time: "now", state: "note", text: note.trim(), by: "maya" }]);
     setNote("");
   };
 
   const rollback = (d: ConsoleDeploy) => {
     setDeploys((all) => all.map((x) => (x.id === d.id ? { ...x, status: "rolled-back" } : x)));
-    setToast({ key: Date.now(), text: `Rolled back ${d.sha} on ${services.find((s) => s.id === d.service)?.name}` });
+    setToast({ key: nextKey(), text: `Rolled back ${d.sha} on ${services.find((s) => s.id === d.service)?.name}` });
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {

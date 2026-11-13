@@ -47,6 +47,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
+/** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
+let keySeq = 0;
+const nextKey = () => ++keySeq;
+
 export type ChatTone = "blue" | "orange" | "teal" | "violet" | "rose" | "amber" | "emerald" | "sky";
 
 export interface ChatPerson {
@@ -1413,7 +1417,7 @@ export function TeamChat({
     const text = (drafts[channel.id] ?? "").trim();
     const file = files[channel.id];
     if (!text && !file) return;
-    const id = `m${Date.now()}`;
+    const id = `m${nextKey()}`;
     const chId = channel.id;
     updateChannel(chId, (c) => ({ ...c, messages: [...c.messages, { id, day: "Today", author: me, time: nowTime(), text, file }] }));
     markFresh(id);
@@ -1426,7 +1430,7 @@ export function TeamChat({
       timers.current.push(
         window.setTimeout(() => setTyping({ channel: chId, name: who?.name.split(" ")[0] ?? "Someone" }), 900),
         window.setTimeout(() => {
-          const rid = `m${Date.now()}`;
+          const rid = `m${nextKey()}`;
           setTyping(null);
           updateChannel(chId, (c) => ({ ...c, messages: [...c.messages, { id: rid, day: "Today", author: auto.author, time: nowTime(), text: auto.text }] }));
           markFresh(rid);
@@ -1440,7 +1444,7 @@ export function TeamChat({
     const key = `thread:${thread.id}`;
     const text = (drafts[key] ?? "").trim();
     if (!text) return;
-    const id = `r${Date.now()}`;
+    const id = `r${nextKey()}`;
     editMessage(thread.id, (m) => ({ ...m, replies: [...(m.replies ?? []), { id, author: me, time: nowTime(), text }] }));
     markFresh(id);
     setDrafts((d) => ({ ...d, [key]: "" }));

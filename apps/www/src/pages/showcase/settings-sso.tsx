@@ -17,6 +17,10 @@ import { Button } from "@wirefront/ui/button";
 import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Switch } from "@wirefront/ui/switch";
 
+/** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
+let keySeq = 0;
+const nextKey = () => ++keySeq;
+
 interface Provider {
   id: string;
   name: string;
@@ -238,7 +242,7 @@ export function SettingsSso() {
                     setMappings((prev) => [
                       ...prev,
                       {
-                        id: `m${prev.length + 1}-${Date.now()}`,
+                        id: `m${prev.length + 1}-${nextKey()}`,
                         source: "",
                         target: "ignore",
                       },

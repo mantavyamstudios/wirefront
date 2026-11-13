@@ -36,6 +36,7 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Button } from "@wirefront/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { useWirefront } from "@wirefront/ui/wirefront/provider";
 
 function useReducedMotionSafe() {
   const prefers = useReducedMotion();
@@ -385,12 +386,13 @@ export function Notes({
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
   const counter = useRef(0);
   const mountedAt = useRef(0);
+  const { now: clock } = useWirefront();
   useEffect(() => {
-    mountedAt.current = Date.now();
-  }, []);
+    mountedAt.current = clock().getTime();
+  }, [clock]);
   const uid = (p: string) => {
     counter.current += 1;
-    return `${p}${Date.now().toString(36)}${counter.current}`;
+    return `${p}${counter.current}`;
   };
 
   useEffect(() => {
@@ -426,7 +428,7 @@ export function Notes({
   const touch = (id: string, patch: (n: Note) => Partial<Note>) =>
     setNotes((all) => all.map((n) => (n.id === id ? { ...n, ...patch(n), updatedAt: stamp() } : n)));
   const stamp = () => {
-    const d = new Date(new Date(now).getTime() + (Date.now() - mountedAt.current));
+    const d = new Date(new Date(now).getTime() + (clock().getTime() - mountedAt.current));
     const pad = (x: number) => String(x).padStart(2, "0");
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
   };

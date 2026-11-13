@@ -62,6 +62,10 @@ import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
+/** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
+let keySeq = 0;
+const nextKey = () => ++keySeq;
+
 export type AssistantTone = "orange" | "teal" | "violet" | "amber" | "info" | "success" | "warning";
 
 export interface AssistantChat {
@@ -924,7 +928,7 @@ export function AssistantStart({
 
   const ask = (text: string, chatId?: string) => {
     const reply = buildReply(context, files, activeTools);
-    const now = Date.now().toString(36);
+    const now = nextKey().toString(36);
     const assistantId = `a-${now}`;
     const pair: Message[] = [
       { id: `u-${now}`, role: "user", text },

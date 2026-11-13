@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
+import { useWirefront } from "@wirefront/ui/wirefront/provider";
 
 interface Zone {
   name: string;
@@ -70,13 +71,14 @@ export function CalendarsTimezone() {
   const [duration, setDuration] = useState(3);
   // The clock starts after mount so server and client render the same markup.
   const [now, setNow] = useState<Date | null>(null);
+  const { now: clock } = useWirefront();
   const [bestPulse, setBestPulse] = useState(false);
 
   useEffect(() => {
-    setNow(new Date());
-    const t = window.setInterval(() => setNow(new Date()), 30_000);
+    setNow(clock());
+    const t = window.setInterval(() => setNow(clock()), 30_000);
     return () => window.clearInterval(t);
-  }, []);
+  }, [clock]);
 
   // Header and rows share one horizontal scroller; bring the window into view
   // on narrow screens where the 24h track doesn't fit.

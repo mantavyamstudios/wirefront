@@ -29,6 +29,7 @@ import { RadioGroup, RadioGroupItem } from "@wirefront/ui/radio-group";
 import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@wirefront/ui/select";
 import { Separator } from "@wirefront/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@wirefront/ui/toggle-group";
+import { useWirefront } from "@wirefront/ui/wirefront/provider";
 
 type FirstDay = "sun" | "mon" | "sat";
 type TimeFormat = "h12" | "h24";
@@ -121,7 +122,8 @@ export function SettingsLocalization() {
   // sample first (09:30 UTC is the same calendar day in every time zone) and
   // switch to the real time once mounted. Keeps hydration deterministic.
   const [previewDate, setPreviewDate] = useState(() => new Date("2026-04-14T09:30:00Z"));
-  useEffect(() => setPreviewDate(new Date()), []);
+  const { now: clock } = useWirefront();
+  useEffect(() => setPreviewDate(clock()), [clock]);
 
   const formattedDate = useMemo(
     () => formatDate(previewDate, dateFormat, timezone),

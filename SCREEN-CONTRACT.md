@@ -68,7 +68,7 @@ Rules:
 4. **Lists are controlled.** Pagination, sort, filters and search are a `ListQuery` the builder sends to their API.
 5. **Forms use Base UI `Form` and `Field`.** Values are validated with the screen's zod schema in `onFormSubmit`; field errors the API returns (field → message) are passed to `<Form errors>`, which clears each one as the user edits that field.
 6. **No framework imports.** Links, toasts, formatting, strings and permissions come from `WirefrontProvider`.
-7. **Deterministic render.** No `Math.random()`, `Date.now()` or `new Date()` during render; time arrives as props or through the provider.
+7. **Deterministic render.** No `Math.random()` during render (the browser check fails on the hydration mismatch it causes). Screens read the clock only through the provider (`useWirefront().now`, `useFormat`), never `Date.now()` or `new Date()`, so tests, previews and server renders can pin it (a catalogue test enforces this). Ids for items created in the browser come from a counter, not the clock.
 8. **Client boundary.** Interactive views start with `"use client"`.
 9. **Licence header.** Every file starts with the SPDX header.
 10. **Unwired means hidden.** An optional action or link prop that isn't given hides its control. No control does nothing when clicked.

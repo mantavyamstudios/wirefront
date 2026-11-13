@@ -16,6 +16,10 @@ import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 
+/** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
+let keySeq = 0;
+const nextKey = () => ++keySeq;
+
 type BlockType = "vacation" | "sick" | "remote";
 
 interface Member {
@@ -205,7 +209,7 @@ export function CalendarsHolidays() {
   const addMember = (name: string, role: string) => {
     if (!name.trim()) return;
     const m: Member = {
-      id: `m_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      id: `m_${nextKey()}`,
       name: name.trim(),
       role: role.trim() || "—",
       initials: initialsOf(name),

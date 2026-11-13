@@ -66,6 +66,31 @@ describe("catalogue", () => {
     expect(problems).toEqual([]);
   });
 
+  it("strips only the text of multi-line code samples when scanning for clock reads", () => {
+    const sample = "const code = `line one\nparkedAt: new Date(),`;";
+    expect(withoutCodeSamples(sample)).not.toContain("new Date()");
+    const open = "$" + "{"; // a template expression opener, spelt out so it reads as test input
+    expect(withoutCodeSamples(`const id = \`m${open}Date.now()}\`;`)).toContain("Date.now()");
+    expect(withoutCodeSamples(`const s = \`a\n${open}String(Date.now())}\nb\`;`)).toContain("Date.now()");
+    expect(withoutCodeSamples("// `note`\nconst d = new Date();")).toContain("new Date()");
+  });
+
+  it("reads the clock only through the provider, never Date.now() or new Date() in a shipped screen", () => {
+    // Screens take "now" from WirefrontProvider (useWirefront().now / useFormat) so tests, previews and
+    // server renders can pin it. Multi-line template literals are code samples shown on screen, not code.
+    const problems: string[] = [];
+    for (const map of Object.values(SOURCE_FILES)) {
+      for (const file of Object.values(map ?? {})) {
+        const shipped = [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f));
+        for (const source of shipped) {
+          const code = withoutCodeSamples(readFileSync(source, "utf8"));
+          for (const m of code.matchAll(/Date\.now\(\)|new Date\(\)/g)) problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${m[0]}`);
+        }
+      }
+    }
+    expect(problems).toEqual([]);
+  });
+
   it("finds a showcase component for every listed design", () => {
     const missing = designs.filter((d) => !getShowcase(d.category, d.slug));
     expect(missing.map((d) => `${d.category}/${d.slug}`)).toEqual([]);
@@ -114,3 +139,72 @@ describe("catalogue", () => {
     expect(stale).toEqual([]);
   });
 });
+
+/**
+ * Blank out the literal text of multi-line template literals (code samples shown on screen), keeping
+ * everything else, including ${...} expressions, comments and one-line templates.
+ */
+function withoutCodeSamples(source: string): string {
+  let out = "";
+  let i = 0;
+  const copyQuoted = (quote: string) => {
+    out += source[i++];
+    while (i < source.length && source[i] !== quote) {
+      if (source[i] === "\\") out += source[i++];
+      out += source[i++];
+    }
+    out += source[i++] ?? "";
+  };
+  const template = (): void => {
+    const start = i;
+    let text = "";
+    i++;
+    let literal = "";
+    const parts: string[] = [];
+    while (i < source.length && source[i] !== "`") {
+      if (source[i] === "\\") {
+        literal += source[i] + (source[i + 1] ?? "");
+        i += 2;
+      } else if (source[i] === "$" && source[i + 1] === "{") {
+        parts.push(literal);
+        literal = "";
+        const saved = out;
+        out = "";
+        i += 2;
+        let depth = 1;
+        while (i < source.length && depth > 0) {
+          const c = source[i];
+          if (c === "`") template();
+          else if (c === '"' || c === "'") copyQuoted(c);
+          else {
+            if (c === "{") depth++;
+            if (c === "}") depth--;
+            if (depth > 0) out += c;
+            i++;
+          }
+        }
+        parts.push(`\${${out}}`);
+        out = saved;
+      } else literal += source[i++];
+    }
+    parts.push(literal);
+    i++;
+    text = source.slice(start, i);
+    out += text.includes("\n") ? `\`${parts.filter((_, n) => n % 2 === 1).join("")}\`` : text;
+  };
+  while (i < source.length) {
+    const c = source[i];
+    if (c === "/" && source[i + 1] === "/") {
+      const end = source.indexOf("\n", i);
+      out += source.slice(i, end === -1 ? undefined : end);
+      i = end === -1 ? source.length : end;
+    } else if (c === "/" && source[i + 1] === "*") {
+      const end = source.indexOf("*/", i + 2) + 2;
+      out += source.slice(i, end);
+      i = end;
+    } else if (c === "`") template();
+    else if (c === '"' || c === "'") copyQuoted(c);
+    else out += source[i++];
+  }
+  return out;
+}

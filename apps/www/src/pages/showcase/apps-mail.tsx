@@ -36,6 +36,10 @@ import { Kbd } from "@wirefront/ui/kbd";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
+/** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
+let keySeq = 0;
+const nextKey = () => ++keySeq;
+
 export type MailTone = "blue" | "orange" | "teal" | "violet" | "rose" | "amber" | "emerald" | "sky";
 export type MailFolder = "inbox" | "starred" | "snoozed" | "sent" | "drafts" | "archive" | "trash";
 
@@ -1024,7 +1028,7 @@ export function Mail({ account = me, threads: initialThreads = defaultThreads, l
       (next ?? rootRef.current)?.focus({ preventScroll: true });
     });
     setToast({
-      key: Date.now(),
+      key: nextKey(),
       text,
       undo: () => {
         patch(t.id, { folder: prevFolder });
@@ -1060,7 +1064,7 @@ export function Mail({ account = me, threads: initialThreads = defaultThreads, l
     const files = draftFiles[selected.id] ?? [];
     if (!text && !files.length) return;
     const msg: MailMessage = {
-      id: `r${Date.now()}`,
+      id: `r${nextKey()}`,
       from: account,
       to: `to ${selected.messages[selected.messages.length - 1].from.name.split(" ")[0]}`,
       time: "Just now",
@@ -1070,7 +1074,7 @@ export function Mail({ account = me, threads: initialThreads = defaultThreads, l
     patch(selected.id, { messages: [...selected.messages, msg], time: "Now" });
     setDrafts((d) => ({ ...d, [selected.id]: "" }));
     setDraftFiles((d) => ({ ...d, [selected.id]: [] }));
-    setToast({ key: Date.now(), text: "Reply sent" });
+    setToast({ key: nextKey(), text: "Reply sent" });
     requestAnimationFrame(() => readerRef.current?.scrollTo({ top: readerRef.current.scrollHeight, behavior: "smooth" }));
   };
 
@@ -1415,7 +1419,7 @@ export function Mail({ account = me, threads: initialThreads = defaultThreads, l
                               <MessageBlock
                                 fade={toggled === key}
                                 message={m}
-                                onAttachment={(a) => setToast({ key: Date.now(), text: `Downloading ${a.name}` })}
+                                onAttachment={(a) => setToast({ key: nextKey(), text: `Downloading ${a.name}` })}
                                 onToggle={() => {
                                   setToggled(key);
                                   setExpanded((x) => ({ ...x, [key]: !isOpen }));
@@ -1457,7 +1461,7 @@ export function Mail({ account = me, threads: initialThreads = defaultThreads, l
                 <Compose
                   onClose={() => setComposing(false)}
                   onSend={(to, subject, body, files) => {
-                    const id = `c${Date.now()}`;
+                    const id = `c${nextKey()}`;
                     setThreads((ts) => [
                       {
                         id,
@@ -1478,7 +1482,7 @@ export function Mail({ account = me, threads: initialThreads = defaultThreads, l
                       ...ts,
                     ]);
                     setComposing(false);
-                    setToast({ key: Date.now(), text: "Message sent" });
+                    setToast({ key: nextKey(), text: "Message sent" });
                   }}
                 />
               )}

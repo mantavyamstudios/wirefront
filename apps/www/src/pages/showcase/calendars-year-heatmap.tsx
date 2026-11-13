@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 import { Skeleton } from "@wirefront/ui/skeleton";
+import { useWirefront } from "@wirefront/ui/wirefront/provider";
 
 const DEFAULT_USERNAME = "mantavyam";
 
@@ -153,6 +154,7 @@ function sampleData(login: string): {
 }
 
 export function CalendarsYearHeatmap() {
+  const { now: clock } = useWirefront();
   const sample = useMemo(() => sampleData(DEFAULT_USERNAME), []);
   const [input, setInput] = useState(DEFAULT_USERNAME);
   // null = show the seeded sample; a string = fetch that user live.
@@ -199,7 +201,7 @@ export function CalendarsYearHeatmap() {
     ])
       .then(([c, p, e]) => {
         if (cancelled) return;
-        setAsOf(Date.now());
+        setAsOf(clock().getTime());
         setData(c);
         setProfile(p);
         setEvents(e);
@@ -214,7 +216,7 @@ export function CalendarsYearHeatmap() {
     return () => {
       cancelled = true;
     };
-  }, [username]);
+  }, [username, clock]);
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();

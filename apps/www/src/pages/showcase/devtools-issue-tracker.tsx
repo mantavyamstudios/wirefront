@@ -38,6 +38,10 @@ import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
 
+/** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
+let keySeq = 0;
+const nextKey = () => ++keySeq;
+
 export type IssueStatus = "backlog" | "todo" | "in_progress" | "in_review" | "done";
 export type IssuePriority = 0 | 1 | 2 | 3 | 4;
 export type IssueTone = "blue" | "orange" | "teal" | "violet" | "rose" | "amber" | "emerald" | "sky";
@@ -594,7 +598,7 @@ export function IssueTracker({
 
   const setStatus = (ids: string[], status: IssueStatus) => {
     update(ids, () => ({ status }), () => `moved to ${statusLabel(status)}`);
-    if (status === "done" && collapsed.has("done")) setToast({ key: Date.now(), text: `${describe(ids)} marked done` });
+    if (status === "done" && collapsed.has("done")) setToast({ key: nextKey(), text: `${describe(ids)} marked done` });
   };
   const setPriority = (ids: string[], priority: IssuePriority) => update(ids, () => ({ priority }), () => `set priority to ${priorityLabel(priority)}`);
   const setAssignee = (ids: string[], assignee?: string) =>
@@ -626,7 +630,7 @@ export function IssueTracker({
     setIssues((all) => all.filter((i) => !ids.includes(i.id)));
     setPicked(new Set());
     if (openId && ids.includes(openId)) setOpenId(null);
-    setToast({ key: Date.now(), text: `Deleted ${describe(ids)}` });
+    setToast({ key: nextKey(), text: `Deleted ${describe(ids)}` });
     rootRef.current?.focus({ preventScroll: true });
   };
 
@@ -689,7 +693,7 @@ export function IssueTracker({
               icon: <CopyIcon className="size-4" />,
               run: () => {
                 navigator.clipboard?.writeText(ids.join(", ")).catch(() => {});
-                setToast({ key: Date.now(), text: `Copied ${describe(ids)}` });
+                setToast({ key: nextKey(), text: `Copied ${describe(ids)}` });
               },
             },
             { id: "c-delete", label: ids.length === 1 ? "Delete issue" : `Delete ${ids.length} issues`, group: "Issue", icon: <Trash2Icon className="size-4" />, run: () => remove(ids) },

@@ -34,6 +34,10 @@ import { Kbd } from "@wirefront/ui/kbd";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 import { cn } from "@wirefront/ui/lib/utils";
 
+/** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
+let keySeq = 0;
+const nextKey = () => ++keySeq;
+
 export type CalendarTone = "teal" | "violet" | "sky" | "amber" | "rose";
 
 export interface CalendarSource {
@@ -413,7 +417,7 @@ export function CalendarWeek({
     if (e.button !== 0) return;
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     const at = Math.floor(minuteAt(e.clientY) / SNAP) * SNAP;
-    const ev: CalendarEvent = { id: `new-${Date.now()}`, title: "", calendar: calendars[0]?.id ?? "me", date, start: at, end: at + 30 };
+    const ev: CalendarEvent = { id: `new-${nextKey()}`, title: "", calendar: calendars[0]?.id ?? "me", date, start: at, end: at + 30 };
     setEvents((es) => [...es, ev]);
     setSelectedId(null);
     setEditing(null);
@@ -464,7 +468,7 @@ export function CalendarWeek({
     if (ev && (ev.start !== d.start || ev.end !== d.end || ev.date !== d.date)) {
       setSelectedId(d.id);
       setToast({
-        key: Date.now(),
+        key: nextKey(),
         text: `${ev.title || "Event"} → ${DOW[weekday(ev.date)]} ${fmtRange(ev.start, ev.end)}`,
         undo: () => {
           patch(d.id, { start: d.start, end: d.end, date: d.date });
@@ -483,7 +487,7 @@ export function CalendarWeek({
     setEditing(null);
     if (ev.title) {
       setToast({
-        key: Date.now(),
+        key: nextKey(),
         text: `Deleted “${ev.title}”`,
         undo: () => {
           setEvents((es) => [...es, ev]);
@@ -508,7 +512,7 @@ export function CalendarWeek({
   const newEventNow = () => {
     const date = mode === "day" ? focusDay : days.includes(today) ? today : days[0];
     const start = Math.ceil((date === today ? nowMin : 9 * 60) / 30) * 30;
-    const ev: CalendarEvent = { id: `new-${Date.now()}`, title: "", calendar: calendars[0]?.id ?? "me", date, start, end: start + 30 };
+    const ev: CalendarEvent = { id: `new-${nextKey()}`, title: "", calendar: calendars[0]?.id ?? "me", date, start, end: start + 30 };
     setEvents((es) => [...es, ev]);
     setSelectedId(ev.id);
     setEditing(ev.id);
@@ -1003,7 +1007,7 @@ export function CalendarWeek({
                       onSave={() => {
                         if (!panel.ev.title.trim()) patch(panel.ev.id, { title: "Busy" });
                         setEditing(null);
-                        setToast({ key: Date.now(), text: `Saved for ${DOW[weekday(panel.ev.date)]} ${fmtRange(panel.ev.start, panel.ev.end)}` });
+                        setToast({ key: nextKey(), text: `Saved for ${DOW[weekday(panel.ev.date)]} ${fmtRange(panel.ev.start, panel.ev.end)}` });
                         rootRef.current?.focus({ preventScroll: true });
                       }}
                       onTitle={(title) => patch(panel.ev.id, { title })}
