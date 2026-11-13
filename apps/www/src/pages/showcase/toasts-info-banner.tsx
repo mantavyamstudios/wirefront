@@ -28,7 +28,7 @@ export function ToastsInfoBanner() {
             <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
               <p className="min-w-0 flex-1 text-amber-900 text-sm dark:text-amber-100">
                 <span className="font-medium">Scheduled maintenance</span>{" "}
-                <span className="text-amber-800/80 dark:text-amber-200/80">
+                <span className="text-amber-800 dark:text-amber-200/80">
                   · Tue Apr 29 from 2:00–2:30 UTC. Brief downtime expected.
                 </span>
               </p>

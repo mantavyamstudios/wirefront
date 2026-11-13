@@ -640,7 +640,7 @@ export function Money({
           </div>
           <Badge variant={badgeVariant(since >= 0 ? "success" : "error")} className={cn(badgeTone(since >= 0 ? "success" : "error"), "h-6 px-2.5 text-sm mb-1.5")}>
             <Tween format={(n) => `${n >= 0 ? "+" : "−"}${money(Math.abs(n))}`} value={since} />
-            <span className="font-normal opacity-80">in 30 days</span>
+            <span className="font-normal">in 30 days</span>
           </Badge>
         </div>
       </div>

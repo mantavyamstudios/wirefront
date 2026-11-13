@@ -21,7 +21,7 @@ const THREADS: Thread[] = [
   {
     id: "1",
     initials: "MO",
-    color: "bg-emerald-500/80",
+    color: "bg-emerald-700",
     name: "Maya Okafor",
     preview: "I rewrote the audit log query — should we land it tonight or…",
     time: "2m",
@@ -31,7 +31,7 @@ const THREADS: Thread[] = [
   {
     id: "2",
     initials: "JL",
-    color: "bg-amber-500/80",
+    color: "bg-amber-700",
     name: "James Lin",
     preview: "Wrapped the migration. Feel free to merge whenever.",
     time: "14m",
@@ -40,7 +40,7 @@ const THREADS: Thread[] = [
   {
     id: "3",
     initials: "RP",
-    color: "bg-violet-500/80",
+    color: "bg-violet-700",
     name: "Riya Patel",
     preview: "Heads up — invite emails are bouncing for big-corp.com",
     time: "1h",
@@ -50,7 +50,7 @@ const THREADS: Thread[] = [
   {
     id: "4",
     initials: "DK",
-    color: "bg-sky-500/80",
+    color: "bg-sky-700",
     name: "Dani Kim",
     preview: "Bookmarked your sidebar design from yesterday, super clean.",
     time: "3h",
@@ -58,7 +58,7 @@ const THREADS: Thread[] = [
   {
     id: "5",
     initials: "AT",
-    color: "bg-rose-500/80",
+    color: "bg-rose-700",
     name: "Alex Tran",
     preview: "Pricing page copy is ready for your eyes.",
     time: "Yesterday",
@@ -66,7 +66,7 @@ const THREADS: Thread[] = [
   {
     id: "6",
     initials: "BF",
-    color: "bg-orange-500/80",
+    color: "bg-orange-700",
     name: "Ben Flores",
     preview: "Approved the new permission scopes — see you on standup.",
     time: "Mon",
@@ -74,7 +74,7 @@ const THREADS: Thread[] = [
   {
     id: "7",
     initials: "SQ",
-    color: "bg-cyan-500/80",
+    color: "bg-cyan-700",
     name: "Sara Quinn",
     preview: "We should chat about the empty-state copy direction.",
     time: "Mon",

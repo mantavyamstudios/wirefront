@@ -34,7 +34,7 @@ const ALL: Integration[] = [
     description: "Two-way sync issues and projects.",
     connected: true,
     glyph: "LN",
-    glyphTone: "bg-violet-500 text-white",
+    glyphTone: "bg-violet-700 text-white",
   },
   {
     id: "slack",
@@ -43,7 +43,7 @@ const ALL: Integration[] = [
     description: "Pipe activity and alerts into channels.",
     connected: true,
     glyph: "SL",
-    glyphTone: "bg-pink-500 text-white",
+    glyphTone: "bg-pink-700 text-white",
   },
   {
     id: "stripe",
@@ -51,7 +51,7 @@ const ALL: Integration[] = [
     category: "Billing",
     description: "Customer + subscription state in real time.",
     glyph: "ST",
-    glyphTone: "bg-indigo-500 text-white",
+    glyphTone: "bg-indigo-700 text-white",
     badge: "New",
   },
   {
@@ -76,7 +76,7 @@ const ALL: Integration[] = [
     category: "Observability",
     description: "Attach traces to user activity.",
     glyph: "SY",
-    glyphTone: "bg-amber-500 text-white",
+    glyphTone: "bg-amber-700 text-white",
   },
   {
     id: "notion",
@@ -92,7 +92,7 @@ const ALL: Integration[] = [
     category: "Design",
     description: "Embed frames and watch components.",
     glyph: "FG",
-    glyphTone: "bg-rose-500 text-white",
+    glyphTone: "bg-rose-700 text-white",
     badge: "Beta",
   },
 ];

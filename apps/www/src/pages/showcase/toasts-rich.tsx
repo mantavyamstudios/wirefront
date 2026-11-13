@@ -30,7 +30,7 @@ const SEED: { id: string; title: string; description: string; data: RichData }[]
       badgeTone: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
       meta: "12m ago",
       actions: [{ label: "Reply" }],
-      avatar: { initials: "RP", tone: "bg-violet-500/85 text-white" },
+      avatar: { initials: "RP", tone: "bg-violet-700 text-white" },
     },
   },
   {
@@ -42,7 +42,7 @@ const SEED: { id: string; title: string; description: string; data: RichData }[]
       badgeTone: "bg-violet-500/15 text-violet-600 dark:text-violet-400",
       meta: "2m ago",
       actions: [{ label: "Snooze" }, { label: "Review", primary: true }],
-      avatar: { initials: "JL", tone: "bg-amber-500/85 text-white" },
+      avatar: { initials: "JL", tone: "bg-amber-700 text-white" },
     },
   },
   {
@@ -54,7 +54,7 @@ const SEED: { id: string; title: string; description: string; data: RichData }[]
       badgeTone: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
       meta: "just now",
       actions: [{ label: "Assign" }, { label: "Welcome", primary: true }],
-      avatar: { initials: "MO", tone: "bg-emerald-500/85 text-white" },
+      avatar: { initials: "MO", tone: "bg-emerald-700 text-white" },
     },
   },
 ];

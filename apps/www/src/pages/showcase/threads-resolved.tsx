@@ -21,14 +21,14 @@ const THREADS: Thread[] = [
   {
     id: 1,
     initials: "MO",
-    tone: "bg-emerald-500/85 text-white",
+    tone: "bg-emerald-700 text-white",
     name: "Maya Okafor",
     time: "yesterday",
     preview:
       "Should we keep this paragraph? It's nicely written but covers the same ground as the diagram below.",
     resolvedBy: {
       initials: "JL",
-      tone: "bg-amber-500/85 text-white",
+      tone: "bg-amber-700 text-white",
       name: "James",
     },
     replyCount: 3,
@@ -36,14 +36,14 @@ const THREADS: Thread[] = [
   {
     id: 2,
     initials: "RP",
-    tone: "bg-violet-500/85 text-white",
+    tone: "bg-violet-700 text-white",
     name: "Riya Patel",
     time: "Mon",
     preview:
       "+1 from me. Also: can you tag the migration with audit-q3 so we can roll back cleanly if needed?",
     resolvedBy: {
       initials: "MO",
-      tone: "bg-emerald-500/85 text-white",
+      tone: "bg-emerald-700 text-white",
       name: "Maya",
     },
     replyCount: 1,
@@ -51,14 +51,14 @@ const THREADS: Thread[] = [
   {
     id: 3,
     initials: "DK",
-    tone: "bg-sky-500/85 text-white",
+    tone: "bg-sky-700 text-white",
     name: "Dani Kim",
     time: "Apr 21",
     preview:
       "Tightened the corner radius on the empty-state cards — I think it reads better now.",
     resolvedBy: {
       initials: "DK",
-      tone: "bg-sky-500/85 text-white",
+      tone: "bg-sky-700 text-white",
       name: "Dani",
     },
     replyCount: 0,

@@ -151,13 +151,13 @@ export function SettingsSecurity() {
         {/* 2FA banner */}
         <section className="mt-8 overflow-hidden rounded-xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.07] to-emerald-500/[0.02]">
           <div className="flex flex-wrap items-start gap-3 p-4 sm:flex-nowrap sm:gap-4 sm:p-5">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-800 dark:text-emerald-400">
               <ShieldCheckIcon className="size-5" />
             </div>
             <div className="min-w-0 flex-1 max-sm:basis-[calc(100%-3.25rem)]">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-medium text-sm">Two-factor authentication</span>
-                <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
+                <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-800 dark:text-emerald-400">
                   <CheckCircle2Icon className="size-2.5" />
                   Enabled
                 </span>
@@ -250,7 +250,7 @@ export function SettingsSecurity() {
                 <div
                   className={`flex size-9 shrink-0 items-center justify-center rounded-md ${
                     s.current
-                      ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                      ? "bg-emerald-500/15 text-emerald-800 dark:text-emerald-400"
                       : "bg-foreground/[0.06] text-muted-foreground"
                   }`}
                 >
@@ -263,7 +263,7 @@ export function SettingsSecurity() {
                       {s.location}
                     </span>
                     {s.current ? (
-                      <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
+                      <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-800 dark:text-emerald-400">
                         <CheckCircle2Icon className="size-2.5" />
                         This device
                       </span>

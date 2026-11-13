@@ -1,146 +1,20 @@
 {
-  "cards/event@desktop": {
-    "color-contrast": 1
-  },
-  "cards/event@mobile": {
-    "color-contrast": 1
-  },
-  "layouts/inbox-rail@desktop": {
-    "color-contrast": 7
-  },
-  "layouts/inbox-rail@mobile": {
-    "color-contrast": 7
-  },
-  "layouts/two-pane@desktop": {
-    "color-contrast": 11
-  },
-  "layouts/two-pane@mobile": {
-    "color-contrast": 10
-  },
-  "layouts/split-resizable@desktop": {
-    "color-contrast": 5
-  },
-  "layouts/split-resizable@mobile": {
-    "color-contrast": 5
-  },
-  "layouts/canvas-tools@desktop": {
-    "color-contrast": 4
-  },
-  "layouts/canvas-tools@mobile": {
-    "color-contrast": 2
-  },
   "settings/appearance@desktop": {
     "color-contrast": 1
   },
   "settings/appearance@mobile": {
     "color-contrast": 1
   },
-  "settings/integrations@desktop": {
-    "color-contrast": 4
-  },
-  "settings/integrations@mobile": {
-    "color-contrast": 4
-  },
-  "settings/security@mobile": {
-    "color-contrast": 1
-  },
-  "settings/security@desktop": {
-    "color-contrast": 1
-  },
   "settings/branding@mobile": {
-    "color-contrast": 2
+    "color-contrast": 1
   },
   "settings/branding@desktop": {
-    "color-contrast": 2
-  },
-  "calendars/week@desktop": {
-    "color-contrast": 15
-  },
-  "calendars/week@mobile": {
-    "color-contrast": 7
-  },
-  "calendars/holidays@desktop": {
-    "color-contrast": 6
-  },
-  "toasts/error-retry@mobile": {
-    "aria-hidden-focus": 1
+    "color-contrast": 1
   },
   "toasts/error-retry@desktop": {
     "aria-hidden-focus": 1
   },
-  "toasts/info-banner@desktop": {
-    "color-contrast": 1
-  },
-  "toasts/info-banner@mobile": {
-    "color-contrast": 1
-  },
-  "toasts/rich@desktop": {
-    "color-contrast": 3
-  },
-  "toasts/rich@mobile": {
-    "color-contrast": 1
-  },
-  "pricing/monthly-yearly@desktop": {
-    "color-contrast": 3
-  },
-  "pricing/monthly-yearly@mobile": {
-    "color-contrast": 3
-  },
-  "threads/inline-thread@desktop": {
-    "color-contrast": 2
-  },
-  "threads/side-panel@desktop": {
-    "color-contrast": 7
-  },
-  "threads/side-panel@mobile": {
-    "color-contrast": 7
-  },
-  "threads/comment-row@desktop": {
-    "color-contrast": 3
-  },
-  "threads/comment-row@mobile": {
-    "color-contrast": 3
-  },
-  "threads/mention-popover@desktop": {
-    "color-contrast": 1
-  },
-  "threads/mention-popover@mobile": {
-    "color-contrast": 1
-  },
-  "threads/resolved@desktop": {
-    "color-contrast": 6
-  },
-  "threads/resolved@mobile": {
-    "color-contrast": 3
-  },
-  "dev-tools/issue-tracker@desktop": {
-    "color-contrast": 1
-  },
-  "dev-tools/issue-tracker@mobile": {
-    "color-contrast": 1
-  },
-  "apps/mail@mobile": {
-    "color-contrast": 1
-  },
-  "apps/mail@desktop": {
-    "color-contrast": 1
-  },
-  "apps/team-chat@desktop": {
-    "color-contrast": 2
-  },
-  "apps/team-chat@mobile": {
-    "color-contrast": 1
-  },
-  "personal/money@mobile": {
-    "color-contrast": 1
-  },
-  "personal/money@desktop": {
-    "color-contrast": 1
-  },
-  "commerce/checkout@desktop": {
-    "color-contrast": 3
-  },
-  "commerce/checkout@mobile": {
-    "color-contrast": 3
+  "toasts/error-retry@mobile": {
+    "aria-hidden-focus": 1
   }
 }

@@ -36,9 +36,9 @@ const TONE_BG: Record<Event["tone"], string> = {
   indigo: "bg-indigo-500/15 border-indigo-500/40 text-indigo-800 dark:text-indigo-300",
   teal: "bg-teal-500/15 border-teal-500/40 text-teal-800 dark:text-teal-300",
   amber: "bg-amber-500/15 border-amber-500/40 text-amber-800 dark:text-amber-300",
-  rose: "bg-rose-500/15 border-rose-500/40 text-rose-700 dark:text-rose-300",
+  rose: "bg-rose-500/15 border-rose-500/40 text-rose-800 dark:text-rose-300",
   violet: "bg-violet-500/15 border-violet-500/40 text-violet-800 dark:text-violet-300",
-  sky: "bg-sky-500/15 border-sky-500/40 text-sky-700 dark:text-sky-300",
+  sky: "bg-sky-500/15 border-sky-500/40 text-sky-800 dark:text-sky-300",
 };
 
 const HOURS = Array.from({ length: 11 }, (_, i) => 8 + i); // 08:00 – 18:00
@@ -183,7 +183,7 @@ export function CalendarsWeek() {
                       <div className="truncate text-[11px] font-medium leading-tight">
                         {e.title}
                       </div>
-                      <div className="truncate font-mono text-[10px] opacity-70">
+                      <div className="truncate font-mono text-[10px]">
                         {formatTime(e.start)}–{formatTime(e.start + e.duration)}
                         {e.attendees ? ` · ${e.attendees}` : ""}
                       </div>

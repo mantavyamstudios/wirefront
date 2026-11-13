@@ -11,6 +11,18 @@ import { Separator } from "@wirefront/ui/separator";
 import { useColorScheme } from "@wirefront/ui/wirefront/provider";
 import { ScrollArea } from "@wirefront/ui/scroll-area";
 
+/** VS light with the two token colours that miss 4.5:1 on the editor background darkened. */
+const vsLightAA = {
+  ...themes.vsLight,
+  styles: themes.vsLight.styles.map((rule) =>
+    rule.types.includes("attr-name")
+      ? { ...rule, style: { ...rule.style, color: "rgb(204, 0, 0)" } }
+      : rule.types.includes("class-name")
+        ? { ...rule, style: { ...rule.style, color: "rgb(30, 105, 128)" } }
+        : rule,
+  ),
+};
+
 const CODE = `import { useState } from "react";
 import { Button } from "@wirefront/ui/button";
 
@@ -209,7 +221,7 @@ export function LayoutsSplitResizable() {
 function EditorPane() {
   // Follows the builder's theme (WirefrontProvider or the `dark` class on <html>).
   const resolved = useColorScheme();
-  const theme = resolved === "dark" ? themes.vsDark : themes.vsLight;
+  const theme = resolved === "dark" ? themes.vsDark : vsLightAA;
   // The resolved theme is only known on the client; colouring tokens before
   // mount would make the server HTML disagree with hydration.
   const [mounted, setMounted] = useState(false);

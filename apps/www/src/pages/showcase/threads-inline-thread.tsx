@@ -18,14 +18,14 @@ interface Comment {
 const COMMENTS: Comment[] = [
   {
     initials: "MO",
-    tone: "bg-emerald-500/85 text-white",
+    tone: "bg-emerald-700 text-white",
     name: "Maya Okafor",
     time: "10m",
     body: "Should we keep this paragraph? It's nicely written but covers the same ground as the diagram below.",
   },
   {
     initials: "JL",
-    tone: "bg-amber-500/85 text-white",
+    tone: "bg-amber-700 text-white",
     name: "James Lin",
     time: "8m",
     body: "I'd keep it. New readers don't always parse the diagram on first pass — the prose is the safety net.",
@@ -40,7 +40,7 @@ export function ThreadsInlineThread() {
   const add = (body: string) =>
     setComments((c) => [
       ...c,
-      { initials: "MS", tone: "bg-violet-500/85 text-white", name: "You", time: "now", body },
+      { initials: "MS", tone: "bg-violet-700 text-white", name: "You", time: "now", body },
     ]);
 
   return (

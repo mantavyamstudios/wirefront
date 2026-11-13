@@ -125,16 +125,16 @@ const TABS = ["All", "Unread", "Mentions"] as const;
 type Tab = (typeof TABS)[number];
 
 const AVATAR_COLORS: Record<string, string> = {
-  MO: "bg-emerald-500/80",
-  JL: "bg-amber-500/80",
-  RP: "bg-violet-500/80",
-  DK: "bg-sky-500/80",
-  AT: "bg-rose-500/80",
-  BF: "bg-orange-500/80",
-  SQ: "bg-cyan-500/80",
-  TH: "bg-teal-500/80",
-  NB: "bg-fuchsia-500/80",
-  OP: "bg-indigo-500/80",
+  MO: "bg-emerald-700",
+  JL: "bg-amber-700",
+  RP: "bg-violet-700",
+  DK: "bg-sky-700",
+  AT: "bg-rose-700",
+  BF: "bg-orange-700",
+  SQ: "bg-cyan-700",
+  TH: "bg-teal-700",
+  NB: "bg-fuchsia-700",
+  OP: "bg-indigo-700",
 };
 
 export function LayoutsTwoPane() {

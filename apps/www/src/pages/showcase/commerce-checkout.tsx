@@ -992,7 +992,7 @@ export function Checkout({
                     return (
                       <section
                         aria-labelledby={`${uid}-h${s}`}
-                        className={cn("transition-[opacity] duration-200", !isOpen && !isDone && "opacity-56")}
+                        className={cn("transition-[opacity] duration-200", !isOpen && !isDone && "text-muted-foreground")}
                         key={s}
                       >
                         <div className="flex items-center gap-3 p-4">

@@ -53,14 +53,14 @@ const BLOCK_TYPES: { id: BlockType; label: string }[] = [
 ];
 
 const TONES = [
-  "bg-emerald-500/85 text-white",
-  "bg-amber-500/85 text-white",
-  "bg-violet-500/85 text-white",
-  "bg-sky-500/85 text-white",
-  "bg-rose-500/85 text-white",
-  "bg-orange-500/85 text-white",
-  "bg-cyan-500/85 text-white",
-  "bg-pink-500/85 text-white",
+  "bg-emerald-700 text-white",
+  "bg-amber-700 text-white",
+  "bg-violet-700 text-white",
+  "bg-sky-700 text-white",
+  "bg-rose-700 text-white",
+  "bg-orange-700 text-white",
+  "bg-cyan-700 text-white",
+  "bg-pink-700 text-white",
 ];
 
 function initialsOf(name: string) {

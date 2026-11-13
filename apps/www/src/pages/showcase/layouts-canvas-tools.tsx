@@ -112,10 +112,10 @@ const SEED_SHAPES: Shape[] = [
 ];
 
 const COLLAB = [
-  { initials: "SK", tone: "bg-rose-500" },
-  { initials: "MR", tone: "bg-emerald-500" },
-  { initials: "JL", tone: "bg-sky-500" },
-  { initials: "DV", tone: "bg-amber-500" },
+  { initials: "SK", tone: "bg-rose-700" },
+  { initials: "MR", tone: "bg-emerald-700" },
+  { initials: "JL", tone: "bg-sky-700" },
+  { initials: "DV", tone: "bg-amber-700" },
 ];
 
 interface Point {

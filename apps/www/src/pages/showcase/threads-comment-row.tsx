@@ -20,7 +20,7 @@ interface Comment {
 const COMMENTS: Comment[] = [
   {
     initials: "MO",
-    tone: "bg-emerald-500/85 text-white",
+    tone: "bg-emerald-700 text-white",
     name: "Maya Okafor",
     time: "2h ago",
     body: (
@@ -39,7 +39,7 @@ const COMMENTS: Comment[] = [
   },
   {
     initials: "JL",
-    tone: "bg-amber-500/85 text-white",
+    tone: "bg-amber-700 text-white",
     name: "James Lin",
     time: "1h ago",
     body: (
@@ -54,7 +54,7 @@ const COMMENTS: Comment[] = [
   },
   {
     initials: "RP",
-    tone: "bg-violet-500/85 text-white",
+    tone: "bg-violet-700 text-white",
     name: "Riya Patel",
     time: "47m ago",
     body: (

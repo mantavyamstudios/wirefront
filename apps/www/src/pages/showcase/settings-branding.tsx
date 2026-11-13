@@ -526,7 +526,6 @@ function PalettePreview({ colors }: { colors: Record<SwatchKey, string> }) {
         style={{
           borderColor: "var(--p-border)",
           color: "var(--p-foreground)",
-          opacity: 0.7,
         }}
       >
         <div className="flex items-center gap-1.5">
@@ -536,7 +535,7 @@ function PalettePreview({ colors }: { colors: Record<SwatchKey, string> }) {
           />
           Acme · Pro
         </div>
-        <span style={{ opacity: 0.5 }}>v2.4</span>
+        <span>v2.4</span>
       </div>
 
       <div className="p-4">

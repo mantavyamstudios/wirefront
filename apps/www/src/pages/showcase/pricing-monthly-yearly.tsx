@@ -99,7 +99,11 @@ export function PricingMonthlyYearly() {
               }`}
             >
               Yearly
-              <span className="ml-2 rounded bg-emerald-500/20 px-1.5 py-0.5 font-mono text-[11px] text-emerald-700 normal-case tracking-normal dark:text-emerald-300">
+              <span
+                className={`ml-2 rounded px-1.5 py-0.5 font-mono text-[11px] normal-case tracking-normal ${
+                  annual ? "bg-background/15 text-background" : "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"
+                }`}
+              >
                 save 20%
               </span>
             </button>
@@ -138,7 +142,7 @@ export function PricingMonthlyYearly() {
                 {annual && price > 0 ? (
                   <div className="mt-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                     Was{" "}
-                    <s className="opacity-60">
+                    <s>
                       <span className="sr-only">monthly price </span>${p.monthly}
                     </s>{" "}
                     · billed yearly
