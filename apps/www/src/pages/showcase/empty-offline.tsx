@@ -39,7 +39,7 @@ export function EmptyOffline() {
           <span className="-bottom-1 absolute right-2 size-3 rounded-full border-2 border-background bg-destructive" />
         </div>
 
-        <div className="mt-8 font-mono text-[10px] text-destructive uppercase tracking-[0.4em]">
+        <div className="mt-8 font-mono text-[10px] text-destructive-foreground uppercase tracking-[0.4em]">
           Offline · waiting
         </div>
 

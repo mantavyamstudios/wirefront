@@ -35,7 +35,7 @@ import { withAppServer } from "./lib/app-server";
 import { readyScreens } from "./lib/contract";
 import { readDesignMeta } from "./lib/registry-meta";
 import { trackProgress } from "./lib/progress";
-import { waitForSettledLayout } from "./lib/settle";
+import { SETTLE_TIMER_MS, waitForSettledLayout } from "./lib/settle";
 import { compare, type Counts } from "./lint-gate";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -104,9 +104,34 @@ async function checkScreen(
     await page.goto(`${base}/c/${design}?preview=%221%22${stateParam}`, { waitUntil: "networkidle", timeout: 60_000 });
     result.settleMs = await waitForSettledLayout(page);
     await page.addScriptTag({ content: AXE_SOURCE });
-    const violations = (await page.evaluate(
-      `axe.run(document, { runOnly: { type: "tag", values: ${JSON.stringify(AXE_TAGS)} }, resultTypes: ["violations"] }).then((r) => r.violations.map((v) => [v.id, v.nodes.map((n) => n.target.join(" ") + " — " + (n.failureSummary || "").replace(/\\s+/g, " ").slice(0, 240))]))`,
-    )) as [string, string[]][];
+    const runAxe = async (only: { type: "tag" | "rule"; values: string[] }) =>
+      (await page.evaluate(
+        `axe.run(document, { runOnly: ${JSON.stringify(only)}, resultTypes: ["violations"] }).then((r) => r.violations.map((v) => [v.id, v.nodes.map((n) => n.target.join(" ") + " — " + (n.failureSummary || "").replace(/\\s+/g, " ").slice(0, 240))]))`,
+      )) as [string, string[]][];
+    let violations = await runAxe({ type: "tag", values: AXE_TAGS });
+    // A screen whose demo adds content on a timer (a chat reply fading in) can
+    // start an entrance animation after the layout settled; axe then measures
+    // a half-transparent colour. Contrast is judged on what users read, so
+    // let running finite animations finish and check contrast again. Logged,
+    // never silent; anything still failing is reported as before.
+    if (violations.some(([rule]) => rule === "color-contrast")) {
+      const waited = (await page.evaluate(`(async () => {
+        const finite = document.getAnimations().filter((a) => {
+          if (a.playState !== "running") return false;
+          const end = a.effect && a.effect.getComputedTiming().endTime;
+          return end !== Infinity && end < ${SETTLE_TIMER_MS};
+        });
+        await Promise.all(finite.map((a) => a.finished.catch(() => undefined)));
+        return finite.length;
+      })()`)) as number;
+      if (waited > 0) {
+        const recheck = await runAxe({ type: "rule", values: ["color-contrast"] });
+        const before = violations.find(([rule]) => rule === "color-contrast")?.[1].length ?? 0;
+        const after = recheck.find(([rule]) => rule === "color-contrast")?.[1].length ?? 0;
+        console.log(`[browser] note ${design}~${state}@${vp.name}: color-contrast measured during ${waited} running animation(s); rechecked after they finished: ${before} → ${after}`);
+        violations = [...violations.filter(([rule]) => rule !== "color-contrast"), ...recheck.filter(([rule]) => rule === "color-contrast")];
+      }
+    }
     for (const [rule, nodes] of violations) {
       result.a11y[rule] = nodes.length;
       result.a11yNodes = [...(result.a11yNodes ?? []), ...nodes.map((n) => `${rule}: ${n}`)];
