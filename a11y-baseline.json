@@ -476,15 +476,6 @@
   "ai/assistant-start@mobile": {
     "color-contrast": 1
   },
-  "ai/run-replay@mobile": {
-    "color-contrast": 1
-  },
-  "ai/prompt-test-bench@mobile": {
-    "color-contrast": 1
-  },
-  "ai/prompt-test-bench@desktop": {
-    "color-contrast": 3
-  },
   "ai/co-writing-doc@mobile": {
     "button-name": 1
   },
