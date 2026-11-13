@@ -317,7 +317,8 @@ export const CATEGORIES: Category[] = [
       {
         slug: "usage",
         title: "Plan usage",
-        blurb: "Plan summary, cycle progress, layered limit meters.",
+        blurb: "Plan, billing cycle and usage meters from your billing API, with amber warnings near each limit and optional manage and upgrade links.",
+        states: ["ready", "loading", "error"],
       },
       {
         slug: "analytics",
@@ -552,7 +553,8 @@ export const CATEGORIES: Category[] = [
       {
         slug: "billing",
         title: "Billing",
-        blurb: "Plan card, payment method, credits, invoice ledger.",
+        blurb: "Plan with live status (active, trial, past due, canceled), payment method via your billing portal, credits, tax ID and hosted invoices, with a confirmed cancel.",
+        states: ["ready", "loading", "error"],
       },
       {
         slug: "integrations",

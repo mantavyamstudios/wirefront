@@ -208,12 +208,6 @@
   "layouts/split-shell@desktop": {
     "color-contrast": 2
   },
-  "dashboards/usage@desktop": {
-    "color-contrast": 5
-  },
-  "dashboards/usage@mobile": {
-    "color-contrast": 5
-  },
   "dashboards/analytics@desktop": {
     "color-contrast": 22
   },
