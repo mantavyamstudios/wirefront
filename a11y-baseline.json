@@ -92,12 +92,6 @@
   "forms/api-key@mobile": {
     "color-contrast": 1
   },
-  "tables/invoices@desktop": {
-    "color-contrast": 1
-  },
-  "tables/invoices@mobile": {
-    "color-contrast": 1
-  },
   "tables/orders@desktop": {
     "aria-prohibited-attr": 24
   },
@@ -106,12 +100,6 @@
   },
   "tables/logs@mobile": {
     "color-contrast": 8
-  },
-  "tables/api-keys@desktop": {
-    "color-contrast": 1
-  },
-  "tables/api-keys@mobile": {
-    "color-contrast": 1
   },
   "tables/inventory@desktop": {
     "color-contrast": 7
@@ -134,12 +122,6 @@
   "tables/transactions@mobile": {
     "button-name": 3,
     "color-contrast": 6
-  },
-  "tables/audit-log@desktop": {
-    "color-contrast": 3
-  },
-  "tables/audit-log@mobile": {
-    "color-contrast": 3
   },
   "filters/faceted@desktop": {
     "label-content-name-mismatch": 3

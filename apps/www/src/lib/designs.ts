@@ -388,7 +388,8 @@ export const CATEGORIES: Category[] = [
       {
         slug: "invoices",
         title: "Invoices",
-        blurb: "Semantic table with status pills and right-aligned tabular amounts.",
+        blurb: "Invoices from your API with search, status filter, sorting and paging, amounts in each invoice's currency, and the outstanding total across all matches.",
+        states: ["ready", "loading", "empty", "error"],
       },
       {
         slug: "members",
@@ -410,7 +411,8 @@ export const CATEGORIES: Category[] = [
       {
         slug: "api-keys",
         title: "API keys",
-        blurb: "Masked keys with copy buttons, scopes, and a destructive row action.",
+        blurb: "API keys listed by prefix only: create with scopes, rotate and revoke with confirmation, and each new secret shown once to copy.",
+        states: ["ready", "loading", "empty", "error"],
         status: "wip",
       },
       {
@@ -431,7 +433,8 @@ export const CATEGORIES: Category[] = [
       {
         slug: "audit-log",
         title: "Audit log",
-        blurb: "Audit trail with active filter chips and a clear-all action.",
+        blurb: "Security events with filter chips, outcome badges and older pages loaded on demand, times shown in your time zone.",
+        states: ["ready", "loading", "empty", "error"],
       },
       {
         slug: "admin-users",

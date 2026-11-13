@@ -492,12 +492,6 @@
     "lint/a11y/useSemanticElements": 1,
     "lint/suspicious/noArrayIndexKey": 2
   },
-  "apps/www/src/pages/showcase/table-api-keys.tsx": {
-    "lint/style/noNonNullAssertion": 1
-  },
-  "apps/www/src/pages/showcase/table-audit-log.tsx": {
-    "lint/suspicious/noArrayIndexKey": 2
-  },
   "apps/www/src/pages/showcase/table-inventory.tsx": {
     "lint/a11y/useSemanticElements": 1
   },

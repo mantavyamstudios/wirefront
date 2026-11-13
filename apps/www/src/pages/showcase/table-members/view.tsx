@@ -258,7 +258,7 @@ export function MembersTable({
   } else if (status === "error") {
     body = (
       <TableRow>
-        <TableCell className="py-12 text-center" colSpan={6}>
+        <TableCell className="whitespace-normal py-12 text-center" colSpan={6}>
           <p className="font-medium">{t.errorTitle}</p>
           {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
           {onRetry ? (
@@ -272,7 +272,7 @@ export function MembersTable({
   } else if (rows.length === 0) {
     body = (
       <TableRow>
-        <TableCell className="py-12 text-center" colSpan={6}>
+        <TableCell className="whitespace-normal py-12 text-center" colSpan={6}>
           <p className="font-medium">{filtered ? t.noMatchTitle : t.emptyTitle}</p>
           <p className="mt-1 text-muted-foreground text-sm">{filtered ? t.noMatchDescription : t.emptyDescription}</p>
           {filtered ? (
