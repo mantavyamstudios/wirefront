@@ -76,6 +76,12 @@ export const DEFAULTS = {
   currency: "USD",
 } as const;
 
+// Module-level, so the defaults keep the same identity across renders and
+// effects that depend on them don't re-run (or loop) every render.
+const systemNow = () => new Date();
+const noToast = () => {};
+const allowAll = () => true;
+
 /** The provider's settings with defaults applied. */
 export function useWirefront() {
   const config = useContext(Context);
@@ -84,9 +90,9 @@ export function useWirefront() {
     locale: config.locale ?? DEFAULTS.locale,
     timeZone: config.timeZone ?? DEFAULTS.timeZone,
     currency: config.currency ?? DEFAULTS.currency,
-    toast: config.toast ?? (() => {}),
-    can: config.can ?? (() => true),
-    now: config.now ?? (() => new Date()),
+    toast: config.toast ?? noToast,
+    can: config.can ?? allowAll,
+    now: config.now ?? systemNow,
   };
 }
 

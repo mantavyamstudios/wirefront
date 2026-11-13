@@ -16,6 +16,7 @@ import {
   useColorScheme,
   useFormat,
   useMessages,
+  useWirefront,
   WirefrontLink,
   WirefrontProvider,
 } from "@wirefront/ui/wirefront/provider";
@@ -178,6 +179,15 @@ function AppLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
 }
 
 describe("WirefrontProvider", () => {
+  it("keeps default functions stable across renders, so effects depending on them don't loop", () => {
+    const { result, rerender } = renderHook(() => useWirefront());
+    const first = result.current;
+    rerender();
+    expect(result.current.now).toBe(first.now);
+    expect(result.current.can).toBe(first.can);
+    expect(result.current.toast).toBe(first.toast);
+  });
+
   it("formats with the provider's locale, time zone and currency (UTC and en-US by default)", () => {
     const at = new Date("2026-04-14T21:30:00Z");
     const plain = renderHook(() => useFormat()).result.current;
