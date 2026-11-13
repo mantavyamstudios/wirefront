@@ -246,7 +246,7 @@ export function LayoutsThreePane() {
           <button
             type="button"
             aria-haspopup="menu"
-            className="flex w-full items-center justify-between gap-2 text-left"
+            className="flex min-h-6 w-full items-center justify-between gap-2 text-left"
           >
             <span className="font-heading text-sm">{workspace.name}</span>
             <ChevronDownIcon className="size-3.5 opacity-60" />

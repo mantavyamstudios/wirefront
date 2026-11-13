@@ -365,7 +365,7 @@ function CheckRow({ check }: { check: Check }) {
       <a
         href="#"
         aria-label={`Details for ${check.name}`}
-        className="hidden text-[12px] text-sky-700 hover:underline sm:inline dark:text-sky-400"
+        className="hidden min-h-6 items-center text-[12px] text-sky-700 hover:underline sm:inline-flex dark:text-sky-400"
       >
         Details
       </a>

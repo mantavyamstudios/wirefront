@@ -256,21 +256,21 @@ export function SettingsBranding() {
               <button
                 type="button"
                 onClick={() => setDomainStatus("verified")}
-                className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:text-foreground"
+                className="min-h-6 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:text-foreground"
               >
                 · simulate verified
               </button>
               <button
                 type="button"
                 onClick={() => setDomainStatus("pending")}
-                className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:text-foreground"
+                className="min-h-6 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:text-foreground"
               >
                 · simulate pending
               </button>
               <button
                 type="button"
                 onClick={() => setDomainStatus("unset")}
-                className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:text-foreground"
+                className="min-h-6 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:text-foreground"
               >
                 · simulate unset
               </button>

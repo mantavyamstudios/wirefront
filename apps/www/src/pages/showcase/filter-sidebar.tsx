@@ -238,7 +238,7 @@ export function FilterSidebar() {
               {CATEGORIES.map((c) => (
                 <Label
                   key={c.value}
-                  className="flex cursor-pointer items-center gap-2 text-sm"
+                  className="flex min-h-6 cursor-pointer items-center gap-2 text-sm"
                 >
                   <Checkbox value={c.value} />
                   <span className="flex-1">{c.label}</span>
@@ -332,7 +332,7 @@ export function FilterSidebar() {
               {RATINGS.map((r) => (
                 <Label
                   key={r.value}
-                  className="flex cursor-pointer items-center gap-2 text-sm"
+                  className="flex min-h-6 cursor-pointer items-center gap-2 text-sm"
                 >
                   <Checkbox value={r.value} />
                   <span className="flex-1">

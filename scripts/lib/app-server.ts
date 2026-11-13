@@ -16,7 +16,8 @@
  *   SIGKILL after 5s). It also runs on exit, Ctrl-C, SIGTERM and uncaught
  *   errors, so an interrupted check still cleans up.
  *
- * - Observable: the server's output is kept in .test-status/server-<label>.log,
+ * - Observable: the server's output is appended to .test-status/server-<label>.log
+ *   (one timestamped section per run),
  *   and any dependency optimisation or reload after warm-up raises an
  *   [alert], so a page that fails mid-check can be traced to the server.
  *
@@ -24,7 +25,7 @@
  * or stopped then).
  */
 import { type ChildProcess, spawn } from "node:child_process";
-import { appendFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync } from "node:fs";
 import { chromium } from "playwright";
 import { createServer } from "node:net";
 import { dirname, resolve } from "node:path";
@@ -149,7 +150,8 @@ export async function startAppServer(label: string): Promise<AppServer> {
   let warm = false;
   mkdirSync(STATUS_DIR, { recursive: true });
   const logFile = resolve(STATUS_DIR, `server-${label}.log`);
-  writeFileSync(logFile, "");
+  // Append, never reset: a failure noticed after a later run must still be traceable.
+  appendFileSync(logFile, `\n=== ${new Date().toISOString()} · ${label} server ===\n`);
   const keep = (d: Buffer) => {
     const text = d.toString();
     log = (log + text).slice(-20_000);

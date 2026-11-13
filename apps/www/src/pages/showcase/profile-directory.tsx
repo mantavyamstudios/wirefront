@@ -227,7 +227,7 @@ export function ProfileDirectory() {
                     if (active) jumpTo(l);
                   }}
                   className={
-                    "grid h-5 w-6 place-items-center rounded transition-colors sm:w-5 pointer-coarse:h-[1.375rem] " +
+                    "grid size-6 place-items-center rounded transition-colors " +
                     (active
                       ? "text-foreground hover:bg-foreground/[0.06]"
                       : "text-muted-foreground")

@@ -64,7 +64,7 @@ type ViewportName = (typeof VIEWPORTS)[number]["name"];
 // Clipped containers are reported but not gated: decorative layers are
 // clipped intentionally and the metric can't tell them apart.
 const GATED_VIEWPORTS: ViewportName[] = ["mobile", "tablet", "laptop"];
-const GATES = ["pageOverflowX", "offenderCount", "squeezedCount"] as const;
+const GATES = ["pageOverflowX", "offenderCount", "squeezedCount", "targetSizeFails"] as const;
 
 interface Metrics {
   vw: number;
@@ -82,6 +82,9 @@ interface Metrics {
   targets: number;
   lt24: number;
   lt44: number;
+  /** Targets failing WCAG 2.2 SC 2.5.8 (under 24px with no spacing exception). */
+  targetSizeFails: number;
+  targetSizeExamples: string[];
   smallTargets: string[];
   textEls: number;
   tiny: number;
@@ -175,6 +178,45 @@ const MEASURE = `(() => {
     if (m < 44) lt44++;
   }
 
+  // WCAG 2.2 SC 2.5.8 (target size, minimum): a target smaller than 24x24 still
+  // passes if a 24px circle centred on it intersects no other target and no
+  // other undersized target's circle. Links inside running text are exempt.
+  const inText = (el) =>
+    (el.tagName === "A" || el.tagName === "BUTTON") &&
+    getComputedStyle(el).display.startsWith("inline") &&
+    [...(el.parentElement?.childNodes ?? [])].some((n) => n !== el && n.nodeType === 3 && n.textContent.trim());
+  // A control inside a <label> is activated by the whole label, so that is its target.
+  const boxes = interactive.map((el) => ({ el, r: (el.closest("label") ?? el).getBoundingClientRect() }));
+  // Visually hidden native inputs (1px, e.g. behind Base UI checkboxes) aren't pointer
+  // targets; their visible control is measured on its own.
+  const pointable = boxes.filter(({ r }) => r.width > 2 && r.height > 2);
+  const small = pointable.filter(({ el, r }) => Math.min(r.width, r.height) < 24 && !inText(el));
+  const centre = (r) => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+  const circleHitsRect = (c, r) => {
+    const dx = c.x - Math.max(r.left, Math.min(c.x, r.right));
+    const dy = c.y - Math.max(r.top, Math.min(c.y, r.bottom));
+    return dx * dx + dy * dy < 12 * 12;
+  };
+  // Nested or stacked boxes (e.g. a slider's thumb and its range input) are one control.
+  const overlap = (a, b) => {
+    const w = Math.min(a.r.right, b.r.right) - Math.max(a.r.left, b.r.left);
+    const h = Math.min(a.r.bottom, b.r.bottom) - Math.max(a.r.top, b.r.top);
+    return w > 0 && h > 0 && w * h >= 0.5 * Math.min(a.r.width * a.r.height, b.r.width * b.r.height);
+  };
+  const contains = (a, b) => a.el.contains(b.el) || b.el.contains(a.el) || overlap(a, b);
+  const wcagFails = [];
+  for (const t of small) {
+    const c = centre(t.r);
+    const clash =
+      pointable.find((o) => o !== t && !contains(o, t) && circleHitsRect(c, o.r)) ??
+      small.find((o) => {
+        if (o === t || contains(o, t)) return false;
+        const d = centre(o.r);
+        return (c.x - d.x) ** 2 + (c.y - d.y) ** 2 < 24 * 24;
+      });
+    if (clash) wcagFails.push(desc(t.el) + " " + Math.round(t.r.width) + "x" + Math.round(t.r.height) + ", too close to " + desc(clash.el));
+  }
+
   return {
     vw, docW: de.scrollWidth, pageOverflowX: Math.max(0, de.scrollWidth - vw),
     offenderCount: offenders.length,
@@ -187,6 +229,7 @@ const MEASURE = `(() => {
     squeezedCount: squeezed.length,
     squeezed: squeezed.sort((a, b) => a.w - b.w).slice(0, 5),
     targets: interactive.length, lt24, lt44, smallTargets,
+    targetSizeFails: wcagFails.length, targetSizeExamples: wcagFails.slice(0, 5),
     textEls, tiny,
   };
 })()`;

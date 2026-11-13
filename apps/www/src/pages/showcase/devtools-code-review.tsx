@@ -1141,7 +1141,7 @@ export function CodeReview({
                           initial={{ height: 0, opacity: 0 }}
                           transition={{ duration: 0.22, ease }}
                         >
-                          <div className="font-mono text-[12px] leading-5">
+                          <div className="font-mono text-[12px] leading-6">
                             {hunks.map((h, hi) => (
                               <Fragment key={h.header}>
                                 <div className="flex items-center gap-2 bg-info/6 px-3 py-1 text-info-foreground dark:bg-info/10">
