@@ -18,6 +18,7 @@ import { Textarea } from "@wirefront/ui/textarea";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, MoveIcon, PaletteIcon, RotateCcwIcon, XIcon, ZoomInIcon, ZoomOutIcon } from "lucide-react";
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from "motion/react";
 import { type KeyboardEvent, type PointerEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
@@ -697,7 +698,7 @@ function UsernameStatusLine({
   );
 }
 
-export function ProfileSettings({
+function ProfileSettingsScreen({
   profile,
   timeZones: zones,
   domain,
@@ -1155,5 +1156,13 @@ export function ProfileSettings({
         t={t}
       />
     </div>
+  );
+}
+
+export function ProfileSettings(props: ProfileSettingsProps) {
+  return (
+    <ScreenBoundary name="ProfileSettings">
+      <ProfileSettingsScreen {...props} />
+    </ScreenBoundary>
   );
 }

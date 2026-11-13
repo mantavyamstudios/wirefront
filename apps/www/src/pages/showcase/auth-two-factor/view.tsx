@@ -13,6 +13,7 @@ import { Switch } from "@wirefront/ui/switch";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { LifeBuoyIcon } from "lucide-react";
 import { useId, useState } from "react";
 
@@ -81,7 +82,7 @@ function BrandMark() {
 
 const DIGITS = Array.from({ length: CODE_LENGTH }, (_, i) => `d${i}`);
 
-export function TwoFactor({ onVerify, onSuccess, rememberDays, supportHref, className }: TwoFactorProps) {
+function TwoFactorScreen({ onVerify, onSuccess, rememberDays, supportHref, className }: TwoFactorProps) {
   const t = useMessages("twoFactor", TWO_FACTOR_MESSAGES);
   const id = useId();
   const [method, setMethod] = useState<TwoFactorInput["method"]>("totp");
@@ -225,5 +226,13 @@ export function TwoFactor({ onVerify, onSuccess, rememberDays, supportHref, clas
         ) : null}
       </Card>
     </div>
+  );
+}
+
+export function TwoFactor(props: TwoFactorProps) {
+  return (
+    <ScreenBoundary name="TwoFactor">
+      <TwoFactorScreen {...props} />
+    </ScreenBoundary>
   );
 }

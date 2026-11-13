@@ -60,6 +60,11 @@ export interface WirefrontConfig {
    * <html> (the convention of shadcn/ui, next-themes and Tailwind).
    */
   colorScheme?: "light" | "dark";
+  /**
+   * Report a screen that crashed while rendering (send it to Sentry, your logs, …). The screen shows a
+   * retry fallback instead of taking the page down; React still logs the error to the console.
+   */
+  onError?: (error: Error, info: { screen: string; componentStack?: string }) => void;
 }
 
 const Context = createContext<WirefrontConfig>({});

@@ -35,6 +35,7 @@ import { useAction } from "@wirefront/ui/wirefront/action";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, CopyIcon, EllipsisIcon, KeyIcon, PlusIcon, RotateCwIcon, TrashIcon } from "lucide-react";
 import { type ReactNode, useEffect, useId, useState } from "react";
 
@@ -103,7 +104,7 @@ export interface ApiKeysTableProps {
 const SKELETON_ROWS = ["s1", "s2", "s3", "s4"];
 const masked = (k: ApiKey) => `${k.prefix}••••${k.last4}`;
 
-export function ApiKeysTable({ keys, status = "ready", error, onRetry, availableScopes, onCreate, onRotate, onRevoke, className }: ApiKeysTableProps) {
+function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableScopes, onCreate, onRotate, onRevoke, className }: ApiKeysTableProps) {
   const t = useMessages("apiKeys", API_KEYS_MESSAGES);
   const format = useFormat();
   const [creating, setCreating] = useState(false);
@@ -440,5 +441,13 @@ function SecretDialog({ created, onClose, t }: { created: CreatedKey | null; onC
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function ApiKeysTable(props: ApiKeysTableProps) {
+  return (
+    <ScreenBoundary name="ApiKeysTable">
+      <ApiKeysTableScreen {...props} />
+    </ScreenBoundary>
   );
 }

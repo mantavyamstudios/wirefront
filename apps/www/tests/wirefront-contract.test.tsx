@@ -8,6 +8,7 @@ import { act, cleanup, fireEvent, render, renderHook, screen, waitFor } from "@t
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { useAction } from "@wirefront/ui/wirefront/action";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { toggleSort, useSelection, withFilter, withPage, withPageSize, withSearch } from "@wirefront/ui/wirefront/list";
 import {
@@ -253,5 +254,36 @@ describe("WirefrontProvider", () => {
       wrapper: ({ children }) => <WirefrontProvider colorScheme="light">{children}</WirefrontProvider>,
     });
     expect(forced.result.current).toBe("light");
+  });
+});
+
+function Boom({ fail }: { fail: { current: boolean } }) {
+  if (fail.current) throw new Error("render failed");
+  return <p>Loaded</p>;
+}
+
+describe("ScreenBoundary", () => {
+  it("contains a crashing screen, reports it with the screen name and renders again on retry", () => {
+    const onError = vi.fn();
+    const fail = { current: true };
+    // React logs caught render errors to the console; keep the test output readable but assert it happened.
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    render(
+      <WirefrontProvider onError={onError}>
+        <p>Rest of the page</p>
+        <ScreenBoundary name="MembersTable">
+          <Boom fail={fail} />
+        </ScreenBoundary>
+      </WirefrontProvider>,
+    );
+    expect(screen.getByText("Rest of the page")).toBeTruthy();
+    expect(screen.getByRole("alert").textContent).toContain("This section couldn’t load");
+    expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: "render failed" }), expect.objectContaining({ screen: "MembersTable" }));
+    expect(log).toHaveBeenCalled();
+    log.mockRestore();
+
+    fail.current = false;
+    fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+    expect(screen.getByText("Loaded")).toBeTruthy();
   });
 });

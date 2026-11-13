@@ -11,6 +11,7 @@ import { ToggleGroup, ToggleGroupItem } from "@wirefront/ui/toggle-group";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, ChevronRightIcon, MailIcon, MessagesSquareIcon, MonitorIcon, SmartphoneIcon } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useId, useState } from "react";
@@ -255,7 +256,7 @@ function HourSelect({ label, value, onChange }: { label: string; value: number; 
   );
 }
 
-export function NotificationSettings({ data, onSave, product, className }: NotificationSettingsProps) {
+function NotificationSettingsScreen({ data, onSave, product, className }: NotificationSettingsProps) {
   const t = useMessages("notificationSettings", NOTIFICATION_SETTINGS_MESSAGES);
   const format = useFormat();
   const reduce = Boolean(useReducedMotion());
@@ -518,5 +519,13 @@ export function NotificationSettings({ data, onSave, product, className }: Notif
       </section>
       <div className="mt-8 flex justify-center sm:hidden">{restoreLink}</div>
     </div>
+  );
+}
+
+export function NotificationSettings(props: NotificationSettingsProps) {
+  return (
+    <ScreenBoundary name="NotificationSettings">
+      <NotificationSettingsScreen {...props} />
+    </ScreenBoundary>
   );
 }

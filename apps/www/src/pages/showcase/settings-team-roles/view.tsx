@@ -29,6 +29,7 @@ import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, CopyIcon, EllipsisIcon, LockIcon, MailIcon, UserMinusIcon, XIcon } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useId, useState } from "react";
@@ -341,7 +342,7 @@ function PermissionMatrix({
   );
 }
 
-export function TeamRoles({
+function TeamRolesScreen({
   data,
   product,
   onInvite,
@@ -828,5 +829,13 @@ export function TeamRoles({
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+export function TeamRoles(props: TeamRolesProps) {
+  return (
+    <ScreenBoundary name="TeamRoles">
+      <TeamRolesScreen {...props} />
+    </ScreenBoundary>
   );
 }

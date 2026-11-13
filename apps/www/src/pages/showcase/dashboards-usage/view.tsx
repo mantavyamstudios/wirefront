@@ -7,6 +7,7 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { interpolate, useFormat, useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ArrowUpRightIcon, ZapIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -64,7 +65,7 @@ const eyebrow = "font-mono text-[10px] text-muted-foreground uppercase tracking-
 const card = "rounded-xl border border-border/60 bg-background/40 p-6";
 const SKELETON_ROWS = ["l1", "l2", "l3", "l4"];
 
-export function UsageDashboard({ usage, status = "ready", error, onRetry, warnAt = 0.8, invoiceHref, manageHref, upgrade, className }: UsageDashboardProps) {
+function UsageDashboardScreen({ usage, status = "ready", error, onRetry, warnAt = 0.8, invoiceHref, manageHref, upgrade, className }: UsageDashboardProps) {
   const t = useMessages("usage", USAGE_MESSAGES);
   const format = useFormat();
   const { now } = useWirefront();
@@ -245,5 +246,13 @@ function UsageMeter({ limit, warnAt, t }: { limit: UsageLimit; warnAt: number; t
         </span>
       </div>
     </li>
+  );
+}
+
+export function UsageDashboard(props: UsageDashboardProps) {
+  return (
+    <ScreenBoundary name="UsageDashboard">
+      <UsageDashboardScreen {...props} />
+    </ScreenBoundary>
   );
 }

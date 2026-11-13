@@ -23,6 +23,7 @@ import { Spinner } from "@wirefront/ui/spinner";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { interpolate, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { BuildingIcon, EyeIcon, GlobeIcon, LockIcon, PlusIcon } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
@@ -81,7 +82,7 @@ type Availability = "idle" | "checking" | "available" | "taken";
 const ICONS: Record<Visibility, typeof LockIcon> = { private: LockIcon, team: EyeIcon, public: GlobeIcon };
 const label = "mb-1.5 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]";
 
-export function CreateWorkspace({
+function CreateWorkspaceScreen({
   onCreate,
   onCreated,
   checkSlug,
@@ -255,5 +256,13 @@ export function CreateWorkspace({
         </Dialog>
       </div>
     </div>
+  );
+}
+
+export function CreateWorkspace(props: CreateWorkspaceProps) {
+  return (
+    <ScreenBoundary name="CreateWorkspace">
+      <CreateWorkspaceScreen {...props} />
+    </ScreenBoundary>
   );
 }

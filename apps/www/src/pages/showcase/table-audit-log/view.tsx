@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ChevronDownIcon, CircleAlertIcon, CircleCheckIcon, CircleSlashIcon, PlusIcon, ShieldIcon, XIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -94,7 +95,7 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-export function AuditLog({
+function AuditLogScreen({
   entries,
   total,
   onLoadMore,
@@ -331,5 +332,13 @@ function FilterChip({
         </button>
       ) : null}
     </div>
+  );
+}
+
+export function AuditLog(props: AuditLogProps) {
+  return (
+    <ScreenBoundary name="AuditLog">
+      <AuditLogScreen {...props} />
+    </ScreenBoundary>
   );
 }

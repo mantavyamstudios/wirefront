@@ -20,6 +20,7 @@ import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ArrowDownToLineIcon, CheckCircle2Icon, CircleAlertIcon, CircleDollarSignIcon, CreditCardIcon, ExternalLinkIcon, ZapIcon } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
@@ -87,7 +88,7 @@ export interface BillingSettingsProps {
 const section = "rounded-xl border border-border/60 bg-background/40";
 const eyebrow = "font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]";
 
-export function BillingSettings({
+function BillingSettingsScreen({
   billing,
   status = "ready",
   error,
@@ -325,5 +326,13 @@ function Fact({ label, value, note }: { label: string; value: string; note: stri
       <div className="mt-2 font-heading text-xl">{value}</div>
       {note ? <div className="mt-1 text-muted-foreground text-xs">{note}</div> : null}
     </div>
+  );
+}
+
+export function BillingSettings(props: BillingSettingsProps) {
+  return (
+    <ScreenBoundary name="BillingSettings">
+      <BillingSettingsScreen {...props} />
+    </ScreenBoundary>
   );
 }

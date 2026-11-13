@@ -21,6 +21,7 @@ import {
 import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
 import { useMessages } from "@wirefront/ui/wirefront/provider";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
   ArrowRightIcon,
   CornerDownLeftIcon,
@@ -74,7 +75,7 @@ const ICONS: Record<CommandKind, ComponentType<{ className?: string }>> = {
   settings: SettingsIcon,
 };
 
-export function CommandPalette({ groups, onSelect, onQueryChange, defaultOpen, hotkey = true, className }: CommandPaletteProps) {
+function CommandPaletteScreen({ groups, onSelect, onQueryChange, defaultOpen, hotkey = true, className }: CommandPaletteProps) {
   const t = useMessages("commandPalette", COMMAND_PALETTE_MESSAGES);
   const [open, setOpen] = useState(Boolean(defaultOpen));
   const items = groups.map((g) => ({ value: g.label, id: g.id, items: g.items.map((entry) => ({ ...entry, value: entry.label })) }));
@@ -170,3 +171,11 @@ export function CommandPalette({ groups, onSelect, onQueryChange, defaultOpen, h
 }
 
 const PLACEHOLDER_CARDS = ["p1", "p2", "p3", "p4", "p5", "p6"];
+
+export function CommandPalette(props: CommandPaletteProps) {
+  return (
+    <ScreenBoundary name="CommandPalette">
+      <CommandPaletteScreen {...props} />
+    </ScreenBoundary>
+  );
+}

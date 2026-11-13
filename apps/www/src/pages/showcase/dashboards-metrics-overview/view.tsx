@@ -7,6 +7,7 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ArrowDownRightIcon, ArrowUpRightIcon, PlusIcon } from "lucide-react";
 import { useId } from "react";
 
@@ -65,7 +66,7 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-export function MetricsOverview({
+function MetricsOverviewScreen({
   data,
   range,
   onRangeChange,
@@ -342,5 +343,13 @@ function Sparkline({ points, label }: { points: SeriesPoint[]; label: string }) 
         <span className="size-1.5 rounded-full bg-primary" />
       </span>
     </div>
+  );
+}
+
+export function MetricsOverview(props: MetricsOverviewProps) {
+  return (
+    <ScreenBoundary name="MetricsOverview">
+      <MetricsOverviewScreen {...props} />
+    </ScreenBoundary>
   );
 }

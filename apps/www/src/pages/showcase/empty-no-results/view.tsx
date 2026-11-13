@@ -8,6 +8,7 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTi
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
 import { interpolate, useMessages } from "@wirefront/ui/wirefront/provider";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { SearchIcon, XIcon } from "lucide-react";
 
 import type { ActiveFilter } from "./schema";
@@ -40,7 +41,7 @@ export interface NoResultsStateProps {
 }
 
 /** The empty state on its own, for any list or table whose query found nothing. */
-export function NoResultsState({ query, filterCount = 0, onClearFilters, onClearSearch, className }: NoResultsStateProps) {
+function NoResultsStateScreen({ query, filterCount = 0, onClearFilters, onClearSearch, className }: NoResultsStateProps) {
   const t = useMessages("noResults", NO_RESULTS_MESSAGES);
   const canClearFilters = Boolean(onClearFilters && filterCount > 0);
   const canClearSearch = Boolean(onClearSearch && query);
@@ -94,7 +95,7 @@ export interface NoResultsProps {
 }
 
 /** A search with filter chips above the empty state: the page a filtered list shows when nothing matches. */
-export function NoResults({ query, onQueryChange, filters, onRemoveFilter, onClearFilters, searchPlaceholder, className }: NoResultsProps) {
+function NoResultsScreen({ query, onQueryChange, filters, onRemoveFilter, onClearFilters, searchPlaceholder, className }: NoResultsProps) {
   const t = useMessages("noResults", NO_RESULTS_MESSAGES);
   return (
     <div className={cn("min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12", className)}>
@@ -137,5 +138,21 @@ export function NoResults({ query, onQueryChange, filters, onRemoveFilter, onCle
         <NoResultsState filterCount={filters.length} onClearFilters={onClearFilters} onClearSearch={() => onQueryChange("")} query={query} />
       </div>
     </div>
+  );
+}
+
+export function NoResultsState(props: NoResultsStateProps) {
+  return (
+    <ScreenBoundary name="NoResultsState">
+      <NoResultsStateScreen {...props} />
+    </ScreenBoundary>
+  );
+}
+
+export function NoResults(props: NoResultsProps) {
+  return (
+    <ScreenBoundary name="NoResults">
+      <NoResultsScreen {...props} />
+    </ScreenBoundary>
   );
 }

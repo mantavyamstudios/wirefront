@@ -14,6 +14,7 @@ import { useAction } from "@wirefront/ui/wirefront/action";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { Building2Icon, CheckIcon, EyeIcon, EyeOffIcon, FingerprintIcon } from "lucide-react";
 import { motion, useAnimationControls, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
@@ -97,7 +98,7 @@ const noPasskey: Action<void, Session> = async () => {};
 const noMagicLink: Action<MagicLinkInput> = async () => {};
 const noProvider: Action<string, Session> = async () => {};
 
-export function SignIn({
+function SignInScreen({
   product,
   logo,
   defaultEmail,
@@ -299,5 +300,13 @@ export function SignIn({
         ) : null}
       </div>
     </div>
+  );
+}
+
+export function SignIn(props: SignInProps) {
+  return (
+    <ScreenBoundary name="SignIn">
+      <SignInScreen {...props} />
+    </ScreenBoundary>
   );
 }

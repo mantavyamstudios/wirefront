@@ -89,6 +89,10 @@ export function checkView(source: string): Violation[] {
       (m) => `${m[0].replace(/\s+/g, "")} makes the render differ between server and browser: take time and randomness from props or useWirefront().now()`,
     ),
   );
+  // Frames (shells) take the builder's page as children; the page's own route boundary owns its errors.
+  const isFrame = /\bchildren\s*:\s*ReactNode\b/.test(src);
+  if (!isFrame && !/<ScreenBoundary\b/.test(src))
+    v.push({ rule: "boundary", message: "render the screen inside <ScreenBoundary name=\"…\"> so a crash shows a retry fallback and reaches onError" });
   if (!/export\s+(?:interface|type)\s+\w+Props\b/.test(src))
     v.push({ rule: "props", message: "exports no …Props type: the screen's data and callbacks are its contract" });
   return v;

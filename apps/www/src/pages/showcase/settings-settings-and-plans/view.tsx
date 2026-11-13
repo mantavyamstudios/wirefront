@@ -35,6 +35,7 @@ import { Switch } from "@wirefront/ui/switch";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useFormat, useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
   AlertTriangleIcon,
   CheckIcon,
@@ -1397,7 +1398,7 @@ function BillingPanel({
   );
 }
 
-export function SettingsAndPlans({
+function SettingsAndPlansScreen({
   data,
   tab,
   domain,
@@ -1513,5 +1514,13 @@ export function SettingsAndPlans({
         ) : null}
       </AnimatePresence>
     </div>
+  );
+}
+
+export function SettingsAndPlans(props: SettingsAndPlansProps) {
+  return (
+    <ScreenBoundary name="SettingsAndPlans">
+      <SettingsAndPlansScreen {...props} />
+    </ScreenBoundary>
   );
 }

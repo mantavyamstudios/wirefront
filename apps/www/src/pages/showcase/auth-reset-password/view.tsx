@@ -12,6 +12,7 @@ import { Spinner } from "@wirefront/ui/spinner";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, ChevronLeftIcon, EyeIcon, EyeOffIcon, TriangleAlertIcon } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
@@ -67,7 +68,7 @@ function BrandMark() {
   );
 }
 
-export function ResetPassword({ token, onReset, onSuccess, linkError, forgotPasswordHref, signInHref, className }: ResetPasswordProps) {
+function ResetPasswordScreen({ token, onReset, onSuccess, linkError, forgotPasswordHref, signInHref, className }: ResetPasswordProps) {
   const t = useMessages("resetPassword", RESET_PASSWORD_MESSAGES);
   const [reveal, setReveal] = useState(false);
   const [done, setDone] = useState(false);
@@ -183,5 +184,13 @@ export function ResetPassword({ token, onReset, onSuccess, linkError, forgotPass
     <div className={cn("flex min-h-svh items-center-safe justify-center bg-background px-4 py-16", className)}>
       <Card className="w-full max-w-sm">{content}</Card>
     </div>
+  );
+}
+
+export function ResetPassword(props: ResetPasswordProps) {
+  return (
+    <ScreenBoundary name="ResetPassword">
+      <ResetPasswordScreen {...props} />
+    </ScreenBoundary>
   );
 }

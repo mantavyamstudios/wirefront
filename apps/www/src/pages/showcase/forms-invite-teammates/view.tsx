@@ -12,6 +12,7 @@ import { Textarea } from "@wirefront/ui/textarea";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ArrowRightIcon, CheckIcon, ChevronDownIcon, CopyIcon, LinkIcon, ShieldIcon, SparklesIcon, XIcon } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, useEffect, useId, useState } from "react";
 import { z } from "zod";
@@ -82,7 +83,7 @@ const Email = z.email();
 const SPLIT = /[\s,;]+/;
 const initials = (email: string) => email.trim().split("@")[0]?.slice(0, 2).toUpperCase() || "??";
 
-export function InviteTeammates({
+function InviteTeammatesScreen({
   onSend,
   onSent,
   autoJoinDomain,
@@ -409,5 +410,13 @@ function CopyLinkButton({ link, t }: { link: string; t: Messages }) {
         <span className="uppercase tracking-[0.2em]">{copied ? t.copied : t.copyLink}</span>
       </span>
     </button>
+  );
+}
+
+export function InviteTeammates(props: InviteTeammatesProps) {
+  return (
+    <ScreenBoundary name="InviteTeammates">
+      <InviteTeammatesScreen {...props} />
+    </ScreenBoundary>
   );
 }

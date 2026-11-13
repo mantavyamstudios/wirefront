@@ -8,6 +8,7 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ExternalLinkIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -46,7 +47,7 @@ function formatCountdown(s: number) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
-export function MagicLinkSent({ email, onResend, resendAfter = 30, expiresInMinutes, mailApp, changeEmailHref, className }: MagicLinkSentProps) {
+function MagicLinkSentScreen({ email, onResend, resendAfter = 30, expiresInMinutes, mailApp, changeEmailHref, className }: MagicLinkSentProps) {
   const t = useMessages("magicLinkSent", MAGIC_LINK_SENT_MESSAGES);
   const [left, setLeft] = useState(resendAfter);
   const resend = useAction(onResend ?? (async () => {}), { onSuccess: () => setLeft(resendAfter) });
@@ -212,5 +213,13 @@ function EnvelopeArt() {
         </svg>
       </div>
     </div>
+  );
+}
+
+export function MagicLinkSent(props: MagicLinkSentProps) {
+  return (
+    <ScreenBoundary name="MagicLinkSent">
+      <MagicLinkSentScreen {...props} />
+    </ScreenBoundary>
   );
 }

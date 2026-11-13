@@ -17,6 +17,7 @@ import { Textarea } from "@wirefront/ui/textarea";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -389,7 +390,7 @@ const failMessage = (result: { error?: string; fieldErrors?: Record<string, stri
 
 const noAction = async () => {};
 
-export function FirstRun({
+function FirstRunScreen({
   product,
   domain,
   defaultWorkspaceName = "",
@@ -1486,5 +1487,13 @@ function FinishView({
       </ul>
 
     </motion.section>
+  );
+}
+
+export function FirstRun(props: FirstRunProps) {
+  return (
+    <ScreenBoundary name="FirstRun">
+      <FirstRunScreen {...props} />
+    </ScreenBoundary>
   );
 }

@@ -31,6 +31,7 @@ import { Switch } from "@wirefront/ui/switch";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
   CheckIcon,
   ClockIcon,
@@ -567,7 +568,7 @@ function EventsForm({
   );
 }
 
-export function DeveloperSettings({
+function DeveloperSettingsScreen({
   data,
   product,
   onCreateKey,
@@ -1192,5 +1193,13 @@ export function DeveloperSettings({
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+export function DeveloperSettings(props: DeveloperSettingsProps) {
+  return (
+    <ScreenBoundary name="DeveloperSettings">
+      <DeveloperSettingsScreen {...props} />
+    </ScreenBoundary>
   );
 }

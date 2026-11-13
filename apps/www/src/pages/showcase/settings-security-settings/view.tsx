@@ -22,6 +22,7 @@ import { useAction } from "@wirefront/ui/wirefront/action";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
   CheckIcon,
   CopyIcon,
@@ -661,7 +662,7 @@ function SessionRow({
   );
 }
 
-export function SecuritySettings({
+function SecuritySettingsScreen({
   data,
   onChangePassword,
   twoFactorSetupHref,
@@ -1066,5 +1067,13 @@ export function SecuritySettings({
         </div>
       </section>
     </div>
+  );
+}
+
+export function SecuritySettings(props: SecuritySettingsProps) {
+  return (
+    <ScreenBoundary name="SecuritySettings">
+      <SecuritySettingsScreen {...props} />
+    </ScreenBoundary>
   );
 }

@@ -14,6 +14,7 @@ import { useAction } from "@wirefront/ui/wirefront/action";
 import { pageCount, toggleSort, withFilter, withPage, withSearch } from "@wirefront/ui/wirefront/list";
 import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus, ListQuery } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ArrowDownIcon, ArrowDownToLineIcon, ArrowUpIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon, SearchIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -89,7 +90,7 @@ const FOOTER_SPANS = [
   [5, "max-md:hidden"],
 ] as const;
 
-export function InvoicesTable({
+function InvoicesTableScreen({
   page,
   query,
   onQueryChange,
@@ -351,5 +352,13 @@ export function InvoicesTable({
         ) : null}
       </div>
     </div>
+  );
+}
+
+export function InvoicesTable(props: InvoicesTableProps) {
+  return (
+    <ScreenBoundary name="InvoicesTable">
+      <InvoicesTableScreen {...props} />
+    </ScreenBoundary>
   );
 }

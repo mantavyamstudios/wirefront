@@ -47,6 +47,7 @@ import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { pageCount, toggleSort, withFilter, withPage, withSearch } from "@wirefront/ui/wirefront/list";
 import { interpolate, useCan, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus, ListQuery } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -175,7 +176,7 @@ interface Local {
   removed: ReadonlySet<string>;
 }
 
-export function MembersTable({
+function MembersTableScreen({
   members,
   total,
   query,
@@ -641,5 +642,13 @@ function InviteDialog({
         </Form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function MembersTable(props: MembersTableProps) {
+  return (
+    <ScreenBoundary name="MembersTable">
+      <MembersTableScreen {...props} />
+    </ScreenBoundary>
   );
 }

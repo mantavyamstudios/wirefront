@@ -10,6 +10,7 @@ import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, MailIcon } from "lucide-react";
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from "motion/react";
 import { useEffect, useId, useState } from "react";
@@ -82,7 +83,7 @@ const DIGITS = Array.from({ length: CODE_LENGTH }, (_, i) => `d${i}`);
 const linkClass =
   "cursor-pointer rounded-sm font-medium text-foreground underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring";
 
-export function VerifyEmail({ email, onVerify, onResend, resendAfter = 30, onSuccess, continueHref, changeEmailHref, className }: VerifyEmailProps) {
+function VerifyEmailScreen({ email, onVerify, onResend, resendAfter = 30, onSuccess, continueHref, changeEmailHref, className }: VerifyEmailProps) {
   const t = useMessages("verifyEmail", VERIFY_EMAIL_MESSAGES);
   const id = useId();
   const reduce = useReducedMotion();
@@ -213,5 +214,13 @@ export function VerifyEmail({ email, onVerify, onResend, resendAfter = 30, onSuc
         ) : null}
       </div>
     </div>
+  );
+}
+
+export function VerifyEmail(props: VerifyEmailProps) {
+  return (
+    <ScreenBoundary name="VerifyEmail">
+      <VerifyEmailScreen {...props} />
+    </ScreenBoundary>
   );
 }

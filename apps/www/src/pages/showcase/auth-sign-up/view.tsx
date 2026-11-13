@@ -13,6 +13,7 @@ import { Spinner } from "@wirefront/ui/spinner";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useId, useState } from "react";
@@ -76,7 +77,7 @@ function Mark() {
 const linkClass =
   "rounded-sm text-foreground underline decoration-border underline-offset-4 outline-none hover:decoration-foreground focus-visible:ring-2 focus-visible:ring-ring";
 
-export function SignUp({ product, logo, onSignUp, onSuccess, signInHref, termsHref, privacyHref, className }: SignUpProps) {
+function SignUpScreen({ product, logo, onSignUp, onSuccess, signInHref, termsHref, privacyHref, className }: SignUpProps) {
   const t = useMessages("signUp", SIGN_UP_MESSAGES);
   const id = useId();
   const reduce = useReducedMotion();
@@ -206,5 +207,13 @@ export function SignUp({ product, logo, onSignUp, onSuccess, signInHref, termsHr
         ) : null}
       </div>
     </div>
+  );
+}
+
+export function SignUp(props: SignUpProps) {
+  return (
+    <ScreenBoundary name="SignUp">
+      <SignUpScreen {...props} />
+    </ScreenBoundary>
   );
 }

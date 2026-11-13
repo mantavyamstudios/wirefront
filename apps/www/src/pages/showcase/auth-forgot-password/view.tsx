@@ -12,6 +12,7 @@ import { Spinner } from "@wirefront/ui/spinner";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ArrowLeftIcon, KeyRoundIcon, MailCheckIcon } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -60,7 +61,7 @@ export interface ForgotPasswordProps {
 const linkClass =
   "cursor-pointer rounded-sm font-medium text-foreground underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring";
 
-export function ForgotPassword({ defaultEmail, onSend, resendAfter = 30, expiresInMinutes, signInHref, className }: ForgotPasswordProps) {
+function ForgotPasswordScreen({ defaultEmail, onSend, resendAfter = 30, expiresInMinutes, signInHref, className }: ForgotPasswordProps) {
   const t = useMessages("forgotPassword", FORGOT_PASSWORD_MESSAGES);
   const reduce = useReducedMotion();
   const [sentTo, setSentTo] = useState<string>();
@@ -167,5 +168,13 @@ export function ForgotPassword({ defaultEmail, onSend, resendAfter = 30, expires
         ) : null}
       </div>
     </div>
+  );
+}
+
+export function ForgotPassword(props: ForgotPasswordProps) {
+  return (
+    <ScreenBoundary name="ForgotPassword">
+      <ForgotPasswordScreen {...props} />
+    </ScreenBoundary>
   );
 }

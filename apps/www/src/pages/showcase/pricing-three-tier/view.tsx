@@ -8,6 +8,7 @@ import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, SparklesIcon } from "lucide-react";
 
 import type { Plan } from "./schema";
@@ -37,7 +38,7 @@ export interface PricingProps {
   className?: string;
 }
 
-export function Pricing({ plans, onChoosePlan, currentPlanId, className }: PricingProps) {
+function PricingScreen({ plans, onChoosePlan, currentPlanId, className }: PricingProps) {
   const t = useMessages("pricing", PRICING_MESSAGES);
   const format = useFormat();
   const choose = useAction(onChoosePlan);
@@ -126,5 +127,13 @@ export function Pricing({ plans, onChoosePlan, currentPlanId, className }: Prici
         ) : null}
       </div>
     </div>
+  );
+}
+
+export function Pricing(props: PricingProps) {
+  return (
+    <ScreenBoundary name="Pricing">
+      <PricingScreen {...props} />
+    </ScreenBoundary>
   );
 }

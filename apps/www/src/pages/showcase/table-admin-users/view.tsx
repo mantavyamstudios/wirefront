@@ -40,6 +40,7 @@ import { useAction } from "@wirefront/ui/wirefront/action";
 import { pageCount, toggleSort, useSelection, withFilter, withPage, withSearch } from "@wirefront/ui/wirefront/list";
 import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus, ListQuery } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -377,7 +378,7 @@ interface Local {
   removed: ReadonlySet<string>;
 }
 
-export function AdminUsers({
+function AdminUsersScreen({
   users,
   total,
   summary,
@@ -1462,5 +1463,13 @@ function InviteDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AdminUsers(props: AdminUsersProps) {
+  return (
+    <ScreenBoundary name="AdminUsers">
+      <AdminUsersScreen {...props} />
+    </ScreenBoundary>
   );
 }

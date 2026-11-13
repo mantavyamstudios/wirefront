@@ -10,6 +10,7 @@ import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ChevronLeftIcon } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
@@ -65,7 +66,7 @@ function BrandMark() {
 
 const DIGITS = Array.from({ length: CODE_LENGTH }, (_, i) => `d${i}`);
 
-export function OtpVerify({ email, onVerify, onSuccess, onResend, resendAfter = 45, cancelHref, otherMethodHref, className }: OtpVerifyProps) {
+function OtpVerifyScreen({ email, onVerify, onSuccess, onResend, resendAfter = 45, cancelHref, otherMethodHref, className }: OtpVerifyProps) {
   const t = useMessages("otpVerify", OTP_VERIFY_MESSAGES);
   const id = useId();
   const [code, setCode] = useState("");
@@ -198,3 +199,10 @@ export function OtpVerify({ email, onVerify, onSuccess, onResend, resendAfter = 
   );
 }
 
+export function OtpVerify(props: OtpVerifyProps) {
+  return (
+    <ScreenBoundary name="OtpVerify">
+      <OtpVerifyScreen {...props} />
+    </ScreenBoundary>
+  );
+}

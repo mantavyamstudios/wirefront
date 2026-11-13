@@ -19,6 +19,7 @@ import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { Trash2Icon, TriangleAlertIcon } from "lucide-react";
 import { useId, useState } from "react";
 
@@ -59,7 +60,7 @@ export interface ConfirmDeleteProps {
   className?: string;
 }
 
-export function ConfirmDelete({ workspace, onDelete, onDeleted, defaultOpen, className }: ConfirmDeleteProps) {
+function ConfirmDeleteScreen({ workspace, onDelete, onDeleted, defaultOpen, className }: ConfirmDeleteProps) {
   const t = useMessages("confirmDelete", CONFIRM_DELETE_MESSAGES);
   const { locale } = useWirefront();
   const format = useFormat();
@@ -163,5 +164,13 @@ export function ConfirmDelete({ workspace, onDelete, onDeleted, defaultOpen, cla
         </div>
       </div>
     </div>
+  );
+}
+
+export function ConfirmDelete(props: ConfirmDeleteProps) {
+  return (
+    <ScreenBoundary name="ConfirmDelete">
+      <ConfirmDeleteScreen {...props} />
+    </ScreenBoundary>
   );
 }

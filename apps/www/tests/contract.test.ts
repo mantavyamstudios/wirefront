@@ -24,6 +24,10 @@ export function MembersTable({ members, onRemove }: MembersTableProps) {
   const joined = (m: Member) => new Date(m.joinedAt);
   return null;
 }
+
+export function MembersTableBoundary(props: MembersTableProps) {
+  return <ScreenBoundary name="MembersTable"><MembersTable {...props} /></ScreenBoundary>;
+}
 `;
 
 const rules = (src: string) => checkView(src).map((v) => v.rule);
@@ -35,7 +39,7 @@ describe("checkView", () => {
 
   it("requires 'use client', the licence header and an exported Props type", () => {
     const bare = 'export function X() { return null; }\n';
-    expect(rules(bare).sort()).toEqual(["licence", "props", "use-client"]);
+    expect(rules(bare).sort()).toEqual(["boundary", "licence", "props", "use-client"]);
   });
 
   it("rejects framework imports and fetching in the view", () => {
@@ -53,6 +57,15 @@ describe("checkView", () => {
     ).replace("return null;", "const id = Math.random();\n  const now = Date.now();\n  const today = new Date();\n  return null;");
     expect(rules(src).sort()).toEqual(["deterministic", "deterministic", "deterministic", "fake-latency", "hard-coded-data"]);
     expect(checkView(src).find((v) => v.rule === "hard-coded-data")?.line).toBe(7);
+  });
+});
+
+describe("screen boundary", () => {
+  it("requires screens to render inside ScreenBoundary, except frames that take the page as children", () => {
+    const unguarded = GOOD.replace(/\nexport function MembersTableBoundary[\s\S]*$/, "\n");
+    expect(rules(unguarded)).toEqual(["boundary"]);
+    const frame = unguarded.replace("members: Member[];", "members: Member[];\n  children: ReactNode;");
+    expect(rules(frame)).toEqual([]);
   });
 });
 
