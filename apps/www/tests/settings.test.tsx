@@ -8,7 +8,10 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SettingsShell } from "@wirefront/ui/settings-shell";
 import { fail } from "@wirefront/ui/wirefront/types";
+import { ok } from "@wirefront/ui/wirefront/types";
 import * as notifyFixtures from "@/pages/showcase/settings-notification-settings/fixtures";
+import * as securityFixtures from "@/pages/showcase/settings-security-settings/fixtures";
+import { SecuritySettings } from "@/pages/showcase/settings-security-settings/view";
 import { NotificationSettings } from "@/pages/showcase/settings-notification-settings/view";
 
 afterEach(cleanup);
@@ -36,13 +39,13 @@ describe("NotificationSettings", () => {
   const data = notifyFixtures.getNotificationSettings;
 
   it("saves the whole preference set after each change", async () => {
-    const onSave = vi.fn(async () => {});
+    const onSave = vi.fn(async (_prefs: typeof data.preferences) => {});
     render(<NotificationSettings data={data} onSave={onSave} product="Acme" />);
     fireEvent.click(screen.getByRole("switch", { name: "Billing notifications" }));
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
-    const saved = onSave.mock.calls[0]?.[0] as typeof data.preferences;
-    expect(saved.sections.find((s) => s.id === "billing")?.enabled).toBe(false);
-    expect(saved.channels).toEqual(data.preferences.channels);
+    const saved = onSave.mock.calls[0]?.[0];
+    expect(saved?.sections.find((s) => s.id === "billing")?.enabled).toBe(false);
+    expect(saved?.channels).toEqual(data.preferences.channels);
     expect(await screen.findByText("Saved")).toBeTruthy();
   });
 
@@ -63,5 +66,57 @@ describe("NotificationSettings", () => {
     await waitFor(() => expect(restore.hasAttribute("disabled")).toBe(false));
     fireEvent.click(restore);
     await waitFor(() => expect(onSave).toHaveBeenLastCalledWith(data.defaults));
+  });
+});
+
+describe("SecuritySettings", () => {
+  const base = { accountEmail: "ada@acme.dev", data: securityFixtures.getSecurity, product: "Acme" };
+
+  it("changes the password only with the current one", async () => {
+    const onChangePassword = vi.fn(async () => {});
+    render(<SecuritySettings {...base} onChangePassword={onChangePassword} />);
+    fireEvent.click(screen.getByRole("button", { name: "Change" }));
+    fireEvent.change(screen.getByLabelText("New password"), { target: { value: "a much longer secret" } });
+    fireEvent.click(screen.getByRole("button", { name: "Update" }));
+    expect(await screen.findByText("Enter your current password.")).toBeTruthy();
+    fireEvent.change(screen.getByLabelText("Current password"), { target: { value: "old secret" } });
+    fireEvent.click(screen.getByRole("button", { name: "Update" }));
+    await waitFor(() => expect(onChangePassword).toHaveBeenCalledWith({ currentPassword: "old secret", newPassword: "a much longer secret" }));
+    expect(await screen.findByText("Changed just now")).toBeTruthy();
+  });
+
+  it("shows recovery codes from the server, and regenerates after confirmation", async () => {
+    const onReveal = vi.fn(async () => ok(securityFixtures.getRecoveryCodes));
+    const onRegenerate = vi.fn(async () => ok(securityFixtures.regenerateRecoveryCodes));
+    render(<SecuritySettings {...base} onChangePassword={vi.fn()} onRegenerateRecoveryCodes={onRegenerate} onRevealRecoveryCodes={onReveal} />);
+    fireEvent.click(screen.getByRole("button", { name: "View" }));
+    expect(await screen.findByText("x4tn-9pwa")).toBeTruthy();
+    fireEvent.click(screen.getAllByRole("button", { name: "Regenerate" })[0] as HTMLElement);
+    const strip = (await screen.findAllByRole("alert")).find((el) => el.textContent?.includes("Make a new set?")) as HTMLElement;
+    fireEvent.click(within(strip).getByRole("button", { name: "Regenerate" }));
+    expect(await screen.findByText("f3kd-8mwq")).toBeTruthy();
+    expect(screen.queryByText("x4tn-9pwa")).toBeNull();
+    expect(screen.getByText("10 of 10 left. Use one if you lose your phone.")).toBeTruthy();
+  });
+
+  it("adds a passkey through the builder's WebAuthn action and signs out other sessions", async () => {
+    const onAddPasskey = vi.fn(async () => ok(securityFixtures.addPasskey));
+    const onSignOutOtherSessions = vi.fn(async () => {});
+    render(<SecuritySettings {...base} onAddPasskey={onAddPasskey} onChangePassword={vi.fn()} onSignOutOtherSessions={onSignOutOtherSessions} />);
+    fireEvent.click(screen.getByRole("button", { name: "Add passkey" }));
+    await waitFor(() => expect(screen.getByLabelText("Passkey name")).toBeTruthy());
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Sign out of all other sessions" })[0] as HTMLElement);
+    const strip = (await screen.findAllByRole("alert")).find((el) => el.textContent?.includes("other sessions?")) as HTMLElement;
+    fireEvent.click(within(strip).getByRole("button", { name: "Sign out 3" }));
+    expect(await screen.findByText("You’re only signed in on this device.")).toBeTruthy();
+  });
+
+  it("hides what isn't wired", () => {
+    render(<SecuritySettings {...base} onChangePassword={vi.fn()} />);
+    expect(screen.queryByRole("button", { name: "Add passkey" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "View" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Disable" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Sign out Ridgeline/ })).toBeNull();
   });
 });
