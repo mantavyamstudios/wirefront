@@ -197,9 +197,6 @@
     "lint/a11y/useSemanticElements": 1,
     "lint/correctness/useExhaustiveDependencies": 2
   },
-  "apps/www/src/pages/showcase/dashboards-analytics.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
   "apps/www/src/pages/showcase/dashboards-engineering.tsx": {
     "lint/a11y/noSvgWithoutTitle": 1
   },
@@ -218,13 +215,6 @@
     "lint/a11y/noSvgWithoutTitle": 1,
     "lint/correctness/useExhaustiveDependencies": 3,
     "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/dashboards-revenue.tsx": {
-    "lint/a11y/useSemanticElements": 1,
-    "lint/a11y/useValidAnchor": 1
-  },
-  "apps/www/src/pages/showcase/dashboards-services.tsx": {
-    "lint/a11y/noSvgWithoutTitle": 1
   },
   "apps/www/src/pages/showcase/dashboards-status-console.tsx": {
     "lint/a11y/noStaticElementInteractions": 1,
