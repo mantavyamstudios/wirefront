@@ -120,24 +120,6 @@
     "lint/a11y/useSemanticElements": 2,
     "lint/correctness/useExhaustiveDependencies": 8
   },
-  "apps/www/src/pages/showcase/auth-centered-signin.tsx": {
-    "lint/a11y/useValidAnchor": 2
-  },
-  "apps/www/src/pages/showcase/auth-centered-signup.tsx": {
-    "lint/a11y/useValidAnchor": 3
-  },
-  "apps/www/src/pages/showcase/auth-check-email.tsx": {
-    "lint/a11y/useValidAnchor": 2
-  },
-  "apps/www/src/pages/showcase/auth-glass-signup.tsx": {
-    "lint/a11y/useValidAnchor": 1
-  },
-  "apps/www/src/pages/showcase/auth-left-signin.tsx": {
-    "lint/a11y/useValidAnchor": 2
-  },
-  "apps/www/src/pages/showcase/auth-right-signin.tsx": {
-    "lint/a11y/useValidAnchor": 2
-  },
   "apps/www/src/pages/showcase/calendars-agenda.tsx": {
     "lint/a11y/useAriaPropsSupportedByRole": 1,
     "lint/suspicious/noArrayIndexKey": 2
@@ -278,14 +260,6 @@
     "lint/a11y/useSemanticElements": 8,
     "lint/correctness/useExhaustiveDependencies": 1,
     "lint/suspicious/noArrayIndexKey": 2
-  },
-  "apps/www/src/pages/showcase/inset-login.tsx": {
-    "lint/a11y/useValidAnchor": 3,
-    "lint/correctness/useHookAtTopLevel": 1
-  },
-  "apps/www/src/pages/showcase/onboarding.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/suspicious/noArrayIndexKey": 1
   },
   "apps/www/src/pages/showcase/personal-habits.tsx": {
     "lint/a11y/useSemanticElements": 2,
@@ -438,9 +412,6 @@
   "apps/www/src/pages/showcase/tours-welcome-carousel.tsx": {
     "lint/style/noNonNullAssertion": 1,
     "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/waitlist.tsx": {
-    "lint/a11y/useValidAnchor": 1
   },
   "apps/www/src/routes/__root.tsx": {
     "lint/security/noDangerouslySetInnerHtml": 1

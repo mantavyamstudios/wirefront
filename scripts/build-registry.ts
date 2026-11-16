@@ -66,6 +66,7 @@ const LOCAL_INLINES: Record<string, string> = {
   "segmented-control": "components/ui/segmented-control.tsx",
   "settings-shell": "components/ui/settings-shell.tsx",
   "particle-field": "components/particle-field.tsx",
+  "illustrated-auth-layout": "components/illustrated-auth-layout.tsx",
   "theme-provider": "components/theme-provider.tsx",
 };
 

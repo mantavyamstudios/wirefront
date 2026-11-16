@@ -16,6 +16,7 @@
     "./appearance-picker": "./src/components/appearance-picker.tsx",
     "./ambient-grain": "./src/components/ambient-grain.tsx",
     "./particle-field": "./src/components/particle-field.tsx",
+    "./illustrated-auth-layout": "./src/components/illustrated-auth-layout.tsx",
     "./orbit-avatar": "./src/components/orbit-avatar.tsx",
     "./orbit-avatar-field": "./src/components/orbit-avatar-field.tsx",
     "./themes": "./src/themes/index.ts",

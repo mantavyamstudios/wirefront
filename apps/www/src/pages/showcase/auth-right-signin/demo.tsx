@@ -1,44 +1,32 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-"use client";
+// Showcase only: the screen with Wirefront's demo logo, providers and product preview.
+// Not shipped by the registry; builders pass their own.
+import { CheckIcon } from "lucide-react";
+import { HeroSignIn } from "./view";
 
-import { Spinner } from "@wirefront/ui/spinner";
-import { type FormEvent, useState } from "react";
-import { CheckIcon, EyeIcon, EyeOffIcon } from "lucide-react";
-import { Button } from "@wirefront/ui/button";
-import { Card } from "@wirefront/ui/card";
-import { Field, FieldLabel } from "@wirefront/ui/field";
-import { Input } from "@wirefront/ui/input";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@wirefront/ui/input-group";
-import { Separator } from "@wirefront/ui/separator";
+const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-export function AuthRightSignin() {
+export function AuthRightSigninShowcasePage() {
   return (
-    <div className="grid min-h-svh grid-cols-1 bg-background text-foreground lg:grid-cols-[1.2fr_minmax(440px,1fr)]">
-      <HeroColumn />
-      <FormColumn />
-    </div>
+    <HeroSignIn
+      forgotPasswordHref="#forgot-password"
+      onProvider={() => wait(600)}
+      onSignIn={() => wait(800)}
+      providers={[
+        { id: "github", name: "GitHub", icon: <GitHubIcon /> },
+        { id: "google", name: "Google", icon: <GoogleIcon /> },
+      ]}
+      signUpHref="#sign-up"
+      hero={<Hero />}
+      logo={<BrandMark />}
+    />
   );
 }
 
-function HeroColumn() {
+function Hero() {
   return (
-    <div className="relative hidden overflow-hidden lg:flex lg:items-center lg:justify-center">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: [
-            "radial-gradient(60% 50% at 18% 22%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 65%)",
-            "radial-gradient(50% 50% at 82% 78%, color-mix(in oklch, var(--foreground) 6%, transparent), transparent 65%)",
-          ].join(", "),
-        }}
-      />
-      <div className="relative z-10 max-w-md px-12">
+    <div className="relative z-10 max-w-md px-12">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
           Open source · MIT
         </div>
@@ -68,7 +56,6 @@ function HeroColumn() {
 
         <DashboardMock />
       </div>
-    </div>
   );
 }
 
@@ -149,21 +136,6 @@ function DashboardMock() {
   );
 }
 
-function FormColumn() {
-  return (
-    <div className="flex items-center justify-center px-6 py-12 lg:border-border/60 lg:border-s lg:px-12">
-      <Card className="w-full max-w-sm gap-0 px-5 py-8 shadow-sm sm:px-6">
-        <BrandMark />
-        <Heading />
-        <OAuthRow />
-        <OrSeparator />
-        <SignInForm />
-        <FooterLinks />
-      </Card>
-    </div>
-  );
-}
-
 function BrandMark() {
   return (
     <div className="flex items-center justify-center">
@@ -181,128 +153,6 @@ function BrandMark() {
           />
         </svg>
       </span>
-    </div>
-  );
-}
-
-function Heading() {
-  return (
-    <div className="mt-5 flex flex-col items-center gap-1.5 text-center">
-      <h1 className="font-heading text-2xl tracking-tight">Welcome back</h1>
-      <p className="text-muted-foreground text-sm">
-        Sign in to your scratchpad
-      </p>
-    </div>
-  );
-}
-
-function OAuthRow() {
-  return (
-    <div className="mt-6 grid grid-cols-2 gap-2.5">
-      <Button variant="outline" type="button">
-        <GitHubIcon />
-        GitHub
-      </Button>
-      <Button variant="outline" type="button">
-        <GoogleIcon />
-        Google
-      </Button>
-    </div>
-  );
-}
-
-function OrSeparator() {
-  return (
-    <div className="my-5 flex items-center gap-3">
-      <Separator className="flex-1" />
-      <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
-        Or
-      </span>
-      <Separator className="flex-1" />
-    </div>
-  );
-}
-
-function SignInForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [reveal, setReveal] = useState(false);
-  const [pending, setPending] = useState(false);
-
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!email.trim() || !password) return;
-    setPending(true);
-    window.setTimeout(() => setPending(false), 800);
-  };
-
-  return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4">
-      <Field>
-        <FieldLabel htmlFor="auth-right-email">Email</FieldLabel>
-        <Input
-          id="auth-right-email"
-          type="email"
-          required
-          placeholder="you@example.com"
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          />
-      </Field>
-
-      <Field>
-        <FieldLabel htmlFor="auth-right-password">Password</FieldLabel>
-        <InputGroup>
-          <InputGroupInput
-            id="auth-right-password"
-            type={reveal ? "text" : "password"}
-            required
-            placeholder="••••••••"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <InputGroupAddon align="inline-end">
-            <button
-              type="button"
-              onClick={() => setReveal((v) => !v)}
-              aria-label={reveal ? "Hide password" : "Show password"}
-              className="cursor-pointer rounded p-1 pointer-coarse:p-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {reveal ? (
-                <EyeOffIcon className="size-4" />
-              ) : (
-                <EyeIcon className="size-4" />
-              )}
-            </button>
-          </InputGroupAddon>
-        </InputGroup>
-      </Field>
-
-      <Button type="submit" size="lg" className="mt-1" disabled={pending} aria-busy={pending}>
-{pending ? <Spinner data-icon="inline-start" /> : null}
-        Sign in
-      </Button>
-    </form>
-  );
-}
-
-function FooterLinks() {
-  return (
-    <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 text-sm">
-      <a
-        href="#"
-        className="whitespace-nowrap text-muted-foreground hover:text-foreground hover:underline"
-      >
-        Forgot password?
-      </a>
-      <p className="whitespace-nowrap text-muted-foreground">
-        New here?{" "}
-        <a href="#" className="text-foreground underline underline-offset-4">
-          Sign up
-        </a>
-      </p>
     </div>
   );
 }
