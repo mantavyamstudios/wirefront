@@ -13,6 +13,12 @@ import * as revenue from "@/pages/showcase/dashboards-revenue/fixtures";
 import { RevenueDashboard } from "@/pages/showcase/dashboards-revenue/view";
 import * as services from "@/pages/showcase/dashboards-services/fixtures";
 import { ServiceHealth } from "@/pages/showcase/dashboards-services/view";
+import * as engineering from "@/pages/showcase/dashboards-engineering/fixtures";
+import { EngineeringVelocity } from "@/pages/showcase/dashboards-engineering/view";
+import * as support from "@/pages/showcase/dashboards-support/fixtures";
+import { SupportQueue } from "@/pages/showcase/dashboards-support/view";
+import * as market from "@/pages/showcase/dashboards-market/fixtures";
+import { MarketsDashboard } from "@/pages/showcase/dashboards-market/view";
 import * as home from "@/pages/showcase/dashboards-home/fixtures";
 import { HomeDashboard } from "@/pages/showcase/dashboards-home/view";
 
@@ -167,5 +173,96 @@ describe("ServiceHealth", () => {
     rerender(<ServiceHealth error="Down." onRetry={onRetry} onWindowChange={() => {}} status="error" window="1h" />);
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
     expect(onRetry).toHaveBeenCalled();
+  });
+});
+
+describe("EngineeringVelocity", () => {
+  it("formats DORA units, judges direction per metric and totals PR weeks", () => {
+    const onRangeChange = vi.fn();
+    render(
+      <WirefrontProvider locale="en-US">
+        <EngineeringVelocity data={engineering.getVelocity} onRangeChange={onRangeChange} range="30d" />
+      </WirefrontProvider>,
+    );
+    expect(screen.getByText("14 / day")).toBeTruthy();
+    expect(screen.getByText("2h 18m")).toBeTruthy();
+    expect(screen.getByText("4.2%")).toBeTruthy();
+    expect(screen.getByText("32m 00s")).toBeTruthy();
+    // Lead time fell 22%: good news.
+    expect(screen.getByText("22%").className).toContain("category-2");
+    // Change failure rate rose 6%: bad news.
+    expect(screen.getByText("6%").className).toContain("category-4");
+    expect(screen.getByText("434")).toBeTruthy();
+    expect(screen.getByText("merged · 39 closed")).toBeTruthy();
+    expect(screen.getByRole("listitem", { name: "Week of Jun 15: 73 merged, 10 open, 6 closed" })).toBeTruthy();
+    expect(screen.getByText("9m 14s", { selector: "dd" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("radio", { name: "90d" }));
+    expect(onRangeChange).toHaveBeenCalledWith("90d");
+  });
+
+  it("shows empty and error states", () => {
+    const { rerender } = render(<EngineeringVelocity data={engineering.emptyVelocity} onRangeChange={() => {}} range="7d" />);
+    expect(screen.getAllByText("Nothing in this period yet.")).toHaveLength(2);
+    rerender(<EngineeringVelocity error="Down." onRangeChange={() => {}} range="7d" status="error" />);
+    expect(screen.getByText("Couldn’t load engineering metrics")).toBeTruthy();
+  });
+});
+
+describe("SupportQueue", () => {
+  it("counts the queue, says how overdue each breach is by the provider clock and ranks agents", () => {
+    render(
+      <WirefrontProvider locale="en-US" now={() => new Date(support.now)}>
+        <SupportQueue breachesHref="/breaches" data={support.getQueueOverview} scope="acme/help" />
+      </WirefrontProvider>,
+    );
+    expect(screen.getByText("Support · acme/help")).toBeTruthy();
+    expect(screen.getByText("157")).toBeTruthy();
+    expect(screen.getByText("of 769 total")).toBeTruthy();
+    expect(screen.getByRole("img", { name: "Tickets by state: Open 84, In progress 32, Waiting 41, Resolved 612" })).toBeTruthy();
+    const table = screen.getByRole("table", { name: "Tickets breaching SLA" });
+    expect(table.textContent).toContain("41m over");
+    expect(table.textContent).toContain("p0 first response");
+    expect(screen.getByText("-38% vs week")).toBeTruthy();
+    expect(screen.getAllByText("74% load").length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: /View all/ }).getAttribute("href")).toBe("/breaches");
+  });
+
+  it("shows empty and error states", () => {
+    const { rerender } = render(<SupportQueue data={support.emptyQueue} />);
+    expect(screen.getByText("Nothing is breaching SLA.")).toBeTruthy();
+    rerender(<SupportQueue error="Down." status="error" />);
+    expect(screen.getByText("Couldn’t load the queue")).toBeTruthy();
+  });
+});
+
+describe("MarketsDashboard", () => {
+  it("prices in the provider's currency, colours moves and features a chosen ticker", () => {
+    const onSelectTicker = vi.fn();
+    const onRangeChange = vi.fn();
+    render(
+      <WirefrontProvider currency="USD" locale="en-US" timeZone="UTC">
+        <MarketsDashboard data={market.getMarketOverview} onRangeChange={onRangeChange} onSelectTicker={onSelectTicker} portfolioName="Index" range="1D" />
+      </WirefrontProvider>,
+    );
+    expect(screen.getByRole("heading", { name: "ACME Acme Holdings" })).toBeTruthy();
+    expect(screen.getByText("$184.62")).toBeTruthy();
+    expect(screen.getByText("+$4.34 today · vol 2.4M")).toBeTruthy();
+    expect(screen.getByText("$184,620")).toBeTruthy();
+    expect(screen.getByText("-0.84%").className).toContain("category-4");
+    expect(screen.getByRole("link", { name: "Fed signals one more rate cut before EOY" }).getAttribute("href")).toBe("#news-3");
+    expect(screen.getByText("2:42 PM")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Show RSND" }));
+    expect(onSelectTicker).toHaveBeenCalledWith("RSND");
+    fireEvent.click(screen.getByRole("radio", { name: "1Y" }));
+    expect(onRangeChange).toHaveBeenCalledWith("1Y");
+    expect(screen.queryByRole("button", { name: "Add ticker" })).toBeNull();
+  });
+
+  it("shows empty and error states", () => {
+    const { rerender } = render(<MarketsDashboard data={{ ...market.getMarketOverview, watchlist: [], headlines: [] }} onRangeChange={() => {}} range="1D" />);
+    expect(screen.getByText("Your watchlist is empty.")).toBeTruthy();
+    expect(screen.getByText("No headlines yet.")).toBeTruthy();
+    rerender(<MarketsDashboard error="Down." onRangeChange={() => {}} range="1D" status="error" />);
+    expect(screen.getByText("Couldn’t load markets")).toBeTruthy();
   });
 });
