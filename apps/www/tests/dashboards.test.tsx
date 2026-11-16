@@ -21,6 +21,8 @@ import * as market from "@/pages/showcase/dashboards-market/fixtures";
 import { MarketsDashboard } from "@/pages/showcase/dashboards-market/view";
 import * as revenueStory from "@/pages/showcase/dashboards-revenue-overview/fixtures";
 import { RevenueStory } from "@/pages/showcase/dashboards-revenue-overview/view";
+import * as consoleData from "@/pages/showcase/dashboards-status-console/fixtures";
+import { StatusConsole } from "@/pages/showcase/dashboards-status-console/view";
 import * as home from "@/pages/showcase/dashboards-home/fixtures";
 import { HomeDashboard } from "@/pages/showcase/dashboards-home/view";
 
@@ -317,5 +319,73 @@ describe("RevenueStory", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
     expect(onRetry).toHaveBeenCalled();
+  });
+});
+
+describe("StatusConsole", () => {
+  // The timeline scrolls to its latest update; jsdom has no Element.scrollTo.
+  beforeEach(() => {
+    Element.prototype.scrollTo = () => {};
+  });
+
+  const renderIt = (props: Partial<Parameters<typeof StatusConsole>[0]> = {}) =>
+    render(
+      <WirefrontProvider locale="en-GB" now={() => new Date(consoleData.now)} timeZone="Europe/London">
+        <StatusConsole currentUserId="maya" data={consoleData.getStatus} updatedAt={consoleData.now} {...props} />
+      </WirefrontProvider>,
+    );
+
+  it("shows health, the incident's progress and hides actions that aren't wired", () => {
+    renderIt();
+    expect(screen.getByRole("status").textContent).toContain("1 degraded");
+    expect(screen.getByRole("button", { name: "Webhook delivery Degraded eu-west" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Webhook delivery Degraded eu-west" }).closest("li")?.textContent).toContain("p95 4.1s2.40% errors99.71% uptime");
+    expect(screen.getByRole("heading", { name: "Webhook deliveries delayed in eu-west" })).toBeTruthy();
+    expect(screen.getByText("Investigating", { selector: "li[aria-current='step'] span" })).toBeTruthy();
+    expect(screen.getByText("14:02")).toBeTruthy();
+    expect(screen.getByText("Primary · 14:06 London")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /Page/ })).toBeNull();
+    expect(screen.queryByRole("textbox", { name: "Post an update" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Roll back/ })).toBeNull();
+  });
+
+  it("filters deploys by service with the number keys and clears with Escape", async () => {
+    renderIt();
+    fireEvent.keyDown(screen.getByRole("button", { name: "Auth Operational global" }), { key: "6" });
+    expect(screen.getByRole("button", { name: "Auth Operational global" }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByText("Rotate JWT signing keys")).toBeTruthy();
+    // Filtered-out deploys animate away first.
+    await waitFor(() => expect(screen.queryByText("Starter pricing copy")).toBeNull());
+    fireEvent.keyDown(screen.getByRole("button", { name: "Auth Operational global" }), { key: "Escape" });
+    expect(screen.getByText("Starter pricing copy")).toBeTruthy();
+  });
+
+  it("pages, posts updates and rolls back through the app", async () => {
+    const onPage = vi.fn(async () => {});
+    const onPostUpdate = vi.fn(async () => {});
+    const onRollback = vi.fn(async () => {});
+    renderIt({ onPage, onPostUpdate, onRollback });
+    fireEvent.click(screen.getAllByRole("button", { name: /Page/ })[0] as HTMLElement);
+    await waitFor(() => expect(onPage).toHaveBeenCalledWith("sam"));
+    expect(await screen.findByText("Paged Sam")).toBeTruthy();
+    fireEvent.change(screen.getByRole("textbox", { name: "Post an update" }), { target: { value: "  Looking at partition 7  " } });
+    fireEvent.click(screen.getByRole("button", { name: "Post update" }));
+    await waitFor(() => expect(onPostUpdate).toHaveBeenCalledWith({ text: "Looking at partition 7" }));
+    fireEvent.click(screen.getByRole("button", { name: "Roll back 7c2e91a" }));
+    await waitFor(() => expect(onRollback).toHaveBeenCalledWith("d1"));
+  });
+
+  it("switches environment and shows a quiet one", () => {
+    const onEnvironmentChange = vi.fn();
+    const { rerender } = renderIt({ environments: ["Production", "Staging"], environment: "Production", onEnvironmentChange });
+    fireEvent.click(screen.getByRole("radio", { name: "Staging" }));
+    expect(onEnvironmentChange).toHaveBeenCalledWith("Staging");
+    rerender(
+      <WirefrontProvider>
+        <StatusConsole data={consoleData.quietStatus} />
+      </WirefrontProvider>,
+    );
+    expect(screen.getByText("No open incidents.")).toBeTruthy();
+    expect(screen.getByRole("status").textContent).toContain("All systems operational");
   });
 });
