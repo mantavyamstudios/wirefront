@@ -23,6 +23,8 @@ import * as revenueStory from "@/pages/showcase/dashboards-revenue-overview/fixt
 import { RevenueStory } from "@/pages/showcase/dashboards-revenue-overview/view";
 import * as consoleData from "@/pages/showcase/dashboards-status-console/fixtures";
 import { StatusConsole } from "@/pages/showcase/dashboards-status-console/view";
+import * as pipeline from "@/pages/showcase/dashboards-pipeline-today/fixtures";
+import { PipelineToday } from "@/pages/showcase/dashboards-pipeline-today/view";
 import * as home from "@/pages/showcase/dashboards-home/fixtures";
 import { HomeDashboard } from "@/pages/showcase/dashboards-home/view";
 
@@ -387,5 +389,72 @@ describe("StatusConsole", () => {
     );
     expect(screen.getByText("No open incidents.")).toBeTruthy();
     expect(screen.getByRole("status").textContent).toContain("All systems operational");
+  });
+});
+
+describe("PipelineToday", () => {
+  // The board watches its size and scrolls chips into view; jsdom has neither.
+  beforeEach(() => {
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        observe() {}
+        disconnect() {}
+      },
+    );
+    Element.prototype.scrollTo = () => {};
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  const renderIt = (props: Partial<Parameters<typeof PipelineToday>[0]> = {}) =>
+    render(
+      <WirefrontProvider currency="USD" locale="en-GB" now={() => new Date(pipeline.now)} timeZone="Europe/London">
+        <PipelineToday currentUserId="maren" data={pipeline.getPipeline} target={pipeline.target} workspace="Kestrel" {...props} />
+      </WirefrontProvider>,
+    );
+
+  it("greets by the provider clock, counts focus signals and hides unwired actions", () => {
+    renderIt();
+    expect(screen.getByRole("heading", { level: 1, name: "Good morning, Maren" })).toBeTruthy();
+    expect(screen.getByText("Tuesday 27 October")).toBeTruthy();
+    expect(screen.getByText(/accounts? needs? you today\./)).toBeTruthy();
+    expect(screen.getByRole("meter").getAttribute("aria-label")).toMatch(/^\d+% of target$/);
+    expect(screen.queryByRole("button", { name: /^Email / })).toBeNull();
+    expect(screen.getAllByRole("button", { name: /^Open / }).length).toBeGreaterThan(0);
+  });
+
+  it("moves a deal from the detail panel, saves it and undoes it when saving fails", async () => {
+    const onDealMove = vi.fn(async () => {
+      throw new Error("CRM is read-only.");
+    });
+    renderIt({ onDealMove });
+    const card = screen.getAllByRole("button", { expanded: false }).find((el) => el.getAttribute("aria-roledescription") === "draggable deal") as HTMLElement;
+    const company = card.querySelector(".font-medium")?.textContent ?? "";
+    fireEvent.click(card);
+    const panel = screen.getByRole("region", { name: company });
+    const next = Array.from(panel.querySelectorAll("button")).find((b) => /^(Move to|Mark as won)/.test(b.textContent ?? "")) as HTMLElement;
+    fireEvent.click(next);
+    await waitFor(() => expect(onDealMove).toHaveBeenCalledWith(expect.objectContaining({ dealId: expect.any(String) })));
+    expect(await screen.findByText(`Couldn’t move ${company}: CRM is read-only.`)).toBeTruthy();
+  });
+
+  it("acts on a focus signal through the app", async () => {
+    const onSignalAction = vi.fn(async () => {});
+    renderIt({ onSignalAction });
+    const signal = pipeline.getPipeline.signals[0];
+    fireEvent.click(screen.getByRole("button", { name: `Email ${signal?.contact}` }));
+    await waitFor(() => expect(onSignalAction).toHaveBeenCalledWith({ signalId: signal?.id, action: "email" }));
+    expect(screen.getByRole("status").textContent).toContain(`Follow-up sent to ${signal?.contact}`);
+  });
+
+  it("shows loading and error states", () => {
+    const { rerender } = renderIt({ data: undefined, status: "loading" });
+    expect(document.querySelector("[aria-busy='true']")).toBeTruthy();
+    rerender(
+      <WirefrontProvider>
+        <PipelineToday currentUserId="maren" error="Down." status="error" target={1} workspace="Kestrel" />
+      </WirefrontProvider>,
+    );
+    expect(screen.getByText("Couldn’t load your pipeline")).toBeTruthy();
   });
 });

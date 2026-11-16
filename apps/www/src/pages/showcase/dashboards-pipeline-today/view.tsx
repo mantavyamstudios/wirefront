@@ -6,24 +6,19 @@
 
 import {
   ArrowRightIcon,
-  Building2Icon,
   CalendarClockIcon,
-  ChartNoAxesColumnIcon,
   CheckIcon,
   ChevronDownIcon,
   CircleCheckIcon,
   Clock3Icon,
   CoffeeIcon,
   EyeIcon,
-  InboxIcon,
-  KanbanIcon,
   type LucideIcon,
   MailIcon,
   MoonIcon,
   PhoneIcon,
   ReplyIcon,
   SettingsIcon,
-  SunriseIcon,
   UserMinusIcon,
   XIcon,
 } from "lucide-react";
@@ -38,412 +33,155 @@ import {
   useTransform,
 } from "motion/react";
 import {
+  createContext,
   type KeyboardEvent,
   type PointerEvent,
-  type ReactElement,
   type ReactNode,
   type RefObject,
+  useContext,
   useEffect,
   useId,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
-import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
+import { Skeleton } from "@wirefront/ui/skeleton";
+import { useAction } from "@wirefront/ui/wirefront/action";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
+import { interpolate, useFormat, useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
+import type { Deal, DealOwner, DealStage, Engagement, FocusAction, FocusKind, FocusSignal, MoveDealInput, PipelineData, PipelineStage, SignalActionInput } from "./schema";
 
-export type DealStage = "lead" | "qualified" | "proposal" | "negotiation" | "won";
-export type Engagement = "hot" | "warm" | "cooling" | "cold";
-export type FocusKind = "quiet" | "opened" | "champion" | "overdue" | "replied";
-export type FocusAction = "email" | "call" | "snooze";
+/** Every string on the screen; override any of them with WirefrontProvider `messages` ("pipelineToday.<key>"). */
+export const PIPELINE_TODAY_MESSAGES = {
+  main: "Main",
+  settings: "Settings",
+  morning: "Good morning, {name}",
+  afternoon: "Good afternoon, {name}",
+  evening: "Good evening, {name}",
+  nothingNeedsYou: "Nothing needs you right now. Nice work.",
+  oneNeedsYou: "1 account needs you today.",
+  manyNeedYou: "{count} accounts need you today.",
+  dragHint: "Drag deals as they move.",
+  forecast: "Weighted forecast",
+  ofTarget: "{percent} of target",
+  targetLine: "{percent} of {target} target",
+  wonAmount: "{amount} won",
+  show: "Show",
+  pipeline: "Pipeline",
+  focus: "Focus",
+  stage: "Stage",
+  laneLabelOne: "{stage}: 1 deal, {amount} {kind}",
+  laneLabelMany: "{stage}: {count} deals, {amount} {kind}",
+  closed: "closed",
+  weighted: "weighted",
+  dropHere: "Drop a deal here",
+  draggableDeal: "draggable deal",
+  instructions: "Press Space to pick up. Arrow keys move the deal between stages and up or down. Space or Enter drops it, Escape cancels. Press Enter to open details.",
+  keyStage: "stage",
+  keyOrder: "order",
+  keySpace: "Space",
+  keyDrop: "drop",
+  keyEsc: "Esc",
+  keyCancel: "cancel",
+  justMoved: "Just moved",
+  daysInStage: "{days}d in stage",
+  closedWon: "Closed won",
+  today: "Today",
+  justNow: "Just now",
+  focusSubtitle: "Who to act on today, and why",
+  clearTitle: "You’re clear for today",
+  clearHandled: "{handled} handled. New signals land here as they happen.",
+  clearHandledSnoozed: "{handled} handled, {snoozed} snoozed until tomorrow. New signals land here as they happen.",
+  bringBack: "Bring back snoozed",
+  openDeal: "Open {company}",
+  email: "Email",
+  emailContact: "Email {contact}",
+  logCall: "Log call",
+  logCallWith: "Log call with {contact}",
+  snooze: "Snooze",
+  snoozeCompany: "Snooze {company} until tomorrow",
+  followUpSent: "Follow-up sent to {contact}",
+  callLogged: "Call with {contact} logged",
+  snoozedUntilTomorrow: "Snoozed until tomorrow",
+  backInFocus: "{company} is back in Focus tomorrow",
+  touchedJustNow: "{company} · touched just now",
+  youEmailed: "You emailed {contact}",
+  youCalled: "You logged a call with {contact}",
+  closeDetails: "Close details",
+  value: "Value",
+  owner: "Owner",
+  closeDate: "Close date",
+  closedOn: "Closed",
+  changeStage: "Stage: {stage}. Change stage",
+  nextStep: "Next step",
+  contacts: "Contacts",
+  lastTouches: "Last touches",
+  notes: "Notes",
+  markWon: "Mark as won",
+  moveTo: "Move to {stage}",
+  saidStays: "{company} stays in {stage}, position {position}.",
+  saidMoved: "{company} moved to {stage}. Forecast now {forecast}.",
+  saidWon: "{company} moved to {stage}, closed won. Forecast now {forecast}.",
+  saidCancelled: "Move cancelled. {company} is back in {stage}.",
+  saidPickedUp: "Picked up {company}. Drop it on a stage, or press Escape to cancel.",
+  saidPickedUpKeys: "Picked up {company} in {stage}. Left and right arrows change stage, up and down reorder, Space drops, Escape cancels.",
+  saidPosition: "{stage}, position {position} of {count}.",
+  saidSignal: "{company}: {outcome}. {left}",
+  saidFocusClear: "Focus is clear.",
+  saidLeft: "{count} left in Focus.",
+  saidMoveFailed: "Couldn’t move {company}: {error}",
+  errorTitle: "Couldn’t load your pipeline",
+  retry: "Try again",
+};
+type Messages = typeof PIPELINE_TODAY_MESSAGES;
 
-export interface PipelineStage {
-  id: DealStage;
+export interface PipelineNavItem {
   label: string;
-  probability: number;
-}
-
-export interface DealOwner {
-  id: string;
-  name: string;
-  role?: string;
-}
-
-export interface DealContact {
-  name: string;
-  role: string;
-  tag?: { label: string; tone: "good" | "bad" | "neutral" };
-}
-
-export interface DealActivity {
-  label: string;
-  when: string;
-}
-
-export interface Deal {
-  id: string;
-  company: string;
-  domain: string;
-  stage: DealStage;
-  value: number;
-  ownerId: string;
-  daysInStage: number;
-  engagement: Engagement;
-  lastTouch: string;
-  closeLabel: string;
-  nextStep: string;
-  contacts: DealContact[];
-  activity: DealActivity[];
-  note?: string;
-}
-
-export interface FocusSignal {
-  id: string;
-  dealId: string;
-  kind: FocusKind;
-  headline: string;
-  detail: string;
-  contact: string;
-  tag: string;
+  href: string;
+  icon: ReactNode;
+  /** Marks the page you're on. */
+  current?: boolean;
+  /** Shows a dot, e.g. for unread items. */
+  badge?: boolean;
 }
 
 export interface PipelineTodayProps {
-  deals?: Deal[];
-  signals?: FocusSignal[];
-  owners?: DealOwner[];
-  stages?: PipelineStage[];
-  currentUserId?: string;
-  workspace?: string;
-  dateLabel?: string;
-  greeting?: string;
-  target?: number;
+  /** Stages, owners, deals and signals. Leave it out while it loads. */
+  data?: PipelineData;
+  /** "loading" shows a placeholder; "error" shows `error` and a retry. Defaults to "ready". */
+  status?: AsyncStatus;
+  error?: string;
+  onRetry?: () => void;
+  /** The signed-in owner's id; greets them and marks their avatar. */
+  currentUserId: string;
+  /** Your workspace's name, shown as its initial in the rail. */
+  workspace: string;
+  /** The app's sections, shown as an icon rail from @3xl up. */
+  nav?: PipelineNavItem[];
+  /** Where the rail's settings button goes. Hidden when not given. */
+  settingsHref?: string;
+  /** The forecast target in the provider's currency. */
+  target: number;
+  /** Shown above the forecast, e.g. "Q4 weighted forecast". */
   forecastLabel?: string;
-  onDealMove?: (dealId: string, stage: DealStage, index: number) => void;
+  /**
+   * Save a deal's new stage and position. The board moves at once; if this
+   * fails the move is undone and the error announced.
+   */
+  onDealMove?: Action<MoveDealInput>;
+  /** Email, log a call for, or snooze a signal. Its buttons show only with this. */
+  onSignalAction?: Action<SignalActionInput>;
   className?: string;
 }
-
-export const defaultStages: PipelineStage[] = [
-  { id: "lead", label: "Lead", probability: 0.1 },
-  { id: "qualified", label: "Qualified", probability: 0.25 },
-  { id: "proposal", label: "Proposal", probability: 0.5 },
-  { id: "negotiation", label: "Negotiation", probability: 0.75 },
-  { id: "won", label: "Won", probability: 1 },
-];
-
-export const defaultOwners: DealOwner[] = [
-  { id: "maren", name: "Maren Kole", role: "Account executive" },
-  { id: "jonah", name: "Jonah Ifeanyi", role: "Account executive" },
-  { id: "sofia", name: "Sofia Lindqvist", role: "Account executive" },
-  { id: "ravi", name: "Ravi Castellano", role: "Sales lead" },
-];
-
-export const defaultDeals: Deal[] = [
-  {
-    id: "pemberton",
-    company: "Pemberton & Vale",
-    domain: "pembertonvale.law",
-    stage: "lead",
-    value: 12000,
-    ownerId: "sofia",
-    daysInStage: 4,
-    engagement: "warm",
-    lastTouch: "4d ago",
-    closeLabel: "Jan 15",
-    nextStep: "Discovery call with Priya to map their intake process",
-    contacts: [{ name: "Priya Nair", role: "Operations director" }],
-    activity: [{ label: "Inbound form: intake routing for 40 lawyers", when: "Oct 23" }],
-  },
-  {
-    id: "mosswood",
-    company: "Mosswood Bakery",
-    domain: "mosswood.co",
-    stage: "lead",
-    value: 6400,
-    ownerId: "ravi",
-    daysInStage: 11,
-    engagement: "cooling",
-    lastTouch: "2w ago",
-    closeLabel: "Feb 1",
-    nextStep: "Send the three-location pricing sheet",
-    contacts: [{ name: "Elsie Bram", role: "Owner" }],
-    activity: [{ label: "Met at the regional food fair", when: "Oct 13" }],
-  },
-  {
-    id: "wrenfield",
-    company: "Wrenfield Clinics",
-    domain: "wrenfield.health",
-    stage: "lead",
-    value: 22000,
-    ownerId: "maren",
-    daysInStage: 2,
-    engagement: "hot",
-    lastTouch: "Yesterday",
-    closeLabel: "Dec 12",
-    nextStep: "Confirm Thursday demo and invite their IT lead",
-    contacts: [
-      { name: "Hugo Ferrant", role: "Head of patient ops", tag: { label: "Champion", tone: "good" } },
-      { name: "Bea Lund", role: "IT manager" },
-    ],
-    activity: [
-      { label: "Hugo booked a demo for Thursday", when: "Yesterday" },
-      { label: "Webinar sign-up", when: "Oct 21" },
-    ],
-  },
-  {
-    id: "oakhollow",
-    company: "Oakhollow Studio",
-    domain: "oakhollow.studio",
-    stage: "qualified",
-    value: 18000,
-    ownerId: "maren",
-    daysInStage: 6,
-    engagement: "warm",
-    lastTouch: "3d ago",
-    closeLabel: "Dec 3",
-    nextStep: "Scope the agency plan with Rosa",
-    contacts: [{ name: "Rosa Quint", role: "Studio director", tag: { label: "Champion", tone: "good" } }],
-    activity: [{ label: "Discovery call, 32 min", when: "Oct 24" }],
-  },
-  {
-    id: "juniper",
-    company: "Juniper Ridge Health",
-    domain: "juniperridge.care",
-    stage: "qualified",
-    value: 39000,
-    ownerId: "sofia",
-    daysInStage: 8,
-    engagement: "warm",
-    lastTouch: "2d ago",
-    closeLabel: "Nov 20",
-    nextStep: "Security questionnaire due Friday",
-    contacts: [{ name: "Owen Achebe", role: "Compliance lead" }],
-    activity: [{ label: "Security questionnaire received", when: "Oct 25" }],
-  },
-  {
-    id: "driftline",
-    company: "Driftline Media",
-    domain: "driftline.fm",
-    stage: "qualified",
-    value: 15500,
-    ownerId: "maren",
-    daysInStage: 5,
-    engagement: "hot",
-    lastTouch: "Today",
-    closeLabel: "Nov 14",
-    nextStep: "Price out 12 seats with the annual discount",
-    contacts: [
-      { name: "Mika Sato", role: "Head of production", tag: { label: "Champion", tone: "good" } },
-      { name: "Jules Arden", role: "Finance" },
-    ],
-    activity: [
-      { label: "Mika replied: ready to talk pricing", when: "Today, 8:12" },
-      { label: "Trial reached 9 active seats", when: "Oct 24" },
-    ],
-  },
-  {
-    id: "brightwater",
-    company: "Brightwater Labs",
-    domain: "brightwater.bio",
-    stage: "proposal",
-    value: 46500,
-    ownerId: "maren",
-    daysInStage: 6,
-    engagement: "hot",
-    lastTouch: "Today",
-    closeLabel: "Nov 12",
-    nextStep: "Walk Theo through pricing options on a call",
-    contacts: [
-      { name: "Theo Marsh", role: "VP research ops", tag: { label: "Champion", tone: "good" } },
-      { name: "Clara Ng", role: "Procurement", tag: { label: "Economic buyer", tone: "neutral" } },
-    ],
-    activity: [
-      { label: "Theo opened the proposal (2nd time)", when: "Today, 9:41" },
-      { label: "Theo opened the proposal", when: "Today, 8:05" },
-      { label: "Proposal sent by you", when: "Oct 21" },
-    ],
-    note: "Budget is approved for Q4. Clara needs the DPA before signature.",
-  },
-  {
-    id: "ferrovia",
-    company: "Ferrovia Transit",
-    domain: "ferrovia.city",
-    stage: "proposal",
-    value: 67000,
-    ownerId: "maren",
-    daysInStage: 19,
-    engagement: "cooling",
-    lastTouch: "8d ago",
-    closeLabel: "Oct 24",
-    nextStep: "Ask Lotte where procurement has it",
-    contacts: [
-      { name: "Lotte Vos", role: "Digital programme lead", tag: { label: "Champion", tone: "good" } },
-      { name: "Bram Okon", role: "Procurement" },
-    ],
-    activity: [
-      { label: "Lotte: sent to procurement", when: "Oct 19" },
-      { label: "Proposal sent by you", when: "Oct 8" },
-    ],
-    note: "City budget cycle ends in December. Procurement wants three references.",
-  },
-  {
-    id: "tessellate",
-    company: "Tessellate Robotics",
-    domain: "tessellate.dev",
-    stage: "proposal",
-    value: 52000,
-    ownerId: "jonah",
-    daysInStage: 3,
-    engagement: "warm",
-    lastTouch: "5h ago",
-    closeLabel: "Oct 30",
-    nextStep: "Legal review of the order form",
-    contacts: [{ name: "Ada Whitlock", role: "CTO", tag: { label: "Champion", tone: "good" } }],
-    activity: [{ label: "Order form sent to legal", when: "Today, 7:30" }],
-  },
-  {
-    id: "halcyon",
-    company: "Halcyon Freight",
-    domain: "halcyonfreight.co",
-    stage: "negotiation",
-    value: 84000,
-    ownerId: "maren",
-    daysInStage: 12,
-    engagement: "cold",
-    lastTouch: "9d ago",
-    closeLabel: "Oct 29",
-    nextStep: "Send the security pack Ines asked for",
-    contacts: [
-      { name: "Ines Okafor", role: "Head of logistics IT", tag: { label: "Champion", tone: "good" } },
-      { name: "Marcus Hale", role: "COO", tag: { label: "Economic buyer", tone: "neutral" } },
-    ],
-    activity: [
-      { label: "Ines asked for the security pack", when: "Oct 18" },
-      { label: "Redlines returned on the MSA", when: "Oct 15" },
-    ],
-    note: "Marcus wants go-live before peak season in January.",
-  },
-  {
-    id: "quillstone",
-    company: "Quillstone Analytics",
-    domain: "quillstone.ai",
-    stage: "negotiation",
-    value: 120000,
-    ownerId: "maren",
-    daysInStage: 9,
-    engagement: "cooling",
-    lastTouch: "6d ago",
-    closeLabel: "Nov 8",
-    nextStep: "Find a new sponsor before the renewal date",
-    contacts: [
-      { name: "Dana Reyes", role: "Former VP data", tag: { label: "Left Oct 19", tone: "bad" } },
-      { name: "Anil Bhatt", role: "CFO", tag: { label: "Economic buyer", tone: "neutral" } },
-      { name: "Wren Castillo", role: "Data platform lead" },
-    ],
-    activity: [
-      { label: "Dana's out-of-office: no longer with Quillstone", when: "Oct 21" },
-      { label: "Renewal quote sent by you", when: "Oct 14" },
-    ],
-    note: "Renewal plus 40 seats. Wren runs the platform day to day and likes it.",
-  },
-  {
-    id: "cinderpath",
-    company: "Cinderpath Games",
-    domain: "cinderpath.gg",
-    stage: "negotiation",
-    value: 28000,
-    ownerId: "ravi",
-    daysInStage: 4,
-    engagement: "warm",
-    lastTouch: "2d ago",
-    closeLabel: "Nov 4",
-    nextStep: "Agree on the multi-year discount",
-    contacts: [{ name: "Leo Brandt", role: "Studio head" }],
-    activity: [{ label: "Asked for a two-year price", when: "Oct 25" }],
-  },
-  {
-    id: "saltmarsh",
-    company: "Saltmarsh Outdoor",
-    domain: "saltmarsh.shop",
-    stage: "won",
-    value: 31000,
-    ownerId: "jonah",
-    daysInStage: 19,
-    engagement: "hot",
-    lastTouch: "Today",
-    closeLabel: "Oct 8",
-    nextStep: "Kick-off with onboarding team",
-    contacts: [{ name: "Nell Harper", role: "E-commerce lead" }],
-    activity: [{ label: "Contract signed", when: "Oct 8" }],
-  },
-  {
-    id: "larkspur",
-    company: "Larkspur Energy",
-    domain: "larkspur.energy",
-    stage: "won",
-    value: 74000,
-    ownerId: "sofia",
-    daysInStage: 25,
-    engagement: "hot",
-    lastTouch: "Yesterday",
-    closeLabel: "Oct 2",
-    nextStep: "Introduce the customer success manager",
-    contacts: [{ name: "Ravi Mendes", role: "Grid operations" }],
-    activity: [{ label: "Contract signed", when: "Oct 2" }],
-  },
-];
-
-export const defaultSignals: FocusSignal[] = [
-  {
-    id: "s-brightwater",
-    dealId: "brightwater",
-    kind: "opened",
-    headline: "opened the proposal twice today",
-    detail: "Theo spent four minutes on pricing. A good moment to call.",
-    contact: "Theo Marsh",
-    tag: "Opened twice",
-  },
-  {
-    id: "s-halcyon",
-    dealId: "halcyon",
-    kind: "quiet",
-    headline: "went quiet 9 days ago",
-    detail: "Ines asked for the security pack on Oct 18. Nothing since.",
-    contact: "Ines Okafor",
-    tag: "Quiet 9 days",
-  },
-  {
-    id: "s-quillstone",
-    dealId: "quillstone",
-    kind: "champion",
-    headline: "renewal in 12 days, champion left",
-    detail: "Dana Reyes left on Oct 19. No new sponsor named yet.",
-    contact: "Anil Bhatt",
-    tag: "Champion left",
-  },
-  {
-    id: "s-driftline",
-    dealId: "driftline",
-    kind: "replied",
-    headline: "replied: ready to talk pricing",
-    detail: "Mika wants options for 12 seats before Friday.",
-    contact: "Mika Sato",
-    tag: "Replied today",
-  },
-  {
-    id: "s-ferrovia",
-    dealId: "ferrovia",
-    kind: "overdue",
-    headline: "is 3 days past its close date",
-    detail: "Still in Proposal. Move the date or nudge procurement.",
-    contact: "Lotte Vos",
-    tag: "3 days overdue",
-  },
-];
 
 const ease = [0.23, 1, 0.32, 1] as const;
 const glide = { type: "spring", stiffness: 520, damping: 42 } as const;
@@ -457,11 +195,11 @@ const stageDot: Record<DealStage, string> = {
   won: "bg-category-2",
 };
 
-const engagementMeta: Record<Engagement, { label: string; level: number; bar: string; text: string }> = {
-  hot: { label: "Hot", level: 4, bar: "bg-category-2", text: "text-category-2-foreground" },
-  warm: { label: "Warm", level: 3, bar: "bg-category-2", text: "text-muted-foreground" },
-  cooling: { label: "Cooling", level: 2, bar: "bg-category-3", text: "text-category-3-foreground" },
-  cold: { label: "Cold", level: 1, bar: "bg-category-4", text: "text-category-4-foreground" },
+const engagementMeta: Record<Engagement, { level: number; bar: string; text: string }> = {
+  hot: { level: 4, bar: "bg-category-2", text: "text-category-2-foreground" },
+  warm: { level: 3, bar: "bg-category-2", text: "text-muted-foreground" },
+  cooling: { level: 2, bar: "bg-category-3", text: "text-category-3-foreground" },
+  cold: { level: 1, bar: "bg-category-4", text: "text-category-4-foreground" },
 };
 
 const warmer: Record<Engagement, Engagement> = { cold: "cooling", cooling: "warm", warm: "hot", hot: "hot" };
@@ -520,21 +258,35 @@ const burstTones = [
   "bg-category-2",
 ];
 
-const fullMoney = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-
-function money(n: number) {
-  return fullMoney.format(Math.round(n));
+/** Money formatters from the provider's locale and currency, plus the screen's messages. */
+interface Fmt {
+  t: Messages;
+  money: (n: number) => string;
+  shortMoney: (n: number) => string;
+  signedMoney: (n: number) => string;
+  percent: (n: number) => string;
 }
 
-function shortMoney(n: number) {
-  const v = Math.round(n);
-  if (v >= 1_000_000) return `$${(v / 1_000_000).toFixed(2).replace(/\.?0+$/, "")}M`;
-  if (v >= 1000) return `$${(v / 1000).toFixed(1).replace(/\.0$/, "")}k`;
-  return `$${v}`;
+function useFmt(): Fmt {
+  const t = useMessages("pipelineToday", PIPELINE_TODAY_MESSAGES);
+  const format = useFormat();
+  return useMemo(
+    () => ({
+      t,
+      money: (n: number) => format.money(Math.round(n), undefined, { maximumFractionDigits: 0 }),
+      shortMoney: (n: number) => format.money(Math.round(n), undefined, { notation: "compact", maximumFractionDigits: 2 }),
+      signedMoney: (n: number) => format.money(Math.round(n), undefined, { maximumFractionDigits: 0, signDisplay: "exceptZero" }),
+      percent: (n: number) => format.number(n, { style: "percent", maximumFractionDigits: 0 }),
+    }),
+    [t, format],
+  );
 }
 
-function signedMoney(n: number) {
-  return `${n > 0 ? "+" : "−"}${money(Math.abs(n))}`;
+const FmtContext = createContext<Fmt | null>(null);
+function useFmtContext(): Fmt {
+  const fmt = useContext(FmtContext);
+  if (!fmt) throw new Error("PipelineToday parts render inside PipelineToday");
+  return fmt;
 }
 
 function initials(name: string) {
@@ -543,13 +295,13 @@ function initials(name: string) {
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
-    .map((p) => p[0])
+    .map((p) => p[0] ?? "")
     .join("")
     .toUpperCase();
 }
 
 function shortName(company: string) {
-  return company.split(/\s+/)[0].replace(/[^A-Za-z-]/g, "");
+  return (company.split(/\s+/)[0] ?? company).replace(/[^\p{L}-]/gu, "");
 }
 
 function hashIndex(s: string, n: number) {
@@ -576,7 +328,8 @@ function moveDeal(list: Deal[], id: string, stage: DealStage, index: number, pat
   const column = rest.filter((d) => d.stage === stage);
   const next: Deal = { ...moving, stage, ...(moving.stage !== stage ? { daysInStage: 0 } : {}), ...patch };
   const anchor = column[index];
-  const at = anchor ? rest.indexOf(anchor) : column.length ? rest.indexOf(column[column.length - 1]) + 1 : rest.length;
+  const last = column[column.length - 1];
+  const at = anchor ? rest.indexOf(anchor) : last ? rest.indexOf(last) + 1 : rest.length;
   return [...rest.slice(0, at), next, ...rest.slice(at)];
 }
 
@@ -650,12 +403,14 @@ function Burst({ reduce }: { reduce: boolean }) {
     <span aria-hidden className="pointer-events-none absolute top-1/2 left-1/2">
       {burstTones.map((tone, i) => {
         const angle = (i / burstTones.length) * Math.PI * 2 - Math.PI / 2;
+        const degrees = Math.round((angle * 180) / Math.PI);
         return (
           <motion.span
             animate={{ x: Math.cos(angle) * 15, y: Math.sin(angle) * 15, opacity: [0, 1, 0], scale: [0.6, 1, 0.6] }}
             className={cn("absolute -top-[2px] -start-[2px] size-1 rounded-full", tone)}
             initial={{ x: 0, y: 0, opacity: 0 }}
-            key={i}
+            // Each particle flies at its own angle.
+            key={`burst-${degrees}`}
             transition={{ duration: 0.6, ease, opacity: { duration: 0.6, times: [0, 0.2, 1] } }}
           />
         );
@@ -676,6 +431,8 @@ interface FaceProps {
 }
 
 function DealFace({ deal, owner, ownerIndex, flag, celebrate, touched, reduce, className }: FaceProps) {
+  const fmt = useFmtContext();
+  const { t } = fmt;
   const engagement = engagementMeta[deal.engagement];
   const won = deal.stage === "won";
   return (
@@ -707,14 +464,14 @@ function DealFace({ deal, owner, ownerIndex, flag, celebrate, touched, reduce, c
       ) : null}
       <div className="relative truncate font-medium">{deal.company}</div>
       <div className="relative mt-2 flex items-baseline justify-between gap-2">
-        <span className="font-medium tabular-nums">{money(deal.value)}</span>
+        <span className="font-medium tabular-nums">{fmt.money(deal.value)}</span>
         <span
           className={cn(
             "shrink-0 text-xs tabular-nums",
             !won && deal.daysInStage >= 14 ? "text-category-3-foreground" : "text-muted-foreground",
           )}
         >
-          {won ? deal.closeLabel : deal.daysInStage === 0 ? "Just moved" : `${deal.daysInStage}d in stage`}
+          {won ? deal.closeLabel : deal.daysInStage === 0 ? t.justMoved : interpolate(t.daysInStage, { days: deal.daysInStage })}
         </span>
       </div>
       <div className="relative mt-1.5 flex h-[18px] items-center gap-1.5 text-xs">
@@ -732,7 +489,7 @@ function DealFace({ deal, owner, ownerIndex, flag, celebrate, touched, reduce, c
               </motion.span>
               {celebrate ? <Burst key={`burst-${celebrate}`} reduce={reduce} /> : null}
             </span>
-            <span className="truncate text-category-2-foreground">Closed won</span>
+            <span className="truncate text-category-2-foreground">{t.closedWon}</span>
             <OwnerAvatar className="ms-auto [--avatar-size:18px]" index={ownerIndex} owner={owner} />
           </>
         ) : (
@@ -823,19 +580,21 @@ function SignalItem({
   stageLabel: string;
   resolving?: FocusAction;
   reduce: boolean;
-  onAct: (signal: FocusSignal, action: FocusAction) => void;
+  onAct?: (signal: FocusSignal, action: FocusAction) => void;
   onOpen: (dealId: string) => void;
   onHint: (dealId: string | null) => void;
 }) {
+  const fmt = useFmtContext();
+  const { t } = fmt;
   const meta = signalMeta[signal.kind];
   const Icon = meta.icon;
   const company = deal?.company ?? "";
   const outcome =
     resolving === "email"
-      ? `Follow-up sent to ${signal.contact}`
+      ? interpolate(t.followUpSent, { contact: signal.contact })
       : resolving === "call"
-        ? `Call with ${signal.contact} logged`
-        : "Snoozed until tomorrow";
+        ? interpolate(t.callLogged, { contact: signal.contact })
+        : t.snoozedUntilTomorrow;
 
   return (
     <motion.li
@@ -857,7 +616,7 @@ function SignalItem({
             <div className="min-w-0 flex-1">
               <p className="text-pretty leading-5">
                 <button
-                  aria-label={`Open ${company}`}
+                  aria-label={interpolate(t.openDeal, { company })}
                   className="relative cursor-pointer rounded-sm font-medium outline-none after:absolute after:-inset-1 after:content-[''] hover:underline hover:underline-offset-2 focus-visible:ring-2 focus-visible:ring-ring"
                   onClick={() => onOpen(signal.dealId)}
                   tabIndex={resolving ? -1 : undefined}
@@ -871,43 +630,45 @@ function SignalItem({
               {deal ? (
                 <p className="mt-1.5 flex items-center gap-1.5 text-muted-foreground text-xs tabular-nums">
                   <span className={cn("size-1.5 rounded-full", stageDot[deal.stage])} />
-                  {stageLabel} · {money(deal.value)}
+                  {stageLabel} · {fmt.money(deal.value)}
                 </p>
               ) : null}
             </div>
           </div>
+          {onAct ? (
           <div aria-hidden={resolving ? true : undefined} className="mt-2.5 flex flex-wrap gap-1.5">
             <Button
-              aria-label={`Email ${signal.contact}`}
+              aria-label={interpolate(t.emailContact, { contact: signal.contact })}
               disabled={Boolean(resolving)}
               onClick={() => onAct(signal, "email")}
               size="xs"
               variant="outline"
             >
               <MailIcon />
-              Email
+              {t.email}
             </Button>
             <Button
-              aria-label={`Log call with ${signal.contact}`}
+              aria-label={interpolate(t.logCallWith, { contact: signal.contact })}
               disabled={Boolean(resolving)}
               onClick={() => onAct(signal, "call")}
               size="xs"
               variant="outline"
             >
               <PhoneIcon />
-              Log call
+              {t.logCall}
             </Button>
             <Button
-              aria-label={`Snooze ${company} until tomorrow`}
+              aria-label={interpolate(t.snoozeCompany, { company })}
               disabled={Boolean(resolving)}
               onClick={() => onAct(signal, "snooze")}
               size="xs"
               variant="ghost"
             >
               <Clock3Icon />
-              Snooze
+              {t.snooze}
             </Button>
           </div>
+          ) : null}
           <AnimatePresence>
             {resolving ? (
               <motion.div
@@ -932,7 +693,7 @@ function SignalItem({
                 <span className="flex min-w-0 flex-col gap-0.5">
                   <span className="text-pretty font-medium leading-5">{outcome}</span>
                   <span className="text-pretty text-muted-foreground text-xs">
-                    {resolving === "snooze" ? `${company} is back in Focus at 9:00` : `${company} · touched just now`}
+                    {interpolate(resolving === "snooze" ? t.backInFocus : t.touchedJustNow, { company })}
                   </span>
                 </span>
               </motion.div>
@@ -960,28 +721,32 @@ function DetailPanel({
   stages: PipelineStage[];
   onClose: () => void;
   onMove: (stage: DealStage) => void;
-  panelRef: RefObject<HTMLDivElement | null>;
+  panelRef: RefObject<HTMLElement | null>;
   headingId: string;
 }) {
+  const fmt = useFmtContext();
+  const { t } = fmt;
   const at = stages.findIndex((s) => s.id === deal.stage);
   const stage = stages[at];
   const next = stages[at + 1];
-  const champion = deal.contacts.find((c) => c.tag?.tone === "good") ?? deal.contacts[0];
+  const close = useRef(onClose);
+  close.current = onClose;
+
+  // Escape closes the panel from anywhere inside it.
+  useEffect(() => {
+    const el = panelRef.current;
+    if (!el) return;
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      e.stopPropagation();
+      close.current();
+    };
+    el.addEventListener("keydown", onKey);
+    return () => el.removeEventListener("keydown", onKey);
+  }, [panelRef]);
 
   return (
-    <div
-      aria-labelledby={headingId}
-      className="flex h-full min-h-0 flex-col outline-none"
-      onKeyDown={(e) => {
-        if (e.key === "Escape") {
-          e.stopPropagation();
-          onClose();
-        }
-      }}
-      ref={panelRef}
-      role="region"
-      tabIndex={-1}
-    >
+    <section aria-labelledby={headingId} className="flex h-full min-h-0 flex-col outline-none" ref={panelRef} tabIndex={-1}>
       <div className="flex items-start gap-3 px-4 pt-4 pb-3">
         <Monogram className="size-9 rounded-lg text-xs" name={deal.company} />
         <div className="flex min-w-0 flex-1 flex-col">
@@ -990,27 +755,27 @@ function DetailPanel({
           </h2>
           <span className="truncate text-muted-foreground text-xs">{deal.domain}</span>
         </div>
-        <Button aria-label="Close details" className="-me-1.5 -mt-1" onClick={onClose} size="icon-sm" variant="ghost">
+        <Button aria-label={t.closeDetails} className="-me-1.5 -mt-1" onClick={onClose} size="icon-sm" variant="ghost">
           <XIcon />
         </Button>
       </div>
       <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 pb-4">
         <dl className="grid grid-cols-2 gap-x-3 gap-y-3 rounded-xl border p-3 text-xs">
           <div className="flex flex-col gap-1">
-            <dt className="text-muted-foreground">Value</dt>
-            <dd className="font-medium text-sm tabular-nums">{money(deal.value)}</dd>
+            <dt className="text-muted-foreground">{t.value}</dt>
+            <dd className="font-medium text-sm tabular-nums">{fmt.money(deal.value)}</dd>
           </div>
           <div className="flex flex-col items-start gap-1">
-            <dt className="text-muted-foreground">Stage</dt>
+            <dt className="text-muted-foreground">{t.stage}</dt>
             <dd>
               <DropdownMenu>
                 <DropdownMenuTrigger
-                  aria-label={`Stage: ${stage?.label}. Change stage`}
+                  aria-label={interpolate(t.changeStage, { stage: stage?.label ?? "" })}
                   className="-mx-1.5 -my-0.5 flex h-6 cursor-pointer items-center gap-1.5 rounded-md px-1.5 font-medium text-sm outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent"
                 >
-                  <span className={cn("size-1.5 rounded-full", stageDot[deal.stage])} />
+                  <span aria-hidden className={cn("size-1.5 rounded-full", stageDot[deal.stage])} />
                   {stage?.label}
-                  <ChevronDownIcon className="size-3.5 text-muted-foreground" />
+                  <ChevronDownIcon aria-hidden className="size-3.5 text-muted-foreground" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
@@ -1020,9 +785,9 @@ function DetailPanel({
                     {stages.map((s) => (
                       <DropdownMenuRadioItem key={s.id} value={s.id}>
                         <span className="flex w-full items-center gap-2">
-                          <span className={cn("size-1.5 rounded-full", stageDot[s.id])} />
+                          <span aria-hidden className={cn("size-1.5 rounded-full", stageDot[s.id])} />
                           <span className="flex-1">{s.label}</span>
-                          <span className="font-mono text-muted-foreground text-xs">{Math.round(s.probability * 100)}%</span>
+                          <span className="font-mono text-muted-foreground text-xs">{fmt.percent(s.probability)}</span>
                         </span>
                       </DropdownMenuRadioItem>
                     ))}
@@ -1032,40 +797,36 @@ function DetailPanel({
             </dd>
           </div>
           <div className="flex flex-col gap-1">
-            <dt className="text-muted-foreground">Owner</dt>
+            <dt className="text-muted-foreground">{t.owner}</dt>
             <dd className="flex min-w-0 items-center gap-1.5">
               <OwnerAvatar index={ownerIndex} owner={owner} />
               <span className="truncate font-medium text-sm">{owner?.name.split(" ")[0]}</span>
             </dd>
           </div>
           <div className="flex flex-col gap-1">
-            <dt className="text-muted-foreground">{deal.stage === "won" ? "Closed" : "Close date"}</dt>
+            <dt className="text-muted-foreground">{deal.stage === "won" ? t.closedOn : t.closeDate}</dt>
             <dd className="font-medium text-sm tabular-nums">{deal.closeLabel}</dd>
           </div>
         </dl>
 
         <section className="mt-5">
-          <h3 className="font-medium text-muted-foreground text-xs">Next step</h3>
+          <h3 className="font-medium text-muted-foreground text-xs">{t.nextStep}</h3>
           <p className="mt-1.5 flex gap-2 text-pretty">
-            <ArrowRightIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+            <ArrowRightIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-muted-foreground rtl:rotate-180" />
             {deal.nextStep}
           </p>
         </section>
 
         <section className="mt-5">
-          <h3 className="font-medium text-muted-foreground text-xs">Contacts</h3>
+          <h3 className="font-medium text-muted-foreground text-xs">{t.contacts}</h3>
           <ul className="mt-2 flex flex-col gap-2.5">
             {deal.contacts.map((c, i) => (
               <li className="flex items-center gap-2.5" key={c.name}>
                 <Avatar className="[--avatar-size:--spacing(7)]">
-                  <AvatarFallback className={cn("font-semibold text-[10px]", ownerTones[(i + 2) % ownerTones.length])}>
-                    {initials(c.name)}
-                  </AvatarFallback>
+                  <AvatarFallback className={cn("font-semibold text-[10px]", ownerTones[(i + 2) % ownerTones.length])}>{initials(c.name)}</AvatarFallback>
                 </Avatar>
                 <span className="flex min-w-0 flex-1 flex-col">
-                  <span className={cn("truncate font-medium", c.tag?.tone === "bad" && "text-muted-foreground line-through decoration-foreground/30")}>
-                    {c.name}
-                  </span>
+                  <span className={cn("truncate font-medium", c.tag?.tone === "bad" && "text-muted-foreground line-through decoration-foreground/30")}>{c.name}</span>
                   <span className="truncate text-muted-foreground text-xs">{c.role}</span>
                 </span>
                 {c.tag ? (
@@ -1086,15 +847,12 @@ function DetailPanel({
         </section>
 
         <section className="mt-5">
-          <h3 className="font-medium text-muted-foreground text-xs">Last touches</h3>
+          <h3 className="font-medium text-muted-foreground text-xs">{t.lastTouches}</h3>
           <ol className="mt-2 flex flex-col">
             {deal.activity.slice(0, 3).map((a, i, list) => (
               <li className="relative flex gap-3 pb-3 last:pb-0" key={`${a.label}-${a.when}`}>
                 {i < list.length - 1 ? <span aria-hidden className="absolute top-3 bottom-0 start-[3px] w-px bg-border" /> : null}
-                <span
-                  aria-hidden
-                  className={cn("mt-1.5 size-[7px] shrink-0 rounded-full", i === 0 ? "bg-foreground/70" : "bg-foreground/20")}
-                />
+                <span aria-hidden className={cn("mt-1.5 size-[7px] shrink-0 rounded-full", i === 0 ? "bg-foreground/70" : "bg-foreground/20")} />
                 <span className="flex min-w-0 flex-col">
                   <span className="text-pretty">{a.label}</span>
                   <span className="text-muted-foreground text-xs">{a.when}</span>
@@ -1106,7 +864,7 @@ function DetailPanel({
 
         {deal.note ? (
           <section className="mt-5">
-            <h3 className="font-medium text-muted-foreground text-xs">Notes</h3>
+            <h3 className="font-medium text-muted-foreground text-xs">{t.notes}</h3>
             <p className="mt-1.5 text-pretty rounded-xl bg-muted/60 p-3 text-sm dark:bg-muted/40">{deal.note}</p>
           </section>
         ) : null}
@@ -1114,45 +872,44 @@ function DetailPanel({
       <div className="flex gap-2 border-t p-3">
         {next ? (
           <Button className="flex-1" onClick={() => onMove(next.id)} variant={next.id === "won" ? "default" : "outline"}>
-            {next.id === "won" ? <CheckIcon /> : <ArrowRightIcon />}
-            {next.id === "won" ? "Mark as won" : `Move to ${next.label}`}
+            {next.id === "won" ? <CheckIcon /> : <ArrowRightIcon className="rtl:rotate-180" />}
+            {next.id === "won" ? t.markWon : interpolate(t.moveTo, { stage: next.label })}
           </Button>
         ) : (
           <span className="flex h-8 flex-1 items-center gap-2 font-medium text-category-2-foreground">
-            <CircleCheckIcon className="size-4" />
-            Closed won
+            <CircleCheckIcon aria-hidden className="size-4" />
+            {t.closedWon}
           </span>
         )}
-        {champion ? (
-          <Button aria-label={`Email ${champion.name}`} size="icon" variant="outline">
-            <MailIcon />
-          </Button>
-        ) : null}
       </div>
-    </div>
+    </section>
   );
 }
 
 type DragState = { id: string; width: number; height: number; origin: DealStage; pointerId: number };
 type Lifted = { id: string; snapshot: Deal[] };
 
-export function PipelineToday({
-  deals: initialDeals = defaultDeals,
-  signals = defaultSignals,
-  owners = defaultOwners,
-  stages = defaultStages,
-  currentUserId = "maren",
-  workspace = "Kestrel",
-  dateLabel = "Tuesday, 27 October",
-  greeting = "Good morning",
-  target = 480000,
-  forecastLabel = "Q4 weighted forecast",
+function PipelineTodayBoard({
+  data,
+  currentUserId,
+  workspace,
+  nav = [],
+  settingsHref,
+  target,
+  forecastLabel,
   onDealMove,
+  onSignalAction,
   className,
-}: PipelineTodayProps) {
+}: PipelineTodayProps & { data: PipelineData }) {
+  const fmt = useFmtContext();
+  const { t } = fmt;
+  const format = useFormat();
+  const { now, timeZone } = useWirefront();
+  const { stages, owners, signals } = data;
   const reduce = useCalmMotion();
   const uid = useId();
-  const [deals, setDeals] = useState(initialDeals);
+  const [deals, setDeals] = useState(data.deals);
+  useEffect(() => setDeals(data.deals), [data.deals]);
   const [drag, setDrag] = useState<DragState | null>(null);
   const [over, setOver] = useState<{ stage: DealStage; index: number } | null>(null);
   const [lifted, setLifted] = useState<Lifted | null>(null);
@@ -1169,9 +926,10 @@ export function PipelineToday({
   const [hinted, setHinted] = useState<string | null>(null);
 
   const rootRef = useRef<HTMLDivElement>(null);
-  const railRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const chipsRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
+  const chipsRef = useRef<HTMLFieldSetElement>(null);
+  const beforeMove = useRef<Deal[] | null>(null);
   const rects = useRef(new Map<string, Rect>());
   const pending = useRef<{ id: string; pointerId: number; x: number; y: number; el: HTMLElement } | null>(null);
   const dragRef = useRef<DragState | null>(null);
@@ -1189,7 +947,7 @@ export function PipelineToday({
 
   const ids = { instructions: `${uid}-how`, detail: `${uid}-detail`, heading: `${uid}-heading`, rail: `${uid}-rail` };
   const order = stages.map((s) => s.id);
-  const stageOf = (id: DealStage) => stages.find((s) => s.id === id) ?? stages[0];
+  const stageOf = (id: DealStage) => stages.find((s) => s.id === id) ?? (stages[0] as PipelineStage);
   const prob = (id: DealStage) => stageOf(id).probability;
   const forecast = (list: Deal[]) => list.reduce((sum, d) => sum + d.value * prob(d.stage), 0);
   const ownerIndex = (id: string) => Math.max(0, owners.findIndex((o) => o.id === id));
@@ -1256,6 +1014,17 @@ export function PipelineToday({
   }, [mobileStage, reduce]);
 
   const say = (text: string) => setAnnouncement((prev) => (prev === text ? `${text} ` : text));
+  const mover = useAction(onDealMove ?? (async () => {}), {
+    // The board already shows the move; undo it if saving fails.
+    onError: (message, input) => {
+      const snapshot = beforeMove.current;
+      if (snapshot) setDeals(snapshot);
+      beforeMove.current = null;
+      const company = snapshot?.find((d) => d.id === input.dealId)?.company ?? "";
+      say(interpolate(t.saidMoveFailed, { company, error: message }));
+    },
+  });
+  const signalAction = useAction(onSignalAction ?? (async () => {}));
   const nextKey = () => {
     counter.current += 1;
     return counter.current;
@@ -1269,7 +1038,7 @@ export function PipelineToday({
     const diff = forecast(after) - forecast(before);
     setMobileStage(now.stage);
     if (was.stage === now.stage) {
-      say(`${now.company} stays in ${stageOf(now.stage).label}, position ${index + 1}.`);
+      say(interpolate(t.saidStays, { company: now.company, stage: stageOf(now.stage).label, position: index + 1 }));
       return;
     }
     if (Math.round(diff) !== 0) {
@@ -1284,17 +1053,18 @@ export function PipelineToday({
       setCelebrate({ id, key });
       later(() => setCelebrate((c) => (c?.key === key ? null : c)), 1500);
     }
-    say(
-      `${now.company} moved to ${stageOf(now.stage).label}${now.stage === "won" ? ", closed won" : ""}. Forecast now ${money(forecast(after))}.`,
-    );
-    onDealMove?.(id, now.stage, index);
+    say(interpolate(now.stage === "won" ? t.saidWon : t.saidMoved, { company: now.company, stage: stageOf(now.stage).label, forecast: fmt.money(forecast(after)) }));
+    if (onDealMove) {
+      beforeMove.current = before;
+      void mover.run({ dealId: id, stage: now.stage, index }, id);
+    }
   };
 
   const commit = (id: string, stage: DealStage, index: number, base: Deal[] = deals) => {
     const original = base.find((d) => d.id === id);
     if (!original) return;
     const patch: Partial<Deal> =
-      original.stage === stage ? {} : stage === "won" ? { closeLabel: "Today", lastTouch: "Just now" } : {};
+      original.stage === stage ? {} : stage === "won" ? { closeLabel: t.today, lastTouch: t.justNow } : {};
     const after = moveDeal(base, id, stage, index, patch);
     setDeals(after);
     settle(base, after, id);
@@ -1332,7 +1102,7 @@ export function PipelineToday({
       commit(d.id, target.stage, target.index);
     } else {
       const deal = deals.find((x) => x.id === d.id);
-      if (deal) say(`Move cancelled. ${deal.company} is back in ${stageOf(deal.stage).label}.`);
+      if (deal) say(interpolate(t.saidCancelled, { company: deal.company, stage: stageOf(deal.stage).label }));
     }
   };
 
@@ -1357,10 +1127,10 @@ export function PipelineToday({
     root.focus({ preventScroll: true });
     setDrag(state);
     setOver(start);
-    say(`Picked up ${deal.company}. Drop it on a stage, or press Escape to cancel.`);
+    say(interpolate(t.saidPickedUp, { company: deal.company }));
   };
 
-  const onRootPointerMove = (e: PointerEvent<HTMLDivElement>) => {
+  const onRootPointerMove = (e: globalThis.PointerEvent) => {
     const d = dragRef.current;
     const root = rootRef.current;
     if (!d || !root || e.pointerId !== d.pointerId) return;
@@ -1387,7 +1157,7 @@ export function PipelineToday({
     setOver({ stage, index });
   };
 
-  const onRootPointerUp = (e: PointerEvent<HTMLDivElement>) => {
+  const onRootPointerUp = (e: globalThis.PointerEvent) => {
     const d = dragRef.current;
     const root = rootRef.current;
     if (!d || !root || e.pointerId !== d.pointerId) return;
@@ -1407,7 +1177,7 @@ export function PipelineToday({
     const base = lifted.snapshot;
     const after = moveDeal(base, current.id, current.stage, index, {
       daysInStage: restored.daysInStage,
-      ...(origin.stage !== current.stage && current.stage === "won" ? { closeLabel: "Today", lastTouch: "Just now" } : {}),
+      ...(origin.stage !== current.stage && current.stage === "won" ? { closeLabel: t.today, lastTouch: t.justNow } : {}),
     });
     setDeals(after);
     settle(base, after, current.id);
@@ -1421,7 +1191,7 @@ export function PipelineToday({
     pendingFocus.current = lifted.id;
     if (deal) {
       setMobileStage(deal.stage);
-      say(`Move cancelled. ${deal.company} is back in ${stageOf(deal.stage).label}.`);
+      say(interpolate(t.saidCancelled, { company: deal.company, stage: stageOf(deal.stage).label }));
     }
   };
 
@@ -1431,7 +1201,7 @@ export function PipelineToday({
     setDeals(after);
     setMobileStage(stage);
     pendingFocus.current = deal.id;
-    say(`${stageOf(stage).label}, position ${column.findIndex((d) => d.id === deal.id) + 1} of ${column.length}.`);
+    say(interpolate(t.saidPosition, { stage: stageOf(stage).label, position: column.findIndex((d) => d.id === deal.id) + 1, count: column.length }));
   };
 
   const focusCard = (id: string, stage: DealStage) => {
@@ -1455,7 +1225,7 @@ export function PipelineToday({
     setSelectedId(null);
   };
 
-  const onCardKeyDown = (e: KeyboardEvent<HTMLDivElement>, deal: Deal) => {
+  const onCardKeyDown = (e: KeyboardEvent<HTMLButtonElement>, deal: Deal) => {
     if (dragRef.current) return;
     const column = deals.filter((d) => d.stage === deal.stage);
     const idx = column.findIndex((d) => d.id === deal.id);
@@ -1489,9 +1259,7 @@ export function PipelineToday({
     if (e.key === " ") {
       e.preventDefault();
       setLifted({ id: deal.id, snapshot: deals });
-      say(
-        `Picked up ${deal.company} in ${stageOf(deal.stage).label}. Left and right arrows change stage, up and down reorder, Space drops, Escape cancels.`,
-      );
+      say(interpolate(t.saidPickedUpKeys, { company: deal.company, stage: stageOf(deal.stage).label }));
     } else if (e.key === "Enter") {
       e.preventDefault();
       openDeal(deal.id);
@@ -1506,7 +1274,7 @@ export function PipelineToday({
         const list = deals.filter((d) => d.stage === order[i]);
         if (list.length) {
           const to = list[Math.min(idx, list.length - 1)];
-          focusCard(to.id, to.stage);
+          if (to) focusCard(to.id, to.stage);
           break;
         }
       }
@@ -1515,6 +1283,7 @@ export function PipelineToday({
 
   const act = (signal: FocusSignal, action: FocusAction) => {
     if (resolving[signal.id]) return;
+    void signalAction.run({ signalId: signal.id, action }, signal.id);
     const deal = deals.find((d) => d.id === signal.dealId);
     setResolving((r) => ({ ...r, [signal.id]: action }));
     railRef.current?.focus({ preventScroll: true });
@@ -1525,11 +1294,11 @@ export function PipelineToday({
             ? {
                 ...d,
                 engagement: warmer[d.engagement],
-                lastTouch: "Just now",
+                lastTouch: t.justNow,
                 activity: [
                   {
-                    label: action === "email" ? `You emailed ${signal.contact}` : `You logged a call with ${signal.contact}`,
-                    when: "Just now",
+                    label: interpolate(action === "email" ? t.youEmailed : t.youCalled, { contact: signal.contact }),
+                    when: t.justNow,
                   },
                   ...d.activity,
                 ],
@@ -1541,7 +1310,11 @@ export function PipelineToday({
     }
     const left = openSignals.length - 1;
     say(
-      `${deal?.company ?? ""}: ${action === "email" ? `follow-up sent to ${signal.contact}` : action === "call" ? `call with ${signal.contact} logged` : "snoozed until tomorrow"}. ${left === 0 ? "Focus is clear." : `${left} left in Focus.`}`,
+      interpolate(t.saidSignal, {
+        company: deal?.company ?? "",
+        outcome: action === "email" ? interpolate(t.followUpSent, { contact: signal.contact }) : action === "call" ? interpolate(t.callLogged, { contact: signal.contact }) : t.snoozedUntilTomorrow,
+        left: left === 0 ? t.saidFocusClear : interpolate(t.saidLeft, { count: left }),
+      }),
     );
     later(
       () => {
@@ -1557,40 +1330,54 @@ export function PipelineToday({
   };
 
   const firstName = me?.name.split(" ")[0] ?? "";
-  const progress = Math.round((total / target) * 100);
+  const progress = total / (target || 1);
+  const today = now();
+  const hour = Number(new Intl.DateTimeFormat("en-US", { timeZone, hour: "numeric", hourCycle: "h23" }).format(today));
+  const greeting = interpolate(hour < 12 ? t.morning : hour < 18 ? t.afternoon : t.evening, { name: firstName });
+  const dateLabel = format.date(today, { weekday: "long", day: "numeric", month: "long" });
 
-  const navItems: { label: string; icon: LucideIcon; current?: boolean; badge?: boolean }[] = [
-    { label: "Today", icon: SunriseIcon, current: true },
-    { label: "Pipeline", icon: KanbanIcon },
-    { label: "Accounts", icon: Building2Icon },
-    { label: "Inbox", icon: InboxIcon, badge: true },
-    { label: "Reports", icon: ChartNoAxesColumnIcon },
-  ];
-
-  const workspaceMenu = (trigger: ReactElement) => (
-    <DropdownMenu>
-      <DropdownMenuTrigger render={trigger} />
-      <DropdownMenuContent
-        align="start"
-        className="w-56 transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] data-ending-style:scale-95 data-starting-style:scale-95 data-ending-style:opacity-0 data-starting-style:opacity-0"
-        side="bottom"
-      >
-        <DropdownMenuGroup>
-          <DropdownMenuLabel>{workspace}</DropdownMenuLabel>
-          <DropdownMenuRadioGroup defaultValue="sales">
-            <DropdownMenuRadioItem value="sales">Sales pipeline</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="renewals">Renewals</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="partners">Partnerships</DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <SettingsIcon />
-          Workspace settings
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+  // Drag tracking, Escape and lifted-card drops listen on the root element.
+  const rootHandlers = useRef({ onRootPointerMove, onRootPointerUp, endDrag, dropLifted, lifted });
+  rootHandlers.current = { onRootPointerMove, onRootPointerUp, endDrag, dropLifted, lifted };
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const h = () => rootHandlers.current;
+    const cancel = () => {
+      if (dragRef.current) h().endDrag(false);
+    };
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape" && dragRef.current) {
+        e.preventDefault();
+        h().endDrag(false);
+      }
+    };
+    const onDown = (e: globalThis.PointerEvent) => {
+      const { lifted: up, dropLifted: drop } = h();
+      if (up && !(e.target instanceof Element && e.target.closest(`[data-card-id="${up.id}"]`))) drop();
+    };
+    const onMove = (e: globalThis.PointerEvent) => h().onRootPointerMove(e);
+    const onUp = (e: globalThis.PointerEvent) => h().onRootPointerUp(e);
+    const onScroll = () => {
+      if (!dragRef.current) rects.current.clear();
+    };
+    root.addEventListener("keydown", onKey);
+    root.addEventListener("lostpointercapture", cancel);
+    root.addEventListener("pointercancel", cancel);
+    root.addEventListener("pointerdown", onDown);
+    root.addEventListener("pointermove", onMove);
+    root.addEventListener("pointerup", onUp);
+    root.addEventListener("scroll", onScroll, true);
+    return () => {
+      root.removeEventListener("keydown", onKey);
+      root.removeEventListener("lostpointercapture", cancel);
+      root.removeEventListener("pointercancel", cancel);
+      root.removeEventListener("pointerdown", onDown);
+      root.removeEventListener("pointermove", onMove);
+      root.removeEventListener("pointerup", onUp);
+      root.removeEventListener("scroll", onScroll, true);
+    };
+  }, []);
 
   const lane = (stage: PipelineStage) => {
     const list = columns[stage.id];
@@ -1599,7 +1386,12 @@ export function PipelineToday({
     const isWon = stage.id === "won";
     return (
       <section
-        aria-label={`${stage.label}: ${list.length} ${list.length === 1 ? "deal" : "deals"}, ${shortMoney(weighted)} ${isWon ? "closed" : "weighted"}`}
+        aria-label={interpolate(list.length === 1 ? t.laneLabelOne : t.laneLabelMany, {
+          stage: stage.label,
+          count: list.length,
+          amount: fmt.shortMoney(weighted),
+          kind: isWon ? t.closed : t.weighted,
+        })}
         className={cn(
           "flex min-h-0 min-w-0 flex-col rounded-2xl bg-muted/50 p-1 transition-colors duration-150 dark:bg-muted/30",
           isOver && (isWon ? "bg-category-2/10" : "bg-accent dark:bg-accent/70"),
@@ -1617,16 +1409,16 @@ export function PipelineToday({
             </span>
             <span className="text-muted-foreground text-xs">
               <span className={cn("font-medium", isWon ? "text-category-2-foreground" : "text-foreground/80")}>
-                <Rolling format={shortMoney} reduce={reduce} value={weighted} />
+                <Rolling format={fmt.shortMoney} reduce={reduce} value={weighted} />
               </span>{" "}
-              {isWon ? "closed" : "weighted"}
+              {isWon ? t.closed : t.weighted}
             </span>
           </div>
           {isWon ? (
             <CheckIcon className="mt-0.5 size-3.5 shrink-0 text-category-2-foreground" />
           ) : (
             <span className="mt-0.5 shrink-0 font-mono text-[11px] text-muted-foreground tabular-nums">
-              {Math.round(stage.probability * 100)}%
+              {fmt.percent(stage.probability)}
             </span>
           )}
         </header>
@@ -1650,13 +1442,13 @@ export function PipelineToday({
             const owner = ownerOf(deal.ownerId);
             return (
               <FlipSlot flipKey={deal.id} getScale={getScale} key={deal.id} reduce={reduce} rects={rects}>
-                <div
+                <button
                   aria-controls={isSelected ? ids.detail : undefined}
                   aria-describedby={ids.instructions}
                   aria-expanded={isSelected}
-                  aria-roledescription="draggable deal"
+                  aria-roledescription={t.draggableDeal}
                   className={cn(
-                    "group/card block cursor-grab touch-pan-y select-none rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:cursor-grabbing",
+                    "group/card block w-full cursor-grab touch-pan-y select-none rounded-xl text-start outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:cursor-grabbing",
                   )}
                   data-card-id={deal.id}
                   onClick={() => openDeal(deal.id)}
@@ -1677,8 +1469,7 @@ export function PipelineToday({
                   onPointerUp={() => {
                     pending.current = null;
                   }}
-                  role="button"
-                  tabIndex={0}
+                  type="button"
                 >
                   <motion.div
                     animate={{ scale: isLifted && !reduce ? 1.03 : 1, rotate: isLifted && !reduce ? -1.2 : 0 }}
@@ -1700,7 +1491,7 @@ export function PipelineToday({
                       touched={touched?.id === deal.id ? touched.key : undefined}
                     />
                   </motion.div>
-                </div>
+                </button>
               </FlipSlot>
             );
           })}
@@ -1709,7 +1500,7 @@ export function PipelineToday({
               aria-hidden
               className="flex h-20 items-center justify-center rounded-xl border border-foreground/10 border-dashed text-muted-foreground text-xs"
             >
-              Drop a deal here
+              {t.dropHere}
             </li>
           ) : null}
         </ul>
@@ -1720,22 +1511,16 @@ export function PipelineToday({
   const draggedDeal = drag ? deals.find((d) => d.id === drag.id) : undefined;
 
   const focusRail = (
-    <div
-      aria-labelledby={ids.rail}
-      className="flex h-full min-h-0 flex-col outline-none"
-      ref={railRef}
-      role="region"
-      tabIndex={-1}
-    >
+    <section aria-labelledby={ids.rail} className="flex h-full min-h-0 flex-col outline-none" ref={railRef} tabIndex={-1}>
       <div className="flex items-baseline justify-between gap-3 px-4 pt-4 pb-3">
         <div className="flex flex-col">
           <h2 className="flex items-center gap-2 font-heading font-semibold text-base" id={ids.rail}>
-            Focus
+            {t.focus}
             <span className="rounded-full bg-muted px-1.5 py-0.5 font-medium font-sans text-muted-foreground text-xs tabular-nums">
               {openSignals.length}
             </span>
           </h2>
-          <p className="text-muted-foreground text-xs">Who to act on today, and why</p>
+          <p className="text-muted-foreground text-xs">{t.focusSubtitle}</p>
         </div>
       </div>
       <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 pb-2 [scrollbar-width:thin]">
@@ -1748,7 +1533,7 @@ export function PipelineToday({
                   <SignalItem
                     deal={deal}
                     key={s.id}
-                    onAct={act}
+                    onAct={onSignalAction ? act : undefined}
                     onHint={setHinted}
                     onOpen={(id) => {
                       setHinted(null);
@@ -1774,120 +1559,86 @@ export function PipelineToday({
               <CoffeeIcon className="size-4.5" />
             </span>
             <div className="flex flex-col gap-1">
-              <span className="text-balance font-medium">You're clear for today</span>
+              <span className="text-balance font-medium">{t.clearTitle}</span>
               <span className="text-pretty text-muted-foreground text-xs">
-                {handled.length} handled{snoozed.length ? `, ${snoozed.length} snoozed until tomorrow` : ""}. New signals land
-                here as they happen.
+                {interpolate(snoozed.length ? t.clearHandledSnoozed : t.clearHandled, { handled: handled.length, snoozed: snoozed.length })}
               </span>
             </div>
             {snoozed.length ? (
               <Button onClick={() => setSnoozed([])} size="xs" variant="outline">
                 <Clock3Icon />
-                Bring back snoozed
+                {t.bringBack}
               </Button>
             ) : null}
           </motion.div>
         )}
       </div>
-    </div>
+    </section>
   );
 
   return (
     <MotionConfig reducedMotion={reduce ? "always" : "never"}>
       <div
-        className={cn(
-          "@container relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm outline-none",
-          className,
-        )}
-        onKeyDown={(e) => {
-          if (e.key === "Escape" && dragRef.current) {
-            e.preventDefault();
-            endDrag(false);
-          }
-        }}
-        onLostPointerCapture={() => {
-          if (dragRef.current) endDrag(false);
-        }}
-        onPointerCancel={() => {
-          if (dragRef.current) endDrag(false);
-        }}
-        onPointerDown={(e) => {
-          if (lifted && !(e.target as HTMLElement).closest(`[data-card-id="${lifted.id}"]`)) dropLifted();
-        }}
-        onPointerMove={onRootPointerMove}
-        onScrollCapture={() => {
-          if (!dragRef.current) rects.current.clear();
-        }}
-        onPointerUp={onRootPointerUp}
+        className={cn("@container relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm outline-none", className)}
         ref={rootRef}
         tabIndex={-1}
       >
         <p className="sr-only" id={ids.instructions}>
-          Press Space to pick up. Arrow keys move the deal between stages and up or down. Space or Enter drops it, Escape
-          cancels. Press Enter to open details.
+          {t.instructions}
         </p>
         <p aria-live="polite" className="sr-only" role="status">
           {announcement}
         </p>
 
         <TooltipProvider delay={400}>
-          <nav
-            aria-label="Main"
-            className="hidden w-14 shrink-0 flex-col items-center gap-1 border-e py-3 @3xl:flex"
-          >
-            {workspaceMenu(
-              <button
-                aria-label={`Switch workspace, current ${workspace}`}
-                className="mb-3 flex size-9 cursor-pointer items-center justify-center rounded-xl bg-primary font-heading font-semibold text-primary-foreground outline-none transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97]"
-                type="button"
-              >
-                {workspace[0]}
-              </button>,
-            )}
-            {navItems.map((n) => (
-              <Tooltip key={n.label}>
+          <nav aria-label={t.main} className="hidden w-14 shrink-0 flex-col items-center gap-1 border-e py-3 @3xl:flex">
+            <span
+              aria-label={workspace}
+              className="mb-3 flex size-9 items-center justify-center rounded-xl bg-primary font-heading font-semibold text-primary-foreground"
+              role="img"
+            >
+              {workspace[0]}
+            </span>
+            {nav.map((n) => (
+              <Tooltip key={n.href}>
                 <TooltipTrigger
                   render={
-                    <button
+                    <WirefrontLink
                       aria-current={n.current ? "page" : undefined}
                       aria-label={n.label}
                       className={cn(
-                        "relative flex size-9 cursor-pointer items-center justify-center rounded-lg outline-none transition-[color,background-color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97]",
-                        n.current
-                          ? "bg-accent text-foreground"
-                          : "text-muted-foreground [@media(hover:hover)]:hover:bg-accent [@media(hover:hover)]:hover:text-foreground",
+                        "relative flex size-9 cursor-pointer items-center justify-center rounded-lg outline-none transition-[color,background-color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] [&_svg]:size-4.5",
+                        n.current ? "bg-accent text-foreground" : "text-muted-foreground [@media(hover:hover)]:hover:bg-accent [@media(hover:hover)]:hover:text-foreground",
                       )}
-                      type="button"
+                      href={n.href}
                     />
                   }
                 >
-                  <n.icon className="size-4.5" />
-                  {n.badge ? (
-                    <span className="absolute top-2 end-2 size-1.5 rounded-full bg-category-4 ring-2 ring-background" />
-                  ) : null}
+                  {n.icon}
+                  {n.badge ? <span aria-hidden className="absolute top-2 end-2 size-1.5 rounded-full bg-category-4 ring-2 ring-background" /> : null}
                 </TooltipTrigger>
                 <TooltipContent side="right">{n.label}</TooltipContent>
               </Tooltip>
             ))}
             <div className="mt-auto flex flex-col items-center gap-3">
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <button
-                      aria-label="Settings"
-                      className="flex size-9 cursor-pointer items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring [@media(hover:hover)]:hover:bg-accent [@media(hover:hover)]:hover:text-foreground"
-                      type="button"
-                    />
-                  }
-                >
-                  <SettingsIcon className="size-4.5" />
-                </TooltipTrigger>
-                <TooltipContent side="right">Settings</TooltipContent>
-              </Tooltip>
-              <Avatar aria-label={me?.name} role="img" className="[--avatar-size:--spacing(7)]">
-                <AvatarFallback className={cn("font-semibold text-[10px]", ownerTones[ownerIndex(currentUserId) % ownerTones.length])}>
-                  {me ? initials(me.name) : "?"}
-                </AvatarFallback>
+              {settingsHref ? (
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <WirefrontLink
+                        aria-label={t.settings}
+                        className="flex size-9 cursor-pointer items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring [@media(hover:hover)]:hover:bg-accent [@media(hover:hover)]:hover:text-foreground"
+                        href={settingsHref}
+                      />
+                    }
+                  >
+                    <SettingsIcon aria-hidden className="size-4.5" />
+                  </TooltipTrigger>
+                  <TooltipContent side="right">{t.settings}</TooltipContent>
+                </Tooltip>
+              ) : null}
+              <Avatar aria-label={me?.name} className="[--avatar-size:--spacing(7)]" role="img">
+                <AvatarFallback className={cn("font-semibold text-[10px]", ownerTones[ownerIndex(currentUserId) % ownerTones.length])}>{me ? initials(me.name) : "?"}</AvatarFallback>
               </Avatar>
             </div>
           </nav>
@@ -1895,53 +1646,32 @@ export function PipelineToday({
 
         <div className="relative flex min-w-0 flex-1 flex-col">
           <div className="flex h-12 shrink-0 items-center justify-between border-b px-3 @3xl:hidden">
-            {workspaceMenu(
-              <button
-                aria-label={`Switch workspace, current ${workspace}`}
-                className="flex h-9 cursor-pointer items-center gap-2 rounded-lg px-1.5 font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                type="button"
-              >
-                <span
-                  aria-hidden
-                  className="flex size-7 items-center justify-center rounded-lg bg-primary font-heading font-semibold text-primary-foreground text-xs before:content-[attr(data-initial)]"
-                  data-initial={workspace[0]}
-                />
-                {workspace}
-                <ChevronDownIcon className="size-3.5 text-muted-foreground" />
-              </button>,
-            )}
-            <div className="flex items-center gap-1">
-              <Button aria-label="Inbox" className="relative" size="icon" variant="ghost">
-                <InboxIcon />
-                <span className="absolute top-2 end-2 size-1.5 rounded-full bg-category-4 ring-2 ring-background" />
-              </Button>
-              <Avatar aria-label={me?.name} role="img" className="[--avatar-size:--spacing(7)]">
-                <AvatarFallback className={cn("font-semibold text-[10px]", ownerTones[ownerIndex(currentUserId) % ownerTones.length])}>
-                  {me ? initials(me.name) : "?"}
-                </AvatarFallback>
-              </Avatar>
-            </div>
+            <span className="flex h-9 items-center gap-2 px-1.5 font-medium">
+              <span aria-hidden className="flex size-7 items-center justify-center rounded-lg bg-primary font-heading font-semibold text-primary-foreground text-xs">
+                {workspace[0]}
+              </span>
+              {workspace}
+            </span>
+            <Avatar aria-label={me?.name} className="[--avatar-size:--spacing(7)]" role="img">
+              <AvatarFallback className={cn("font-semibold text-[10px]", ownerTones[ownerIndex(currentUserId) % ownerTones.length])}>{me ? initials(me.name) : "?"}</AvatarFallback>
+            </Avatar>
           </div>
 
           <header className="flex shrink-0 flex-col gap-3 px-4 pt-4 pb-3 @3xl:flex-row @3xl:items-end @3xl:justify-between @3xl:px-6 @3xl:pt-5 @3xl:pb-4 @5xl:px-5">
             <div className="flex min-w-0 flex-col gap-0.5">
               <span className="text-muted-foreground text-xs">{dateLabel}</span>
-              <h1 className="text-balance font-heading font-semibold text-xl tracking-tight">
-                {greeting}, {firstName}
-              </h1>
+              <h1 className="text-balance font-heading font-semibold text-xl tracking-tight">{greeting}</h1>
               <p className="text-pretty text-muted-foreground">
-                {openSignals.length === 0
-                  ? "Nothing needs you right now. Nice work."
-                  : `${openSignals.length} ${openSignals.length === 1 ? "account needs" : "accounts need"} you today.`}
-                <span className="hidden @5xl:inline"> Drag deals as they move.</span>
+                {openSignals.length === 0 ? t.nothingNeedsYou : openSignals.length === 1 ? t.oneNeedsYou : interpolate(t.manyNeedYou, { count: openSignals.length })}{" "}
+                <span className="hidden @5xl:inline">{t.dragHint}</span>
               </p>
             </div>
             <div className="flex flex-col gap-0.5 @3xl:items-end">
-              <span className="text-muted-foreground text-xs">{forecastLabel}</span>
+              <span className="text-muted-foreground text-xs">{forecastLabel ?? t.forecast}</span>
               <div className="flex items-center gap-2 @3xl:flex-row-reverse">
                 <span className="font-heading font-semibold text-2xl tracking-tight">
-                  <Rolling format={money} reduce={reduce} value={total} />
-                  <span className="sr-only">{money(total)}</span>
+                  <Rolling format={fmt.money} reduce={reduce} value={total} />
+                  <span className="sr-only">{fmt.money(total)}</span>
                 </span>
                 <AnimatePresence>
                   {delta ? (
@@ -1958,48 +1688,40 @@ export function PipelineToday({
                       key={delta.key}
                       transition={{ duration: 0.2, ease }}
                     >
-                      {signedMoney(delta.amount)}
+                      {fmt.signedMoney(delta.amount)}
                     </motion.span>
                   ) : null}
                 </AnimatePresence>
               </div>
-              <div
-                aria-label={`${progress}% of target`}
-                aria-valuemax={100}
-                aria-valuemin={0}
-                aria-valuenow={Math.min(100, progress)}
-                className="relative mt-1.5 mb-1 h-1 w-full overflow-hidden rounded-full bg-muted @3xl:w-56"
-                role="meter"
-              >
+              <meter aria-label={interpolate(t.ofTarget, { percent: fmt.percent(progress) })} className="sr-only" max={1} min={0} value={Math.min(1, progress)} />
+              <div aria-hidden className="relative mt-1.5 mb-1 h-1 w-full overflow-hidden rounded-full bg-muted @3xl:w-56">
                 <motion.div
-                  animate={{ scaleX: Math.min(1, total / target) }}
+                  animate={{ scaleX: Math.min(1, progress) }}
                   className="absolute inset-0 origin-left rounded-full bg-primary"
                   initial={false}
                   transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 260, damping: 32 }}
                 />
-                <div
-                  className="absolute inset-y-0 start-0 bg-category-2"
-                  style={{ width: `${Math.min(100, (won / target) * 100)}%` }}
-                />
+                <div className="absolute inset-y-0 start-0 bg-category-2" style={{ width: `${Math.min(100, (won / (target || 1)) * 100)}%` }} />
               </div>
               <span className="text-muted-foreground text-xs tabular-nums">
-                {progress}% of {shortMoney(target)} target · <span className="text-category-2-foreground">{shortMoney(won)} won</span>
+                {interpolate(t.targetLine, { percent: fmt.percent(progress), target: fmt.shortMoney(target) })} ·{" "}
+                <span className="text-category-2-foreground">{interpolate(t.wonAmount, { amount: fmt.shortMoney(won) })}</span>
               </span>
             </div>
           </header>
 
           <div className="shrink-0 px-4 pb-3 @5xl:hidden">
-            <SegmentedControl aria-label="Show" className="w-full">
-              {(["board", "focus"] as const).map((t) => (
+            <SegmentedControl aria-label={t.show} className="w-full">
+              {(["board", "focus"] as const).map((view) => (
                 <SegmentedControlItem
-                  aria-pressed={tab === t}
+                  aria-pressed={tab === view}
                   className="flex-1"
-                  data-pressed={tab === t ? "" : undefined}
-                  key={t}
-                  onClick={() => setTab(t)}
+                  data-pressed={tab === view ? "" : undefined}
+                  key={view}
+                  onClick={() => setTab(view)}
                 >
-                  {t === "board" ? "Pipeline" : "Focus"}
-                  {t === "focus" && openSignals.length ? (
+                  {view === "board" ? t.pipeline : t.focus}
+                  {view === "focus" && openSignals.length ? (
                     <span className="text-muted-foreground text-xs tabular-nums">{openSignals.length}</span>
                   ) : null}
                 </SegmentedControlItem>
@@ -2015,12 +1737,11 @@ export function PipelineToday({
               )}
             >
               <div className="shrink-0 px-4 pb-3 @5xl:hidden">
-                <div
-                  aria-label="Stage"
+                <fieldset
+                  className="relative m-0 flex min-w-0 gap-1 overflow-x-auto rounded-xl border-0 bg-muted p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                   ref={chipsRef}
-                  className="relative flex gap-1 overflow-x-auto rounded-xl bg-muted p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                  role="group"
                 >
+                  <legend className="sr-only">{t.stage}</legend>
                   {stages.map((s) => {
                     const active = s.id === mobileStage;
                     const isOver = drag !== null && over?.stage === s.id;
@@ -2051,7 +1772,7 @@ export function PipelineToday({
                       </button>
                     );
                   })}
-                </div>
+                </fieldset>
               </div>
               <div className="min-h-0 flex-1 overflow-x-auto px-4 pb-4 @3xl:px-6 @5xl:px-5 @5xl:pt-4">
                 <div className="grid h-full grid-cols-1 gap-2 @5xl:min-w-[860px] @5xl:grid-cols-5">
@@ -2071,17 +1792,17 @@ export function PipelineToday({
                     <div className="flex items-center gap-3 rounded-full border bg-popover px-3 py-1.5 text-muted-foreground text-xs shadow-lg/5">
                       <span className="flex items-center gap-1">
                         <Kbd>←</Kbd>
-                        <Kbd>→</Kbd> stage
+                        <Kbd>→</Kbd> {t.keyStage}
                       </span>
                       <span className="flex items-center gap-1">
                         <Kbd>↑</Kbd>
-                        <Kbd>↓</Kbd> order
+                        <Kbd>↓</Kbd> {t.keyOrder}
                       </span>
                       <span className="flex items-center gap-1">
-                        <Kbd>Space</Kbd> drop
+                        <Kbd>{t.keySpace}</Kbd> {t.keyDrop}
                       </span>
                       <span className="hidden items-center gap-1 @md:flex">
-                        <Kbd>Esc</Kbd> cancel
+                        <Kbd>{t.keyEsc}</Kbd> {t.keyCancel}
                       </span>
                     </div>
                   </motion.div>
@@ -2153,14 +1874,42 @@ export function PipelineToday({
   );
 }
 
-export function AccountsCrmDemo() {
+function PipelineTodayScreen(props: PipelineTodayProps) {
+  const fmt = useFmt();
+  const { t } = fmt;
+  const { data, status = "ready", error, onRetry, className } = props;
   return (
-    <PipelineToday
-      currentUserId="maren"
-      dateLabel="Tuesday, 27 October"
-      forecastLabel="Q4 weighted forecast"
-      target={480000}
-      workspace="Kestrel"
-    />
+    <FmtContext.Provider value={fmt}>
+      {status === "ready" && data ? (
+        <PipelineTodayBoard {...props} data={data} />
+      ) : (
+        <div className={cn("@container flex h-[760px] w-full flex-col overflow-hidden bg-background text-foreground text-sm", className)}>
+          {status === "error" ? (
+            <div className="flex h-full flex-col items-center justify-center px-6 text-center">
+              <p className="font-medium">{t.errorTitle}</p>
+              {error ? <p className="mt-1 max-w-xs text-pretty text-muted-foreground text-xs">{error}</p> : null}
+              {onRetry ? (
+                <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+                  {t.retry}
+                </Button>
+              ) : null}
+            </div>
+          ) : (
+            <div aria-busy="true" className="flex h-full flex-col gap-4 p-5">
+              <Skeleton className="h-16 w-full max-w-md motion-reduce:animate-none" />
+              <Skeleton className="w-full flex-1 rounded-2xl motion-reduce:animate-none" />
+            </div>
+          )}
+        </div>
+      )}
+    </FmtContext.Provider>
+  );
+}
+
+export function PipelineToday(props: PipelineTodayProps) {
+  return (
+    <ScreenBoundary name="PipelineToday">
+      <PipelineTodayScreen {...props} />
+    </ScreenBoundary>
   );
 }
