@@ -91,7 +91,7 @@ export function InboxRail({
             {unread ? (
               <span className="rounded-full bg-foreground/10 px-1.5 py-0.5 font-mono text-[10px] text-foreground">
                 <span aria-hidden>{unread}</span>
-                <span className="sr-only">{interpolate(t.unreadCount, { count: unread })}</span>
+                <span className="sr-only">, {interpolate(t.unreadCount, { count: unread })}</span>
               </span>
             ) : null}
           </div>

@@ -1,19 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-"use client";
+// Showcase only: the tab shell inside a phone mockup, with sample pages per tab.
+// Not shipped by the registry; builders render their own pages as children.
 
-import { useState } from "react";
+import { type AnchorHTMLAttributes, createContext, useContext, useState } from "react";
+import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
+import { type BottomTab, BottomTabShell } from "./view";
 import {
   BatteryFull,
   BellIcon,
-  ChevronLeftIcon,
   ChevronRightIcon,
   CompassIcon,
   HeartIcon,
   HomeIcon,
   MessageCircleIcon,
   PlusIcon,
-  SearchIcon,
   SettingsIcon,
   ShieldIcon,
   SignalHigh,
@@ -36,7 +37,7 @@ const TAB_TITLES: Record<TabKey, string> = {
   profile: "Profile",
 };
 
-export function LayoutsBottomNav() {
+export function LayoutsBottomNavShowcasePage() {
   const [activeTab, setActiveTab] = useState<TabKey>("home");
 
   return (
@@ -45,7 +46,11 @@ export function LayoutsBottomNav() {
     <div className="relative min-h-svh bg-background text-foreground md:flex md:items-center md:justify-center md:bg-foreground/[0.04] md:px-6 md:py-12">
       <PageBackdrop />
       <div className="relative md:flex md:flex-col md:items-center md:gap-5">
-        <PhoneFrame activeTab={activeTab} setActiveTab={setActiveTab} />
+        <GoContext.Provider value={(id) => setActiveTab(id as TabKey)}>
+          <WirefrontProvider link={DemoLink}>
+            <PhoneFrame activeTab={activeTab} />
+          </WirefrontProvider>
+        </GoContext.Provider>
         <span className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em] md:inline">
           MOBILE · 380×760
         </span>
@@ -69,26 +74,18 @@ function PageBackdrop() {
   );
 }
 
-function PhoneFrame({
-  activeTab,
-  setActiveTab,
-}: {
-  activeTab: TabKey;
-  setActiveTab: (tab: TabKey) => void;
-}) {
+function PhoneFrame({ activeTab }: { activeTab: TabKey }) {
   return (
     <div className="relative min-h-svh w-full bg-background md:h-[min(760px,calc(100svh-6rem))] md:min-h-0 md:w-[380px] md:overflow-hidden md:rounded-[40px] md:border-8 md:border-foreground/15 md:shadow-2xl">
       <div className="relative min-h-svh w-full md:h-full md:min-h-0 md:overflow-hidden md:rounded-[28px]">
         <div aria-hidden className="absolute top-2 left-1/2 z-30 hidden h-6 w-24 -translate-x-1/2 rounded-full bg-foreground/85 md:block" />
         <div className="flex min-h-svh flex-col md:h-full md:min-h-0">
           <StatusBar />
-          <AppHeader title={TAB_TITLES[activeTab]} />
           <ScrollRegion aria-label={TAB_TITLES[activeTab]} className="flex-1 md:min-h-0">
-            <main className="px-4 pt-4 pb-[calc(72px+env(safe-area-inset-bottom)+1rem)] sm:px-5 md:pb-4">
+            <BottomTabShell activeId={activeTab} onBack={() => {}} onSearch={() => {}} tabs={TABS} title={TAB_TITLES[activeTab]}>
               <TabContent tab={activeTab} />
-            </main>
+            </BottomTabShell>
           </ScrollRegion>
-          <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
       </div>
     </div>
@@ -104,22 +101,6 @@ function StatusBar() {
         <Wifi className="size-3.5" />
         <BatteryFull className="size-4" />
       </div>
-    </div>
-  );
-}
-
-function AppHeader({ title }: { title: string }) {
-  return (
-    <div className="sticky top-0 z-20 flex items-center justify-between border-b border-border/60 bg-background/95 px-3 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur sm:px-5 md:static md:py-3 md:pt-3">
-      <div className="flex items-center gap-1">
-        <Button variant="ghost" size="icon-sm" aria-label="Back">
-          <ChevronLeftIcon />
-        </Button>
-        <h1 className="font-heading text-base">{title}</h1>
-      </div>
-      <Button variant="ghost" size="icon-sm" aria-label="Search">
-        <SearchIcon />
-      </Button>
     </div>
   );
 }
@@ -417,90 +398,32 @@ function ProfileStat({ label, value }: { label: string; value: string }) {
   );
 }
 
-type TabDef = {
-  key: TabKey;
-  label: string;
-  icon: typeof HomeIcon;
-  badge?: string;
-};
 
-const TABS: TabDef[] = [
-  { key: "home", label: "Home", icon: HomeIcon },
-  { key: "discover", label: "Discover", icon: CompassIcon },
-  { key: "create", label: "Create", icon: PlusIcon },
-  { key: "alerts", label: "Alerts", icon: BellIcon, badge: "3" },
-  { key: "profile", label: "Profile", icon: UserIcon },
+const TABS: BottomTab[] = [
+  { id: "home", label: "Home", href: "#home", icon: <HomeIcon /> },
+  { id: "discover", label: "Discover", href: "#discover", icon: <CompassIcon /> },
+  { id: "create", label: "Create", href: "#create", icon: <PlusIcon />, primary: true },
+  { id: "alerts", label: "Alerts", href: "#alerts", icon: <BellIcon />, badge: 3 },
+  { id: "profile", label: "Profile", href: "#profile", icon: <UserIcon /> },
 ];
 
-function BottomNav({
-  activeTab,
-  setActiveTab,
-}: {
-  activeTab: TabKey;
-  setActiveTab: (tab: TabKey) => void;
-}) {
+const GoContext = createContext<(id: string) => void>(() => {});
+
+/** Hash links switch the demo's tab instead of navigating. */
+function DemoLink({ href, onClick, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  const go = useContext(GoContext);
   return (
-    <nav
-      aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-30 flex h-[calc(72px+env(safe-area-inset-bottom))] items-stretch justify-around border-t border-border/60 bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:relative md:h-[72px] md:pb-0"
-    >
-      {TABS.map((tab) => {
-        const isActive = activeTab === tab.key;
-        const isCenter = tab.key === "create";
-
-        if (isCenter) {
-          return (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => setActiveTab(tab.key)}
-              aria-current={isActive ? "page" : undefined}
-              className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 cursor-pointer"
-            >
-              <span className="flex size-12 items-center justify-center rounded-full bg-foreground text-background -translate-y-3 shadow-md">
-                <PlusIcon className="size-5" />
-              </span>
-              <span
-                className={`text-[11px] -mt-2 ${
-                  isActive ? "text-foreground" : "text-muted-foreground"
-                }`}
-              >
-                {tab.label}
-              </span>
-            </button>
-          );
+    <a
+      {...props}
+      href={href}
+      onClick={(e) => {
+        onClick?.(e);
+        if (href?.startsWith("#")) {
+          e.preventDefault();
+          go(href.slice(1));
         }
-
-        const Icon = tab.icon;
-        return (
-          <button
-            key={tab.key}
-            type="button"
-            onClick={() => setActiveTab(tab.key)}
-            aria-current={isActive ? "page" : undefined}
-            className={`relative flex flex-col items-center justify-center gap-0.5 flex-1 py-2 cursor-pointer transition-colors ${
-              isActive ? "text-foreground" : "text-muted-foreground"
-            }`}
-          >
-            {isActive ? (
-              <span className="absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-6 rounded-full bg-foreground" />
-            ) : null}
-            <span className="relative">
-              <Icon
-                className="size-5"
-                strokeWidth={isActive ? 2.4 : 2}
-              />
-              {tab.badge ? (
-                <span className="absolute -top-1.5 -end-2 min-w-[16px] h-4 px-1 rounded-full bg-foreground text-background text-[10px] font-medium flex items-center justify-center">
-                  {tab.badge}
-                  <span className="sr-only"> new</span>
-                </span>
-              ) : null}
-            </span>
-            <span className="text-[11px]">{tab.label}</span>
-          </button>
-        );
-      })}
-    </nav>
+      }}
+    />
   );
 }
+

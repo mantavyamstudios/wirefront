@@ -2,26 +2,26 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 "use client";
 
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
+import { interpolate, useMessages } from "@wirefront/ui/wirefront/provider";
 import { useEffect, useRef, useState } from "react";
 import {
   Circle as CircleIcon,
   EyeIcon,
   EyeOffIcon,
   Hand,
-  ImageIcon,
   LockIcon,
   Maximize,
   Maximize2,
   MinusIcon,
-  MoreHorizontal,
   MousePointer2,
-  Pen,
   PlusIcon,
   Share2,
   SlidersHorizontal,
   Square,
   Type,
   UnlockIcon,
+  type LucideIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Separator } from "@wirefront/ui/separator";
@@ -30,93 +30,61 @@ import { Slider } from "@wirefront/ui/slider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 
-type ShapeType = "rectangle" | "ellipse" | "text";
-type Tool =
-  | "move"
-  | "hand"
-  | "frame"
-  | "ellipse"
-  | "text"
-  | "pen"
-  | "image"
-  | "more";
+import type { CanvasShape } from "./schema";
 
-interface Shape {
-  id: string;
-  type: ShapeType;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  fill: string;
-  opacity: number;
-  visible: boolean;
-  locked: boolean;
-  text?: string;
-  name: string;
-}
+/** Every string on the screen; override any of them with WirefrontProvider `messages` ("canvasEditor.<key>"). */
+export const CANVAS_EDITOR_MESSAGES = {
+  tools: "Tools",
+  move: "Move",
+  hand: "Hand",
+  frame: "Frame",
+  ellipse: "Ellipse",
+  text: "Text",
+  frameName: "Frame {n}",
+  ellipseName: "Ellipse {n}",
+  textName: "Text {n}",
+  textDefault: "Text",
+  openInspector: "Open inspector",
+  inspector: "Inspector",
+  collaborators: "People here",
+  share: "Share",
+  zoomOut: "Zoom out",
+  zoomIn: "Zoom in",
+  fit: "Fit to screen",
+  fullscreen: "Fullscreen",
+  selectedSize: "1 selected · {width} × {height}",
+  layersOne: "1 layer · drag a tool to draw",
+  layers: "{count} layers · drag a tool to draw",
+  design: "Design",
+  noSelection: "No selection",
+  noSelectionHint: "Pick a shape on the canvas, or grab a tool (F, O, T) and drag to create one.",
+  position: "Position",
+  size: "Size",
+  fill: "Fill",
+  fillColor: "Fill {color}",
+  opacity: "Opacity",
+  layersTitle: "Layers",
+  delete: "Delete",
+  noLayers: "No layers yet.",
+  hide: "Hide {name}",
+  show: "Show {name}",
+  lock: "Lock {name}",
+  unlock: "Unlock {name}",
+};
+
+type ShapeType = "rectangle" | "ellipse" | "text";
+type Tool = "move" | "hand" | "frame" | "ellipse" | "text";
+
+/** A shape on the canvas. */
+export type Shape = CanvasShape;
 
 const SWATCHES = ["#3b82f6", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444"];
 
-const TOOLS: { id: Tool; icon: typeof MousePointer2; label: string; shortcut: string }[] = [
-  { id: "move", icon: MousePointer2, label: "Move", shortcut: "V" },
-  { id: "hand", icon: Hand, label: "Hand", shortcut: "H" },
-  { id: "frame", icon: Square, label: "Frame", shortcut: "F" },
-  { id: "ellipse", icon: CircleIcon, label: "Ellipse", shortcut: "O" },
-  { id: "text", icon: Type, label: "Text", shortcut: "T" },
-  { id: "pen", icon: Pen, label: "Pen", shortcut: "P" },
-  { id: "image", icon: ImageIcon, label: "Place image", shortcut: "I" },
-  { id: "more", icon: MoreHorizontal, label: "More", shortcut: "" },
-];
+const TOOL_ICON: Record<Tool, LucideIcon> = { move: MousePointer2, hand: Hand, frame: Square, ellipse: CircleIcon, text: Type };
+const TOOL_SHORTCUT: Record<Tool, string> = { move: "V", hand: "H", frame: "F", ellipse: "O", text: "T" };
+const TOOL_ORDER = Object.keys(TOOL_ICON) as Tool[];
 
-const SEED_SHAPES: Shape[] = [
-  {
-    id: "hero",
-    type: "rectangle",
-    x: 60,
-    y: 220,
-    width: 480,
-    height: 280,
-    fill: "#3b82f6",
-    opacity: 100,
-    visible: true,
-    locked: false,
-    name: "Hero",
-  },
-  {
-    id: "card",
-    type: "rectangle",
-    x: 600,
-    y: 80,
-    width: 320,
-    height: 180,
-    fill: "#8b5cf6",
-    opacity: 100,
-    visible: true,
-    locked: false,
-    name: "Card",
-  },
-  {
-    id: "avatar",
-    type: "ellipse",
-    x: -60,
-    y: 300,
-    width: 120,
-    height: 120,
-    fill: "#10b981",
-    opacity: 70,
-    visible: true,
-    locked: false,
-    name: "Avatar",
-  },
-];
 
-const COLLAB = [
-  { initials: "SK", tone: "bg-category-4-strong" },
-  { initials: "MR", tone: "bg-category-2-strong" },
-  { initials: "JL", tone: "bg-category-1-strong" },
-  { initials: "DV", tone: "bg-category-3-strong" },
-];
 
 interface Point {
   x: number;
@@ -139,15 +107,41 @@ function nextId(prefix: string): string {
   return `${prefix}-${idCounter++}`;
 }
 
-function defaultName(type: ShapeType, n: number): string {
-  if (type === "rectangle") return `Frame ${n}`;
-  if (type === "ellipse") return `Ellipse ${n}`;
-  return `Text ${n}`;
+const TINT = ["", "bg-category-1-strong", "bg-category-2-strong", "bg-category-3-strong", "bg-category-4-strong", "bg-category-5-strong", "bg-category-6-strong", "bg-category-7-strong", "bg-category-8-strong"];
+const initialsOf = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase())
+    .join("");
+
+export interface CanvasCollaborator {
+  name: string;
+  /** One of the eight category colours. */
+  color: number;
 }
 
-export function LayoutsCanvasTools() {
-  const [shapes, setShapes] = useState<Shape[]>(SEED_SHAPES);
-  const [selectedId, setSelectedId] = useState<string | null>("hero");
+export interface CanvasEditorProps {
+  /** The shapes the canvas opens with (getCanvas). */
+  defaultShapes: Shape[];
+  /** Called with every shape after each finished edit (a drag ending, an inspector change). Save it with saveCanvas. */
+  onChange?: (shapes: Shape[]) => void;
+  /** People with the file open. Hidden when empty. */
+  collaborators?: CanvasCollaborator[];
+  /** Open your share dialog. Hidden when not given. */
+  onShare?: () => void;
+  /** The shape selected when the canvas opens. */
+  defaultSelectedId?: string;
+  className?: string;
+}
+
+function CanvasEditorScreen({ defaultShapes, onChange, collaborators = [], onShare, defaultSelectedId, className }: CanvasEditorProps) {
+  const t = useMessages("canvasEditor", CANVAS_EDITOR_MESSAGES);
+  const [shapes, setShapes] = useState<Shape[]>(defaultShapes);
+  const [selectedId, setSelectedId] = useState<string | null>(defaultSelectedId ?? null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const defaultName = (type: ShapeType, n: number) => interpolate(type === "rectangle" ? t.frameName : type === "ellipse" ? t.ellipseName : t.textName, { n });
   const [tool, setTool] = useState<Tool>("move");
   const [zoom, setZoom] = useState(0.85);
   const [pan, setPan] = useState<Point>({ x: 80, y: 60 });
@@ -244,7 +238,7 @@ export function LayoutsCanvasTools() {
     if (tool === "frame" || tool === "ellipse" || tool === "text") {
       const shapeType: ShapeType =
         tool === "frame" ? "rectangle" : (tool as ShapeType);
-      const fill = SWATCHES[creationCount % SWATCHES.length] ?? SWATCHES[0]!;
+      const fill = SWATCHES[creationCount % SWATCHES.length] ?? "#3b82f6";
       setDrag({
         kind: "create",
         type: shapeType,
@@ -259,13 +253,18 @@ export function LayoutsCanvasTools() {
     setSelectedId(null);
   };
 
+  // Window listeners read the latest helpers through a ref, so they don't
+  // re-subscribe on every render.
+  const latest = useRef({ pointerPair, screenToWorld, defaultName, textDefault: t.textDefault });
+  latest.current = { pointerPair, screenToWorld, defaultName, textDefault: t.textDefault };
+
   // Pinch: track touch pointers at the window level.
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
       if (!pointersRef.current.has(e.pointerId)) return;
       pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
       const pinch = pinchRef.current;
-      const pair = pointerPair();
+      const pair = latest.current.pointerPair();
       if (!pinch || !pair) return;
       const next = Math.min(4, Math.max(0.25, pinch.startZoom * (pair.dist / pinch.startDist)));
       // Keep the world point under the starting midpoint under the fingers.
@@ -299,7 +298,7 @@ export function LayoutsCanvasTools() {
         setPan({ x: drag.startPan.x + dx, y: drag.startPan.y + dy });
         return;
       }
-      const world = screenToWorld(e.clientX, e.clientY);
+      const world = latest.current.screenToWorld(e.clientX, e.clientY);
       if (drag.kind === "create") {
         setDrag({ ...drag, currentW: world });
         return;
@@ -342,8 +341,8 @@ export function LayoutsCanvasTools() {
               opacity: 100,
               visible: true,
               locked: false,
-              text: drag.type === "text" ? "Text" : undefined,
-              name: defaultName(drag.type, creationCount),
+              text: drag.type === "text" ? latest.current.textDefault : undefined,
+              name: latest.current.defaultName(drag.type, creationCount),
             },
           ]);
           setSelectedId(id);
@@ -361,7 +360,7 @@ export function LayoutsCanvasTools() {
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("pointercancel", onUp);
     };
-  }, [drag, pan.x, pan.y, zoom, creationCount]);
+  }, [drag, creationCount]);
 
   // Keyboard shortcuts: tools, delete, escape, space-to-pan.
   useEffect(() => {
@@ -398,8 +397,6 @@ export function LayoutsCanvasTools() {
       else if (k === "r" || k === "f") setTool("frame");
       else if (k === "o") setTool("ellipse");
       else if (k === "t") setTool("text");
-      else if (k === "p") setTool("pen");
-      else if (k === "i") setTool("image");
     };
     const onKeyUp = (e: KeyboardEvent) => {
       if (e.code === "Space") setSpaceDown(false);
@@ -485,6 +482,14 @@ export function LayoutsCanvasTools() {
     });
   };
 
+  // Report the shapes once an edit finishes (not on every pointer move).
+  const reported = useRef(shapes);
+  useEffect(() => {
+    if (drag || shapes === reported.current) return;
+    reported.current = shapes;
+    onChange?.(shapes);
+  }, [shapes, drag, onChange]);
+
   const visibleShapes = shapes.filter((s) => s.visible);
   const previewRect =
     drag?.kind === "create"
@@ -532,7 +537,7 @@ export function LayoutsCanvasTools() {
         : "cursor-default";
 
   return (
-    <div className="relative h-svh w-full select-none overflow-hidden bg-foreground/[0.02] text-foreground">
+    <div className={cn("relative h-svh w-full select-none overflow-hidden bg-foreground/[0.02] text-foreground", className)} ref={rootRef}>
       <DotGrid pan={pan} zoom={zoom} />
 
       <div
@@ -595,24 +600,25 @@ export function LayoutsCanvasTools() {
         mobileExtra={
           <Sheet>
             <SheetTrigger
-              aria-label="Open inspector"
+              aria-label={t.openInspector}
               className="grid size-11 shrink-0 place-items-center rounded-md text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground"
             >
               <SlidersHorizontal className="size-4" />
             </SheetTrigger>
             <SheetContent side="bottom" className="max-h-[70svh] pb-[env(safe-area-inset-bottom)]">
-              <SheetTitle className="sr-only">Inspector</SheetTitle>
+              <SheetTitle className="sr-only">{t.inspector}</SheetTitle>
               {inspector("w-full border-0 bg-transparent pt-12 shadow-none backdrop-blur-none")}
             </SheetContent>
           </Sheet>
         }
       />
-      <CollabBar />
+      {collaborators.length || onShare ? <CollabBar collaborators={collaborators} onShare={onShare} /> : null}
       <ZoomControls
         zoom={zoom}
         onIn={() => onZoomChange(0.1)}
         onOut={() => onZoomChange(-0.1)}
         onFit={onFitToScreen}
+        onFullscreen={() => void rootRef.current?.requestFullscreen?.()}
       />
       <StatusPill selected={selectedShape} total={shapes.length} />
 
@@ -679,7 +685,7 @@ function ShapeRender({
             lineHeight: 1,
           }}
         >
-          {shape.text ?? "Text"}
+          {shape.text}
         </div>
       ) : (
         <div
@@ -696,15 +702,15 @@ function SelectionFrame({ shape, zoom }: { shape: Shape; zoom: number }) {
   const handle = 8 / zoom;
   const stroke = 1.5 / zoom;
   const ringInset = -stroke;
-  const handles: { left: number; top: number }[] = [
-    { left: 0, top: 0 },
-    { left: shape.width / 2, top: 0 },
-    { left: shape.width, top: 0 },
-    { left: 0, top: shape.height / 2 },
-    { left: shape.width, top: shape.height / 2 },
-    { left: 0, top: shape.height },
-    { left: shape.width / 2, top: shape.height },
-    { left: shape.width, top: shape.height },
+  const handles: { id: string; left: number; top: number }[] = [
+    { id: "nw", left: 0, top: 0 },
+    { id: "n", left: shape.width / 2, top: 0 },
+    { id: "ne", left: shape.width, top: 0 },
+    { id: "w", left: 0, top: shape.height / 2 },
+    { id: "e", left: shape.width, top: shape.height / 2 },
+    { id: "sw", left: 0, top: shape.height },
+    { id: "s", left: shape.width / 2, top: shape.height },
+    { id: "se", left: shape.width, top: shape.height },
   ];
   return (
     <>
@@ -715,9 +721,9 @@ function SelectionFrame({ shape, zoom }: { shape: Shape; zoom: number }) {
           border: `${stroke}px solid rgb(59 130 246)`,
         }}
       />
-      {handles.map((p, i) => (
+      {handles.map((p) => (
         <div
-          key={i}
+          key={p.id}
           className="pointer-events-none absolute bg-category-1"
           style={{
             left: p.left - handle / 2,
@@ -741,24 +747,26 @@ function ToolsPalette({
   onChangeTool: (t: Tool) => void;
   mobileExtra?: React.ReactNode;
 }) {
+  const t = useMessages("canvasEditor", CANVAS_EDITOR_MESSAGES);
   // Vertical palette top-left on md+; a horizontal bottom bar (wraps if needed) on
   // phones (thumb reach, and it keeps the top free for zoom/collab).
   return (
     <div
       role="toolbar"
-      aria-label="Tools"
+      aria-label={t.tools}
       className="absolute bottom-[calc(0.75rem+env(safe-area-inset-bottom))] left-1/2 z-10 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 rounded-xl border border-border bg-card/85 p-1 shadow-lg backdrop-blur md:top-3 md:bottom-auto md:left-3 md:translate-x-0"
     >
       <div className="flex min-w-0 flex-row flex-wrap justify-center gap-0.5 md:flex-col md:flex-nowrap">
-      {TOOLS.map((t) => {
-        const Icon = t.icon;
-        const isActive = tool === t.id;
+      {TOOL_ORDER.map((id) => {
+        const Icon = TOOL_ICON[id];
+        const isActive = tool === id;
+        const label = t[id];
         return (
-          <Tooltip key={t.id}>
+          <Tooltip key={id}>
             <TooltipTrigger
-              aria-label={t.label}
+              aria-label={label}
               aria-pressed={isActive}
-              onClick={() => onChangeTool(t.id)}
+              onClick={() => onChangeTool(id)}
               className={cn(
                 "grid size-9 shrink-0 place-items-center rounded-md transition-colors pointer-coarse:size-11",
                 isActive
@@ -770,12 +778,8 @@ function ToolsPalette({
             </TooltipTrigger>
             <TooltipContent side="right">
               <span className="flex items-center gap-2">
-                {t.label}
-                {t.shortcut ? (
-                  <span className="rounded border border-border bg-muted px-1 font-mono text-[10px] text-muted-foreground">
-                    {t.shortcut}
-                  </span>
-                ) : null}
+                {label}
+                <span className="rounded border border-border bg-muted px-1 font-mono text-[10px] text-muted-foreground">{TOOL_SHORTCUT[id]}</span>
               </span>
             </TooltipContent>
           </Tooltip>
@@ -792,29 +796,35 @@ function ToolsPalette({
   );
 }
 
-function CollabBar() {
+function CollabBar({ collaborators, onShare }: { collaborators: CanvasCollaborator[]; onShare?: () => void }) {
+  const t = useMessages("canvasEditor", CANVAS_EDITOR_MESSAGES);
   return (
     <div className="absolute top-3 left-3 z-10 flex items-center gap-2 rounded-full border border-border bg-card/85 px-2 py-1 shadow-lg backdrop-blur md:left-1/2 md:-translate-x-1/2">
-      <div className="flex -space-x-1.5">
-        {COLLAB.map((c, i) => (
-          <Avatar
-            key={c.initials}
-            className={cn("size-7 text-white ring-2 ring-card", c.tone, i > 1 && "max-sm:hidden")}
-          >
-            <AvatarFallback className="bg-transparent font-medium text-[10px] text-white">
-              {c.initials}
-            </AvatarFallback>
-          </Avatar>
-        ))}
-      </div>
-      <Separator orientation="vertical" className="h-5" />
-      <button
-        type="button"
-        className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-2.5 py-1 font-medium text-[11px] text-background hover:bg-foreground/90 pointer-coarse:min-h-9"
-      >
-        <Share2 className="size-3" />
-        Share
-      </button>
+      {collaborators.length ? (
+        <ul aria-label={t.collaborators} className="flex -space-x-1.5">
+          {collaborators.map((c, i) => (
+            <li className={cn(i > 1 && "max-sm:hidden")} key={c.name}>
+              <Avatar className={cn("size-7 text-white ring-2 ring-card", TINT[c.color])} title={c.name}>
+                <AvatarFallback className="bg-transparent font-medium text-[10px] text-white">
+                  <span aria-hidden>{initialsOf(c.name)}</span>
+                  <span className="sr-only">{c.name}</span>
+                </AvatarFallback>
+              </Avatar>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {collaborators.length && onShare ? <Separator className="h-5" orientation="vertical" /> : null}
+      {onShare ? (
+        <button
+          className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-2.5 py-1 font-medium text-[11px] text-background hover:bg-foreground/90 pointer-coarse:min-h-9"
+          onClick={onShare}
+          type="button"
+        >
+          <Share2 aria-hidden className="size-3" />
+          {t.share}
+        </button>
+      ) : null}
     </div>
   );
 }
@@ -824,56 +834,60 @@ function ZoomControls({
   onIn,
   onOut,
   onFit,
+  onFullscreen,
 }: {
   zoom: number;
   onIn: () => void;
   onOut: () => void;
   onFit: () => void;
+  onFullscreen: () => void;
 }) {
+  const t = useMessages("canvasEditor", CANVAS_EDITOR_MESSAGES);
   return (
     <div className="absolute top-3 end-3 z-10 flex items-center gap-0.5 rounded-full border border-border bg-card/85 p-1 shadow-lg backdrop-blur">
       <Tooltip>
         <TooltipTrigger
-          aria-label="Zoom out"
+          aria-label={t.zoomOut}
           onClick={onOut}
           className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:size-9"
         >
           <MinusIcon className="size-3.5" />
         </TooltipTrigger>
-        <TooltipContent>Zoom out</TooltipContent>
+        <TooltipContent>{t.zoomOut}</TooltipContent>
       </Tooltip>
       <span className="min-w-[42px] px-2 text-center font-mono text-foreground/80 text-xs tabular-nums">
         {Math.round(zoom * 100)}%
       </span>
       <Tooltip>
         <TooltipTrigger
-          aria-label="Zoom in"
+          aria-label={t.zoomIn}
           onClick={onIn}
           className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:size-9"
         >
           <PlusIcon className="size-3.5" />
         </TooltipTrigger>
-        <TooltipContent>Zoom in</TooltipContent>
+        <TooltipContent>{t.zoomIn}</TooltipContent>
       </Tooltip>
       <Separator orientation="vertical" className="mx-1 h-5" />
       <Tooltip>
         <TooltipTrigger
-          aria-label="Fit to screen"
+          aria-label={t.fit}
           onClick={onFit}
           className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:size-9"
         >
           <Maximize2 className="size-3.5" />
         </TooltipTrigger>
-        <TooltipContent>Fit to screen</TooltipContent>
+        <TooltipContent>{t.fit}</TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger
-          aria-label="Fullscreen"
+          aria-label={t.fullscreen}
+          onClick={onFullscreen}
           className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground max-sm:hidden pointer-coarse:size-9"
         >
           <Maximize className="size-3.5" />
         </TooltipTrigger>
-        <TooltipContent>Fullscreen</TooltipContent>
+        <TooltipContent>{t.fullscreen}</TooltipContent>
       </Tooltip>
     </div>
   );
@@ -886,14 +900,15 @@ function StatusPill({
   selected: Shape | null;
   total: number;
 }) {
+  const t = useMessages("canvasEditor", CANVAS_EDITOR_MESSAGES);
   return (
     <div
       aria-live="polite"
       className="absolute bottom-3 start-3 z-10 hidden rounded-md border border-border bg-card/85 px-2 py-1 font-mono text-[10px] text-foreground/70 uppercase tracking-[0.2em] backdrop-blur md:block"
     >
       {selected
-        ? `1 selected · ${Math.round(selected.width)} × ${Math.round(selected.height)}`
-        : `${total} layer${total === 1 ? "" : "s"} · drag a tool to draw`}
+        ? interpolate(t.selectedSize, { width: Math.round(selected.width), height: Math.round(selected.height) })
+        : interpolate(total === 1 ? t.layersOne : t.layers, { count: total })}
     </div>
   );
 }
@@ -919,6 +934,7 @@ function Inspector({
   onToggleLocked: (id: string) => void;
   onDelete: (id: string) => void;
 }) {
+  const t = useMessages("canvasEditor", CANVAS_EDITOR_MESSAGES);
   return (
     <div
       className={cn(
@@ -927,37 +943,18 @@ function Inspector({
         className,
       )}
     >
-      <div className="flex border-border border-b px-1 pt-1">
-        {["Design", "Prototype", "Inspect"].map((tab, i) => (
-          <button
-            key={tab}
-            type="button"
-            disabled={i !== 0}
-            className={cn(
-              "flex-1 rounded-t-md px-2 py-1.5 font-medium text-[11px] transition-colors",
-              i === 0
-                ? "bg-foreground/[0.06] text-foreground"
-                : "cursor-not-allowed text-muted-foreground",
-            )}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+      <h2 className="border-border border-b px-3 py-2 font-medium text-[11px]">{t.design}</h2>
 
       {!shape ? (
         <div className="px-3 py-6 text-center">
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">
-            No selection
+            {t.noSelection}
           </div>
-          <p className="mt-2 text-muted-foreground text-xs leading-relaxed">
-            Pick a shape on the canvas, or grab a tool (F, O, T) and drag to
-            create one.
-          </p>
+          <p className="mt-2 text-muted-foreground text-xs leading-relaxed">{t.noSelectionHint}</p>
         </div>
       ) : (
         <div className="space-y-3 px-3 py-2">
-          <InspectorSection title="Position">
+          <InspectorSection title={t.position}>
             <div className="grid grid-cols-2 gap-2">
               <NumberField
                 label="X"
@@ -971,7 +968,7 @@ function Inspector({
               />
             </div>
           </InspectorSection>
-          <InspectorSection title="Size">
+          <InspectorSection title={t.size}>
             <div className="grid grid-cols-2 gap-2">
               <NumberField
                 label="W"
@@ -985,14 +982,14 @@ function Inspector({
               />
             </div>
           </InspectorSection>
-          <InspectorSection title="Fill">
+          <InspectorSection title={t.fill}>
             <div className="space-y-2">
               <div className="flex items-center gap-1.5">
                 {SWATCHES.map((c) => (
                   <button
                     key={c}
                     type="button"
-                    aria-label={`Fill ${c}`}
+                    aria-label={interpolate(t.fillColor, { color: c })}
                     onClick={() => onUpdate(shape.id, { fill: c })}
                     className={cn(
                       "size-5 rounded-md border transition-shadow",
@@ -1009,7 +1006,7 @@ function Inspector({
                   {shape.opacity}%
                 </span>
                 <span className="sr-only" id={`opacity-label-${shape.id}`}>
-                  Opacity
+                  {t.opacity}
                 </span>
                 <Slider
                   aria-labelledby={`opacity-label-${shape.id}`}
@@ -1019,7 +1016,7 @@ function Inspector({
                   value={[shape.opacity]}
                   onValueChange={(v) =>
                     onUpdate(shape.id, {
-                      opacity: Math.round(Array.isArray(v) ? v[0]! : v),
+                      opacity: Math.round(Array.isArray(v) ? (v[0] ?? 0) : v),
                     })
                   }
                 />
@@ -1033,24 +1030,20 @@ function Inspector({
 
       <div className="px-3 py-2">
         <div className="mb-1.5 flex items-center justify-between">
-          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">
-            Layers
-          </span>
+          <h3 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">{t.layersTitle}</h3>
           {shape ? (
             <button
               type="button"
               onClick={() => onDelete(shape.id)}
               className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] hover:text-destructive"
             >
-              Delete
+              {t.delete}
             </button>
           ) : null}
         </div>
         <div className="space-y-0.5">
           {shapes.length === 0 ? (
-            <p className="px-1.5 py-2 text-muted-foreground text-[11px]">
-              No layers yet.
-            </p>
+            <p className="px-1.5 py-2 text-muted-foreground text-[11px]">{t.noLayers}</p>
           ) : (
             [...shapes].reverse().map((layer) => {
               const isActive = selectedId === layer.id;
@@ -1067,7 +1060,7 @@ function Inspector({
                   <button
                     type="button"
                     onClick={() => onToggleVisible(layer.id)}
-                    aria-label={`${layer.visible ? "Hide" : "Show"} ${layer.name}`}
+                    aria-label={interpolate(layer.visible ? t.hide : t.show, { name: layer.name })}
                     className="grid size-6 place-items-center rounded text-muted-foreground hover:text-foreground pointer-coarse:size-9"
                   >
                     {layer.visible ? (
@@ -1088,7 +1081,7 @@ function Inspector({
                   <button
                     type="button"
                     onClick={() => onToggleLocked(layer.id)}
-                    aria-label={`${layer.locked ? "Unlock" : "Lock"} ${layer.name}`}
+                    aria-label={interpolate(layer.locked ? t.unlock : t.lock, { name: layer.name })}
                     className="grid size-6 place-items-center rounded text-muted-foreground hover:text-foreground pointer-coarse:size-9"
                   >
                     {layer.locked ? (
@@ -1164,5 +1157,13 @@ function NumberField({
         className="w-full bg-transparent font-mono text-[11px] text-foreground tabular-nums outline-none"
       />
     </label>
+  );
+}
+
+export function CanvasEditor(props: CanvasEditorProps) {
+  return (
+    <ScreenBoundary name="CanvasEditor">
+      <CanvasEditorScreen {...props} />
+    </ScreenBoundary>
   );
 }
