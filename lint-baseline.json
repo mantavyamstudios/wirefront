@@ -202,12 +202,6 @@
     "lint/a11y/useSemanticElements": 5,
     "lint/suspicious/noArrayIndexKey": 1
   },
-  "apps/www/src/pages/showcase/dashboards-revenue-overview.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/noSvgWithoutTitle": 1,
-    "lint/correctness/useExhaustiveDependencies": 3,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
   "apps/www/src/pages/showcase/dashboards-status-console.tsx": {
     "lint/a11y/noStaticElementInteractions": 1,
     "lint/a11y/useSemanticElements": 1,

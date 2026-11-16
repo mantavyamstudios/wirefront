@@ -7,28 +7,26 @@
 import {
   ArrowDownRightIcon,
   ArrowUpRightIcon,
-  ChartSplineIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   ClipboardIcon,
   DownloadIcon,
   HandshakeIcon,
-  HouseIcon,
   type LucideIcon,
   MegaphoneIcon,
-  PackageIcon,
   SettingsIcon,
-  ShoppingBagIcon,
   TagIcon,
   TruckIcon,
-  UsersIcon,
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion, useSpring, useTransform } from "motion/react";
 import {
+  createContext,
+  Fragment,
   type KeyboardEvent,
   type PointerEvent,
   type ReactNode,
   type RefObject,
+  useContext,
   useEffect,
   useId,
   useLayoutEffect,
@@ -38,53 +36,121 @@ import {
 } from "react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@wirefront/ui/empty";
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
+import { Skeleton } from "@wirefront/ui/skeleton";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
+import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
+import type { MomentKind, RangeKey, RevenueChannel, RevenueDay, RevenueMoment, RevenueStoryData } from "./schema";
 
-export type RangeKey = "7d" | "30d" | "90d" | "12m";
-export type MomentKind = "promo" | "pricing" | "partner" | "incident";
+/** Every string on the screen; override any of them with WirefrontProvider `messages` ("revenueStory.<key>"). */
+export const REVENUE_STORY_MESSAGES = {
+  app: "App",
+  main: "Main",
+  settings: "Settings",
+  breadcrumb: "Breadcrumb",
+  title: "Revenue",
+  updated: "Updated {when}",
+  export: "Export",
+  copySummary: "Copy summary",
+  downloadCsv: "Download CSV",
+  csvDownloaded: "CSV downloaded",
+  summaryCopied: "Summary copied",
+  couldntCopy: "Couldn’t copy",
+  summaryText: "{store} revenue, {period}: {total}.",
+  summaryTextChange: "{store} revenue, {period}: {total}, {direction} {amount} on the previous period.",
+  up: "up",
+  down: "down",
+  csvDay: "date,revenue,previous",
+  csvWeek: "week_starting,revenue,previous",
+  dateRange: "Date range",
+  range7d: "Last 7 days",
+  range30d: "Last 30 days",
+  range90d: "Last 90 days",
+  range12m: "Last 12 months",
+  rangeOption: "{short}, {long}",
+  periodVs: "vs {start} – {end}",
+  thisPeriod: "{total} this period",
+  thisPeriodChange: "{total} this period, {change} on the last one — {attribution} {channel}.",
+  changeUp: "up {amount}",
+  changeDown: "down {amount}",
+  mostlyFrom: "mostly from",
+  mostOfItFrom: "most of it from",
+  ledBy: "led by",
+  bestWorst: "Best {unit} was {best} at {bestValue}{bestDuring}. Slowest was {worst} at {worstValue}{worstDuring}.",
+  day: "day",
+  week: "week",
+  during: ", during {phrase}",
+  weekOf: "week of {date}",
+  weekOfLong: "Week of {date}",
+  theWeekOf: "the week of {date}",
+  dayLong: "{weekday}, {date}",
+  dateWithYear: "{date}, {year}",
+  span: "{from} – {to}",
+  chart: "Revenue chart",
+  latest: "Latest · {label}",
+  versus: "vs {label} · {value}",
+  legendThis: "This period",
+  legendPrevious: "Previous period",
+  scrub: "Scrub revenue",
+  scrubValue: "{label}: {value}",
+  scrubValueChange: "{label}: {value}, {direction} {percent} on {previous}",
+  chipNote: "chart note: {title}, {dates}",
+  impactChannel: "{channel} has averaged {after} a day since, against {before} before.",
+  impactDay: "{current} that day, against {previous} the day before.",
+  impactDays: "{current} over {count} days, against {previous} the {count} days before.",
+  promo: "Promotion",
+  pricing: "Pricing",
+  partner: "Partner",
+  incident: "Incident",
+  breakdown: "Where it came from",
+  vsLastPeriod: "vs last period",
+  shareLabel: "Share of revenue: {summary}",
+  ofRevenue: "{percent} of revenue",
+  new: "new",
+  moments: "Moments",
+  momentsCount: "{count} in this period",
+  noMoments: "None logged",
+  noMomentsHint: "Nothing happened worth pinning in this range. Add a moment to see it on the line.",
+  errorTitle: "Couldn’t load revenue",
+  retry: "Try again",
+};
+type Messages = typeof REVENUE_STORY_MESSAGES;
 
-export interface RevenueDay {
-  date: string;
-  byChannel: Record<string, number>;
-}
-
-export interface RevenueChannel {
-  key: string;
+export interface RevenueStoryNavItem {
   label: string;
-}
-
-export interface RevenueMoment {
-  id: string;
-  date: string;
-  endDate?: string;
-  kind: MomentKind;
-  title: string;
-  short?: string;
-  phrase?: string;
-  note: string;
-  channel?: string;
-  weight?: number;
+  href: string;
+  icon: ReactNode;
+  /** Marks the page you're on. */
+  current?: boolean;
 }
 
 export interface RevenueStoryProps {
-  days?: RevenueDay[];
-  channels?: RevenueChannel[];
-  moments?: RevenueMoment[];
-  store?: { name: string; plan: string };
-  user?: { name: string; email: string };
+  /** Daily revenue, channels and moments. Leave it out while it loads. */
+  data?: RevenueStoryData;
+  /** "loading" shows a placeholder; "error" shows `error` and a retry. Defaults to "ready". */
+  status?: AsyncStatus;
+  error?: string;
+  onRetry?: () => void;
+  /** Your store, shown in the rail and the breadcrumb. */
+  store: { name: string };
+  /** The signed-in user, shown at the foot of the rail. */
+  user?: { name: string };
+  /** The app's sections, shown as an icon rail from @3xl up. */
+  nav?: RevenueStoryNavItem[];
+  /** Where the rail's settings button goes. Hidden when not given. */
+  settingsHref?: string;
+  /** When the data was last refreshed (ISO date-time). */
+  updatedAt?: string;
   defaultRange?: RangeKey;
   onRangeChange?: (range: RangeKey) => void;
-  onNavigate?: (label: string) => void;
   className?: string;
 }
 
 const DAY = 86_400_000;
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
 function parseDay(iso: string) {
@@ -95,175 +161,19 @@ function isoOf(t: number) {
   const d = new Date(t);
   return `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
 }
-function dayLabel(t: number, year?: number) {
-  const d = new Date(t);
-  const base = `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`;
-  return year !== undefined && d.getUTCFullYear() !== year ? `${base}, ${d.getUTCFullYear()}` : base;
-}
 const yearOf = (t: number) => new Date(t).getUTCFullYear();
 
-function mulberry32(seed: number) {
-  let s = seed;
-  return () => {
-    s = (s + 0x6d2b79f5) | 0;
-    let t = Math.imul(s ^ (s >>> 15), 1 | s);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+/** How many buckets each range shows, and how many days each bucket covers. */
+const RANGE_SPEC: Record<RangeKey, { buckets: number; step: number }> = {
+  "7d": { buckets: 7, step: 1 },
+  "30d": { buckets: 30, step: 1 },
+  "90d": { buckets: 90, step: 1 },
+  "12m": { buckets: 52, step: 7 },
+};
+const RANGE_ORDER: RangeKey[] = ["7d", "30d", "90d", "12m"];
 
-const SAMPLE_CHANNELS: RevenueChannel[] = [
-  { key: "store", label: "Online store" },
-  { key: "wholesale", label: "Wholesale" },
-  { key: "market", label: "Marketplaces" },
-  { key: "social", label: "Social shop" },
-];
-
-const SAMPLE_MOMENTS: RevenueMoment[] = [
-  {
-    id: "spring-sale",
-    date: "2025-04-24",
-    endDate: "2025-04-28",
-    kind: "promo",
-    title: "Spring sale",
-    phrase: "the spring sale",
-    note: "20% off throws and bedding for five days, sent to the full list.",
-    weight: 2,
-  },
-  {
-    id: "marketplace-fees",
-    date: "2025-06-02",
-    kind: "pricing",
-    channel: "market",
-    title: "Marketplace fees went up",
-    short: "Marketplace fees",
-    note: "Listing fees rose to 9.5%, so marketplace prices went up to cover them.",
-    weight: 2,
-  },
-  {
-    id: "autumn-launch",
-    date: "2025-09-23",
-    endDate: "2025-09-29",
-    kind: "promo",
-    title: "Autumn collection launch",
-    short: "Autumn launch",
-    phrase: "the autumn launch",
-    note: "Twelve new pieces in walnut and wool, launched with a lookbook email.",
-    weight: 1,
-  },
-  {
-    id: "starter-price",
-    date: "2025-11-18",
-    kind: "pricing",
-    channel: "store",
-    title: "Price change on Starter Set",
-    short: "Starter Set price",
-    note: "The Starter Set went from $68 to $58 to make it an easier first order.",
-    weight: 2,
-  },
-  {
-    id: "black-friday",
-    date: "2025-11-28",
-    endDate: "2025-12-01",
-    kind: "promo",
-    title: "Black Friday sale",
-    short: "Black Friday",
-    phrase: "the Black Friday sale",
-    note: "25% off sitewide through Cyber Monday. Marketplaces ran the same discount.",
-    weight: 3,
-  },
-  {
-    id: "wholesale-partner",
-    date: "2025-12-02",
-    kind: "partner",
-    channel: "wholesale",
-    title: "Wholesale partner onboarded",
-    short: "Wholesale partner",
-    note: "Juniper & Pine took 14 lines for their four shops. The first order shipped on Dec 3.",
-    weight: 3,
-  },
-  {
-    id: "shipping-delay",
-    date: "2025-12-08",
-    endDate: "2025-12-10",
-    kind: "incident",
-    title: "Shipping delay",
-    phrase: "the shipping delay",
-    note: "A carrier backlog pushed delivery estimates to 6–8 days and checkout conversion fell.",
-    weight: 3,
-  },
-  {
-    id: "gift-guide",
-    date: "2025-12-11",
-    endDate: "2025-12-12",
-    kind: "promo",
-    title: "Gift guide email",
-    short: "Gift guide",
-    phrase: "the gift guide email",
-    note: "The holiday gift guide went to 41,200 subscribers on Thursday morning.",
-    weight: 2,
-  },
-];
-
-const SAMPLE_EFFECTS: { from: string; to: string; on: string[]; by: number[] }[] = [
-  { from: "2024-11-29", to: "2024-12-02", on: ["store", "market", "social"], by: [1.55, 1.28, 1.22, 1.38] },
-  { from: "2025-04-24", to: "2025-04-28", on: ["store", "social"], by: [1.34, 1.26, 1.22, 1.2, 1.14] },
-  { from: "2025-06-02", to: "2025-12-12", on: ["market"], by: [0.84] },
-  { from: "2025-09-23", to: "2025-09-29", on: ["store"], by: [1.26, 1.18, 1.14, 1.1, 1.08, 1.06, 1.04] },
-  { from: "2025-11-18", to: "2025-12-12", on: ["store"], by: [1.04] },
-  { from: "2025-11-28", to: "2025-12-01", on: ["store", "market", "social"], by: [1.85, 1.42, 1.32, 1.56] },
-  { from: "2025-12-02", to: "2025-12-12", on: ["wholesale"], by: [1.3, 3.6, 2.3] },
-  { from: "2025-12-08", to: "2025-12-10", on: ["store", "market"], by: [0.72, 0.6, 0.78] },
-  { from: "2025-12-11", to: "2025-12-12", on: ["store", "social"], by: [1.26, 1.12] },
-];
-
-function sampleDays(): RevenueDay[] {
-  const rand = mulberry32(1128);
-  const end = Date.UTC(2025, 11, 12);
-  const count = 728;
-  const season = [0.84, 0.82, 0.9, 0.95, 0.97, 0.93, 0.9, 0.92, 0.98, 1.02, 1.03, 1.06];
-  const week = [1.03, 0.94, 0.96, 0.98, 1.0, 1.04, 1.07];
-  const out: RevenueDay[] = [];
-  for (let i = 0; i < count; i++) {
-    const t = end - (count - 1 - i) * DAY;
-    const date = isoOf(t);
-    const d = new Date(t);
-    const p = i / (count - 1);
-    const level = 5400 * (1 + 0.36 * p) * season[d.getUTCMonth()] * week[d.getUTCDay()];
-    const shares: Record<string, number> = {
-      store: 0.5 - 0.03 * p,
-      wholesale: 0.14,
-      market: 0.28 - 0.05 * p,
-      social: 0.08 + 0.07 * p,
-    };
-    const byChannel: Record<string, number> = {};
-    for (const key of Object.keys(shares)) {
-      let boost = 1;
-      for (const e of SAMPLE_EFFECTS) {
-        if (date < e.from || date > e.to || !e.on.includes(key)) continue;
-        const offset = Math.round((t - parseDay(e.from)) / DAY);
-        boost *= e.by[Math.min(offset, e.by.length - 1)];
-      }
-      const spread = key === "wholesale" ? 0.5 : 0.14;
-      byChannel[key] = Math.round(level * shares[key] * boost * (1 + (rand() - 0.5) * spread));
-    }
-    out.push({ date, byChannel });
-  }
-  return out;
-}
-
-const SAMPLE_DAYS = sampleDays();
-
-const RANGES: { value: RangeKey; label: string; long: string; buckets: number; step: number }[] = [
-  { value: "7d", label: "7d", long: "Last 7 days", buckets: 7, step: 1 },
-  { value: "30d", label: "30d", long: "Last 30 days", buckets: 30, step: 1 },
-  { value: "90d", label: "90d", long: "Last 90 days", buckets: 90, step: 1 },
-  { value: "12m", label: "12m", long: "Last 12 months", buckets: 52, step: 7 },
-];
-
-const KINDS: Record<MomentKind, { label: string; icon: LucideIcon; dot: string; band: string; stem: string; soft: string }> = {
+const KINDS: Record<MomentKind, { icon: LucideIcon; dot: string; band: string; stem: string; soft: string }> = {
   promo: {
-    label: "Promotion",
     icon: MegaphoneIcon,
     dot: "fill-category-5",
     band: "fill-category-5/8",
@@ -271,7 +181,6 @@ const KINDS: Record<MomentKind, { label: string; icon: LucideIcon; dot: string; 
     soft: "bg-category-5/12 text-category-5-foreground",
   },
   pricing: {
-    label: "Pricing",
     icon: TagIcon,
     dot: "fill-category-1",
     band: "fill-category-1/8",
@@ -279,7 +188,6 @@ const KINDS: Record<MomentKind, { label: string; icon: LucideIcon; dot: string; 
     soft: "bg-category-1/12 text-category-1-foreground",
   },
   partner: {
-    label: "Partner",
     icon: HandshakeIcon,
     dot: "fill-category-6",
     band: "fill-category-6/8",
@@ -287,7 +195,6 @@ const KINDS: Record<MomentKind, { label: string; icon: LucideIcon; dot: string; 
     soft: "bg-category-6/12 text-category-6-foreground",
   },
   incident: {
-    label: "Incident",
     icon: TruckIcon,
     dot: "fill-category-3",
     band: "fill-category-3/10",
@@ -298,22 +205,66 @@ const KINDS: Record<MomentKind, { label: string; icon: LucideIcon; dot: string; 
 
 const SHADES = ["bg-foreground", "bg-foreground/55", "bg-foreground/32", "bg-foreground/16"];
 
-const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-const money = (n: number) => usd.format(Math.round(n));
-function compact(n: number) {
-  const a = Math.abs(n);
-  if (a >= 1e6) return `$${(a / 1e6).toFixed(2)}M`;
-  if (a >= 1e3) return `$${(a / 1e3).toFixed(1)}k`;
-  return `$${Math.round(a)}`;
+/** Formatters built from the provider's locale and currency, plus the screen's messages. */
+interface Fmt {
+  t: Messages;
+  money: (n: number) => string;
+  compact: (n: number) => string;
+  signed: (n: number) => string;
+  percent: (n: number) => string;
+  axis: (n: number) => string;
+  /** "Dec 12", or "Dec 12, 2024" when `year` is given and differs. Days are UTC calendar dates. */
+  day: (t: number, year?: number) => string;
+  weekday: (t: number) => string;
+  month: (t: number) => string;
 }
-const signed = (n: number) => `${n < 0 ? "−" : "+"}${compact(n)}`;
-const percent = (n: number) => `${n < 0 ? "−" : "+"}${Math.abs(n * 100).toFixed(0)}%`;
+
+function useFmt(): Fmt {
+  const t = useMessages("revenueStory", REVENUE_STORY_MESSAGES);
+  const format = useFormat();
+  return useMemo(() => {
+    const compact = (n: number) => format.money(Math.abs(n), undefined, { notation: "compact", maximumFractionDigits: 1 });
+    return {
+      t,
+      money: (n: number) => format.money(Math.round(n), undefined, { maximumFractionDigits: 0 }),
+      compact,
+      signed: (n: number) => `${n < 0 ? "−" : "+"}${compact(n)}`,
+      percent: (n: number) => format.number(n, { style: "percent", maximumFractionDigits: 0, signDisplay: "exceptZero" }),
+      axis: (n: number) => format.money(n, undefined, { notation: "compact", maximumFractionDigits: 1 }),
+      day: (time: number, year?: number) => {
+        const base = format.date(time, { month: "short", day: "numeric", timeZone: "UTC" });
+        const y = new Date(time).getUTCFullYear();
+        return year !== undefined && y !== year ? interpolate(t.dateWithYear, { date: base, year: y }) : base;
+      },
+      weekday: (time: number) => format.date(time, { weekday: "short", timeZone: "UTC" }),
+      month: (time: number) => format.date(time, { month: "short", timeZone: "UTC" }),
+    };
+  }, [t, format]);
+}
+
+const FmtContext = createContext<Fmt | null>(null);
+function useFmtContext(): Fmt {
+  const fmt = useContext(FmtContext);
+  if (!fmt) throw new Error("RevenueStory parts render inside RevenueStory");
+  return fmt;
+}
+
+/** Fill a message's {placeholders} with React nodes. */
+function rich(template: string, values: Record<string, ReactNode>): ReactNode {
+  let offset = 0;
+  return template
+    .split(/(\{\w+\})/)
+    .filter((part) => part !== "")
+    .map((part) => {
+    const at = offset;
+    offset += part.length;
+    const key = part.match(/^\{(\w+)\}$/)?.[1];
+    // Keyed by where the part starts in the template.
+    return <Fragment key={`at-${at}`}>{key !== undefined && key in values ? values[key] : part}</Fragment>;
+  });
+}
+
 const tone = (n: number) => (n < 0 ? "text-destructive-foreground" : "text-success-foreground");
-function axisMoney(v: number) {
-  if (v >= 1e6) return `$${+(v / 1e6).toFixed(1)}M`;
-  if (v >= 1e3) return `$${+(v / 1e3).toFixed(1)}k`;
-  return `$${v}`;
-}
 const totalOf = (day: RevenueDay) => Object.values(day.byChannel).reduce((a, b) => a + b, 0);
 
 const ease = [0.23, 1, 0.32, 1] as const;
@@ -400,7 +351,7 @@ interface Model {
   moments: PlacedMoment[];
 }
 
-function impactOf(m: RevenueMoment, days: RevenueDay[], index: Map<string, number>, channels: RevenueChannel[]): Impact | null {
+function impactOf(m: RevenueMoment, days: RevenueDay[], index: Map<string, number>, channels: RevenueChannel[], fmt: Fmt): Impact | null {
   const a = index.get(m.date);
   if (a === undefined) return null;
   if (m.channel) {
@@ -416,7 +367,7 @@ function impactOf(m: RevenueMoment, days: RevenueDay[], index: Map<string, numbe
     const label = channels.find((c) => c.key === m.channel)?.label ?? m.channel;
     return {
       change: after / before - 1,
-      text: `${label} has averaged ${compact(after / w)} a day since, up from ${compact(before / w)}.`,
+      text: interpolate(fmt.t.impactChannel, { channel: label, after: fmt.compact(after / w), before: fmt.compact(before / w) }),
     };
   }
   const b = Math.min(index.get(m.endDate ?? m.date) ?? a, days.length - 1);
@@ -429,9 +380,8 @@ function impactOf(m: RevenueMoment, days: RevenueDay[], index: Map<string, numbe
     prev += totalOf(days[a - len + k]);
   }
   if (!prev) return null;
-  const span = len === 1 ? "that day" : `over ${len} days`;
-  const before = len === 1 ? "the day before" : `the ${len} days before`;
-  return { change: cur / prev - 1, text: `${compact(cur)} ${span}, against ${compact(prev)} ${before}.` };
+  const values = { current: fmt.compact(cur), previous: fmt.compact(prev), count: len };
+  return { change: cur / prev - 1, text: interpolate(len === 1 ? fmt.t.impactDay : fmt.t.impactDays, values) };
 }
 
 function buildModel(
@@ -442,7 +392,7 @@ function buildModel(
   impacts: Map<string, Impact | null>,
   range: RangeKey,
 ): Model {
-  const spec = RANGES.find((r) => r.value === range) ?? RANGES[1];
+  const spec = RANGE_SPEC[range];
   const step = spec.step;
   const n = Math.max(1, Math.min(spec.buckets, Math.floor(days.length / step)));
   const span = n * step;
@@ -501,16 +451,16 @@ function buildModel(
   };
 }
 
-function bucketLabel(model: Model, t: number, long = false) {
-  if (model.step === 7) return `${long ? "Week of " : "week of "}${dayLabel(t, yearOf(model.end))}`;
-  const label = dayLabel(t, yearOf(model.end));
-  return long ? `${WEEKDAYS[new Date(t).getUTCDay()]}, ${label}` : label;
+function bucketLabel(fmt: Fmt, model: Model, t: number, long = false) {
+  const date = fmt.day(t, yearOf(model.end));
+  if (model.step === 7) return interpolate(long ? fmt.t.weekOfLong : fmt.t.weekOf, { date });
+  return long ? interpolate(fmt.t.dayLong, { weekday: fmt.weekday(t), date }) : date;
 }
 
-function momentDates(m: RevenueMoment) {
+function momentDates(fmt: Fmt, m: RevenueMoment) {
   const a = parseDay(m.date);
-  if (!m.endDate || m.endDate === m.date) return dayLabel(a);
-  return `${dayLabel(a)} – ${dayLabel(parseDay(m.endDate))}`;
+  if (!m.endDate || m.endDate === m.date) return fmt.day(a);
+  return interpolate(fmt.t.span, { from: fmt.day(a), to: fmt.day(parseDay(m.endDate)) });
 }
 
 function momentAt(model: Model, i: number) {
@@ -635,10 +585,11 @@ function Rolling({ value, format, className }: { value: number; format: (n: numb
 }
 
 function RangeSwitch({ value, onChange }: { value: RangeKey; onChange: (v: RangeKey) => void }) {
+  const { t } = useFmtContext();
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   const index = Math.max(
     0,
-    RANGES.findIndex((r) => r.value === value),
+    RANGE_ORDER.indexOf(value),
   );
   const onKeyDown = (e: KeyboardEvent<HTMLFieldSetElement>) => {
     const moves: Record<string, number> = {
@@ -647,33 +598,33 @@ function RangeSwitch({ value, onChange }: { value: RangeKey; onChange: (v: Range
       ArrowLeft: index - 1,
       ArrowUp: index - 1,
       Home: 0,
-      End: RANGES.length - 1,
+      End: RANGE_ORDER.length - 1,
     };
     if (!(e.key in moves)) return;
     e.preventDefault();
-    const next = (moves[e.key] + RANGES.length) % RANGES.length;
-    onChange(RANGES[next].value);
+    const next = ((moves[e.key] ?? index) + RANGE_ORDER.length) % RANGE_ORDER.length;
+    onChange(RANGE_ORDER[next] ?? value);
     refs.current[next]?.focus();
   };
   return (
-    <SegmentedControl aria-label="Date range" onKeyDown={onKeyDown} role="radiogroup" size="sm">
-      {RANGES.map((r, i) => {
-        const checked = r.value === value;
+    <SegmentedControl aria-label={t.dateRange} onKeyDown={onKeyDown} role="radiogroup" size="sm">
+      {RANGE_ORDER.map((r, i) => {
+        const checked = r === value;
         return (
           <SegmentedControlItem
             aria-checked={checked}
-            aria-label={`${r.label}, ${r.long}`}
+            aria-label={interpolate(t.rangeOption, { short: r, long: t[`range${r}`] })}
             className="min-w-11 px-2.5 text-muted-foreground text-xs tabular-nums focus-visible:ring-2 focus-visible:ring-ring"
             data-checked={checked ? "" : undefined}
-            key={r.value}
-            onClick={() => onChange(r.value)}
+            key={r}
+            onClick={() => onChange(r)}
             ref={(el: HTMLButtonElement | null) => {
               refs.current[i] = el;
             }}
             role="radio"
             tabIndex={checked ? 0 : -1}
           >
-            {r.label}
+            {r}
           </SegmentedControlItem>
         );
       })}
@@ -686,45 +637,51 @@ function Highlight({ children, className }: { children: ReactNode; className?: s
 }
 
 function Summary({ model }: { model: Model }) {
+  const fmt = useFmtContext();
+  const { t } = fmt;
   const change = model.prevTotal === null ? null : model.total - model.prevTotal;
   const gains = model.channels.map((c) => ({ label: c.label, delta: c.total - c.prev }));
   const lead = change === null ? null : [...gains].sort((a, b) => (change >= 0 ? b.delta - a.delta : a.delta - b.delta))[0];
   const most = lead && change ? lead.delta / change >= 0.5 : false;
-  const unit = model.step === 7 ? "week" : "day";
   const values = model.buckets.map((b) => b.value);
   const best = values.indexOf(Math.max(...values));
   const worst = values.indexOf(Math.min(...values));
   const bestMoment = momentAt(model, best);
   const worstMoment = momentAt(model, worst);
-  const when = (i: number) => (model.step === 7 ? `the ${bucketLabel(model, model.buckets[i].t)}` : bucketLabel(model, model.buckets[i].t));
+  const when = (i: number) => {
+    const at = model.buckets[i]?.t ?? model.end;
+    return model.step === 7 ? interpolate(t.theWeekOf, { date: fmt.day(at, yearOf(model.end)) }) : bucketLabel(fmt, model, at);
+  };
+  const strong = (node: ReactNode) => <span className="font-medium text-foreground">{node}</span>;
+  const figure = (n: number) => <span className="font-medium text-foreground tabular-nums">{fmt.compact(n)}</span>;
+  const total = (
+    <Highlight>
+      <Rolling format={fmt.money} value={model.total} />
+    </Highlight>
+  );
 
   return (
     <div className="min-w-0 @3xl:min-h-24">
       <p className="max-w-[46rem] text-balance font-heading text-[22px] text-muted-foreground leading-[1.3] tracking-[-0.015em] @3xl:text-[27px] @3xl:leading-[1.25]">
-        <Highlight>
-          <Rolling format={money} value={model.total} />
-        </Highlight>{" "}
-        this period
-        {change !== null && lead ? (
-          <>
-            ,{" "}
-            <Highlight className={tone(change)}>
-              {change < 0 ? "down" : "up"} <Rolling format={compact} value={Math.abs(change)} />
-            </Highlight>{" "}
-            on the last one — {most ? (change < 0 ? "mostly from" : "most of it from") : "led by"}{" "}
-            <Highlight>{lead.label}</Highlight>.
-          </>
-        ) : (
-          "."
-        )}
+        {change !== null && lead
+          ? rich(t.thisPeriodChange, {
+              total,
+              change: <Highlight className={tone(change)}>{rich(change < 0 ? t.changeDown : t.changeUp, { amount: <Rolling format={fmt.compact} value={Math.abs(change)} /> })}</Highlight>,
+              attribution: most ? (change < 0 ? t.mostlyFrom : t.mostOfItFrom) : t.ledBy,
+              channel: <Highlight>{lead.label}</Highlight>,
+            })
+          : rich(`${t.thisPeriod}.`, { total })}
       </p>
       <p className="mt-2 text-pretty text-muted-foreground text-sm">
-        Best {unit} was <span className="font-medium text-foreground">{when(best)}</span> at{" "}
-        <span className="font-medium text-foreground tabular-nums">{compact(values[best])}</span>
-        {bestMoment ? `, during ${bestMoment.phrase}` : ""}. Slowest was{" "}
-        <span className="font-medium text-foreground">{when(worst)}</span> at{" "}
-        <span className="font-medium text-foreground tabular-nums">{compact(values[worst])}</span>
-        {worstMoment ? `, during ${worstMoment.phrase}` : ""}.
+        {rich(t.bestWorst, {
+          unit: model.step === 7 ? t.week : t.day,
+          best: strong(when(best)),
+          bestValue: figure(values[best] ?? 0),
+          bestDuring: bestMoment?.phrase ? interpolate(t.during, { phrase: bestMoment.phrase }) : "",
+          worst: strong(when(worst)),
+          worstValue: figure(values[worst] ?? 0),
+          worstDuring: worstMoment?.phrase ? interpolate(t.during, { phrase: worstMoment.phrase }) : "",
+        })}
       </p>
     </div>
   );
@@ -748,6 +705,8 @@ function KindIcon({ kind, className }: { kind: MomentKind; className?: string })
 }
 
 function StoryChart({ model, handlers, cardId }: { model: Model; handlers: MomentHandlers; cardId: string }) {
+  const fmt = useFmtContext();
+  const { t } = fmt;
   const mounted = useMounted();
   const reduce = useReducedMotionAfterMount();
   const clipId = `reveal-${useId().replace(/:/g, "")}`;
@@ -788,26 +747,54 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
   const scrubIndex = scrub && scrub.range === model.range ? Math.min(scrub.i, n - 1) : null;
   const active = scrubIndex ?? open?.i0 ?? n - 1;
   const showCrosshair = scrubIndex !== null || open !== null;
-  const bucket = buckets[active];
+  const bucket = buckets[active] ?? (buckets[n - 1] as Bucket);
   const delta = bucket.prev ? bucket.value / bucket.prev - 1 : null;
   const here = model.moments.filter((m) => active >= m.i0 && active <= m.i1);
-  const label = bucketLabel(model, bucket.t, true);
-  const prevLabel = model.step === 7 ? bucketLabel(model, bucket.prevT) : dayLabel(bucket.prevT, yearOf(model.end));
-  const widest = money(Math.max(...values)).length;
+  const label = bucketLabel(fmt, model, bucket.t, true);
+  const prevLabel = model.step === 7 ? bucketLabel(fmt, model, bucket.prevT) : fmt.day(bucket.prevT, yearOf(model.end));
+  const widest = fmt.money(Math.max(...values)).length;
 
-  const chipText = (m: PlacedMoment) => ({ label: m.short ?? m.title, delta: m.impact ? percent(m.impact.change) : "" });
-  const placement = useMemo(() => {
-    if (!ready) return new Map<string, { left: number; row: number; compact: boolean }>();
-    const items = model.moments.map((m) => {
-      const t = chipText(m);
-      const textW = measure ? measure(t.label, 500) + measure(t.delta, 400) : (t.label.length + t.delta.length) * 6.6;
-      return { id: m.id, x: x(m.i0), weight: m.weight ?? 1, full: Math.ceil(textW + 46) };
-    });
-    return placeChips(items, pad.l - 10, width - 2, rows, wide);
-  }, [ready, model, measure, width, rows, wide]);
+  const chipText = (m: PlacedMoment) => ({ label: m.short ?? m.title, delta: m.impact ? fmt.percent(m.impact.change) : "" });
+  // Chips are laid out once per render; it's a handful of moments.
+  const placement = ready
+    ? placeChips(
+        model.moments.map((m) => {
+          const text = chipText(m);
+          const textW = measure ? measure(text.label, 500) + measure(text.delta, 400) : (text.label.length + text.delta.length) * 6.6;
+          return { id: m.id, x: x(m.i0), weight: m.weight ?? 1, full: Math.ceil(textW + 46) };
+        }),
+        pad.l - 10,
+        width - 2,
+        rows,
+        wide,
+      )
+    : new Map<string, { left: number; row: number; compact: boolean }>();
 
   const xTicks = ready ? axisTicks(model, plotW) : [];
-  const valueText = `${label}: ${money(bucket.value)}${delta !== null ? `, ${delta < 0 ? "down" : "up"} ${Math.abs(delta * 100).toFixed(0)}% on ${prevLabel}` : ""}`;
+  const valueText =
+    delta !== null
+      ? interpolate(t.scrubValueChange, {
+          label,
+          value: fmt.money(bucket.value),
+          direction: delta < 0 ? t.down : t.up,
+          percent: fmt.percent(Math.abs(delta)),
+          previous: prevLabel,
+        })
+      : interpolate(t.scrubValue, { label, value: fmt.money(bucket.value) });
+  const surroundRef = useRef<HTMLDivElement>(null);
+  const pinnedRef = useRef(handlers);
+  pinnedRef.current = handlers;
+  // Escape anywhere in the chart closes a pinned note.
+  useEffect(() => {
+    const el = surroundRef.current;
+    if (!el) return;
+    const onEscape = (e: globalThis.KeyboardEvent) => {
+      const h = pinnedRef.current;
+      if (e.key === "Escape" && h.pinnedId) h.onToggle(h.pinnedId);
+    };
+    el.addEventListener("keydown", onEscape);
+    return () => el.removeEventListener("keydown", onEscape);
+  }, []);
 
   const indexAt = (e: PointerEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -844,11 +831,11 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
   const cardTop = pad.t + 2;
 
   return (
-    <section aria-label="Revenue chart" className="flex min-h-0 min-w-0 flex-1 flex-col">
+    <section aria-label={t.chart} className="flex min-h-0 min-w-0 flex-1 flex-col">
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div className="min-w-0">
           <div className="flex h-5 min-w-0 items-center gap-2 text-muted-foreground text-xs">
-            <span className="shrink-0 tabular-nums">{showCrosshair || focused ? label : `Latest · ${label}`}</span>
+            <span className="shrink-0 tabular-nums">{showCrosshair || focused ? label : interpolate(t.latest, { label })}</span>
             {here[0] && (
               <span className={cn("inline-flex h-5 min-w-0 items-center gap-1 rounded-full ps-0.5 pe-2 font-medium", KINDS[here[0].kind].soft)}>
                 <KindIcon className="size-4 bg-transparent" kind={here[0].kind} />
@@ -861,17 +848,15 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
               className="font-heading font-semibold text-[28px] leading-none tracking-[-0.02em] tabular-nums"
               style={{ minWidth: `${widest * 0.6}em` }}
             >
-              {money(bucket.value)}
+              {fmt.money(bucket.value)}
             </span>
             {delta !== null && bucket.prev !== null && (
               <span className="inline-flex items-center gap-1 text-xs tabular-nums">
                 <span className={cn("inline-flex items-center gap-0.5 font-medium", tone(delta))}>
                   {delta < 0 ? <ArrowDownRightIcon aria-hidden className="size-3.5" /> : <ArrowUpRightIcon aria-hidden className="size-3.5" />}
-                  {percent(delta)}
+                  {fmt.percent(delta)}
                 </span>
-                <span className="text-muted-foreground">
-                  vs {prevLabel} · {money(bucket.prev)}
-                </span>
+                <span className="text-muted-foreground">{interpolate(t.versus, { label: prevLabel, value: fmt.money(bucket.prev) })}</span>
               </span>
             )}
           </div>
@@ -879,27 +864,22 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
         <div aria-hidden className="flex items-center gap-4 pb-0.5 text-muted-foreground text-xs">
           <span className="inline-flex items-center gap-1.5">
             <span className="h-0.5 w-4 rounded-full bg-foreground" />
-            This period
+            {t.legendThis}
           </span>
           {prevValues && (
             <span className="inline-flex items-center gap-1.5">
-              <svg className="h-0.5 w-4 overflow-visible" viewBox="0 0 16 2">
+              <svg aria-hidden className="h-0.5 w-4 overflow-visible" viewBox="0 0 16 2">
                 <line className="stroke-muted-foreground/70" strokeDasharray="3 3" strokeWidth={1.5} x1={0} x2={16} y1={1} y2={1} />
               </svg>
-              Previous period
+              {t.legendPrevious}
             </span>
           )}
         </div>
       </div>
 
-      <div
-        className="relative mt-3 h-[300px] min-h-0 w-full @4xl:h-auto @4xl:min-h-[260px] @4xl:flex-1"
-        onKeyDown={(e) => {
-          if (e.key === "Escape" && handlers.pinnedId) handlers.onToggle(handlers.pinnedId);
-        }}
-      >
+      <div className="relative mt-3 h-[300px] min-h-0 w-full @4xl:h-auto @4xl:min-h-[260px] @4xl:flex-1" ref={surroundRef}>
         <div
-          aria-label="Scrub revenue"
+          aria-label={t.scrub}
           aria-valuemax={n - 1}
           aria-valuemin={0}
           aria-valuenow={active}
@@ -961,7 +941,7 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                 })}
 
               {ticks.map((v, k) => (
-                <motion.g animate={{ y: y(v) }} initial={false} key={`tick-${k}`} transition={morph}>
+                <motion.g animate={{ y: y(v) }} initial={false} key={`tick-${v}`} transition={morph}>
                   <line
                     className={k === 0 ? "stroke-border" : "stroke-border/70"}
                     strokeDasharray={k === 0 ? undefined : "2 4"}
@@ -971,7 +951,7 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                     y2={0}
                   />
                   <text className="fill-muted-foreground text-[10px] tabular-nums" dominantBaseline="middle" textAnchor="end" x={pad.l - 10} y={0}>
-                    {axisMoney(v)}
+                    {fmt.axis(v)}
                   </text>
                 </motion.g>
               ))}
@@ -979,7 +959,7 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
               {xTicks.map((i) => {
                 const px = x(i);
                 const anchor = i === n - 1 && n > 1 ? "end" : px - 24 < pad.l ? "start" : "middle";
-                const t = buckets[i].t;
+                const at = buckets[i]?.t ?? 0;
                 return (
                   <motion.text
                     animate={{ opacity: 1 }}
@@ -991,7 +971,7 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                     x={px}
                     y={height - 8}
                   >
-                    {model.step === 7 ? MONTHS[new Date(t + 6 * DAY).getUTCMonth()] : dayLabel(t)}
+                    {model.step === 7 ? fmt.month(at + 6 * DAY) : fmt.day(at)}
                   </motion.text>
                 );
               })}
@@ -1070,7 +1050,7 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                   animate={{ x: spot.left, y: spot.row * 30 + 4, opacity: 1, scale: 1 }}
                   aria-controls={isOpen ? cardId : undefined}
                   aria-expanded={isOpen}
-                  aria-label={`${spot.compact ? "" : `${text.label}${text.delta ? ` ${text.delta}` : ""}, `}chart note: ${m.title}, ${momentDates(m)}`}
+                  aria-label={`${spot.compact ? "" : `${text.label}${text.delta ? ` ${text.delta}` : ""}, `}${interpolate(t.chipNote, { title: m.title, dates: momentDates(fmt, m) })}`}
                   className={cn(
                     "absolute top-0 start-0 z-10 inline-flex h-6 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border bg-background text-xs shadow-xs/5 outline-none before:absolute before:-inset-x-1 before:-inset-y-1 focus-visible:ring-2 focus-visible:ring-ring",
                     "transition-[background-color,border-color,scale] duration-150 ease-out active:scale-[0.97] [@media(hover:hover)]:hover:bg-accent",
@@ -1120,16 +1100,16 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
             >
               <div className="flex items-center gap-2 text-muted-foreground text-xs">
                 <KindIcon className="size-5" kind={open.kind} />
-                <span>{KINDS[open.kind].label}</span>
+                <span>{t[open.kind]}</span>
                 <span aria-hidden>·</span>
-                <span className="tabular-nums">{momentDates(open)}</span>
+                <span className="tabular-nums">{momentDates(fmt, open)}</span>
               </div>
               <p className="mt-2 font-medium text-sm">{open.title}</p>
               <p className="mt-1 text-pretty text-muted-foreground text-xs leading-relaxed">{open.note}</p>
               {open.impact && (
                 <div className="mt-2.5 flex items-start justify-between gap-3 border-t pt-2.5 text-xs">
                   <span className="text-pretty text-muted-foreground">{open.impact.text}</span>
-                  <span className={cn("shrink-0 font-medium tabular-nums", tone(open.impact.change))}>{percent(open.impact.change)}</span>
+                  <span className={cn("shrink-0 font-medium tabular-nums", tone(open.impact.change))}>{fmt.percent(open.impact.change)}</span>
                 </div>
               )}
             </motion.div>
@@ -1141,6 +1121,9 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
 }
 
 function Breakdown({ model }: { model: Model }) {
+  const fmt = useFmtContext();
+  const { t } = fmt;
+  const share = (n: number) => fmt.percent(n).replace(/^\+/, "");
   const titleId = useId();
   const reduce = useReducedMotionAfterMount();
   const [hover, setHover] = useState<string | null>(null);
@@ -1151,12 +1134,12 @@ function Breakdown({ model }: { model: Model }) {
     <section aria-labelledby={titleId} className="min-w-0">
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="font-medium text-sm" id={titleId}>
-          Where it came from
+          {t.breakdown}
         </h2>
-        {hasPrev && <span className="text-muted-foreground text-xs">vs last period</span>}
+        {hasPrev && <span className="text-muted-foreground text-xs">{t.vsLastPeriod}</span>}
       </div>
       <div
-        aria-label={`Share of revenue: ${ranked.map((c) => `${c.label} ${Math.round((c.total / total) * 100)}%`).join(", ")}`}
+        aria-label={interpolate(t.shareLabel, { summary: ranked.map((c) => `${c.label} ${share(c.total / total)}`).join(", ") })}
         className="mt-3 flex h-2.5 gap-[3px]"
         role="img"
       >
@@ -1187,13 +1170,13 @@ function Breakdown({ model }: { model: Model }) {
               <span aria-hidden className={cn("size-2.5 rounded-full transition-colors duration-300", SHADES[i % SHADES.length])} />
               <div className="min-w-0">
                 <div className="truncate">{c.label}</div>
-                <div className="text-muted-foreground text-xs tabular-nums">{Math.round((c.total / total) * 100)}% of revenue</div>
+                <div className="text-muted-foreground text-xs tabular-nums">{interpolate(t.ofRevenue, { percent: share(c.total / total) })}</div>
               </div>
               <div className="text-end">
-                <Rolling className="font-medium" format={compact} value={c.total} />
+                <Rolling className="font-medium" format={fmt.compact} value={c.total} />
                 {hasPrev && (
                   <div className={cn("text-xs tabular-nums", tone(change))}>
-                    {signed(change)} · {c.prev ? percent(change / c.prev) : "new"}
+                    {fmt.signed(change)} · {c.prev ? fmt.percent(change / c.prev) : t.new}
                   </div>
                 )}
               </div>
@@ -1206,16 +1189,16 @@ function Breakdown({ model }: { model: Model }) {
 }
 
 function MomentList({ model, handlers, cardId }: { model: Model; handlers: MomentHandlers; cardId: string }) {
+  const fmt = useFmtContext();
+  const { t } = fmt;
   const titleId = useId();
   return (
     <section aria-labelledby={titleId} className="flex min-h-0 min-w-0 flex-col">
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="font-medium text-sm" id={titleId}>
-          Moments
+          {t.moments}
         </h2>
-        <span className="text-muted-foreground text-xs tabular-nums">
-          {model.moments.length ? `${model.moments.length} in this period` : "None logged"}
-        </span>
+        <span className="text-muted-foreground text-xs tabular-nums">{model.moments.length ? interpolate(t.momentsCount, { count: model.moments.length }) : t.noMoments}</span>
       </div>
       {model.moments.length ? (
         <ul className="-mx-2.5 mt-1.5 flex min-h-0 flex-col overflow-y-auto p-0.5 pb-3 [mask-image:linear-gradient(to_bottom,black_calc(100%-1.25rem),transparent)] [scrollbar-width:thin]">
@@ -1241,110 +1224,85 @@ function MomentList({ model, handlers, cardId }: { model: Model; handlers: Momen
                   <KindIcon className="size-6 [&_svg]:size-3" kind={m.kind} />
                   <span className="min-w-0">
                     <span className="block truncate">{m.title}</span>
-                    <span className="block text-muted-foreground text-xs tabular-nums">{momentDates(m)}</span>
+                    <span className="block text-muted-foreground text-xs tabular-nums">{momentDates(fmt, m)}</span>
                   </span>
-                  {m.impact && <span className={cn("text-xs tabular-nums", tone(m.impact.change))}>{percent(m.impact.change)}</span>}
+                  {m.impact && <span className={cn("text-xs tabular-nums", tone(m.impact.change))}>{fmt.percent(m.impact.change)}</span>}
                 </button>
               </li>
             );
           })}
         </ul>
       ) : (
-        <p className="mt-2 text-pretty text-muted-foreground text-xs">Nothing happened worth pinning in this range. Add a moment to see it on the line.</p>
+        <p className="mt-2 text-pretty text-muted-foreground text-xs">{t.noMomentsHint}</p>
       )}
     </section>
   );
 }
 
-const NAV: { label: string; icon: LucideIcon }[] = [
-  { label: "Home", icon: HouseIcon },
-  { label: "Orders", icon: ShoppingBagIcon },
-  { label: "Products", icon: PackageIcon },
-  { label: "Customers", icon: UsersIcon },
-  { label: "Revenue", icon: ChartSplineIcon },
-];
-
-function RailButton({ label, active, icon: Icon, onClick }: { label: string; active?: boolean; icon: LucideIcon; onClick?: () => void }) {
+function RailLink({ label, href, current, children }: { label: string; href: string; current?: boolean; children: ReactNode }) {
   return (
     <Tooltip>
       <TooltipTrigger
         render={
-          <button
-            aria-current={active ? "page" : undefined}
+          <WirefrontLink
+            aria-current={current ? "page" : undefined}
             aria-label={label}
             className={cn(
-              "flex size-9 cursor-pointer items-center justify-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "flex size-9 cursor-pointer items-center justify-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4",
               pressable,
-              active ? "bg-accent text-foreground" : "text-muted-foreground [@media(hover:hover)]:hover:bg-accent/60 [@media(hover:hover)]:hover:text-foreground",
+              current ? "bg-accent text-foreground" : "text-muted-foreground [@media(hover:hover)]:hover:bg-accent/60 [@media(hover:hover)]:hover:text-foreground",
             )}
-            onClick={onClick}
-            type="button"
+            href={href}
           />
         }
       >
-        <Icon aria-hidden className="size-4" />
+        {children}
       </TooltipTrigger>
       <TooltipContent side="right">{label}</TooltipContent>
     </Tooltip>
   );
 }
 
-function SectionEmpty({ label, icon: Icon, onBack }: { label: string; icon: LucideIcon; onBack: () => void }) {
-  return (
-    <div className="flex min-h-0 flex-1 flex-col p-4 @3xl:p-7">
-      <Empty className="flex-1 rounded-2xl border border-dashed">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <Icon />
-          </EmptyMedia>
-          <EmptyTitle className="font-semibold text-base">{label} opens in its own view</EmptyTitle>
-          <EmptyDescription className="text-pretty">This preview only includes the revenue story.</EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <Button className={pressable} onClick={onBack} size="sm" variant="outline">
-            Back to revenue
-          </Button>
-        </EmptyContent>
-      </Empty>
-    </div>
-  );
-}
-
-export function RevenueStory({
-  days = SAMPLE_DAYS,
-  channels = SAMPLE_CHANNELS,
-  moments = SAMPLE_MOMENTS,
-  store = { name: "Fernwood Goods", plan: "Growth plan" },
-  user = { name: "Ines Moreau", email: "ines@fernwood.shop" },
+function RevenueStoryScreen({
+  data,
+  status = "ready",
+  error,
+  onRetry,
+  store,
+  user,
+  nav = [],
+  settingsHref,
+  updatedAt,
   defaultRange = "30d",
   onRangeChange,
-  onNavigate,
   className,
 }: RevenueStoryProps) {
+  const fmt = useFmt();
+  const { t } = fmt;
+  const format = useFormat();
   const cardId = useId();
   const [range, setRange] = useState<RangeKey>(defaultRange);
-  const [nav, setNav] = useState("Revenue");
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [focusId, setFocusId] = useState<string | null>(null);
   const [pinnedId, setPinnedId] = useState<string | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
+  const days = data?.days ?? [];
+  const channels = data?.channels ?? [];
+  const moments = data?.moments ?? [];
   const dayIndex = useMemo(() => new Map(days.map((d, i) => [d.date, i])), [days]);
-  const impacts = useMemo(
-    () => new Map(moments.map((m) => [m.id, impactOf(m, days, dayIndex, channels)])),
-    [moments, days, dayIndex, channels],
-  );
-  const model = useMemo(() => buildModel(days, channels, moments, dayIndex, impacts, range), [days, channels, moments, dayIndex, impacts, range]);
+  const impacts = useMemo(() => new Map(moments.map((m) => [m.id, impactOf(m, days, dayIndex, channels, fmt)])), [moments, days, dayIndex, channels, fmt]);
+  const model = useMemo(() => (days.length ? buildModel(days, channels, moments, dayIndex, impacts, range) : null), [days, channels, moments, dayIndex, impacts, range]);
   const openId = hoverId ?? focusId ?? pinnedId;
 
   useEffect(() => {
-    if (!status) return;
-    const timer = window.setTimeout(() => setStatus(null), 2200);
+    if (!notice) return;
+    const timer = window.setTimeout(() => setNotice(null), 2200);
     return () => window.clearTimeout(timer);
-  }, [status]);
+  }, [notice]);
 
   const handlers: MomentHandlers = {
-    openId: model.moments.some((m) => m.id === openId) ? openId : null,
+    openId: model?.moments.some((m) => m.id === openId) ? openId : null,
     pinnedId,
     onHover: setHoverId,
     onFocus: setFocusId,
@@ -1357,150 +1315,167 @@ export function RevenueStory({
     onRangeChange?.(next);
   };
 
-  const go = (label: string) => {
-    setNav(label);
-    onNavigate?.(label);
+  const summaryText = (m: Model) => {
+    const change = m.prevTotal === null ? null : m.total - m.prevTotal;
+    const period = interpolate(t.dateWithYear, { date: interpolate(t.span, { from: fmt.day(m.start), to: fmt.day(m.end) }), year: yearOf(m.end) });
+    return change === null
+      ? interpolate(t.summaryText, { store: store.name, period, total: fmt.money(m.total) })
+      : interpolate(t.summaryTextChange, { store: store.name, period, total: fmt.money(m.total), direction: change < 0 ? t.down : t.up, amount: fmt.compact(change) });
   };
 
-  const summaryText = () => {
-    const change = model.prevTotal === null ? null : model.total - model.prevTotal;
-    const period = `${dayLabel(model.start)} – ${dayLabel(model.end)}, ${yearOf(model.end)}`;
-    return `${store.name} revenue, ${period}: ${money(model.total)}${change === null ? "" : `, ${change < 0 ? "down" : "up"} ${compact(change)} on the previous period`}.`;
-  };
-
-  const downloadCsv = () => {
-    const header = model.step === 7 ? "week_starting,revenue,previous" : "date,revenue,previous";
-    const lines = model.buckets.map((b) => `${isoOf(b.t)},${Math.round(b.value)},${b.prev === null ? "" : Math.round(b.prev)}`);
-    const url = URL.createObjectURL(new Blob([[header, ...lines].join("\n")], { type: "text/csv" }));
+  const downloadCsv = (m: Model) => {
+    const lines = m.buckets.map((b) => `${isoOf(b.t)},${Math.round(b.value)},${b.prev === null ? "" : Math.round(b.prev)}`);
+    const url = URL.createObjectURL(new Blob([[m.step === 7 ? t.csvWeek : t.csvDay, ...lines].join("\n")], { type: "text/csv" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `revenue-${model.range}.csv`;
+    a.download = `revenue-${m.range}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    setStatus("CSV downloaded");
+    setNotice(t.csvDownloaded);
   };
 
-  const copySummary = () => {
-    navigator.clipboard?.writeText(summaryText()).then(
-      () => setStatus("Summary copied"),
-      () => setStatus("Couldn't copy"),
+  const copySummary = (m: Model) => {
+    if (!navigator.clipboard) {
+      setNotice(t.couldntCopy);
+      return;
+    }
+    navigator.clipboard.writeText(summaryText(m)).then(
+      () => setNotice(t.summaryCopied),
+      () => setNotice(t.couldntCopy),
     );
   };
 
-  const initials = user.name
+  const initials = (user?.name ?? "")
     .split(" ")
-    .map((p) => p[0])
+    .map((p) => p[0] ?? "")
     .join("")
     .slice(0, 2);
-  const section = NAV.find((item) => item.label === nav) ?? NAV[4];
-  const rangeLong = RANGES.find((r) => r.value === range)?.long ?? "";
+  const current = nav.find((item) => item.current);
+  const ready = status === "ready" && model;
 
   return (
-    <TooltipProvider>
-      <div className={cn("@container relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm", className)}>
-        <aside aria-label="App" className="hidden w-14 shrink-0 flex-col items-center gap-1 border-e bg-muted/40 py-3 @3xl:flex">
-          <span
-            aria-label={store.name}
-            className="mb-3 flex size-8 items-center justify-center rounded-lg bg-primary font-heading font-semibold text-primary-foreground text-sm"
-            role="img"
-          >
-            {store.name[0]}
-          </span>
-          <nav aria-label="Main" className="flex flex-col gap-1">
-            {NAV.map((item) => (
-              <RailButton active={item.label === nav} icon={item.icon} key={item.label} label={item.label} onClick={() => go(item.label)} />
-            ))}
-          </nav>
-          <div className="mt-auto flex flex-col items-center gap-2">
-            <RailButton icon={SettingsIcon} label="Settings" />
-            <Avatar aria-label={user.name} className="size-7">
-              <AvatarFallback className="text-[11px]">{initials}</AvatarFallback>
-            </Avatar>
-          </div>
-        </aside>
-
-        <div className="flex min-w-0 flex-1 flex-col">
-          <header className="flex h-12 shrink-0 items-center gap-3 border-b px-4 @3xl:px-7">
-            <span
-              aria-hidden
-              className="flex size-6 items-center justify-center rounded-md bg-primary font-heading font-semibold text-primary-foreground text-xs @3xl:hidden"
-            >
+    <FmtContext.Provider value={fmt}>
+      <TooltipProvider>
+        <div className={cn("@container relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm", className)}>
+          <aside aria-label={t.app} className="hidden w-14 shrink-0 flex-col items-center gap-1 border-e bg-muted/40 py-3 @3xl:flex">
+            <span aria-label={store.name} className="mb-3 flex size-8 items-center justify-center rounded-lg bg-primary font-heading font-semibold text-primary-foreground text-sm" role="img">
               {store.name[0]}
             </span>
-            <nav aria-label="Breadcrumb" className="flex min-w-0 flex-1 items-center gap-1.5 text-sm">
-              <span className="hidden truncate text-muted-foreground @md:inline">{store.name}</span>
-              <ChevronRightIcon aria-hidden className="hidden size-3.5 shrink-0 text-muted-foreground @md:block" />
-              <span aria-current="page" className="truncate font-medium">
-                {section.label}
+            {nav.length ? (
+              <nav aria-label={t.main} className="flex flex-col gap-1">
+                {nav.map((item) => (
+                  <RailLink current={item.current} href={item.href} key={item.href} label={item.label}>
+                    {item.icon}
+                  </RailLink>
+                ))}
+              </nav>
+            ) : null}
+            <div className="mt-auto flex flex-col items-center gap-2">
+              {settingsHref ? (
+                <RailLink href={settingsHref} label={t.settings}>
+                  <SettingsIcon aria-hidden />
+                </RailLink>
+              ) : null}
+              {user ? (
+                <Avatar aria-label={user.name} className="size-7" role="img">
+                  <AvatarFallback className="text-[11px]">{initials}</AvatarFallback>
+                </Avatar>
+              ) : null}
+            </div>
+          </aside>
+
+          <div className="flex min-w-0 flex-1 flex-col">
+            <header className="flex h-12 shrink-0 items-center gap-3 border-b px-4 @3xl:px-7">
+              <span aria-hidden className="flex size-6 items-center justify-center rounded-md bg-primary font-heading font-semibold text-primary-foreground text-xs @3xl:hidden">
+                {store.name[0]}
               </span>
-            </nav>
-            <span aria-live="polite" className="hidden text-muted-foreground text-xs @2xl:inline">
-              {status ?? "Updated 2 min ago"}
-            </span>
-            {section.label === "Revenue" && (
-              <DropdownMenu>
-                <DropdownMenuTrigger render={<Button className={pressable} size="sm" variant="outline" />}>
-                  <DownloadIcon />
-                  Export
-                  <ChevronDownIcon className="-me-0.5 opacity-60" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-48">
-                  <DropdownMenuItem onClick={copySummary}>
-                    <ClipboardIcon />
-                    Copy summary
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={downloadCsv}>
+              <nav aria-label={t.breadcrumb} className="flex min-w-0 flex-1 items-center gap-1.5 text-sm">
+                <span className="hidden truncate text-muted-foreground @md:inline">{store.name}</span>
+                <ChevronRightIcon aria-hidden className="hidden size-3.5 shrink-0 text-muted-foreground @md:block rtl:rotate-180" />
+                <span aria-current="page" className="truncate font-medium">
+                  {current?.label ?? t.title}
+                </span>
+              </nav>
+              <span aria-live="polite" className="hidden text-muted-foreground text-xs @2xl:inline">
+                {notice ?? (updatedAt ? interpolate(t.updated, { when: format.relative(updatedAt) }) : null)}
+              </span>
+              {ready ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger render={<Button className={pressable} size="sm" variant="outline" />}>
                     <DownloadIcon />
-                    Download CSV
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </header>
+                    {t.export}
+                    <ChevronDownIcon className="-me-0.5 opacity-60" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="min-w-48">
+                    <DropdownMenuItem onClick={() => copySummary(model)}>
+                      <ClipboardIcon />
+                      {t.copySummary}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => downloadCsv(model)}>
+                      <DownloadIcon />
+                      {t.downloadCsv}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : null}
+            </header>
 
-          {section.label !== "Revenue" ? (
-            <SectionEmpty icon={section.icon} label={section.label} onBack={() => go("Revenue")} />
-          ) : (
-            <main className="min-h-0 flex-1 overflow-y-auto">
-              <div className="@container mx-auto flex min-h-full max-w-[1280px] flex-col @5xl:h-full gap-5 px-4 pt-5 pb-6 @3xl:px-7 @3xl:pt-6">
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-                    <p className="text-muted-foreground text-xs tabular-nums">
-                      <span className="font-medium text-foreground">{rangeLong}</span> · {dayLabel(model.start, yearOf(model.end))} – {dayLabel(model.end)}
-                      {model.prevStart !== null && model.prevEnd !== null && (
-                        <span className="hidden @md:inline">
-                          {" "}
-                          vs {dayLabel(model.prevStart, yearOf(model.end))} – {dayLabel(model.prevEnd, yearOf(model.end))}
-                        </span>
-                      )}
-                    </p>
-                    <RangeSwitch onChange={changeRange} value={range} />
-                  </div>
-                  <Summary model={model} />
+            <main aria-busy={status === "loading"} className="min-h-0 flex-1 overflow-y-auto">
+              {status === "error" ? (
+                <div className="flex h-full flex-col items-center justify-center p-10 text-center">
+                  <p className="font-medium">{t.errorTitle}</p>
+                  {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+                  {onRetry ? (
+                    <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+                      {t.retry}
+                    </Button>
+                  ) : null}
                 </div>
+              ) : ready ? (
+                <div className="@container mx-auto flex min-h-full max-w-[1280px] flex-col @5xl:h-full gap-5 px-4 pt-5 pb-6 @3xl:px-7 @3xl:pt-6">
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+                      <p className="text-muted-foreground text-xs tabular-nums">
+                        <span className="font-medium text-foreground">{t[`range${range}`]}</span> ·{" "}
+                        {interpolate(t.span, { from: fmt.day(model.start, yearOf(model.end)), to: fmt.day(model.end) })}
+                        {model.prevStart !== null && model.prevEnd !== null && (
+                          <span className="hidden @md:inline">
+                            {" "}
+                            {interpolate(t.periodVs, { start: fmt.day(model.prevStart, yearOf(model.end)), end: fmt.day(model.prevEnd, yearOf(model.end)) })}
+                          </span>
+                        )}
+                      </p>
+                      <RangeSwitch onChange={changeRange} value={range} />
+                    </div>
+                    <Summary model={model} />
+                  </div>
 
-                <div className="grid min-h-0 flex-1 grid-cols-1 gap-x-7 gap-y-8 @4xl:grid-cols-[minmax(0,1fr)_20rem] @4xl:grid-rows-[minmax(0,1fr)]">
-                  <StoryChart cardId={cardId} handlers={handlers} model={model} />
-                  <div className="flex min-h-0 min-w-0 flex-col gap-5 border-t pt-6 @4xl:border-t-0 @4xl:border-s @4xl:pt-0 @4xl:ps-7">
-                    <Breakdown model={model} />
-                    <MomentList cardId={cardId} handlers={handlers} model={model} />
+                  <div className="grid min-h-0 flex-1 grid-cols-1 gap-x-7 gap-y-8 @4xl:grid-cols-[minmax(0,1fr)_20rem] @4xl:grid-rows-[minmax(0,1fr)]">
+                    <StoryChart cardId={cardId} handlers={handlers} model={model} />
+                    <div className="flex min-h-0 min-w-0 flex-col gap-5 border-t pt-6 @4xl:border-t-0 @4xl:border-s @4xl:pt-0 @4xl:ps-7">
+                      <Breakdown model={model} />
+                      <MomentList cardId={cardId} handlers={handlers} model={model} />
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="mx-auto flex h-full max-w-[1280px] flex-col gap-5 px-4 pt-5 pb-6 @3xl:px-7 @3xl:pt-6">
+                  <Skeleton className="h-24 w-full max-w-[46rem] motion-reduce:animate-none" />
+                  <Skeleton className="min-h-[260px] w-full flex-1 motion-reduce:animate-none" />
+                </div>
+              )}
             </main>
-          )}
+          </div>
         </div>
-      </div>
-    </TooltipProvider>
+      </TooltipProvider>
+    </FmtContext.Provider>
   );
 }
 
-export function RevenueStoryDemo() {
+export function RevenueStory(props: RevenueStoryProps) {
   return (
-    <RevenueStory
-      defaultRange="30d"
-      store={{ name: "Fernwood Goods", plan: "Growth plan" }}
-      user={{ name: "Ines Moreau", email: "ines@fernwood.shop" }}
-    />
+    <ScreenBoundary name="RevenueStory">
+      <RevenueStoryScreen {...props} />
+    </ScreenBoundary>
   );
 }

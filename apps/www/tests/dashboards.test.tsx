@@ -5,7 +5,7 @@
  * The wiring contract of the dashboard screens.
  */
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
 import * as analytics from "@/pages/showcase/dashboards-analytics/fixtures";
 import { PageviewAnalytics } from "@/pages/showcase/dashboards-analytics/view";
@@ -19,6 +19,8 @@ import * as support from "@/pages/showcase/dashboards-support/fixtures";
 import { SupportQueue } from "@/pages/showcase/dashboards-support/view";
 import * as market from "@/pages/showcase/dashboards-market/fixtures";
 import { MarketsDashboard } from "@/pages/showcase/dashboards-market/view";
+import * as revenueStory from "@/pages/showcase/dashboards-revenue-overview/fixtures";
+import { RevenueStory } from "@/pages/showcase/dashboards-revenue-overview/view";
 import * as home from "@/pages/showcase/dashboards-home/fixtures";
 import { HomeDashboard } from "@/pages/showcase/dashboards-home/view";
 
@@ -264,5 +266,56 @@ describe("MarketsDashboard", () => {
     expect(screen.getByText("No headlines yet.")).toBeTruthy();
     rerender(<MarketsDashboard error="Down." onRangeChange={() => {}} range="1D" status="error" />);
     expect(screen.getByText("Couldn’t load markets")).toBeTruthy();
+  });
+});
+
+describe("RevenueStory", () => {
+  // The chart measures its box; jsdom has no ResizeObserver.
+  beforeEach(() => {
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        observe() {}
+        disconnect() {}
+      },
+    );
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  const renderIt = (props: Partial<Parameters<typeof RevenueStory>[0]> = {}) =>
+    render(
+      <WirefrontProvider currency="USD" locale="en-US" now={() => new Date(revenueStory.now)}>
+        <RevenueStory data={revenueStory.getRevenueStory} store={revenueStory.store} updatedAt={revenueStory.updatedAt} {...props} />
+      </WirefrontProvider>,
+    );
+
+  it("tells the period's story in the provider's currency and changes range", () => {
+    const onRangeChange = vi.fn();
+    renderIt({ onRangeChange, nav: [{ label: "Revenue", href: "/revenue", icon: null, current: true }] });
+    expect(screen.getByText("Last 30 days")).toBeTruthy();
+    // The summary is one sentence built from messages and live figures.
+    expect(document.body.textContent).toMatch(/\$[\d,]+ this period, (up|down) \$[\d.]+K on the last one — (led by|most of it from|mostly from) \w/);
+    expect(document.body.textContent).toMatch(/Best day was Nov 28 at \$12\.9K, during the Black Friday sale\. Slowest was Dec 9 at \$6\.3K, during the shipping delay\./);
+    expect(screen.getByText("Updated 2 minutes ago")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Revenue" }).getAttribute("aria-current")).toBe("page");
+    expect(screen.getByRole("heading", { name: "Where it came from" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /Black Friday sale/ })).toBeTruthy();
+    fireEvent.click(screen.getByRole("radio", { name: "12m, Last 12 months" }));
+    expect(onRangeChange).toHaveBeenCalledWith("12m");
+    expect(document.body.textContent).toMatch(/Best week was the week of \w{3} \d+/);
+  });
+
+  it("shows loading and error states", () => {
+    const onRetry = vi.fn();
+    const { rerender } = renderIt({ data: undefined, status: "loading" });
+    expect(screen.getByRole("main").getAttribute("aria-busy")).toBe("true");
+    expect(screen.queryByRole("button", { name: "Export" })).toBeNull();
+    rerender(
+      <WirefrontProvider>
+        <RevenueStory error="Down." onRetry={onRetry} status="error" store={revenueStory.store} />
+      </WirefrontProvider>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+    expect(onRetry).toHaveBeenCalled();
   });
 });
