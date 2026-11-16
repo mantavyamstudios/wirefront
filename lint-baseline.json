@@ -379,17 +379,6 @@
   "apps/www/src/pages/showcase/settings-webhooks.tsx": {
     "lint/suspicious/noArrayIndexKey": 2
   },
-  "apps/www/src/pages/showcase/sidebars-docs-tree.tsx": {
-    "lint/a11y/noNoninteractiveElementToInteractiveRole": 1,
-    "lint/a11y/useFocusableInteractive": 1,
-    "lint/a11y/useSemanticElements": 1
-  },
-  "apps/www/src/pages/showcase/sidebars-inbox-rail.tsx": {
-    "lint/style/noNonNullAssertion": 2
-  },
-  "apps/www/src/pages/showcase/sidebars-mini-rail.tsx": {
-    "lint/style/noNonNullAssertion": 1
-  },
   "apps/www/src/pages/showcase/threads-comment-row.tsx": {
     "lint/suspicious/noArrayIndexKey": 2
   },
