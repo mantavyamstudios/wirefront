@@ -283,10 +283,6 @@
     "lint/a11y/useValidAnchor": 3,
     "lint/correctness/useHookAtTopLevel": 1
   },
-  "apps/www/src/pages/showcase/layouts-split-resizable.tsx": {
-    "lint/a11y/useSemanticElements": 1,
-    "lint/suspicious/noArrayIndexKey": 2
-  },
   "apps/www/src/pages/showcase/onboarding.tsx": {
     "lint/a11y/noStaticElementInteractions": 1,
     "lint/suspicious/noArrayIndexKey": 1

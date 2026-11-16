@@ -12,6 +12,8 @@ import * as hairlineFixtures from "@/pages/showcase/layouts-hairline-shell/fixtu
 import { HairlineShell } from "@/pages/showcase/layouts-hairline-shell/view";
 import * as canvasFixtures from "@/pages/showcase/layouts-canvas-tools/fixtures";
 import { CanvasEditor } from "@/pages/showcase/layouts-canvas-tools/view";
+import { PaneResizer } from "@wirefront/ui/wirefront/pane-resizer";
+import { SplitPanes } from "@/pages/showcase/layouts-split-resizable/view";
 import { BottomTabShell } from "@/pages/showcase/layouts-bottom-nav/view";
 import { SelectionToolbar } from "@/pages/showcase/layouts-floating-toolbar/view";
 import * as readerFixtures from "@/pages/showcase/layouts-focus-mode/fixtures";
@@ -352,5 +354,74 @@ describe("CanvasEditor", () => {
     expect(screen.queryByRole("button", { name: "Share" })).toBeNull();
     expect(screen.getByRole("toolbar", { name: "Tools" })).toBeTruthy();
     expect(screen.queryByRole("button", { name: /Pen|Place image/ })).toBeNull();
+  });
+});
+
+describe("PaneResizer", () => {
+  const renderIt = (extra: Partial<Parameters<typeof PaneResizer>[0]> = {}, dir = "ltr") => {
+    const props = { onChange: vi.fn(), onReset: vi.fn() };
+    render(
+      <div dir={dir}>
+        <PaneResizer fromDrag={(start, grown) => start + grown} label="Resize" max={600} min={200} side="start" value={400} {...props} {...extra} />
+      </div>,
+    );
+    return { ...props, handle: screen.getByRole("separator", { name: "Resize" }) };
+  };
+
+  it("is a focusable window splitter with its range", () => {
+    const { handle } = renderIt();
+    expect(handle.getAttribute("tabindex")).toBe("0");
+    expect([handle.getAttribute("aria-valuemin"), handle.getAttribute("aria-valuenow"), handle.getAttribute("aria-valuemax")]).toEqual(["200", "400", "600"]);
+  });
+
+  it("grows the start pane with ArrowRight, by more with Shift, and clamps", () => {
+    const { handle, onChange } = renderIt();
+    fireEvent.keyDown(handle, { key: "ArrowRight" });
+    expect(onChange).toHaveBeenLastCalledWith(416);
+    fireEvent.keyDown(handle, { key: "ArrowLeft", shiftKey: true });
+    expect(onChange).toHaveBeenLastCalledWith(336);
+    fireEvent.keyDown(handle, { key: "Home" });
+    expect(onChange).toHaveBeenLastCalledWith(200);
+    fireEvent.keyDown(handle, { key: "End" });
+    expect(onChange).toHaveBeenLastCalledWith(600);
+  });
+
+  it("flips for an end-side pane and for right-to-left text", () => {
+    const end = renderIt({ side: "end" });
+    fireEvent.keyDown(end.handle, { key: "ArrowLeft" });
+    expect(end.onChange).toHaveBeenLastCalledWith(416);
+    cleanup();
+    const rtl = renderIt({}, "rtl");
+    fireEvent.keyDown(rtl.handle, { key: "ArrowLeft" });
+    expect(rtl.onChange).toHaveBeenLastCalledWith(416);
+  });
+
+  it("resizes by dragging and resets on Enter and double-click", () => {
+    const onDraggingChange = vi.fn();
+    const { handle, onChange, onReset } = renderIt({ onDraggingChange });
+    handle.setPointerCapture = () => {};
+    fireEvent.pointerDown(handle, { clientX: 100, pointerId: 1 });
+    fireEvent.pointerMove(handle, { clientX: 130, pointerId: 1 });
+    expect(onChange).toHaveBeenLastCalledWith(430);
+    fireEvent.pointerUp(handle, { pointerId: 1 });
+    expect(onDraggingChange.mock.calls).toEqual([[true], [false]]);
+    fireEvent.keyDown(handle, { key: "Enter" });
+    fireEvent.doubleClick(handle);
+    expect(onReset).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("SplitPanes", () => {
+  it("shows both panes, reports the split and resets it", () => {
+    const onSplitChange = vi.fn();
+    render(<SplitPanes end={<p>Preview body</p>} endLabel="Preview" onSplitChange={onSplitChange} start={<p>Code body</p>} startLabel="Code" />);
+    expect(screen.getByRole("region", { name: "Code" }).textContent).toBe("Code body");
+    expect(screen.getByText("50% / 50%")).toBeTruthy();
+    fireEvent.keyDown(screen.getByRole("separator", { name: "Resize panes" }), { key: "ArrowRight" });
+    expect(onSplitChange).toHaveBeenLastCalledWith(55);
+    expect(screen.getByText("55% / 45%")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Reset" }));
+    expect(onSplitChange).toHaveBeenLastCalledWith(50);
+    expect(screen.getByRole("radio", { name: "Preview" })).toBeTruthy();
   });
 });

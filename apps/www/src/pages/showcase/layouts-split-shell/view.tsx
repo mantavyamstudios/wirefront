@@ -12,7 +12,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wiref
 import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import { BotIcon, CheckIcon, ChevronRightIcon, LoaderCircleIcon, MenuIcon, PanelRightIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
 import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
-import { type KeyboardEvent, type PointerEvent, type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react";
+import { type ReactNode, useEffect, useId, useRef, useState } from "react";
+import { PaneResizer } from "@wirefront/ui/wirefront/pane-resizer";
 
 import type { SplitShellItem, SplitShellUser } from "./schema";
 
@@ -237,7 +238,6 @@ export function SplitShell({
   const [width, setWidth] = useState(defaultPanelWidth);
   const [dragging, setDragging] = useState(false);
   const panelId = useId();
-  const drag = useRef<{ x: number; w: number } | null>(null);
 
   useEffect(() => {
     const el = rootRef.current;
@@ -252,31 +252,7 @@ export function SplitShell({
   const maxW = Math.max(minPanelWidth, Math.min(maxPanelWidth, rootWidth - sidebarWidth - 400));
   const w = Math.min(Math.max(width, minPanelWidth), maxW);
   const showPanel = !!panel && (docked ? panelOpen : overlayOpen);
-  const clamp = useCallback((v: number) => Math.min(Math.max(v, minPanelWidth), maxW), [minPanelWidth, maxW]);
 
-  const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
-    e.currentTarget.setPointerCapture(e.pointerId);
-    drag.current = { x: e.clientX, w };
-    setDragging(true);
-  };
-  const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
-    if (!drag.current) return;
-    setWidth(clamp(drag.current.w + (drag.current.x - e.clientX)));
-  };
-  const onPointerUp = () => {
-    drag.current = null;
-    setDragging(false);
-  };
-  const onHandleKey = (e: KeyboardEvent<HTMLDivElement>) => {
-    const delta = e.shiftKey ? 64 : 16;
-    if (e.key === "ArrowLeft") setWidth(clamp(w + delta));
-    else if (e.key === "ArrowRight") setWidth(clamp(w - delta));
-    else if (e.key === "Home") setWidth(maxW);
-    else if (e.key === "End") setWidth(minPanelWidth);
-    else if (e.key === "Enter") setWidth(defaultPanelWidth);
-    else return;
-    e.preventDefault();
-  };
   const togglePanel = () => (docked ? setPanelOpen((o) => !o) : setOverlayOpen((o) => !o));
 
   return (
@@ -360,23 +336,18 @@ export function SplitShell({
                     initial={{ width: 0, opacity: 0 }}
                     transition={dragging ? { duration: 0 } : spring}
                   >
-                    {/* biome-ignore lint/a11y/useSemanticElements: WAI-ARIA window splitter; <hr> can't take focus or keyboard input. Approved exception, D-017. */}
-                    <div
-                      aria-controls={panelId}
-                      aria-label={t.resizePanel}
-                      aria-orientation="vertical"
-                      aria-valuemax={maxW}
-                      aria-valuemin={minPanelWidth}
-                      aria-valuenow={Math.round(w)}
-                      className="group/handle relative flex w-2 shrink-0 cursor-col-resize touch-none items-center justify-center outline-none before:absolute before:inset-y-0 before:-inset-x-2"
-                      onDoubleClick={() => setWidth(defaultPanelWidth)}
-                      onKeyDown={onHandleKey}
-                      onPointerCancel={onPointerUp}
-                      onPointerDown={onPointerDown}
-                      onPointerMove={onPointerMove}
-                      onPointerUp={onPointerUp}
-                      role="separator"
-                      tabIndex={0}
+                    <PaneResizer
+                      className="group/handle relative flex w-2 shrink-0 items-center justify-center before:absolute before:inset-y-0 before:-inset-x-2"
+                      controls={panelId}
+                      fromDrag={(start, grown) => start + grown}
+                      label={t.resizePanel}
+                      max={maxW}
+                      min={minPanelWidth}
+                      onChange={setWidth}
+                      onDraggingChange={setDragging}
+                      onReset={() => setWidth(defaultPanelWidth)}
+                      side="end"
+                      value={w}
                     >
                       <motion.span
                         animate={{ height: dragging ? 56 : 32 }}
@@ -386,7 +357,7 @@ export function SplitShell({
                         )}
                         transition={spring}
                       />
-                    </div>
+                    </PaneResizer>
                     <section aria-label={t.panel} className="relative flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border bg-background shadow-xs/5" id={panelId} style={{ width: w }}>
                       {panel({ close: () => setPanelOpen(false) })}
                       <AnimatePresence>
