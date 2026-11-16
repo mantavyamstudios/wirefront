@@ -193,9 +193,6 @@
     "lint/style/noNonNullAssertion": 2,
     "lint/suspicious/noArrayIndexKey": 4
   },
-  "apps/www/src/pages/showcase/card-media.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
   "apps/www/src/pages/showcase/charts-bar-grouped.tsx": {
     "lint/suspicious/noArrayIndexKey": 1
   },
