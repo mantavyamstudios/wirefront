@@ -185,16 +185,6 @@
     "lint/a11y/useAriaPropsSupportedByRole": 1,
     "lint/suspicious/noArrayIndexKey": 2
   },
-  "apps/www/src/pages/showcase/toasts-info-banner.tsx": {
-    "lint/a11y/useSemanticElements": 1
-  },
-  "apps/www/src/pages/showcase/toasts-rich.tsx": {
-    "lint/style/noNonNullAssertion": 1
-  },
-  "apps/www/src/pages/showcase/toasts-undo.tsx": {
-    "lint/correctness/useExhaustiveDependencies": 1,
-    "lint/style/noNonNullAssertion": 1
-  },
   "apps/www/src/pages/showcase/tours-arrow-tooltip.tsx": {
     "lint/style/noNonNullAssertion": 6,
     "lint/suspicious/noArrayIndexKey": 1
