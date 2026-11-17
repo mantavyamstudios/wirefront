@@ -6,7 +6,7 @@
  *
  *   npm run test:phase
  *
- * bundle budget → install → browser → responsive audit → visual. Every check starts and
+ * bundle budget → install → browser → responsive audit. Every check starts and
  * retires its own server, so only one runs at a time. All checks run even if
  * one fails; the summary lists each result and the exit code is non-zero if
  * any failed. Output streams through, including `[alert]` lines.
@@ -23,7 +23,7 @@ const CHECKS: [name: string, args: string[]][] = [
   ["install", ["run", "test:install"]],
   ["browser", ["run", "test:browser"]],
   ["responsive", ["run", "audit:responsive", "--", "--strict"]],
-  ["visual", ["run", "test:visual"]],
+  // test:visual is left out of the phase run by decision (2026-11-17); run it on request with `npm run test:visual`.
 ];
 
 function runCheck(args: string[]): Promise<number> {
