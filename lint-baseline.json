@@ -166,25 +166,6 @@
     "lint/correctness/useExhaustiveDependencies": 3,
     "lint/suspicious/noArrayIndexKey": 3
   },
-  "apps/www/src/pages/showcase/threads-comment-row.tsx": {
-    "lint/suspicious/noArrayIndexKey": 2
-  },
-  "apps/www/src/pages/showcase/threads-compose-rich.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/threads-inline-thread.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/threads-mention-popover.tsx": {
-    "lint/a11y/noNoninteractiveElementToInteractiveRole": 3,
-    "lint/a11y/useFocusableInteractive": 2,
-    "lint/a11y/useKeyWithClickEvents": 2,
-    "lint/style/noNonNullAssertion": 1
-  },
-  "apps/www/src/pages/showcase/threads-side-panel.tsx": {
-    "lint/a11y/useAriaPropsSupportedByRole": 1,
-    "lint/suspicious/noArrayIndexKey": 2
-  },
   "apps/www/src/routes/__root.tsx": {
     "lint/security/noDangerouslySetInnerHtml": 1
   },
