@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import type { Teammate } from "./schema";
+
+/** Demo data for the showcase, the generated mocks and tests. */
+export const company = "Acme";
+
+export const listTeammates: Teammate[] = [
+  { id: "maya", name: "Maya Okafor", role: "Staff Engineer · Audit log", department: "Engineering", city: "Brooklyn, NY", presence: "online", pronouns: "she/her", bio: "Distributed systems, retention, observability.", email: "maya@acme.dev", profileHref: "#maya" },
+  { id: "james", name: "James Lin", role: "Senior Engineer · API", department: "Engineering", city: "Toronto, CA", presence: "online", pronouns: "he/him", bio: "API ergonomics. Long-suffering reviewer.", email: "james@acme.dev", profileHref: "#james" },
+  { id: "riya", name: "Riya Patel", role: "Engineer · Billing", department: "Engineering", city: "Bangalore, IN", presence: "away", pronouns: "she/her", bio: "Migrations, tax math, idempotency.", email: "riya@acme.dev", profileHref: "#riya" },
+  { id: "alex", name: "Alex Tran", role: "Engineer · Front-end", department: "Engineering", city: "London, UK", presence: "off", pronouns: "they/them", bio: "Forms, focus rings, things you don’t notice.", email: "alex@acme.dev", profileHref: "#alex" },
+  { id: "dani", name: "Dani Kim", role: "Lead Designer", department: "Design & Brand", city: "Berlin, DE", presence: "online", pronouns: "she/her", bio: "Product surfaces, motion, type.", email: "dani@acme.dev", profileHref: "#dani" },
+  { id: "mantavyam", name: "Mantavyam", role: "Brand", department: "Design & Brand", city: "San Francisco, CA", presence: "online", pronouns: "he/him", bio: "Words, voice, sometimes paint.", email: "brand@acme.dev", profileHref: "#mantavyam" },
+];

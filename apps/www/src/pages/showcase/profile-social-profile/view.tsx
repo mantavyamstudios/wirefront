@@ -40,61 +40,94 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import { useAction } from "@wirefront/ui/wirefront/action";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
+import { interpolate, useFormat, useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import type { Action } from "@wirefront/ui/wirefront/types";
+import type { SocialArt as ProfileArt, SocialHue as ProfileHue, SocialPost as ProfilePost, SocialStreak, SocialSuggestion as ProfileSuggestion, SocialUser as ProfileUser } from "./schema";
 
-export type ProfileHue = "amber" | "rose" | "violet" | "teal" | "sky" | "orange" | "emerald" | "indigo" | "fuchsia";
+/** Every string on the screen; override any of them with WirefrontProvider `messages` ("socialProfile.<key>"). */
+export const SOCIAL_PROFILE_MESSAGES = {
+  back: "Back",
+  postsCount: "{count} posts",
+  follow: "Follow",
+  following: "Following",
+  unfollow: "Unfollow",
+  followName: "Follow {name}",
+  unfollowName: "Unfollow {name}",
+  notifyOn: "Get notified when {name} posts",
+  notifyOff: "Turn off notifications from {name}",
+  moreFor: "More options for @{handle}",
+  copyProfile: "Copy link to profile",
+  profileCopied: "Profile link copied",
+  mute: "Mute @{handle}",
+  verified: "Verified",
+  handle: "@{handle}",
+  followsYou: "Follows you",
+  muted: "Muted",
+  joined: "Joined {date}",
+  followingCount: "Following",
+  followersCount: "Followers",
+  mutualsOne: "Followed by {a}",
+  mutualsTwo: "Followed by {a}, {b}",
+  mutualsMore: "Followed by {a}, {b} and {count} others",
+  sections: "Profile sections",
+  posts: "Posts",
+  replies: "Replies",
+  media: "Media",
+  openMedia: "Open {caption}",
+  openImage: "Open image: {caption}",
+  youMightLike: "You might like",
+  streakProgress: "{done} / {total}",
+  footer: "Footer",
+  pinned: "Pinned",
+  replyingTo: "Replying to",
+  repliesCount: "{count} replies",
+  viewsCount: "{count} views",
+  repost: "Repost",
+  undoRepost: "Undo repost",
+  like: "Like",
+  unlike: "Unlike",
+  bookmark: "Bookmark",
+  removeBookmark: "Remove bookmark",
+  copyPost: "Copy link to post",
+  postCopied: "Link copied",
+  close: "Close",
+  previous: "Previous",
+  next: "Next",
+  position: "{n} of {total}",
+};
 
-export interface ProfileArt {
-  glyph: string;
-  hue: ProfileHue;
-  caption: string;
-}
+type Messages = typeof SOCIAL_PROFILE_MESSAGES;
 
-export interface ProfilePost {
-  id: string;
-  text: string;
-  time: string;
-  pinned?: boolean;
-  media?: ProfileArt[];
-  link?: { domain: string; title: string; hue: ProfileHue };
-  replyTo?: { name: string; handle: string; text: string; hue: ProfileHue };
-  replies: number;
-  reposts: number;
-  likes: number;
-  views: string;
-  liked?: boolean;
-}
-
-export interface ProfileUser {
-  name: string;
-  handle: string;
-  bio: string;
-  location: string;
-  website: string;
-  joined: string;
-  following: number;
-  followers: number;
-  posts: number;
-  verified?: boolean;
-  followsYou?: boolean;
-}
-
-export interface ProfileSuggestion {
-  name: string;
-  handle: string;
-  hue: ProfileHue;
-  note: string;
-}
-
-export interface ProfileProps {
-  className?: string;
-  user?: ProfileUser;
-  posts?: ProfilePost[];
-  replies?: ProfilePost[];
-  media?: ProfileArt[];
+export interface SocialProfileProps {
+  user: ProfileUser;
+  posts: ProfilePost[];
+  replies: ProfilePost[];
+  media: ProfileArt[];
   suggestions?: ProfileSuggestion[];
+  /** Names of people the viewer follows who follow them. */
   mutuals?: string[];
-  initiallyFollowing?: boolean;
+  /** Whether the viewer follows them, gets their notifications, and has muted them. */
+  following?: boolean;
+  notify?: boolean;
+  muted?: boolean;
+  /** A habit tracker shown in the sidebar. Hidden when not given. */
+  streak?: SocialStreak;
+  /** The profile's shareable URL, for "Copy link". */
+  profileUrl: string;
+  /** A post's shareable URL. */
+  postUrl: (id: string) => string;
+  footerLinks?: { label: string; href: string }[];
+  copyright?: string;
+  /** Each change shows at once and reverts if its action fails. Controls are local-only without them. */
+  onToggleFollow?: Action<boolean>;
+  onToggleNotify?: Action<boolean>;
+  onToggleMute?: Action<boolean>;
+  onReact?: Action<{ id: string; kind: "like" | "repost" | "bookmark"; on: boolean }>;
+  onFollowSuggestion?: Action<{ handle: string; following: boolean }>;
   onBack?: () => void;
+  className?: string;
 }
 
 const spring = { type: "spring", stiffness: 520, damping: 44, mass: 1 } as const;
@@ -113,140 +146,22 @@ const hues: Record<ProfileHue, { art: string; avatar: string }> = {
   fuchsia: { art: "from-category-5/20 via-category-5/35 to-category-5", avatar: "from-category-5/35 to-category-5" },
 };
 
-const defaultUser: ProfileUser = {
-  name: "Wren Halloway",
-  handle: "wrenmakes",
-  bio: "Illustrator and type nerd. Drawing one letter a day for all of 2026. Running @nightjar.studio with two cats and a lot of tracing paper.",
-  location: "Lisbon",
-  website: "wrenhalloway.studio",
-  joined: "Joined March 2019",
-  following: 312,
-  followers: 18402,
-  posts: 1204,
-  verified: true,
-  followsYou: true,
-};
-
-const defaultPosts: ProfilePost[] = [
-  {
-    id: "p1",
-    pinned: true,
-    text: "Day 297 of #letteraday: a lowercase g that took four tries. The ear kept wanting to be a question mark. Prints of the whole alphabet go up in December.",
-    time: "Oct 22",
-    media: [{ glyph: "g", hue: "amber", caption: "Day 297 · lowercase g" }],
-    replies: 48,
-    reposts: 212,
-    likes: 2318,
-    views: "41K",
-  },
-  {
-    id: "p2",
-    text: "Hot take: kerning is just vibes with a ruler.",
-    time: "3h",
-    replies: 96,
-    reposts: 140,
-    likes: 842,
-    views: "18K",
-  },
-  {
-    id: "p3",
-    text: "Wrote up how I pull colour palettes out of the old matchbox labels my grandad kept in a biscuit tin. Five palettes, free to use.",
-    time: "Oct 20",
-    link: { domain: "wrenhalloway.studio", title: "Palettes from the matchbox drawer", hue: "orange" },
-    replies: 22,
-    reposts: 88,
-    likes: 604,
-    views: "12K",
-  },
-  {
-    id: "p4",
-    text: "Studio window at 7am, and the same view at 7pm. I should be drawing but look at it.",
-    time: "Oct 18",
-    media: [
-      { glyph: "", hue: "rose", caption: "Morning" },
-      { glyph: "", hue: "indigo", caption: "Dusk" },
-    ],
-    replies: 31,
-    reposts: 45,
-    likes: 1290,
-    views: "22K",
-    liked: true,
-  },
-  {
-    id: "p5",
-    text: "Reminder that @mira.draws is running a free lettering session on Sunday. Bring a pencil and low expectations, that’s the whole vibe.",
-    time: "Oct 16",
-    replies: 9,
-    reposts: 64,
-    likes: 377,
-    views: "8.1K",
-  },
-];
-
-const defaultReplies: ProfilePost[] = [
-  {
-    id: "r1",
-    replyTo: { name: "Mira Castell", handle: "mira.draws", text: "What pens are you using for the ink studies? They look so soft.", hue: "teal" },
-    text: "A 0.3 fineliner for outlines and a brush pen that’s about 80% dried out. The dry one is the secret.",
-    time: "1h",
-    replies: 4,
-    reposts: 3,
-    likes: 129,
-    views: "2.4K",
-  },
-  {
-    id: "r2",
-    replyTo: { name: "Otto Brennan", handle: "ottotype", text: "Serif or sans for a bakery that’s been open since 1962?", hue: "sky" },
-    text: "Chunky slab, slightly too tight, like it was hand-painted on the window by someone in a hurry. Bakeries deserve swagger.",
-    time: "Oct 21",
-    replies: 12,
-    reposts: 8,
-    likes: 301,
-    views: "5.6K",
-  },
-  {
-    id: "r3",
-    replyTo: { name: "Priya Nair", handle: "priyanair", text: "Do you plan the whole alphabet or wing it day by day?", hue: "fuchsia" },
-    text: "Wing it, then quietly redraw the ones that don’t match. Q has been redrawn six times. Q knows what it did.",
-    time: "Oct 19",
-    replies: 6,
-    reposts: 2,
-    likes: 188,
-    views: "3.1K",
-  },
-];
-
-const defaultMedia: ProfileArt[] = [
-  { glyph: "g", hue: "amber", caption: "Day 297 · lowercase g" },
-  { glyph: "&", hue: "violet", caption: "Day 290 · ampersand" },
-  { glyph: "R", hue: "teal", caption: "Day 284 · capital R" },
-  { glyph: "Q", hue: "rose", caption: "Day 276 · Q, sixth attempt" },
-  { glyph: "a", hue: "sky", caption: "Day 268 · double-storey a" },
-  { glyph: "M", hue: "orange", caption: "Day 259 · capital M" },
-  { glyph: "?", hue: "emerald", caption: "Day 251 · question mark" },
-  { glyph: "k", hue: "fuchsia", caption: "Day 243 · lowercase k" },
-  { glyph: "S", hue: "indigo", caption: "Day 237 · capital S" },
-];
-
-const defaultSuggestions: ProfileSuggestion[] = [
-  { name: "Mira Castell", handle: "mira.draws", hue: "teal", note: "Follows you" },
-  { name: "Otto Brennan", handle: "ottotype", hue: "sky", note: "Type designer" },
-  { name: "Nightjar Studio", handle: "nightjar.studio", hue: "indigo", note: "Wren’s studio" },
-];
-
 function initials(name: string) {
   return name
     .split(/\s+/)
-    .map((p) => p[0])
+    .map((p) => p[0] ?? "")
     .join("")
     .slice(0, 2)
     .toUpperCase();
 }
 
-const compact = (n: number) =>
-  n >= 10_000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}K` : n.toLocaleString("en-US");
+/** Counts in the viewer's locale, compact from ten thousand. */
+function useCompact() {
+  const fmt = useFormat();
+  return (n: number) => fmt.number(n, { notation: n >= 10_000 ? "compact" : "standard", maximumFractionDigits: 1 });
+}
 
-function Tween({ value, format = (n: number) => Math.round(n).toLocaleString("en-US") }: { value: number; format?: (n: number) => string }) {
+function Tween({ value, format }: { value: number; format: (n: number) => string }) {
   const reduce = useReducedMotion();
   const mv = useMotionValue(value);
   const text = useTransform(mv, format);
@@ -263,6 +178,7 @@ function Tween({ value, format = (n: number) => Math.round(n).toLocaleString("en
 
 function Count({ value }: { value: number }) {
   const reduce = useReducedMotion();
+  const compact = useCompact();
   const prev = useRef(value);
   const dir = value >= prev.current ? 1 : -1;
   useEffect(() => {
@@ -305,7 +221,7 @@ function Art({ art, className, large }: { art: ProfileArt; className?: string; l
               art.hue === "indigo" ? "bg-category-3/11 shadow-[0_0_40px_10px] shadow-category-3/4" : "bg-category-3/12 shadow-[0_0_60px_20px] shadow-category-3/5",
             )}
           />
-          <svg className="absolute inset-x-0 bottom-0 h-[46%] w-full" preserveAspectRatio="none" viewBox="0 0 100 40">
+          <svg aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[46%] w-full" preserveAspectRatio="none" viewBox="0 0 100 40">
             <path className="fill-black/15" d="M0 18 L12 12 L22 16 L34 6 L46 14 L58 9 L70 15 L82 8 L100 14 V40 H0Z" />
             <path className="fill-black/25" d="M0 26 Q20 18 40 24 T80 22 T100 24 V40 H0Z" />
           </svg>
@@ -329,50 +245,105 @@ function Art({ art, className, large }: { art: ProfileArt; className?: string; l
 }
 
 function RichText({ text }: { text: string }) {
-  const parts = text.split(/([@#][\w.]+\w)/g);
+  let offset = 0;
+  const parts = text.split(/([@#][\w.]+\w)/g).map((p) => {
+    const at = offset;
+    offset += p.length;
+    return { at, p };
+  });
   return (
     <>
-      {parts.map((p, i) =>
+      {parts.map(({ at, p }) =>
         /^[@#]/.test(p) ? (
-          <span className="text-info-foreground" key={i}>
+          <span className="text-info-foreground" key={at}>
             {p}
           </span>
         ) : (
-          <Fragment key={i}>{p}</Fragment>
+          <Fragment key={at}>{p}</Fragment>
         ),
       )}
     </>
   );
 }
 
-export function Profile({
+function SocialProfileScreen({
   className,
-  user = defaultUser,
-  posts: initialPosts = defaultPosts,
-  replies: initialReplies = defaultReplies,
-  media = defaultMedia,
-  suggestions = defaultSuggestions,
-  mutuals = ["Mira Castell", "Otto Brennan"],
-  initiallyFollowing = false,
+  user,
+  posts: initialPosts,
+  replies: initialReplies,
+  media,
+  suggestions = [],
+  mutuals = [],
+  following: initiallyFollowing = false,
+  notify = false,
+  muted: initiallyMuted = false,
+  streak,
+  profileUrl,
+  postUrl,
+  footerLinks = [],
+  copyright,
+  onToggleFollow,
+  onToggleNotify,
+  onToggleMute,
+  onReact,
+  onFollowSuggestion,
   onBack,
-}: ProfileProps) {
+}: SocialProfileProps) {
+  const t = useMessages("socialProfile", SOCIAL_PROFILE_MESSAGES);
+  const fmt = useFormat();
   const reduce = useReducedMotion();
-  const uid = useId().replace(/:/g, "");
+  const uid = useId().replace(/[^\w-]/g, "");
   const [following, setFollowing] = useState(initiallyFollowing);
-  const [bell, setBell] = useState(false);
+  const [bell, setBell] = useState(notify);
   const [tab, setTab] = useState<"posts" | "replies" | "media">("posts");
   const [posts, setPosts] = useState(initialPosts);
   const [replies, setReplies] = useState(initialReplies);
+  useEffect(() => setPosts(initialPosts), [initialPosts]);
+  useEffect(() => setReplies(initialReplies), [initialReplies]);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [suggested, setSuggested] = useState<string[]>([]);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(initiallyMuted);
+  const flipper = (set: (v: boolean) => void) => ({
+    optimistic: (next: boolean) => {
+      set(next);
+      return () => set(!next);
+    },
+  });
+  const followAction = useAction(onToggleFollow ?? (async () => {}), flipper(setFollowing));
+  const notifyAction = useAction(onToggleNotify ?? (async () => {}), flipper(setBell));
+  const muteAction = useAction(onToggleMute ?? (async () => {}), flipper(setMuted));
+  const suggestAction = useAction(onFollowSuggestion ?? (async () => {}), {
+    optimistic: ({ handle, following: on }) => {
+      const set = (v: boolean) => setSuggested((all) => (v ? [...all, handle] : all.filter((h) => h !== handle)));
+      set(on);
+      return () => set(!on);
+    },
+  });
+  const reactAction = useAction(onReact ?? (async () => {}), {
+    optimistic: ({ id, kind, on }) => {
+      const apply = (v: boolean) => {
+        const fn = (all: ProfilePost[]) =>
+          all.map((p) => {
+            if (p.id !== id) return p;
+            if (kind === "like") return { ...p, liked: v, likes: p.likes + (v === Boolean(p.liked) ? 0 : v ? 1 : -1) };
+            if (kind === "repost") return { ...p, reposted: v, reposts: p.reposts + (v === Boolean(p.reposted) ? 0 : v ? 1 : -1) };
+            return { ...p, bookmarked: v };
+          });
+        setPosts(fn);
+        setReplies(fn);
+      };
+      apply(on);
+      return () => apply(!on);
+    },
+  });
+  const actionError = followAction.error ?? notifyAction.error ?? muteAction.error ?? suggestAction.error ?? reactAction.error;
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => {
     if (copyTimer.current) clearTimeout(copyTimer.current);
   }, []);
   const copyProfileLink = () => {
-    navigator.clipboard?.writeText(`https://${user.website}/@${user.handle}`).catch(() => {});
+    navigator.clipboard?.writeText(profileUrl).catch(() => {});
     setCopied(true);
     if (copyTimer.current) clearTimeout(copyTimer.current);
     copyTimer.current = setTimeout(() => setCopied(false), 1600);
@@ -387,11 +358,11 @@ export function Profile({
 
   const followers = user.followers + (following && !initiallyFollowing ? 1 : 0) - (!following && initiallyFollowing ? 1 : 0);
 
-  const toggleLike = (list: "posts" | "replies", id: string) => {
-    const fn = (all: ProfilePost[]) =>
-      all.map((p) => (p.id === id ? { ...p, liked: !p.liked, likes: p.likes + (p.liked ? -1 : 1) } : p));
-    if (list === "posts") setPosts(fn);
-    else setReplies(fn);
+  const react = (post: ProfilePost, kind: "like" | "repost" | "bookmark") =>
+    void reactAction.run({ id: post.id, kind, on: !(kind === "like" ? post.liked : kind === "repost" ? post.reposted : post.bookmarked) }, `${post.id}:${kind}`);
+  const toggleFollow = () => {
+    if (following && bell) void notifyAction.run(false);
+    void followAction.run(!following);
   };
 
   const switchTab = (t: typeof tab) => {
@@ -405,8 +376,11 @@ export function Profile({
     mutuals.length === 0
       ? null
       : mutuals.length === 1
-        ? `Followed by ${mutuals[0]}`
-        : `Followed by ${mutuals[0]}, ${mutuals[1]}${mutuals.length > 2 ? ` and ${mutuals.length - 2} others` : ""}`;
+        ? interpolate(t.mutualsOne, { a: mutuals[0] ?? "" })
+        : mutuals.length === 2
+          ? interpolate(t.mutualsTwo, { a: mutuals[0] ?? "", b: mutuals[1] ?? "" })
+          : interpolate(t.mutualsMore, { a: mutuals[0] ?? "", b: mutuals[1] ?? "", count: mutuals.length - 2 });
+  const streakCells = (streak?.days ?? []).map((state, n) => ({ key: `day-${n}`, state }));
 
   return (
     <div
@@ -422,7 +396,7 @@ export function Profile({
               <motion.span aria-hidden className="absolute inset-0 -z-10 border-b bg-background/85 backdrop-blur-md" style={{ opacity: barBg }} />
               {onBack && (
                 <Button
-                  aria-label="Back"
+                  aria-label={t.back}
                   className={cn(
                     "transition-colors",
                     compactBar ? "" : "bg-black/30 text-white backdrop-blur-sm hover:bg-black/40",
@@ -436,7 +410,7 @@ export function Profile({
               )}
               <motion.div className="flex min-w-0 flex-col" style={{ opacity: barBg }}>
                 <span className="truncate font-heading font-semibold">{user.name}</span>
-                <span className="text-muted-foreground text-xs tabular-nums">{user.posts.toLocaleString("en-US")} posts</span>
+                <span className="text-muted-foreground text-xs tabular-nums">{interpolate(t.postsCount, { count: fmt.number(user.posts) })}</span>
               </motion.div>
               <AnimatePresence>
                 {compactBar && (
@@ -447,13 +421,8 @@ export function Profile({
                     initial={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.15, ease: easeOut }}
                   >
-                    <Button
-                      className={press}
-                      onClick={() => setFollowing((f) => !f)}
-                      size="sm"
-                      variant={following ? "outline" : "default"}
-                    >
-                      {following ? "Following" : "Follow"}
+                    <Button aria-pressed={following} className={press} onClick={toggleFollow} size="sm" variant={following ? "outline" : "default"}>
+                      {following ? t.following : t.follow}
                     </Button>
                   </motion.div>
                 )}
@@ -478,7 +447,7 @@ export function Profile({
                     <DropdownMenuTrigger
                       render={
                         <Button
-                          aria-label={`More options for @${user.handle}`}
+                          aria-label={interpolate(t.moreFor, { handle: user.handle })}
                           className={cn("size-9 rounded-full before:rounded-full sm:size-9", press)}
                           size="icon"
                           variant="outline"
@@ -500,42 +469,38 @@ export function Profile({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
                       <DropdownMenuItem onClick={copyProfileLink}>
-                        <LinkIcon /> Copy link to profile
+                        <LinkIcon /> {t.copyProfile}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuCheckboxItem checked={muted} onCheckedChange={setMuted}>
-                        Mute @{user.handle}
+                      <DropdownMenuCheckboxItem checked={muted} onCheckedChange={(v) => void muteAction.run(Boolean(v))}>
+                        {interpolate(t.mute, { handle: user.handle })}
                       </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <FollowButton
-                    bell={bell}
-                    following={following}
-                    name={user.name}
-                    onBell={() => setBell((b) => !b)}
-                    onToggle={() => {
-                      setFollowing((f) => !f);
-                      if (following) setBell(false);
-                    }}
-                  />
+                  <FollowButton bell={bell} following={following} name={user.name} onBell={() => void notifyAction.run(!bell)} onToggle={toggleFollow} t={t} />
                 </div>
               </div>
 
               <div className="flex flex-col gap-0.5">
                 <h2 className="flex items-center gap-1.5 font-heading font-semibold text-xl tracking-tight">
                   {user.name}
-                  {user.verified && <BadgeCheckIcon aria-label="Verified" className="size-5 fill-info text-background" />}
+                  {user.verified && (
+                    <>
+                      <BadgeCheckIcon aria-hidden className="size-5 fill-info text-background" />
+                      <span className="sr-only">{t.verified}</span>
+                    </>
+                  )}
                 </h2>
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <span>@{user.handle}</span>
+                  <span>{interpolate(t.handle, { handle: user.handle })}</span>
                   {user.followsYou && (
-                    <span className="rounded-md bg-muted px-1.5 py-0.5 font-medium text-[11px] text-muted-foreground">Follows you</span>
+                    <span className="rounded-md bg-muted px-1.5 py-0.5 font-medium text-[11px] text-muted-foreground">{t.followsYou}</span>
                   )}
                   {muted && (
-                    <span className="rounded-md bg-warning/12 px-1.5 py-0.5 font-medium text-[11px] text-warning-foreground">Muted</span>
+                    <span className="rounded-md bg-warning/12 px-1.5 py-0.5 font-medium text-[11px] text-warning-foreground">{t.muted}</span>
                   )}
                   <span aria-live="polite" className="sr-only">
-                    {copied ? "Profile link copied" : ""}
+                    {copied ? t.profileCopied : ""}
                   </span>
                 </div>
               </div>
@@ -545,42 +510,41 @@ export function Profile({
               </p>
 
               <ul className="flex flex-wrap gap-x-4 gap-y-1.5 text-muted-foreground">
-                <li className="flex items-center gap-1.5">
-                  <MapPinIcon aria-hidden className="size-4" />
-                  {user.location}
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <LinkIcon aria-hidden className="size-4" />
-                  <a
-                    className="rounded-sm text-info-foreground underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
-                    href={`https://${user.website}`}
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    {user.website}
-                  </a>
-                </li>
+                {user.location ? (
+                  <li className="flex items-center gap-1.5">
+                    <MapPinIcon aria-hidden className="size-4" />
+                    {user.location}
+                  </li>
+                ) : null}
+                {user.website ? (
+                  <li className="flex items-center gap-1.5">
+                    <LinkIcon aria-hidden className="size-4" />
+                    <a className="rounded-sm text-info-foreground underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring" href={`https://${user.website}`} rel="noreferrer" target="_blank">
+                      {user.website}
+                    </a>
+                  </li>
+                ) : null}
                 <li className="flex items-center gap-1.5">
                   <CalendarDaysIcon aria-hidden className="size-4" />
-                  {user.joined}
+                  {interpolate(t.joined, { date: fmt.date(`${user.joinedAt}T00:00:00Z`, { month: "long", year: "numeric", timeZone: "UTC" }) })}
                 </li>
               </ul>
 
               <div className="flex flex-wrap gap-x-4 gap-y-1">
                 <span>
-                  <span className="font-medium tabular-nums">{user.following.toLocaleString("en-US")}</span>{" "}
-                  <span className="text-muted-foreground">Following</span>
+                  <span className="font-medium tabular-nums">{fmt.number(user.following)}</span> <span className="text-muted-foreground">{t.followingCount}</span>
                 </span>
                 <span>
                   <span className="font-medium">
-                    <Tween value={followers} />
+                    <Tween format={(n) => fmt.number(Math.round(n))} value={followers} />
                   </span>{" "}
-                  <span className="text-muted-foreground">Followers</span>
+                  <span className="text-muted-foreground">{t.followersCount}</span>
                 </span>
               </div>
 
               {mutualText && (
                 <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                  <span className="flex -space-x-1.5">
+                  <span aria-hidden className="flex -space-x-1.5">
                     {mutuals.slice(0, 3).map((m, i) => (
                       <Avatar className="ring-2 ring-background [--avatar-size:--spacing(5)]" key={m}>
                         <AvatarFallback
@@ -598,12 +562,12 @@ export function Profile({
 
             <div aria-hidden ref={tabsRef} />
             <div className="sticky top-14 z-10 border-b bg-background">
-              <div aria-label="Profile sections" className="flex" role="tablist">
+              <div aria-label={t.sections} className="flex" role="tablist">
                 {(
                   [
-                    ["posts", "Posts"],
-                    ["replies", "Replies"],
-                    ["media", "Media"],
+                    ["posts", t.posts],
+                    ["replies", t.replies],
+                    ["media", t.media],
                   ] as const
                 ).map(([value, label]) => {
                   const on = tab === value;
@@ -660,12 +624,14 @@ export function Profile({
                       {posts.map((p) => (
                         <PostItem
                           key={p.id}
-                          onLike={() => toggleLike("posts", p.id)}
+                          onReact={(kind) => react(p, kind)}
                           onOpenMedia={(art) => {
                             const i = media.findIndex((m) => m.caption === art.caption);
                             if (i >= 0) setLightbox(i);
                           }}
                           post={p}
+                          postUrl={postUrl(p.id)}
+                          t={t}
                           user={user}
                         />
                       ))}
@@ -674,7 +640,7 @@ export function Profile({
                   {tab === "replies" && (
                     <ul className="divide-y">
                       {replies.map((p) => (
-                        <PostItem key={p.id} onLike={() => toggleLike("replies", p.id)} post={p} user={user} />
+                        <PostItem key={p.id} onReact={(kind) => react(p, kind)} post={p} postUrl={postUrl(p.id)} t={t} user={user} />
                       ))}
                     </ul>
                   )}
@@ -683,7 +649,7 @@ export function Profile({
                       {media.map((m, i) => (
                         <li className="@container" key={m.caption}>
                           <button
-                            aria-label={`Open ${m.caption}`}
+                            aria-label={interpolate(t.openMedia, { caption: m.caption })}
                             className={cn(
                               "group/media relative block aspect-square w-full cursor-pointer overflow-hidden rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                               press,
@@ -705,14 +671,15 @@ export function Profile({
           <aside className="sticky top-0 hidden w-[300px] shrink-0 flex-col gap-4 self-start py-4 @5xl:flex">
             <section aria-labelledby={`${uid}-sugg`} className="rounded-2xl border bg-card p-4 shadow-xs/5">
               <h3 className="font-heading font-semibold" id={`${uid}-sugg`}>
-                You might like
+                {t.youMightLike}
               </h3>
               <ul className="mt-3 flex flex-col gap-3">
                 {suggestions.map((s) => {
                   const on = suggested.includes(s.handle);
+                  const toggleSuggestion = () => void suggestAction.run({ handle: s.handle, following: !on }, s.handle);
                   return (
                     <li className="flex items-center gap-3" key={s.handle}>
-                      <Avatar className="[--avatar-size:--spacing(9)]">
+                      <Avatar aria-hidden className="[--avatar-size:--spacing(9)]">
                         <AvatarFallback className={cn("bg-gradient-to-br font-semibold text-white text-xs", hues[s.hue].avatar)}>
                           {initials(s.name)}
                         </AvatarFallback>
@@ -724,69 +691,64 @@ export function Profile({
                       <Button
                         aria-pressed={on}
                         className={cn("min-w-[5.5rem]", press)}
-                        onClick={() => setSuggested((all) => (on ? all.filter((h) => h !== s.handle) : [...all, s.handle]))}
+                        onClick={toggleSuggestion}
                         size="sm"
                         variant={on ? "ghost" : "outline"}
                       >
-                        {on ? "Following" : "Follow"}
+                        {on ? t.following : t.follow}
                       </Button>
                     </li>
                   );
                 })}
               </ul>
             </section>
-            <section aria-labelledby={`${uid}-alpha`} className="rounded-2xl border bg-card p-4 shadow-xs/5">
-              <div className="flex items-baseline justify-between">
-                <h3 className="font-heading font-semibold" id={`${uid}-alpha`}>
-                  Letter a day
-                </h3>
-                <span className="text-muted-foreground text-xs tabular-nums">297 / 365</span>
-              </div>
-              <div aria-hidden className="mt-3 grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[3px]">
-                {Array.from({ length: 60 }, (_, i) => (
-                  <span
-                    className={cn(
-                      "aspect-square rounded-[calc(var(--radius)*0.2)]",
-                      i > 51
-                        ? "bg-muted"
-                        : i === 51
-                          ? "bg-category-3/60 ring-2 ring-category-3/18"
-                          : i % 7 === 3 && i < 49
-                            ? "bg-muted"
-                            : "bg-category-5/80",
-                    )}
-                    key={i}
-                  />
+            {streak ? (
+              <section aria-labelledby={`${uid}-alpha`} className="rounded-2xl border bg-card p-4 shadow-xs/5">
+                <div className="flex items-baseline justify-between">
+                  <h3 className="font-heading font-semibold" id={`${uid}-alpha`}>
+                    {streak.title}
+                  </h3>
+                  <span className="text-muted-foreground text-xs tabular-nums">{interpolate(t.streakProgress, { done: streak.done, total: streak.total })}</span>
+                </div>
+                <div aria-hidden className="mt-3 grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[3px]">
+                  {streakCells.map((c) => (
+                    <span
+                      className={cn(
+                        "aspect-square rounded-[calc(var(--radius)*0.2)]",
+                        c.state === "future" ? "bg-muted" : c.state === "today" ? "bg-category-3/60 ring-2 ring-category-3/18" : c.state === "skipped" ? "bg-muted" : "bg-category-5/80",
+                      )}
+                      key={c.key}
+                    />
+                  ))}
+                </div>
+                {streak.note ? <p className="mt-3 text-muted-foreground text-xs">{streak.note}</p> : null}
+              </section>
+            ) : null}
+            {footerLinks.length || copyright ? (
+              <nav aria-label={t.footer} className="flex flex-wrap gap-x-3 gap-y-1 px-4 text-muted-foreground text-xs">
+                {footerLinks.map((l) => (
+                  <WirefrontLink className="rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring" href={l.href} key={l.href}>
+                    {l.label}
+                  </WirefrontLink>
                 ))}
-              </div>
-              <p className="mt-3 text-muted-foreground text-xs">The last 60 days. Seven skipped, all of them Mondays.</p>
-            </section>
-            <nav aria-label="Footer" className="flex flex-wrap gap-x-3 gap-y-1 px-4 text-muted-foreground text-xs">
-              {["Terms", "Privacy", "Cookies", "Accessibility"].map((l) => (
-                <a
-                  className="rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
-                  href="#top"
-                  key={l}
-                  onClick={(e) => e.preventDefault()}
-                >
-                  {l}
-                </a>
-              ))}
-              <span>© 2026 Ripple</span>
-            </nav>
+                {copyright ? <span>{copyright}</span> : null}
+              </nav>
+            ) : null}
           </aside>
         </div>
       </div>
 
-      <Lightbox
-        index={lightbox}
-        items={media}
-        onChange={setLightbox}
-        onClose={() => setLightbox(null)}
-      />
+      {actionError ? (
+        <p className="absolute inset-x-4 bottom-4 z-40 rounded-lg border bg-popover px-3 py-2 text-destructive-foreground text-sm shadow-lg" role="alert">
+          {actionError}
+        </p>
+      ) : null}
+      <Lightbox index={lightbox} items={media} onChange={setLightbox} onClose={() => setLightbox(null)} t={t} />
     </div>
   );
 }
+
+const COVER_LINES = Array.from({ length: 9 }, (_, i) => i);
 
 function Cover() {
   return (
@@ -798,8 +760,8 @@ function Cover() {
             "radial-gradient(55% 90% at 10% 15%, var(--category-3) 0%, transparent 60%), radial-gradient(45% 80% at 88% 0%, var(--category-4) 0%, transparent 65%), radial-gradient(70% 90% at 62% 115%, var(--category-5) 0%, transparent 60%), linear-gradient(120deg, var(--category-7), var(--category-4) 50%, var(--category-5))",
         }}
       />
-      <svg className="absolute inset-0 size-full opacity-30 mix-blend-soft-light" preserveAspectRatio="none" viewBox="0 0 600 200">
-        {Array.from({ length: 9 }, (_, i) => (
+      <svg aria-hidden="true" className="absolute inset-0 size-full opacity-30 mix-blend-soft-light" preserveAspectRatio="none" viewBox="0 0 600 200">
+        {COVER_LINES.map((i) => (
           <path
             d={`M-20 ${40 + i * 18} C 120 ${10 + i * 20}, 260 ${90 + i * 14}, 420 ${40 + i * 18} S 640 ${20 + i * 16}, 640 ${30 + i * 18}`}
             fill="none"
@@ -820,7 +782,9 @@ function FollowButton({
   name,
   onToggle,
   onBell,
+  t,
 }: {
+  t: Messages;
   following: boolean;
   bell: boolean;
   name: string;
@@ -833,7 +797,7 @@ function FollowButton({
   const pillW = following ? 112 : 92;
   const total = following ? pillW + 44 : pillW;
   const move = reduce ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 30, mass: 0.9 } as const;
-  const label = following ? (hover ? "Unfollow" : "Following") : "Follow";
+  const label = following ? (hover ? t.unfollow : t.following) : t.follow;
 
   return (
     <motion.div
@@ -873,7 +837,7 @@ function FollowButton({
         {following && (
           <motion.button
             animate={{ opacity: 1 }}
-            aria-label={bell ? `Turn off notifications from ${name}` : `Get notified when ${name} posts`}
+            aria-label={interpolate(bell ? t.notifyOff : t.notifyOn, { name })}
             aria-pressed={bell}
             className={cn(
               "absolute top-0 start-0 flex size-9 cursor-pointer items-center justify-center rounded-full text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
@@ -901,7 +865,7 @@ function FollowButton({
 
       <motion.button
         animate={{ width: pillW }}
-        aria-label={following ? `Unfollow ${name}` : `Follow ${name}`}
+        aria-label={interpolate(following ? t.unfollowName : t.followName, { name })}
         aria-pressed={following}
         className={cn(
           "absolute top-0 end-0 flex h-9 cursor-pointer items-center justify-center rounded-full font-medium outline-none transition-[color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97]",
@@ -937,26 +901,42 @@ function FollowButton({
 function PostItem({
   post,
   user,
-  onLike,
+  onReact,
   onOpenMedia,
+  postUrl,
+  t,
 }: {
   post: ProfilePost;
   user: ProfileUser;
-  onLike: () => void;
+  onReact: (kind: "like" | "repost" | "bookmark") => void;
   onOpenMedia?: (art: ProfileArt) => void;
+  postUrl: string;
+  t: Messages;
 }) {
-  const [reposted, setReposted] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const fmt = useFormat();
+  const { now } = useWirefront();
+  const compact = useCompact();
+  const reposted = Boolean(post.reposted);
+  const saved = Boolean(post.bookmarked);
+  const age = now().getTime() - new Date(post.at).getTime();
+  const when = age < 86_400_000 ? fmt.relative(post.at) : fmt.date(post.at, { month: "short", day: "numeric" });
 
   const header = (
     <div className="flex min-w-0 items-center gap-1.5">
       <span className="truncate font-medium">{user.name}</span>
-      {user.verified && <BadgeCheckIcon aria-label="Verified" className="size-4 shrink-0 fill-info text-background" />}
-      <span className="truncate text-muted-foreground">@{user.handle}</span>
+      {user.verified && (
+        <>
+          <BadgeCheckIcon aria-hidden className="size-4 shrink-0 fill-info text-background" />
+          <span className="sr-only">{t.verified}</span>
+        </>
+      )}
+      <span className="truncate text-muted-foreground">{interpolate(t.handle, { handle: user.handle })}</span>
       <span aria-hidden className="text-muted-foreground">
         ·
       </span>
-      <span className="shrink-0 text-muted-foreground">{post.time}</span>
+      <time className="shrink-0 text-muted-foreground" dateTime={post.at}>
+        {when}
+      </time>
     </div>
   );
 
@@ -964,13 +944,13 @@ function PostItem({
     <li className="flex flex-col gap-2 px-4 py-3.5">
       {post.pinned && (
         <span className="flex items-center gap-1.5 ps-8 font-medium text-muted-foreground text-xs">
-          <PinIcon className="size-3.5" /> Pinned
+          <PinIcon aria-hidden className="size-3.5" /> {t.pinned}
         </span>
       )}
       {post.replyTo && (
         <div className="relative flex gap-3">
           <span aria-hidden className="absolute top-11 bottom-[-0.875rem] start-[19px] w-0.5 rounded-full bg-border" />
-          <Avatar className="[--avatar-size:--spacing(10)]">
+          <Avatar aria-hidden className="[--avatar-size:--spacing(10)]">
             <AvatarFallback className={cn("bg-gradient-to-br font-semibold text-white text-xs", hues[post.replyTo.hue].avatar)}>
               {initials(post.replyTo.name)}
             </AvatarFallback>
@@ -978,14 +958,14 @@ function PostItem({
           <div className="flex min-w-0 flex-1 flex-col gap-0.5 pb-1">
             <div className="flex min-w-0 items-center gap-1.5">
               <span className="truncate font-medium">{post.replyTo.name}</span>
-              <span className="truncate text-muted-foreground">@{post.replyTo.handle}</span>
+              <span className="truncate text-muted-foreground">{interpolate(t.handle, { handle: post.replyTo.handle })}</span>
             </div>
             <p className="text-pretty">{post.replyTo.text}</p>
           </div>
         </div>
       )}
       <article className="flex gap-3">
-        <Avatar className="[--avatar-size:--spacing(10)]">
+        <Avatar aria-hidden className="[--avatar-size:--spacing(10)]">
           <AvatarFallback className={cn("bg-gradient-to-br font-heading font-semibold text-white text-xs", hues.violet.avatar)}>
             {initials(user.name)}
           </AvatarFallback>
@@ -994,7 +974,7 @@ function PostItem({
           {header}
           {post.replyTo && (
             <span className="-mt-0.5 text-muted-foreground text-xs">
-              Replying to <span className="text-info-foreground">@{post.replyTo.handle}</span>
+              {t.replyingTo} <span className="text-info-foreground">{interpolate(t.handle, { handle: post.replyTo.handle })}</span>
             </span>
           )}
           <p className="text-pretty leading-relaxed">
@@ -1004,7 +984,7 @@ function PostItem({
             <div className={cn("mt-1.5 grid gap-1 overflow-hidden rounded-2xl border", post.media.length > 1 ? "grid-cols-2" : "grid-cols-1")}>
               {post.media.map((m) => (
                 <button
-                  aria-label={`Open image: ${m.caption}`}
+                  aria-label={interpolate(t.openImage, { caption: m.caption })}
                   className={cn(
                     "@container block cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
                     post.media && post.media.length > 1 ? "aspect-[4/5]" : "aspect-[16/10]",
@@ -1025,7 +1005,8 @@ function PostItem({
                 "mt-1.5 flex overflow-hidden rounded-2xl border outline-none transition-colors hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-ring",
               )}
               href={`https://${post.link.domain}`}
-              onClick={(e) => e.preventDefault()}
+              rel="noreferrer"
+              target="_blank"
             >
               <span aria-hidden className={cn("flex w-24 shrink-0 items-end gap-0.5 bg-gradient-to-br p-2.5 @md:w-32", hues[post.link.hue].art)}>
                 {["bg-category-3/12", "bg-category-7", "bg-category-4-strong", "bg-category-6-strong", "bg-category-8-strong"].map((c) => (
@@ -1039,31 +1020,31 @@ function PostItem({
             </a>
           )}
           <div className="-ms-2 mt-1 flex items-center justify-between text-muted-foreground">
-            <Stat icon={<MessageCircleIcon />} label={`${post.replies} replies`}>
+            <Stat icon={<MessageCircleIcon />} label={interpolate(t.repliesCount, { count: fmt.number(post.replies) })}>
               {compact(post.replies)}
             </Stat>
-            <Action
+            <PostAction
               active={reposted}
               activeClass="text-category-2-foreground"
               icon={<Repeat2Icon />}
-              label={reposted ? "Undo repost" : "Repost"}
-              onClick={() => setReposted((r) => !r)}
+              label={reposted ? t.undoRepost : t.repost}
+              onClick={() => onReact("repost")}
             >
-              <Count value={post.reposts + (reposted ? 1 : 0)} />
-            </Action>
-            <LikeAction count={post.likes} liked={Boolean(post.liked)} onClick={onLike} />
-            <Stat icon={<BarChart2Icon />} label={`${post.views} views`}>
+              <Count value={post.reposts} />
+            </PostAction>
+            <LikeAction count={post.likes} liked={Boolean(post.liked)} onClick={() => onReact("like")} t={t} />
+            <Stat icon={<BarChart2Icon />} label={interpolate(t.viewsCount, { count: post.views })}>
               {post.views}
             </Stat>
             <div className="flex">
-              <Action
+              <PostAction
                 active={saved}
                 activeClass="text-info-foreground"
                 icon={<BookmarkIcon className={cn(saved && "fill-current")} />}
-                label={saved ? "Remove bookmark" : "Bookmark"}
-                onClick={() => setSaved((s) => !s)}
+                label={saved ? t.removeBookmark : t.bookmark}
+                onClick={() => onReact("bookmark")}
               />
-              <ShareAction id={post.id} />
+              <ShareAction t={t} url={postUrl} />
             </div>
           </div>
         </div>
@@ -1081,14 +1062,14 @@ function Stat({ icon, label, children }: { icon: ReactNode; label: string; child
   );
 }
 
-function ShareAction({ id }: { id: string }) {
+function ShareAction({ url, t }: { url: string; t: Messages }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => {
     if (timer.current) clearTimeout(timer.current);
   }, []);
   return (
-    <Action
+    <PostAction
       active={copied}
       activeClass="text-success-foreground"
       icon={
@@ -1105,10 +1086,10 @@ function ShareAction({ id }: { id: string }) {
           </motion.span>
         </AnimatePresence>
       }
-      label={copied ? "Link copied" : "Copy link to post"}
+      label={copied ? t.postCopied : t.copyPost}
       toggle={false}
       onClick={() => {
-        navigator.clipboard?.writeText(`https://example.com/post/${id}`).catch(() => {});
+        navigator.clipboard?.writeText(url).catch(() => {});
         setCopied(true);
         if (timer.current) clearTimeout(timer.current);
         timer.current = setTimeout(() => setCopied(false), 1600);
@@ -1117,7 +1098,7 @@ function ShareAction({ id }: { id: string }) {
   );
 }
 
-function Action({
+function PostAction({
   icon,
   label,
   children,
@@ -1152,12 +1133,12 @@ function Action({
   );
 }
 
-function LikeAction({ liked, count, onClick }: { liked: boolean; count: number; onClick: () => void }) {
+function LikeAction({ liked, count, onClick, t }: { liked: boolean; count: number; onClick: () => void; t: Messages }) {
   const reduce = useReducedMotion();
   const [pop, setPop] = useState(0);
   return (
     <button
-      aria-label={liked ? "Unlike" : "Like"}
+      aria-label={liked ? t.unlike : t.like}
       aria-pressed={liked}
       className={cn(
         "group/like flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-2 text-xs outline-none hover:bg-category-4/10 hover:text-category-4-foreground focus-visible:ring-2 focus-visible:ring-ring",
@@ -1199,11 +1180,13 @@ function Lightbox({
   index,
   onChange,
   onClose,
+  t,
 }: {
   items: ProfileArt[];
   index: number | null;
   onChange: (i: number) => void;
   onClose: () => void;
+  t: Messages;
 }) {
   const reduce = useReducedMotion();
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -1213,6 +1196,19 @@ function Lightbox({
   }, [open]);
   const item = index !== null ? items[index] : null;
   const go = (d: number) => index !== null && onChange((index + d + items.length) % items.length);
+  // Escape closes and the arrows step while the viewer is open.
+  const keys = useRef({ go, onClose });
+  keys.current = { go, onClose };
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") keys.current.onClose();
+      if (e.key === "ArrowRight") keys.current.go(1);
+      if (e.key === "ArrowLeft") keys.current.go(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   return (
     <AnimatePresence>
@@ -1224,17 +1220,13 @@ function Lightbox({
           className="absolute inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/85 p-4 backdrop-blur-sm"
           exit={{ opacity: 0 }}
           initial={{ opacity: 0 }}
-          onClick={onClose}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") onClose();
-            if (e.key === "ArrowRight") go(1);
-            if (e.key === "ArrowLeft") go(-1);
-          }}
           role="dialog"
           transition={{ duration: 0.2, ease: easeOut }}
         >
+          {/* Clicking outside the picture closes it; keyboard users have Escape and the close button. */}
+          <button aria-hidden className="absolute inset-0 -z-10 cursor-default" onClick={onClose} tabIndex={-1} type="button" />
           <button
-            aria-label="Close"
+            aria-label={t.close}
             className="absolute top-3 end-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white outline-none hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white"
             onClick={onClose}
             ref={closeRef}
@@ -1246,7 +1238,6 @@ function Lightbox({
             animate={{ opacity: 1, scale: 1 }}
             className="@container w-full max-w-[440px]"
             initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
-            onClick={(e) => e.stopPropagation()}
             transition={{ duration: 0.22, ease: easeOut }}
           >
             <AnimatePresence initial={false} mode="popLayout">
@@ -1262,28 +1253,28 @@ function Lightbox({
               </motion.div>
             </AnimatePresence>
           </motion.div>
-          <div className="flex items-center gap-3 text-white" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center gap-3 text-white">
             <button
-              aria-label="Previous"
+              aria-label={t.previous}
               className="flex size-9 cursor-pointer items-center justify-center rounded-full bg-white/10 outline-none hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white"
               onClick={() => go(-1)}
               type="button"
             >
-              <ChevronLeftIcon className="size-4" />
+              <ChevronLeftIcon className="size-4 rtl:rotate-180" />
             </button>
             <span className="min-w-44 text-center text-sm">
               {item.caption}
               <span className="block text-white/60 text-xs tabular-nums">
-                {(index ?? 0) + 1} of {items.length}
+                {interpolate(t.position, { n: (index ?? 0) + 1, total: items.length })}
               </span>
             </span>
             <button
-              aria-label="Next"
+              aria-label={t.next}
               className="flex size-9 cursor-pointer items-center justify-center rounded-full bg-white/10 outline-none hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white"
               onClick={() => go(1)}
               type="button"
             >
-              <ChevronRightIcon className="size-4" />
+              <ChevronRightIcon className="size-4 rtl:rotate-180" />
             </button>
           </div>
         </motion.div>
@@ -1292,6 +1283,10 @@ function Lightbox({
   );
 }
 
-export function ProfileDemo() {
-  return <Profile initiallyFollowing={false} mutuals={["Mira Castell", "Otto Brennan", "Priya Nair", "Jonah Ifeanyi"]} />;
+export function SocialProfile(props: SocialProfileProps) {
+  return (
+    <ScreenBoundary name="SocialProfile">
+      <SocialProfileScreen {...props} />
+    </ScreenBoundary>
+  );
 }
