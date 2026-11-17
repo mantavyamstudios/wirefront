@@ -4,7 +4,7 @@
 /**
  * The wiring contract of the Phase 7 settings screens.
  */
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
 import { fail, ok } from "@wirefront/ui/wirefront/types";
@@ -30,6 +30,8 @@ import * as localization from "@/pages/showcase/settings-localization/fixtures";
 import { LocalizationSettings } from "@/pages/showcase/settings-localization/view";
 import * as theme from "@/pages/showcase/settings-appearance-settings/fixtures";
 import { ThemeSettings } from "@/pages/showcase/settings-appearance-settings/view";
+import * as connectors from "@/pages/showcase/settings-connectors/fixtures";
+import { ConnectorMarketplace } from "@/pages/showcase/settings-connectors/view";
 import * as profile from "@/pages/showcase/settings-profile/fixtures";
 import { AccountProfileSettings } from "@/pages/showcase/settings-profile/view";
 
@@ -464,5 +466,59 @@ describe("ThemeSettings", () => {
     await waitFor(() => expect(onSave).toHaveBeenLastCalledWith({ ...theme.factoryPrefs, accent: "rose", density: "compact" }));
     fireEvent.click(screen.getByRole("button", { name: "Reset" }));
     await waitFor(() => expect(onSave).toHaveBeenLastCalledWith(theme.factoryPrefs));
+  });
+});
+
+describe("ConnectorMarketplace", () => {
+  beforeEach(() => {
+    Element.prototype.scrollTo = () => {};
+  });
+  const renderIt = (props: Partial<Parameters<typeof ConnectorMarketplace>[0]> = {}) =>
+    render(<ConnectorMarketplace apps={connectors.listConnectorApps} workspace="Northwind" {...props} />);
+
+  it("is a read-only directory without actions", () => {
+    renderIt();
+    expect(screen.getByRole("heading", { name: "Integrations" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /^Connect / })).toBeNull();
+    expect(screen.getByRole("button", { name: "Relay" })).toBeTruthy();
+  });
+
+  it("connects, shows a failure with retry, and filters", async () => {
+    let attempts = 0;
+    const onConnect = vi.fn(async (id: string) => {
+      if (id === "silo" && attempts++ === 0) return fail("Silo rejected the token.");
+    });
+    renderIt({ onConnect });
+    fireEvent.click(screen.getByRole("button", { name: "Connect Silo" }));
+    expect(await screen.findByText("Authorization failed. Retry to try again.")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Retry connecting Silo" }));
+    await waitFor(() => expect(screen.queryByRole("button", { name: "Retry connecting Silo" })).toBeNull());
+    expect(onConnect).toHaveBeenCalledTimes(2);
+    fireEvent.click(screen.getByRole("radio", { name: "Connected" }));
+    expect(screen.getByRole("button", { name: "Silo" })).toBeTruthy();
+    await waitFor(() => expect(screen.queryByRole("button", { name: "Postbox" })).toBeNull());
+  });
+
+  it("disconnects and changes settings from the details sheet", async () => {
+    const onDisconnect = vi.fn(async () => {});
+    const onSettingChange = vi.fn(async () => {});
+    renderIt({ onConnect: async () => {}, onDisconnect, onSettingChange });
+    fireEvent.click(screen.getByRole("button", { name: "Relay" }));
+    const sheet = await screen.findByRole("dialog");
+    fireEvent.click(within(sheet).getByRole("switch", { name: /Allow agents to write/ }));
+    expect(onSettingChange).toHaveBeenCalledWith({ appId: "relay", settingId: "agents", on: true });
+    fireEvent.click(within(sheet).getByRole("button", { name: "Disconnect" }));
+    expect(onDisconnect).toHaveBeenCalledWith("relay");
+    expect(await within(sheet).findByText("Connect Relay to change its settings.")).toBeTruthy();
+  });
+
+  it("requests a missing app from an empty search", async () => {
+    const onRequestApp = vi.fn(async () => {});
+    renderIt({ onRequestApp });
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search apps" }), { target: { value: "Zapline" } });
+    expect(screen.getByText("No apps match “Zapline”")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Request “Zapline”" }));
+    expect(onRequestApp).toHaveBeenCalledWith("Zapline");
+    expect(await screen.findByText("Requested · we’ll email you")).toBeTruthy();
   });
 });
