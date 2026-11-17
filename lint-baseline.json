@@ -275,9 +275,6 @@
   "apps/www/src/pages/showcase/settings-localization.tsx": {
     "lint/a11y/noLabelWithoutControl": 2
   },
-  "apps/www/src/pages/showcase/settings-webhooks.tsx": {
-    "lint/suspicious/noArrayIndexKey": 2
-  },
   "apps/www/src/pages/showcase/threads-comment-row.tsx": {
     "lint/suspicious/noArrayIndexKey": 2
   },

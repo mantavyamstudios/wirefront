@@ -22,6 +22,10 @@ import * as appearance from "@/pages/showcase/settings-appearance/fixtures";
 import { AppearanceSettings } from "@/pages/showcase/settings-appearance/view";
 import * as sso from "@/pages/showcase/settings-sso/fixtures";
 import { SsoSetup } from "@/pages/showcase/settings-sso/view";
+import * as branding from "@/pages/showcase/settings-branding/fixtures";
+import { WorkspaceBranding } from "@/pages/showcase/settings-branding/view";
+import * as webhooks from "@/pages/showcase/settings-webhooks/fixtures";
+import { WebhookSettings } from "@/pages/showcase/settings-webhooks/view";
 import * as profile from "@/pages/showcase/settings-profile/fixtures";
 import { AccountProfileSettings } from "@/pages/showcase/settings-profile/view";
 
@@ -317,5 +321,85 @@ describe("SsoSetup", () => {
     fireEvent.click(screen.getByRole("switch", { name: /Require SSO for all members/ }));
     fireEvent.click(enforce);
     await waitFor(() => expect(onEnforce).toHaveBeenCalled());
+  });
+});
+
+describe("WorkspaceBranding", () => {
+  it("is read-only without actions", () => {
+    render(<WorkspaceBranding data={branding.getBranding} />);
+    expect(screen.queryByRole("button", { name: /Upload/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Save colours" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Save domain" })).toBeNull();
+    expect(screen.getByRole("status").textContent).toBe("Pending DNS");
+  });
+
+  it("saves a valid palette, validates the domain and verifies DNS", async () => {
+    const onSaveColors = vi.fn(async () => {});
+    const onSaveDomain = vi.fn(async () => {});
+    const onVerifyDomain = vi.fn(async () => ok(branding.verifyDomain));
+    render(<WorkspaceBranding data={branding.getBranding} defaultColors={branding.defaultColors} onSaveColors={onSaveColors} onSaveDomain={onSaveDomain} onVerifyDomain={onVerifyDomain} presets={branding.presets} />);
+    const save = screen.getByRole("button", { name: "Save colours" }) as HTMLButtonElement;
+    expect(save.disabled).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: /^Edit Accent/ }));
+    fireEvent.click(await screen.findByRole("button", { name: "Use #ec4899" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save colours" }));
+    await waitFor(() => expect(onSaveColors).toHaveBeenCalledWith({ ...branding.defaultColors, accent: "#ec4899" }));
+    fireEvent.change(screen.getByLabelText("Domain"), { target: { value: "not a domain" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save domain" }));
+    expect(await screen.findByText("Enter a domain like workspace.yourcompany.com.")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Check DNS" }));
+    await waitFor(() => expect(screen.getByRole("status").textContent).toBe("Verified"));
+  });
+
+  it("saves the email sender and keeps the inbox preview in step", async () => {
+    const onSaveEmail = vi.fn(async () => {});
+    render(<WorkspaceBranding data={branding.getBranding} onSaveEmail={onSaveEmail} />);
+    fireEvent.change(screen.getByLabelText("From name"), { target: { value: "Acme Team" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save sender" }));
+    await waitFor(() => expect(onSaveEmail).toHaveBeenCalledWith({ fromName: "Acme Team", replyTo: "noreply@acme.io" }));
+    expect(screen.getByText("Welcome to Acme Team — your account is ready.")).toBeTruthy();
+  });
+});
+
+describe("WebhookSettings", () => {
+  const renderIt = (props: Partial<Parameters<typeof WebhookSettings>[0]> = {}) =>
+    render(
+      <WirefrontProvider locale="en-US" now={() => new Date(webhooks.now)} timeZone="UTC">
+        <WebhookSettings data={webhooks.getWebhooks} signatureHeader="Acme-Signature" {...props} />
+      </WirefrontProvider>,
+    );
+
+  it("masks the secret and hides unwired actions", () => {
+    renderIt();
+    expect(screen.getByText("whsec_••••••••••••2f3a")).toBeTruthy();
+    expect(screen.getByText("Acme-Signature")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Reveal signing secret" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^Actions for/ })).toBeNull();
+    expect(screen.getByText("2 minutes ago")).toBeTruthy();
+  });
+
+  it("reveals and copies the secret only on request", async () => {
+    const writeText = vi.fn(async () => {});
+    Object.assign(navigator, { clipboard: { writeText } });
+    const onRevealSecret = vi.fn(async () => ok(webhooks.revealSecret));
+    renderIt({ onRevealSecret });
+    fireEvent.click(screen.getByRole("button", { name: "Copy signing secret" }));
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(webhooks.revealSecret.secret));
+    expect(onRevealSecret).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "Reveal signing secret" }));
+    expect(screen.getByText(webhooks.revealSecret.secret)).toBeTruthy();
+    expect(onRevealSecret).toHaveBeenCalledTimes(1);
+  });
+
+  it("filters failed deliveries, shows payloads and resends", async () => {
+    const onResend = vi.fn(async () => {});
+    renderIt({ onResend });
+    fireEvent.click(screen.getByRole("radio", { name: "Failed" }));
+    const rows = screen.getAllByRole("button", { expanded: false });
+    expect(rows.every((r) => !/\b(200|204)\b/.test(r.textContent ?? ""))).toBe(true);
+    fireEvent.click(rows[0] as HTMLElement);
+    expect(screen.getByText("2 of 3")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Resend" }));
+    await waitFor(() => expect(onResend).toHaveBeenCalled());
   });
 });
