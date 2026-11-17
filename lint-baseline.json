@@ -55,31 +55,6 @@
     "lint/a11y/useSemanticElements": 1,
     "lint/suspicious/noArrayIndexKey": 2
   },
-  "apps/www/src/pages/showcase/ai-assistant-start.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/correctness/useExhaustiveDependencies": 1,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/ai-co-writing-doc.tsx": {
-    "lint/a11y/noAutofocus": 1,
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/correctness/useExhaustiveDependencies": 1
-  },
-  "apps/www/src/pages/showcase/ai-conductor.tsx": {
-    "lint/a11y/useSemanticElements": 1,
-    "lint/complexity/useOptionalChain": 1,
-    "lint/correctness/noUnsafeOptionalChaining": 1,
-    "lint/correctness/useExhaustiveDependencies": 1
-  },
-  "apps/www/src/pages/showcase/ai-prompt-test-bench.tsx": {
-    "lint/a11y/noNoninteractiveTabindex": 1,
-    "lint/a11y/useSemanticElements": 3,
-    "lint/suspicious/noArrayIndexKey": 2
-  },
-  "apps/www/src/pages/showcase/ai-run-replay.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1,
-    "lint/correctness/useExhaustiveDependencies": 1
-  },
   "apps/www/src/pages/showcase/apps-drive.tsx": {
     "lint/a11y/noSvgWithoutTitle": 1,
     "lint/a11y/useSemanticElements": 1,
