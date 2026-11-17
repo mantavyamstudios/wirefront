@@ -278,12 +278,6 @@
   "apps/www/src/pages/showcase/settings-localization.tsx": {
     "lint/a11y/noLabelWithoutControl": 2
   },
-  "apps/www/src/pages/showcase/settings-permissions.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1
-  },
-  "apps/www/src/pages/showcase/settings-privacy.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1
-  },
   "apps/www/src/pages/showcase/settings-sso.tsx": {
     "lint/a11y/noLabelWithoutControl": 1
   },

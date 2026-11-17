@@ -14,6 +14,10 @@ import * as security from "@/pages/showcase/settings-security/fixtures";
 import { SecurityOverview } from "@/pages/showcase/settings-security/view";
 import * as developer from "@/pages/showcase/settings-developer/fixtures";
 import { DeveloperLabs } from "@/pages/showcase/settings-developer/view";
+import * as permissions from "@/pages/showcase/settings-permissions/fixtures";
+import { RolePermissions } from "@/pages/showcase/settings-permissions/view";
+import * as privacy from "@/pages/showcase/settings-privacy/fixtures";
+import { PrivacyData } from "@/pages/showcase/settings-privacy/view";
 import * as profile from "@/pages/showcase/settings-profile/fixtures";
 import { AccountProfileSettings } from "@/pages/showcase/settings-profile/view";
 
@@ -160,5 +164,90 @@ describe("DeveloperLabs", () => {
     rerender(<DeveloperLabs data={{ ...developer.getDeveloperSettings, canSwitchEnvironment: true }} onSetEnvironment={onSetEnvironment} />);
     fireEvent.click(screen.getByRole("radio", { name: /Staging/ }));
     await waitFor(() => expect(onSetEnvironment).toHaveBeenCalledWith("staging"));
+  });
+});
+
+describe("RolePermissions", () => {
+  it("is read-only without onSetGrant and filters to differences", () => {
+    render(<RolePermissions data={permissions.getPermissions} />);
+    expect(screen.queryByRole("switch", { name: /for Admin/ })).toBeNull();
+    expect(screen.getByText("Viewing")).toBeTruthy();
+    expect(screen.getAllByRole("img", { name: "Allowed" }).length).toBeGreaterThan(0);
+    fireEvent.click(screen.getByRole("switch", { name: "Show only differences" }));
+    expect(screen.queryByRole("rowheader", { name: /View documents/ })).toBeNull();
+    fireEvent.change(screen.getByRole("searchbox", { name: "Filter capabilities" }), { target: { value: "zzz" } });
+    expect(screen.getByText("No capabilities match “zzz”.")).toBeTruthy();
+  });
+
+  it("edits the selected role's grants and rolls back a failure; locked roles stay read-only", async () => {
+    let reject: (e: Error) => void = () => {};
+    const onSetGrant = vi.fn(() => new Promise<void>((_, r) => (reject = r)));
+    render(<RolePermissions data={permissions.getPermissions} onSetGrant={onSetGrant} />);
+    const share = screen.getByRole("switch", { name: "Share externally for Admin" });
+    expect(share.getAttribute("aria-checked")).toBe("true");
+    fireEvent.click(share);
+    expect(onSetGrant).toHaveBeenCalledWith({ roleId: "admin", capabilityId: "doc.share", allowed: false });
+    expect(screen.getByRole("switch", { name: "Share externally for Admin" }).getAttribute("aria-checked")).toBe("false");
+    reject(new Error("Only owners can change this role."));
+    expect((await screen.findByRole("alert")).textContent).toBe("Only owners can change this role.");
+    expect(screen.getByRole("switch", { name: "Share externally for Admin" }).getAttribute("aria-checked")).toBe("true");
+    fireEvent.click(screen.getAllByRole("button", { name: /^Owner/ })[0] as HTMLElement);
+    expect(screen.queryByRole("switch", { name: /for Owner/ })).toBeNull();
+    expect(screen.getByText("Owner can’t be edited")).toBeTruthy();
+  });
+});
+
+describe("PrivacyData", () => {
+  const renderIt = (props: Partial<Parameters<typeof PrivacyData>[0]> = {}) =>
+    render(
+      <WirefrontProvider locale="en-US" now={() => new Date(privacy.now)} timeZone="UTC">
+        <PrivacyData data={privacy.getPrivacy} {...props} />
+      </WirefrontProvider>,
+    );
+
+  it("hides unwired sections and keeps retention read-only", () => {
+    renderIt();
+    expect(screen.queryByRole("heading", { name: "Export your data" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Delete this account" })).toBeNull();
+    expect(screen.getByText("Messages older than 90 days will be permanently deleted at the end of each month.")).toBeTruthy();
+  });
+
+  it("exports the chosen categories and shows progress and the download", async () => {
+    const onRequestExport = vi.fn(async () => {});
+    const { rerender } = renderIt({ onRequestExport });
+    expect(screen.getByText(/^2\sGB$/)).toBeTruthy();
+    fireEvent.click(screen.getByRole("checkbox", { name: /Calendar events/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Generate export" }));
+    await waitFor(() => expect(onRequestExport).toHaveBeenCalledWith({ categories: ["messages", "files", "comments", "calendar"] }));
+    rerender(
+      <WirefrontProvider locale="en-US" now={() => new Date(privacy.now)} timeZone="UTC">
+        <PrivacyData data={{ ...privacy.getPrivacy, latestExport: { ...privacy.requestExport, progress: 40 } }} onRequestExport={onRequestExport} />
+      </WirefrontProvider>,
+    );
+    expect(screen.getByText("40%")).toBeTruthy();
+    rerender(
+      <WirefrontProvider locale="en-US" now={() => new Date(privacy.now)} timeZone="UTC">
+        <PrivacyData data={{ ...privacy.getPrivacy, latestExport: privacy.readyExport }} onRequestExport={onRequestExport} />
+      </WirefrontProvider>,
+    );
+    expect(screen.getByRole("link", { name: "Download" }).getAttribute("href")).toBe("#download-export");
+    expect(screen.getByText("export-2026-04-26.zip · link expires tomorrow")).toBeTruthy();
+  });
+
+  it("requests deletion and counts down a pending one from the provider clock", async () => {
+    const onRequestDeletion = vi.fn(async () => {});
+    const onCancelDeletion = vi.fn(async () => {});
+    const { rerender } = renderIt({ onRequestDeletion, onCancelDeletion });
+    fireEvent.click(screen.getByRole("button", { name: "Request account deletion" }));
+    await waitFor(() => expect(onRequestDeletion).toHaveBeenCalled());
+    rerender(
+      <WirefrontProvider locale="en-US" now={() => new Date(privacy.now)} timeZone="UTC">
+        <PrivacyData data={{ ...privacy.getPrivacy, deletion: privacy.pendingDeletion }} onCancelDeletion={onCancelDeletion} onRequestDeletion={onRequestDeletion} />
+      </WirefrontProvider>,
+    );
+    expect(screen.getByText("23")).toBeTruthy();
+    expect(screen.getByText("Pending deletion · requested Apr 19, 2026")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Cancel deletion request" }));
+    await waitFor(() => expect(onCancelDeletion).toHaveBeenCalled());
   });
 });
