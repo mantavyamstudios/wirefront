@@ -5,7 +5,7 @@
  * The wiring contract of the Phase 7 settings screens.
  */
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
 import { fail, ok } from "@wirefront/ui/wirefront/types";
 import * as integrations from "@/pages/showcase/settings-integrations/fixtures";
@@ -18,6 +18,10 @@ import * as permissions from "@/pages/showcase/settings-permissions/fixtures";
 import { RolePermissions } from "@/pages/showcase/settings-permissions/view";
 import * as privacy from "@/pages/showcase/settings-privacy/fixtures";
 import { PrivacyData } from "@/pages/showcase/settings-privacy/view";
+import * as appearance from "@/pages/showcase/settings-appearance/fixtures";
+import { AppearanceSettings } from "@/pages/showcase/settings-appearance/view";
+import * as sso from "@/pages/showcase/settings-sso/fixtures";
+import { SsoSetup } from "@/pages/showcase/settings-sso/view";
 import * as profile from "@/pages/showcase/settings-profile/fixtures";
 import { AccountProfileSettings } from "@/pages/showcase/settings-profile/view";
 
@@ -249,5 +253,69 @@ describe("PrivacyData", () => {
     expect(screen.getByText("Pending deletion · requested Apr 19, 2026")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Cancel deletion request" }));
     await waitFor(() => expect(onCancelDeletion).toHaveBeenCalled());
+  });
+});
+
+describe("AppearanceSettings", () => {
+  // The preview follows the OS scheme; jsdom has no matchMedia.
+  beforeEach(() => {
+    vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("is read-only without onSave", () => {
+    render(<AppearanceSettings prefs={appearance.getAppearance} />);
+    expect(screen.getByRole("radio", { name: /Dark/ }).getAttribute("aria-disabled") ?? String((screen.getByRole("radio", { name: /Dark/ }) as HTMLButtonElement).disabled)).toBe("true");
+    expect(screen.queryByRole("button", { name: "Reset" })).toBeNull();
+  });
+
+  it("saves each choice at once, reverts a failure and resets to the defaults", async () => {
+    const onSave = vi.fn(async (prefs: typeof appearance.getAppearance) => (prefs.font === "mono" ? fail("Couldn’t save.") : undefined));
+    render(<AppearanceSettings defaults={appearance.getAppearance} onSave={onSave} prefs={appearance.getAppearance} />);
+    fireEvent.click(screen.getByRole("radio", { name: /Dark/ }));
+    expect(onSave).toHaveBeenLastCalledWith({ ...appearance.getAppearance, mode: "dark" });
+    await waitFor(() => expect(screen.getByRole("radio", { name: /Dark/ }).getAttribute("aria-checked")).toBe("true"));
+    fireEvent.click(screen.getByRole("radio", { name: /Geist Mono/ }));
+    expect((await screen.findByRole("alert")).textContent).toBe("Couldn’t save.");
+    expect(screen.getByRole("radio", { name: /Geist Mono/ }).getAttribute("aria-checked")).toBe("false");
+    fireEvent.click(screen.getByRole("button", { name: "Reset" }));
+    await waitFor(() => expect(onSave).toHaveBeenLastCalledWith(appearance.getAppearance));
+  });
+});
+
+describe("SsoSetup", () => {
+  const renderIt = (props: Partial<Parameters<typeof SsoSetup>[0]> = {}) =>
+    render(<SsoSetup config={sso.getSsoConfig} product="Acme" providers={sso.listSsoProviders} {...props} />);
+
+  it("resumes at the provider's saved step and copies endpoints", async () => {
+    const writeText = vi.fn(async () => {});
+    Object.assign(navigator, { clipboard: { writeText } });
+    renderIt();
+    expect(screen.getByRole("heading", { name: "Attribute mapping" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: /^Step 1, done/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Copy SSO URL (ACS)" }));
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(sso.getSsoConfig.acsUrl));
+    expect(await screen.findByRole("button", { name: "Copied SSO URL (ACS)" })).toBeTruthy();
+  });
+
+  it("validates new mappings, saves them, tests and enforces", async () => {
+    const onSaveMappings = vi.fn(async () => {});
+    const onTest = vi.fn(async () => ok(sso.testSso));
+    const onEnforce = vi.fn(async () => {});
+    renderIt({ onSaveMappings, onTest, onEnforce });
+    fireEvent.click(screen.getByRole("button", { name: "Add mapping" }));
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    expect((await screen.findByRole("alert")).textContent).toBe("Enter the attribute name.");
+    fireEvent.change(screen.getByRole("textbox", { name: "Attribute name" }), { target: { value: "department" } });
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    await waitFor(() => expect(onSaveMappings).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({ source: "department", target: "ignore" })])));
+    fireEvent.click(await screen.findByRole("button", { name: "Run test login" }));
+    expect(await screen.findByText(/Mapped 4 of 4 fields\./)).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    const enforce = screen.getByRole("button", { name: "Save & enforce" });
+    expect((enforce as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(screen.getByRole("switch", { name: /Require SSO for all members/ }));
+    fireEvent.click(enforce);
+    await waitFor(() => expect(onEnforce).toHaveBeenCalled());
   });
 });

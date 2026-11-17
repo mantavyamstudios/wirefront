@@ -265,9 +265,6 @@
   "apps/www/src/pages/showcase/settings-appearance-settings.tsx": {
     "lint/a11y/noLabelWithoutControl": 2
   },
-  "apps/www/src/pages/showcase/settings-appearance.tsx": {
-    "lint/style/noNonNullAssertion": 3
-  },
   "apps/www/src/pages/showcase/settings-connectors.tsx": {
     "lint/a11y/noLabelWithoutControl": 1,
     "lint/a11y/noStaticElementInteractions": 1,
@@ -277,9 +274,6 @@
   },
   "apps/www/src/pages/showcase/settings-localization.tsx": {
     "lint/a11y/noLabelWithoutControl": 2
-  },
-  "apps/www/src/pages/showcase/settings-sso.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1
   },
   "apps/www/src/pages/showcase/settings-webhooks.tsx": {
     "lint/suspicious/noArrayIndexKey": 2
