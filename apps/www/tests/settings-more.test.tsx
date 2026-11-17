@@ -6,9 +6,14 @@
  */
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fail } from "@wirefront/ui/wirefront/types";
+import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
+import { fail, ok } from "@wirefront/ui/wirefront/types";
 import * as integrations from "@/pages/showcase/settings-integrations/fixtures";
 import { IntegrationDirectory } from "@/pages/showcase/settings-integrations/view";
+import * as security from "@/pages/showcase/settings-security/fixtures";
+import { SecurityOverview } from "@/pages/showcase/settings-security/view";
+import * as developer from "@/pages/showcase/settings-developer/fixtures";
+import { DeveloperLabs } from "@/pages/showcase/settings-developer/view";
 import * as profile from "@/pages/showcase/settings-profile/fixtures";
 import { AccountProfileSettings } from "@/pages/showcase/settings-profile/view";
 
@@ -78,5 +83,82 @@ describe("IntegrationDirectory", () => {
   it("hides connect buttons that aren't wired", () => {
     render(<IntegrationDirectory integrations={integrations.listIntegrations} />);
     expect(screen.queryByRole("button", { name: /^Connect/ })).toBeNull();
+  });
+});
+
+describe("SecurityOverview", () => {
+  const renderIt = (props: Partial<Parameters<typeof SecurityOverview>[0]> = {}) =>
+    render(
+      <WirefrontProvider locale="en-US" now={() => new Date(security.now)}>
+        <SecurityOverview data={security.getSecurity} {...props} />
+      </WirefrontProvider>,
+    );
+
+  it("shows status from the provider clock and hides unwired actions", () => {
+    renderIt();
+    expect(screen.getByText("Last verified 2 hours ago")).toBeTruthy();
+    expect(screen.getByText("12 minutes ago")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Add passkey" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^Revoke/ })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Recovery codes" })).toBeNull();
+  });
+
+  it("removes passkeys, revokes sessions and signs out the others through the app", async () => {
+    const onRemovePasskey = vi.fn(async () => {});
+    const onRevokeSession = vi.fn(async () => fail("That session already ended."));
+    const onRevokeOtherSessions = vi.fn(async () => {});
+    renderIt({ onRemovePasskey, onRevokeSession, onRevokeOtherSessions });
+    fireEvent.click(screen.getByRole("button", { name: "Remove YubiKey 5C" }));
+    await waitFor(() => expect(onRemovePasskey).toHaveBeenCalledWith("yubikey"));
+    fireEvent.click(screen.getByRole("button", { name: "Revoke session in Berlin, DE" }));
+    expect((await screen.findByRole("alert")).textContent).toBe("That session already ended.");
+    fireEvent.click(screen.getByRole("button", { name: "Sign out of all other sessions" }));
+    await waitFor(() => expect(onRevokeOtherSessions).toHaveBeenCalled());
+  });
+
+  it("fetches recovery codes only when revealed, and regenerates them", async () => {
+    const onRevealCodes = vi.fn(async () => ok(security.getRecoveryCodes));
+    const onRegenerateCodes = vi.fn(async () => ok(security.regenerateRecoveryCodes));
+    renderIt({ onRevealCodes, onRegenerateCodes });
+    expect(screen.queryByText("4F2A-9XK7-LM3D")).toBeNull();
+    expect(onRevealCodes).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Reveal codes" }));
+    expect(await screen.findByText("4F2A-9XK7-LM3D")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Regenerate codes" }));
+    expect(await screen.findByText("7T2B-QW9M-ZK4D")).toBeTruthy();
+    expect(screen.queryByText("4F2A-9XK7-LM3D")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Hide codes" }));
+    expect(screen.queryByText("7T2B-QW9M-ZK4D")).toBeNull();
+  });
+});
+
+describe("DeveloperLabs", () => {
+  it("toggles a flag at once and rolls it back when saving fails", async () => {
+    let reject: (e: Error) => void = () => {};
+    const onSetFlag = vi.fn(() => new Promise<void>((_, r) => (reject = r)));
+    render(<DeveloperLabs data={developer.getDeveloperSettings} onSetFlag={onSetFlag} />);
+    expect(screen.getByText("7 / 13 on")).toBeTruthy();
+    const flag = screen.getByRole("switch", { name: /preview-card-hover/ });
+    fireEvent.click(flag);
+    expect(onSetFlag).toHaveBeenCalledWith({ key: "preview-card-hover", enabled: true });
+    expect(screen.getByText("8 / 13 on")).toBeTruthy();
+    reject(new Error("Flags are locked."));
+    expect((await screen.findByRole("alert")).textContent).toBe("Flags are locked.");
+    expect(screen.getByText("7 / 13 on")).toBeTruthy();
+  });
+
+  it("shows the console with debug on and locks environments for non-admins", async () => {
+    const onSetDebug = vi.fn(async () => {});
+    const onSetEnvironment = vi.fn(async () => {});
+    const { rerender } = render(<DeveloperLabs data={developer.getDeveloperSettings} logLines={developer.logLines} onSetDebug={onSetDebug} onSetEnvironment={onSetEnvironment} />);
+    expect(screen.queryByText("card_declined", { exact: false })).toBeNull();
+    fireEvent.click(screen.getByRole("switch", { name: "Debug mode" }));
+    await waitFor(() => expect(onSetDebug).toHaveBeenCalledWith(true));
+    expect(screen.getByText("8 lines")).toBeTruthy();
+    expect(screen.getByText("Admin-only — contact your workspace owner to change.")).toBeTruthy();
+    expect(screen.getByRole("radio", { name: /Staging/ }).getAttribute("aria-disabled") ?? (screen.getByRole("radio", { name: /Staging/ }) as HTMLButtonElement).disabled.toString()).toMatch(/true/);
+    rerender(<DeveloperLabs data={{ ...developer.getDeveloperSettings, canSwitchEnvironment: true }} onSetEnvironment={onSetEnvironment} />);
+    fireEvent.click(screen.getByRole("radio", { name: /Staging/ }));
+    await waitFor(() => expect(onSetEnvironment).toHaveBeenCalledWith("staging"));
   });
 });
