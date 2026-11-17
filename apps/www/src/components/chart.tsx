@@ -62,12 +62,16 @@ export function chartColor(i: number): string {
 export function ChartContainer({
   children,
   className = "h-72",
+  label,
 }: {
   children: ReactNode;
   className?: string;
+  /** What the chart shows, for screen readers. When given, the chart is one image with this name. */
+  label?: string;
 }) {
   return (
     <div
+      {...(label ? { role: "img", "aria-label": label } : {})}
       className={`${className} text-foreground [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:font-mono [&_.recharts-cartesian-axis-tick_text]:text-[10px] [&_.recharts-cartesian-axis-tick_text]:uppercase [&_.recharts-xAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.2em] [&_.recharts-yAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.05em] [&_.recharts-cartesian-grid-bg]:fill-transparent [&_.recharts-cartesian-grid_line]:stroke-border [&_.recharts-polar-grid_line]:stroke-border [&_.recharts-polar-angle-axis-tick_text]:fill-muted-foreground [&_.recharts-polar-angle-axis-tick_text]:font-mono [&_.recharts-polar-angle-axis-tick_text]:text-[10px]`}
     >
       {/* Start at a valid size: the default -1x-1 makes Recharts warn on the
@@ -190,7 +194,13 @@ export function ChartAxis({
  * Default Recharts tooltip swapped for a frosted card matching the
  * scratchpad's design language (mono labels, themed border/background).
  */
-export function ChartTooltip(props: Partial<TooltipProps>) {
+export function ChartTooltip({
+  valueFormatter,
+  ...props
+}: Partial<TooltipProps> & {
+  /** Formats each numeric value, e.g. with the provider's money formatter. Defaults to toLocaleString(). */
+  valueFormatter?: (value: number) => string;
+}) {
   return (
     <Tooltip
       cursor={{
@@ -198,13 +208,16 @@ export function ChartTooltip(props: Partial<TooltipProps>) {
         strokeOpacity: 0.25,
         strokeDasharray: "2 4",
       }}
-      content={ChartTooltipContent}
+      content={(content) => <ChartTooltipContent {...content} valueFormatter={valueFormatter} />}
       {...props}
     />
   );
 }
 
-function ChartTooltipContent(props: TooltipContentProps<TooltipValueType, NameType>) {
+function ChartTooltipContent({
+  valueFormatter,
+  ...props
+}: TooltipContentProps<TooltipValueType, NameType> & { valueFormatter?: (value: number) => string }) {
   const { active, label, payload } = props;
   if (!active || !payload || payload.length === 0) return null;
   return (
@@ -225,7 +238,7 @@ function ChartTooltipContent(props: TooltipContentProps<TooltipValueType, NameTy
             <span className="text-muted-foreground">{String(p.name ?? p.dataKey)}</span>
             <span className="ml-auto font-mono tabular-nums text-foreground">
               {typeof p.value === "number"
-                ? p.value.toLocaleString()
+                ? (valueFormatter?.(p.value) ?? p.value.toLocaleString())
                 : String(p.value)}
             </span>
           </li>
