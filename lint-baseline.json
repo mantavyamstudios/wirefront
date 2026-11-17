@@ -268,36 +268,6 @@
     "lint/a11y/useAriaPropsSupportedByRole": 1,
     "lint/suspicious/noArrayIndexKey": 2
   },
-  "apps/www/src/pages/showcase/timelines-activity-feed.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/timelines-approvals.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/timelines-audit.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/timelines-commits.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/timelines-inbox-thread.tsx": {
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/timelines-notifications.tsx": {
-    "lint/a11y/useSemanticElements": 1,
-    "lint/suspicious/noArrayIndexKey": 2
-  },
-  "apps/www/src/pages/showcase/timelines-pr-ops-console.tsx": {
-    "lint/a11y/noSvgWithoutTitle": 1,
-    "lint/a11y/useValidAnchor": 2,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/timelines-pull-request.tsx": {
-    "lint/suspicious/noArrayIndexKey": 2
-  },
-  "apps/www/src/pages/showcase/timelines-status-page.tsx": {
-    "lint/suspicious/noArrayIndexKey": 2
-  },
   "apps/www/src/pages/showcase/toasts-info-banner.tsx": {
     "lint/a11y/useSemanticElements": 1
   },
