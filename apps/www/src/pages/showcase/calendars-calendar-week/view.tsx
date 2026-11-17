@@ -19,8 +19,9 @@ import {
   VideoIcon,
   XIcon,
 } from "lucide-react";
+import { Radio } from "@base-ui/react/radio";
+import { RadioGroup } from "@base-ui/react/radio-group";
 import {
-  type KeyboardEvent,
   type PointerEvent as ReactPointerEvent,
   type RefObject,
   useEffect,
@@ -33,41 +34,72 @@ import { Calendar } from "@wirefront/ui/calendar";
 import { Kbd } from "@wirefront/ui/kbd";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 import { cn } from "@wirefront/ui/lib/utils";
+import { useAction } from "@wirefront/ui/wirefront/action";
+import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { calendarLabels } from "@wirefront/ui/wirefront/calendar-labels";
+import { interpolate, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import type { Action } from "@wirefront/ui/wirefront/types";
+import type { CalendarSource, CalendarTone, WeekEvent as CalendarEvent } from "./schema";
 
 /** Unique ids and toast keys for items created in the browser; deterministic, unlike the clock. */
 let keySeq = 0;
 const nextKey = () => ++keySeq;
 
-export type CalendarTone = "teal" | "violet" | "sky" | "amber" | "rose";
-
-export interface CalendarSource {
-  id: string;
-  name: string;
-  tone: CalendarTone;
-  visible?: boolean;
-}
-
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  calendar: string;
-  date: string;
-  start: number;
-  end: number;
-  allDay?: boolean;
-  days?: number;
-  location?: string;
-  video?: boolean;
-  people?: string[];
-}
+/** Every string on the screen; override any of them with WirefrontProvider `messages` ("calendarWeek.<key>"). */
+export const CALENDAR_WEEK_MESSAGES = {
+  newEvent: "New event",
+  newEventKey: "N",
+  calendars: "Calendars",
+  keysWeek: "week",
+  keysToday: "today",
+  keysMove: "move event",
+  keysResize: "resize",
+  today: "Today",
+  previousWeek: "Previous week",
+  previousDay: "Previous day",
+  nextWeek: "Next week",
+  nextDay: "Next day",
+  view: "View",
+  day: "day",
+  week: "week",
+  weekNumber: "W{n}",
+  allDay: "All day",
+  allDayDetail: "All day{span} · {calendar}",
+  allDaySpan: " · {count} days",
+  dayColumn: "{day}, drag to create an event",
+  untitled: "New event",
+  defaultTitle: "Busy",
+  close: "Close",
+  undo: "Undo",
+  moved: "{title} → {when}",
+  deleted: "Deleted “{title}”",
+  savedFor: "Saved for {when}",
+  saveFailed: "Couldn’t save the change.",
+  editEvent: "Edit event",
+  eventTitle: "Event title",
+  addTitle: "Add a title",
+  deleteEvent: "Delete event",
+  save: "Save",
+  move: "move",
+  resize: "resize",
+  hours: "{h}h",
+  hoursMinutes: "{h}h {m}m",
+  minutes: "{m}m",
+};
 
 export interface CalendarWeekProps {
-  calendars?: CalendarSource[];
-  events?: CalendarEvent[];
-  now?: string;
+  /** The calendars, with whether each is shown. */
+  calendars: CalendarSource[];
+  /** Events around the shown weeks. */
+  events: CalendarEvent[];
+  /** Save a created, moved, resized or edited event; return it to replace a temporary id. Without it, changes stay on the page. */
+  onSaveEvent?: Action<CalendarEvent, CalendarEvent | undefined>;
+  /** Delete an event. Without it, deletes stay on the page. */
+  onDeleteEvent?: Action<string>;
   className?: string;
 }
+
+type Messages = typeof CALENDAR_WEEK_MESSAGES;
 
 const toneDot: Record<CalendarTone, string> = {
   teal: "bg-category-6",
@@ -107,13 +139,34 @@ const SNAP = 15;
 const ease = [0.23, 1, 0.32, 1] as const;
 const settle = { type: "spring", stiffness: 640, damping: 46 } as const;
 
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const DOW = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
 function parse(iso: string) {
   const [y, m, d] = iso.split("-").map(Number);
-  return new Date(Date.UTC(y, m - 1, d));
+  return new Date(Date.UTC(y ?? 1970, (m ?? 1) - 1, d ?? 1));
+}
+
+/** Locale-aware labels for days, months, times and durations. */
+function useLabels(t: Messages) {
+  const { locale } = useWirefront();
+  const f = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(locale, { timeZone: "UTC", ...o });
+  const dow = (date: string) => f({ weekday: "short" }).format(parse(date));
+  const dayName = (date: string) => f({ weekday: "long" }).format(parse(date));
+  const month = (date: string, style: "long" | "short" = "long") => f({ month: style }).format(parse(date));
+  const time = (min: number) => f({ hour: "numeric", ...(min % 60 ? { minute: "2-digit" } : {}) }).format(new Date(Date.UTC(2026, 0, 1, 0, min)));
+  const range = (a: number, b: number) => `${time(a)} – ${time(b)}`;
+  /** A short clock time without AM/PM, for the narrow "now" badge. */
+  const clock = (min: number) =>
+    f({ hour: "numeric", minute: "2-digit" })
+      .formatToParts(new Date(Date.UTC(2026, 0, 1, 0, min)))
+      .filter((p) => p.type !== "dayPeriod")
+      .map((p) => p.value)
+      .join("")
+      .trim();
+  const duration = (min: number) => {
+    const h = Math.floor(min / 60);
+    const m = min % 60;
+    return h ? interpolate(m ? t.hoursMinutes : t.hours, { h, m }) : interpolate(t.minutes, { m });
+  };
+  return { dow, dayName, month, time, range, clock, duration, locale };
 }
 function iso(d: Date) {
   return d.toISOString().slice(0, 10);
@@ -139,77 +192,8 @@ function isoWeek(date: string) {
 function diffDays(a: string, b: string) {
   return Math.round((parse(a).getTime() - parse(b).getTime()) / 86400000);
 }
-function fmtTime(min: number, withPeriod = true) {
-  const h = Math.floor(min / 60) % 24;
-  const m = min % 60;
-  const h12 = ((h + 11) % 12) + 1;
-  const period = h >= 12 ? "PM" : "AM";
-  return `${h12}${m ? `:${String(m).padStart(2, "0")}` : ""}${withPeriod ? ` ${period}` : ""}`;
-}
-function fmtRange(a: number, b: number) {
-  const samePeriod = a < 720 === b < 720;
-  return `${fmtTime(a, !samePeriod)} – ${fmtTime(b)}`;
-}
-function fmtDuration(min: number) {
-  const h = Math.floor(min / 60);
-  const m = min % 60;
-  return h ? `${h}h${m ? ` ${m}m` : ""}` : `${m}m`;
-}
 const snap = (min: number) => Math.round(min / SNAP) * SNAP;
-
-const defaultCalendars: CalendarSource[] = [
-  { id: "me", name: "Maya Okafor", tone: "teal", visible: true },
-  { id: "team", name: "Team", tone: "violet", visible: true },
-  { id: "product", name: "Product reviews", tone: "sky", visible: true },
-  { id: "launches", name: "Launches", tone: "amber", visible: true },
-  { id: "holidays", name: "Holidays", tone: "rose", visible: true },
-];
-
-function buildEvents(): CalendarEvent[] {
-  const wk = "2026-10-19";
-  const d = (n: number) => addDays(wk, n);
-  const t = (h: number, m = 0) => h * 60 + m;
-  const standups: CalendarEvent[] = [];
-  for (let w = -1; w <= 1; w++) {
-    for (let i = 0; i < 5; i++) {
-      standups.push({
-        id: `standup-${w}-${i}`,
-        title: "Standup",
-        calendar: "team",
-        date: addDays(wk, w * 7 + i),
-        start: t(9),
-        end: t(9, 30),
-        video: true,
-      });
-    }
-  }
-  return [
-    ...standups,
-    { id: "e1", title: "Pricing model review", calendar: "me", date: d(0), start: t(11), end: t(12), location: "Room Atlas", people: ["Jonas Weber", "Priya Raman"] },
-    { id: "e2", title: "Onboarding v3 working session", calendar: "product", date: d(0), start: t(14), end: t(15, 30), video: true, people: ["Priya Raman", "Leo Marchetti"] },
-    { id: "e3", title: "1:1 Jonas", calendar: "me", date: d(0), start: t(16), end: t(16, 30), video: true, people: ["Jonas Weber"] },
-    { id: "e4", title: "Research readout", calendar: "team", date: d(1), start: t(10), end: t(11), location: "Big room", people: ["Ana Sousa"] },
-    { id: "e5", title: "Lunch with Ellie", calendar: "me", date: d(1), start: t(12, 30), end: t(13, 30), location: "Canal Café" },
-    { id: "e6", title: "Interview: Staff Engineer", calendar: "me", date: d(1), start: t(15), end: t(16), video: true, people: ["Sam Whitfield"] },
-    { id: "e7", title: "Hiring sync", calendar: "team", date: d(1), start: t(15, 30), end: t(16, 15), people: ["Ana Sousa", "Sam Whitfield"] },
-    { id: "e8", title: "Incident review: webhooks", calendar: "team", date: d(2), start: t(13), end: t(14), video: true, people: ["Sam Whitfield"] },
-    { id: "e9", title: "Board prep", calendar: "me", date: d(2), start: t(16), end: t(17, 30), location: "Room Atlas" },
-    { id: "e10", title: "Q4 pricing decision", calendar: "me", date: d(3), start: t(10), end: t(10, 45), video: true, people: ["Jonas Weber", "Priya Raman"] },
-    { id: "e11", title: "Customer call: Fieldnote", calendar: "me", date: d(3), start: t(11, 30), end: t(12), video: true, people: ["Noor Haddad"] },
-    { id: "e12", title: "Design crit", calendar: "product", date: d(3), start: t(14), end: t(15), location: "Studio", people: ["Priya Raman", "Leo Marchetti", "Ana Sousa"] },
-    { id: "e13", title: "Release notes review", calendar: "launches", date: d(3), start: t(14, 30), end: t(15), people: ["Jonas Weber"] },
-    { id: "e14", title: "Climbing", calendar: "me", date: d(3), start: t(18), end: t(19, 30), location: "Boulder Hall" },
-    { id: "e15", title: "Focus: Q4 plan", calendar: "me", date: d(4), start: t(10), end: t(12) },
-    { id: "e16", title: "Starter pricing goes live", calendar: "launches", date: d(4), start: t(15), end: t(15, 30) },
-    { id: "e17", title: "Team drinks", calendar: "team", date: d(4), start: t(17), end: t(18, 30), location: "The Lantern" },
-    { id: "e18", title: "Run club", calendar: "me", date: d(5), start: t(9), end: t(10) },
-    { id: "a1", title: "Leo out", calendar: "team", date: d(3), start: 0, end: 0, allDay: true, days: 2 },
-    { id: "a2", title: "Clocks go back", calendar: "holidays", date: d(6), start: 0, end: 0, allDay: true },
-    { id: "n1", title: "Roadmap sync", calendar: "product", date: addDays(wk, 7), start: t(11), end: t(12), video: true },
-    { id: "n2", title: "Lisbon offsite", calendar: "team", date: addDays(wk, 9), start: 0, end: 0, allDay: true, days: 2 },
-    { id: "p1", title: "Quarterly planning", calendar: "product", date: addDays(wk, -5), start: t(13), end: t(16) },
-  ];
-}
+const HOURS_24 = Array.from({ length: 24 }, (_, h) => h);
 
 interface Placed {
   ev: CalendarEvent;
@@ -256,7 +240,7 @@ function packAllDay(list: CalendarEvent[], first: string, count: number) {
 
 function toDate(date: string) {
   const [y, m, d] = date.split("-").map(Number);
-  return new Date(y, m - 1, d);
+  return new Date(y ?? 1970, (m ?? 1) - 1, d ?? 1);
 }
 function fromDate(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -286,7 +270,7 @@ function MiniMonth({
     : { from: toDate(selected), to: toDate(selected) };
   return (
     <Calendar
-      labels={calendarLabels()}
+      labels={calendarLabels(useWirefront().locale)}
       className="mx-auto p-0 [--cell-size:--spacing(8)] sm:[--cell-size:--spacing(8)]"
       classNames={{ day_button: "in-data-outside:text-muted-foreground", weekday: "text-muted-foreground" }}
       mode="range"
@@ -319,20 +303,28 @@ type DragState = {
 
 type ViewMode = "day" | "week";
 
-export function CalendarWeek({
-  calendars: initialCalendars = defaultCalendars,
-  events: initialEvents,
-  now = "2026-10-22T10:40",
-  className,
-}: CalendarWeekProps) {
-  const today = now.slice(0, 10);
-  const [hh, mm] = now.slice(11, 16).split(":").map(Number);
-  const [nowMin, setNowMin] = useState(hh * 60 + mm);
+function CalendarWeekScreen({ calendars: initialCalendars, events: initialEvents, onSaveEvent, onDeleteEvent, className }: CalendarWeekProps) {
+  const t = useMessages("calendarWeek", CALENDAR_WEEK_MESSAGES);
+  const L = useLabels(t);
+  const { now, timeZone } = useWirefront();
+  // Today and the current minute, in the provider's time zone.
+  const clock = () => {
+    const parts = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(now());
+    const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "00";
+    return { date: `${get("year")}-${get("month")}-${get("day")}`, minutes: Number(get("hour")) * 60 + Number(get("minute")) };
+  };
+  const today = clock().date;
+  const [nowMin, setNowMin] = useState(() => clock().minutes);
   const [calendars, setCalendars] = useState(initialCalendars);
-  const [events, setEvents] = useState<CalendarEvent[]>(() => initialEvents ?? buildEvents());
+  const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
+  useEffect(() => setEvents(initialEvents), [initialEvents]);
+  useEffect(() => setCalendars(initialCalendars), [initialCalendars]);
+  const zoneName = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "short" }).formatToParts(now()).find((p) => p.type === "timeZoneName")?.value ?? "";
+  const saveAction = useAction(onSaveEvent ?? (async () => undefined));
+  const deleteAction = useAction(onDeleteEvent ?? (async () => {}));
   const [view, setView] = useState<ViewMode>("week");
   const [focusDay, setFocusDay] = useState(today);
-  const [month, setMonth] = useState(today.slice(0, 8) + "01");
+  const [month, setMonth] = useState(`${today.slice(0, 8)}01`);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [drag, setDrag] = useState<DragState | null>(null);
@@ -350,6 +342,19 @@ export function CalendarWeek({
     const id = window.setInterval(() => setNowMin((m) => Math.min(m + 1, 24 * 60 - 1)), 60000);
     return () => window.clearInterval(id);
   }, []);
+  /** Saves an event; reverts to `before` (or keeps the draft) if it fails, and swaps in the saved id. */
+  const persist = async (ev: CalendarEvent, before?: CalendarEvent) => {
+    if (!onSaveEvent) return;
+    const result = await saveAction.run(ev, ev.id);
+    if (!result.ok) {
+      if (before) setEvents((es) => es.map((e) => (e.id === ev.id ? before : e)));
+      setToast({ key: nextKey(), text: result.error ?? t.saveFailed });
+    } else if (result.data && result.data.id !== ev.id) {
+      const saved = result.data;
+      setEvents((es) => es.map((e) => (e.id === ev.id ? saved : e)));
+      setSelectedId((id) => (id === ev.id ? saved.id : id));
+    }
+  };
 
   useEffect(() => {
     const el = rootRef.current;
@@ -387,16 +392,18 @@ export function CalendarWeek({
 
   const goto = (d: string) => {
     setFocusDay(d);
-    setMonth(d.slice(0, 8) + "01");
+    setMonth(`${d.slice(0, 8)}01`);
   };
   const step = (dir: number) => goto(addDays(focusDay, dir * (mode === "week" ? 7 : 1)));
 
   const header = () => {
-    const a = parse(days[0]);
-    const b = parse(days[days.length - 1]);
-    if (mode === "day" && !narrow) return { main: `${MONTHS[a.getUTCMonth()]} ${a.getUTCDate()}`, sub: DAY_NAMES[weekday(days[0])] };
-    if (a.getUTCMonth() === b.getUTCMonth()) return { main: MONTHS[a.getUTCMonth()], sub: String(a.getUTCFullYear()) };
-    return { main: `${MONTHS[a.getUTCMonth()].slice(0, 3)} – ${MONTHS[b.getUTCMonth()].slice(0, 3)}`, sub: String(b.getUTCFullYear()) };
+    const a = parse(days[0] ?? today);
+    const b = parse(days[days.length - 1] ?? today);
+    const first = days[0] ?? today;
+    const last = days[days.length - 1] ?? today;
+    if (mode === "day" && !narrow) return { main: `${L.month(first)} ${a.getUTCDate()}`, sub: L.dayName(first) };
+    if (a.getUTCMonth() === b.getUTCMonth()) return { main: L.month(first), sub: String(a.getUTCFullYear()) };
+    return { main: `${L.month(first, "short")} – ${L.month(last, "short")}`, sub: String(b.getUTCFullYear()) };
   };
   const head = header();
 
@@ -468,12 +475,15 @@ export function CalendarWeek({
     }
     const ev = events.find((x) => x.id === d.id);
     if (ev && (ev.start !== d.start || ev.end !== d.end || ev.date !== d.date)) {
+      const before = { ...ev, start: d.start, end: d.end, date: d.date };
       setSelectedId(d.id);
+      void persist(ev, before);
       setToast({
         key: nextKey(),
-        text: `${ev.title || "Event"} → ${DOW[weekday(ev.date)]} ${fmtRange(ev.start, ev.end)}`,
+        text: interpolate(t.moved, { title: ev.title || t.untitled, when: `${L.dow(ev.date)} ${L.range(ev.start, ev.end)}` }),
         undo: () => {
           patch(d.id, { start: d.start, end: d.end, date: d.date });
+          void persist(before, ev);
           setToast(null);
           rootRef.current?.focus({ preventScroll: true });
         },
@@ -487,12 +497,21 @@ export function CalendarWeek({
     setEvents((es) => es.filter((e) => e.id !== id));
     setSelectedId(null);
     setEditing(null);
+    if (onDeleteEvent && !id.startsWith("new-")) {
+      void deleteAction.run(id, id).then((result) => {
+        if (!result.ok) {
+          setEvents((es) => [...es, ev]);
+          setToast({ key: nextKey(), text: result.error ?? t.saveFailed });
+        }
+      });
+    }
     if (ev.title) {
       setToast({
         key: nextKey(),
-        text: `Deleted “${ev.title}”`,
+        text: interpolate(t.deleted, { title: ev.title }),
         undo: () => {
           setEvents((es) => [...es, ev]);
+          void persist(ev);
           setToast(null);
           rootRef.current?.focus({ preventScroll: true });
         },
@@ -522,7 +541,7 @@ export function CalendarWeek({
     requestAnimationFrame(() => titleRef.current?.focus());
   };
 
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+  const onKeyDown = (e: KeyboardEvent) => {
     const t = e.target as HTMLElement;
     if (t.tagName === "INPUT" || t.tagName === "TEXTAREA") return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -535,17 +554,16 @@ export function CalendarWeek({
       if (e.key === "ArrowUp" || e.key === "ArrowDown") {
         e.preventDefault();
         const d = e.key === "ArrowUp" ? -SNAP : SNAP;
-        if (e.shiftKey) patch(selected.id, { end: Math.max(selected.start + SNAP, Math.min(1440, selected.end + d)) });
-        else {
-          const start = Math.max(0, Math.min(1440 - len, selected.start + d));
-          patch(selected.id, { start, end: start + len });
-        }
+        const next = e.shiftKey ? { ...selected, end: Math.max(selected.start + SNAP, Math.min(1440, selected.end + d)) } : { ...selected, start: Math.max(0, Math.min(1440 - len, selected.start + d)), end: Math.max(0, Math.min(1440 - len, selected.start + d)) + len };
+        patch(selected.id, next);
+        if (!selected.id.startsWith("new-")) void persist(next, selected);
         return;
       }
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         e.preventDefault();
         const date = addDays(selected.date, e.key === "ArrowLeft" ? -1 : 1);
         patch(selected.id, { date });
+        if (!selected.id.startsWith("new-")) void persist({ ...selected, date }, selected);
         if (!days.includes(date)) goto(date);
         return;
       }
@@ -573,14 +591,24 @@ export function CalendarWeek({
     }
   };
 
+  // Keys work anywhere in the calendar; the latest handler is read through a ref.
+  const keyHandler = useRef(onKeyDown);
+  keyHandler.current = onKeyDown;
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const listener = (e: KeyboardEvent) => keyHandler.current(e);
+    root.addEventListener("keydown", listener);
+    return () => root.removeEventListener("keydown", listener);
+  }, []);
   const panel = selected ? { ev: selected, cal: calOf(selected.calendar), dayIndex: days.indexOf(selected.date) } : null;
 
   const sidebar = (
     <div className="flex h-full flex-col gap-6 px-3 pt-3 pb-4">
       <Button className="w-full justify-start transition-[box-shadow,scale] duration-150 ease-out active:scale-[0.97]" onClick={newEventNow}>
-        <PlusIcon />
-        New event
-        <Kbd className="ms-auto bg-primary-foreground/16 text-primary-foreground">N</Kbd>
+        <PlusIcon aria-hidden />
+        {t.newEvent}
+        <Kbd className="ms-auto bg-primary-foreground/16 text-primary-foreground">{t.newEventKey}</Kbd>
       </Button>
       <MiniMonth
         busy={busy}
@@ -596,7 +624,7 @@ export function CalendarWeek({
         wholeWeek={mode === "week"}
       />
       <div>
-        <div className="mb-1.5 ps-1.5 font-medium text-muted-foreground text-xs">Calendars</div>
+        <div className="mb-1.5 ps-1.5 font-medium text-muted-foreground text-xs">{t.calendars}</div>
         <ul className="flex flex-col gap-0.5">
           {calendars.map((c) => {
             const on = c.visible !== false;
@@ -627,16 +655,16 @@ export function CalendarWeek({
         <div className="flex items-center gap-1.5">
           <Kbd>←</Kbd>
           <Kbd>→</Kbd>
-          <span>week</span>
+          <span>{t.keysWeek}</span>
           <Kbd className="ms-2">T</Kbd>
-          <span>today</span>
+          <span>{t.keysToday}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <Kbd>↑</Kbd>
           <Kbd>↓</Kbd>
-          <span>move event</span>
+          <span>{t.keysMove}</span>
           <Kbd className="ms-2">⇧</Kbd>
-          <span>resize</span>
+          <span>{t.keysResize}</span>
         </div>
       </div>
     </div>
@@ -652,11 +680,10 @@ export function CalendarWeek({
           "@container relative isolate flex h-[760px] w-full select-none overflow-hidden bg-sidebar text-foreground text-sm outline-none",
           className,
         )}
-        onKeyDown={onKeyDown}
         ref={rootRef}
         tabIndex={-1}
       >
-        <aside aria-label="Calendars" className="hidden w-64 shrink-0 overflow-y-auto @4xl:block">
+        <aside aria-label={t.calendars} className="hidden w-64 shrink-0 overflow-y-auto @4xl:block">
           {sidebar}
         </aside>
 
@@ -706,27 +733,25 @@ export function CalendarWeek({
             )}
             <div className="ms-auto flex items-center gap-1.5">
               <Button onClick={() => goto(today)} size="sm" variant="outline">
-                Today
+                {t.today}
               </Button>
               <div className="flex">
-                <Button aria-label={mode === "week" ? "Previous week" : "Previous day"} onClick={() => step(-1)} size="icon-sm" variant="ghost">
-                  <ChevronLeftIcon />
+                <Button aria-label={mode === "week" ? t.previousWeek : t.previousDay} onClick={() => step(-1)} size="icon-sm" variant="ghost">
+                  <ChevronLeftIcon className="rtl:rotate-180" />
                 </Button>
-                <Button aria-label={mode === "week" ? "Next week" : "Next day"} onClick={() => step(1)} size="icon-sm" variant="ghost">
-                  <ChevronRightIcon />
+                <Button aria-label={mode === "week" ? t.nextWeek : t.nextDay} onClick={() => step(1)} size="icon-sm" variant="ghost">
+                  <ChevronRightIcon className="rtl:rotate-180" />
                 </Button>
               </div>
-              <div aria-label="View" className="hidden rounded-lg bg-muted p-0.5 @2xl:flex" role="group">
+              <RadioGroup aria-label={t.view} className="hidden rounded-lg bg-muted p-0.5 @2xl:flex" onValueChange={(v) => setView(v as ViewMode)} value={view}>
                 {(["day", "week"] as const).map((v) => (
-                  <button
-                    aria-pressed={view === v}
+                  <Radio.Root
                     className={cn(
-                      "relative h-7 cursor-pointer rounded-md px-2.5 font-medium text-xs capitalize outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      "relative h-7 cursor-pointer rounded-md px-2.5 font-medium text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring",
                       view === v ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                     )}
                     key={v}
-                    onClick={() => setView(v)}
-                    type="button"
+                    value={v}
                   >
                     {view === v && (
                       <motion.span
@@ -736,13 +761,15 @@ export function CalendarWeek({
                       />
                     )}
                     <span className="relative flex items-center gap-1.5">
-                      {v}
-                      <span className="text-[10px] text-muted-foreground uppercase">{v[0]}</span>
+                      {t[v]}
+                      <span aria-hidden className="text-[10px] text-muted-foreground uppercase">
+                        {t[v][0]}
+                      </span>
                     </span>
-                  </button>
+                  </Radio.Root>
                 ))}
-              </div>
-              <Button aria-label="New event" className="@4xl:hidden" onClick={newEventNow} size="icon-sm">
+              </RadioGroup>
+              <Button aria-label={t.newEvent} className="@4xl:hidden" onClick={newEventNow} size="icon-sm">
                 <PlusIcon />
               </Button>
             </div>
@@ -755,7 +782,7 @@ export function CalendarWeek({
                 const isToday = d === today;
                 return (
                   <button
-                    aria-label={`${DOW[weekday(d)]} ${parse(d).getUTCDate()}`}
+                    aria-label={`${L.dow(d)} ${parse(d).getUTCDate()}`}
                     aria-pressed={on}
                     className="relative flex h-12 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     key={d}
@@ -770,7 +797,7 @@ export function CalendarWeek({
                       />
                     )}
                     <span className={cn("relative text-[11px]", isToday ? "font-medium text-destructive-foreground" : "text-muted-foreground")}>
-                      {DOW[weekday(d)]}
+                      {L.dow(d)}
                     </span>{" "}
                     <span className={cn("relative font-medium tabular-nums", isToday && "text-destructive-foreground")}>{parse(d).getUTCDate()}</span>
                     {busy.has(d) && <span className="absolute bottom-1 size-1 rounded-full bg-muted-foreground/60" />}
@@ -784,11 +811,11 @@ export function CalendarWeek({
             <div className="flex w-14 shrink-0 flex-col items-end pe-2 text-[10px] text-muted-foreground">
               {!narrow && (
                 <span className="flex h-11 flex-col items-end justify-center leading-tight">
-                  <span className="font-medium text-foreground/80 tabular-nums">W{isoWeek(days[0])}</span>
-                  <span>CEST</span>
+                  <span className="font-medium text-foreground/80 tabular-nums">{interpolate(t.weekNumber, { n: isoWeek(days[0] ?? today) })}</span>
+                  <span>{zoneName}</span>
                 </span>
               )}
-              <span className="flex h-8 items-center">All day</span>
+              <span className="flex h-8 items-center">{t.allDay}</span>
             </div>
             <div className="min-w-0 flex-1">
               {!narrow && (
@@ -805,7 +832,7 @@ export function CalendarWeek({
                         }}
                         type="button"
                       >
-                        <span className={cn("text-xs", isToday ? "font-medium text-destructive-foreground" : "text-muted-foreground")}>{DOW[weekday(d)]}</span>
+                        <span className={cn("text-xs", isToday ? "font-medium text-destructive-foreground" : "text-muted-foreground")}>{L.dow(d)}</span>
                         <span
                           className={cn(
                             "flex h-6 min-w-6 items-center justify-center rounded-full px-1 font-medium tabular-nums",
@@ -823,7 +850,7 @@ export function CalendarWeek({
                 {days.map((d) => (
                   <div className="border-s" key={d} style={{ gridColumn: "span 1", gridRow: "1 / span 3" }} />
                 ))}
-                {packAllDay(allDay, days[0], days.length).map(({ e, row, startIdx, endIdx }) => {
+                {packAllDay(allDay, days[0] ?? today, days.length).map(({ e, row, startIdx, endIdx }) => {
                   const cal = calOf(e.calendar);
                   return (
                     <button
@@ -862,7 +889,7 @@ export function CalendarWeek({
                     key={h}
                     style={{ top: h * HOUR }}
                   >
-                    {fmtTime(h * 60)}
+                    {L.time(h * 60)}
                   </span>
                 ))}
                 {todayIdx >= 0 && (
@@ -870,7 +897,7 @@ export function CalendarWeek({
                     className="absolute end-1 z-20 -translate-y-1/2 rounded-md bg-category-4-strong px-1 py-px font-medium text-[10px] text-white tabular-nums"
                     style={{ top: nowTop }}
                   >
-                    {fmtTime(nowMin).replace(" AM", "").replace(" PM", "")}
+                    {L.clock(nowMin)}
                   </span>
                 )}
               </div>
@@ -884,11 +911,11 @@ export function CalendarWeek({
                 style={{ gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))` }}
               >
                 <div aria-hidden className="pointer-events-none absolute inset-0">
-                  {Array.from({ length: 24 }, (_, h) => (
+                  {HOURS_24.map((h) => (
                     <div className="absolute inset-x-0 border-t border-border/70" key={h} style={{ top: h * HOUR }} />
                   ))}
-                  {Array.from({ length: 24 }, (_, h) => (
-                    <div className="absolute inset-x-0 border-t border-border/30 border-dashed" key={`h${h}`} style={{ top: h * HOUR + HOUR / 2 }} />
+                  {HOURS_24.map((h) => (
+                    <div className="absolute inset-x-0 border-t border-border/30 border-dashed" key={`half-${h}`} style={{ top: h * HOUR + HOUR / 2 }} />
                   ))}
                   {todayIdx >= 0 && nowMin <= 24 * 60 && <div className="absolute inset-x-0 h-px -translate-y-1/2 bg-destructive/25" style={{ top: nowTop }} />}
                 </div>
@@ -897,13 +924,7 @@ export function CalendarWeek({
                   const placed = placeDay(timed.filter((e) => e.date === d));
                   const isToday = d === today;
                   return (
-                    <div
-                      aria-label={`${DOW[weekday(d)]} ${parse(d).getUTCDate()}, drag to create an event`}
-                      className={cn("relative border-s", weekday(d) >= 5 && "bg-muted/40")}
-                      key={d}
-                      onPointerDown={(e) => beginCreate(e, d)}
-                      role="group"
-                    >
+                    <div className={cn("relative border-s", weekday(d) >= 5 && "bg-muted/40")} key={d} onPointerDown={(e) => beginCreate(e, d)} title={interpolate(t.dayColumn, { day: `${L.dow(d)} ${parse(d).getUTCDate()}` })}>
                       {isToday && nowMin <= 24 * 60 && (
                         <div aria-hidden className="pointer-events-none absolute inset-x-0 z-20" style={{ top: nowTop }}>
                           <div className="absolute inset-x-0 h-0.5 -translate-y-1/2 bg-destructive" />
@@ -957,12 +978,12 @@ export function CalendarWeek({
                             >
                               <div className={cn("flex h-full flex-col ps-3 pe-1.5", short ? "flex-row items-center gap-1.5 py-0" : "py-1")}>
                                 <span className={cn("truncate font-medium text-xs leading-4", !ev.title && "italic", !ev.title && !faded && "opacity-75")}>
-                                  {ev.title || "New event"}
+                                  {ev.title || t.untitled}
                                 </span>
                                 <span className={cn("truncate text-[11px] tabular-nums leading-4", !faded && "opacity-75", short && "hidden shrink-0 @[8rem]:inline")}>
-                                  {short ? fmtTime(ev.start) : fmtRange(ev.start, ev.end)}
+                                  {short ? L.time(ev.start) : L.range(ev.start, ev.end)}
                                 </span>
-                                {short ? <span className="sr-only">{`, ${fmtRange(ev.start, ev.end)}`}</span> : null}
+                                {short ? <span className="sr-only">{`, ${L.range(ev.start, ev.end)}`}</span> : null}
                                 {!short && height > 64 && ev.location && (
                                   <span className={cn("mt-0.5 flex items-center gap-1 truncate text-[11px] leading-4", !faded && "opacity-75")}>
                                     <MapPinIcon className="size-3 shrink-0" />
@@ -972,7 +993,7 @@ export function CalendarWeek({
                               </div>
                               {isDrag && height >= 40 && (
                                 <span className="pointer-events-none absolute end-1.5 bottom-1.5 rounded bg-black/20 px-1 font-medium text-[10px] tabular-nums">
-                                  {fmtDuration(ev.end - ev.start)}
+                                  {L.duration(ev.end - ev.start)}
                                 </span>
                               )}
                               <span
@@ -998,7 +1019,8 @@ export function CalendarWeek({
                       dayIndex={panel.dayIndex}
                       editing={editing === panel.ev.id}
                       ev={panel.ev}
-                      key={panel.ev.id}
+                      key={`${panel.ev.id}-${editing === panel.ev.id}`}
+                      t={t}
                       onCalendar={(id) => patch(panel.ev.id, { calendar: id })}
                       onClose={closeEditor}
                       onDelete={() => remove(panel.ev.id)}
@@ -1007,9 +1029,11 @@ export function CalendarWeek({
                         requestAnimationFrame(() => titleRef.current?.focus());
                       }}
                       onSave={() => {
-                        if (!panel.ev.title.trim()) patch(panel.ev.id, { title: "Busy" });
+                        const saved = panel.ev.title.trim() ? panel.ev : { ...panel.ev, title: t.defaultTitle };
+                        if (saved !== panel.ev) patch(panel.ev.id, { title: saved.title });
                         setEditing(null);
-                        setToast({ key: nextKey(), text: `Saved for ${DOW[weekday(panel.ev.date)]} ${fmtRange(panel.ev.start, panel.ev.end)}` });
+                        void persist(saved);
+                        setToast({ key: nextKey(), text: interpolate(t.savedFor, { when: `${L.dow(panel.ev.date)} ${L.range(panel.ev.start, panel.ev.end)}` }) });
                         rootRef.current?.focus({ preventScroll: true });
                       }}
                       onTitle={(title) => patch(panel.ev.id, { title })}
@@ -1037,10 +1061,10 @@ export function CalendarWeek({
                   <div className="min-w-0 flex-1">
                     <div className="font-medium">{selected.title}</div>
                     <div className="text-muted-foreground text-xs">
-                      All day{selected.days && selected.days > 1 ? ` · ${selected.days} days` : ""} · {calOf(selected.calendar).name}
+                      {interpolate(t.allDayDetail, { span: selected.days && selected.days > 1 ? interpolate(t.allDaySpan, { count: selected.days }) : "", calendar: calOf(selected.calendar).name })}
                     </div>
                   </div>
-                  <Button aria-label="Close" onClick={closeEditor} size="icon-xs" variant="ghost">
+                  <Button aria-label={t.close} onClick={closeEditor} size="icon-xs" variant="ghost">
                     <XIcon />
                   </Button>
                 </div>
@@ -1062,7 +1086,7 @@ export function CalendarWeek({
                   <span className="truncate text-sm tabular-nums">{toast.text}</span>
                   {toast.undo ? (
                     <Button className="rounded-full" onClick={toast.undo} size="xs" variant="secondary">
-                      Undo
+                      {t.undo}
                     </Button>
                   ) : (
                     <span className="w-1" />
@@ -1091,7 +1115,9 @@ function EventCard({
   onClose,
   onDelete,
   onEdit,
+  t,
 }: {
+  t: Messages;
   ev: CalendarEvent;
   calendars: CalendarSource[];
   dayIndex: number;
@@ -1106,6 +1132,7 @@ function EventCard({
   onDelete: () => void;
   onEdit: () => void;
 }) {
+  const L = useLabels(t);
   const cal = calendars.find((c) => c.id === ev.calendar) ?? calendars[0];
   const cardRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -1116,7 +1143,7 @@ function EventCard({
     const bottom = top + card.offsetHeight;
     if (bottom > box.scrollTop + box.clientHeight - 12) box.scrollTo({ top: bottom - box.clientHeight + 12, behavior: "smooth" });
     else if (top < box.scrollTop + 8) box.scrollTo({ top: top - 8, behavior: "smooth" });
-  }, [scrollRef, editing]);
+  }, [scrollRef]);
   const toRight = cols === 1 ? false : dayIndex < cols - 2;
   const single = cols === 1;
   const top = Math.max(4, ev.start * PX - 8);
@@ -1137,7 +1164,7 @@ function EventCard({
       onPointerDown={(e) => e.stopPropagation()}
       ref={cardRef}
       role="dialog"
-      aria-label={editing ? "Edit event" : ev.title}
+      aria-label={editing ? t.editEvent : ev.title}
       style={style}
       transition={{ duration: 0.16, ease }}
     >
@@ -1145,14 +1172,14 @@ function EventCard({
         <span className={cn("mt-1.5 size-2.5 shrink-0 rounded-full", toneDot[cal.tone])} />
         {editing ? (
           <input
-            aria-label="Event title"
+            aria-label={t.eventTitle}
             className="min-w-0 flex-1 bg-transparent font-medium text-sm outline-none placeholder:text-muted-foreground/70"
             onChange={(e) => onTitle(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") onSave();
               if (e.key === "Escape") onClose();
             }}
-            placeholder="Add a title"
+            placeholder={t.addTitle}
             ref={titleRef}
             value={ev.title}
           />
@@ -1161,7 +1188,7 @@ function EventCard({
             {ev.title}
           </button>
         )}
-        <Button aria-label="Close" className="-me-1 -mt-0.5" onClick={onClose} size="icon-xs" variant="ghost">
+        <Button aria-label={t.close} className="-me-1 -mt-0.5" onClick={onClose} size="icon-xs" variant="ghost">
           <XIcon />
         </Button>
       </div>
@@ -1169,9 +1196,9 @@ function EventCard({
         <div className="flex items-center gap-2">
           <ClockIcon className="size-3.5 shrink-0" />
           <span className="tabular-nums">
-            {DOW[weekday(ev.date)]} {MONTHS[parse(ev.date).getUTCMonth()].slice(0, 3)} {parse(ev.date).getUTCDate()} · {fmtRange(ev.start, ev.end)}
+            {L.dow(ev.date)} {L.month(ev.date, "short")} {parse(ev.date).getUTCDate()} · {L.range(ev.start, ev.end)}
           </span>
-          <span className="ms-auto tabular-nums">{fmtDuration(ev.end - ev.start)}</span>
+          <span className="ms-auto tabular-nums">{L.duration(ev.end - ev.start)}</span>
         </div>
         {ev.location && (
           <div className="flex items-center gap-2">
@@ -1179,10 +1206,10 @@ function EventCard({
             {ev.location}
           </div>
         )}
-        {ev.video && (
+        {ev.videoUrl && (
           <div className="flex items-center gap-2">
-            <VideoIcon className="size-3.5 shrink-0" />
-            <span className="text-info-foreground">meet.kestrel.dev/{ev.id}</span>
+            <VideoIcon aria-hidden className="size-3.5 shrink-0" />
+            <span className="truncate text-info-foreground">{ev.videoUrl.replace(/^https?:\/\//, "")}</span>
           </div>
         )}
         {ev.people?.length ? (
@@ -1222,7 +1249,7 @@ function EventCard({
         {editing ? (
           <>
             <Button className="transition-[box-shadow,scale] duration-150 ease-out active:scale-[0.97]" onClick={onSave} size="xs">
-              Save
+              {t.save}
             </Button>
             <span className="text-muted-foreground text-xs">
               <Kbd className="h-4 text-[10px]">↵</Kbd>
@@ -1230,11 +1257,11 @@ function EventCard({
           </>
         ) : (
           <span className="flex items-center gap-1 ps-1 text-muted-foreground text-xs">
-            <Kbd className="h-4 text-[10px]">↑↓</Kbd> move
-            <Kbd className="ms-1 h-4 text-[10px]">⇧↑↓</Kbd> resize
+            <Kbd className="h-4 text-[10px]">↑↓</Kbd> {t.move}
+            <Kbd className="ms-1 h-4 text-[10px]">⇧↑↓</Kbd> {t.resize}
           </span>
         )}
-        <Button aria-label="Delete event" className="ms-auto" onClick={onDelete} size="icon-xs" variant="ghost">
+        <Button aria-label={t.deleteEvent} className="ms-auto" onClick={onDelete} size="icon-xs" variant="ghost">
           <Trash2Icon />
         </Button>
       </div>
@@ -1242,6 +1269,10 @@ function EventCard({
   );
 }
 
-export function CalendarWeekDemo() {
-  return <CalendarWeek />;
+export function CalendarWeek(props: CalendarWeekProps) {
+  return (
+    <ScreenBoundary name="CalendarWeek">
+      <CalendarWeekScreen {...props} />
+    </ScreenBoundary>
+  );
 }
