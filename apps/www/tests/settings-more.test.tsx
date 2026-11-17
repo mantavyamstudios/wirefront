@@ -26,6 +26,8 @@ import * as branding from "@/pages/showcase/settings-branding/fixtures";
 import { WorkspaceBranding } from "@/pages/showcase/settings-branding/view";
 import * as webhooks from "@/pages/showcase/settings-webhooks/fixtures";
 import { WebhookSettings } from "@/pages/showcase/settings-webhooks/view";
+import * as localization from "@/pages/showcase/settings-localization/fixtures";
+import { LocalizationSettings } from "@/pages/showcase/settings-localization/view";
 import * as profile from "@/pages/showcase/settings-profile/fixtures";
 import { AccountProfileSettings } from "@/pages/showcase/settings-profile/view";
 
@@ -401,5 +403,35 @@ describe("WebhookSettings", () => {
     expect(screen.getByText("2 of 3")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Resend" }));
     await waitFor(() => expect(onResend).toHaveBeenCalled());
+  });
+});
+
+describe("LocalizationSettings", () => {
+  const renderIt = (props: Partial<Parameters<typeof LocalizationSettings>[0]> = {}) =>
+    render(
+      <WirefrontProvider locale="en-US" now={() => new Date(localization.now)}>
+        <LocalizationSettings currencies={localization.currencies} languages={localization.languages} prefs={localization.getLocalePrefs} timeZones={localization.timeZones} {...props} />
+      </WirefrontProvider>,
+    );
+
+  it("previews formats from the saved preferences and the provider clock", () => {
+    renderIt();
+    expect(screen.getAllByText("04/14/2026").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("2:30 AM").length).toBeGreaterThan(0);
+    expect(screen.getByText("1,234,567.89")).toBeTruthy();
+    expect(screen.getByText("Week starts Sunday")).toBeTruthy();
+    expect(screen.getByRole("radio", { name: "Monday" }).getAttribute("aria-disabled") ?? String((screen.getByRole("radio", { name: "Monday" }) as HTMLButtonElement).disabled)).toBe("true");
+  });
+
+  it("saves each change and reformats the preview", async () => {
+    const onSave = vi.fn(async () => {});
+    renderIt({ onSave });
+    fireEvent.click(screen.getByRole("radio", { name: "Monday" }));
+    expect(onSave).toHaveBeenLastCalledWith({ ...localization.getLocalePrefs, firstDay: "mon" });
+    await waitFor(() => expect(screen.getByText("Week starts Monday")).toBeTruthy());
+    fireEvent.click(screen.getByRole("radio", { name: /24-hour/ }));
+    await waitFor(() => expect(onSave).toHaveBeenLastCalledWith({ ...localization.getLocalePrefs, firstDay: "mon", timeFormat: "h24" }));
+    fireEvent.click(screen.getByRole("radio", { name: "1.234,56" }));
+    await waitFor(() => expect(screen.getByText("1.234.567,89")).toBeTruthy());
   });
 });
