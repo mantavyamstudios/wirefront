@@ -185,21 +185,6 @@
     "lint/a11y/useAriaPropsSupportedByRole": 1,
     "lint/suspicious/noArrayIndexKey": 2
   },
-  "apps/www/src/pages/showcase/tours-arrow-tooltip.tsx": {
-    "lint/style/noNonNullAssertion": 6,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/tours-checklist.tsx": {
-    "lint/a11y/useSemanticElements": 1
-  },
-  "apps/www/src/pages/showcase/tours-spotlight.tsx": {
-    "lint/style/noNonNullAssertion": 5,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/tours-welcome-carousel.tsx": {
-    "lint/style/noNonNullAssertion": 1,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
   "apps/www/src/routes/__root.tsx": {
     "lint/security/noDangerouslySetInnerHtml": 1
   },
