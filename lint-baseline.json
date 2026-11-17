@@ -262,9 +262,6 @@
     "lint/a11y/useValidAnchor": 1,
     "lint/suspicious/noArrayIndexKey": 4
   },
-  "apps/www/src/pages/showcase/settings-appearance-settings.tsx": {
-    "lint/a11y/noLabelWithoutControl": 2
-  },
   "apps/www/src/pages/showcase/settings-connectors.tsx": {
     "lint/a11y/noLabelWithoutControl": 1,
     "lint/a11y/noStaticElementInteractions": 1,

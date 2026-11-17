@@ -28,6 +28,8 @@ import * as webhooks from "@/pages/showcase/settings-webhooks/fixtures";
 import { WebhookSettings } from "@/pages/showcase/settings-webhooks/view";
 import * as localization from "@/pages/showcase/settings-localization/fixtures";
 import { LocalizationSettings } from "@/pages/showcase/settings-localization/view";
+import * as theme from "@/pages/showcase/settings-appearance-settings/fixtures";
+import { ThemeSettings } from "@/pages/showcase/settings-appearance-settings/view";
 import * as profile from "@/pages/showcase/settings-profile/fixtures";
 import { AccountProfileSettings } from "@/pages/showcase/settings-profile/view";
 
@@ -433,5 +435,34 @@ describe("LocalizationSettings", () => {
     await waitFor(() => expect(onSave).toHaveBeenLastCalledWith({ ...localization.getLocalePrefs, firstDay: "mon", timeFormat: "h24" }));
     fireEvent.click(screen.getByRole("radio", { name: "1.234,56" }));
     await waitFor(() => expect(screen.getByText("1.234.567,89")).toBeTruthy());
+  });
+});
+
+describe("ThemeSettings", () => {
+  // The preview follows the OS scheme; jsdom has no matchMedia.
+  beforeEach(() => {
+    vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("is read-only without onSave and the preview is still playable", () => {
+    render(<ThemeSettings prefs={theme.getThemePrefs} previewTasks={theme.previewTasks} workspace="Ridgeline" />);
+    expect(screen.getByText("Customise how Ridgeline looks on this device.")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Reset" })).toBeNull();
+    expect((screen.getByRole("switch", { name: /Show sidebar icons/ }) as HTMLButtonElement).disabled ?? true).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Complete “QA the onboarding emails” in the preview" }));
+    expect(screen.getByRole("button", { name: "Reopen “QA the onboarding emails” in the preview" })).toBeTruthy();
+  });
+
+  it("saves each change, shows Saved and resets to the defaults", async () => {
+    const onSave = vi.fn(async () => {});
+    render(<ThemeSettings defaults={theme.factoryPrefs} onSave={onSave} prefs={theme.getThemePrefs} previewTasks={theme.previewTasks} workspace="Ridgeline" />);
+    fireEvent.click(screen.getByRole("radio", { name: "Rose" }));
+    expect(onSave).toHaveBeenLastCalledWith({ ...theme.factoryPrefs, accent: "rose" });
+    expect(await screen.findByText("Saved")).toBeTruthy();
+    fireEvent.click(screen.getByRole("radio", { name: "Compact" }));
+    await waitFor(() => expect(onSave).toHaveBeenLastCalledWith({ ...theme.factoryPrefs, accent: "rose", density: "compact" }));
+    fireEvent.click(screen.getByRole("button", { name: "Reset" }));
+    await waitFor(() => expect(onSave).toHaveBeenLastCalledWith(theme.factoryPrefs));
   });
 });
