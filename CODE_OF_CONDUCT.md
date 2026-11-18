@@ -10,6 +10,6 @@ Wirefront adopts the [Contributor Covenant, version 2.1](https://www.contributor
 
 ## Reporting
 
-If you experience or witness unacceptable behaviour, contact the maintainers privately through [mantavyam.com](https://mantavyam.com). Reports are handled confidentially.
+If you experience or witness unacceptable behaviour, contact the maintainers privately through [mantavyam.in](https://mantavyam.in). Reports are handled confidentially.
 
 Maintainers may remove, edit or reject comments, commits, code, issues and other contributions that break this code of conduct, and may temporarily or permanently ban contributors, following the Covenant's [enforcement guidelines](https://www.contributor-covenant.org/version/2/1/code_of_conduct/#enforcement-guidelines).

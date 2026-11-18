@@ -4,7 +4,7 @@ import type { ShellContext } from "./schema";
 
 /** What the mocks return for `getShellContext`. */
 export const getShellContext: ShellContext = {
-  user: { name: "Mantavyam", email: "hello@mantavyam.com" },
+  user: { name: "Mantavyam", email: "hello@mantavyam.in" },
   workspace: { id: "ws_acme", name: "Acme Inc." },
   unread: 4,
 };

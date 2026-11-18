@@ -13,7 +13,7 @@ const root = resolve(__dirname, '..')
 
 const TITLE = 'Wirefront'
 const TAGLINE = 'Mantavyam Studios'
-const DOMAIN = 'mantavyam.com'
+const DOMAIN = 'mantavyam.in'
 const SUBTITLE = 'Production-ready UI screens built on shadcn/ui'
 const STATS = ['200 screens', 'shadcn registry', "press 'c' to copy"]
 

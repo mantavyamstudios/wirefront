@@ -2,7 +2,7 @@
 
 200 responsive UI screens built on [shadcn/ui](https://ui.shadcn.com) with [Base UI](https://base-ui.com) and Tailwind v4, each installable with the shadcn CLI. Browse a screen, preview it on desktop, tablet or phone, then copy its source or install it.
 
-By [Mantavyam Studios](https://mantavyam.com) · [GitHub](https://github.com/mantavyamstudios) · [Book a call](https://cal.com/mantavyam/business)
+By [Mantavyam Studios](https://mantavyam.in) · [GitHub](https://github.com/mantavyamstudios) · [Book a call](https://cal.com/mantavyam/business)
 
 ## Layout
 
