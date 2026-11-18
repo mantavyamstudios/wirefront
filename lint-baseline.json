@@ -104,28 +104,6 @@
     "lint/a11y/useSemanticElements": 1,
     "lint/correctness/useExhaustiveDependencies": 2
   },
-  "apps/www/src/pages/showcase/devtools-code-review.tsx": {
-    "lint/a11y/noAutofocus": 3,
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/useSemanticElements": 2,
-    "lint/suspicious/noArrayIndexKey": 3
-  },
-  "apps/www/src/pages/showcase/devtools-docs-site.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/useFocusableInteractive": 1,
-    "lint/a11y/useKeyWithClickEvents": 1,
-    "lint/a11y/useValidAnchor": 1,
-    "lint/suspicious/noArrayIndexKey": 3
-  },
-  "apps/www/src/pages/showcase/devtools-issue-tracker.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/useAriaPropsSupportedByRole": 1,
-    "lint/a11y/useFocusableInteractive": 6,
-    "lint/a11y/useKeyWithClickEvents": 2,
-    "lint/a11y/useSemanticElements": 8,
-    "lint/correctness/useExhaustiveDependencies": 1,
-    "lint/suspicious/noArrayIndexKey": 2
-  },
   "apps/www/src/pages/showcase/personal-habits.tsx": {
     "lint/a11y/useSemanticElements": 2,
     "lint/suspicious/noArrayIndexKey": 1

@@ -57,7 +57,7 @@ function initials(name: string) {
 /** Plain text with `code` and @mentions highlighted. */
 function RichText({ text }: { text: string }) {
   let at = 0;
-  return text.split(/(`[^`]+`|(?<![\w.])@[\w.-]+)/g).map((part) => {
+  return text.split(/(`[^`]+`|(?<![\w.])@[\w.-]+)/g).filter(Boolean).map((part) => {
     const key = at;
     at += part.length;
     if (part.length > 2 && part.startsWith("`") && part.endsWith("`")) return <code key={key}>{part.slice(1, -1)}</code>;

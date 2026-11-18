@@ -246,7 +246,10 @@ function Art({ art, className, large }: { art: ProfileArt; className?: string; l
 
 function RichText({ text }: { text: string }) {
   let offset = 0;
-  const parts = text.split(/([@#][\w.]+\w)/g).map((p) => {
+  const parts = text
+    .split(/([@#][\w.]+\w)/g)
+    .filter(Boolean)
+    .map((p) => {
     const at = offset;
     offset += p.length;
     return { at, p };
