@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev --port 4000",
     "prebuild": "cd ../.. && npm run registry",
-    "build": "vite build",
+    "build": "vite build && node scripts/write-404.mjs",
     "start": "node .output/server/index.mjs",
     "pretypecheck": "node scripts/ensure-route-tree.mjs",
     "typecheck": "tsc -b && tsc -p tests && tsc -p tsconfig.shipped.json",

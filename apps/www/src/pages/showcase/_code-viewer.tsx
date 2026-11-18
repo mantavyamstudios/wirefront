@@ -10,6 +10,7 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { useTheme } from "@wirefront/ui/theme-provider";
 import type { CategorySlug } from "@/lib/designs";
 import { getSourceFile } from "./source-files";
+import { SITE_URL } from "@/lib/site";
 
 const RAW_SOURCES = import.meta.glob(["./*.tsx", "./*/view.tsx", "./*/schema.ts", "./*/fixtures.ts"], {
   query: "?raw",
@@ -59,8 +60,11 @@ export function CodeStage({ category, design, title }: CodeStageProps) {
   const { resolved } = useTheme();
   const reduce = useReducedMotion();
   const [setupOpen, setSetupOpen] = useState(false);
-  const registryUrl =
-    typeof window !== "undefined"
+  // The production build knows its own URL (VITE_SITE_URL), so the server and
+  // the browser render the same command; without it (local dev) fall back to the page origin.
+  const registryUrl = SITE_URL
+    ? `${SITE_URL}/r/${category}-${design}.json`
+    : typeof window !== "undefined"
       ? `${window.location.origin}/r/${category}-${design}.json`
       : `/r/${category}-${design}.json`;
   const installCommand = `npx shadcn@latest add ${registryUrl}`;

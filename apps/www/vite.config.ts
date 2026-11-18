@@ -8,6 +8,7 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import { nitro } from 'nitro/vite'
 import { defineConfig, type Plugin } from 'vite'
+import { SOURCE_FILES } from './src/pages/showcase/source-files.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -35,6 +36,16 @@ function serveDepSourcemaps(): Plugin {
   }
 }
 
+// Every page is prerendered to static HTML so the site can be served from
+// static hosting (Cloudflare Workers static assets) with no server code.
+// Design pages have path parameters, so they are listed here rather than
+// discovered. Pages are written as /c/<category>/<design>.html (not
+// .../index.html) so Cloudflare serves the slash-less URLs the app links to
+// without a redirect.
+const designPaths = Object.entries(SOURCE_FILES).flatMap(([category, designs]) =>
+  Object.keys(designs ?? {}).map((design) => `/c/${category}/${design}`),
+)
+
 export default defineConfig({
   server: { port: 4000 },
   // The code-review screen shows a diff containing `import … from "vitest"`
@@ -45,5 +56,14 @@ export default defineConfig({
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
   },
-  plugins: [serveDepSourcemaps(), tailwindcss(), tanstackStart(), nitro(), viteReact()],
+  plugins: [
+    serveDepSourcemaps(),
+    tailwindcss(),
+    tanstackStart({
+      prerender: { enabled: true, crawlLinks: true, failOnError: true, autoSubfolderIndex: false },
+      pages: designPaths.map((path) => ({ path, prerender: { enabled: true } })),
+    }),
+    nitro(),
+    viteReact(),
+  ],
 })
