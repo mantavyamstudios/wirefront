@@ -55,46 +55,6 @@
     "lint/a11y/useSemanticElements": 1,
     "lint/suspicious/noArrayIndexKey": 2
   },
-  "apps/www/src/pages/showcase/apps-drive.tsx": {
-    "lint/a11y/noSvgWithoutTitle": 1,
-    "lint/a11y/useSemanticElements": 1,
-    "lint/suspicious/noArrayIndexKey": 2
-  },
-  "apps/www/src/pages/showcase/apps-folder-view.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/useSemanticElements": 4,
-    "lint/suspicious/noArrayIndexKey": 5
-  },
-  "apps/www/src/pages/showcase/apps-help-centre.tsx": {
-    "lint/a11y/noLabelWithoutControl": 1,
-    "lint/a11y/noNoninteractiveElementToInteractiveRole": 2,
-    "lint/a11y/noStaticElementInteractions": 2,
-    "lint/a11y/useFocusableInteractive": 1,
-    "lint/correctness/useExhaustiveDependencies": 1,
-    "lint/suspicious/noArrayIndexKey": 6
-  },
-  "apps/www/src/pages/showcase/apps-mail.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/useSemanticElements": 1
-  },
-  "apps/www/src/pages/showcase/apps-notes.tsx": {
-    "lint/a11y/useSemanticElements": 1,
-    "lint/correctness/useExhaustiveDependencies": 1
-  },
-  "apps/www/src/pages/showcase/apps-team-chat.tsx": {
-    "lint/a11y/noAutofocus": 2,
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/useKeyWithClickEvents": 1,
-    "lint/a11y/useSemanticElements": 3,
-    "lint/correctness/useExhaustiveDependencies": 4,
-    "lint/suspicious/noArrayIndexKey": 5,
-    "lint/suspicious/useIterableCallbackReturn": 1
-  },
-  "apps/www/src/pages/showcase/apps-video-call.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/useSemanticElements": 2,
-    "lint/correctness/useExhaustiveDependencies": 8
-  },
   "apps/www/src/pages/showcase/commerce-checkout.tsx": {
     "lint/a11y/noSvgWithoutTitle": 2,
     "lint/suspicious/noArrayIndexKey": 1
