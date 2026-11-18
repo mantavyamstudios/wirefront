@@ -64,21 +64,6 @@
     "lint/a11y/useSemanticElements": 1,
     "lint/correctness/useExhaustiveDependencies": 2
   },
-  "apps/www/src/pages/showcase/personal-habits.tsx": {
-    "lint/a11y/useSemanticElements": 2,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/personal-money.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/useSemanticElements": 1,
-    "lint/suspicious/noArrayIndexKey": 1
-  },
-  "apps/www/src/pages/showcase/personal-music-player.tsx": {
-    "lint/a11y/noStaticElementInteractions": 1,
-    "lint/a11y/noSvgWithoutTitle": 8,
-    "lint/correctness/useExhaustiveDependencies": 3,
-    "lint/suspicious/noArrayIndexKey": 3
-  },
   "apps/www/src/routes/__root.tsx": {
     "lint/security/noDangerouslySetInnerHtml": 1
   },
