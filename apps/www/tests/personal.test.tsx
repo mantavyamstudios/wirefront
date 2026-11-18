@@ -100,4 +100,11 @@ describe("personal", () => {
     render(<MusicPlayer appName={musicFx.appName} onPlayingChange={() => {}} onSeek={() => {}} onTrackChange={onTrackChange} playing playlists={musicFx.listPlaylists} position={first.duration} tracks={musicFx.listTracks} />, { wrapper: wrap("2026-10-24T10:00:00Z") });
     expect(onTrackChange).toHaveBeenCalledWith(musicFx.listTracks[1]?.id);
   });
+
+  it("MusicPlayer keeps rendering when likedIds is left out", () => {
+    const base = { appName: musicFx.appName, onPlayingChange: () => {}, onSeek: () => {}, onTrackChange: () => {}, playing: true, playlists: musicFx.listPlaylists, tracks: musicFx.listTracks };
+    const { rerender } = render(<MusicPlayer {...base} position={10} />, { wrapper: wrap("2026-10-24T10:00:00Z") });
+    rerender(<MusicPlayer {...base} position={11} />);
+    expect(screen.getByRole("slider", { name: "Seek" }).getAttribute("aria-valuenow")).toBe("11");
+  });
 });

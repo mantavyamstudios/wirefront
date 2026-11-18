@@ -89,6 +89,8 @@ export interface MusicPlayerProps {
   className?: string;
 }
 
+/** Stable empty default, so the render-time sync below does not loop. */
+const NO_LIKES: string[] = [];
 const spring = { type: "spring", stiffness: 520, damping: 46, mass: 1 } as const;
 const easeOut = [0.23, 1, 0.32, 1] as const;
 const press = "transition-[color,background-color,box-shadow,scale] duration-150 ease-out active:scale-[0.97]";
@@ -382,7 +384,7 @@ function QueueRow({ track, index, total, onPlay, onRemove, onMove, t }: { track:
   );
 }
 
-function MusicPlayerScreen({ appName, tracks, playlists, likedIds = [], links = [], initialTrackId, position, playing, onTrackChange, onPlayingChange, onSeek, onVolumeChange, onToggleLike, className }: MusicPlayerProps) {
+function MusicPlayerScreen({ appName, tracks, playlists, likedIds = NO_LIKES, links = [], initialTrackId, position, playing, onTrackChange, onPlayingChange, onSeek, onVolumeChange, onToggleLike, className }: MusicPlayerProps) {
   const t = useMessages("musicPlayer", MUSIC_PLAYER_MESSAGES);
   const reduce = useReducedMotionAfterMount();
   const volumeId = useId();
