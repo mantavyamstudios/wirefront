@@ -49,6 +49,9 @@ const COVERS = [
   "radial-gradient(120% 100% at 30% 20%, color-mix(in srgb, var(--category-4) 35%, transparent), transparent 60%), radial-gradient(120% 100% at 80% 80%, color-mix(in srgb, var(--category-5) 70%, transparent), transparent 60%)",
 ];
 
+/** Whole amounts drop the ".00"; works on older Intl type libs without trailingZeroDisplay. */
+const wholeAmount = (n: number): Intl.NumberFormatOptions | undefined => (Number.isInteger(n) ? { minimumFractionDigits: 0, maximumFractionDigits: 0 } : undefined);
+
 function ProductCardsScreen({ products, total, collection, onAddToBag, onWishlist, className }: ProductCardsProps) {
   const t = useMessages("productCards", PRODUCT_CARDS_MESSAGES);
   const format = useFormat();
@@ -134,11 +137,11 @@ function ProductCardsScreen({ products, total, collection, onAddToBag, onWishlis
                   </CardHeader>
                   <CardContent className="pt-0">
                     <div className="flex items-baseline gap-2">
-                      <div className="font-heading font-semibold text-lg">{format.money(p.price, p.currency, { trailingZeroDisplay: "stripIfInteger" })}</div>
+                      <div className="font-heading font-semibold text-lg">{format.money(p.price, p.currency, wholeAmount(p.price))}</div>
                       {p.compareAtPrice ? (
                         <del className="text-muted-foreground text-sm">
                           <span className="sr-only">{t.wasPrice} </span>
-                          {format.money(p.compareAtPrice, p.currency, { trailingZeroDisplay: "stripIfInteger" })}
+                          {format.money(p.compareAtPrice, p.currency, wholeAmount(p.compareAtPrice))}
                         </del>
                       ) : null}
                     </div>
