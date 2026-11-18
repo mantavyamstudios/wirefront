@@ -623,7 +623,8 @@ function ConductorScreen({ agentName, title, briefTitle, messages, helpers, fiel
             </span>
           </div>
           {helpers.length > 0 ? (
-            <button aria-label={interpolate(t.helpersCount, { count: helpers.length })} className="hidden cursor-pointer items-center -space-x-1.5 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring @md:flex" onClick={() => openPane("agents")} type="button">
+            <button className="hidden cursor-pointer items-center -space-x-1.5 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring @md:flex" onClick={() => openPane("agents")} type="button">
+              <span className="sr-only">{interpolate(t.helpersCount, { count: helpers.length })}</span>
               <AnimatePresence initial={false}>
                 {helpers.map((h) => (
                   <motion.span animate={{ opacity: 1, scale: 1 }} className="flex rounded-full ring-2 ring-background" initial={{ opacity: 0, scale: 0.9 }} key={h.id} transition={{ duration: 0.2, ease }}>

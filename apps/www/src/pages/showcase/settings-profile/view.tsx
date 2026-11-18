@@ -17,7 +17,7 @@ import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
 import { AtSignIcon, GlobeIcon, KeyRoundIcon, ShieldCheckIcon, TrashIcon, UploadIcon } from "lucide-react";
-import { type ReactNode, type SelectHTMLAttributes, useId, useRef, useState } from "react";
+import { type ReactNode, type SelectHTMLAttributes, useId, useRef, useState, useSyncExternalStore } from "react";
 import { type AccountProfile, AccountProfileInput } from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("accountProfile.<key>"). */
@@ -87,6 +87,8 @@ export interface AccountProfileProps {
 const FORM_ID = "account-profile-form";
 const fieldError = "text-destructive-foreground text-xs";
 const label = "font-medium text-sm leading-none";
+
+const noSubscribe = () => () => {};
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -172,7 +174,11 @@ function AccountProfileScreen({
   const remove = useAction(onRemovePhoto ?? (async () => {}));
   const photoError = upload.error ?? remove.error;
 
+  // Time-zone names come from the runtime's ICU data, which differs between the server and the
+  // browser, so the server and the first client render show the IANA id and the name follows.
+  const hydrated = useSyncExternalStore(noSubscribe, () => true, () => false);
   const zoneName = (zone: string) => {
+    if (!hydrated) return zone;
     try {
       const name = new Intl.DateTimeFormat(locale, { timeZone: zone, timeZoneName: "longGeneric" }).formatToParts(new Date(0)).find((p) => p.type === "timeZoneName")?.value;
       return name ? `${name} (${zone})` : zone;
