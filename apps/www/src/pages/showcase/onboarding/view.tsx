@@ -15,7 +15,7 @@ import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
-import { type FormEvent, type ReactNode, useEffect, useRef, useState } from "react";
+import { type SubmitEvent, type ReactNode, useEffect, useRef, useState } from "react";
 import { CreateWorkspaceInput, InviteEmail, type InviteTeammatesInput } from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("workspaceOnboarding.<key>"). */
@@ -111,7 +111,7 @@ function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<W
     },
   });
 
-  const add = (e: FormEvent) => {
+  const add = (e: SubmitEvent) => {
     e.preventDefault();
     const email = draft.trim().toLowerCase();
     if (!email) return;

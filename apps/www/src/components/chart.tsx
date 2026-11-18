@@ -25,7 +25,7 @@
  *   </ChartContainer>
  */
 
-import type { ReactNode } from "react";
+import { createContext, type ReactNode, useContext, useLayoutEffect, useRef, useState } from "react";
 import {
   CartesianGrid,
   Legend,
@@ -59,6 +59,18 @@ export function chartColor(i: number): string {
  * inherit the muted token for axis text, and wraps in a
  * <ResponsiveContainer> so showcases just need to provide a height.
  */
+/** Narrowest Y axis, so short labels ("$0") still leave room for the tick margin. */
+const Y_AXIS_MIN = 44;
+/** Space between a Y label and the plot (the axis tickMargin) plus a pixel of slack. */
+const Y_AXIS_GAP = 12;
+
+/**
+ * The Y axis width ChartContainer measured from its rendered labels. Recharts'
+ * own width="auto" never renders the axis in Recharts 3.8 here (it waits for a
+ * size it only computes after rendering), so the container sizes it instead.
+ */
+const YAxisWidth = createContext<number | undefined>(undefined);
+
 export function ChartContainer({
   children,
   className = "h-72",
@@ -69,16 +81,31 @@ export function ChartContainer({
   /** What the chart shows, for screen readers. When given, the chart is one image with this name. */
   label?: string;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [yWidth, setYWidth] = useState(Y_AXIS_MIN);
+  // After every render, fit the Y axis to its widest label (labels change with
+  // data, locale and the container's size).
+  useLayoutEffect(() => {
+    const labels = ref.current?.querySelectorAll(".recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value");
+    if (!labels?.length) return;
+    let widest = 0;
+    for (const l of labels) widest = Math.max(widest, l.getBoundingClientRect().width);
+    const next = Math.max(Y_AXIS_MIN, Math.ceil(widest) + Y_AXIS_GAP);
+    if (Math.abs(next - yWidth) > 1) setYWidth(next);
+  });
   return (
     <div
+      ref={ref}
       {...(label ? { role: "img", "aria-label": label } : {})}
       className={`${className} text-foreground [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:font-mono [&_.recharts-cartesian-axis-tick_text]:text-[10px] [&_.recharts-cartesian-axis-tick_text]:uppercase [&_.recharts-xAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.2em] [&_.recharts-yAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.05em] [&_.recharts-cartesian-grid-bg]:fill-transparent [&_.recharts-cartesian-grid_line]:stroke-border [&_.recharts-polar-grid_line]:stroke-border [&_.recharts-polar-angle-axis-tick_text]:fill-muted-foreground [&_.recharts-polar-angle-axis-tick_text]:font-mono [&_.recharts-polar-angle-axis-tick_text]:text-[10px]`}
     >
       {/* Start at a valid size: the default -1x-1 makes Recharts warn on the
           render before the container has been measured. */}
-      <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
-        {children as React.ReactElement}
-      </ResponsiveContainer>
+      <YAxisWidth.Provider value={yWidth}>
+        <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
+          {children as React.ReactElement}
+        </ResponsiveContainer>
+      </YAxisWidth.Provider>
     </div>
   );
 }
@@ -144,6 +171,7 @@ export function ChartAxis({
   // was applied after layout: Y labels overflowed a fixed 36px axis and got
   // clipped ("100%" rendered as "0%"), and X labels collided on narrow charts.
   const isY = axis === "y";
+  const measuredY = useContext(YAxisWidth);
   const common = {
     dataKey,
     tickFormatter,
@@ -164,12 +192,12 @@ export function ChartAxis({
   if (isY) {
     const o =
       orientation === "left" || orientation === "right" ? orientation : undefined;
-    // `width` acts as a floor; "auto" sizes the axis to its longest label.
+    // `width` acts as a floor over the measured width of the longest label.
     return (
       <YAxis
         {...common}
         interval={interval}
-        width={width === undefined ? "auto" : Math.max(width, 44)}
+        width={Math.max(width ?? 0, measuredY ?? Y_AXIS_MIN, Y_AXIS_MIN)}
         orientation={o}
       />
     );

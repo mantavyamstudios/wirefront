@@ -139,10 +139,36 @@ export async function canvasRects(page: Page): Promise<Rect[]> {
     .map((r) => ({ x: r.x, y: r.y, width: r.width, height: r.height }))`)) as Rect[];
 }
 
+/** Recharts Y axes on the page that have not drawn any tick labels yet. */
+// Recharts 3 draws tick labels in a separate layer (".recharts-yAxis-tick-labels"),
+// not inside the axis group, so the labels are counted per chart surface.
+const BARE_Y_AXES = `[...document.querySelectorAll(".recharts-wrapper")]
+  .filter((chart) => chart.querySelector(".recharts-yAxis"))
+  .filter((chart) => ![...chart.querySelectorAll(".recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value")].some((t) => (t.textContent ?? "").trim() && t.getBoundingClientRect().width > 0))
+  .length`;
+
+/**
+ * Recharts sizes a `width="auto"` Y axis from its measured labels a frame or
+ * two after layout, so a chart can look settled while its Y axis is still
+ * empty. Step time (virtual and real) until every visible Y axis has labels,
+ * and fail rather than capture a chart without them.
+ */
+export async function waitForChartAxes(page: Page): Promise<void> {
+  const realStart = Date.now();
+  for (;;) {
+    const bare = (await page.evaluate(BARE_Y_AXES)) as number;
+    if (bare === 0) return;
+    if (Date.now() - realStart > SETTLE_WATCHDOG_MS) throw new LayoutNeverSettledError(SETTLE_WATCHDOG_MS, `${bare} chart Y axis(es) never drew tick labels`);
+    await page.waitForTimeout(16);
+    await page.clock.runFor(SETTLE_STEP_MS);
+  }
+}
+
 /** Open a design's preview, wait until it has settled and take a PNG of the viewport. */
 export async function captureDesign(page: Page, url: string): Promise<{ png: Buffer; canvases: Rect[] }> {
   await page.goto(url, { waitUntil: "networkidle", timeout: 60_000 });
   await waitForSettledVirtual(page);
+  await waitForChartAxes(page);
   const canvases = await canvasRects(page);
   const png = await page.screenshot({ fullPage: false, animations: "disabled" });
   return { png, canvases };

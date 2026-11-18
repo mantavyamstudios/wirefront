@@ -22,7 +22,7 @@ import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { interpolate, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { CheckIcon, ChevronDownIcon, CopyIcon, GlobeIcon, LinkIcon, LockIcon, Share2Icon } from "lucide-react";
-import { type FormEvent, useState } from "react";
+import { type SubmitEvent, useState } from "react";
 
 import { type LinkAccess, ShareInviteInput, type ShareMember, type ShareRole, type ShareRoleChange } from "./schema";
 
@@ -137,7 +137,7 @@ function ShareDialogScreen({
   });
   const failure = inviteError ?? invite.error ?? role.error ?? remove.error ?? link.error;
 
-  const submitInvite = (event: FormEvent) => {
+  const submitInvite = (event: SubmitEvent) => {
     event.preventDefault();
     const parsed = ShareInviteInput.safeParse({ emails: emails.split(/[\s,;]+/).filter(Boolean), role: inviteRole });
     if (!parsed.success) {
