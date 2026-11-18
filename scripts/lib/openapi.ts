@@ -8,7 +8,7 @@
  * what OpenAPI 3.1 uses). Schemas named with `.meta({ id })` become
  * components.schemas and are referenced by $ref.
  */
-import { z } from "zod";
+import * as z from "zod";
 
 import type { ApiContract, ApiOperation } from "../../packages/ui/src/wirefront/api";
 

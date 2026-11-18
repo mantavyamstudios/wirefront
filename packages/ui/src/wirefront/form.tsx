@@ -4,9 +4,13 @@
 
 /**
  * The form pattern every Wirefront form follows (SCREEN-CONTRACT.md, rule 5):
- * Base UI's <Form> collects the values, the screen's zod schema validates them,
+ * Base UI's <Form> collects the values, the screen's schema validates them,
  * the builder's action saves them, and field errors from either end up on the
  * right fields.
+ *
+ * Any Standard Schema validator works (https://standardschema.dev): the shipped
+ * screens use zod, and a builder can pass a Valibot, ArkType or zod/mini schema
+ * of the same shape instead.
  *
  *   const form = useActionForm({ schema: InviteInput, action: onInvite, onSuccess: close });
  *   <Form {...form.formProps}>
@@ -16,17 +20,46 @@
  *   </Form>
  */
 import { useCallback, useRef, useState } from "react";
-import { type z, flattenError } from "zod";
 
 import { type Action, type FieldErrors, settle } from "./types";
 
-export interface ActionFormOptions<Schema extends z.ZodType, Output> {
-  schema: Schema;
-  action: Action<z.output<Schema>, Output>;
-  onSuccess?: (data: Output, values: z.output<Schema>) => void;
+/** The Standard Schema v1 interface, copied from the spec so no package is needed. */
+export interface StandardSchemaV1<Input = unknown, Output = Input> {
+  readonly "~standard": {
+    readonly version: 1;
+    readonly vendor: string;
+    readonly validate: (value: unknown) => StandardResult<Output> | Promise<StandardResult<Output>>;
+    readonly types?: { readonly input: Input; readonly output: Output } | undefined;
+  };
+}
+type StandardIssue = { readonly message: string; readonly path?: ReadonlyArray<PropertyKey | { readonly key: PropertyKey }> | undefined };
+type StandardResult<Output> = { readonly value: Output; readonly issues?: undefined } | { readonly issues: ReadonlyArray<StandardIssue> };
+/** The validated value type of a Standard Schema. */
+export type SchemaOutput<Schema extends StandardSchemaV1> = NonNullable<Schema["~standard"]["types"]>["output"];
+
+/** Groups issues by their first path segment, like zod's flattenError; issues without a path are form-level. */
+function flattenIssues(issues: ReadonlyArray<StandardIssue>) {
+  const fieldErrors: Record<string, string[]> = {};
+  const formErrors: string[] = [];
+  for (const issue of issues) {
+    const first = issue.path?.[0];
+    const key = first === undefined ? undefined : typeof first === "object" ? first.key : first;
+    if (key === undefined) formErrors.push(issue.message);
+    else {
+      const name = String(key);
+      fieldErrors[name] = [...(fieldErrors[name] ?? []), issue.message];
+    }
+  }
+  return { fieldErrors, formErrors };
 }
 
-export function useActionForm<Schema extends z.ZodType, Output = void>({
+export interface ActionFormOptions<Schema extends StandardSchemaV1, Output> {
+  schema: Schema;
+  action: Action<SchemaOutput<Schema>, Output>;
+  onSuccess?: (data: Output, values: SchemaOutput<Schema>) => void;
+}
+
+export function useActionForm<Schema extends StandardSchemaV1, Output = void>({
   schema,
   action,
   onSuccess,
@@ -40,29 +73,39 @@ export function useActionForm<Schema extends z.ZodType, Output = void>({
   const submit = useCallback(
     async (values: Record<string, unknown>) => {
       if (inFlight.current) return;
-      const parsed = schema.safeParse(values);
-      if (!parsed.success) {
-        const { fieldErrors, formErrors } = flattenError(parsed.error);
-        setErrors(fieldErrors as FieldErrors);
+      // Validation may be async (Standard Schema allows it), so hold the guard from here.
+      inFlight.current = true;
+      let parsed: StandardResult<unknown>;
+      try {
+        parsed = await schema["~standard"].validate(values);
+      } catch (error) {
+        // A throwing validator is a bug in the schema: free the form and let the error surface.
+        inFlight.current = false;
+        throw error;
+      }
+      if (parsed.issues) {
+        inFlight.current = false;
+        const { fieldErrors, formErrors } = flattenIssues(parsed.issues);
+        setErrors(fieldErrors);
         // Errors no rendered field can show (the key wasn't submitted, or the
         // schema refined the whole object) go to the form-level message, so a
         // failed validation is never silent.
         const orphaned = Object.entries(fieldErrors)
           .filter(([key]) => !(key in values))
-          .flatMap(([, messages]) => (messages as string[] | undefined) ?? []);
+          .flatMap(([, messages]) => messages);
         const unshown = [...formErrors, ...orphaned];
         setFormError(unshown.length ? unshown.join(" ") : undefined);
         return;
       }
-      inFlight.current = true;
       setPending(true);
       setErrors({});
       setFormError(undefined);
-      const result = await settle(action, parsed.data);
+      const data = parsed.value as SchemaOutput<Schema>;
+      const result = await settle(action, data);
       inFlight.current = false;
       setPending(false);
       if (result.ok) {
-        onSuccess?.(result.data, parsed.data);
+        onSuccess?.(result.data, data);
       } else {
         setErrors(result.fieldErrors ?? {});
         setFormError(result.error);

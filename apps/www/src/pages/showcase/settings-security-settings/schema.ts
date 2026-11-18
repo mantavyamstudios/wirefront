@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-import { z } from "zod";
+import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 export const DeviceKind = z.enum(["laptop", "desktop", "phone", "tablet", "key"]).meta({ id: "DeviceKind" });

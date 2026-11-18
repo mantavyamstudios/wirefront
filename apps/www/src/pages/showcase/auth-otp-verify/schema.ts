@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-import { z } from "zod";
+import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** Digits in a one-time code. The field and the schema both use it. */

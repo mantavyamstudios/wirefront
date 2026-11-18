@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-import { z } from "zod";
+import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 export const Hint = z.object({ id: z.string(), title: z.string(), body: z.string(), /** When the feature shipped (ISO date). */ addedAt: z.string().optional() }).meta({ id: "Hint" });

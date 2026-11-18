@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-import { z } from "zod";
+import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 export const DeliveryItem = z.object({ id: z.string(), name: z.string(), detail: z.string(), /** Unit price. */ price: z.number(), qty: z.number().int().min(1), art: z.enum(["bread", "milk", "fruit", "flowers"]) }).meta({ id: "DeliveryItem" });

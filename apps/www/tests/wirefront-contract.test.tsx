@@ -6,7 +6,7 @@ import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { act, cleanup, fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { z } from "zod";
+import * as z from "zod";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
@@ -172,6 +172,61 @@ describe("useActionForm with Base UI Form", () => {
     submit();
     await waitFor(() => expect(screen.getByTestId("email-error").textContent).toBe("Already a member"));
     expect(screen.getByRole("alert").textContent).toBe("Couldn't invite");
+  });
+
+  it("accepts any Standard Schema validator, async and with object path segments", async () => {
+    // A hand-written Standard Schema v1 validator standing in for Valibot, ArkType or zod/mini.
+    const schema = {
+      "~standard": {
+        version: 1 as const,
+        vendor: "test",
+        validate: async (value: unknown) => {
+          const v = value as { email?: string; seats?: string };
+          const issues = [
+            ...(v.email?.includes("@") ? [] : [{ message: "Enter a valid email", path: [{ key: "email" }] }]),
+            ...(v.seats ? [] : [{ message: "Pick a seat count", path: ["seats"] }]),
+            ...(v.email === "taken@example.com" ? [{ message: "That address is taken" }] : []),
+          ];
+          return issues.length ? { issues } : { value: { email: v.email ?? "", seats: Number(v.seats) } };
+        },
+        types: undefined as unknown as { input: unknown; output: { email: string; seats: number } },
+      },
+    };
+    const action = vi.fn(async (_: { email: string; seats: number }) => {});
+    const { result } = renderHook(() => useActionForm({ schema, action }));
+    await act(() => result.current.submit({ email: "nope", seats: "" }));
+    expect(result.current.errors).toEqual({ email: ["Enter a valid email"], seats: ["Pick a seat count"] });
+    await act(() => result.current.submit({ email: "taken@example.com", seats: "3" }));
+    expect(result.current.formError).toBe("That address is taken");
+    await act(() => result.current.submit({ email: "ada@example.com", seats: "3" }));
+    expect(action).toHaveBeenCalledWith({ email: "ada@example.com", seats: 3 });
+  });
+
+  it("ignores a second submit while async validation is still running", async () => {
+    let release = () => {};
+    const gate = new Promise<void>((r) => {
+      release = r;
+    });
+    const schema = {
+      "~standard": {
+        version: 1 as const,
+        vendor: "test",
+        validate: async (value: unknown) => {
+          await gate;
+          return { value: value as { email: string } };
+        },
+      },
+    };
+    const action = vi.fn(async () => {});
+    const { result } = renderHook(() => useActionForm({ schema, action }));
+    let first: Promise<void> = Promise.resolve();
+    act(() => {
+      first = result.current.submit({ email: "a@example.com" });
+      void result.current.submit({ email: "a@example.com" });
+    });
+    release();
+    await act(() => first);
+    expect(action).toHaveBeenCalledTimes(1);
   });
 });
 

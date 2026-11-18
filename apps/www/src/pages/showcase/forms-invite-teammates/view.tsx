@@ -15,7 +15,7 @@ import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ArrowRightIcon, CheckIcon, ChevronDownIcon, CopyIcon, LinkIcon, ShieldIcon, SparklesIcon, XIcon } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, useEffect, useId, useState } from "react";
-import { z } from "zod";
+import * as z from "zod";
 
 import { type Invitation, InviteRole, type SendInvitesInput, type SendInvitesResult } from "./schema";
 

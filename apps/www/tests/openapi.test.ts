@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /** API contracts → OpenAPI 3.1 and MSW handlers (scripts/lib/openapi.ts). */
 import { describe, expect, it } from "vitest";
-import { z } from "zod";
+import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 import { toMswHandlers, toOpenApi } from "../../../scripts/lib/openapi";
 

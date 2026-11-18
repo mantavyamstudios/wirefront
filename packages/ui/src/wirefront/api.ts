@@ -14,7 +14,7 @@
  * Paths use OpenAPI's {param} syntax. Name reusable schemas with
  * `.meta({ id: "Member" })` so they become named components.
  */
-import type { z } from "zod";
+import type * as z from "zod";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 

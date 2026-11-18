@@ -10,7 +10,7 @@ A ready-to-wire screen is a folder in `apps/www/src/pages/showcase/`:
 
 ```
 tables-members/
-  schema.ts     zod schemas, inferred types and the API contract: export const api = defineApi({…})
+  schema.ts     zod schemas (import * as z from "zod"), inferred types and the API contract: export const api = defineApi({…})
   view.tsx      the screen: props in, UI out; no data, no fetching, no router
   fixtures.ts   demo data that satisfies schema.ts (also what the generated mocks return)
   demo.tsx      view + fixtures + the previewed state; exports <Name>ShowcasePage
@@ -26,7 +26,7 @@ Screens build on the contract helpers in `packages/ui/src/wirefront/` (imported 
 |---|---|
 | `types` | `AsyncStatus`, `ListQuery`, `FieldErrors`, `ActionResult`, `Action`, `ok`, `fail`, `settle`. Server-safe (no `"use client"`): use `ok`/`fail` in server actions too. |
 | `provider` | `WirefrontProvider`, `useWirefront`, `useFormat` (dates, times, money, relative), `useMessages` (copy overrides), `useCan`, `WirefrontLink`, `useColorScheme` |
-| `form` | `useActionForm({ schema, action })`: Base UI `<Form>` + zod + the builder's action, field errors from either side, pending |
+| `form` | `useActionForm({ schema, action })`: Base UI `<Form>` + any Standard Schema validator (the screens ship zod) + the builder's action, field errors from either side, pending |
 | `action` | `useAction(action, { optimistic })`: pending per item, optimistic update with rollback |
 | `list` | `toggleSort`, `withSearch`, `withFilter`, `withPage`, `withPageSize`, `useListQuery`, `useSelection` |
 | `api` | `defineApi({…})`: the screen's backend operations; Wirefront generates OpenAPI 3.1 and MSW mocks from it. Server-safe, so `schema.ts` can validate requests on the server. |
@@ -74,7 +74,7 @@ Rules:
 10. **Unwired means hidden.** An optional action or link prop that isn't given hides its control. No control does nothing when clicked.
 11. **Raw values in, formatted out.** APIs return numbers, ISO dates and units; the screen formats them with `useFormat`, so the builder's locale, time zone and currency apply. No preformatted strings in the data.
 12. **Safe mutations.** Destructive actions ask for confirmation first. Reversible updates (a role, a toggle) apply at once and roll back with the error shown if the action fails.
-13. **Server-safe schemas.** `schema.ts`, `types` and `api` carry no `"use client"`, so the builder validates requests on the server with the same zod schemas.
+13. **Server-safe schemas.** `schema.ts`, `types` and `api` carry no `"use client"`, so the builder validates requests on the server with the same zod schemas. Schemas import zod as a namespace, `import * as z from "zod"`, so bundlers tree-shake it; the named `{ z }` import pulls in all of zod and the linter rejects it.
 14. **Lists report every change.** Search, filter and sort changes go back to page 1 and fire `onQueryChange` each time; debouncing is the builder's choice (it belongs with their fetching).
 
 ## WirefrontProvider
