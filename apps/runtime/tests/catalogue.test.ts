@@ -92,7 +92,7 @@ describe("catalogue", () => {
     expect(problems).toEqual([]);
   });
 
-  it("uses logical direction classes so screens mirror in right-to-left languages", () => {
+  it("uses logical direction classes so screens mirror in RTL languages", () => {
     // ms/me/ps/pe, start/end, text-start/end, border-s/e, rounded-s/e instead of their left/right forms.
     // A left/right offset paired with translate-x in the same class string stays physical: centring
     // (left-1/2 -translate-x-1/2) and slide-ins pair a side with a translate that doesn't mirror.

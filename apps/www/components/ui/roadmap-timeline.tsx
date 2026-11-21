@@ -353,7 +353,7 @@ const ROADMAP_ITEMS: RoadmapItem[] = [
     motionScore: "S",
     scoreValue: 5,
     description:
-      "Collision-aware right-to-left cascading submenus, popover anchor realignment, and dynamic arrow direction for context & dropdown menus.",
+      "Collision-aware RTL cascading submenus, popover anchor realignment, and dynamic arrow direction for context & dropdown menus.",
     priority: "High",
     tags: ["RTL", "Floating UI", "Menus", "Popovers"],
   },

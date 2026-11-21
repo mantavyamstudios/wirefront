@@ -15,7 +15,7 @@ import { getShowcase } from "@/pages/showcase/registry";
 interface PreviewSearch {
   /** The screen state to show (screens that declare `states`). */
   state?: string;
-  /** Lay the screen out right-to-left, as a builder's RTL app would. */
+  /** Lay the screen out RTL, as a builder's RTL app would. */
   dir?: "rtl";
 }
 

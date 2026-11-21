@@ -3,11 +3,11 @@ title: Introduction
 description: What Wirefront is, the three principles every screen is built on, and how to install a screen and wire it to your backend.
 ---
 
-**Wirefront is a backend-agnostic catalogue of production-grade UI screens**, built on [shadcn/ui](https://ui.shadcn.com) with [Base UI](https://base-ui.com) and Tailwind CSS v4. Screens are organised by the experience they serve, from an app's frame to its accounts, data, activity, interactions and whole products. Install the one you need with the shadcn CLI, wire it to your backend and tweak it locally: no screen built from scratch, and no backend you have to adopt.
+**Wirefront is a backend-agnostic catalogue of production-grade UI screens**, built on [shadcn/ui](https://ui.shadcn.com) with [Base UI](https://base-ui.com) and Tailwind CSS v4. Screens are organised by the experience they serve, from an app's frame to its accounts, data, activity, interactions and whole products. Install the one you need with the shadcn CLI, wire it to your backend and tweak it locally.
 
 ## What's a screen?
 
-A screen is one self-contained page or panel: a pricing table, a members list, a sign-in form, an AI chat. Each screen is a folder of three files that install into your project as source you own:
+A screen is one self-contained page or panel. Each screen is a folder of three files that install into your project as source you own:
 
 - **`view.tsx`**: the screen itself. Props in, UI out: no data, no fetching, no router.
 - **`schema.ts`**: zod schemas, the types they infer and the screen's API contract (`defineApi`), the operations your backend answers.
@@ -17,7 +17,7 @@ A screen is one self-contained page or panel: a pricing table, a members list, a
 
 ### Adaptive
 
-Screens fit your stack, not ours. One [`WirefrontProvider`](/docs/wiring#app-wide-setup) at the root of your app hands every screen your router's link component, your toast function, your locale, time zone and currency, copy overrides for every string, and a permission check. Screens use semantic theme tokens, so they follow your shadcn/ui theme in light and dark mode, and logical properties, so they mirror for right-to-left languages.
+Screens fit your stack, not ours. One [`WirefrontProvider`](/docs/wiring#app-wide-setup) at the root of your app hands every screen your router's link component, your toast function, your locale, time zone and currency, copy overrides for every string, and a permission check. Screens use semantic theme tokens, so they follow your shadcn/ui theme in light and dark mode, and logical properties, so they mirror for languages of your required type (RTL/LTR).
 
 ### Dynamic
 

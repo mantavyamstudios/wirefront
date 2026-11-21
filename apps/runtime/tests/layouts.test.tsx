@@ -386,7 +386,7 @@ describe("PaneResizer", () => {
     expect(onChange).toHaveBeenLastCalledWith(600);
   });
 
-  it("flips for an end-side pane and for right-to-left text", () => {
+  it("flips for an end-side pane and for RTL text", () => {
     const end = renderIt({ side: "end" });
     fireEvent.keyDown(end.handle, { key: "ArrowLeft" });
     expect(end.onChange).toHaveBeenLastCalledWith(416);

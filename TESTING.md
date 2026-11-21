@@ -44,7 +44,7 @@ A check that fails is fixed at the cause. Nothing is skipped, silenced or retrie
 | `bun run test:phase` | The phase tier, one check after another: bundle budget, install, browser, responsive, with a summary |
 | `bun run test:install` | Failure mode 9 (`--templates=`, `--items=` for a sample) |
 | `bun run test:browser` | Failure modes 10 and 13 (`--design=` for a sample; `--update-a11y-baseline` after fixing accessibility problems) |
-| `bun run audit:responsive -- --strict` | Failure mode 11 (`--design=`, `--viewports=`; `--rtl` lays every screen out right-to-left into `report-rtl.json`) |
+| `bun run audit:responsive -- --strict` | Failure mode 11 (`--design=`, `--viewports=`; `--rtl` lays every screen out RTL into `report-rtl.json`) |
 | `bun run test:visual` | Failure mode 12 (`--design=`). When a visual change is intended: `bun run snapshot`, review and commit the previews |
 
 ## Servers
