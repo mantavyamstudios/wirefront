@@ -230,7 +230,7 @@ export function Navbar({
                   >
                     {/* Wordmark set like the "Menu" label beside it. */}
                     <span className="nav-logo__wordmark-svg nav-logo__wordmark">
-                      UI Playground
+                      Wirefront
                     </span>
                     <Image
                       alt=""
@@ -444,7 +444,7 @@ export function Navbar({
                             </div>
                             <div className="nav-banner__center-content">
                               <div className="nav-banner__title">
-                                <h2 className="h-m">Enterprise UI Playground</h2>
+                                <h2 className="h-m">Wirefront</h2>
                               </div>
                               <div className="nav-banner__btn">
                                 <button

@@ -1,10 +1,13 @@
-import { CONTACT_EMAIL, SITE_NAME } from "@/lib/site";
+import { SITE_NAME } from "@/lib/site";
+
+/** Mantavyam Studios' booking page (published in the README). */
+export const BOOK_A_CALL_URL = "https://cal.com/mantavyam/business";
 
 export const PRICING_CORE_MESSAGE =
-  "Try every flow live in your browser and read its full Dart source, free. Plus, with a commercial license and new flows as they land, is coming soon.";
+  "Try every screen live in your browser and install its full source, free and open source under MIT. Need help wiring screens to your product? Book a call with Mantavyam Studios.";
 
 export const PRICING_DISCLAIMER =
-  "Plus pricing isn't final yet. Get in touch to hear when it launches or to talk about commercial use.";
+  "Custom work is scoped per project. Book a call to talk it through.";
 
 export interface PricingFaqItem {
   content: string;
@@ -15,30 +18,28 @@ export const PRICING_FAQ_ITEMS: PricingFaqItem[] = [
   {
     title: `What is ${SITE_NAME}?`,
     content:
-      "A library of Flutter UI flows you can preview live in the browser, with the full Dart source of every screen.",
+      "A library of 200 responsive, ready-to-wire UI screens built on shadcn/ui and Base UI. Preview each one live in the browser, then install it with the shadcn CLI.",
   },
   {
     title: "Is it really free?",
     content:
-      "Yes. Previewing every flow and reading its source is free, with no account needed.",
+      "Yes. Every screen is free and open source under the MIT License, with no account needed.",
   },
   {
-    title: "Can I use the flows in commercial apps?",
+    title: "Can I use the screens in commercial apps?",
     content:
-      "See the License page for the current terms, or get in touch to talk about commercial use.",
+      "Yes. The MIT License allows personal and commercial use; keep the copyright and license notice with the code.",
   },
   {
-    title: "What's included in Plus?",
+    title: "Can you build or wire screens for us?",
     content:
-      "Every flow, new flows as they land, and a commercial license. Pricing is coming soon.",
+      "Mantavyam Studios takes on custom work. Book a call to talk about your project.",
   },
   {
-    title: "How do I use a flow?",
+    title: "How do I install a screen?",
     content:
-      "Open the flow's Code tab, copy its Dart files into your Flutter app and adapt them.",
+      "Run the shadcn CLI command on the screen's page, then pass your own data in as props.",
   },
 ];
 
-export function getSupportMailtoUrl(): string {
-  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`${SITE_NAME} Plus`)}`;
-}
+

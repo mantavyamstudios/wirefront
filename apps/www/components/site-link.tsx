@@ -9,7 +9,7 @@ import { getSiteSection } from "@/components/page-transition/page-transition-pro
 type SiteLinkProps = ComponentProps<typeof NextLink>;
 
 /**
- * next/link that prefetches only within the current section (home, flows,
+ * next/link that prefetches only within the current section (home, screens,
  * docs, pricing, legal).
  *
  * A link into another section plays the full-screen page transition, so a

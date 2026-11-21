@@ -6,19 +6,20 @@ import { useRef } from "react";
 import Link from "@/components/site-link";
 import { useButton3DHover } from "@/hooks/use-button-3d-hover";
 
-import { getSupportMailtoUrl, PRICING_DISCLAIMER } from "./pricing-config";
+import { BOOK_A_CALL_URL, PRICING_DISCLAIMER } from "./pricing-config";
 
 const FREE_FEATURES = [
-  "Preview every flow in the browser",
+  "Preview every screen in the browser",
   "Phone, tablet and laptop frames",
   "Light & dark mode",
-  "Full Dart source for every flow",
+  "Full source, installable with the shadcn CLI",
+  "MIT License, commercial use included",
 ] as const;
 
-const PLUS_FEATURES = [
-  "Every flow, including new ones as they land",
-  "Commercial license",
-  "Full source for every flow",
+const CUSTOM_FEATURES = [
+  "Screens wired to your backend",
+  "New screens for your product",
+  "Built by Mantavyam Studios",
 ] as const;
 
 export function PricingCards() {
@@ -68,8 +69,8 @@ export function PricingCards() {
               </div>
 
               <p className="mt-[0.75em] mb-0 font-sans text-[1em] leading-[1.5] tracking-[-0.01em] text-[var(--color-neutral-525)]">
-                Everything you need to try every flow and take its source into
-                your own app.
+                Everything you need to try every screen and install its source
+                in your own app.
               </p>
 
               <div className="mt-[1.75em] mb-[1.75em] border-0 border-[var(--color-neutral-400)] border-t-[var(--stroke-weight)]" />
@@ -99,7 +100,7 @@ export function PricingCards() {
                 data-shape="round"
                 data-size="full"
                 data-theme=""
-                href="/flows"
+                href="/screens"
                 style={{ borderRadius: "1.5rem" }}
               >
                 <div
@@ -109,17 +110,17 @@ export function PricingCards() {
                 />
                 <div className="button-label__wrap">
                   <div className="button-label">
-                    <span>Browse flows</span>
+                    <span>Browse screens</span>
                   </div>
                   <div aria-hidden="true" className="button-label">
-                    <span>Browse flows</span>
+                    <span>Browse screens</span>
                   </div>
                 </div>
               </Link>
             </div>
           </div>
 
-          {/* Card 2: Plus */}
+          {/* Card 2: Custom work */}
           <div className="pricing-card is--sponsor relative flex flex-col justify-between overflow-hidden">
             <div>
               <div className="flex items-center justify-between gap-[var(--gap-xs)]">
@@ -134,10 +135,10 @@ export function PricingCards() {
                     data-wf--button-theme--variant="neutral-525"
                     style={{ borderRadius: "1.5rem" }}
                   />
-                  <span className="is--relative eyebrow">Plus</span>
+                  <span className="is--relative eyebrow">Custom</span>
                 </div>
                 <span className="scribble pricing-card__scribble">
-                  Coming soon!
+                  Let&apos;s talk!
                 </span>
               </div>
 
@@ -146,19 +147,19 @@ export function PricingCards() {
                   $—
                 </h2>
                 <span className="eyebrow text-[var(--color-neutral-500)]">
-                  / pricing soon
+                  / per project
                 </span>
               </div>
 
               <p className="mt-[0.75em] mb-0 font-sans text-[1em] leading-[1.5] tracking-[-0.01em] text-[var(--color-neutral-525)]">
-                Every flow with a commercial license, plus new flows as they
-                land.
+                Help wiring Wirefront screens to your product, from the people
+                who make them.
               </p>
 
               <div className="mt-[1.75em] mb-[1.75em] border-0 border-[var(--color-neutral-400)] border-t-[var(--stroke-weight)]" />
 
               <ul className="flex list-none flex-col gap-[0.875em] p-0">
-                {PLUS_FEATURES.map((feature) => (
+                {CUSTOM_FEATURES.map((feature) => (
                   <li
                     className="flex items-start gap-[0.75em] p-0"
                     key={feature}
@@ -176,14 +177,16 @@ export function PricingCards() {
 
             <div className="mt-[2.25em] flex flex-col gap-[0.625em]">
               <a
-                aria-label="Get in touch about Plus"
+                aria-label="Book a call with Mantavyam Studios"
                 className="button w-inline-block rounded-[.875rem]!"
                 data-button-rotate=""
                 data-button-rotate-hover=""
                 data-shape=""
                 data-size="full"
                 data-theme=""
-                href={getSupportMailtoUrl()}
+                href={BOOK_A_CALL_URL}
+                rel="noopener noreferrer"
+                target="_blank"
                 style={{ borderRadius: ".875rem" }}
               >
                 <div
@@ -193,10 +196,10 @@ export function PricingCards() {
                 />
                 <div className="button-label__wrap">
                   <div className="button-label">
-                    <span>Get in touch</span>
+                    <span>Book a call</span>
                   </div>
                   <div aria-hidden="true" className="button-label">
-                    <span>Get in touch</span>
+                    <span>Book a call</span>
                   </div>
                 </div>
               </a>

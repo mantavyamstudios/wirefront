@@ -11,7 +11,7 @@ export interface UnderNavMarqueeProps {
 export function UnderNavMarquee({
   isMenuOpen = false,
   isScrollingStarted: isScrollingStartedProp,
-  text = "Real Flutter flows, live in your browser",
+  text = "Ready-to-wire screens, live in your browser",
 }: UnderNavMarqueeProps = {}) {
   const [internalScrollingStarted, setInternalScrollingStarted] =
     useState(false);

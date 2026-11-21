@@ -40,7 +40,7 @@ interface SourceFile {
   path: string;
 }
 
-/** Multi-file source from `sourceUrl` (e.g. a Flutter flow's Dart files). */
+/** Multi-file source from `sourceUrl` (e.g. a screen's view, schema and fixtures). */
 function useSourceFiles(open: boolean, sourceUrl?: string) {
   const [files, setFiles] = useState<SourceFile[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);

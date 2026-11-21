@@ -137,7 +137,7 @@ export function Footer() {
                             data-wf--button-theme--variant="coral"
                           />
                           <span className="is--relative eyebrow text-white">
-                            Flutter UI
+                            shadcn/ui
                           </span>
                         </div>
                       </div>
@@ -150,7 +150,7 @@ export function Footer() {
                               WebkitTextFillColor: "#fff",
                             }}
                           >
-                            Enterprise UI Playground
+                            Wirefront
                           </h2>
                         </div>
                         <div className="flex justify-center pt-6">
@@ -421,8 +421,7 @@ export function Footer() {
                 {/* Center Column: Copyright */}
                 <div className="flex items-center justify-center">
                   <p className="eyebrow">
-                    © <span data-current-year="">2026</span> enterprise ui
-                    playground
+                    © <span data-current-year="">2026</span> wirefront
                   </p>
                 </div>
 

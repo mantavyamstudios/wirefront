@@ -19,17 +19,18 @@ function ContactLine({ topic }: { topic: string }) {
 
 export const TERMS_OF_SERVICE_ITEMS: TermItem[] = [
   {
-    id: "using-the-flows",
-    title: "1. Using the flows",
+    id: "using-the-screens",
+    title: "1. Using the screens",
     content: (
       <>
         <p className="lg:text-lg">
-          These terms cover your use of the {SITE_NAME} website and the Flutter
-          flows it shows. By using the site, you agree to them.
+          These terms cover your use of the {SITE_NAME} website and the UI
+          screens it shows. By using the site, you agree to them.
         </p>
         <p className="lg:text-lg">
-          The flows are provided as reference implementations. You are free to
-          run them in the browser and study how they work.
+          The screens are provided as ready-to-wire starting points. You are
+          free to run them in the browser, study how they work and install
+          them in your own projects.
         </p>
         <p className="lg:text-lg">
           Please don&apos;t disrupt the site, try to gain unauthorized access to
@@ -44,9 +45,9 @@ export const TERMS_OF_SERVICE_ITEMS: TermItem[] = [
     content: (
       <>
         <p className="lg:text-lg">
-          Free flows may be used in personal and commercial projects. Plus flows
-          are covered by the Plus license. Redistributing the flow library as-is
-          is not permitted.
+          Wirefront is open source under the MIT License: you may use, copy,
+          modify and distribute the screens in personal and commercial
+          projects, provided the copyright and license notice stay with them.
         </p>
         <p className="lg:text-lg">
           See the <Link href="/docs/license">License</Link> page for the full
@@ -60,7 +61,7 @@ export const TERMS_OF_SERVICE_ITEMS: TermItem[] = [
     title: "3. No warranty",
     content: (
       <p className="lg:text-lg">
-        The flows and site are provided &ldquo;as is&rdquo;, without warranty of
+        The screens and site are provided &ldquo;as is&rdquo;, without warranty of
         any kind. Use in production is at your own discretion.
       </p>
     ),
@@ -104,7 +105,7 @@ export const PRIVACY_POLICY_ITEMS: TermItem[] = [
         </p>
         <p className="lg:text-lg">
           Basic, aggregated analytics from Cloudflare Web Analytics may be used
-          to understand which flows are popular. It does not use cookies or
+          to understand which screens are popular. It does not use cookies or
           build a profile of you.
         </p>
       </>
@@ -121,48 +122,34 @@ export const PRIVACY_POLICY_ITEMS: TermItem[] = [
     ),
   },
   {
-    id: "device-features",
-    title: "3. Camera, microphone and location",
-    content: (
-      <p className="lg:text-lg">
-        Some flows demonstrate taking photos, recording, scanning or maps. They
-        only use your camera, microphone or location after your browser asks for
-        and receives your permission, and you can revoke it at any time in your
-        browser settings.
-      </p>
-    ),
-  },
-  {
     id: "services-we-use",
-    title: "4. Services we use",
+    title: "3. Services we use",
     content: (
       <>
         <p className="lg:text-lg">
-          The site is hosted on Cloudflare Pages, which processes standard
-          request data (such as your IP address) to serve and protect it.
+          The site is hosted on Cloudflare, which processes standard request
+          data (such as your IP address) to serve and protect it.
         </p>
         <p className="lg:text-lg">
-          Some flows load content from third parties while you use them: maps
-          from Google Maps, fonts from Google Fonts and sample photos from
-          Unsplash. Those services receive standard request data under their own
-          privacy policies.
+          The screen previews load nothing from third parties: their data is
+          sample data shipped with the site.
         </p>
       </>
     ),
   },
   {
     id: "your-choices",
-    title: "5. Your choices",
+    title: "4. Your choices",
     content: (
       <p className="lg:text-lg">
         You can block analytics with any standard content blocker without
-        affecting how the flows work.
+        affecting how the screens work.
       </p>
     ),
   },
   {
     id: "changes",
-    title: "6. Changes to this policy",
+    title: "5. Changes to this policy",
     content: (
       <p className="lg:text-lg">
         This policy may change as the project grows; the latest version always
@@ -172,7 +159,7 @@ export const PRIVACY_POLICY_ITEMS: TermItem[] = [
   },
   {
     id: "contact",
-    title: "7. Contact",
+    title: "6. Contact",
     content: <ContactLine topic="privacy" />,
   },
 ];

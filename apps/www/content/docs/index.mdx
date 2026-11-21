@@ -1,35 +1,37 @@
 ---
 title: Introduction
-description: What Enterprise UI Playground is, what a flow is, and how to explore, preview and reuse real Flutter UI flows in your browser.
+description: What Wirefront is, what a screen is, and how to preview, install and wire responsive UI screens.
 ---
 
-**Enterprise UI Playground is a catalogue of real Flutter UI flows** — complete, multi-screen journeys such as logging in, checking out, sharing content or onboarding a new user. Every flow runs live in your browser, so you can tap through it exactly as a user would before you decide to use it.
+**Wirefront is a catalogue of 200 responsive, ready-to-wire UI screens** built on [shadcn/ui](https://ui.shadcn.com) with [Base UI](https://base-ui.com) and Tailwind CSS v4. Every screen runs live in your browser, so you can click through it before you install it with the shadcn CLI.
 
-## What's a flow?
+## What's a screen?
 
-A flow is a small, self-contained Flutter feature: one or more screens, the navigation between them, and the state they share. Flows are grouped into six categories:
+A screen is one self-contained page or panel: a pricing table, a members list, a sign-in form, an AI chat. Each ready-to-wire screen is a folder of three files:
 
-- **Account Management** — logging in, editing a profile, resetting a password, logging out, deleting an account.
-- **Commerce & Finance** — listings, carts, ordering, booking, refunds, transfers, subscriptions and redeeming.
-- **Content** — creating, editing, uploading, searching and filtering content, plus recording, scanning and watching media.
-- **Misc** — setting up, connecting accounts, verifying, dark mode, switching views and toggles.
-- **New User Experience** — tutorials, creating an account and onboarding.
-- **Social** — inviting, chatting, calling, commenting, sharing, following, reviewing, blocking and reporting.
+- **`view.tsx`** — the screen itself: props in, UI out. No data, no fetching, no router.
+- **`schema.ts`** — zod schemas, the screen's types and its API contract.
+- **`fixtures.ts`** — demo data that satisfies the schema, for tests and mocks.
 
-Browse them all on the [Flows](/flows) page.
+Screens come in 23 kinds, grouped six ways:
+
+- **Shells** — layouts: app frames and navigation.
+- **Accounts** — auth and onboarding, settings, profile, pricing.
+- **Data** — dashboards, tables, charts, filters.
+- **Activity** — cards, timelines, calendars, threads and comments.
+- **Interaction** — forms, modals, toasts and banners, tours and coachmarks, empty states.
+- **Products** — apps, AI and agents, dev tools, personal, commerce.
+
+Browse them all on the [Screens](/screens) page.
 
 ## Live in your browser
 
-Each flow page runs the actual Flutter code, compiled for the web, inside a phone, tablet or laptop frame. Switch devices to check responsive layouts, restart the flow to begin again, and toggle light or dark mode — nothing is a screenshot or a video.
+Each screen page runs the real React component inside a phone, tablet or laptop frame. Switch devices to check the responsive layout, replay the screen to begin again, and toggle light or dark mode. Nothing is a screenshot or a video.
 
 ## Read the source
 
-Every flow page has a **Code** tab with the Dart source for that flow: the files inside the flow's folder and any shared files it imports. See [Using a flow](/docs/installation) to bring one into your own Flutter app.
-
-## Built with Flutter
-
-The flows are written in [Flutter](https://flutter.dev) with a small number of well-known packages. They are designed to be read, copied and adapted rather than installed as a library.
+Every screen page has a **Code** tab with the files the screen installs. See [Installing a screen](/docs/installation) to add one to your own app.
 
 ## Questions and feedback
 
-Found a bug in a flow, or want to suggest a new one? See [Contact & support](/docs/contact).
+Found a bug in a screen, or want to suggest a new one? See [Contact & support](/docs/contact).

@@ -13,9 +13,9 @@ interface Suggestion {
 }
 
 const SUGGESTIONS: readonly Suggestion[] = [
-  { description: "Browse every Flutter flow", route: "/flows" },
+  { description: "Browse every screen", route: "/screens" },
   {
-    description: "Bring a flow into your own app",
+    description: "Install a screen in your own app",
     route: "/docs/installation",
   },
   { description: "Read the docs from the start", route: "/docs" },

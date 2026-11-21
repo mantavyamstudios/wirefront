@@ -21,10 +21,6 @@ export interface FlowDeviceSpec {
   id: FlowDevice;
   label: string;
   model: string;
-  /** `EmbedDevice` name in the Flutter runtime. */
-  runtimeKind: "mobile" | "tablet" | "web";
-  /** Status / navigation bar insets passed to the runtime's MediaQuery. */
-  safeArea: { bottom: number; top: number };
   /** Display glass, relative to `frame`. */
   screen: Rect & { radius: string };
   /** The app viewport (iframe) inside the screen. */
@@ -66,8 +62,6 @@ export const FLOW_DEVICES: Record<FlowDevice, FlowDeviceSpec> = {
     label: "Phone",
     model: "Galaxy S23 Ultra",
     Icon: Smartphone,
-    runtimeKind: "mobile",
-    safeArea: { top: 0, bottom: 0 },
     frame: {
       width: 384 + PHONE_INSET_X * 2 + PHONE_SIDE * 2,
       height: 824 + PHONE_INSET_Y * 2,
@@ -86,8 +80,6 @@ export const FLOW_DEVICES: Record<FlowDevice, FlowDeviceSpec> = {
     label: "Tablet",
     model: "Galaxy Tab S7+",
     Icon: Tablet,
-    runtimeKind: "tablet",
-    safeArea: { top: 0, bottom: 0 },
     frame: { width: 876 + TABLET_INSET * 2, height: 1400 + TABLET_INSET * 2 },
     screen: {
       left: TABLET_INSET,
@@ -103,8 +95,6 @@ export const FLOW_DEVICES: Record<FlowDevice, FlowDeviceSpec> = {
     label: "Desktop",
     model: "MacBook Pro 14″",
     Icon: Laptop,
-    runtimeKind: "web",
-    safeArea: { top: 0, bottom: 0 },
     frame: {
       width: 1512 + MAC_INSET_X * 2,
       height: 982 + MAC_INSET_TOP + MAC_CHIN,

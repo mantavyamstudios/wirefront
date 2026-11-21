@@ -27,8 +27,8 @@ interface ComponentPagePreviewPanelProps {
   onRestart?: () => void;
   onToggleExpanded: () => void;
   /**
-   * Custom preview rendered in place of the registry iframe (e.g. the Flutter
-   * runtime on `/flows`). Hides the loading overlay, and the source panel
+   * Custom preview rendered in place of the registry iframe (e.g. the Wirefront
+   * runtime on the screen pages). Hides the loading overlay, and the source panel
    * unless `sourceUrl` is given.
    */
   preview?: ReactNode;
@@ -350,7 +350,7 @@ export function ComponentPagePreviewPanel({
 
       <div className="bg-background relative isolate w-full flex-1 transform-gpu overflow-hidden max-lg:h-full max-lg:rounded-3xl lg:h-full lg:min-h-[520px] lg:rounded-b-2xl">
         {hasCustomPreview ? (
-          // Always interactive: a custom preview (the framed Flutter runtime)
+          // Always interactive: a custom preview (the framed Wirefront runtime)
           // is a touch target in its own right, and the page still scrolls
           // from the canvas around it.
           <div className="pointer-events-auto size-full">{preview}</div>

@@ -7,8 +7,8 @@ export const dynamic = "force-static";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Enterprise UI Playground",
-    short_name: "UI Playground",
+    name: "Wirefront",
+    short_name: "Wirefront",
     description: SITE_DESCRIPTION,
     start_url: "/",
     display: "standalone",

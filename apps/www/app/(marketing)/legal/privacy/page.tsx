@@ -7,7 +7,7 @@ import { getPageAlternates } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "What Enterprise UI Playground collects (aggregated analytics only), what it does not, and the services the flows use.",
+    "What Wirefront collects (aggregated analytics only), what it does not, and the services the site uses.",
   alternates: getPageAlternates("/legal/privacy"),
 };
 

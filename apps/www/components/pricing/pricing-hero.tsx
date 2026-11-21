@@ -23,7 +23,7 @@ export function PricingHero() {
           {/* Title at 5em */}
           <div className="mx-auto max-w-4xl">
             <h1 className="h-l leading-[1.02] tracking-tight text-balance text-neutral-900 dark:text-white">
-              <span className="block">Preview every flow,</span>
+              <span className="block">Every screen,</span>
               <span className="block">free.</span>
             </h1>
 
@@ -69,7 +69,7 @@ export function PricingHero() {
                 data-button-rotate-hover=""
                 data-shape="round"
                 data-theme=""
-                href="/flows"
+                href="/screens"
                 style={{ borderRadius: "1.5rem" }}
               >
                 <div
@@ -79,10 +79,10 @@ export function PricingHero() {
                 />
                 <div className="button-label__wrap">
                   <div className="button-label">
-                    <span>Browse flows</span>
+                    <span>Browse screens</span>
                   </div>
                   <div aria-hidden="true" className="button-label">
-                    <span>Browse flows</span>
+                    <span>Browse screens</span>
                   </div>
                 </div>
               </Link>
@@ -102,10 +102,10 @@ export function PricingHero() {
                 />
                 <div className="button-label__wrap">
                   <div className="button-label">
-                    <span>Using a flow &rarr;</span>
+                    <span>Installing a screen &rarr;</span>
                   </div>
                   <div aria-hidden="true" className="button-label">
-                    <span>Using a flow &rarr;</span>
+                    <span>Installing a screen &rarr;</span>
                   </div>
                 </div>
               </Link>
