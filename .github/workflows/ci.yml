@@ -196,8 +196,9 @@ jobs:
         env:
           PREVIEW_NAME: pr-${{ github.event.pull_request.number }}
         run: |
-          bunx wrangler preview --name "$PREVIEW_NAME" --message "${GITHUB_SHA::7}" --json > preview.json
-          cat preview.json
+          # tee, not a redirect: wrangler's output, errors included, stays in the log.
+          set -o pipefail
+          bunx wrangler preview --name "$PREVIEW_NAME" --message "${GITHUB_SHA::7}" --json | tee preview.json
           {
             echo "Preview $PREVIEW_NAME:"
             jq -r '.. | strings | select(startswith("https://"))' preview.json | sort -u
