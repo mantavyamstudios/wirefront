@@ -120,7 +120,7 @@ export function ScreensPreviewControls({
         <span aria-hidden className="size-3.5 rounded-full" style={{ background: PALETTES[palette].swatch[0] }} />
       </PreviewMenu>
       <button
-        aria-label="Right-to-left layout"
+        aria-label="RTL layout"
         aria-pressed={isRtl}
         className={`${TRIGGER} font-mono ${isRtl ? "bg-background text-foreground dark:bg-foreground/10" : ""}`}
         onClick={() => onDirChange(isRtl ? "ltr" : "rtl")}

@@ -19,7 +19,7 @@
  *   --viewports=a,b     subset of mobile,tablet,laptop,desktop
  *   --screenshots       save viewport screenshots
  *   --strict            exit 1 if any design fails a gate (see GATES)
- *   --rtl               lay every screen out right-to-left (preview `dir=rtl`: dir and
+ *   --rtl               lay every screen out RTL (preview `dir=rtl`: dir and
  *                       Base UI's DirectionProvider, as a builder's RTL app would);
  *                       the report goes to report-rtl.json
  *

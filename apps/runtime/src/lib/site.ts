@@ -15,6 +15,6 @@ export const LINKS = {
   repo: "https://github.com/mantavyamstudios/wirefront",
   studioGithub: "https://github.com/mantavyamstudios",
   github: "https://github.com/mantavyam",
-  website: "https://mantavyam.in",
+  website: "https://mantavyam.com",
   booking: "https://cal.com/mantavyam/business",
 } as const;
