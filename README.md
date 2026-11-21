@@ -1,6 +1,6 @@
 # Wirefront
 
-200 responsive UI screens built on [shadcn/ui](https://ui.shadcn.com) with [Base UI](https://base-ui.com) and Tailwind v4, each installable with the shadcn CLI. Browse a screen, preview it on desktop, tablet or phone, then copy its source or install it.
+A backend-agnostic catalogue of production-grade UI screens built on [shadcn/ui](https://ui.shadcn.com) with [Base UI](https://base-ui.com) and Tailwind v4, organised by the experience they serve. Every screen is adaptive, dynamic and responsive: install it with the shadcn CLI, wire it to your backend and tweak it locally.
 
 By [Mantavyam Studios](https://mantavyam.in) · [GitHub](https://github.com/mantavyamstudios) · [Book a call](https://cal.com/mantavyam/business)
 
@@ -47,7 +47,9 @@ The six groups are Shells (layouts), Accounts (auth, settings, profile, pricing)
 
 ## Screen pages
 
-Every screen page shows the screen live on a phone, tablet or laptop frame (rotate, replay, light/dark, expand with `⌘J`), its docs beside it, and a Code tab with the files it installs.
+Every screen page shows the screen live on a phone, tablet or laptop frame (rotate, replay, light/dark, expand with `⌘J`; switch its state, accent palette and direction from the toolbar under it), its docs beside it, and a Code tab with the files it installs.
+
+Below the editorial MDX, each page carries a reference generated from the screen's code by `scripts/screen-docs.ts`: installation, a usage example, props (types, JSDoc, defaults), the backend contract (`api` in `schema.ts`), data types, states, copy keys, permissions and dependencies. It runs before the site's `dev`, `build` and typecheck; `bun run --cwd apps/www screens:docs --check` also typechecks every usage example against its screen.
 
 ## How designs are organised
 

@@ -14,7 +14,10 @@
  * - the screen page's iframe never shows the screen (no wf:ready / ready marker);
  * - moving to another screen reloads the iframe instead of messaging it,
  *   or leaves it on the old screen;
- * - the site's theme switch does not reach the iframe;
+ * - the site's theme switch, or the toolbar's state, palette and direction
+ *   controls, do not reach the iframe;
+ * - a screen page is missing its generated reference (usage, props, backend
+ *   contract), or the landing copy hard-codes a screen count;
  * - the source panel's JSON does not hold the screen's files;
  * - a gallery page lists the wrong screens;
  * - any console error or uncaught exception on the site or inside the iframe.
@@ -31,7 +34,10 @@ const BASE = `http://127.0.0.1:${PORT}`;
 const TIMEOUT_MS = 30_000;
 
 interface Manifest {
-  groups: { slug: string; kinds: { slug: string; screens: { slug: string; title: string; files: string[] }[] }[] }[];
+  groups: {
+    slug: string;
+    kinds: { slug: string; screens: { slug: string; title: string; files: string[]; states: string[] }[] }[];
+  }[];
   totals: { screens: number };
 }
 const manifest = JSON.parse(readFileSync(resolve(ROOT, "apps/www/lib/screens/screens.manifest.json"), "utf8")) as Manifest;
@@ -112,6 +118,7 @@ async function main() {
       "/llms.txt",
       `/llms-screens.mdx/${group.slug}/${kind}/${first.slug}`,
       "/docs",
+      "/docs/wiring",
     ];
     for (const url of urls) check((await status(url)) === 200, `${url} answers 200`);
     check((await status(`/c/${kind}/${first.slug}`)) === 404, "old /c/ address is gone (404, no redirect)");
@@ -170,6 +177,55 @@ async function main() {
         () => false,
       );
     check(themed, "the site's theme switch reaches the iframe");
+
+    // Palette: the toolbar's accent palette reaches the iframe.
+    await page.getByRole("button", { name: "Accent palette" }).click();
+    await page.getByRole("menuitemradio", { name: "Indigo" }).click();
+    check(
+      await frame
+        .waitForFunction(() => document.documentElement.getAttribute("data-palette") === "indigo", null, { timeout: TIMEOUT_MS })
+        .then(() => true, () => false),
+      "the toolbar's palette reaches the iframe",
+    );
+
+    // Direction: right to left, without a reload.
+    await page.getByRole("button", { name: "Right-to-left layout" }).click();
+    check(
+      await frame
+        .waitForFunction(() => document.querySelector('[dir="rtl"]') !== null, null, { timeout: TIMEOUT_MS })
+        .then(() => true, () => false),
+      "the toolbar's direction switch lays the screen out right to left",
+    );
+    await page.getByRole("button", { name: "Right-to-left layout" }).click();
+
+    // Generated reference on the screen page.
+    for (const id of ["installation", "usage", "props", "backend-contract", "dependencies"]) {
+      check((await page.locator(`h2#${id}`).count()) === 1, `the screen page has its "${id}" reference section`);
+    }
+
+    // State: a screen that declares states switches between them.
+    const stated = manifest.groups
+      .flatMap((g) => g.kinds.flatMap((k) => k.screens.map((sc) => ({ g, k, sc }))))
+      .find(({ sc }) => sc.states.includes("loading"));
+    if (stated) {
+      await page.goto(`${BASE}/${stated.g.slug}/${stated.k.slug}/${stated.sc.slug}`, { waitUntil: "load" });
+      const statedFrame = await screenFrame(page);
+      await waitForScreen(statedFrame, stated.k.slug, stated.sc.slug);
+      await page.getByRole("button", { name: "Screen state" }).click();
+      await page.getByRole("menuitemradio", { name: "Loading" }).click();
+      check(
+        await statedFrame
+          .waitForFunction(() => new URLSearchParams(window.location.search).get("state") === "loading", null, { timeout: TIMEOUT_MS })
+          .then(() => true, () => false),
+        `the toolbar's state control shows ${stated.k.slug}/${stated.sc.slug} loading`,
+      );
+    } else {
+      check(false, "a screen declares a loading state (none found to test the state control)");
+    }
+
+    // Landing copy: no hard-coded screen count.
+    const home = await (await fetch(`${BASE}/`)).text();
+    check(!new RegExp(`\\b${manifest.totals.screens}\\b (responsive|screens)`).test(home), "the landing page does not state a screen count");
 
     // Docs toolkit: ComponentPreview embeds the runtime, ComponentInstallation shows the registry command.
     await page.goto(`${BASE}/docs/installation`, { waitUntil: "load" });
