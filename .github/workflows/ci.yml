@@ -198,8 +198,10 @@ jobs:
         run: |
           # tee, not a redirect: wrangler's output, errors included, stays in the log.
           set -o pipefail
-          bunx wrangler preview --name "$PREVIEW_NAME" --message "${GITHUB_SHA::7}" --json | tee preview.json
+          bunx wrangler preview --name "$PREVIEW_NAME" --message "${GITHUB_SHA::7}" | tee preview.log
+          # wrangler ends with "Preview URL: ..." and "Unique Deployment URL: ...".
           {
-            echo "Preview $PREVIEW_NAME:"
-            jq -r '.. | strings | select(startswith("https://"))' preview.json | sort -u
+            echo "Preview $PREVIEW_NAME (${GITHUB_SHA::7}):"
+            grep -E "URL: https://" preview.log | sed -E 's/^[^A-Za-z]*//' ||
+              echo "::warning::The Preview deployed, but wrangler printed no URL; see the log above" >&2
           } >> "$GITHUB_STEP_SUMMARY"
