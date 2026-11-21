@@ -5,7 +5,6 @@ import {
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_URL,
-  X_PROFILE_URL,
 } from "@/lib/site";
 
 export const PUBLISHER_JSON_LD = {
@@ -22,12 +21,12 @@ export const PUBLISHER_JSON_LD = {
     height: 192,
   },
   sameAs: [GITHUB_REPO_URL],
-  slogan: "Real Flutter flows, live in your browser",
-  knowsAbout: ["Flutter", "Dart", "Mobile UI", "User flows", "UI design"],
+  slogan: "Ready-to-wire screens, live in your browser",
+  knowsAbout: ["React", "shadcn/ui", "Tailwind CSS", "Responsive UI", "UI design"],
   founder: {
-    "@type": "Person",
-    name: "Devesh Mishra",
-    sameAs: [GITHUB_PROFILE_URL, X_PROFILE_URL],
+    "@type": "Organization",
+    name: "Mantavyam Studios",
+    sameAs: [GITHUB_PROFILE_URL],
   },
 } as const;
 

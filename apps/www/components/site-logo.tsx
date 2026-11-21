@@ -19,7 +19,7 @@ export function SiteLogo({
 }) {
   return (
     <Image
-      alt="Enterprise UI Playground"
+      alt="Wirefront"
       className={cn(
         "ring-border/60 shrink-0 rounded-lg object-cover ring-1",
         sizes[size],

@@ -7,7 +7,7 @@ import { getPageAlternates } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "The ground rules for using Enterprise UI Playground and its Flutter flows.",
+    "The ground rules for using Wirefront and its UI screens.",
   alternates: getPageAlternates("/legal/terms"),
 };
 

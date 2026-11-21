@@ -6,12 +6,12 @@ import { getPageAlternates, SITE_NAME } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Preview every Flutter flow live in your browser and read its full Dart source, free. Plus, with a commercial license, is coming soon.",
+    "Every Wirefront screen is free and open source under MIT. Book a call for custom work.",
   alternates: getPageAlternates("/pricing"),
   openGraph: {
     title: `Pricing — ${SITE_NAME}`,
     description:
-      "Preview every Flutter flow live and read its full Dart source, free.",
+      "Every Wirefront screen, free and open source under MIT.",
   },
 };
 

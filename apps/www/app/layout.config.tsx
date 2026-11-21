@@ -24,7 +24,7 @@ export const baseOptions: BaseLayoutProps = {
       secondary: false,
     },
     {
-      text: "Using a Flow",
+      text: "Installing a Screen",
       url: "/docs/installation",
       secondary: false,
     },

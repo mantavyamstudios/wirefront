@@ -30,21 +30,21 @@ export function InfoSection() {
             </div>
             <div className="info__title">
               <h3 className="is--long h-ml">
-                See exactly how a flow feels before you build it: every screen
-                runs live, and every line of Dart is there to take.
+                See exactly how a screen behaves before you wire it: every
+                screen runs live, and every line of it is yours to install.
               </h3>
             </div>
             <ul className="info__list">
               <li className="info__li">
                 <div className="info__li-title">
                   <h4 className="u--fw-medium p-l">
-                    Real Flutter, not screenshots
+                    Real React, not screenshots
                   </h4>
                 </div>
                 <p className="p-m">
-                  Each flow is the actual Flutter app compiled for the web. Tap,
-                  type and scroll through it on a phone, tablet or laptop frame,
-                  in light or dark mode.
+                  Each screen is the real React component, running in your
+                  browser. Click, type and scroll through it on a phone, tablet
+                  or laptop frame, in light or dark mode.
                 </p>
               </li>
               <li className="info__li">
@@ -52,21 +52,20 @@ export function InfoSection() {
                   <h4 className="u--fw-medium p-l">Every screen, every file</h4>
                 </div>
                 <p className="p-m">
-                  The Code tab lists the Dart files behind each flow, including
-                  the shared ones it imports, so you can copy it into your own
-                  Flutter app and make it yours.
+                  The Code tab shows each screen's view, schema and fixtures.
+                  One shadcn CLI command installs them in your app, ready to
+                  wire to your own data.
                 </p>
               </li>
               <li className="info__li">
                 <div className="info__li-title">
                   <h4 className="u--fw-medium p-l">
-                    Six categories, one place
+                    Six groups, one place
                   </h4>
                 </div>
                 <p className="p-m">
-                  Account management, commerce and finance, content, social, new
-                  user experience and everyday patterns: the journeys real
-                  products are made of, side by side.
+                  Shells, accounts, data, activity, interaction and whole
+                  products: the screens real apps are made of, side by side.
                 </p>
               </li>
             </ul>

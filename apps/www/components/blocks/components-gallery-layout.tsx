@@ -34,7 +34,7 @@ interface ComponentsGalleryLayoutProps {
   tree: PageTree.Root;
 }
 
-/** Docs navbar + mobile nav drawer for the gallery index (`/flows`). */
+/** Docs navbar + mobile nav drawer for the gallery index (`/screens`). */
 export function ComponentsGalleryLayout({
   children,
   releaseDatesByUrl,

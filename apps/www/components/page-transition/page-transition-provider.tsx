@@ -21,14 +21,14 @@ import { PageTransitionShader } from "./page-transition-shader";
 
 /** Shown while moving between sections of the site (see `getSiteSection`). */
 export const DOCS_TRANSITION_PHRASES = [
-  "tap through every screen",
-  "real flutter real flows",
-  "preview read copy ship",
-  "full enterprise usecases",
+  "try every screen live",
+  "ready to wire screens",
+  "preview install wire ship",
+  "two hundred screens",
   "every screen runs live",
-  "full dart source inside",
-  "loading the playground",
-  "flows you can touch",
+  "full source inside",
+  "loading wirefront",
+  "screens you can touch",
 ] as const;
 
 const DOCS_TYPER_VARIATIONS: TyperVariation[] = [

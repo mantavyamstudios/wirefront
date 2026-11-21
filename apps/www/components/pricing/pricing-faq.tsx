@@ -7,22 +7,22 @@ import Link from "@/components/site-link";
 import { PRICING_FAQ_ITEMS } from "./pricing-config";
 
 function FaqAnswer({ content, title }: { content: string; title: string }) {
-  if (title === "Can I use the flows in commercial apps?") {
+  if (title === "Can I use the screens in commercial apps?") {
     return (
       <p className="pricing-faq__answer p-m">
-        See the <Link href="/docs/license">License</Link> page for the current
-        terms, or <Link href="/docs/contact">get in touch</Link> to talk about
-        commercial use.
+        Yes. The MIT License allows personal and commercial use; keep the
+        copyright and license notice with the code. See the{" "}
+        <Link href="/docs/license">License</Link> page.
       </p>
     );
   }
 
-  if (title === "How do I use a flow?") {
+  if (title === "How do I install a screen?") {
     return (
       <p className="pricing-faq__answer p-m">
-        Open the flow&apos;s Code tab, copy its Dart files into your Flutter app
-        and adapt them. Full steps are in{" "}
-        <Link href="/docs/installation">Using a flow</Link>.
+        Run the shadcn CLI command on the screen&apos;s page, then pass your own
+        data in as props. Full steps are in{" "}
+        <Link href="/docs/installation">Installing a screen</Link>.
       </p>
     );
   }

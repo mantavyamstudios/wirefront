@@ -222,7 +222,7 @@ export async function generateMetadata(props: {
           },
         ]
       : {
-          name: "Devesh Mishra",
+          name: "Mantavyam Studios",
           url: GITHUB_PROFILE_URL,
         },
     openGraph: {

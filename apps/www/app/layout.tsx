@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
   authors: [
     {
-      name: "Devesh Mishra",
+      name: "Mantavyam Studios",
       url: GITHUB_PROFILE_URL,
     },
   ],
@@ -77,8 +77,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@devzsh",
-    creator: "@devzsh",
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
     images: defaultTwitterImages,

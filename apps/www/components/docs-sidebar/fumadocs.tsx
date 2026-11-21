@@ -284,7 +284,7 @@ export const DocsSidebar = (
     <DocsShell className="h-full min-h-0 max-md:w-full max-md:max-w-full md:w-[var(--fd-sidebar-width,260px)] md:max-w-[var(--fd-sidebar-width,260px)]">
       <DocsShellHeader className="flex items-center justify-between border-b px-4 py-3 md:hidden">
         <Link
-          aria-label="Enterprise UI Playground home"
+          aria-label="Wirefront home"
           className="focus-visible:ring-ring flex items-center gap-2 rounded-md transition-opacity outline-none hover:opacity-80 focus-visible:ring-2"
           href="/"
           onClick={(e) => {
@@ -297,7 +297,7 @@ export const DocsSidebar = (
           }}
         >
           <SiteLogo size="sm" />
-          <span className="text-sm font-semibold">UI Playground</span>
+          <span className="text-sm font-semibold">Wirefront</span>
         </Link>
         <button
           aria-label="Close menu"

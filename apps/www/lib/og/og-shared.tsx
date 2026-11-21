@@ -55,7 +55,7 @@ export function OgBrand() {
         }}
         tw="text-white text-5xl font-bold"
       >
-        UI Playground
+        Wirefront
       </p>
     </div>
   );

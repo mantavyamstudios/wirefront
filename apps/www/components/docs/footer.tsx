@@ -37,9 +37,9 @@ export const Footer = ({ lastUpdate }: { lastUpdate?: Date }) => {
               rel="noopener noreferrer"
               target="_blank"
             >
-              Devesh Mishra
+              Mantavyam Studios
             </a>
-            . Real Flutter flows, live in your browser.
+            . Ready-to-wire screens, live in your browser.
           </p>
 
           {!isMobile && <Bunny className="mb-2" sleeping={isNightTime} />}

@@ -1,6 +1,6 @@
 ---
-title: Using a flow
-description: Preview a flow, read its Dart source and bring it into your own Flutter app.
+title: Installing a screen
+description: Preview a screen, read its source and install it in your own app with the shadcn CLI.
 ---
 
 <Steps>
@@ -8,48 +8,34 @@ description: Preview a flow, read its Dart source and bring it into your own Flu
 
 ### Preview it
 
-Open any flow from the [Flows](/flows) page. The preview runs the real Flutter code — tap, type and scroll through it. Use the device switcher to try it on a phone, tablet or laptop, and the restart button to begin again from the first screen.
+Open any screen from the [Screens](/screens) page. The preview runs the real component: click, type and scroll through it. Use the device switcher to try it on a phone, tablet or laptop, and the replay button to start it again.
 
 </Step>
 <Step>
 
 ### Read the source
 
-Open the **Code** tab on the flow page. It lists every Dart file the flow needs:
-
-- **Flow files** live in the flow's own folder, for example `lib/flows/01_account_management/login/`.
-- **Shared files** are imported from elsewhere in the app (theme, constants or common widgets) and are shown with their `lib/…` path.
-
-The full source is also in the [GitHub repository](https://github.com/deveshmishra09/enterprise_ui_playground).
+Open the **Code** tab on the screen page. It lists the files the screen installs: `view.tsx`, `schema.ts` and `fixtures.ts`. The full source is also in the [GitHub repository](https://github.com/mantavyamstudios/wirefront).
 
 </Step>
 <Step>
 
 ### Add it to your app
 
-1. Copy the flow's folder (and any shared files it lists) into your Flutter project's `lib/` directory.
-2. Update the `package:enterprise_ui_playground/…` imports to your own package name.
-3. Add any packages the flow imports to your `pubspec.yaml`, then run `flutter pub get`.
-4. Push the flow's entry screen from your own navigation, for example:
+In a project set up for [shadcn/ui](https://ui.shadcn.com/docs/installation), install the screen from its registry item. The screen page shows the exact command; for example:
 
-```dart
-Navigator.of(context).push(
-  MaterialPageRoute(builder: (_) => const LoginScreen()),
-);
+```bash
+npx shadcn@latest add https://wirefront.mantavyam.in/r/pricing-three-tier.json
 ```
+
+The CLI writes the screen to `components/wirefront/<screen>/` with the helpers it uses beside it, and installs the shadcn/ui components and packages it needs.
 
 </Step>
 <Step>
 
-### Make it yours
+### Wire it
 
-Restyle the screens to match your design system, and replace the sample data and placeholder actions with calls to your own services.
+Render the view with your own data. Every list, user, number and label arrives through props, and every action leaves as an event, so the view never fetches by itself. Validate your API's responses with the zod schemas in `schema.ts`, and use `fixtures.ts` for tests and mocks.
 
 </Step>
 </Steps>
-
-<Callout>
-  Some flows use the camera, microphone or location. On the web these ask for
-  permission in your browser; in a mobile app you also need the platform
-  permission entries (`Info.plist` on iOS, `AndroidManifest.xml` on Android).
-</Callout>
