@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 
 import { CommandPaletteGroupsProvider } from "@/components/command-palette/command-palette-groups-provider";
 import { CommandPaletteSearchDialog } from "@/components/command-palette/command-palette-search-dialog";
-import { FlowsAnchorLinks } from "@/components/flows/flows-anchor-links";
+import { ScreensAnchorLinks } from "@/components/screens/screens-anchor-links";
 import { GlobalCursorToggle } from "@/components/global-cursor-toggle";
 import { PageTransitionProvider } from "@/components/page-transition/page-transition-provider";
 import { getCommandPaletteGroups } from "@/lib/command-palette/get-command-palette-items";
@@ -36,17 +36,17 @@ export const metadata: Metadata = {
   metadataBase: new URL(getMetadataBaseUrl()),
   title: {
     template: `%s - ${SITE_NAME}`,
-    default: `${SITE_NAME} – Live Flutter user flows`,
+    default: `${SITE_NAME} – Ready-to-wire UI screens`,
   },
   description: SITE_DESCRIPTION,
   keywords: [
     SITE_NAME,
-    "Flutter",
-    "Flutter UI",
-    "Flutter web",
-    "Dart",
-    "User flows",
-    "Mobile UI patterns",
+    "shadcn/ui",
+    "React",
+    "Tailwind CSS",
+    "UI screens",
+    "Ready-to-wire",
+    "Responsive UI",
     "UI templates",
   ],
   // The owner's GitHub avatar, refreshed on every build (scripts/fetch-avatar.mts).
@@ -126,7 +126,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <NuqsAdapter>
               <PageTransitionProvider>
                 {app}
-                <FlowsAnchorLinks />
+                <ScreensAnchorLinks />
                 <Toaster />
               </PageTransitionProvider>
             </NuqsAdapter>

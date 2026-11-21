@@ -2,7 +2,7 @@ import { cache } from "react";
 
 import { baseOptions } from "@/app/layout.config";
 import { source } from "@/lib/docs/source";
-import { getFlowGalleryItems } from "@/lib/flows/data";
+import { getScreenGalleryItems, getScreenGroups } from "@/lib/screens/data";
 
 import type { CommandPaletteGroup, CommandPaletteItem } from "./types";
 
@@ -61,10 +61,10 @@ function getDocumentationItems(): CommandPaletteItem[] {
     );
 }
 
-function getFlowItems(): CommandPaletteItem[] {
-  return getFlowGalleryItems().map((entry) =>
+function getScreenItems(): CommandPaletteItem[] {
+  return getScreenGalleryItems().map((entry) =>
     item({
-      id: `flow-${entry.slug}`,
+      id: `screen-${entry.slug}`,
       label: entry.title,
       hint: entry.collection,
       href: entry.href,
@@ -85,12 +85,22 @@ export const getCommandPaletteGroups = cache((): CommandPaletteGroup[] => {
       path: "/",
     }),
     item({
-      id: "page-flows",
-      label: "Flows",
-      href: "/flows",
+      id: "page-screens",
+      label: "Screens",
+      href: "/screens",
       icon: "box",
-      path: "/flows",
+      path: "/screens",
     }),
+    ...getScreenGroups().map((group) =>
+      item({
+        id: `page-group-${group.slug}`,
+        label: group.title,
+        hint: group.meaning,
+        href: `/${group.slug}`,
+        icon: "box",
+        path: `/${group.slug}`,
+      })
+    ),
     item({
       id: "page-docs",
       label: "Documentation",
@@ -120,9 +130,9 @@ export const getCommandPaletteGroups = cache((): CommandPaletteGroup[] => {
     });
   }
 
-  const flows = getFlowItems();
-  if (flows.length > 0) {
-    groups.push({ id: "flows", label: "Flows", items: flows });
+  const screens = getScreenItems();
+  if (screens.length > 0) {
+    groups.push({ id: "screens", label: "Screens", items: screens });
   }
 
   return groups;

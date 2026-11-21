@@ -4,7 +4,7 @@ import type { source } from "@/lib/docs/source";
 
 export type PrimitiveDocPage = InferPageType<typeof source>;
 
-/** `(string & Record<never, never>)` lets other catalogues (e.g. `/flows`) reuse these types. */
+/** `(string & Record<never, never>)` lets other catalogues (e.g. `/screens`) reuse these types. */
 export type ComponentCollection =
   | "component"
   | "block"
@@ -44,8 +44,6 @@ export type ComponentGalleryCategory =
   | (string & Record<never, never>);
 
 export interface ComponentGalleryCardPreview {
-  /** Two-screen flow card used on `/flows` (screens + tapped point on screen 1). */
-  flow?: { screens: string[]; tap?: { x: number; y: number } };
   poster?: string;
   videoMp4?: string;
   videoWebm?: string;

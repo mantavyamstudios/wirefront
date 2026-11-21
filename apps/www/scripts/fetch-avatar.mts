@@ -1,6 +1,7 @@
 /**
- * Pulls the site icon from the owner's GitHub avatar, so every build uses the
- * current profile picture. GitHub resizes it (`?s=`) and serves JPEG.
+ * Pulls the site icon from the studio's GitHub avatar, so every build uses the
+ * current profile picture. GitHub resizes it (`?s=`) and serves JPEG or PNG;
+ * PNGs are converted so the icons stay `avatar-<size>.jpg`.
  *
  * Runs before `next build`. If GitHub can't be reached, the copies already in
  * `public/brand/` are kept and the build carries on.
@@ -8,7 +9,9 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-const AVATAR_URL = "https://avatars.githubusercontent.com/u/145436782";
+import sharp from "sharp";
+
+const AVATAR_URL = "https://avatars.githubusercontent.com/u/332807507";
 const SIZES = [32, 128, 180, 192, 512] as const;
 const OUT_DIR = path.join(import.meta.dirname, "../public/brand");
 
@@ -18,10 +21,13 @@ async function fetchSize(size: number) {
     signal: AbortSignal.timeout(15_000),
   });
   const type = response.headers.get("content-type") ?? "";
-  if (!(response.ok && type.startsWith("image/jpeg"))) {
+  if (!(response.ok && /^image\/(jpeg|png)/.test(type))) {
     throw new Error(`HTTP ${response.status} (${type || "no type"})`);
   }
-  return Buffer.from(await response.arrayBuffer());
+  const body = Buffer.from(await response.arrayBuffer());
+  return type.startsWith("image/png")
+    ? sharp(body).flatten({ background: "#ffffff" }).jpeg({ quality: 90 }).toBuffer()
+    : body;
 }
 
 try {

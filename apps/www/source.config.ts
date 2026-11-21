@@ -55,11 +55,11 @@ export const docs = defineDocs({
 });
 
 /**
- * Flutter flows — served at `/flows/<category>/<subflow>`. Pages are generated
- * from the Flutter catalogue by `scripts/flows-manifest.mts`.
+ * Wirefront screens — served at `/<group>/<kind>/<screen>`. Pages are
+ * generated from the screens catalogue by `scripts/screens-manifest.mts`.
  */
-export const flows = defineDocs({
-  dir: "content/flows",
+export const screens = defineDocs({
+  dir: "content/screens",
   docs: {
     schema: blocksDocSchema,
     postprocess: blocksDocPostprocess,

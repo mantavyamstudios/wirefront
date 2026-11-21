@@ -93,11 +93,12 @@ const THEME_GROUP: CommandPaletteGroup = {
 
 /** Section label shown beside a full-text search result. */
 function searchHint(url: string): string | undefined {
-  if (url.startsWith("/flows/")) {
-    return "Flow";
-  }
   if (url.startsWith("/docs")) {
     return "Docs";
+  }
+  // Screens live at /{group}/{kind}/{screen}.
+  if (url.split("#")[0].split("/").filter(Boolean).length === 3) {
+    return "Screen";
   }
   return undefined;
 }

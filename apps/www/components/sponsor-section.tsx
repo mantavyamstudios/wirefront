@@ -1,12 +1,12 @@
 import Link from "@/components/site-link";
-import manifest from "@/lib/flows/flows.manifest.json";
+import manifest from "@/lib/screens/screens.manifest.json";
 
-const FLOW_COUNT = manifest.categories.reduce(
-  (count, category) => count + category.subflows.length,
-  0
+/** Every kind with the group it sits in, in display order. */
+const KINDS = manifest.groups.flatMap((group) =>
+  group.kinds.map((kind) => ({ ...kind, group: group.slug }))
 );
 
-/** Landing strip: one link per flow category. */
+/** Landing strip: one link per kind of screen. */
 export function SponsorSection() {
   return (
     <section
@@ -18,7 +18,7 @@ export function SponsorSection() {
           {/* Title */}
           <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center">
             <h2 className="!m-0 text-center !text-3xl !leading-[1.15] !font-normal tracking-[-0.04em] sm:!text-4xl sm:!leading-[1.12] md:!text-5xl md:!leading-[1.08] lg:!text-[56px] lg:!leading-[1.06]">
-              {FLOW_COUNT} flows across {manifest.categories.length} categories
+              {manifest.totals.screens} screens across {KINDS.length} kinds
             </h2>
           </div>
 
@@ -63,19 +63,19 @@ export function SponsorSection() {
             </svg>
           </div>
 
-          {/* Category links: each glides to its heading on /flows. */}
+          {/* Kind links: each opens its /{group}/{kind} page. */}
           <ul className="!my-10 flex w-full !list-none flex-wrap items-center justify-center gap-x-6 gap-y-3 !p-0 md:!my-12 md:gap-x-10">
-            {manifest.categories.map((category) => (
-              <li key={category.slug}>
+            {KINDS.map((kind) => (
+              <li key={kind.slug}>
                 <Link
                   className="flex items-baseline gap-2 !no-underline transition-opacity duration-200 hover:opacity-50"
-                  href={`/flows#${category.slug}`}
+                  href={`/${kind.group}/${kind.slug}`}
                 >
                   <span className="text-lg tracking-[-0.02em] md:text-2xl">
-                    {category.title}
+                    {kind.title}
                   </span>
                   <span className="font-mono text-xs opacity-40">
-                    {category.subflows.length}
+                    {kind.screens.length}
                   </span>
                 </Link>
               </li>
@@ -106,13 +106,13 @@ export function SponsorSection() {
           {/* Bottom CTA */}
           <div className="group mt-8 flex cursor-pointer flex-col items-center justify-center gap-1.5 text-center text-sm transition-all ease-in-out sm:flex-row md:mt-10 md:text-base">
             <p className="!m-0 opacity-40">
-              Every flow runs live in your browser
+              Every screen runs live in your browser
             </p>
             <Link
               className="flex cursor-pointer items-center gap-1 pl-1 !font-medium !no-underline opacity-70 transition-opacity hover:opacity-100"
-              href="/flows"
+              href="/screens"
             >
-              explore flows
+              explore screens
               <span className="flex items-center transition-all ease-in-out group-hover:translate-x-1">
                 <svg
                   aria-hidden="true"

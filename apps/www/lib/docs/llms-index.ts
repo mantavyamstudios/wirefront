@@ -1,12 +1,12 @@
 import type { InferPageType } from "fumadocs-core/source";
 
 import type { source } from "@/lib/docs/source";
-import type { flowsSource } from "@/lib/flows/source";
+import type { screensSource } from "@/lib/screens/source";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 type LlmsIndexPage =
   | InferPageType<typeof source>
-  | InferPageType<typeof flowsSource>;
+  | InferPageType<typeof screensSource>;
 
 function formatPageLine(page: LlmsIndexPage): string {
   const description = page.data.description?.trim();
@@ -15,10 +15,10 @@ function formatPageLine(page: LlmsIndexPage): string {
   return `- [${title}](${SITE_URL}${page.url})${suffix}`;
 }
 
-/** Build `llms.txt`: docs and every flow, plus the markdown exports. */
+/** Build `llms.txt`: docs and every screen, plus the markdown exports. */
 export function buildLlmsIndex(
   docsPages: InferPageType<typeof source>[],
-  flowPages: InferPageType<typeof flowsSource>[]
+  screenPages: InferPageType<typeof screensSource>[]
 ): string {
   return [
     `# ${SITE_NAME}`,
@@ -27,11 +27,11 @@ export function buildLlmsIndex(
     "## Documentation",
     ...docsPages.map(formatPageLine),
     "",
-    "## Flows",
-    ...flowPages.map(formatPageLine),
+    "## Screens",
+    ...screenPages.map(formatPageLine),
     "",
     "## LLM exports",
-    `- [llms-full.txt](${SITE_URL}/llms-full.txt): every docs and flow page as markdown`,
-    `- Markdown of any page: \`${SITE_URL}/llms.mdx/<docs-page>\` for docs (e.g. \`${SITE_URL}/llms.mdx/installation\`) and \`${SITE_URL}/llms-flows.mdx/<category>/<flow>\` for flows`,
+    `- [llms-full.txt](${SITE_URL}/llms-full.txt): every docs and screen page as markdown`,
+    `- Markdown of any page: \`${SITE_URL}/llms.mdx/<docs-page>\` for docs (e.g. \`${SITE_URL}/llms.mdx/installation\`) and \`${SITE_URL}/llms-screens.mdx/<group>/<kind>/<screen>\` for screens`,
   ].join("\n");
 }

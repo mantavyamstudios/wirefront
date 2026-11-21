@@ -13,7 +13,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@source "../node_modules/fumadocs-ui/dist/**/*.js";
+@source "../../../node_modules/fumadocs-ui/dist/**/*.js";
 
 :root {
   --card: oklch(1 0 0);

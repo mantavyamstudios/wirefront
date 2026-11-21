@@ -9,7 +9,7 @@ import "@/app/(marketing)/home.css";
 import { usePageTransition } from "@/components/page-transition/page-transition-provider";
 import Link from "@/components/site-link";
 import { useButton3DHover } from "@/hooks/use-button-3d-hover";
-import { NAV_EXPLORE, NAV_FLOWS, NAV_SOCIALS } from "@/lib/navigation";
+import { NAV_EXPLORE, NAV_SCREENS, NAV_SOCIALS } from "@/lib/navigation";
 
 import { SocialIcon } from "./social-icons";
 import { UnderNavMarquee } from "./under-nav-marquee";
@@ -242,7 +242,7 @@ export function Navbar({
                   </Link>
                 </div>
 
-                {/* Action Buttons: 1st button 1.5rem (Flows) + 2nd button .875rem (Docs) */}
+                {/* Action Buttons: 1st button 1.5rem (Screens) + 2nd button .875rem (Docs) */}
                 <div className="nav-bar__buttons">
                   <div className="nav-bar__login-button">
                     <Link
@@ -253,8 +253,8 @@ export function Navbar({
                       data-shape="round"
                       data-size=""
                       data-theme=""
-                      href="/flows"
-                      onClick={(e) => handleLinkClick(e, "/flows")}
+                      href="/screens"
+                      onClick={(e) => handleLinkClick(e, "/screens")}
                       style={{ borderRadius: "1.5rem" }}
                     >
                       <div
@@ -264,13 +264,13 @@ export function Navbar({
                       />
                       <div className="button-label__wrap">
                         <div className="button-label dark:text-white!">
-                          <span>Flows</span>
+                          <span>Screens</span>
                         </div>
                         <div
                           aria-hidden="true"
                           className="button-label dark:text-white!"
                         >
-                          <span>Flows</span>
+                          <span>Screens</span>
                         </div>
                       </div>
                     </Link>
@@ -317,13 +317,13 @@ export function Navbar({
                 <div className="nav-bar__bottom-overflow">
                   <div className="nav-bar__bottom-inner" data-lenis-prevent="">
                     <div className="nav-bar__bottom-row">
-                      {/* Flows Column */}
+                      {/* Screens Column */}
                       <div className="is--products nav-bar__bottom-col">
                         <div className="nav-bar__tag-row">
-                          <span className="eyebrow">Flows</span>
+                          <span className="eyebrow">Screens</span>
                         </div>
                         <ul className="nav-bar__ul-big">
-                          {NAV_FLOWS.map((item, index) => (
+                          {NAV_SCREENS.map((item, index) => (
                             <li className="nav-bar__big-li" key={item.label}>
                               <Link
                                 className="nav-bar__big-a w-inline-block"
@@ -338,7 +338,7 @@ export function Navbar({
                                   {item.label}
                                 </span>
                               </Link>
-                              {index < NAV_FLOWS.length - 1 && (
+                              {index < NAV_SCREENS.length - 1 && (
                                 <div className="is--nav-transparent line" />
                               )}
                             </li>
