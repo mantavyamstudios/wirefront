@@ -87,16 +87,8 @@ jobs:
         with:
           bun-version: 1.4.5
       - run: bun install --frozen-lockfile
-      - name: Install Chromium for Playwright (3 attempts, 5 min each)
-        run: |
-          for attempt in 1 2 3; do
-            if timeout 300 npx playwright install --with-deps chromium; then
-              exit 0
-            fi
-            echo "::warning::Playwright's Chromium download failed or stalled (attempt $attempt of 3); retrying"
-          done
-          echo "::error::Couldn't install Chromium for Playwright after 3 attempts"
-          exit 1
+      - name: Install Chromium for Playwright
+        run: bash scripts/ci-install-chromium.sh
       - run: bun run test:browser
       - if: always()
         uses: actions/upload-artifact@v7
@@ -121,16 +113,8 @@ jobs:
         with:
           bun-version: 1.4.5
       - run: bun install --frozen-lockfile
-      - name: Install Chromium for Playwright (3 attempts, 5 min each)
-        run: |
-          for attempt in 1 2 3; do
-            if timeout 300 npx playwright install --with-deps chromium; then
-              exit 0
-            fi
-            echo "::warning::Playwright's Chromium download failed or stalled (attempt $attempt of 3); retrying"
-          done
-          echo "::error::Couldn't install Chromium for Playwright after 3 attempts"
-          exit 1
+      - name: Install Chromium for Playwright
+        run: bash scripts/ci-install-chromium.sh
       - run: bun run audit:responsive -- --strict
       - if: always()
         uses: actions/upload-artifact@v7
@@ -157,16 +141,8 @@ jobs:
       - run: bun install --frozen-lockfile
       - name: Screens manifest matches the catalogue
         run: bun run --cwd apps/www screens:check
-      - name: Install Chromium for Playwright (3 attempts, 5 min each)
-        run: |
-          for attempt in 1 2 3; do
-            if timeout 300 npx playwright install --with-deps chromium; then
-              exit 0
-            fi
-            echo "::warning::Playwright's Chromium download failed or stalled (attempt $attempt of 3); retrying"
-          done
-          echo "::error::Couldn't install Chromium for Playwright after 3 attempts"
-          exit 1
+      - name: Install Chromium for Playwright
+        run: bash scripts/ci-install-chromium.sh
       - run: bun run test:bridge
       - run: bun run build
       - name: Every screen's usage example typechecks against the screen
