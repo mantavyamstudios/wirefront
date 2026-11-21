@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: sending fails, and Retry succeeds after a moment.
 // Not shipped by the registry; builders pass their own retry action.

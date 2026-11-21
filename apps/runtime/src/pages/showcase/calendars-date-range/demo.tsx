@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: the picker opened on the last 14 days; Apply goes nowhere.
 // Not shipped by the registry; builders pass the range on to their own filters.

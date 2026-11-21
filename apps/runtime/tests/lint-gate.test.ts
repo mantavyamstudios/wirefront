@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /** The lint ratchet: existing debt may shrink, never grow (scripts/lint-gate.ts). */
 import { readdirSync, readFileSync } from "node:fs";

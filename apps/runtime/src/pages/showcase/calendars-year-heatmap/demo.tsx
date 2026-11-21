@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: a seeded sample year; searching waits and then reports no such user.
 // Not shipped by the registry; builders load contributions from their own backend.

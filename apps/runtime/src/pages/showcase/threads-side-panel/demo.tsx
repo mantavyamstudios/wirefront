@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: the panel opens on load over a placeholder issue page; actions save after a
 // short wait. Not shipped by the registry; builders wire ThreadPanel to their own backend.

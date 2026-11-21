@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /** Every source file carries its licence header (see scripts/spdx.ts). */
 import { readdirSync, readFileSync } from "node:fs";
@@ -18,12 +18,12 @@ describe("SPDX headers", () => {
     expect(headerLines("apps/runtime/src/x.tsx", "")).toHaveLength(2);
   });
 
-  it("mark every UI kit component as shadcn/ui (MIT) or Wirefront (AGPL), with no coss ui left", () => {
+  it("mark every UI kit component as shadcn/ui (MIT) or Wirefront (MIT), with no coss ui left", () => {
     const dir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../packages/ui/src/components/ui");
     const wrong = readdirSync(dir).filter((f) => {
       const head = readFileSync(path.join(dir, f), "utf8").split("\n").slice(0, 3).join("\n");
       const shadcn = head.includes("SPDX-License-Identifier: MIT") && head.includes("shadcn/ui");
-      const wirefront = head.includes("SPDX-License-Identifier: AGPL-3.0-only") && head.includes("Mantavyam Studios");
+      const wirefront = head.includes("SPDX-License-Identifier: MIT") && head.includes("Mantavyam Studios");
       return !(shadcn || wirefront) || /cal\.com|coss/i.test(head);
     });
     expect(wrong).toEqual([]);
@@ -31,7 +31,7 @@ describe("SPDX headers", () => {
 
   it("keep a shebang first and are added only once", () => {
     const once = withHeader("scripts/x.ts", "#!/usr/bin/env tsx\nconsole.log(1);\n");
-    expect(once.startsWith("#!/usr/bin/env tsx\n// SPDX-License-Identifier: AGPL-3.0-only\n")).toBe(true);
+    expect(once.startsWith("#!/usr/bin/env tsx\n// SPDX-License-Identifier: MIT\n")).toBe(true);
     expect(withHeader("scripts/x.ts", once)).toBe(once);
   });
 });

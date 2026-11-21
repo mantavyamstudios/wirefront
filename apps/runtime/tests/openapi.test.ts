@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /** API contracts → OpenAPI 3.1 and MSW handlers (scripts/lib/openapi.ts). */
 import { describe, expect, it } from "vitest";

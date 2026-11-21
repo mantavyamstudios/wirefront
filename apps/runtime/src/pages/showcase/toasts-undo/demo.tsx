@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: archiving a project shows the snackbar; Undo puts it back.
 // Not shipped by the registry; builders call notifyUndo after their own reversible change.

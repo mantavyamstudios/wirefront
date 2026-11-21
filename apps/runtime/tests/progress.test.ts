@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /** Slow-test alerts for long-running checks (scripts/lib/progress.ts). */
 import { afterEach, describe, expect, it, vi } from "vitest";

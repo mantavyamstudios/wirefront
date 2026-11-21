@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: three notifications on load, with a fixed clock; Replay shows them again.
 // Not shipped by the registry; builders call notifyActivity from their realtime feed.

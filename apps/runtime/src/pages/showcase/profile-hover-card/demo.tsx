@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: a sample comment with two mentions, and Maya's card shown open beside it.
 // Not shipped by the registry; builders render PersonHoverCard wherever they render mentions.

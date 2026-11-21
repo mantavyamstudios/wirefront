@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: the checklist docked over a placeholder welcome page.
 // Not shipped by the registry; builders load listSetupTasks and save onToggle.

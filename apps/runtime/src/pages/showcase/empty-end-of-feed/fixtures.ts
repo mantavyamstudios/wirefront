@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /** Demo data for the showcase: the feed the end marker sits under. */
 export const now = "2026-10-24T12:00:00Z";

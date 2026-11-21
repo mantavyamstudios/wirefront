@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: the list with sample integrations. Not shipped by the registry.
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
