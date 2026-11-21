@@ -59,6 +59,7 @@
         "@base-ui/react": "^1.9.0",
         "@floating-ui/react": "^0.27.20",
         "@wirefront/bridge": "workspace:*",
+        "@wirefront/ui": "workspace:*",
         "@workspace/ui": "workspace:*",
         "class-variance-authority": "^0.7.1",
         "cmdk": "^1.1.1",
