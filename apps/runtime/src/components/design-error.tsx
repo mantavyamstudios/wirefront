@@ -19,7 +19,7 @@ export function DesignError({ error }: ErrorComponentProps) {
     <div className="flex min-h-svh items-center justify-center bg-background p-6 text-foreground" role="alert">
       <div className="max-w-md space-y-2 text-center">
         <p className="font-medium">This screen failed to load.</p>
-        <p className="break-words font-mono text-muted-foreground text-xs">{message}</p>
+        <p className="wrap-break-word font-mono text-muted-foreground text-xs">{message}</p>
       </div>
     </div>
   );

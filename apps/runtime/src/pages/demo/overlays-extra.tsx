@@ -33,7 +33,7 @@ const TONES: Record<Notification["Icon"], string> = {
   comment: "bg-sky-500/15 text-sky-600 dark:text-sky-400",
   mention: "bg-violet-500/15 text-violet-600 dark:text-violet-400",
   invite: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
-  billing: "bg-foreground/[0.08] text-foreground",
+  billing: "bg-foreground/8 text-foreground",
 };
 
 export function NotificationsSheet() {
@@ -49,7 +49,7 @@ export function NotificationsSheet() {
 
   return (
     <Sheet open={open} onOpenChange={(o) => setOverlay(o ? "notifications" : null)}>
-      <SheetContent side="right" className="!max-w-md">
+      <SheetContent side="right" className="max-w-md!">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <BellIcon className="size-4 opacity-70" />
@@ -62,7 +62,7 @@ export function NotificationsSheet() {
             Mark all read
           </Button>
         </SheetHeader>
-        <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 !p-0">
+        <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 p-0!">
           {buckets.map((bucket) => {
             const items = notifications.filter((n) => n.bucket === bucket);
             if (items.length === 0) return null;
@@ -78,7 +78,7 @@ export function NotificationsSheet() {
                       <li
                         key={n.id}
                         className={`relative flex gap-3 px-4 py-3 transition-colors ${
-                          n.read ? "" : "bg-foreground/[0.02]"
+                          n.read ? "" : "bg-foreground/2"
                         }`}
                       >
                         {!n.read ? (
@@ -152,7 +152,7 @@ export function ShortcutsDialog() {
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOverlay(o ? "shortcuts" : null)}>
-      <DialogContent className="!max-w-2xl">
+      <DialogContent className="max-w-2xl!">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <KeyboardIcon className="size-4 opacity-70" />
@@ -174,8 +174,8 @@ export function ShortcutsDialog() {
                     >
                       <span>{it.label}</span>
                       <span className="flex items-center gap-1">
-                        {it.keys.map((k, i) => (
-                          <Kbd key={i}>{k}</Kbd>
+                        {it.keys.map((k) => (
+                          <Kbd key={k}>{k}</Kbd>
                         ))}
                       </span>
                     </li>

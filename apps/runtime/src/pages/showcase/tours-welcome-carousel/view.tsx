@@ -90,7 +90,7 @@ function WelcomeTourScreen({ steps, icons = {}, open, defaultOpen = true, onOpen
         showCloseButton={false}
       >
         <div className="touch-pan-y select-none" ref={swipeRef}>
-          <div className="relative h-36 max-h-[30svh] overflow-hidden bg-gradient-to-br from-primary/30 via-primary/10 to-background sm:h-44">
+          <div className="relative h-36 max-h-[30svh] overflow-hidden bg-linear-to-br from-primary/30 via-primary/10 to-background sm:h-44">
             <div
               aria-hidden
               className="absolute inset-0 opacity-50"

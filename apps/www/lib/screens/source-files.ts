@@ -30,10 +30,14 @@ const manifest = manifestJson as {
 /** `apps/runtime/src/pages/showcase`, resolved from `apps/www` (the Next.js cwd). */
 const SHOWCASE = path.resolve(process.cwd(), "../runtime/src/pages/showcase");
 
-const languageOf = (file: string) => (file.endsWith(".tsx") ? "tsx" : "typescript");
+const languageOf = (file: string) =>
+  file.endsWith(".tsx") ? "tsx" : "typescript";
 
 /** The files a screen installs: view.tsx, schema.ts and fixtures.ts, or its single file. */
-export async function getScreenSourceFiles(kind: string, screen: string): Promise<ScreenSourceFile[] | null> {
+export const getScreenSourceFiles = async (
+  kind: string,
+  screen: string
+): Promise<ScreenSourceFile[] | null> => {
   const found = manifest.groups
     .flatMap((g) => g.kinds)
     .find((k) => k.slug === kind)
@@ -41,10 +45,15 @@ export async function getScreenSourceFiles(kind: string, screen: string): Promis
   if (!found) {
     return null;
   }
-  return Promise.all(
+  return await Promise.all(
     found.files.map(async (file) => {
       const code = readFileSync(path.join(SHOWCASE, file), "utf-8");
-      return { code, html: await highlightCode(code, languageOf(file)), path: file, scope: "flow" as const };
-    }),
+      return {
+        code,
+        html: await highlightCode(code, languageOf(file)),
+        path: file,
+        scope: "flow" as const,
+      };
+    })
   );
-}
+};

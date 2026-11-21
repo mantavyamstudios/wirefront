@@ -136,7 +136,7 @@ function CredentialsSessionsScreen({ data, status = "ready", error, onRetry, onS
         <h1 className="mt-1 font-heading text-2xl">{t.title}</h1>
         <p className="mt-1 text-muted-foreground text-sm">{t.subtitle}</p>
 
-        <div className={cn("mt-6 rounded-xl border p-4", safe ? "border-border/60 bg-category-2/[0.04]" : "border-category-4/30 bg-category-4/[0.05]")}>
+        <div className={cn("mt-6 rounded-xl border p-4", safe ? "border-border/60 bg-category-2/4" : "border-category-4/30 bg-category-4/5")}>
           <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
             {safe ? <ShieldCheckIcon aria-hidden className="mt-0.5 size-5 shrink-0 text-category-2-foreground" /> : <ShieldAlertIcon aria-hidden className="mt-0.5 size-5 shrink-0 text-category-4-foreground" />}
             <div className="min-w-0 flex-1 basis-[calc(100%-2rem)] sm:basis-auto">
@@ -178,12 +178,12 @@ function CredentialsSessionsScreen({ data, status = "ready", error, onRetry, onS
                 className="grid grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3.5 sm:grid-cols-[44px_minmax(0,1fr)_140px_auto] sm:px-4"
                 key={s.id}
               >
-                <div className="flex size-10 items-center justify-center rounded-lg bg-foreground/[0.06]">{KIND_ICON[s.kind]}</div>
+                <div className="flex size-10 items-center justify-center rounded-lg bg-foreground/6">{KIND_ICON[s.kind]}</div>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                     {s.device}
                     {s.current ? <span className="rounded-full bg-category-2/15 px-2 py-0.5 font-mono text-[10px] text-category-2-foreground uppercase tracking-[0.2em]">{t.thisDevice}</span> : null}
-                    {s.trusted ? <span className="rounded-full bg-foreground/[0.06] px-2 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{t.trusted}</span> : null}
+                    {s.trusted ? <span className="rounded-full bg-foreground/6 px-2 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{t.trusted}</span> : null}
                   </div>
                   <div className="text-muted-foreground text-xs">
                     {s.client} · {s.location}
@@ -232,11 +232,11 @@ function CredentialsSessionsScreen({ data, status = "ready", error, onRetry, onS
             <ul className="mt-4 divide-y divide-border/40 overflow-hidden rounded-xl border border-border/60 bg-background/40">
               {keys.map((k) => (
                 <li className="grid grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:grid-cols-[44px_minmax(0,1fr)_auto] sm:px-4" key={k.id}>
-                  <div className="flex size-10 items-center justify-center rounded-lg bg-foreground/[0.06]">
+                  <div className="flex size-10 items-center justify-center rounded-lg bg-foreground/6">
                     <LockIcon aria-hidden className="size-4 opacity-70" />
                   </div>
                   <div className="min-w-0">
-                    <div className="break-words text-sm">{k.label}</div>
+                    <div className="wrap-break-word text-sm">{k.label}</div>
                     <div className="font-mono text-[10px] text-muted-foreground">{k.lastUsedAt ? interpolate(t.keyMeta, { added: day(k.addedAt), used: fmt.relative(k.lastUsedAt) }) : interpolate(t.keyAdded, { added: day(k.addedAt) })}</div>
                   </div>
                   {onRemoveKey ? (

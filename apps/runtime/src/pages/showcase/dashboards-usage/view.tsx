@@ -112,7 +112,7 @@ function UsageDashboardScreen({ usage, status = "ready", error, onRetry, warnAt 
                 <div className={eyebrow}>{t.plan}</div>
                 <div className="mt-1 flex items-center gap-2">
                   <span className="font-heading text-xl">{usage.plan.name}</span>
-                  <span className="rounded bg-foreground/[0.08] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">{t[usage.plan.interval]}</span>
+                  <span className="rounded bg-foreground/8 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">{t[usage.plan.interval]}</span>
                 </div>
               </div>
               <div className="text-end">
@@ -157,7 +157,7 @@ function UsageDashboardScreen({ usage, status = "ready", error, onRetry, warnAt 
               aria-valuemax={totalDays}
               aria-valuemin={0}
               aria-valuenow={elapsed}
-              className="mt-3 h-1.5 overflow-hidden rounded-full bg-foreground/[0.08]"
+              className="mt-3 h-1.5 overflow-hidden rounded-full bg-foreground/8"
               role="progressbar"
             >
               <div className="h-full rounded-full bg-foreground/70" style={{ width: `${(elapsed / totalDays) * 100}%` }} />
@@ -235,7 +235,7 @@ function UsageMeter({ limit, warnAt, t }: { limit: UsageLimit; warnAt: number; t
         aria-valuemax={100}
         aria-valuemin={0}
         aria-valuenow={Math.round(Math.min(1, share) * 100)}
-        className="mt-2 h-1.5 overflow-hidden rounded-full bg-foreground/[0.06]"
+        className="mt-2 h-1.5 overflow-hidden rounded-full bg-foreground/6"
         role="progressbar"
       >
         <div className={cn("h-full rounded-full transition-all", warn ? "bg-warning" : "bg-foreground/70")} style={{ width: `${Math.min(1, share) * 100}%` }} />

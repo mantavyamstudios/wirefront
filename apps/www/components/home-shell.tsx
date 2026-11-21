@@ -17,20 +17,18 @@ interface HomeShellProps {
   gutterClassName?: string;
 }
 
-export function HomeShell({
+export const HomeShell = ({
   as: Component = "div",
   children,
   className,
   gutterClassName,
   contentClassName,
-}: HomeShellProps) {
-  return (
-    <Component className={cn(homeShellOuterClass, className)}>
-      <div className={cn(homeShellGutterClass, gutterClassName)}>
-        <div className={cn(homeShellMaxWidthClass, contentClassName)}>
-          {children}
-        </div>
+}: HomeShellProps) => (
+  <Component className={cn(homeShellOuterClass, className)}>
+    <div className={cn(homeShellGutterClass, gutterClassName)}>
+      <div className={cn(homeShellMaxWidthClass, contentClassName)}>
+        {children}
       </div>
-    </Component>
-  );
-}
+    </div>
+  </Component>
+);

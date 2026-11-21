@@ -69,7 +69,7 @@ function Thread({ comments, onReply, onResolve, error, t }: { comments: ThreadCo
         <MessageSquareIcon aria-hidden className="size-3" />
         {interpolate(t.heading, { count: comments.length })}
       </h2>
-      <div className="mt-1 flex items-center gap-2 rounded-md bg-category-3/[0.06] px-2.5 py-1 ring-1 ring-category-3/20 lg:-ms-6 lg:rounded-s-none">
+      <div className="mt-1 flex items-center gap-2 rounded-md bg-category-3/6 px-2.5 py-1 ring-1 ring-category-3/20 lg:-ms-6 lg:rounded-s-none">
         <span aria-hidden className="size-1.5 rounded-full bg-category-3" />
         <span className="font-mono text-[10px] text-category-3-foreground uppercase tracking-[0.25em]">{t.anchored}</span>
       </div>
@@ -86,7 +86,7 @@ function Thread({ comments, onReply, onResolve, error, t }: { comments: ThreadCo
           </div>
           <p className="ms-8 text-muted-foreground text-sm leading-relaxed">{c.body}</p>
           <div className="ms-6 flex items-center gap-1">
-            <button className="min-h-8 rounded px-2 font-mono text-[11px] text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10" onClick={() => inputRef.current?.focus()} type="button">
+            <button className="min-h-8 rounded px-2 font-mono text-[11px] text-muted-foreground outline-none transition-colors hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10" onClick={() => inputRef.current?.focus()} type="button">
               {t.reply}
             </button>
           </div>
@@ -155,11 +155,11 @@ function InlineThreadScreen({ before, anchor, after, comments: initial, currentU
         <article className="min-w-0">
           {before}
           <div className="relative mt-4">
-            <div className="rounded-md bg-category-3/[0.08] px-3 py-2 text-foreground/90 text-sm leading-relaxed ring-1 ring-category-3/30">{anchor}</div>
+            <div className="rounded-md bg-category-3/8 px-3 py-2 text-foreground/90 text-sm leading-relaxed ring-1 ring-category-3/30">{anchor}</div>
             <Sheet>
               <SheetTrigger
                 aria-label={interpolate(t.openThread, { count: comments.length })}
-                className="absolute -end-2 -top-3 inline-flex min-h-8 items-center gap-1 rounded-full bg-category-3 px-2.5 font-mono text-[11px] text-white shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 lg:hidden pointer-coarse:min-h-10"
+                className="absolute -inset-e-2 -top-3 inline-flex min-h-8 items-center gap-1 rounded-full bg-category-3 px-2.5 font-mono text-[11px] text-white shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 lg:hidden pointer-coarse:min-h-10"
               >
                 <MessageSquareIcon aria-hidden className="size-3" />
                 {comments.length}

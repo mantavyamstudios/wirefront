@@ -3,11 +3,11 @@ import type { FileTreeElement } from "@workspace/ui/components/file-tree";
 const PROJECT_ROOT_ID = "your-project";
 const PROJECT_ROOT_LABEL = "your-project";
 
-function ensureFolder(
+const ensureFolder = (
   parent: FileTreeElement,
   segment: string,
   id: string
-): FileTreeElement {
+): FileTreeElement => {
   const children = parent.children ?? [];
   const existing = children.find(
     (child) => child.type === "folder" && child.name === segment
@@ -27,10 +27,10 @@ function ensureFolder(
 
   parent.children = [...children, folder];
   return folder;
-}
+};
 
 /** Build a nested folder tree from shadcn registry install targets. */
-export function buildInstallFileTree(targets: string[]): FileTreeElement[] {
+export const buildInstallFileTree = (targets: string[]): FileTreeElement[] => {
   const normalizedTargets = [
     ...new Set(
       targets.flatMap((target) => {
@@ -85,4 +85,4 @@ export function buildInstallFileTree(targets: string[]): FileTreeElement[] {
   }
 
   return [root];
-}
+};

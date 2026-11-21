@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
 import { useCommandPaletteGroups } from "./command-palette-groups-provider";
+import { preloadCommandPaletteDialog } from "./preload-dialog";
 
 const CommandPaletteDialog = dynamic(
   () =>
@@ -14,24 +15,22 @@ const CommandPaletteDialog = dynamic(
 
 // Preload the JS chunk as soon as this module evaluates.
 if (typeof window !== "undefined") {
-  import("./command-palette-dialog").catch(() => {});
+  preloadCommandPaletteDialog();
 }
 
-export function CommandPaletteSearchDialog({
+export const CommandPaletteSearchDialog = ({
   onOpenChange,
   open,
-}: SharedProps) {
+}: SharedProps) => {
   const groups = useCommandPaletteGroups();
   const [hasOpened, setHasOpened] = useState(open);
+  if (open && !hasOpened) {
+    setHasOpened(true);
+  }
 
   // Pre-mount during browser idle time so the first Cmd+K / click is instant
   useEffect(() => {
-    if (hasOpened) {
-      return;
-    }
-
-    if (open) {
-      setHasOpened(true);
+    if (hasOpened || open) {
       return;
     }
 
@@ -69,4 +68,4 @@ export function CommandPaletteSearchDialog({
       open={open}
     />
   );
-}
+};

@@ -169,7 +169,7 @@ const TONES = [
   "bg-orange-500/85 text-white",
   "bg-cyan-500/85 text-white",
   "bg-pink-500/85 text-white",
-];
+] as const;
 
 const PROJECT_COLORS = [
   "bg-emerald-500",
@@ -179,12 +179,12 @@ const PROJECT_COLORS = [
   "bg-rose-500",
   "bg-orange-500",
   "bg-cyan-500",
-];
+] as const;
 
 function tone(seed: string) {
   let h = 0;
   for (let i = 0; i < seed.length; i++) h = (h << 5) - h + seed.charCodeAt(i);
-  return TONES[Math.abs(h) % TONES.length]!;
+  return TONES[Math.abs(h) % TONES.length] ?? TONES[0];
 }
 
 function initials(name: string) {
@@ -192,7 +192,7 @@ function initials(name: string) {
     .split(" ")
     .filter(Boolean)
     .slice(0, 2)
-    .map((p) => p[0]!.toUpperCase())
+    .map((p) => p.charAt(0).toUpperCase())
     .join("");
 }
 
@@ -201,7 +201,7 @@ const SEED_WORKSPACES: Workspace[] = [
     id: "ws_acme",
     name: "Acme inc.",
     letter: "A",
-    tone: "bg-gradient-to-br from-primary/70 to-primary/30",
+    tone: "bg-linear-to-br from-primary/70 to-primary/30",
     members: 24,
     plan: "pro",
   },
@@ -209,7 +209,7 @@ const SEED_WORKSPACES: Workspace[] = [
     id: "ws_blue",
     name: "Blueprint Co.",
     letter: "B",
-    tone: "bg-gradient-to-br from-sky-500/70 to-sky-500/30",
+    tone: "bg-linear-to-br from-sky-500/70 to-sky-500/30",
     members: 6,
     plan: "free",
   },
@@ -217,7 +217,7 @@ const SEED_WORKSPACES: Workspace[] = [
     id: "ws_meridian",
     name: "Meridian Studio",
     letter: "M",
-    tone: "bg-gradient-to-br from-amber-500/70 to-amber-500/30",
+    tone: "bg-linear-to-br from-amber-500/70 to-amber-500/30",
     members: 14,
     plan: "team",
   },
@@ -274,11 +274,11 @@ const SEED_PROJECTS: Project[] = [
 
 const SEED_MEMBERS: Member[] = [
   { id: "m0", name: "Mantavyam", email: "hello@mantavyam.in", role: "owner", status: "online", initials: "MS", tone: "bg-foreground text-background", lastActive: "now" },
-  { id: "m1", name: "Maya Okafor", email: "maya@acme.com", role: "admin", status: "online", initials: "MO", tone: TONES[0]!, lastActive: "2m ago" },
-  { id: "m2", name: "James Lin", email: "james@acme.com", role: "member", status: "online", initials: "JL", tone: TONES[1]!, lastActive: "12m ago" },
-  { id: "m3", name: "Riya Patel", email: "riya@acme.com", role: "member", status: "away", initials: "RP", tone: TONES[2]!, lastActive: "1h ago" },
-  { id: "m4", name: "Dani Kim", email: "dani@acme.com", role: "member", status: "offline", initials: "DK", tone: TONES[3]!, lastActive: "yesterday" },
-  { id: "m5", name: "Alex Tran", email: "alex@acme.com", role: "viewer", status: "offline", initials: "AT", tone: TONES[4]!, lastActive: "Apr 22" },
+  { id: "m1", name: "Maya Okafor", email: "maya@acme.com", role: "admin", status: "online", initials: "MO", tone: TONES[0], lastActive: "2m ago" },
+  { id: "m2", name: "James Lin", email: "james@acme.com", role: "member", status: "online", initials: "JL", tone: TONES[1], lastActive: "12m ago" },
+  { id: "m3", name: "Riya Patel", email: "riya@acme.com", role: "member", status: "away", initials: "RP", tone: TONES[2], lastActive: "1h ago" },
+  { id: "m4", name: "Dani Kim", email: "dani@acme.com", role: "member", status: "offline", initials: "DK", tone: TONES[3], lastActive: "yesterday" },
+  { id: "m5", name: "Alex Tran", email: "alex@acme.com", role: "viewer", status: "offline", initials: "AT", tone: TONES[4], lastActive: "Apr 22" },
 ];
 
 const SEED_THREADS: Thread[] = [
@@ -423,10 +423,10 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     setMembers((ms) => [
       ...ms,
       ...rows.map((r, i) => {
-        const name = r.email.split("@")[0]!.replace(/[._-]/g, " ");
+        const name = (r.email.split("@")[0] ?? r.email).replace(/[._-]/g, " ");
         const niceName = name
           .split(" ")
-          .map((p) => p[0]!.toUpperCase() + p.slice(1))
+          .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
           .join(" ");
         return {
           id: `m_${Date.now()}_${i}`,
@@ -486,13 +486,13 @@ export function DemoProvider({ children }: { children: ReactNode }) {
               if (m.id !== messageId) return m;
               const existing = m.reactions ?? [];
               const idx = existing.findIndex((r) => r.emoji === emoji);
-              if (idx === -1) {
+              const r = existing[idx];
+              if (!r) {
                 return {
                   ...m,
                   reactions: [...existing, { emoji, count: 1, mine: true }],
                 };
               }
-              const r = existing[idx]!;
               const next = r.mine
                 ? r.count <= 1
                   ? null

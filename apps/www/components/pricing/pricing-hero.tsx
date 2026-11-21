@@ -7,7 +7,7 @@ import { useButton3DHover } from "@/hooks/use-button-3d-hover";
 
 import { PRICING_CORE_MESSAGE } from "./pricing-config";
 
-export function PricingHero() {
+export const PricingHero = () => {
   const containerRef = useRef<HTMLElement>(null);
   useButton3DHover(containerRef);
 
@@ -27,7 +27,7 @@ export function PricingHero() {
               <span className="block">free.</span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-balance text-[var(--color-neutral-500)] sm:text-xl">
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-balance text-neutral-500 sm:text-xl">
               {PRICING_CORE_MESSAGE}
             </p>
           </div>
@@ -115,4 +115,4 @@ export function PricingHero() {
       </div>
     </section>
   );
-}
+};

@@ -12,17 +12,15 @@ const MAX_DURATION_MS = 1100;
 let pendingSection: string | null = null;
 
 /** Returns (and clears) the category a cross-page link asked `/screens` to show. */
-export function consumePendingScreensSection(): string | null {
+export const consumePendingScreensSection = (): string | null => {
   const section = pendingSection;
   pendingSection = null;
   return section;
-}
+};
 
-function easeOutCubic(t: number): number {
-  return 1 - (1 - t) ** 3;
-}
+const easeOutCubic = (t: number): number => 1 - (1 - t) ** 3;
 
-function scrollParent(element: HTMLElement): HTMLElement | null {
+const scrollParent = (element: HTMLElement): HTMLElement | null => {
   for (let node = element.parentElement; node; node = node.parentElement) {
     const { overflowY } = getComputedStyle(node);
     if (
@@ -33,21 +31,22 @@ function scrollParent(element: HTMLElement): HTMLElement | null {
     }
   }
   return null;
-}
+};
 
 /**
  * Ease-out scroll to a `/screens` category heading, honouring its
  * `scroll-margin-top`. Instant under reduced motion; a wheel, touch or key
  * press hands control back to the visitor.
  */
-export function smoothScrollToSection(id: string): void {
+export const smoothScrollToSection = (id: string): void => {
   const target = document.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
   if (!target) {
     return;
   }
 
   const scroller = scrollParent(target);
-  const margin = Number.parseFloat(getComputedStyle(target).scrollMarginTop);
+  const margin =
+    Number(getComputedStyle(target).scrollMarginTop.replace(/px$/u, "")) || 0;
   const viewportTop = scroller ? scroller.getBoundingClientRect().top : 0;
   const from = scroller ? scroller.scrollTop : window.scrollY;
   const to = Math.max(
@@ -95,10 +94,10 @@ export function smoothScrollToSection(id: string): void {
     }
   };
   frame = requestAnimationFrame(step);
-}
+};
 
 /** The `/screens` category a plain left click on `anchor` should glide to. */
-function screensSectionOf(event: MouseEvent): string | null {
+const screensSectionOf = (event: MouseEvent): string | null => {
   if (
     event.defaultPrevented ||
     event.button !== 0 ||
@@ -122,7 +121,7 @@ function screensSectionOf(event: MouseEvent): string | null {
     return null;
   }
   return url.hash.slice(1);
-}
+};
 
 /**
  * Category links (`/screens#<category>`) anywhere on the site glide to their
@@ -130,7 +129,7 @@ function screensSectionOf(event: MouseEvent): string | null {
  * so it runs before Next.js `<Link>` and the footer/landing click handlers,
  * which all skip events that are already default-prevented.
  */
-export function ScreensAnchorLinks() {
+export const ScreensAnchorLinks = () => {
   const { transitionTo } = usePageTransition();
 
   useEffect(() => {
@@ -160,4 +159,4 @@ export function ScreensAnchorLinks() {
   }, [transitionTo]);
 
   return null;
-}
+};

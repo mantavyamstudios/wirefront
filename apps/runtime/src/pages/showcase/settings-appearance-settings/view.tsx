@@ -504,7 +504,7 @@ function ThemeCard({ value, label, accent }: { value: ThemeChoice; label: string
     >
       <span
         className={cn(
-          "relative block aspect-[16/11] w-full overflow-hidden rounded-lg border ring-offset-2 ring-offset-background transition-[box-shadow,scale] duration-150 ease-out group-active:scale-[0.98] group-focus-visible:ring-2 group-focus-visible:ring-ring",
+          "relative block aspect-16/11 w-full overflow-hidden rounded-lg border ring-offset-2 ring-offset-background transition-[box-shadow,scale] duration-150 ease-out group-active:scale-[0.98] group-focus-visible:ring-2 group-focus-visible:ring-ring",
           "group-data-checked:ring-2 group-data-checked:ring-foreground [@media(hover:hover)]:group-hover:not-group-data-checked:border-foreground/24",
         )}
       >
@@ -521,7 +521,7 @@ function ThemeCard({ value, label, accent }: { value: ThemeChoice; label: string
           <ThemeThumb accent={accent} variant={value} />
         )}
         <RadioPrimitive.Indicator
-          className="absolute top-1.5 end-1.5 flex size-4.5 items-center justify-center rounded-full bg-foreground text-background shadow-xs/5 transition-[opacity,scale] duration-150 ease-out data-starting-style:scale-75 data-starting-style:opacity-0"
+          className="absolute top-1.5 inset-e-1.5 flex size-4.5 items-center justify-center rounded-full bg-foreground text-background shadow-xs/5 transition-[opacity,scale] duration-150 ease-out data-starting-style:scale-75 data-starting-style:opacity-0"
           keepMounted={false}
         >
           <CheckIcon className="size-3" strokeWidth={3} />

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ComponentGalleryExplorer } from "@/components/blocks/gallery/component-gallery-explorer";
 import { usePageTransition } from "@/components/page-transition/page-transition-provider";
@@ -27,9 +27,10 @@ const TRANSITION_WAIT_MS = 4000;
  * - from a deep link (`/screens#auth`): Next.js lands there, then the heading
  *   is re-aligned after the shell shifts, unless the visitor already scrolled.
  */
-function useArrivalSection() {
+const useArrivalSection = () => {
   const { isTransitioning } = usePageTransition();
-  const [pending] = useState(consumePendingScreensSection);
+  // Read once on mount: the category a link on another page asked for.
+  const pending = useMemo(() => consumePendingScreensSection(), []);
   const [waitedOut, setWaitedOut] = useState(false);
 
   useEffect(() => {
@@ -81,48 +82,57 @@ function useArrivalSection() {
       }
     };
   }, [pending]);
-}
+};
 const EXPANDED_HEIGHT = 440;
 
 /**
  * The screen's preview across the full row width, above the row's text band
  * (the collapsed height), so the title never sits on the image.
  */
-function ScreenRowMedia({ item }: { item: ComponentGalleryItem }) {
+const ScreenRowMedia = ({ item }: { item: ComponentGalleryItem }) => {
   const poster = item.cardPreview?.poster;
   return (
-    <div className="bg-muted/60 absolute inset-x-0 top-0 overflow-hidden" style={{ bottom: COLLAPSED_HEIGHT }}>
-      {poster ? <Image alt="" className="object-cover object-top" fill sizes="100vw" src={poster} /> : null}
+    <div
+      className="bg-muted/60 absolute inset-x-0 top-0 overflow-hidden"
+      style={{ bottom: COLLAPSED_HEIGHT }}
+    >
+      {poster ? (
+        <Image
+          alt=""
+          className="object-cover object-top"
+          fill
+          sizes="100vw"
+          src={poster}
+        />
+      ) : null}
     </div>
   );
-}
+};
 
-function ScreensList({ items }: { items: ComponentGalleryItem[] }) {
-  return (
-    <HoverExpand
-      collapsedHeight={COLLAPSED_HEIGHT}
-      expandedHeight={EXPANDED_HEIGHT}
-      items={items.map((item) => ({
-        label: item.title,
-        description: item.description,
-        href: item.href,
-        media: <ScreenRowMedia item={item} />,
-      }))}
-    />
-  );
-}
+const ScreensList = ({ items }: { items: ComponentGalleryItem[] }) => (
+  <HoverExpand
+    collapsedHeight={COLLAPSED_HEIGHT}
+    expandedHeight={EXPANDED_HEIGHT}
+    items={items.map((item) => ({
+      label: item.title,
+      description: item.description,
+      href: item.href,
+      media: <ScreenRowMedia item={item} />,
+    }))}
+  />
+);
 
 /**
  * The shell's gallery explorer with the list view swapped for Hover Expand rows
  * that reveal each screen's preview.
  */
-export function ScreensGalleryExplorer({
+export const ScreensGalleryExplorer = ({
   items,
   sections,
 }: {
   items: ComponentGalleryItem[];
   sections: ComponentGallerySection[];
-}) {
+}) => {
   useArrivalSection();
 
   return (
@@ -132,4 +142,4 @@ export function ScreensGalleryExplorer({
       sections={sections}
     />
   );
-}
+};

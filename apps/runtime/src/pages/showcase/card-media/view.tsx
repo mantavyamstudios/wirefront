@@ -103,9 +103,9 @@ function ArticleCardsScreen({ articles, onSave, className }: ArticleCardsProps) 
               <li key={a.id}>
                 <Card className="relative h-full overflow-hidden transition-shadow focus-within:ring-2 focus-within:ring-ring hover:shadow-md">
                   {a.coverUrl ? (
-                    <img alt="" className="aspect-[16/9] w-full object-cover" src={a.coverUrl} />
+                    <img alt="" className="aspect-video w-full object-cover" src={a.coverUrl} />
                   ) : (
-                    <div aria-hidden className="relative aspect-[16/9] w-full bg-muted" style={{ background: `${COVERS[i % COVERS.length]}, var(--muted)` }}>
+                    <div aria-hidden className="relative aspect-video w-full bg-muted" style={{ background: `${COVERS[i % COVERS.length]}, var(--muted)` }}>
                       <Pattern kind={i % 3} />
                     </div>
                   )}

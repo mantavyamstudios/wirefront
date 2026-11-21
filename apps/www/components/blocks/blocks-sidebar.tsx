@@ -2,8 +2,10 @@
 
 import { cn } from "@workspace/ui/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
+
+import { useIsClient } from "@/lib/use-is-client";
 
 import { useBlocksMenu } from "./blocks-menu-context";
 import { ComponentPageBlocksNav } from "./blocks-nav";
@@ -24,24 +26,20 @@ const SIDEBAR_TRANSITION = {
 // resample a different region of background on every frame, which is far
 // more expensive than fading it in place. A small x offset keeps the
 // directional "slide" feel without that per-frame resampling cost.
-function getPanelMotion(isStacked: boolean) {
+const getPanelMotion = (isStacked: boolean) => {
   const offset = isStacked ? -24 : -16;
   return {
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: offset },
     initial: { opacity: 0, x: offset },
   };
-}
+};
 
-export function ComponentPageBlocksSidebar() {
+export const ComponentPageBlocksSidebar = () => {
   const { close, navItems, open } = useBlocksMenu();
   const isStacked = useBlocksStackedLayout();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const panelMotion = getPanelMotion(isStacked);
-
-  useLayoutEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!(open && isStacked)) {
@@ -108,11 +106,11 @@ export function ComponentPageBlocksSidebar() {
             >
               <div
                 aria-hidden="true"
-                className="from-background/90 via-background/40 pointer-events-none absolute inset-x-0 top-0 z-10 h-20 rounded-t-3xl bg-gradient-to-b to-transparent"
+                className="from-background/90 via-background/40 pointer-events-none absolute inset-x-0 top-0 z-10 h-20 rounded-t-3xl bg-linear-to-b to-transparent"
               />
               <div
                 aria-hidden="true"
-                className="from-background/90 via-background/40 pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 rounded-b-3xl bg-gradient-to-t to-transparent"
+                className="from-background/90 via-background/40 pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 rounded-b-3xl bg-linear-to-t to-transparent"
               />
 
               <ComponentPageBlocksNav items={navItems} onNavigate={close} />
@@ -128,4 +126,4 @@ export function ComponentPageBlocksSidebar() {
   }
 
   return createPortal(overlay, document.body);
-}
+};

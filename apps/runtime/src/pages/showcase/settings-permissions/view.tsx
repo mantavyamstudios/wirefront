@@ -67,7 +67,7 @@ const ROLE_TONE: Record<number, string> = {
   7: "bg-category-7/15 text-category-7-foreground",
   8: "bg-category-8/15 text-category-8-foreground",
 };
-const NEUTRAL_TONE = "bg-foreground/[0.08] text-muted-foreground";
+const NEUTRAL_TONE = "bg-foreground/8 text-muted-foreground";
 const SKELETON_ROWS = ["r1", "r2", "r3"];
 const groupTint = "bg-[color-mix(in_srgb,var(--background),var(--foreground)_2.5%)]";
 
@@ -80,7 +80,7 @@ function GrantMark({ grant, label }: { grant: Grant; label: string }) {
     );
   if (grant === "na")
     return (
-      <span aria-label={label} className="inline-flex size-5 items-center justify-center rounded-full bg-foreground/[0.04] text-muted-foreground" role="img">
+      <span aria-label={label} className="inline-flex size-5 items-center justify-center rounded-full bg-foreground/4 text-muted-foreground" role="img">
         <LockIcon className="size-2.5" />
       </span>
     );
@@ -176,7 +176,7 @@ function RolePermissionsScreen({ data, status = "ready", error, onRetry, onSetGr
                         aria-pressed={isActive}
                         className={cn(
                           "group w-full rounded-lg border px-3 py-2.5 text-start outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
-                          isActive ? "border-foreground/30 bg-foreground/[0.04]" : "border-border/60 bg-background/40 hover:border-foreground/20 hover:bg-foreground/[0.02]",
+                          isActive ? "border-foreground/30 bg-foreground/4" : "border-border/60 bg-background/40 hover:border-foreground/20 hover:bg-foreground/2",
                         )}
                         onClick={() => setActiveRole(role.id)}
                         type="button"
@@ -188,7 +188,7 @@ function RolePermissionsScreen({ data, status = "ready", error, onRetry, onSetGr
                             </span>
                             <span className="font-medium text-sm">{role.name}</span>
                           </span>{" "}
-                          <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground tabular-nums">
+                          <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground tabular-nums">
                             <span className="sr-only">{interpolate(t.members, { count: role.members })}</span>
                             <span aria-hidden>{role.members}</span>
                           </span>
@@ -229,7 +229,7 @@ function RolePermissionsScreen({ data, status = "ready", error, onRetry, onSetGr
                   ) : null}
                 </div>
                 <div className="flex items-center gap-2.5 rounded-md border border-border/60 bg-background/40 px-3 py-1.5 pointer-coarse:min-h-11">
-                  <Switch checked={diffOnly} className="!h-4 !w-7 [--thumb-size:--spacing(3)]" id={`${id}-diff`} onCheckedChange={setDiffOnly} />
+                  <Switch checked={diffOnly} className="h-4! w-7! [--thumb-size:--spacing(3)]" id={`${id}-diff`} onCheckedChange={setDiffOnly} />
                   <label className="cursor-pointer font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]" htmlFor={`${id}-diff`}>
                     {t.differencesOnly}
                   </label>
@@ -248,7 +248,7 @@ function RolePermissionsScreen({ data, status = "ready", error, onRetry, onSetGr
                     <thead className="sticky top-0 z-10 bg-background/95 backdrop-blur">
                       <tr className="border-border/60 border-b">
                         <th
-                          className="sticky start-0 z-20 min-w-[150px] bg-background px-3 py-3 text-start font-mono font-normal text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:min-w-[200px] sm:px-4 lg:min-w-[240px]"
+                          className="sticky inset-s-0 z-20 min-w-37.5 bg-background px-3 py-3 text-start font-mono font-normal text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:min-w-50 sm:px-4 lg:min-w-60"
                           scope="col"
                         >
                           {t.capability}
@@ -257,12 +257,12 @@ function RolePermissionsScreen({ data, status = "ready", error, onRetry, onSetGr
                           const isActive = role.id === active.id;
                           return (
                             <th
-                              className={cn("w-[72px] min-w-[72px] border-border/40 border-s px-1.5 py-3 text-center font-normal transition-colors sm:w-[88px] sm:px-2", isActive && "bg-foreground/[0.04]")}
+                              className={cn("w-18 min-w-18 border-border/40 border-s px-1.5 py-3 text-center font-normal transition-colors sm:w-22 sm:px-2", isActive && "bg-foreground/4")}
                               key={role.id}
                               scope="col"
                             >
                               <button aria-pressed={isActive} className="flex w-full flex-col items-center gap-1 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10" onClick={() => setActiveRole(role.id)} type="button">
-                                <span className={cn("font-mono text-[10px] uppercase tracking-[0.1em] sm:tracking-[0.2em]", isActive ? "text-foreground" : "text-muted-foreground")}>{role.name}</span>
+                                <span className={cn("font-mono text-[10px] uppercase tracking-widest sm:tracking-[0.2em]", isActive ? "text-foreground" : "text-muted-foreground")}>{role.name}</span>
                                 <span aria-hidden className="font-mono text-[10px] text-muted-foreground tabular-nums">
                                   {role.members}
                                 </span>
@@ -277,7 +277,7 @@ function RolePermissionsScreen({ data, status = "ready", error, onRetry, onSetGr
                         <Fragment key={group.id}>
                           {/* Section label lives in its own pinned cell (a full-width colSpan cell can't stick), so it stays put while the role columns scroll. */}
                           <tr className="border-border/40 border-b">
-                            <th className={cn("sticky start-0 z-10 px-3 py-2 text-start font-mono font-normal text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4", groupTint)} colSpan={1} scope="colgroup">
+                            <th className={cn("sticky inset-s-0 z-10 px-3 py-2 text-start font-mono font-normal text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4", groupTint)} colSpan={1} scope="colgroup">
                               {group.label}
                             </th>
                             <td aria-hidden className={groupTint} colSpan={roles.length} />
@@ -285,9 +285,9 @@ function RolePermissionsScreen({ data, status = "ready", error, onRetry, onSetGr
                           {group.capabilities.map((cap, ci) => {
                             const lastRow = gi === filtered.length - 1 && ci === group.capabilities.length - 1;
                             return (
-                              <tr className={cn("group/row transition-colors odd:bg-foreground/[0.012] hover:bg-foreground/[0.04]", !lastRow && "border-border/30 border-b")} key={cap.id}>
+                              <tr className={cn("group/row transition-colors odd:bg-foreground/[0.012] hover:bg-foreground/4", !lastRow && "border-border/30 border-b")} key={cap.id}>
                                 {/* Opaque sticky cell: the row tint is translucent, so scrolled cells would show through. */}
-                                <th className="sticky start-0 z-10 min-w-[150px] bg-background px-3 py-2.5 text-start font-normal sm:min-w-[200px] sm:px-4 lg:min-w-[240px]" scope="row">
+                                <th className="sticky inset-s-0 z-10 min-w-37.5 bg-background px-3 py-2.5 text-start font-normal sm:min-w-50 sm:px-4 lg:min-w-60" scope="row">
                                   <span className="flex flex-col">
                                     <span className="font-medium text-[13px]">{cap.label}</span>
                                     {cap.hint ? <span className="line-clamp-2 text-muted-foreground text-xs">{cap.hint}</span> : null}
@@ -299,12 +299,12 @@ function RolePermissionsScreen({ data, status = "ready", error, onRetry, onSetGr
                                   const canEdit = isActive && editable && grant !== "na";
                                   const key = `${role.id}:${cap.id}`;
                                   return (
-                                    <td className={cn("border-border/30 border-s px-2 py-2.5 text-center", isActive && "bg-foreground/[0.025]")} key={role.id}>
+                                    <td className={cn("border-border/30 border-s px-2 py-2.5 text-center", isActive && "bg-foreground/2.5")} key={role.id}>
                                       {canEdit ? (
                                         <Switch
                                           aria-label={interpolate(t.toggle, { capability: cap.label, role: role.name })}
                                           checked={grant === "yes"}
-                                          className="!h-4 !w-7 [--thumb-size:--spacing(3)]"
+                                          className="h-4! w-7! [--thumb-size:--spacing(3)]"
                                           disabled={setGrant.isPending(key)}
                                           onCheckedChange={(on) => void setGrant.run({ roleId: role.id, capabilityId: cap.id, allowed: on }, key)}
                                         />

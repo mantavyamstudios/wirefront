@@ -640,7 +640,7 @@ function FirstRunScreen({
   };
 
   return (
-    <div className={cn("@container/screen relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm", className)}>
+    <div className={cn("@container/screen relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm", className)}>
       <aside className="hidden w-64 shrink-0 flex-col border-e bg-muted/30 px-3 py-4 @3xl/screen:flex">
         <div className="flex h-8 items-center gap-2 px-2">
           <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">

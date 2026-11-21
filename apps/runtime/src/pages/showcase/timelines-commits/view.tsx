@@ -137,7 +137,7 @@ function CommitGraphScreen({ commits, repo, branch, status = "ready", error, onR
             <p className="py-12 text-center text-muted-foreground text-sm">{t.empty}</p>
           ) : (
             <div className="relative" style={{ height: totalHeight }}>
-              <svg aria-hidden className="pointer-events-none absolute start-4 top-0" height={totalHeight} viewBox={`0 0 ${graphWidth} ${totalHeight}`} width={graphWidth}>
+              <svg aria-hidden className="pointer-events-none absolute inset-s-4 top-0" height={totalHeight} viewBox={`0 0 ${graphWidth} ${totalHeight}`} width={graphWidth}>
                 {edges.map((e) => (
                   <path d={pathFor(e)} fill="none" key={e.key} stroke={e.color} strokeLinecap="round" strokeOpacity={0.75} strokeWidth={1.75} />
                 ))}
@@ -170,7 +170,7 @@ function CommitGraphScreen({ commits, repo, branch, status = "ready", error, onR
                           </Avatar>
                           <span className={cn("truncate text-sm", merge && "text-muted-foreground italic")}>{c.message}</span>
                           {c.tag ? (
-                            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em] max-sm:hidden">
+                            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em] max-sm:hidden">
                               <TagIcon aria-hidden className="size-2.5" />
                               {c.tag}
                             </span>

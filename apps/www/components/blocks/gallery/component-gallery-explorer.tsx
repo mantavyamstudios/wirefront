@@ -15,6 +15,7 @@ import {
 } from "@/lib/registry/component-gallery-sections";
 import type { ComponentGallerySection } from "@/lib/registry/component-gallery-sections";
 import type { ComponentGalleryItem } from "@/lib/registry/types";
+import { useIsClient } from "@/lib/use-is-client";
 import {
   Tabs,
   TabsHighlight,
@@ -62,57 +63,49 @@ const newBadgeStrokeTransition = {
   times: NEW_BADGE_TIMES,
 };
 
-function NewBadge({
+const NewBadge = ({
   prefersReducedMotion,
 }: {
   prefersReducedMotion: boolean | null;
-}) {
-  return (
-    <span
-      className="flex items-center rounded-lg text-sm font-medium capitalize"
-      style={{ color: "var(--accent-pro)" }}
+}) => (
+  <span
+    className="flex items-center rounded-lg text-sm font-medium capitalize"
+    style={{ color: "var(--accent-pro)" }}
+  >
+    new
+    <svg
+      fill="none"
+      height="20"
+      viewBox="0 0 16 16"
+      width="20"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      new
-      <svg
-        fill="none"
-        height="20"
-        viewBox="0 0 16 16"
-        width="20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <title>New</title>
-        <motion.path
-          animate={
-            prefersReducedMotion
-              ? { opacity: 1 }
-              : { opacity: NEW_BADGE_BOTTOM }
-          }
-          d="M5.2168 11.2812L8.3418 8.15625L11.4668 11.2812"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.25"
-          transition={
-            prefersReducedMotion ? undefined : newBadgeStrokeTransition
-          }
-        />
-        <motion.path
-          animate={
-            prefersReducedMotion ? { opacity: 1 } : { opacity: NEW_BADGE_TOP }
-          }
-          d="M5.2168 6.90625L8.3418 3.78125L11.4668 6.90625"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.25"
-          transition={
-            prefersReducedMotion ? undefined : newBadgeStrokeTransition
-          }
-        />
-      </svg>
-    </span>
-  );
-}
+      <title>New</title>
+      <motion.path
+        animate={
+          prefersReducedMotion ? { opacity: 1 } : { opacity: NEW_BADGE_BOTTOM }
+        }
+        d="M5.2168 11.2812L8.3418 8.15625L11.4668 11.2812"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.25"
+        transition={prefersReducedMotion ? undefined : newBadgeStrokeTransition}
+      />
+      <motion.path
+        animate={
+          prefersReducedMotion ? { opacity: 1 } : { opacity: NEW_BADGE_TOP }
+        }
+        d="M5.2168 6.90625L8.3418 3.78125L11.4668 6.90625"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.25"
+        transition={prefersReducedMotion ? undefined : newBadgeStrokeTransition}
+      />
+    </svg>
+  </span>
+);
 
 const filterItemVariants = {
   initial: {
@@ -177,10 +170,10 @@ const SORT_OPTIONS = [
   { label: "Newest", value: "newest" },
 ] as const satisfies readonly { label: string; value: SortMode }[];
 
-function sortItems(
+const sortItems = (
   items: ComponentGalleryItem[],
   sortMode: SortMode
-): ComponentGalleryItem[] {
+): ComponentGalleryItem[] => {
   const sorted = [...items];
 
   if (sortMode === "newest") {
@@ -192,12 +185,12 @@ function sortItems(
   }
 
   return sorted.toSorted((a, b) => a.title.localeCompare(b.title));
-}
+};
 
-function filterItems(
+const filterItems = (
   items: ComponentGalleryItem[],
   search: string
-): ComponentGalleryItem[] {
+): ComponentGalleryItem[] => {
   const query = search.trim().toLowerCase();
 
   return items.filter((item) => {
@@ -215,9 +208,9 @@ function filterItems(
       item.slug.toLowerCase().includes(query)
     );
   });
-}
+};
 
-function GalleryAnimatedItem({
+const GalleryAnimatedItem = ({
   children,
   index,
   prefersReducedMotion,
@@ -225,7 +218,7 @@ function GalleryAnimatedItem({
   children: ReactNode;
   index: number;
   prefersReducedMotion: boolean | null;
-}) {
+}) => {
   const variants = prefersReducedMotion
     ? reducedFilterItemVariants
     : filterItemVariants;
@@ -251,9 +244,9 @@ function GalleryAnimatedItem({
       {children}
     </motion.div>
   );
-}
+};
 
-function GalleryCard({
+const GalleryCard = ({
   item,
   prefersReducedMotion,
   priority = false,
@@ -261,16 +254,12 @@ function GalleryCard({
   item: ComponentGalleryItem;
   prefersReducedMotion: boolean | null;
   priority?: boolean;
-}) {
+}) => {
   const category = resolveGalleryCategory(item);
   const [isPreviewActive, setIsPreviewActive] = useState(false);
-  // Computed after mount — isRecentlyReleased() reads Date.now(), which is not
-  // allowed during a client render without a Suspense boundary.
-  const [isNew, setIsNew] = useState(false);
-
-  useEffect(() => {
-    setIsNew(isRecentlyReleased(item.releaseDate));
-  }, [item.releaseDate]);
+  // Client only: isRecentlyReleased() reads the clock, which the static HTML can't know.
+  const isClient = useIsClient();
+  const isNew = isClient && isRecentlyReleased(item.releaseDate);
 
   return (
     <div>
@@ -316,15 +305,15 @@ function GalleryCard({
       </Link>
     </div>
   );
-}
+};
 
-function GalleryCompactCard({
+const GalleryCompactCard = ({
   item,
   priority = false,
 }: {
   item: ComponentGalleryItem;
   priority?: boolean;
-}) {
+}) => {
   const category = resolveGalleryCategory(item);
   const [isPreviewActive, setIsPreviewActive] = useState(false);
 
@@ -368,9 +357,9 @@ function GalleryCompactCard({
       </Link>
     </div>
   );
-}
+};
 
-function GalleryListRow({
+const GalleryListRow = ({
   item,
   onPointerEnter,
   onPointerLeave,
@@ -383,37 +372,35 @@ function GalleryListRow({
   ) => void;
   onPointerLeave?: () => void;
   onPointerMove?: (event: React.MouseEvent<HTMLElement>) => void;
-}) {
-  return (
-    <Link
-      className="group border-border bg-card hover:border-foreground/15 flex items-center gap-4 rounded-xl border px-5 py-3.5 transition-all"
-      href={item.href}
-      onMouseEnter={(event) => {
-        onPointerEnter?.(item, event);
-      }}
-      onMouseLeave={onPointerLeave}
-      onMouseMove={onPointerMove}
-    >
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <div className="flex items-center gap-2">
-          <span className="text-foreground truncate text-sm font-medium">
-            {item.title}
-          </span>
-          <span className="bg-muted text-foreground/50 shrink-0 rounded-full px-2 py-0.5 text-xs capitalize">
-            {resolveGalleryCategory(item)}
-          </span>
-        </div>
-        {item.description ? (
-          <p className="text-foreground/50 line-clamp-1 text-xs">
-            {item.description}
-          </p>
-        ) : null}
+}) => (
+  <Link
+    className="group border-border bg-card hover:border-foreground/15 flex items-center gap-4 rounded-xl border px-5 py-3.5 transition-all"
+    href={item.href}
+    onMouseEnter={(event) => {
+      onPointerEnter?.(item, event);
+    }}
+    onMouseLeave={onPointerLeave}
+    onMouseMove={onPointerMove}
+  >
+    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div className="flex items-center gap-2">
+        <span className="text-foreground truncate text-sm font-medium">
+          {item.title}
+        </span>
+        <span className="bg-muted text-foreground/50 shrink-0 rounded-full px-2 py-0.5 text-xs capitalize">
+          {resolveGalleryCategory(item)}
+        </span>
       </div>
-    </Link>
-  );
-}
+      {item.description ? (
+        <p className="text-foreground/50 line-clamp-1 text-xs">
+          {item.description}
+        </p>
+      ) : null}
+    </div>
+  </Link>
+);
 
-function GallerySectionItems({
+const GallerySectionItems = ({
   isFirstSection,
   items,
   listHoverHandlers,
@@ -434,7 +421,7 @@ function GallerySectionItems({
   prefersReducedMotion: boolean | null;
   renderList?: (items: ComponentGalleryItem[]) => ReactNode;
   viewMode: ViewMode;
-}) {
+}) => {
   const variants = prefersReducedMotion
     ? {
         center: { opacity: 1 },
@@ -525,15 +512,15 @@ function GallerySectionItems({
       </AnimatePresence>
     </div>
   );
-}
+};
 
-function ViewToggle({
+const ViewToggle = ({
   setViewMode,
   viewMode,
 }: {
   setViewMode: (mode: ViewMode) => void;
   viewMode: ViewMode;
-}) {
+}) => {
   const options = [
     { value: "cards", label: "Cards", Icon: Grid2x2 },
     { value: "compact", label: "Compact", Icon: Grid3x2 },
@@ -565,7 +552,7 @@ function ViewToggle({
       </TabsHighlight>
     </Tabs>
   );
-}
+};
 
 interface ComponentGalleryExplorerProps {
   items: ComponentGalleryItem[];
@@ -575,11 +562,11 @@ interface ComponentGalleryExplorerProps {
   sections?: ComponentGallerySection[];
 }
 
-export function ComponentGalleryExplorer({
+export const ComponentGalleryExplorer = ({
   items,
   renderList,
   sections = COMPONENT_GALLERY_SECTIONS,
-}: ComponentGalleryExplorerProps) {
+}: ComponentGalleryExplorerProps) => {
   const prefersReducedMotion = useReducedMotion();
   const [search, setSearch] = useState("");
   const [sortMode, setSortMode] = useState<SortMode>("default");
@@ -647,7 +634,7 @@ export function ComponentGalleryExplorer({
           <div className="relative w-full">
             <Search
               aria-hidden
-              className="text-muted-foreground pointer-events-none absolute top-1/2 left-3.5 size-[18px] -translate-y-1/2"
+              className="text-muted-foreground pointer-events-none absolute top-1/2 left-3.5 size-4.5 -translate-y-1/2"
               strokeWidth={2.5}
             />
             <input
@@ -754,7 +741,7 @@ export function ComponentGalleryExplorer({
           ) : (
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="flex min-h-[240px] flex-col items-center justify-center gap-2 text-center"
+              className="flex min-h-60 flex-col items-center justify-center gap-2 text-center"
               exit={{ opacity: 0, y: -8 }}
               initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
               key="gallery-empty"
@@ -774,4 +761,4 @@ export function ComponentGalleryExplorer({
       <BlocksNavHoverPreview position={hoverPosition} preview={hoverPreview} />
     </div>
   );
-}
+};

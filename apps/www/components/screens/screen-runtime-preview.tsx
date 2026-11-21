@@ -14,13 +14,17 @@ interface ScreenRuntimePreviewProps {
  * separate app, so docs embed them the way the screen pages do: an iframe on
  * `/preview/<kind>/<screen>`.
  */
-export function ScreenRuntimePreview({ kind, screen, title }: ScreenRuntimePreviewProps) {
-  return (
-    <iframe
-      className="block h-[560px] w-full border-0"
-      loading="lazy"
-      src={`${process.env.NEXT_PUBLIC_RUNTIME_ORIGIN ?? ""}/preview/${kind}/${screen}`}
-      title={`${title} preview`}
-    />
-  );
-}
+export const ScreenRuntimePreview = ({
+  kind,
+  screen,
+  title,
+}: ScreenRuntimePreviewProps) => (
+  <iframe
+    className="block h-140 w-full border-0"
+    loading="lazy"
+    // The runtime needs scripts and its own origin; it may not navigate the page around it.
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
+    src={`${process.env.NEXT_PUBLIC_RUNTIME_ORIGIN ?? ""}/preview/${kind}/${screen}`}
+    title={`${title} preview`}
+  />
+);

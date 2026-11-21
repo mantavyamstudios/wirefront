@@ -382,11 +382,11 @@ function OwnerAvatar({ owner, index, className }: { owner?: DealOwner; index: nu
 function SignalBars({ engagement }: { engagement: Engagement }) {
   const meta = engagementMeta[engagement];
   return (
-    <span aria-hidden className="flex h-2.5 shrink-0 items-end gap-[2px]">
+    <span aria-hidden className="flex h-2.5 shrink-0 items-end gap-0.5">
       {[0, 1, 2, 3].map((i) => (
         <span
           className={cn(
-            "w-[3px] rounded-[1px] transition-colors duration-300",
+            "w-0.75 rounded-[1px] transition-colors duration-300",
             i < meta.level ? meta.bar : "bg-foreground/12",
           )}
           key={i}
@@ -407,7 +407,7 @@ function Burst({ reduce }: { reduce: boolean }) {
         return (
           <motion.span
             animate={{ x: Math.cos(angle) * 15, y: Math.sin(angle) * 15, opacity: [0, 1, 0], scale: [0.6, 1, 0.6] }}
-            className={cn("absolute -top-[2px] -start-[2px] size-1 rounded-full", tone)}
+            className={cn("absolute -top-0.5 -inset-s-0.5 size-1 rounded-full", tone)}
             initial={{ x: 0, y: 0, opacity: 0 }}
             // Each particle flies at its own angle.
             key={`burst-${degrees}`}
@@ -474,7 +474,7 @@ function DealFace({ deal, owner, ownerIndex, flag, celebrate, touched, reduce, c
           {won ? deal.closeLabel : deal.daysInStage === 0 ? t.justMoved : interpolate(t.daysInStage, { days: deal.daysInStage })}
         </span>
       </div>
-      <div className="relative mt-1.5 flex h-[18px] items-center gap-1.5 text-xs">
+      <div className="relative mt-1.5 flex h-4.5 items-center gap-1.5 text-xs">
         {won ? (
           <>
             <span className="relative flex size-3.5 shrink-0 items-center justify-center">
@@ -851,8 +851,8 @@ function DetailPanel({
           <ol className="mt-2 flex flex-col">
             {deal.activity.slice(0, 3).map((a, i, list) => (
               <li className="relative flex gap-3 pb-3 last:pb-0" key={`${a.label}-${a.when}`}>
-                {i < list.length - 1 ? <span aria-hidden className="absolute top-3 bottom-0 start-[3px] w-px bg-border" /> : null}
-                <span aria-hidden className={cn("mt-1.5 size-[7px] shrink-0 rounded-full", i === 0 ? "bg-foreground/70" : "bg-foreground/20")} />
+                {i < list.length - 1 ? <span aria-hidden className="absolute top-3 bottom-0 inset-s-0.75 w-px bg-border" /> : null}
+                <span aria-hidden className={cn("mt-1.5 size-1.75 shrink-0 rounded-full", i === 0 ? "bg-foreground/70" : "bg-foreground/20")} />
                 <span className="flex min-w-0 flex-col">
                   <span className="text-pretty">{a.label}</span>
                   <span className="text-muted-foreground text-xs">{a.when}</span>
@@ -1422,7 +1422,7 @@ function PipelineTodayBoard({
             </span>
           )}
         </header>
-        <ul className="-m-1 flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto p-1 [scrollbar-width:thin]">
+        <ul className="-m-1 flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto p-1 scrollbar-thin">
           {list.map((deal) => {
             if (drag?.id === deal.id) {
               return (
@@ -1523,7 +1523,7 @@ function PipelineTodayBoard({
           <p className="text-muted-foreground text-xs">{t.focusSubtitle}</p>
         </div>
       </div>
-      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 pb-2 [scrollbar-width:thin]">
+      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 pb-2 scrollbar-thin">
         {visibleSignals.length ? (
           <ul>
             <AnimatePresence initial={false}>
@@ -1579,7 +1579,7 @@ function PipelineTodayBoard({
   return (
     <MotionConfig reducedMotion={reduce ? "always" : "never"}>
       <div
-        className={cn("@container relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm outline-none", className)}
+        className={cn("@container relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm outline-none", className)}
         ref={rootRef}
         tabIndex={-1}
       >
@@ -1615,7 +1615,7 @@ function PipelineTodayBoard({
                   }
                 >
                   {n.icon}
-                  {n.badge ? <span aria-hidden className="absolute top-2 end-2 size-1.5 rounded-full bg-category-4 ring-2 ring-background" /> : null}
+                  {n.badge ? <span aria-hidden className="absolute top-2 inset-e-2 size-1.5 rounded-full bg-category-4 ring-2 ring-background" /> : null}
                 </TooltipTrigger>
                 <TooltipContent side="right">{n.label}</TooltipContent>
               </Tooltip>
@@ -1701,7 +1701,7 @@ function PipelineTodayBoard({
                   initial={false}
                   transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 260, damping: 32 }}
                 />
-                <div className="absolute inset-y-0 start-0 bg-category-2" style={{ width: `${Math.min(100, (won / (target || 1)) * 100)}%` }} />
+                <div className="absolute inset-y-0 inset-s-0 bg-category-2" style={{ width: `${Math.min(100, (won / (target || 1)) * 100)}%` }} />
               </div>
               <span className="text-muted-foreground text-xs tabular-nums">
                 {interpolate(t.targetLine, { percent: fmt.percent(progress), target: fmt.shortMoney(target) })} ·{" "}
@@ -1738,7 +1738,7 @@ function PipelineTodayBoard({
             >
               <div className="shrink-0 px-4 pb-3 @5xl:hidden">
                 <fieldset
-                  className="relative m-0 flex min-w-0 gap-1 overflow-x-auto rounded-xl border-0 bg-muted p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  className="relative m-0 flex min-w-0 gap-1 overflow-x-auto rounded-xl border-0 bg-muted p-1 scrollbar-none [&::-webkit-scrollbar]:hidden"
                   ref={chipsRef}
                 >
                   <legend className="sr-only">{t.stage}</legend>
@@ -1775,7 +1775,7 @@ function PipelineTodayBoard({
                 </fieldset>
               </div>
               <div className="min-h-0 flex-1 overflow-x-auto px-4 pb-4 @3xl:px-6 @5xl:px-5 @5xl:pt-4">
-                <div className="grid h-full grid-cols-1 gap-2 @5xl:min-w-[860px] @5xl:grid-cols-5">
+                <div className="grid h-full grid-cols-1 gap-2 @5xl:min-w-215 @5xl:grid-cols-5">
                   {stages.map((s) => lane(s))}
                 </div>
               </div>
@@ -1812,7 +1812,7 @@ function PipelineTodayBoard({
 
             <aside
               className={cn(
-                "min-h-0 flex-col bg-background @5xl:flex @5xl:w-[288px] @5xl:shrink-0 @5xl:border-s @[90rem]:w-[312px]",
+                "min-h-0 flex-col bg-background @5xl:flex @5xl:w-[288px] @5xl:shrink-0 @5xl:border-s @[90rem]:w-78",
                 selected
                   ? "absolute inset-0 z-30 flex @5xl:static"
                   : tab === "focus"
@@ -1850,7 +1850,7 @@ function PipelineTodayBoard({
         {drag && draggedDeal ? (
           <motion.div
             aria-hidden
-            className="pointer-events-none absolute top-0 start-0 z-50"
+            className="pointer-events-none absolute top-0 inset-s-0 z-50"
             style={{ x: dragX, y: dragY, rotate: tilt, width: drag.width }}
           >
             <motion.div
@@ -1883,7 +1883,7 @@ function PipelineTodayScreen(props: PipelineTodayProps) {
       {status === "ready" && data ? (
         <PipelineTodayBoard {...props} data={data} />
       ) : (
-        <div className={cn("@container flex h-[760px] w-full flex-col overflow-hidden bg-background text-foreground text-sm", className)}>
+        <div className={cn("@container flex h-190 w-full flex-col overflow-hidden bg-background text-foreground text-sm", className)}>
           {status === "error" ? (
             <div className="flex h-full flex-col items-center justify-center px-6 text-center">
               <p className="font-medium">{t.errorTitle}</p>

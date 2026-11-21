@@ -40,6 +40,7 @@ import { chromium, type Browser, type BrowserContext } from "playwright";
 
 import { SOURCE_FILES } from "../apps/runtime/src/pages/showcase/source-files";
 import { withAppServer } from "./lib/app-server";
+import { must } from "./lib/must";
 import { type Progress, trackProgress } from "./lib/progress";
 import { waitForSettledLayout } from "./lib/settle";
 
@@ -323,9 +324,9 @@ async function runWorker(
     progress.start(key);
 
     for (const v of viewports) {
-      const page = await contexts.get(v.name)!.newPage();
+      const page = await must(contexts.get(v.name), `a browser context for ${v.name}`).newPage();
       const errors: string[] = [];
-      page.on("pageerror", (e) => errors.push(String(e).split("\n")[0]!.slice(0, 200)));
+      page.on("pageerror", (e) => errors.push(String(e).split("\n")[0]?.slice(0, 200) ?? String(e)));
       try {
         await page.goto(
           `${base}/preview/${task.category}/${task.design}${rtl ? "?dir=%22rtl%22" : ""}`,
@@ -342,7 +343,7 @@ async function runWorker(
         }
       } catch (err) {
         result[v.name] = {
-          error: err instanceof Error ? err.message.split("\n")[0]! : String(err),
+          error: err instanceof Error ? (err.message.split("\n")[0] ?? err.message) : String(err),
         };
       }
       await page.close();

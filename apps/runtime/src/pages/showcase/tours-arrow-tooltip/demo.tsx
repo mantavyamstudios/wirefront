@@ -23,7 +23,7 @@ export function ToursArrowTooltipShowcasePage() {
   return (
     <div className="relative min-h-svh bg-background text-foreground">
       <div className="grid min-h-svh grid-cols-1 sm:grid-cols-[60px_1fr]">
-        <aside className="border-border/60 border-e bg-foreground/[0.02] max-sm:hidden" />
+        <aside className="border-border/60 border-e bg-foreground/2 max-sm:hidden" />
         <main className="min-w-0 p-4 pb-72 sm:p-6 lg:p-10">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -44,7 +44,7 @@ export function ToursArrowTooltipShowcasePage() {
           </div>
           <div aria-hidden className="mt-6 space-y-2">
             {ROWS.map((k, i) => (
-              <div className={cn("h-12 rounded-md border border-border/40 bg-foreground/[0.02]", i === 0 && ring("row"))} data-tour={i === 0 ? "row" : undefined} key={k} />
+              <div className={cn("h-12 rounded-md border border-border/40 bg-foreground/2", i === 0 && ring("row"))} data-tour={i === 0 ? "row" : undefined} key={k} />
             ))}
           </div>
           {open ? null : (

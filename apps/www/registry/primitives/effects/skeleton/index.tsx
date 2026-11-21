@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@workspace/ui/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { CSSProperties, HTMLAttributes, ReactNode, Ref } from "react";
 
 import { usePrefersReducedMotion } from "@/registry/hooks/use-prefers-reduced-motion";
@@ -67,14 +67,12 @@ const skeletonVariantDefaultDuration: Record<SkeletonVariant, number> = {
   fade: 2.4,
 };
 
-function getSkeletonVariantDuration(
+const getSkeletonVariantDuration = (
   variant: SkeletonVariant,
   duration?: number
-) {
-  return duration ?? skeletonVariantDefaultDuration[variant];
-}
+) => duration ?? skeletonVariantDefaultDuration[variant];
 
-function ensureSkeletonStyles() {
+const ensureSkeletonStyles = () => {
   if (typeof document === "undefined") {
     return;
   }
@@ -88,9 +86,9 @@ function ensureSkeletonStyles() {
   }
 
   style.textContent = SKELETON_CSS;
-}
+};
 
-function resolveSkeletonA11yProps({
+const resolveSkeletonA11yProps = ({
   animate = true,
   decorative = true,
   label,
@@ -98,7 +96,7 @@ function resolveSkeletonA11yProps({
   animate?: boolean;
   decorative?: boolean;
   label?: string | null;
-}) {
+}) => {
   if (decorative || label === null) {
     return { "aria-hidden": true as const };
   }
@@ -108,7 +106,7 @@ function resolveSkeletonA11yProps({
     "aria-live": "polite" as const,
     role: "status" as const,
   };
-}
+};
 
 interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   animate?: boolean;
@@ -120,7 +118,7 @@ interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   variant?: SkeletonVariant;
 }
 
-function Skeleton({
+const Skeleton = ({
   animate = true,
   className,
   decorative = true,
@@ -131,7 +129,7 @@ function Skeleton({
   style,
   variant = "shimmer",
   ...props
-}: SkeletonProps) {
+}: SkeletonProps) => {
   const variantDuration = getSkeletonVariantDuration(variant, duration);
   const showShimmer = animate && variant === "shimmer";
   const showFade = animate && variant === "fade";
@@ -174,39 +172,35 @@ function Skeleton({
       ) : null}
     </div>
   );
-}
+};
 
-function SkeletonAvatar({
+const SkeletonAvatar = ({
   className,
   ...props
-}: Omit<SkeletonProps, "rounded">) {
-  return (
-    <Skeleton
-      className={cn("size-10", className)}
-      decorative
-      rounded="full"
-      {...props}
-    />
-  );
-}
+}: Omit<SkeletonProps, "rounded">) => (
+  <Skeleton
+    className={cn("size-10", className)}
+    decorative
+    rounded="full"
+    {...props}
+  />
+);
 
-function SkeletonText({ className, ...props }: SkeletonProps) {
-  return <Skeleton className={cn("h-3", className)} decorative {...props} />;
-}
+const SkeletonText = ({ className, ...props }: SkeletonProps) => (
+  <Skeleton className={cn("h-3", className)} decorative {...props} />
+);
 
-function SkeletonButton({
+const SkeletonButton = ({
   className,
   ...props
-}: Omit<SkeletonProps, "rounded">) {
-  return (
-    <Skeleton
-      className={cn("h-9 w-24", className)}
-      decorative
-      rounded="lg"
-      {...props}
-    />
-  );
-}
+}: Omit<SkeletonProps, "rounded">) => (
+  <Skeleton
+    className={cn("h-9 w-24", className)}
+    decorative
+    rounded="lg"
+    {...props}
+  />
+);
 
 const ShimmerSkeleton = Skeleton;
 
@@ -246,35 +240,28 @@ interface SkeletonTransitionProps {
  * crossfade finishes — size `skeleton` close to the expected content to
  * avoid a visible jump.
  */
-function SkeletonTransition({
+const SkeletonTransition = ({
   children,
   className,
   fadeDuration = SKELETON_TRANSITION_DEFAULT_FADE_DURATION,
   loading,
   settleDuration = SKELETON_TRANSITION_DEFAULT_SETTLE_DURATION,
   skeleton,
-}: SkeletonTransitionProps) {
+}: SkeletonTransitionProps) => {
   const [phase, setPhase] = useState<SkeletonTransitionPhase>(
     loading ? "loading" : "done"
   );
   const prefersReducedMotion = usePrefersReducedMotion();
-  // Reveal only on a real loading → ready transition. The effect also re-runs
-  // when prefersReducedMotion resolves after mount, which must not replay it.
-  const wasLoadingRef = useRef(loading);
-
-  useEffect(() => {
-    const wasLoading = wasLoadingRef.current;
-    wasLoadingRef.current = loading;
-
+  // Reveal only on a real loading to ready change, never on mount.
+  const [lastLoading, setLastLoading] = useState(loading);
+  if (lastLoading !== loading) {
+    setLastLoading(loading);
     if (loading) {
       setPhase("loading");
-      return;
+    } else {
+      setPhase(prefersReducedMotion ? "done" : "settling");
     }
-    if (!wasLoading) {
-      return;
-    }
-    setPhase(prefersReducedMotion ? "done" : "settling");
-  }, [loading, prefersReducedMotion]);
+  }
 
   useEffect(() => {
     if (phase !== "settling") {
@@ -331,7 +318,7 @@ function SkeletonTransition({
       )}
     </div>
   );
-}
+};
 
 export {
   getSkeletonVariantDuration,

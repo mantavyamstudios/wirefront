@@ -400,7 +400,7 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
 
   if (status === "error") {
     return (
-      <div className={cn("flex min-h-[480px] w-full items-center justify-center p-6", className)}>
+      <div className={cn("flex min-h-120 w-full items-center justify-center p-6", className)}>
         <div className="rounded-xl border border-border/60 p-10 text-center">
           <p className="font-medium">{t.errorTitle}</p>
           {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
@@ -424,7 +424,7 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
   }
 
   return (
-    <div className={cn("@container/screen relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm", className)} ref={rootRef}>
+    <div className={cn("@container/screen relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm", className)} ref={rootRef}>
       <aside className="hidden w-56 shrink-0 flex-col gap-1 border-e bg-muted/40 p-3 @3xl/screen:flex">
         <div className="flex items-center gap-2 px-2 pt-1 pb-4">
           <span aria-hidden className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -478,9 +478,9 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
                   <p className="text-muted-foreground text-xs">{rich(t.summary, { apps: <RollingNumber value={visible.length} />, connected: <RollingNumber value={connectedCount} /> })}</p>
                 </div>
                 <div className="relative w-full @xl:w-72">
-                  <SearchIcon aria-hidden className="pointer-events-none absolute start-2.5 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <SearchIcon aria-hidden className="pointer-events-none absolute inset-s-2.5 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input aria-label={t.search} className="ps-8 pe-12" onChange={(e) => setQuery(e.target.value)} placeholder={t.search} ref={searchRef} type="search" value={query} />
-                  <span className="absolute end-1.5 top-1/2 -translate-y-1/2">
+                  <span className="absolute inset-e-1.5 top-1/2 -translate-y-1/2">
                     {query ? (
                       <Button
                         aria-label={t.clearSearch}
@@ -503,7 +503,7 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
 
               <RadioGroup
                 aria-label={t.categories}
-                className="-mx-4 flex gap-1.5 overflow-x-auto px-4 py-0.5 [scrollbar-width:none] @3xl/screen:hidden"
+                className="-mx-4 flex gap-1.5 overflow-x-auto px-4 py-0.5 scrollbar-none @3xl/screen:hidden"
                 onValueChange={(v) => pickCategory((v as string) || null)}
                 value={category ?? ""}
               >
@@ -568,13 +568,13 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
                 transition={quick}
               >
                 <div aria-hidden className="relative mb-5 h-14 w-32">
-                  <span className="absolute start-0 top-3 flex size-10 -rotate-8 items-center justify-center rounded-xl border bg-card text-muted-foreground shadow-xs/5">
+                  <span className="absolute inset-s-0 top-3 flex size-10 -rotate-8 items-center justify-center rounded-xl border bg-card text-muted-foreground shadow-xs/5">
                     <MailIcon className="size-4" />
                   </span>
-                  <span className="absolute end-0 top-3 flex size-10 rotate-8 items-center justify-center rounded-xl border bg-card text-muted-foreground shadow-xs/5">
+                  <span className="absolute inset-e-0 top-3 flex size-10 rotate-8 items-center justify-center rounded-xl border bg-card text-muted-foreground shadow-xs/5">
                     <DatabaseIcon className="size-4" />
                   </span>
-                  <span className="absolute start-1/2 top-0 flex size-12 -translate-x-1/2 items-center justify-center rounded-xl border bg-card text-foreground shadow-sm/5">
+                  <span className="absolute inset-s-1/2 top-0 flex size-12 -translate-x-1/2 items-center justify-center rounded-xl border bg-card text-foreground shadow-sm/5">
                     <SearchXIcon className="size-5" />
                   </span>
                 </div>
@@ -660,7 +660,7 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
                                   <p className="mt-0.5 line-clamp-2 text-pretty text-muted-foreground text-xs @2xl:line-clamp-1">{app.blurb}</p>
                                 )}
                               </div>
-                              <div className="relative z-[1] -my-0.5 shrink-0">
+                              <div className="relative z-1 -my-0.5 shrink-0">
                                 <ConnectButton {...cardProps(app)} />
                               </div>
                             </motion.li>
@@ -677,7 +677,7 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
       </div>
 
       <Sheet onOpenChange={(o) => !o && setOpenId(null)} open={Boolean(open)}>
-        <SheetContent className="w-full gap-0 p-0 sm:max-w-[400px]" side="right">
+        <SheetContent className="w-full gap-0 p-0 sm:max-w-100" side="right">
           {open ? <DetailPanel {...cardProps(open)} changeSetting={onSettingChange ? (settingId, on) => void changeSetting.run({ appId: open.id, settingId, on }, `${open.id}:${settingId}`) : undefined} error={errors[open.id]} icon={icons[open.id]} installs={installs.format(open.installs)} settingError={changeSetting.error} workspace={workspace} /> : null}
         </SheetContent>
       </Sheet>

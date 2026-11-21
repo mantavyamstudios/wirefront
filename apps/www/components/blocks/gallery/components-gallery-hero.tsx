@@ -27,7 +27,7 @@ const TITLE = "Copy the source. Ship the polish.";
 const DESCRIPTION =
   "Preview-first component pages with live demos, install commands, and full API reference.";
 
-function StackIconBadge({
+const StackIconBadge = ({
   Icon,
   index,
   play,
@@ -35,7 +35,7 @@ function StackIconBadge({
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
   index: number;
   play: boolean;
-}) {
+}) => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
@@ -56,7 +56,7 @@ function StackIconBadge({
       <Icon className="h-2.5 w-2.5" />
     </motion.div>
   );
-}
+};
 
 interface ComponentsGalleryHeroProps {
   className?: string;
@@ -70,13 +70,13 @@ interface ComponentsGalleryHeroProps {
   title?: string;
 }
 
-export function ComponentsGalleryHero({
+export const ComponentsGalleryHero = ({
   className,
   description = DESCRIPTION,
   showStackIcons = true,
   stackLabel = STACK_LABEL,
   title = TITLE,
-}: ComponentsGalleryHeroProps) {
+}: ComponentsGalleryHeroProps) => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
@@ -110,7 +110,7 @@ export function ComponentsGalleryHero({
         <TextEffect
           as="h1"
           className="max-w-3xl text-center text-5xl font-medium tracking-tighter sm:text-6xl"
-          containerTransition={{ staggerChildren: 0.04 }}
+          speedReveal={1.25}
           delay={0.1}
           per="word"
           preset="blur"
@@ -124,7 +124,7 @@ export function ComponentsGalleryHero({
       <TextEffect
         as="p"
         className="text-muted-foreground mt-3 block max-w-xl text-center text-sm font-normal text-balance sm:text-base md:text-lg"
-        containerTransition={{ staggerChildren: 0.02 }}
+        speedReveal={2.5}
         delay={0.25}
         per="word"
         preset="blur"
@@ -135,4 +135,4 @@ export function ComponentsGalleryHero({
       </TextEffect>
     </div>
   );
-}
+};

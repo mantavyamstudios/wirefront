@@ -97,7 +97,7 @@ export function FocusReader({ children, brand, nav, documents, activeDocumentId,
         {nav.map((item) => (
           <li key={item.id}>
             <WirefrontLink
-              className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.03] hover:text-foreground [&_svg]:size-4 [&_svg]:opacity-70 pointer-coarse:min-h-11"
+              className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-muted-foreground text-sm transition-colors hover:bg-foreground/3 hover:text-foreground [&_svg]:size-4 [&_svg]:opacity-70 pointer-coarse:min-h-11"
               href={item.href}
             >
               {item.icon}
@@ -116,7 +116,7 @@ export function FocusReader({ children, brand, nav, documents, activeDocumentId,
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors pointer-coarse:min-h-11",
-                  active ? "bg-foreground/[0.06] text-foreground" : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground",
+                  active ? "bg-foreground/6 text-foreground" : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground",
                 )}
                 href={d.href}
               >
@@ -134,7 +134,7 @@ export function FocusReader({ children, brand, nav, documents, activeDocumentId,
     <ul className="flex flex-col gap-0.5">
       {toc.map((s) => (
         <li key={s.id}>
-          <a className="block w-full rounded-md px-2 py-1.5 text-start text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.03] hover:text-foreground pointer-coarse:py-3" href={`#${s.id}`}>
+          <a className="block w-full rounded-md px-2 py-1.5 text-start text-muted-foreground text-sm transition-colors hover:bg-foreground/3 hover:text-foreground pointer-coarse:py-3" href={`#${s.id}`}>
             {s.label}
           </a>
         </li>
@@ -146,30 +146,30 @@ export function FocusReader({ children, brand, nav, documents, activeDocumentId,
 
   return (
     <div className={cn("relative min-h-svh bg-background text-foreground", className)}>
-      <Progress.Root aria-label={t.progress} className="fixed top-0 start-0 end-0 z-50" value={Math.round(progress)}>
+      <Progress.Root aria-label={t.progress} className="fixed top-0 inset-s-0 inset-e-0 z-50" value={Math.round(progress)}>
         <Progress.Track className="h-0.5 w-full">
           <Progress.Indicator className="h-full bg-foreground transition-[width] duration-150 motion-reduce:transition-none" />
         </Progress.Track>
       </Progress.Root>
 
-      <header className="fixed top-0 end-0 start-0 z-40 flex h-12 items-center justify-between gap-2 border-border/60 border-b bg-background/80 px-3 backdrop-blur sm:px-6">
+      <header className="fixed top-0 inset-e-0 inset-s-0 z-40 flex h-12 items-center justify-between gap-2 border-border/60 border-b bg-background/80 px-3 backdrop-blur sm:px-6">
         {/* Below xl the rails don't fit beside the article: open them as sheets. */}
         {!focused ? (
           <Sheet>
             <SheetTrigger
               aria-label={t.openNavigation}
-              className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground xl:hidden pointer-coarse:size-11"
+              className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/4 hover:text-foreground xl:hidden pointer-coarse:size-11"
             >
               <MenuIcon className="size-4" />
             </SheetTrigger>
-            <SheetContent className="max-w-[280px] bg-background px-3 py-4" side="left">
+            <SheetContent className="max-w-70 bg-background px-3 py-4" side="left">
               <SheetTitle className="sr-only">{t.navigation}</SheetTitle>
               {navPanel}
             </SheetContent>
           </Sheet>
         ) : null}
         <div aria-hidden={focused} className={cn("flex items-center gap-2.5 max-sm:hidden", fade, focused ? "pointer-events-none -translate-x-2 opacity-0" : "opacity-100")}>
-          <div aria-hidden className="size-6 rounded-md bg-gradient-to-br from-primary/70 to-primary/30 ring-1 ring-border/60" />
+          <div aria-hidden className="size-6 rounded-md bg-linear-to-br from-primary/70 to-primary/30 ring-1 ring-border/60" />
           <span className="font-medium text-sm">{brand}</span>
         </div>
         {onSearch ? (
@@ -187,11 +187,11 @@ export function FocusReader({ children, brand, nav, documents, activeDocumentId,
         <div className="ms-auto flex items-center gap-2 sm:gap-3">
           {!focused && toc.length ? (
             <Sheet>
-              <SheetTrigger className="flex min-h-9 items-center gap-1.5 rounded-md px-2 text-muted-foreground text-xs transition-colors hover:bg-foreground/[0.04] hover:text-foreground xl:hidden pointer-coarse:min-h-11">
+              <SheetTrigger className="flex min-h-9 items-center gap-1.5 rounded-md px-2 text-muted-foreground text-xs transition-colors hover:bg-foreground/4 hover:text-foreground xl:hidden pointer-coarse:min-h-11">
                 <ListIcon aria-hidden className="size-3.5" />
                 {t.onThisPage}
               </SheetTrigger>
-              <SheetContent className="max-w-[300px] bg-background px-5 py-6" side="right">
+              <SheetContent className="max-w-75 bg-background px-5 py-6" side="right">
                 <SheetTitle className="mb-3 px-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{t.onThisPage}</SheetTitle>
                 {tocList}
               </SheetContent>
@@ -214,7 +214,7 @@ export function FocusReader({ children, brand, nav, documents, activeDocumentId,
       {/* Docked rails only at xl+, where they fit beside the centred article. */}
       <aside
         aria-hidden={focused}
-        className={cn("fixed start-0 top-12 bottom-0 z-30 hidden w-60 overflow-y-auto border-border/60 border-e bg-foreground/[0.02] px-3 py-4 xl:block", fade, focused ? "pointer-events-none -translate-x-full opacity-0 rtl:translate-x-full" : "opacity-100")}
+        className={cn("fixed inset-s-0 top-12 bottom-0 z-30 hidden w-60 overflow-y-auto border-border/60 border-e bg-foreground/2 px-3 py-4 xl:block", fade, focused ? "pointer-events-none -translate-x-full opacity-0 rtl:translate-x-full" : "opacity-100")}
         inert={focused}
       >
         {navPanel}
@@ -222,7 +222,7 @@ export function FocusReader({ children, brand, nav, documents, activeDocumentId,
       {toc.length ? (
         <aside
           aria-hidden={focused}
-          className={cn("fixed end-0 top-12 bottom-0 z-30 hidden w-[280px] overflow-y-auto border-border/60 border-s px-5 py-6 xl:block", fade, focused ? "pointer-events-none translate-x-full opacity-0 rtl:-translate-x-full" : "opacity-100")}
+          className={cn("fixed inset-e-0 top-12 bottom-0 z-30 hidden w-70 overflow-y-auto border-border/60 border-s px-5 py-6 xl:block", fade, focused ? "pointer-events-none translate-x-full opacity-0 rtl:-translate-x-full" : "opacity-100")}
           inert={focused}
         >
           <h2 className="mb-3 px-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{t.onThisPage}</h2>
@@ -234,7 +234,7 @@ export function FocusReader({ children, brand, nav, documents, activeDocumentId,
 
       <button
         aria-label={focused ? t.exitFocusMode : t.enterFocusMode}
-        className="fixed end-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex size-11 items-center justify-center rounded-full border border-border/60 bg-card text-foreground shadow-sm transition-colors hover:bg-foreground/[0.04] sm:end-6 sm:bottom-6"
+        className="fixed inset-e-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex size-11 items-center justify-center rounded-full border border-border/60 bg-card text-foreground shadow-sm transition-colors hover:bg-foreground/4 sm:inset-e-6 sm:bottom-6"
         onClick={() => setFocused((f) => !f)}
         type="button"
       >

@@ -6,7 +6,7 @@ export const BLOCKS_PAGE_SCROLL_ROOT_SELECTOR = "[data-blocks-scroll-root]";
 
 export const HOME_PAGE_SCROLL_SELECTOR = "#home-page";
 
-export function resolveScrollRoot(container: HTMLElement): Element | Window {
+export const resolveScrollRoot = (container: HTMLElement): Element | Window => {
   const previewScroller = container.closest(BLOCKS_PREVIEW_SCROLL_SELECTOR);
   if (previewScroller) {
     return previewScroller;
@@ -31,12 +31,12 @@ export function resolveScrollRoot(container: HTMLElement): Element | Window {
   }
 
   return window;
-}
+};
 
-export function getScrollerHeight(scroller: Element | Window): number {
+export const getScrollerHeight = (scroller: Element | Window): number => {
   if (scroller === window) {
     return window.innerHeight;
   }
 
   return (scroller as HTMLElement).clientHeight;
-}
+};

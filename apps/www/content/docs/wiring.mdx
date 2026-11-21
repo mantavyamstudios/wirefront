@@ -13,17 +13,19 @@ Wrap your app once in `WirefrontProvider`. Every setting is optional:
 import { WirefrontProvider } from "@/components/wirefront/provider";
 
 <WirefrontProvider
-  link={Link}                 // Next.js, TanStack Router or React Router Link; defaults to <a>
+  link={Link} // Next.js, TanStack Router or React Router Link; defaults to <a>
   toast={(t) => toast(t.title, { description: t.description })}
-  locale="en-IN"              // dates and numbers; defaults to "en-US"
-  timeZone="Asia/Kolkata"     // defaults to "UTC", so server and browser render the same text
-  currency="INR"              // money; defaults to "USD"
-  messages={messages}         // copy overrides, keyed "<screen>.<key>"
+  locale="en-IN" // dates and numbers; defaults to "en-US"
+  timeZone="Asia/Kolkata" // defaults to "UTC", so server and browser render the same text
+  currency="INR" // money; defaults to "USD"
+  messages={messages} // copy overrides, keyed "<screen>.<key>"
   can={(action, resource) => ability.can(action, resource)}
-  onError={(error, { screen }) => Sentry.captureException(error, { tags: { screen } })}
+  onError={(error, { screen }) =>
+    Sentry.captureException(error, { tags: { screen } })
+  }
 >
   {children}
-</WirefrontProvider>
+</WirefrontProvider>;
 ```
 
 | Setting | What it does |
@@ -41,7 +43,7 @@ Nested providers inherit their parent's settings and override the ones they set.
 
 ### RTL languages
 
-Screens use logical properties (`ms-`, `pe-`, `start-`, `text-start`), so they mirror when the page is RTL. Set `dir` on `<html>` and give Base UI the same direction, so menus, sliders and keyboard navigation follow it:
+Screens use logical properties (`ms-`, `pe-`, `inset-s-`, `text-start`), so they mirror when the page is RTL. Set `dir` on `<html>` and give Base UI the same direction, so menus, sliders and keyboard navigation follow it:
 
 ```tsx
 import { DirectionProvider } from "@base-ui/react/direction-provider";
@@ -52,7 +54,7 @@ import { DirectionProvider } from "@base-ui/react/direction-provider";
       <WirefrontProvider locale={locale}>{children}</WirefrontProvider>
     </DirectionProvider>
   </body>
-</html>
+</html>;
 ```
 
 ## Data in
@@ -68,7 +70,9 @@ Lists are controlled. The screen renders the page you pass and reports what the 
 Every action has one shape:
 
 ```ts
-type Action<Input, Output> = (input: Input) => Promise<ActionResult<Output> | void>;
+type Action<Input, Output> = (
+  input: Input
+) => Promise<ActionResult<Output> | void>;
 ```
 
 Resolve with nothing or `ok(data)` on success. Resolve with `fail(message, fieldErrors)` to show what went wrong, or throw: the screen shows the error's message either way. Field errors (field name to message) appear under the matching inputs and clear as the user edits them.
@@ -79,7 +83,10 @@ The screen tracks pending state from the promise, applies reversible updates at 
 "use client";
 import { SignIn } from "@/components/wirefront/auth-sign-in/view";
 import { fail, ok } from "@/components/wirefront/types";
-import type { Session, SignInInput } from "@/components/wirefront/auth-sign-in/schema";
+import type {
+  Session,
+  SignInInput,
+} from "@/components/wirefront/auth-sign-in/schema";
 
 async function signIn(input: SignInInput) {
   const res = await fetch("/api/auth/sign-in", {
@@ -87,7 +94,10 @@ async function signIn(input: SignInInput) {
     headers: { "content-type": "application/json" },
     body: JSON.stringify(input),
   });
-  if (res.status === 401) return fail(undefined, { password: "That password doesn’t match this account." });
+  if (res.status === 401)
+    return fail(undefined, {
+      password: "That password doesn’t match this account.",
+    });
   if (!res.ok) return fail("Couldn’t sign you in. Try again in a moment.");
   return ok((await res.json()) as Session);
 }
@@ -97,7 +107,9 @@ export function SignInPage() {
     <SignIn
       product="Acme"
       onSignIn={signIn}
-      onSuccess={(session) => window.location.assign(session?.redirectTo ?? "/")}
+      onSuccess={(session) =>
+        window.location.assign(session?.redirectTo ?? "/")
+      }
       forgotPasswordHref="/forgot-password"
       signUpHref="/sign-up"
     />

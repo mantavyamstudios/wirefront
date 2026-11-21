@@ -3,9 +3,12 @@
   "ui": "tui",
   "globalPassThroughEnv": [
     "APP_URL",
+    "AUDIT_CONCURRENCY",
     "BROWSER_CONCURRENCY",
     "CAPTURE_CONCURRENCY",
-    "SETTLE_WATCHDOG_MS"
+    "GITHUB_ACTIONS",
+    "SETTLE_WATCHDOG_MS",
+    "SNAPSHOT_ONLY_MISSING"
   ],
   "tasks": {
     "dev": {
@@ -23,6 +26,7 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "../../scripts/build-registry.ts",
+        "../../scripts/lib/**",
         "../../packages/ui/src/**",
         "../runtime/src/**"
       ],

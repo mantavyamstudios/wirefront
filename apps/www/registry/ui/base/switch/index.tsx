@@ -19,7 +19,7 @@ const SWITCH_SPRING = {
 } as const;
 
 const switchVariants = cva(
-  "peer group/switch focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-checked:bg-primary data-unchecked:bg-input dark:data-unchecked:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 relative inline-flex shrink-0 cursor-pointer items-center rounded-full border border-transparent p-0.5 transition-colors outline-none select-none group-has-[:focus-visible]/field-label:border-transparent group-has-[:focus-visible]/field-label:ring-0 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 data-checked:justify-end data-disabled:cursor-not-allowed data-disabled:opacity-50 data-unchecked:justify-start data-[state=checked]:justify-end data-[state=unchecked]:justify-start",
+  "peer group/switch focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-checked:bg-primary data-unchecked:bg-input dark:data-unchecked:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 relative inline-flex shrink-0 cursor-pointer items-center rounded-full border border-transparent p-0.5 transition-colors outline-none select-none group-has-focus-visible/field-label:border-transparent group-has-focus-visible/field-label:ring-0 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 data-checked:justify-end data-disabled:cursor-not-allowed data-disabled:opacity-50 data-unchecked:justify-start data-[state=checked]:justify-end data-[state=unchecked]:justify-start",
   {
     variants: {
       size: {
@@ -96,11 +96,38 @@ interface SwitchProps
   uncheckedIcon?: React.ReactNode;
 }
 
+/** An icon inside the track that shows in one state and fades out in the other. */
+const SwitchStateIcon = ({
+  className,
+  icon,
+  reducedMotion,
+  visible,
+}: {
+  className: string;
+  icon: React.ReactNode;
+  reducedMotion: boolean;
+  visible: boolean;
+}) =>
+  icon ? (
+    <motion.span
+      animate={visible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
+      aria-hidden="true"
+      className={cn(
+        "pointer-events-none absolute flex items-center justify-center [&_svg]:size-3",
+        className
+      )}
+      initial={false}
+      transition={reducedMotion ? { duration: 0 } : { duration: 0.15 }}
+    >
+      {icon}
+    </motion.span>
+  ) : null;
+
 /**
  * An accessible, highly customizable Switch component built with Base UI and Motion.
  * Features spring layout physics (`stiffness: 500, damping: 30`) and full Tailwind CSS override support.
  */
-function Switch({
+const Switch = ({
   checked: controlledChecked,
   defaultChecked = false,
   onCheckedChange,
@@ -120,7 +147,7 @@ function Switch({
   disabled = false,
   style,
   ...props
-}: SwitchProps) {
+}: SwitchProps) => {
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const descriptionId = description ? `${inputId}-desc` : undefined;
@@ -156,37 +183,18 @@ function Switch({
       }}
       {...props}
     >
-      {checkedIcon && (
-        <motion.span
-          animate={
-            isChecked ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }
-          }
-          aria-hidden="true"
-          className="text-primary-foreground pointer-events-none absolute left-1 flex items-center justify-center [&_svg]:size-3"
-          initial={false}
-          transition={
-            prefersReducedMotion ? { duration: 0 } : { duration: 0.15 }
-          }
-        >
-          {checkedIcon}
-        </motion.span>
-      )}
-
-      {uncheckedIcon && (
-        <motion.span
-          animate={
-            isChecked ? { opacity: 0, scale: 0.5 } : { opacity: 1, scale: 1 }
-          }
-          aria-hidden="true"
-          className="text-muted-foreground pointer-events-none absolute right-1 flex items-center justify-center [&_svg]:size-3"
-          initial={false}
-          transition={
-            prefersReducedMotion ? { duration: 0 } : { duration: 0.15 }
-          }
-        >
-          {uncheckedIcon}
-        </motion.span>
-      )}
+      <SwitchStateIcon
+        className="text-primary-foreground left-1"
+        icon={checkedIcon}
+        reducedMotion={Boolean(prefersReducedMotion)}
+        visible={isChecked}
+      />
+      <SwitchStateIcon
+        className="text-muted-foreground right-1"
+        icon={uncheckedIcon}
+        reducedMotion={Boolean(prefersReducedMotion)}
+        visible={!isChecked}
+      />
 
       <SwitchPrimitive.Thumb
         className={cn(switchThumbVariants({ size }), thumbClassName)}
@@ -250,7 +258,7 @@ function Switch({
       {labelContent}
     </div>
   );
-}
+};
 
 export type { SwitchProps };
 export { SWITCH_SPRING, Switch, switchThumbVariants, switchVariants };

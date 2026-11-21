@@ -1,7 +1,14 @@
 "use client";
 
 import { cn } from "@workspace/ui/lib/utils";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { ReactNode } from "react";
 
 import {
@@ -33,30 +40,35 @@ interface ComponentData {
 
 const componentDataCache = new Map<string, Promise<ComponentData>>();
 
-function fetchComponentData(name: string): Promise<ComponentData> {
+const fetchComponentData = (name: string): Promise<ComponentData> => {
   const cached = componentDataCache.get(name);
   if (cached) {
     return cached;
   }
 
-  const promise = Promise.all([
-    loadComponentSource(name),
-    loadComponentHtml(name),
-    loadComponentFiles(name),
-  ])
-    .then(([code, html, files]) => ({
-      code: code ?? undefined,
-      html: html ?? undefined,
-      files: files ?? [],
-    }))
-    .catch((error) => {
+  const load = async () => {
+    try {
+      const [code, html, files] = await Promise.all([
+        loadComponentSource(name),
+        loadComponentHtml(name),
+        loadComponentFiles(name),
+      ]);
+      return {
+        code: code ?? undefined,
+        html: html ?? undefined,
+        files: files ?? [],
+      };
+    } catch (error) {
+      // Forget the failed attempt so the next render retries.
       componentDataCache.delete(name);
       throw error;
-    });
+    }
+  };
+  const promise = load();
 
   componentDataCache.set(name, promise);
   return promise;
-}
+};
 
 export interface ComponentInstallationProps extends React.HTMLAttributes<HTMLDivElement> {
   afterSteps?: ReactNode;
@@ -67,7 +79,7 @@ export interface ComponentInstallationProps extends React.HTMLAttributes<HTMLDiv
 
 type LoadStatus = "idle" | "loading" | "loaded" | "error";
 
-export function ComponentInstallation({
+export const ComponentInstallation = ({
   name,
   className,
   beforeSteps,
@@ -75,7 +87,7 @@ export function ComponentInstallation({
   children,
   hideFileStructure = false,
   ...props
-}: ComponentInstallationProps) {
+}: ComponentInstallationProps) => {
   const [manualCode, setManualCode] = useState<string>();
   const [manualHtml, setManualHtml] = useState<string>();
   const [manualFiles, setManualFiles] = useState<ManualInstallFile[]>([]);
@@ -84,7 +96,10 @@ export function ComponentInstallation({
   const [activeTab, setActiveTab] = useState<string>("shadcn");
   const component = index[name];
   const currentNameRef = useRef(name);
-  currentNameRef.current = name;
+  // Before any other effect: loads that finish after the name changed are dropped.
+  useLayoutEffect(() => {
+    currentNameRef.current = name;
+  }, [name]);
   const loadStateRef = useRef<{ name: string; status: LoadStatus }>({
     name,
     status: "idle",
@@ -104,8 +119,9 @@ export function ComponentInstallation({
     setLoadStatus("loading");
     setLoadError(null);
 
-    fetchComponentData(requestedName)
-      .then((data) => {
+    const load = async () => {
+      try {
+        const data = await fetchComponentData(requestedName);
         if (currentNameRef.current !== requestedName) {
           return;
         }
@@ -120,8 +136,7 @@ export function ComponentInstallation({
         if (data.files) {
           setManualFiles(data.files);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         if (currentNameRef.current !== requestedName) {
           return;
         }
@@ -132,7 +147,9 @@ export function ComponentInstallation({
             ? error.message
             : "Failed to load component source"
         );
-      });
+      }
+    };
+    load();
   }, [name]);
 
   const prevNameRef = useRef(name);
@@ -264,4 +281,4 @@ export function ComponentInstallation({
       {!hideFileStructure && <ComponentFileStructure name={name} />}
     </div>
   );
-}
+};

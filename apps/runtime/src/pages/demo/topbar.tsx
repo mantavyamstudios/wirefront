@@ -2,9 +2,9 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { ArrowLeftIcon, BellIcon, KeyboardIcon, SearchIcon } from "lucide-react";
 import { ThemeToggle } from "@wirefront/ui/theme-toggle";
-import { useDemo } from "./store";
+import { useDemo, type View } from "./store";
 
-const TITLES: Record<string, { eyebrow: string; title: string }> = {
+const TITLES: Record<View, { eyebrow: string; title: string }> = {
   home: { eyebrow: "Workspace · Acme inc.", title: "Home" },
   projects: { eyebrow: "Workspace · Acme inc.", title: "Projects" },
   members: { eyebrow: "Workspace · Acme inc.", title: "Members" },
@@ -21,7 +21,7 @@ export function DemoTopbar() {
     setOverlay,
     unreadNotifications,
   } = useDemo();
-  const meta = TITLES[view]!;
+  const meta = TITLES[view];
   const project =
     view === "projects" && selectedProjectId
       ? projects.find((p) => p.id === selectedProjectId)
@@ -34,7 +34,7 @@ export function DemoTopbar() {
           <button
             type="button"
             onClick={closeProject}
-            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:bg-foreground/5 hover:text-foreground"
           >
             <ArrowLeftIcon className="size-3" />
             Projects
@@ -75,7 +75,7 @@ export function DemoTopbar() {
           onClick={() => setOverlay("shortcuts")}
           aria-label="Keyboard shortcuts"
           title="Keyboard shortcuts"
-          className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+          className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
         >
           <KeyboardIcon className="size-4" />
         </button>
@@ -84,7 +84,7 @@ export function DemoTopbar() {
           type="button"
           onClick={() => setOverlay("notifications")}
           aria-label="Notifications"
-          className="relative inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+          className="relative inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
         >
           <BellIcon className="size-4" />
           {unreadNotifications > 0 ? (

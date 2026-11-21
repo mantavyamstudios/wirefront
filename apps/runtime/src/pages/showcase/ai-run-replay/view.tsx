@@ -315,7 +315,7 @@ function ToolEntry({ entry, total, t }: { entry: ToolLog; total: number; t: Mess
       <AnimatePresence initial={false}>
         {open ? (
           <motion.div animate={{ height: "auto", opacity: 1 }} className="overflow-hidden" exit={{ height: 0, opacity: 0 }} id={panelId} initial={{ height: 0, opacity: 0 }} transition={spring}>
-            <div className="ms-[4.75rem] me-2 mb-2 grid gap-2 rounded-lg border bg-background p-3 font-mono text-xs dark:bg-input/24">
+            <div className="ms-19 me-2 mb-2 grid gap-2 rounded-lg border bg-background p-3 font-mono text-xs dark:bg-input/24">
               <div className="flex items-center gap-1.5 text-muted-foreground">
                 <BracesIcon aria-hidden className="size-3" />
                 {t.arguments}
@@ -493,7 +493,7 @@ function TraceStrip({ log, total, head, next, t }: { log: RunLogEntry[]; total: 
       <span className="hidden w-14 shrink-0 font-medium text-muted-foreground text-xs @md:block">{t.timeline}</span>
       <div aria-hidden className="relative h-5 min-w-0 flex-1">
         <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-border" />
-        <motion.div animate={{ scaleX: target }} className="absolute inset-y-0 start-0 w-full origin-left rounded-sm bg-foreground/[0.04] dark:bg-foreground/[0.06]" initial={false} transition={reduce ? { duration: 0 } : { duration, ease: "linear" }} />
+        <motion.div animate={{ scaleX: target }} className="absolute inset-y-0 inset-s-0 w-full origin-left rounded-sm bg-foreground/4 dark:bg-foreground/6" initial={false} transition={reduce ? { duration: 0 } : { duration, ease: "linear" }} />
         {tools.map((e) => {
           const meta = toolMeta[e.call.kind];
           const failed = e.status === "failed" || e.status === "denied";
@@ -514,7 +514,7 @@ function TraceStrip({ log, total, head, next, t }: { log: RunLogEntry[]; total: 
           <span className={cn("absolute top-1/2 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full", e.kind === "approval" ? "bg-warning" : "bg-muted-foreground/56")} key={e.id} style={{ left: `${(e.at / total) * 100}%` }} />
         ))}
         <motion.div animate={{ x: `${target * 100}%` }} className="pointer-events-none absolute inset-0" initial={false} transition={reduce ? { duration: 0 } : { duration, ease: "linear" }}>
-          <span className="absolute inset-y-0 start-0 w-px bg-foreground/48" />
+          <span className="absolute inset-y-0 inset-s-0 w-px bg-foreground/48" />
         </motion.div>
       </div>
       <span className="shrink-0 whitespace-nowrap text-end font-mono text-[11px] text-muted-foreground tabular-nums">
@@ -850,7 +850,7 @@ function RunReplayScreen({ run, output, traceNext, autoApprove, onPausedChange, 
                 return (
                   <li className={cn("relative gap-3 pb-4 last:pb-0 @3xl:flex", collapsed ? "hidden" : "flex", !planOpen && "@max-3xl:pb-0")} key={s.title}>
                     {last ? null : (
-                      <span aria-hidden className={cn("absolute start-[9px] top-6 bottom-1 w-0.5 overflow-hidden rounded-full bg-border", !planOpen && "hidden @3xl:block")}>
+                      <span aria-hidden className={cn("absolute inset-s-2.25 top-6 bottom-1 w-0.5 overflow-hidden rounded-full bg-border", !planOpen && "hidden @3xl:block")}>
                         <motion.span animate={{ scaleY: s.status === "done" || s.status === "skipped" ? 1 : 0 }} className="block h-full origin-top bg-success" initial={false} transition={spring} />
                       </span>
                     )}
@@ -942,7 +942,7 @@ function RunReplayScreen({ run, output, traceNext, autoApprove, onPausedChange, 
                 />
               ) : null}
             </AnimatePresence>
-            <div className={cn("flex min-h-0 flex-1 flex-col gap-3 p-4 @3xl:overflow-y-auto", run.approval || run.failure ? "@3xl:[mask-image:linear-gradient(to_bottom,transparent_0.75rem,black_2.75rem)]" : "@3xl:[mask-image:linear-gradient(to_bottom,transparent,black_1.25rem)]")} ref={logRef}>
+            <div className={cn("flex min-h-0 flex-1 flex-col gap-3 p-4 @3xl:overflow-y-auto", run.approval || run.failure ? "@3xl:mask-[linear-gradient(to_bottom,transparent_0.75rem,black_2.75rem)]" : "@3xl:mask-[linear-gradient(to_bottom,transparent,black_1.25rem)]")} ref={logRef}>
               <div>
                 <div className={cn(tab === "activity" ? "block" : "hidden", "@6xl:block")} id={`${tabsId}-activity`} role="tabpanel">
                   <h3 className="mb-2 hidden font-medium @6xl:block">{t.activity}</h3>

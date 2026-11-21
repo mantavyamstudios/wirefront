@@ -158,7 +158,7 @@ function Sidebar({
           href={href}
           onClick={onNavigate}
         >
-          {on && <motion.span className="absolute start-0 top-1.5 bottom-1.5 w-0.5 rounded-full bg-foreground" layoutId="hairline-active" transition={spring} />}
+          {on && <motion.span className="absolute inset-s-0 top-1.5 bottom-1.5 w-0.5 rounded-full bg-foreground" layoutId="hairline-active" transition={spring} />}
           {icon}
           <span className={cn("min-w-0 flex-1 truncate", fade)}>{label}</span>
           {count ? (
@@ -230,7 +230,7 @@ function Sidebar({
           ) : null}
         </div>
 
-        <nav aria-label={t.navigation} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-1.5 py-2 [scrollbar-width:thin]">
+        <nav aria-label={t.navigation} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-1.5 py-2 scrollbar-thin">
           <div className="flex flex-col gap-px">
             {onSearch ? (
               <RailTip collapsed={collapsed} label={t.search}>
@@ -248,7 +248,7 @@ function Sidebar({
                 n.href,
                 <span className="relative shrink-0 [&_svg]:size-4">
                   {n.icon}
-                  {collapsed && n.count ? <span aria-hidden className="absolute -end-0.5 -top-0.5 size-1.5 rounded-full bg-info ring-2 ring-background" /> : null}
+                  {collapsed && n.count ? <span aria-hidden className="absolute -inset-e-0.5 -top-0.5 size-1.5 rounded-full bg-info ring-2 ring-background" /> : null}
                 </span>,
                 n.count,
               ),
@@ -401,7 +401,7 @@ export function HairlineShell({ children, title, actions, footer, defaultCollaps
                   animate={{ x: 0 }}
                   aria-label={t.navigation}
                   aria-modal="true"
-                  className="absolute inset-y-0 start-0 z-50 w-64 max-w-[85%] border-e bg-background outline-none @3xl:hidden"
+                  className="absolute inset-y-0 inset-s-0 z-50 w-64 max-w-[85%] border-e bg-background outline-none @3xl:hidden"
                   exit={{ x: "-100%" }}
                   initial={{ x: "-100%" }}
                   ref={drawerRef}

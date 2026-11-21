@@ -134,7 +134,7 @@ function ExportDialogScreen({
                     const Icon = ICON[f];
                     return (
                       <Radio.Root
-                        className="group flex cursor-pointer items-center gap-3 rounded-lg border border-border/60 px-3 py-2.5 text-start outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/[0.04]"
+                        className="group flex cursor-pointer items-center gap-3 rounded-lg border border-border/60 px-3 py-2.5 text-start outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/4"
                         key={f}
                         value={f}
                       >
@@ -183,7 +183,7 @@ function ExportDialogScreen({
                 </div>
                 <CheckboxGroup aria-labelledby={`${id}-include`} className="flex flex-col gap-1.5" onValueChange={setInclude} value={include}>
                   {sections.map((s) => (
-                    <Label className="flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 font-normal text-sm hover:bg-foreground/[0.03] pointer-coarse:min-h-11" key={s.id}>
+                    <Label className="flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 font-normal text-sm hover:bg-foreground/3 pointer-coarse:min-h-11" key={s.id}>
                       <Checkbox value={s.id} />
                       {s.label}
                     </Label>

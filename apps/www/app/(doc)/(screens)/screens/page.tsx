@@ -3,8 +3,12 @@ import type { Metadata } from "next";
 import { BlocksScrollArea } from "@/components/blocks/blocks-scroll-area";
 import { ComponentsGalleryHero } from "@/components/blocks/gallery/components-gallery-hero";
 import { ScreensGalleryExplorer } from "@/components/screens/screens-gallery-explorer";
-import { getScreenGalleryItems, getScreenGallerySections, getScreenTotals } from "@/lib/screens/data";
 import { screenSocialMetadata } from "@/lib/og/screen-social-metadata";
+import {
+  getScreenGalleryItems,
+  getScreenGallerySections,
+  getScreenTotals,
+} from "@/lib/screens/data";
 import { getPageAlternates } from "@/lib/site";
 
 const title = "Screens";
@@ -18,7 +22,7 @@ export const metadata: Metadata = {
   ...screenSocialMetadata(["screens"], title, description, "/screens"),
 };
 
-export default function ScreensPage() {
+const ScreensPage = () => {
   const totals = getScreenTotals();
 
   return (
@@ -33,8 +37,13 @@ export default function ScreensPage() {
           />
         </div>
 
-        <ScreensGalleryExplorer items={getScreenGalleryItems()} sections={getScreenGallerySections()} />
+        <ScreensGalleryExplorer
+          items={getScreenGalleryItems()}
+          sections={getScreenGallerySections()}
+        />
       </div>
     </BlocksScrollArea>
   );
-}
+};
+
+export default ScreensPage;

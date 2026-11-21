@@ -82,7 +82,7 @@ export interface ShareDialogProps {
 }
 
 const pill =
-  "inline-flex min-h-8 shrink-0 items-center gap-1 rounded-md border border-border/60 px-2.5 font-mono text-[11px] text-muted-foreground outline-none hover:bg-foreground/[0.05] focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none pointer-coarse:min-h-10";
+  "inline-flex min-h-8 shrink-0 items-center gap-1 rounded-md border border-border/60 px-2.5 font-mono text-[11px] text-muted-foreground outline-none hover:bg-foreground/5 focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none pointer-coarse:min-h-10";
 const initialsOf = (name: string) =>
   name
     .split(/\s+/)
@@ -229,7 +229,7 @@ function ShareDialogScreen({
 
               <div className="rounded-lg border border-border/60 bg-background p-3">
                 <div className="flex items-start gap-3">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06]">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-foreground/6">
                     {linkAccess === "restricted" ? <LockIcon aria-hidden className="size-4 opacity-70" /> : <GlobeIcon aria-hidden className="size-4 opacity-70" />}
                   </div>
                   <div className="min-w-0 flex-1">

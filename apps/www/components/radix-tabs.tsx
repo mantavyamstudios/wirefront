@@ -19,66 +19,52 @@ import type {
 
 type TabsProps = TabsPrimitiveProps;
 
-function Tabs({ className, ...props }: TabsProps) {
-  return (
-    <TabsPrimitive
-      className={cn("flex flex-col gap-2", className)}
-      {...props}
-    />
-  );
-}
+const Tabs = ({ className, ...props }: TabsProps) => (
+  <TabsPrimitive className={cn("flex flex-col gap-2", className)} {...props} />
+);
 
 type TabsListProps = TabsListPrimitiveProps;
 
-function TabsList({ className, ...props }: TabsListProps) {
-  return (
-    <TabsHighlightPrimitive className="bg-accent absolute inset-0 z-0 rounded-lg border border-transparent">
-      <TabsListPrimitive
-        className={cn(
-          "text-muted-foreground inline-flex h-9 w-fit items-center justify-center",
-          className
-        )}
-        {...props}
-      />
-    </TabsHighlightPrimitive>
-  );
-}
+const TabsList = ({ className, ...props }: TabsListProps) => (
+  <TabsHighlightPrimitive className="bg-accent absolute inset-0 z-0 rounded-lg border border-transparent">
+    <TabsListPrimitive
+      className={cn(
+        "text-muted-foreground inline-flex h-9 w-fit items-center justify-center",
+        className
+      )}
+      {...props}
+    />
+  </TabsHighlightPrimitive>
+);
 
 type TabsTriggerProps = TabsTriggerPrimitiveProps;
 
-function TabsTrigger({ className, ...props }: TabsTriggerProps) {
-  return (
-    <TabsHighlightItemPrimitive
-      className="size-full flex-1"
-      value={props.value}
-    >
-      <TabsTriggerPrimitive
-        className={cn(
-          "text-foreground focus-visible:border-ring focus-visible:outline-ring focus-visible:ring-ring/50 data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] w-full flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 ease-out focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-          className
-        )}
-        {...props}
-      />
-    </TabsHighlightItemPrimitive>
-  );
-}
+const TabsTrigger = ({ className, ...props }: TabsTriggerProps) => (
+  <TabsHighlightItemPrimitive className="size-full flex-1" value={props.value}>
+    <TabsTriggerPrimitive
+      className={cn(
+        "text-foreground focus-visible:border-ring focus-visible:outline-ring focus-visible:ring-ring/50 data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] w-full flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 ease-out focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        className
+      )}
+      {...props}
+    />
+  </TabsHighlightItemPrimitive>
+);
 
 type TabsContentsProps = TabsContentsPrimitiveProps;
 
-function TabsContents(props: TabsContentsProps) {
-  return <TabsContentsPrimitive {...props} />;
-}
+const TabsContents = (props: TabsContentsProps) => (
+  <TabsContentsPrimitive {...props} />
+);
 
 type TabsContentProps = TabsContentPrimitiveProps;
 
-function TabsContent({ className, ...props }: TabsContentProps) {
-  return (
-    <TabsContentPrimitive
-      className={cn("flex-1 outline-none", className)}
-      {...props}
-    />
-  );
-}
+const TabsContent = ({ className, ...props }: TabsContentProps) => (
+  <TabsContentPrimitive
+    className={cn("flex-1 outline-none", className)}
+    {...props}
+  />
+);
 
 export {
   Tabs,

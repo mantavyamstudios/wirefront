@@ -14,6 +14,8 @@ import type { PanInfo } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { useIsClient } from "@/lib/use-is-client";
+
 import {
   blocksSourcePanelDesktopLayerClassName,
   blocksSourcePanelGutterClassName,
@@ -41,7 +43,7 @@ interface SourceFile {
 }
 
 /** Multi-file source from `sourceUrl` (e.g. a screen's view, schema and fixtures). */
-function useSourceFiles(open: boolean, sourceUrl?: string) {
+const useSourceFiles = (open: boolean, sourceUrl?: string) => {
   const [files, setFiles] = useState<SourceFile[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -71,17 +73,21 @@ function useSourceFiles(open: boolean, sourceUrl?: string) {
       setFiles(data.files ?? []);
     };
 
-    load()
-      .catch((error) => {
-        if (!cancelled && error?.name !== "AbortError") {
+    const run = async () => {
+      try {
+        await load();
+      } catch (error) {
+        const aborted = error instanceof Error && error.name === "AbortError";
+        if (!(cancelled || aborted)) {
+          console.error("[source panel] couldn't load the source code", error);
           setLoadError("Unable to load source code right now.");
         }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
-      });
+      }
+      if (!cancelled) {
+        setIsLoading(false);
+      }
+    };
+    run();
 
     return () => {
       cancelled = true;
@@ -90,7 +96,7 @@ function useSourceFiles(open: boolean, sourceUrl?: string) {
   }, [open, sourceUrl]);
 
   return { files, isLoading, loadError };
-}
+};
 
 interface SourcePanelContentProps {
   isLoading: boolean;
@@ -103,11 +109,11 @@ const sourceContentTransition = {
   ease: [0.25, 0.46, 0.45, 0.94] as const,
 };
 
-function resolveSourceContentState({
+const resolveSourceContentState = ({
   isLoading,
   loadError,
   sourceHtml,
-}: SourcePanelContentProps): "code" | "error" | "loading" | null {
+}: SourcePanelContentProps): "code" | "error" | "loading" | null => {
   if (isLoading) {
     return "loading";
   }
@@ -121,9 +127,9 @@ function resolveSourceContentState({
   }
 
   return null;
-}
+};
 
-function SourcePanelContent(props: SourcePanelContentProps) {
+const SourcePanelContent = (props: SourcePanelContentProps) => {
   const { loadError, sourceHtml } = props;
   const contentState = resolveSourceContentState(props);
 
@@ -176,13 +182,13 @@ function SourcePanelContent(props: SourcePanelContentProps) {
       ) : null}
     </AnimatePresence>
   );
-}
+};
 
-function useComponentSource(
+const useComponentSource = (
   open: boolean,
   registryName: string,
   initialFilename?: string
-) {
+) => {
   const [sourceCode, setSourceCode] = useState("");
   const [sourceHtml, setSourceHtml] = useState<string | null>(null);
   const [sourceFilename, setSourceFilename] = useState(initialFilename);
@@ -255,17 +261,21 @@ function useComponentSource(
       applySourceResponse(data);
     };
 
-    fetchSource()
-      .catch((error) => {
-        if (!cancelled && error?.name !== "AbortError") {
+    const run = async () => {
+      try {
+        await fetchSource();
+      } catch (error) {
+        const aborted = error instanceof Error && error.name === "AbortError";
+        if (!(cancelled || aborted)) {
+          console.error("[source panel] couldn't load the source code", error);
           setLoadError("Unable to load source code right now.");
         }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
-      });
+      }
+      if (!cancelled) {
+        setIsLoading(false);
+      }
+    };
+    run();
 
     return () => {
       cancelled = true;
@@ -280,17 +290,34 @@ function useComponentSource(
     sourceFilename,
     sourceHtml,
   };
-}
+};
 
-export function ComponentPageSourcePanel({
+/** The file being shown from a multi-file source, in the shape the registry source has. */
+const fromSourceFiles = (
+  fileSource: ReturnType<typeof useSourceFiles>,
+  activeFile: number
+) => {
+  const { files } = fileSource;
+  const currentFile = files?.[Math.min(activeFile, files.length - 1)];
+  return {
+    files,
+    isLoading: fileSource.isLoading,
+    loadError: fileSource.loadError,
+    sourceCode: currentFile?.code ?? "",
+    sourceHtml: currentFile?.html ?? null,
+    sourceFilename: currentFile?.path,
+  };
+};
+
+export const ComponentPageSourcePanel = ({
   open,
   onClose,
   onLoadingChange,
   registryName,
   filename: initialFilename,
   sourceUrl,
-}: ComponentPageSourcePanelProps) {
-  const [mounted, setMounted] = useState(false);
+}: ComponentPageSourcePanelProps) => {
+  const mounted = useIsClient();
   const [copied, setCopied] = useState(false);
   const [activeFile, setActiveFile] = useState(0);
   const sourceDragControls = useDragControls();
@@ -300,33 +327,29 @@ export function ComponentPageSourcePanel({
     initialFilename
   );
   const fileSource = useSourceFiles(open, sourceUrl);
-  const files = sourceUrl ? fileSource.files : null;
-  const currentFile = files?.[Math.min(activeFile, files.length - 1)];
-  const isLoading = sourceUrl ? fileSource.isLoading : registrySource.isLoading;
-  const loadError = sourceUrl ? fileSource.loadError : registrySource.loadError;
-  const sourceCode = sourceUrl
-    ? (currentFile?.code ?? "")
-    : registrySource.sourceCode;
-  const sourceHtml = sourceUrl
-    ? (currentFile?.html ?? null)
-    : registrySource.sourceHtml;
-  const sourceFilename = sourceUrl
-    ? currentFile?.path
-    : registrySource.sourceFilename;
+  const {
+    files,
+    isLoading,
+    loadError,
+    sourceCode,
+    sourceHtml,
+    sourceFilename,
+  } = sourceUrl
+    ? fromSourceFiles(fileSource, activeFile)
+    : { ...registrySource, files: null };
 
-  useEffect(() => {
+  // A new source URL starts at its first file.
+  const [lastSourceUrl, setLastSourceUrl] = useState(sourceUrl);
+  if (lastSourceUrl !== sourceUrl) {
+    setLastSourceUrl(sourceUrl);
     if (sourceUrl) {
       setActiveFile(0);
     }
-  }, [sourceUrl]);
+  }
 
   useEffect(() => {
     onLoadingChange?.(isLoading);
   }, [isLoading, onLoadingChange]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!open) {
@@ -343,15 +366,18 @@ export function ComponentPageSourcePanel({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [onClose, open]);
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     if (!sourceCode) {
       return;
     }
-
-    navigator.clipboard.writeText(sourceCode).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+    try {
+      await navigator.clipboard.writeText(sourceCode);
+    } catch (error) {
+      console.error("[source panel] couldn't copy the source code", error);
+      return;
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   if (!mounted) {
@@ -479,7 +505,7 @@ export function ComponentPageSourcePanel({
               <div
                 className={cn(
                   "h-full overflow-auto",
-                  "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+                  "scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
                   "[&_.relative.group_>_button]:hidden",
                   "[&_pre]:min-h-full [&_pre]:px-4! [&_pre]:pt-24! [&_pre]:pb-24!"
                 )}
@@ -498,4 +524,4 @@ export function ComponentPageSourcePanel({
     </AnimatePresence>,
     document.body
   );
-}
+};

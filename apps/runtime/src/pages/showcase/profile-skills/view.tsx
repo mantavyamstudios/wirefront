@@ -115,7 +115,7 @@ function SkillEndorsementsScreen({ person, skills, status = "ready", error, onRe
                   {inCat.map((s) => (
                     <li className="rounded-xl border border-border/60 bg-background/40 px-3.5 py-2.5 transition-colors hover:bg-background/60" key={s.id}>
                       <div className="flex items-baseline justify-between gap-2">
-                        <h3 className="min-w-0 break-words font-normal text-sm">{s.name}</h3>
+                        <h3 className="min-w-0 wrap-break-word font-normal text-sm">{s.name}</h3>
                         <div aria-label={interpolate(t.proficiency, { level: s.level })} className="flex shrink-0 items-center gap-0.5" role="img">
                           {LEVELS.map((n) => (
                             <span className={cn("size-1.5 rounded-full", n <= s.level ? "bg-foreground" : "bg-muted-foreground/25")} key={n} />
@@ -137,7 +137,7 @@ function SkillEndorsementsScreen({ person, skills, status = "ready", error, onRe
                         {onEndorse ? (
                           <button
                             aria-pressed={s.endorsedByMe}
-                            className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-md bg-foreground/[0.04] px-2.5 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none hover:bg-foreground/[0.08] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring aria-pressed:bg-foreground aria-pressed:text-background pointer-coarse:min-h-10"
+                            className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-md bg-foreground/4 px-2.5 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none hover:bg-foreground/8 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring aria-pressed:bg-foreground aria-pressed:text-background pointer-coarse:min-h-10"
                             disabled={endorse.isPending(s.id)}
                             onClick={() => void endorse.run({ id: s.id, endorsed: !s.endorsedByMe }, s.id)}
                             type="button"

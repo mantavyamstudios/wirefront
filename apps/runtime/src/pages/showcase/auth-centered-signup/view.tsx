@@ -120,8 +120,8 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
   return (
     <div className="relative min-h-svh overflow-x-clip bg-background text-foreground">
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute start-[-10%] top-[-10%] size-[24rem] rounded-full bg-primary/10 blur-3xl sm:size-[40rem]" />
-        <div className="absolute end-[-10%] bottom-[-10%] size-[24rem] rounded-full bg-accent/15 blur-3xl sm:size-[40rem]" />
+        <div className="absolute inset-s-[-10%] top-[-10%] size-96 rounded-full bg-primary/10 blur-3xl sm:size-160" />
+        <div className="absolute inset-e-[-10%] bottom-[-10%] size-96 rounded-full bg-accent/15 blur-3xl sm:size-160" />
         <div className="absolute inset-0" style={{ background: "radial-gradient(60% 50% at 50% 0%, color-mix(in oklch, var(--color-foreground) 4%, transparent), transparent 70%)" }} />
       </div>
       <div className="relative flex min-h-svh flex-col items-center justify-center-safe px-4 py-12">
@@ -210,7 +210,7 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
                       <div className={cn("h-1.5 flex-1 rounded-full transition-colors", meta && i < meta.segments ? meta.bar : "bg-border")} key={level} />
                     ))}
                   </div>
-                  <span aria-live="polite" className={cn("min-w-[3.5rem] text-end font-mono text-[10px] uppercase tracking-[0.2em]", meta?.text)}>
+                  <span aria-live="polite" className={cn("min-w-14 text-end font-mono text-[10px] uppercase tracking-[0.2em]", meta?.text)}>
                     {strength ? (
                       <>
                         <span className="sr-only">{t.strength} </span>

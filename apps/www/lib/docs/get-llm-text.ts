@@ -3,12 +3,14 @@ import type { InferPageType } from "fumadocs-core/source";
 import type { source } from "@/lib/docs/source";
 import type { screensSource } from "@/lib/screens/source";
 
-type LLMPage = InferPageType<typeof source> | InferPageType<typeof screensSource>;
+type LLMPage =
+  | InferPageType<typeof source>
+  | InferPageType<typeof screensSource>;
 
-const FRONTMATTER_RE = /^---[\s\S]*?---\s*/;
-const TITLE_RE = /^title:\s*["']?([^"'\n]+)["']?/m;
+const FRONTMATTER_RE = /^---[\s\S]*?---\s*/u;
+const TITLE_RE = /^title:\s*["']?(?<title>[^"'\n]+)["']?/mu;
 
-export async function getLLMText(page: LLMPage) {
+export const getLLMText = async (page: LLMPage) => {
   let processed = "";
   let raw = "";
 
@@ -21,9 +23,9 @@ export async function getLLMText(page: LLMPage) {
 
   const title =
     page.data.title ||
-    (raw ? raw.match(TITLE_RE)?.[1] : undefined) ||
+    (raw ? raw.match(TITLE_RE)?.groups?.title : undefined) ||
     "Document";
   return `# ${title} (${page.url})
 
 ${processed}`;
-}
+};

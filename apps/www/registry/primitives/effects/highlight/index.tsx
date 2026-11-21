@@ -75,13 +75,11 @@ type ExtendedChildProps = ComponentPropsWithoutRef<"div"> & {
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
 /** Collapse to an instant transition for `prefers-reduced-motion: reduce`. */
-function resolveTransition(
+const resolveTransition = (
   transition: Transition,
   prefersReducedMotion: boolean | null
-): Transition {
-  return prefersReducedMotion ? { duration: 0 } : transition;
-}
-function isEqualTransition(a: Transition, b: Transition): boolean {
+): Transition => (prefersReducedMotion ? { duration: 0 } : transition);
+const isEqualTransition = (a: Transition, b: Transition): boolean => {
   if (a === b) {
     return true;
   }
@@ -95,28 +93,29 @@ function isEqualTransition(a: Transition, b: Transition): boolean {
     keys.length === Object.keys(right).length &&
     keys.every((key) => left[key] === right[key])
   );
-}
+};
 /**
  * Keeps a stable object identity while the resolved transition is shallow-equal.
  * Without this an inline `transition={{ ... }}` prop yields a new object every
  * render, which re-triggers the measuring effects — and their `setState` calls —
  * on every single pass.
  */
-function useStableTransition(
+const useStableTransition = (
   transition: Transition,
   prefersReducedMotion: boolean | null
-): Transition {
-  const cache = useRef<Transition | null>(null);
+): Transition => {
   const next = resolveTransition(transition, prefersReducedMotion);
-  if (cache.current === null || !isEqualTransition(cache.current, next)) {
-    cache.current = next;
+  const [stable, setStable] = useState(next);
+  const changed = !isEqualTransition(stable, next);
+  if (changed) {
+    setStable(next);
   }
-  return cache.current;
-}
-function assignRef<T>(
+  return changed ? next : stable;
+};
+const assignRef = <T,>(
   ref: Ref<T> | undefined,
   node: T | null
-): (() => void) | undefined {
+): (() => void) | undefined => {
   if (typeof ref === "function") {
     const cleanup = ref(node);
     return typeof cleanup === "function" ? cleanup : undefined;
@@ -124,7 +123,7 @@ function assignRef<T>(
   if (ref) {
     (ref as RefObject<T | null>).current = node;
   }
-}
+};
 /**
  * Merge the child's own ref, our measurement ref and the forwarded ref into a
  * single callback. Without this a child ref (Radix/cmdk items rely on theirs)
@@ -133,12 +132,12 @@ function assignRef<T>(
  * Callback-ref cleanup functions are preserved for React 19. Refs that do not
  * provide cleanup are reset to null when the composed ref detaches.
  */
-function useComposedRefs<T>(
+const useComposedRefs = <T,>(
   childRef: Ref<T> | undefined,
   localRef: Ref<T> | undefined,
   forwardedRef: Ref<T> | undefined
-): RefCallback<T> {
-  return useCallback(
+): RefCallback<T> =>
+  useCallback(
     (node) => {
       const refs = [childRef, localRef, forwardedRef];
       if (node === null) {
@@ -161,11 +160,10 @@ function useComposedRefs<T>(
     },
     [childRef, localRef, forwardedRef]
   );
-}
-function omitKeys<T extends Record<string, unknown>>(
+const omitKeys = <T extends Record<string, unknown>>(
   source: T,
   keys: readonly string[]
-): Record<string, unknown> {
+): Record<string, unknown> => {
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(source)) {
     if (!keys.includes(key)) {
@@ -173,17 +171,17 @@ function omitKeys<T extends Record<string, unknown>>(
     }
   }
   return result;
-}
+};
 /**
  * Only inject the data attributes the child did not set itself, so components
  * that manage their own `data-active` state keep control of it. Selection ARIA
  * is intentionally left to the consumer because this primitive is not limited
  * to tabs or listbox options.
  */
-function getNonOverridingDataAttributes<T extends Record<string, unknown>>(
+const getNonOverridingDataAttributes = <T extends Record<string, unknown>>(
   element: ReactElement<T>,
   dataAttrs: T
-): T {
+): T => {
   const result: Record<string, unknown> = { ...dataAttrs };
   for (const key of Object.keys(dataAttrs)) {
     const own = element.props[key];
@@ -192,12 +190,12 @@ function getNonOverridingDataAttributes<T extends Record<string, unknown>>(
     }
   }
   return result as T;
-}
+};
 /** Run every upstream handler first so the child's own handlers always fire. */
-function chainHandlers(
+const chainHandlers = (
   own: OwnHandlers,
   ...sources: Record<string, unknown>[]
-): OwnHandlers {
+): OwnHandlers => {
   const chained: OwnHandlers = {};
   for (const name of HANDLER_KEYS) {
     const handler = own[name];
@@ -234,17 +232,17 @@ function chainHandlers(
     }
   }
   return chained;
-}
+};
 const HighlightContext = createContext<HighlightContextValue | undefined>(
   undefined
 );
-function useHighlight(): HighlightContextValue {
+const useHighlight = (): HighlightContextValue => {
   const ctx = useContext(HighlightContext);
   if (!ctx) {
     throw new Error("useHighlight must be used within a Highlight");
   }
   return ctx;
-}
+};
 // ─── Highlight ────────────────────────────────────────────────────────────────
 interface HighlightBaseProps<T extends string> {
   /**
@@ -300,7 +298,115 @@ type HighlightDivProps = Omit<
 export type HighlightProps<T extends string = string> = HighlightDivProps &
   HighlightBaseProps<T> &
   (({ mode: "parent" } & HighlightParentOnlyProps) | { mode?: "children" });
-export function Highlight<T extends string = string>({
+/** The active value: controlled by `value` when given, internal otherwise. */
+const useHighlightValue = <T extends string>(
+  valueProp: T | null | undefined,
+  defaultValue: T | null | undefined,
+  onValueChange: ((value: T | null) => void) | undefined
+) => {
+  // `value` makes the component fully controlled: interaction only reports
+  // through `onValueChange` and never moves the highlight on its own.
+  const isControlled = valueProp !== undefined;
+  const [uncontrolledValue, setUncontrolledValue] = useState<string | null>(
+    defaultValue ?? null
+  );
+  const activeValue = isControlled ? valueProp : uncontrolledValue;
+  // Mirrors the effective value so uncontrolled interactions can bail out before
+  // React commits the next render. In controlled mode, the prop remains the source
+  // of truth and this ref must never record a selection the parent rejected.
+  const activeValueRef = useRef(activeValue);
+  useIsomorphicLayoutEffect(() => {
+    activeValueRef.current = activeValue;
+  }, [activeValue]);
+  const setActiveValue = useCallback(
+    (next: string | null) => {
+      const currentValue = isControlled ? activeValue : activeValueRef.current;
+      if (currentValue === next) {
+        return;
+      }
+      if (!isControlled) {
+        activeValueRef.current = next;
+        setUncontrolledValue(next);
+      }
+      onValueChange?.(next as T | null);
+    },
+    [activeValue, isControlled, onValueChange]
+  );
+  return { activeValue, setActiveValue };
+};
+
+const sameBounds = (a: Bounds | null, b: Bounds) =>
+  a !== null &&
+  a.top === b.top &&
+  a.left === b.left &&
+  a.width === b.width &&
+  a.height === b.height;
+
+/** The highlight's box inside the container, from an item's measured rect. */
+const useHighlightBounds = (
+  localRef: RefObject<HTMLDivElement | null>,
+  boundsOffset: Partial<Bounds> | undefined
+) => {
+  const [boundsState, setBoundsState] = useState<Bounds | null>(null);
+  // Plain numbers, so an inline `boundsOffset` object doesn't re-create setBounds.
+  const offsetTop = boundsOffset?.top ?? 0;
+  const offsetLeft = boundsOffset?.left ?? 0;
+  const offsetWidth = boundsOffset?.width ?? 0;
+  const offsetHeight = boundsOffset?.height ?? 0;
+  const setBounds = useCallback(
+    (bounds: DOMRect) => {
+      if (!localRef.current) {
+        return;
+      }
+      const container = localRef.current;
+      const cr = container.getBoundingClientRect();
+      const next: Bounds = {
+        top:
+          bounds.top -
+          cr.top +
+          container.scrollTop -
+          container.clientTop +
+          offsetTop,
+        left:
+          bounds.left -
+          cr.left +
+          container.scrollLeft -
+          container.clientLeft +
+          offsetLeft,
+        width: bounds.width + offsetWidth,
+        height: bounds.height + offsetHeight,
+      };
+      setBoundsState((prev) => (sameBounds(prev, next) ? prev : next));
+    },
+    [localRef, offsetTop, offsetLeft, offsetWidth, offsetHeight]
+  );
+  const clearBounds = useCallback(
+    () => setBoundsState((prev) => (prev === null ? prev : null)),
+    []
+  );
+  return { boundsState, setBounds, clearBounds };
+};
+
+/** The pill's transition; a new transition prop replaces any one-off (instant) one. */
+const usePillTransition = (resolvedTransition: Transition) => {
+  const [pillTransition, setPillTransition] =
+    useState<Transition>(resolvedTransition);
+  /** Bails out when nothing changed so an equal transition never re-renders. */
+  const updatePillTransition = useCallback((next: Transition) => {
+    setPillTransition((prev) => (isEqualTransition(prev, next) ? prev : next));
+  }, []);
+  const [lastResolvedTransition, setLastResolvedTransition] =
+    useState(resolvedTransition);
+  if (lastResolvedTransition !== resolvedTransition) {
+    setLastResolvedTransition(resolvedTransition);
+    if (!isEqualTransition(pillTransition, resolvedTransition)) {
+      setPillTransition(resolvedTransition);
+    }
+  }
+  return { pillTransition, updatePillTransition };
+};
+
+export const Highlight = <T extends string = string>({
   ref,
   children,
   mode = "children",
@@ -317,13 +423,13 @@ export function Highlight<T extends string = string>({
   itemsClassName,
   autoWrap,
   ...rest
-}: HighlightProps<T>) {
-  const { boundsOffset, containerClassName } = rest as HighlightParentOnlyProps;
+}: HighlightProps<T>) => {
   const containerProps = omitKeys(rest, [
     "boundsOffset",
     "containerClassName",
     "data-slot",
   ]);
+  const { boundsOffset, containerClassName } = rest as HighlightParentOnlyProps;
   const localRef = useRef<HTMLDivElement | null>(null);
   const setContainerRef = useComposedRefs<HTMLDivElement>(
     undefined,
@@ -335,93 +441,21 @@ export function Highlight<T extends string = string>({
     transition,
     prefersReducedMotion
   );
-  // `value` makes the component fully controlled: interaction only reports
-  // through `onValueChange` and never moves the highlight on its own.
-  const isControlled = valueProp !== undefined;
-  const [uncontrolledValue, setUncontrolledValue] = useState<string | null>(
-    defaultValue ?? null
+  const { activeValue, setActiveValue } = useHighlightValue(
+    valueProp,
+    defaultValue,
+    onValueChange
   );
-  const activeValue = isControlled ? valueProp : uncontrolledValue;
-  // Mirrors the effective value so uncontrolled interactions can bail out before
-  // React commits the next render. In controlled mode, the prop remains the source
-  // of truth and this ref must never record a selection the parent rejected.
-  const activeValueRef = useRef(activeValue);
-  activeValueRef.current = activeValue;
-  const [boundsState, setBoundsState] = useState<Bounds | null>(null);
+  const { boundsState, setBounds, clearBounds } = useHighlightBounds(
+    localRef,
+    boundsOffset
+  );
   const [activeClassName, setActiveClassName] = useState("");
-  const [pillTransition, setPillTransition] =
-    useState<Transition>(resolvedTransition);
-  /** Bails out when nothing changed so an equal transition never re-renders. */
-  const updatePillTransition = useCallback((next: Transition) => {
-    setPillTransition((prev) => (isEqualTransition(prev, next) ? prev : next));
-  }, []);
-  useEffect(() => {
-    if (activeValue === null) {
-      setActiveClassName("");
-    }
-  }, [activeValue]);
-  useEffect(() => {
-    updatePillTransition(resolvedTransition);
-  }, [resolvedTransition, updatePillTransition]);
-  const setActiveValue = useCallback(
-    (next: string | null) => {
-      const currentValue = isControlled ? activeValue : activeValueRef.current;
-      if (currentValue === next) {
-        return;
-      }
-      if (!isControlled) {
-        activeValueRef.current = next;
-        setUncontrolledValue(next);
-      }
-      onValueChange?.(next as T | null);
-    },
-    [activeValue, isControlled, onValueChange]
-  );
-  // Keep boundsOffset always fresh without re-creating setBounds
-  const boundsOffsetRef = useRef<Partial<Bounds>>(boundsOffset ?? {});
-  useIsomorphicLayoutEffect(() => {
-    boundsOffsetRef.current = boundsOffset ?? {};
-  }, [boundsOffset]);
-  const setBounds = useCallback((bounds: DOMRect) => {
-    if (!localRef.current) {
-      return;
-    }
-    const container = localRef.current;
-    const cr = container.getBoundingClientRect();
-    const o = boundsOffsetRef.current;
-    const next: Bounds = {
-      top:
-        bounds.top -
-        cr.top +
-        container.scrollTop -
-        container.clientTop +
-        (o.top ?? 0),
-      left:
-        bounds.left -
-        cr.left +
-        container.scrollLeft -
-        container.clientLeft +
-        (o.left ?? 0),
-      width: bounds.width + (o.width ?? 0),
-      height: bounds.height + (o.height ?? 0),
-    };
-    setBoundsState((prev) => {
-      if (
-        prev &&
-        prev.top === next.top &&
-        prev.left === next.left &&
-        prev.width === next.width &&
-        prev.height === next.height
-      ) {
-        return prev;
-      }
-      return next;
-    });
-  }, []);
-  const clearBounds = useCallback(
-    () => setBoundsState((prev) => (prev === null ? prev : null)),
-    []
-  );
+  const { pillTransition, updatePillTransition } =
+    usePillTransition(resolvedTransition);
+  if (activeValue === null && activeClassName !== "") {
+    setActiveClassName("");
+  }
   const measureActiveItem = useCallback(
     (layout = false) => {
       if (mode !== "parent" || activeValue == null || !localRef.current) {
@@ -462,7 +496,6 @@ export function Highlight<T extends string = string>({
     clearBounds,
     resolvedTransition,
     updatePillTransition,
-    boundsOffset,
   ]);
   // Parent mode: keep pill aligned while the list layout animates or resizes
   useEffect(() => {
@@ -565,8 +598,8 @@ export function Highlight<T extends string = string>({
   }, [droppedPropKeys, mode]);
   let renderedChildren: ReactNode = children;
   if (enabled) {
-    if (mode === "parent") {
-      renderedChildren = (
+    renderedChildren =
+      mode === "parent" ? (
         <div
           {...containerProps}
           className={cn("relative isolate", containerClassName)}
@@ -612,17 +645,16 @@ export function Highlight<T extends string = string>({
           </AnimatePresence>
           {content}
         </div>
+      ) : (
+        content
       );
-    } else {
-      renderedChildren = content;
-    }
   }
   return (
     <HighlightContext.Provider value={ctx}>
       {renderedChildren}
     </HighlightContext.Provider>
   );
-}
+};
 // ─── HighlightItem ────────────────────────────────────────────────────────────
 interface ItemOverlayProps {
   activeClassName?: string;
@@ -644,30 +676,28 @@ interface ItemOverlayProps {
  * The previous item unmounts in the same commit, which is fine — shared-layout
  * projection reads the outgoing bounds from Motion's previous-layout snapshot.
  */
-function ItemOverlay({
+const ItemOverlay = ({
   activeClassName,
   className,
   contextId,
   contextStyle,
   style,
   transition,
-}: ItemOverlayProps) {
-  return (
-    <motion.div
-      className={cn("pointer-events-none", className, activeClassName)}
-      data-slot="highlight"
-      layoutId={`highlight-${contextId}`}
-      style={{
-        position: "absolute",
-        inset: 0,
-        zIndex: -1,
-        ...contextStyle,
-        ...style,
-      }}
-      transition={transition}
-    />
-  );
-}
+}: ItemOverlayProps) => (
+  <motion.div
+    className={cn("pointer-events-none", className, activeClassName)}
+    data-slot="highlight"
+    layoutId={`highlight-${contextId}`}
+    style={{
+      position: "absolute",
+      inset: 0,
+      zIndex: -1,
+      ...contextStyle,
+      ...style,
+    }}
+    transition={transition}
+  />
+);
 export interface HighlightItemProps extends Omit<
   ComponentPropsWithoutRef<"div">,
   "children" | "className" | "style"
@@ -689,7 +719,39 @@ export interface HighlightItemProps extends Omit<
   /** Unique value identifying this item. Falls back to the child's `data-highlight-value`, then its `id`. */
   value?: string;
 }
-export function HighlightItem({
+/** The item's value: its `value` prop, then the child's `data-highlight-value`, then its `id`. */
+const resolveItemValue = (
+  value: string | undefined,
+  element: ReactElement<ExtendedChildProps> | null,
+  generatedId: string
+): string =>
+  value ??
+  element?.props["data-highlight-value"] ??
+  element?.props.id ??
+  generatedId;
+
+/** The data attributes every item carries, for styling and for parent-mode measuring. */
+const itemDataAttrs = (
+  isActive: boolean,
+  isDisabled: boolean | undefined,
+  value: string
+) => ({
+  "data-active": isActive ? "true" : "false",
+  "data-disabled": isDisabled || undefined,
+  "data-highlight-value": value,
+});
+
+/** Hover activates on enter and clears on leave; click activates on click. */
+const triggerHandlers = (
+  trigger: HighlightTrigger,
+  activate: () => void,
+  clear: () => void
+): OwnHandlers =>
+  trigger === "hover"
+    ? { onMouseEnter: activate, onMouseLeave: clear }
+    : { onClick: activate };
+
+export const HighlightItem = ({
   ref,
   children,
   value,
@@ -700,7 +762,7 @@ export function HighlightItem({
   disabled,
   asChild = false,
   ...props
-}: HighlightItemProps) {
+}: HighlightItemProps) => {
   const {
     activeValue,
     className: contextClassName,
@@ -722,11 +784,7 @@ export function HighlightItem({
   const isValidChild =
     isValidElement<ExtendedChildProps>(children) && children.type !== Fragment;
   const element = isValidChild ? children : null;
-  const childValue =
-    value ??
-    element?.props["data-highlight-value"] ??
-    element?.props.id ??
-    generatedId;
+  const childValue = resolveItemValue(value, element, generatedId);
   const isActive = activeValue === childValue;
   const isDisabled = disabled ?? contextDisabled;
   const itemTransition = useStableTransition(
@@ -769,21 +827,14 @@ export function HighlightItem({
   if (!(enabled && isValidChild && element)) {
     return children;
   }
-  const dataAttrs = {
-    "data-active": isActive ? "true" : "false",
-    "data-disabled": isDisabled || undefined,
-    "data-highlight-value": childValue,
-  };
-  let ownHandlers: OwnHandlers = {};
-  if (!isDisabled) {
-    ownHandlers =
-      trigger === "hover"
-        ? {
-            onMouseEnter: () => setActiveValue(childValue),
-            onMouseLeave: () => setActiveValue(null),
-          }
-        : { onClick: () => setActiveValue(childValue) };
-  }
+  const dataAttrs = itemDataAttrs(isActive, isDisabled, childValue);
+  const ownHandlers = isDisabled
+    ? {}
+    : triggerHandlers(
+        trigger,
+        () => setActiveValue(childValue),
+        () => setActiveValue(null)
+      );
   // In wrapper mode the child's handlers already run on the child and bubble up.
   // Re-chaining them onto the wrapper would invoke them a second time.
   const handlers = asChild
@@ -850,5 +901,5 @@ export function HighlightItem({
       )}
     </div>
   );
-}
+};
 export { useHighlight };

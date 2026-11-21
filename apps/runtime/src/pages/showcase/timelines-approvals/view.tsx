@@ -53,7 +53,7 @@ export interface MergeReadinessProps {
   className?: string;
 }
 
-const TONE = { ok: "bg-category-2/15 text-category-2-foreground", bad: "bg-category-4/15 text-category-4-foreground", neutral: "bg-foreground/[0.06] text-foreground" };
+const TONE = { ok: "bg-category-2/15 text-category-2-foreground", bad: "bg-category-4/15 text-category-4-foreground", neutral: "bg-foreground/6 text-foreground" };
 
 function initials(name: string) {
   return name
@@ -87,7 +87,7 @@ function EventGlyph({ e }: { e: PrEvent }) {
       <GitCommitIcon className="size-4" />
     );
   return (
-    <span aria-hidden className={cn("z-10 grid size-[32px] place-items-center rounded-full ring-4 ring-background", tone)}>
+    <span aria-hidden className={cn("z-10 grid size-8 place-items-center rounded-full ring-4 ring-background", tone)}>
       {icon}
     </span>
   );
@@ -162,7 +162,7 @@ function MergeReadinessScreen({ pr, status = "ready", error, onRetry, onMerge, c
               {t.activity}
             </h2>
             <ol className="relative mt-4">
-              <span aria-hidden className="absolute start-[15px] top-1 bottom-1 w-px bg-border/50" />
+              <span aria-hidden className="absolute inset-s-3.75 top-1 bottom-1 w-px bg-border/50" />
               {pr.events.map((e) => (
                 <li className="relative grid grid-cols-[32px_minmax(0,1fr)_auto] items-start gap-3 py-2.5" key={e.id}>
                   <EventGlyph e={e} />
@@ -173,9 +173,9 @@ function MergeReadinessScreen({ pr, status = "ready", error, onRetry, onMerge, c
                           <AvatarFallback className="text-[10px]">{initials(e.actor)}</AvatarFallback>
                         </Avatar>
                       ) : null}
-                      <span className="min-w-0 break-words">{e.summary}</span>
+                      <span className="min-w-0 wrap-break-word">{e.summary}</span>
                     </div>
-                    {e.detail ? <div className="mt-1 break-words text-muted-foreground text-xs">{e.detail}</div> : null}
+                    {e.detail ? <div className="mt-1 wrap-break-word text-muted-foreground text-xs">{e.detail}</div> : null}
                   </div>
                   <time className="whitespace-nowrap pt-0.5 font-mono text-[10px] text-muted-foreground" dateTime={e.at}>
                     {fmt.relative(e.at)}
@@ -187,7 +187,7 @@ function MergeReadinessScreen({ pr, status = "ready", error, onRetry, onMerge, c
 
           {/* Below lg the merge status (reviewers + checks) comes first — it's the
               answer to "can I merge?" — and sits side by side from sm. */}
-          <div className="order-first grid grid-cols-1 content-start gap-4 sm:grid-cols-2 lg:order-none lg:grid-cols-1">
+          <div className="order-first grid grid-cols-1 content-start gap-4 sm:grid-cols-2 lg:order-0 lg:grid-cols-1">
             <section aria-labelledby={`${uid}-reviewers`} className="rounded-xl border border-border/60 bg-background/40 p-4">
               <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]" id={`${uid}-reviewers`}>
                 {interpolate(t.reviewers, { approved, total: pr.reviewers.length })}

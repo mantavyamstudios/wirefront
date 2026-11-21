@@ -153,7 +153,7 @@ function CodeTabs({ samples, title, lang, onLang, languages, t }: { samples: Par
         {single ? (
           <span className="px-1.5 font-mono text-muted-foreground text-xs">{t.terminal}</span>
         ) : (
-          <fieldset className="m-0 flex min-w-0 gap-0.5 overflow-x-auto border-0 p-0 [scrollbar-width:none]">
+          <fieldset className="m-0 flex min-w-0 gap-0.5 overflow-x-auto border-0 p-0 scrollbar-none">
             <legend className="sr-only">{t.languages}</legend>
             {available.map((l) => (
               <button aria-pressed={current === l.id} className={cn("relative h-7 shrink-0 cursor-pointer rounded-md px-2 font-medium text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring", current === l.id ? "text-foreground" : "text-muted-foreground hover:text-foreground")} key={l.id} onClick={() => onLang(l.id)} type="button">
@@ -207,7 +207,7 @@ function Block({ block, lang, onLang, languages, t }: { block: DocsBlock; lang: 
         <ul className="flex flex-col gap-1 ps-1">
           {block.items.map((it) => (
             <li className="flex gap-3 text-[15px] leading-7" key={it}>
-              <span aria-hidden className="mt-[13px] size-1 shrink-0 rounded-full bg-muted-foreground/70" />
+              <span aria-hidden className="mt-3.25 size-1 shrink-0 rounded-full bg-muted-foreground/70" />
               <span className="text-foreground/85">
                 <Inline text={it} />
               </span>
@@ -217,7 +217,7 @@ function Block({ block, lang, onLang, languages, t }: { block: DocsBlock; lang: 
       );
     case "steps":
       return (
-        <ol className="relative flex flex-col gap-3 before:absolute before:start-3 before:top-3 before:bottom-3 before:w-px before:bg-border">
+        <ol className="relative flex flex-col gap-3 before:absolute before:inset-s-3 before:top-3 before:bottom-3 before:w-px before:bg-border">
           {block.items.map((it, i) => (
             <li className="relative flex gap-3" key={it}>
               <span aria-hidden className="z-10 flex size-6 shrink-0 items-center justify-center rounded-full border bg-background font-medium text-xs tabular-nums">
@@ -234,7 +234,7 @@ function Block({ block, lang, onLang, languages, t }: { block: DocsBlock; lang: 
       const Icon = block.tone === "info" ? InfoIcon : TriangleAlertIcon;
       return (
         <div className={cn("flex gap-3 rounded-xl border px-4 py-3.5", block.tone === "info" ? "border-info/16 bg-info/4 dark:border-info/14 dark:bg-info/6" : "border-warning/20 bg-warning/5 dark:border-warning/14 dark:bg-warning/6")} role="note">
-          <Icon aria-hidden className={cn("mt-[3px] size-4 shrink-0", block.tone === "info" ? "text-info-foreground" : "text-warning-foreground")} />
+          <Icon aria-hidden className={cn("mt-0.75 size-4 shrink-0", block.tone === "info" ? "text-info-foreground" : "text-warning-foreground")} />
           <div className="min-w-0">
             <div className="font-medium">{block.title}</div>
             <p className="mt-1 text-pretty text-muted-foreground leading-6">
@@ -249,7 +249,7 @@ function Block({ block, lang, onLang, languages, t }: { block: DocsBlock; lang: 
     case "table":
       return (
         <ScrollRegion aria-label={block.head.join(", ")} className="rounded-xl border" orientation="horizontal">
-          <table className="w-full min-w-[420px] text-start text-sm">
+          <table className="w-full min-w-105 text-start text-sm">
             <thead className="bg-muted/30">
               <tr>
                 {block.head.map((h) => (
@@ -332,7 +332,7 @@ function SearchDialog({ open, onOpenChange, pages, onPick, t }: { open: boolean;
       }}
       open={open}
     >
-      <DialogContent className="top-16 flex max-h-[440px] translate-y-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-xl" showCloseButton={false}>
+      <DialogContent className="top-16 flex max-h-110 translate-y-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-xl" showCloseButton={false}>
         <DialogTitle className="sr-only">{t.searchDialog}</DialogTitle>
         <div className="flex items-center gap-2 border-b px-3">
           <SearchIcon aria-hidden className="size-4 shrink-0 text-muted-foreground" />
@@ -558,7 +558,7 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
           const on = s.id === activeSection;
           return (
             <li className="relative" key={s.id}>
-              {on ? <motion.span className="absolute inset-y-1 -start-px w-0.5 rounded-full bg-foreground" layoutId="toc-rail" transition={spring} /> : null}
+              {on ? <motion.span className="absolute inset-y-1 -inset-s-px w-0.5 rounded-full bg-foreground" layoutId="toc-rail" transition={spring} /> : null}
               <button aria-current={on ? "location" : undefined} className={cn("w-full cursor-pointer rounded-e-md py-1.5 ps-3.5 pe-2 text-start text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", on ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground")} onClick={() => go(page.id, s.id)} type="button">
                 {s.title}
               </button>
@@ -618,13 +618,13 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
         </header>
 
         <div className="flex min-h-0 flex-1">
-          <aside aria-label={t.pages} className="hidden w-60 shrink-0 overflow-y-auto border-e [scrollbar-width:thin] @4xl:block">
+          <aside aria-label={t.pages} className="hidden w-60 shrink-0 overflow-y-auto border-e scrollbar-thin @4xl:block">
             {sidebar}
           </aside>
 
-          <div className="min-w-0 flex-1 overflow-y-auto [scroll-padding-top:16px] [scrollbar-width:thin]" onScroll={onScroll} ref={scrollRef}>
-            <div className="mx-auto flex max-w-[1040px] gap-10 px-4 pt-8 pb-16 @3xl:px-10">
-              <motion.article animate={{ opacity: 1, y: 0 }} className="min-w-0 max-w-[680px] flex-1" initial={{ opacity: 0, y: 6 }} key={page.id} transition={{ duration: 0.2, ease }}>
+          <div className="min-w-0 flex-1 overflow-y-auto scroll-pt-4 scrollbar-thin" onScroll={onScroll} ref={scrollRef}>
+            <div className="mx-auto flex max-w-260 gap-10 px-4 pt-8 pb-16 @3xl:px-10">
+              <motion.article animate={{ opacity: 1, y: 0 }} className="min-w-0 max-w-170 flex-1" initial={{ opacity: 0, y: 6 }} key={page.id} transition={{ duration: 0.2, ease }}>
                 <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
                   <span>{page.group}</span>
                   <ChevronRightIcon aria-hidden className="size-3 rtl:-scale-x-100" />
@@ -749,7 +749,7 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
         </div>
 
         <Sheet onOpenChange={setDrawer} open={drawer}>
-          <SheetContent className="w-[272px] max-w-[calc(100%-3rem)] gap-0 p-0" showCloseButton={false} side="left">
+          <SheetContent className="w-68 max-w-[calc(100%-3rem)] gap-0 p-0" showCloseButton={false} side="left">
             <div className="flex h-12 items-center justify-between border-b ps-4 pe-2">
               <SheetTitle className="font-medium text-sm">
                 {product} {t.docs} {version ? <span className="font-mono text-muted-foreground text-xs">{version}</span> : null}

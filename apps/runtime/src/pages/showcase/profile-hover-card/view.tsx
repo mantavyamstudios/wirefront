@@ -65,7 +65,7 @@ function Card({ person, onToggleFollow, className }: PersonHoverCardProps) {
 
   return (
     <div className={cn("relative w-[min(20rem,calc(100vw-2rem))] overflow-hidden bg-background", className)}>
-      <div aria-hidden className="h-16 bg-gradient-to-br from-category-8/30 via-foreground/[0.04] to-category-6/30" />
+      <div aria-hidden className="h-16 bg-linear-to-br from-category-8/30 via-foreground/4 to-category-6/30" />
       <div className="relative px-4 pb-4">
         <Avatar aria-hidden className="-mt-7 size-14 border-4 border-background bg-foreground">
           {person.avatarUrl ? <AvatarImage alt="" src={person.avatarUrl} /> : null}
@@ -148,7 +148,7 @@ function PersonHoverCardScreen(props: PersonHoverCardProps) {
   return (
     <Popover>
       <PopoverTrigger
-        className="inline-flex items-center gap-1 rounded-full bg-foreground/[0.06] px-2 py-0.5 align-baseline font-medium text-foreground/90 hover:bg-foreground/[0.1] pointer-coarse:py-1"
+        className="inline-flex items-center gap-1 rounded-full bg-foreground/6 px-2 py-0.5 align-baseline font-medium text-foreground/90 hover:bg-foreground/10 pointer-coarse:py-1"
         delay={200}
         openOnHover
       >
@@ -157,7 +157,7 @@ function PersonHoverCardScreen(props: PersonHoverCardProps) {
         </Avatar>
         {interpolate(t.mention, { name: person.name })}
       </PopoverTrigger>
-      <PopoverContent aria-label={interpolate(t.profile, { name: person.name })} className="overflow-hidden [&_[data-slot=popover-viewport]]:p-0">
+      <PopoverContent aria-label={interpolate(t.profile, { name: person.name })} className="overflow-hidden **:data-[slot=popover-viewport]:p-0">
         <Card {...props} />
       </PopoverContent>
     </Popover>

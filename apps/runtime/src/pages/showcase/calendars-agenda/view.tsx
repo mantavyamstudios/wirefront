@@ -155,7 +155,7 @@ function DayAgendaScreen({ events, minGap = 15, minFocus = 30, status = "ready",
                                     </Avatar>
                                   ))}
                                   {e.attendees.length > 4 ? (
-                                    <span aria-hidden className="grid size-6 place-items-center rounded-full border-2 border-background bg-foreground/[0.06] font-mono text-[10px]">
+                                    <span aria-hidden className="grid size-6 place-items-center rounded-full border-2 border-background bg-foreground/6 font-mono text-[10px]">
                                       +{e.attendees.length - 4}
                                     </span>
                                   ) : null}

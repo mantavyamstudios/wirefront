@@ -25,6 +25,7 @@ import { resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { SOURCE_FILES } from "../apps/runtime/src/pages/showcase/source-files";
+import { must } from "./lib/must";
 import { cssVarsFor, readDesignMeta, tokensUsed } from "./lib/registry-meta";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -112,7 +113,7 @@ interface CrawlResult {
 function titleCase(slug: string): string {
   return slug
     .split("-")
-    .map((s) => (s ? s[0]!.toUpperCase() + s.slice(1) : s))
+    .map((s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s))
     .join(" ");
 }
 
@@ -143,7 +144,7 @@ function mapLibraryPath(absPath: string): {
   // in the consumer.
   let m = rel.match(/^components\/ui\/([a-z0-9-]+)\.tsx$/);
   if (m) {
-    const name = m[1]!;
+    const name = must(m[1], "a component name");
     if (name in LOCAL_INLINES) {
       return {
         alias: `@/components/wirefront/${name}`,
@@ -273,7 +274,7 @@ function rewriteLibraryFile(absPath: string, source: string): {
     /from\s+(["'])@wirefront\/ui\/([a-z0-9/-]+)\1/g,
     (_match, q: string, name: string) => {
       if (name === "lib/utils") return `from ${q}@/lib/utils${q}`;
-      const baseName = name.split("/").pop()!;
+      const baseName = must(name.split("/").pop(), "an import name");
       if (name.startsWith("hooks/")) {
         follow.push(resolve(UI_PKG_DIR, `${name}.ts`));
         return `from ${q}@/hooks/wirefront/${baseName}${q}`;
@@ -284,7 +285,7 @@ function rewriteLibraryFile(absPath: string, source: string): {
         return `from ${q}@/components/wirefront/${baseName}${q}`;
       }
       if (LOCAL_INLINES[baseName]) {
-        follow.push(resolve(UI_PKG_DIR, LOCAL_INLINES[baseName]!));
+        follow.push(resolve(UI_PKG_DIR, must(LOCAL_INLINES[baseName], `a local inline for ${baseName}`)));
         return `from ${q}@/components/wirefront/${baseName}${q}`;
       }
       registryDeps.add(baseName);
@@ -294,11 +295,12 @@ function rewriteLibraryFile(absPath: string, source: string): {
 
   // 3. Track known npm deps (anything not relative and not @/ or @wirefront/).
   const importRe = /from\s+["']([^"']+)["']/g;
-  for (const m of out.matchAll(importRe)) {
-    const spec = m[1]!;
+  // Code only, as in crawl(): imports shown inside template literals don't count.
+  for (const m of out.replace(/`(?:\\.|[^`\\])*`/g, "``").matchAll(importRe)) {
+    const spec = must(m[1], "an import specifier");
     // Match on the package name so subpath imports (motion/react) count too.
     const parts = spec.split("/");
-    const pkg = spec.startsWith("@") ? parts.slice(0, 2).join("/") : parts[0]!;
+    const pkg = spec.startsWith("@") ? parts.slice(0, 2).join("/") : must(parts[0], "a package name");
     if (TRACKED_NPM_DEPS.has(pkg)) npmDeps.add(pkg);
   }
 
@@ -339,7 +341,7 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
 
   const drainLibQueue = async () => {
     while (libQueue.length > 0) {
-      const absPath = libQueue.shift()!;
+      const absPath = must(libQueue.shift(), "a queued file");
       if (visitedLib.has(absPath)) continue;
       visitedLib.add(absPath);
 
@@ -359,7 +361,7 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
   };
 
   while (showcaseQueue.length > 0) {
-    const fname = showcaseQueue.shift()!;
+    const fname = must(showcaseQueue.shift(), "a queued file");
     if (visitedShowcase.has(fname)) continue;
     visitedShowcase.add(fname);
 
@@ -367,23 +369,27 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
     let ext: string;
     try {
       ({ raw, ext } = await readShowcase(fname));
-    } catch {
-      continue;
+    } catch (err) {
+      // Every queued file comes from a real import, so a missing one is a broken screen.
+      throw new Error(`${rootFilename}: ${err instanceof Error ? err.message : String(err)}`);
     }
+    // Imports are read from code only: code shown as text inside template
+    // literals (a diff viewer's sample, for example) is not followed.
+    const code = raw.replace(/`(?:\\.|[^`\\])*`/g, "``");
 
     // @wirefront/ui/<name> -> queue local inline OR add a shadcn/ui dep.
     const orbitRe = /from\s+["']@wirefront\/ui\/([a-z0-9/-]+)["']/g;
-    for (const m of raw.matchAll(orbitRe)) {
-      const importPath = m[1]!;
+    for (const m of code.matchAll(orbitRe)) {
+      const importPath = must(m[1], "an import path");
       if (importPath === "lib/utils") continue;
-      const baseName = importPath.split("/").pop()!;
+      const baseName = must(importPath.split("/").pop(), "an import name");
       if (importPath.startsWith("hooks/")) {
         libQueue.push(resolve(UI_PKG_DIR, `${importPath}.ts`));
       } else if (importPath.startsWith("wirefront/")) {
         const ts = resolve(UI_PKG_DIR, `${importPath}.ts`);
         libQueue.push(existsSync(ts) ? ts : resolve(UI_PKG_DIR, `${importPath}.tsx`));
       } else if (LOCAL_INLINES[baseName]) {
-        libQueue.push(resolve(UI_PKG_DIR, LOCAL_INLINES[baseName]!));
+        libQueue.push(resolve(UI_PKG_DIR, must(LOCAL_INLINES[baseName], `a local inline for ${baseName}`)));
       } else {
         registryDeps.add(baseName);
       }
@@ -391,25 +397,25 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
 
     // Sibling showcase imports (./foo).
     const relRe = /from\s+["']\.\/([a-z0-9_-]+)["']/g;
-    for (const m of raw.matchAll(relRe)) {
+    for (const m of code.matchAll(relRe)) {
       // Inside a screen folder, ./x is a file of that folder.
       const dir = fname.includes("/") && !fname.startsWith(APP_PREFIX) ? fname.slice(0, fname.lastIndexOf("/") + 1) : "";
-      const sibling = `${dir}${m[1]!}`;
+      const sibling = `${dir}${must(m[1], "a sibling file")}`;
       if (!visitedShowcase.has(sibling)) showcaseQueue.push(sibling);
     }
 
     // App-level components (@/components/<name>, not @/components/ui/*).
     const appRe = /from\s+["']@\/components\/([a-z0-9-]+)["']/g;
-    for (const m of raw.matchAll(appRe)) {
+    for (const m of code.matchAll(appRe)) {
       const app = `${APP_PREFIX}${m[1]}`;
       if (!visitedShowcase.has(app)) showcaseQueue.push(app);
     }
 
     const importRe = /from\s+["']([^"']+)["']/g;
-    for (const m of raw.matchAll(importRe)) {
-      const spec = m[1]!;
+    for (const m of code.matchAll(importRe)) {
+      const spec = must(m[1], "an import specifier");
       const parts = spec.split("/");
-      const pkg = spec.startsWith("@") ? parts.slice(0, 2).join("/") : parts[0]!;
+      const pkg = spec.startsWith("@") ? parts.slice(0, 2).join("/") : must(parts[0], "a package name");
       if (TRACKED_NPM_DEPS.has(pkg)) npmDeps.add(pkg);
     }
 

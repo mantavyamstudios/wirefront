@@ -49,7 +49,7 @@ function check(ok: boolean, what: string) {
 }
 
 async function startServer(): Promise<ChildProcess> {
-  const child = spawn("bunx", ["wrangler@4", "dev", "--port", String(PORT), "--ip", "127.0.0.1"], {
+  const child = spawn("bunx", ["wrangler", "dev", "--port", String(PORT), "--ip", "127.0.0.1"], {
     cwd: ROOT,
     env: { ...process.env, WRANGLER_SEND_METRICS: "false" },
     stdio: ["ignore", "pipe", "pipe"],
@@ -72,12 +72,11 @@ async function status(path: string): Promise<number> {
   return (await fetch(`${BASE}${path}`, { redirect: "manual" })).status;
 }
 
-function screenFrame(page: Page): Promise<Frame> {
-  return page.waitForSelector('iframe[title="Screen preview"]', { timeout: TIMEOUT_MS }).then(async (el) => {
-    const frame = await el.contentFrame();
-    if (!frame) throw new Error("the screen iframe has no frame");
-    return frame;
-  });
+async function screenFrame(page: Page): Promise<Frame> {
+  const el = await page.waitForSelector('iframe[title="Screen preview"]', { timeout: TIMEOUT_MS });
+  const frame = await el.contentFrame();
+  if (!frame) throw new Error("the screen iframe has no frame");
+  return frame;
 }
 
 /** Waits until the iframe shows /preview/{kind}/{screen} with its ready marker. */

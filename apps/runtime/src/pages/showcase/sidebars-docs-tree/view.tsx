@@ -88,7 +88,7 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
       const active = node.id === activeId;
       // Indentation is capped so deep trees don't eat narrow screens.
       const indent = { paddingInlineStart: `${Math.min(depth, 4) * 14 + 12}px` };
-      const look = active ? "bg-foreground/[0.08] text-foreground" : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground";
+      const look = active ? "bg-foreground/8 text-foreground" : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground";
       return (
         <li key={node.id}>
           {isFolder ? (
@@ -113,7 +113,7 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
     <div className="flex h-full min-h-0 flex-col">
       <div className="border-border/60 border-b px-4 py-3.5">
         <div className="flex items-center gap-2">
-          <div aria-hidden className="flex size-6 items-center justify-center rounded bg-foreground/[0.08]">
+          <div aria-hidden className="flex size-6 items-center justify-center rounded bg-foreground/8">
             <BookmarkIcon className="size-3.5" />
           </div>
           <div className="font-medium text-sm">{t.title}</div>
@@ -139,7 +139,7 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
       {onNewPage ? (
         <div className="border-border/60 border-t px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
           <button
-            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-muted-foreground text-xs outline-none transition-colors hover:bg-foreground/[0.03] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11"
+            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-muted-foreground text-xs outline-none transition-colors hover:bg-foreground/3 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11"
             onClick={onNewPage}
             type="button"
           >
@@ -156,7 +156,7 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
       {/* Phones: content first, the tree behind a "Contents" trigger. */}
       <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-border/60 border-b bg-background/90 px-2 backdrop-blur md:hidden">
         <Sheet onOpenChange={setNavOpen} open={navOpen}>
-          <SheetTrigger className="flex min-h-11 items-center gap-2 rounded-md px-2.5 text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.04] hover:text-foreground">
+          <SheetTrigger className="flex min-h-11 items-center gap-2 rounded-md px-2.5 text-muted-foreground text-sm transition-colors hover:bg-foreground/4 hover:text-foreground">
             <ListTreeIcon aria-hidden className="size-4" />
             {t.contents}
           </SheetTrigger>
@@ -168,7 +168,7 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
         {activeId ? <span className="truncate text-sm">{titleOf(tree, activeId)}</span> : null}
       </header>
 
-      <aside className="sticky top-0 hidden h-svh flex-col border-border/60 border-e bg-foreground/[0.02] md:flex">{panel(false)}</aside>
+      <aside className="sticky top-0 hidden h-svh flex-col border-border/60 border-e bg-foreground/2 md:flex">{panel(false)}</aside>
 
       <main className="min-w-0">{children}</main>
     </div>

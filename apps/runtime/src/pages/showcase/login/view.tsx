@@ -63,7 +63,7 @@ export interface ParticleSignInProps {
 function ParticleSignInScreen({ onMagicLink, providers = [], onProvider, onSent, defaultEmail, illustration, brand, caption, actions }: ParticleSignInProps) {
   return (
     <IllustratedAuthLayout actions={actions} brand={brand} caption={caption} illustration={illustration}>
-      {brand ? <div className="absolute start-4 top-4 flex max-w-[calc(100%-5rem)] items-center sm:start-6 sm:top-6 lg:hidden">{brand}</div> : null}
+      {brand ? <div className="absolute inset-s-4 top-4 flex max-w-[calc(100%-5rem)] items-center sm:inset-s-6 sm:top-6 lg:hidden">{brand}</div> : null}
       <SignInForm defaultEmail={defaultEmail} onMagicLink={onMagicLink} onProvider={onProvider} onSent={onSent} providers={providers} />
     </IllustratedAuthLayout>
   );

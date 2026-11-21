@@ -6,6 +6,8 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "wirefront",
   "compatibility_date": "2026-11-18",
+  // Pull request Previews (ci.yml) are served on workers.dev Preview URLs.
+  "preview_urls": true,
   "assets": {
     "directory": "./apps/www/out",
     "html_handling": "auto-trailing-slash",

@@ -62,7 +62,7 @@ const checkVariants: Variants = {
   },
 };
 
-function Copy({
+const Copy = ({
   size = 24,
   color = "currentColor",
   animate = false,
@@ -72,7 +72,7 @@ function Copy({
   onMouseEnter,
   onMouseLeave,
   ...props
-}: CopyProps) {
+}: CopyProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const reducedMotion = useReducedMotion();
 
@@ -156,7 +156,7 @@ function Copy({
       </g>
     </motion.svg>
   );
-}
+};
 
 export {
   Copy,

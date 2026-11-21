@@ -32,7 +32,6 @@ export function ProjectDetailView() {
     closeProject,
     projects,
     issues,
-    members,
     toggleStar,
     requestArchive,
     pushToast,
@@ -49,7 +48,7 @@ export function ProjectDetailView() {
       <button
         type="button"
         onClick={closeProject}
-        className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+        className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] transition-colors hover:bg-foreground/5 hover:text-foreground"
       >
         <ArrowLeftIcon className="size-3" />
         All projects
@@ -201,7 +200,7 @@ function Issues({ issues }: { issues: Issue[] }) {
               <div className={`font-mono text-[10px] uppercase tracking-[0.25em] ${g.tone}`}>
                 {g.label}
               </div>
-              <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground">
+              <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground">
                 {items.length}
               </span>
             </div>
@@ -251,8 +250,8 @@ function Activity() {
   return (
     <div className="rounded-xl border border-border/60 bg-background/40 p-5">
       <ol className="relative ml-3 border-l border-border/60">
-        {events.map((e, i) => (
-          <li key={i} className="relative pl-6 pb-5 last:pb-0">
+        {events.map((e) => (
+          <li key={e.target} className="relative pl-6 pb-5 last:pb-0">
             <span className="-left-3 absolute top-0 flex size-6 items-center justify-center rounded-full bg-background ring-1 ring-border/60">
               <e.Icon className="size-3 opacity-70" />
             </span>
@@ -280,7 +279,7 @@ function IssueRow({ issue }: { issue: Issue }) {
   }[issue.status];
 
   return (
-    <li className="group flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.03]">
+    <li className="group flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/3">
       <span className={`flex size-5 items-center justify-center ${status.className}`}>
         <status.Icon className="size-3.5" />
       </span>

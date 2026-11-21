@@ -5,8 +5,8 @@ import { useEffect, useMemo, useRef } from "react";
 import type { ReactNode } from "react";
 
 import { ComponentPageLayoutClient } from "@/components/blocks/blocks-layout-client";
-import type { ScreenDetail } from "@/lib/screens/data";
 import type { ComponentGalleryItem } from "@/lib/registry/types";
+import type { ScreenDetail } from "@/lib/screens/data";
 
 import { ScreensRuntimeFrame } from "./screens-runtime-frame";
 import type { ScreensRuntimeHandle } from "./screens-runtime-frame";
@@ -26,11 +26,11 @@ const runtimeUrl = (detail: ScreenDetail) =>
  * inside its preview panel) stays mounted while the user moves between
  * screens. Each page only supplies the docs column (`children`).
  */
-export function ScreensDetailFrame({
+export const ScreensDetailFrame = ({
   children,
   details,
   navItems,
-}: ScreensDetailFrameProps) {
+}: ScreensDetailFrameProps) => {
   const pathname = usePathname();
   const runtimeRef = useRef<ScreensRuntimeHandle>(null);
   const byHref = useMemo(
@@ -89,4 +89,4 @@ export function ScreensDetailFrame({
       {children}
     </ComponentPageLayoutClient>
   );
-}
+};

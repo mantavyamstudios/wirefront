@@ -127,10 +127,10 @@ function AgentMark({ helper, size = "md" }: { helper: Helper; size?: "sm" | "md"
           />
         </svg>
       )}
-      <span className={cn("absolute flex items-center justify-center rounded-full font-semibold", sm ? "inset-0 text-[10px]" : "inset-[4px] text-[11px]", t.soft)}>{helper.name[0]}</span>
+      <span className={cn("absolute flex items-center justify-center rounded-full font-semibold", sm ? "inset-0 text-[10px]" : "inset-1 text-[11px]", t.soft)}>{helper.name[0]}</span>
       <AnimatePresence>
         {!sm && helper.status === "done" ? (
-          <motion.span animate={{ opacity: 1, scale: 1 }} className="absolute -end-0.5 -bottom-0.5 flex size-3.5 items-center justify-center rounded-full bg-success text-white ring-2 ring-background" initial={{ opacity: 0, scale: 0.6 }} transition={{ type: "spring", stiffness: 500, damping: 28 }}>
+          <motion.span animate={{ opacity: 1, scale: 1 }} className="absolute -inset-e-0.5 -bottom-0.5 flex size-3.5 items-center justify-center rounded-full bg-success text-white ring-2 ring-background" initial={{ opacity: 0, scale: 0.6 }} transition={{ type: "spring", stiffness: 500, damping: 28 }}>
             <CheckIcon className="size-2.5" strokeWidth={3} />
           </motion.span>
         ) : null}
@@ -482,7 +482,7 @@ function ConductorScreen({ agentName, title, briefTitle, messages, helpers, fiel
   const chat = (
     <div className="flex h-full min-h-0 flex-col">
       <ScrollRegion aria-label={t.conversation} className="min-h-0 flex-1">
-        <div className="mx-auto flex max-w-[40rem] flex-col gap-6 px-4 py-6 @3xl:px-8" ref={chatRef}>
+        <div className="mx-auto flex max-w-160 flex-col gap-6 px-4 py-6 @3xl:px-8" ref={chatRef}>
           {shown.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-16 text-center text-muted-foreground">
               <LoaderCircleIcon aria-hidden className="size-4 animate-spin motion-reduce:animate-none" />
@@ -515,7 +515,7 @@ function ConductorScreen({ agentName, title, briefTitle, messages, helpers, fiel
       </ScrollRegion>
 
       <div className="px-4 pb-4 @3xl:px-8">
-        <div className="mx-auto max-w-[40rem]">
+        <div className="mx-auto max-w-160">
           {error ? (
             <p className="mb-2 text-destructive text-xs" role="alert">
               {error}
@@ -673,14 +673,14 @@ function ConductorScreen({ agentName, title, briefTitle, messages, helpers, fiel
               <section aria-label={t.helpers} className="w-60 shrink-0 border-s bg-muted/32 dark:bg-muted/16">
                 {panel}
               </section>
-              <section aria-label={t.brief} className="w-[25rem] shrink-0 border-s">
+              <section aria-label={t.brief} className="w-100 shrink-0 border-s">
                 {brief}
               </section>
             </>
           ) : null}
 
           {mode === "mid" ? (
-            <section aria-label={t.briefAndHelpers} className="flex w-[22rem] shrink-0 flex-col border-s">
+            <section aria-label={t.briefAndHelpers} className="flex w-88 shrink-0 flex-col border-s">
               <div className="px-4 pt-3">
                 {segmented(
                   [

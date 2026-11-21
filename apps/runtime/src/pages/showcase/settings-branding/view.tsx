@@ -130,7 +130,7 @@ const LOGO_SCHEME: Record<"light" | "dark", { bg: string; fg: string; bar: strin
 const STATUS_PILL: Record<DomainStatus, { className: string; icon: ReactNode }> = {
   verified: { className: "border-category-2/30 bg-category-2/10 text-category-2-foreground", icon: <CheckCircle2Icon aria-hidden className="size-3.5" /> },
   pending: { className: "border-category-3/30 bg-category-3/10 text-category-3-foreground", icon: <CircleAlertIcon aria-hidden className="size-3.5" /> },
-  unset: { className: "border-border/60 bg-foreground/[0.04] text-muted-foreground", icon: <CircleSlashIcon aria-hidden className="size-3.5" /> },
+  unset: { className: "border-border/60 bg-foreground/4 text-muted-foreground", icon: <CircleSlashIcon aria-hidden className="size-3.5" /> },
 };
 const fieldError = "text-destructive-foreground text-xs";
 const label = "font-medium text-sm leading-none";
@@ -428,7 +428,7 @@ function WorkspaceBrandingScreen({
                     ))}
                     {defaultColors && onSaveColors ? (
                       <button
-                        className="ms-auto inline-flex h-8 items-center gap-1.5 self-start rounded-md px-2.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] outline-none transition-colors hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                        className="ms-auto inline-flex h-8 items-center gap-1.5 self-start rounded-md px-2.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] outline-none transition-colors hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
                         onClick={() => setColors(defaultColors)}
                         type="button"
                       >
@@ -474,7 +474,7 @@ function WorkspaceBrandingScreen({
                     <Field.Label className={label}>{t.domainLabel}</Field.Label>
                     <div className="flex flex-wrap items-stretch gap-2">
                       <div className="relative min-w-48 flex-1">
-                        <span className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2">
+                        <span className="pointer-events-none absolute inset-s-3 top-1/2 -translate-y-1/2">
                           <GlobeIcon aria-hidden className="size-3.5 opacity-60" />
                         </span>
                         <Input className="ps-8 font-mono text-sm" defaultValue={domainName} placeholder={t.domainPlaceholder} spellCheck={false} />
@@ -515,7 +515,7 @@ function WorkspaceBrandingScreen({
                 </Form>
 
                 {domainStatus !== "unset" ? (
-                  <div className="mt-5 rounded-lg border border-border/60 bg-foreground/[0.02] p-4">
+                  <div className="mt-5 rounded-lg border border-border/60 bg-foreground/2 p-4">
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <h3 className={eyebrow}>{t.txtRecord}</h3>
@@ -576,7 +576,7 @@ function WorkspaceBrandingScreen({
 
                 <h3 className={cn(eyebrow, "mt-4")}>{t.inboxPreview}</h3>
                 <div aria-hidden className="mt-2 flex items-center gap-3 rounded-lg border border-border/60 bg-background p-3">
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/30 to-primary/5 ring-1 ring-border/60">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-primary/30 to-primary/5 ring-1 ring-border/60">
                     <MailIcon className="size-4 opacity-70" />
                   </div>
                   <div className="min-w-0 flex-1">

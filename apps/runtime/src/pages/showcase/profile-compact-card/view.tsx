@@ -58,7 +58,7 @@ const DOT: Record<RosterMember["presence"], string> = { online: "bg-success", aw
 const TONE: Record<Permission, string> = {
   owner: "bg-category-5/15 text-category-5-foreground",
   admin: "bg-category-8/15 text-category-8-foreground",
-  member: "bg-foreground/[0.06] text-foreground",
+  member: "bg-foreground/6 text-foreground",
   viewer: "bg-muted text-muted-foreground",
 };
 
@@ -135,7 +135,7 @@ function MemberRosterScreen({ roster, status = "ready", error, onRetry, onChange
                   <Avatar className="size-10">
                     <AvatarFallback className="text-xs">{initials(m.name)}</AvatarFallback>
                   </Avatar>
-                  <span className={cn("absolute end-0 bottom-0 size-3 rounded-full border-2 border-background", DOT[m.presence])} />
+                  <span className={cn("absolute inset-e-0 bottom-0 size-3 rounded-full border-2 border-background", DOT[m.presence])} />
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ function MemberRosterScreen({ roster, status = "ready", error, onRetry, onChange
                 <DropdownMenu>
                   <DropdownMenuTrigger
                     aria-label={interpolate(t.moreFor, { name: m.name })}
-                    className="-me-1 grid size-8 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10"
+                    className="-me-1 grid size-8 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10"
                   >
                     <MoreHorizontalIcon aria-hidden className="size-4" />
                   </DropdownMenuTrigger>

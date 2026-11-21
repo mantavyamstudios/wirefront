@@ -71,7 +71,7 @@ export const Quote = ({
       }}
     >
       {avatar ? (
-        // oxlint-disable-next-line next/no-img-element, react-doctor/nextjs-no-img-element -- Satori OG images require a plain img with an absolute URL.
+        // oxlint-disable-next-line next/no-img-element -- Satori OG images require a plain img with an absolute URL.
         <img
           alt={author}
           height={76}

@@ -31,11 +31,16 @@ export interface AccountSidebarProps extends BaseLayoutProps {
   releaseDatesByUrl?: Record<string, string>;
 }
 
-export function AccountSidebar({
-  links = [],
+const ACCOUNT_SIDEBAR_DEFAULT_LINKS: NonNullable<AccountSidebarProps["links"]> =
+  [];
+
+const ACCOUNT_SIDEBAR_DEFAULT_RELEASE_DATES_BY_URL: Record<string, string> = {};
+
+export const AccountSidebar = ({
+  links = ACCOUNT_SIDEBAR_DEFAULT_LINKS,
   githubUrl,
-  releaseDatesByUrl = {},
-}: AccountSidebarProps) {
+  releaseDatesByUrl = ACCOUNT_SIDEBAR_DEFAULT_RELEASE_DATES_BY_URL,
+}: AccountSidebarProps) => {
   const { setOpen } = useSidebar();
   const { transitionTo } = usePageTransition();
   const resolvedLinks = getLinks(links, githubUrl);
@@ -79,7 +84,7 @@ export function AccountSidebar({
                 buttonVariants({
                   color: "ghost",
                   size: "icon-sm",
-                  className: "!size-8 [&_svg]:!size-5 text-fd-muted-foreground",
+                  className: "size-8! [&_svg]:size-5! text-fd-muted-foreground",
                 })
               )}
               onClick={closeMobile}
@@ -122,4 +127,4 @@ export function AccountSidebar({
       </DocsMobileDrawer>
     </DocsReleaseDatesProvider>
   );
-}
+};

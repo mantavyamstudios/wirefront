@@ -172,7 +172,7 @@ function AutoText({ value, className, inputRef, ...props }: TextareaHTMLAttribut
   });
   return (
     <textarea
-      className={cn("block w-full resize-none overflow-hidden bg-transparent outline-none [field-sizing:content] placeholder:text-muted-foreground/60", className)}
+      className={cn("block w-full resize-none overflow-hidden bg-transparent outline-none field-sizing-content placeholder:text-muted-foreground/60", className)}
       ref={(el) => {
         local.current = el;
         inputRef?.(el);
@@ -187,7 +187,7 @@ function AutoText({ value, className, inputRef, ...props }: TextareaHTMLAttribut
 function CheckBox({ checked, onToggle, label, disabled }: { checked: boolean; onToggle: () => void; label: string; disabled?: boolean }) {
   const reduce = useReducedMotionSafe();
   return (
-    <label className={cn("relative mt-[5px] flex size-4.5 shrink-0 cursor-pointer items-center justify-center rounded-[calc(var(--radius)*0.5)] border transition-[background-color,border-color,scale] duration-150 ease-out after:absolute after:-inset-2.5 after:content-[''] active:scale-[0.92] has-focus-visible:ring-2 has-focus-visible:ring-ring has-focus-visible:ring-offset-1 has-focus-visible:ring-offset-background", checked ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background hover:border-foreground/40 dark:bg-input/32")}>
+    <label className={cn("relative mt-1.25 flex size-4.5 shrink-0 cursor-pointer items-center justify-center rounded-[calc(var(--radius)*0.5)] border transition-[background-color,border-color,scale] duration-150 ease-out after:absolute after:-inset-2.5 after:content-[''] active:scale-[0.92] has-focus-visible:ring-2 has-focus-visible:ring-ring has-focus-visible:ring-offset-1 has-focus-visible:ring-offset-background", checked ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background hover:border-foreground/40 dark:bg-input/32")}>
       <input aria-label={label} checked={checked} className="sr-only" disabled={disabled} onChange={onToggle} type="checkbox" />
       <svg aria-hidden="true" className="size-3" fill="none" viewBox="0 0 12 12">
         <motion.path animate={{ pathLength: checked ? 1 : 0, opacity: checked ? 1 : 0 }} d="M2.5 6.2 5 8.6l4.5-5" initial={false} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" transition={reduce ? { duration: 0 } : { duration: 0.18, ease: easeOut }} />

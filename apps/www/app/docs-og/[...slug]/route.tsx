@@ -1,17 +1,17 @@
 import { notFound } from "next/navigation";
 
 import { source } from "@/lib/docs/source";
+import { getCachedOgImageBuffer } from "@/lib/og/og-docs";
 import { getScreenGroups } from "@/lib/screens/data";
 import { screensSource } from "@/lib/screens/source";
-import { getCachedOgImageBuffer } from "@/lib/og/og-docs";
 
 /** Static export (Cloudflare Pages): render once at build time. */
 export const dynamic = "force-static";
 
-export async function GET(
+export const GET = async (
   _req: Request,
   { params }: { params: Promise<{ slug: string[] }> }
-) {
+) => {
   const { slug } = await params;
   const pageSlug = slug.slice(0, -1);
   const buffer = await getCachedOgImageBuffer(pageSlug);
@@ -26,25 +26,23 @@ export async function GET(
       "Cache-Control": "public, max-age=31536000, immutable",
     },
   });
-}
+};
 
-export function generateStaticParams(): {
+export const generateStaticParams = (): {
   slug: string[];
-}[] {
-  return [
-    { slug: ["image.png"] },
-    { slug: ["screens", "image.png"] },
-    ...getScreenGroups().flatMap((group) => [
-      { slug: ["screens", group.slug, "image.png"] },
-      ...group.kinds.map((kind) => ({
-        slug: ["screens", group.slug, kind.slug, "image.png"],
-      })),
-    ]),
-    ...source
-      .generateParams()
-      .map((page) => ({ slug: [...page.slug, "image.png"] })),
-    ...screensSource
-      .generateParams()
-      .map((page) => ({ slug: ["screens", ...page.slug, "image.png"] })),
-  ];
-}
+}[] => [
+  { slug: ["image.png"] },
+  { slug: ["screens", "image.png"] },
+  ...getScreenGroups().flatMap((group) => [
+    { slug: ["screens", group.slug, "image.png"] },
+    ...group.kinds.map((kind) => ({
+      slug: ["screens", group.slug, kind.slug, "image.png"],
+    })),
+  ]),
+  ...source
+    .generateParams()
+    .map((page) => ({ slug: [...page.slug, "image.png"] })),
+  ...screensSource
+    .generateParams()
+    .map((page) => ({ slug: ["screens", ...page.slug, "image.png"] })),
+];

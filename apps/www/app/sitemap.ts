@@ -10,13 +10,12 @@ export const dynamic = "force-static";
 /** Keep in sync with `LAST_UPDATED` in legal policy articles. */
 const LEGAL_LAST_UPDATED = new Date("2026-11-20");
 
-function toLastModified(value: Date | string | number | undefined) {
-  return value ? new Date(value) : undefined;
-}
+const toLastModified = (value: Date | string | number | undefined) =>
+  value ? new Date(value) : undefined;
 
-function latest(
+const latest = (
   pages: readonly { data: { lastModified?: Date | string | number } }[]
-) {
+) => {
   let newest: Date | undefined;
   for (const page of pages) {
     const date = toLastModified(page.data.lastModified);
@@ -25,15 +24,15 @@ function latest(
     }
   }
   return newest;
-}
+};
 
-async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
+const buildSitemap = async (): Promise<MetadataRoute.Sitemap> => {
   const docPages = source.getPages();
   const screenPages = screensSource.getPages();
   const latestScreen = latest(screenPages);
-  const latestContent = [latest(docPages), latestScreen]
+  const [latestContent] = [latest(docPages), latestScreen]
     .filter((date): date is Date => Boolean(date))
-    .toSorted((a, b) => b.getTime() - a.getTime())[0];
+    .toSorted((a, b) => b.getTime() - a.getTime());
 
   return await Promise.resolve([
     {
@@ -73,8 +72,9 @@ async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.3,
     })),
   ]);
-}
+};
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  return await buildSitemap();
-}
+const sitemap = async (): Promise<MetadataRoute.Sitemap> =>
+  await buildSitemap();
+
+export default sitemap;

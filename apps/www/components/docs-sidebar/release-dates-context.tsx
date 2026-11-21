@@ -1,54 +1,39 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext } from "react";
 import type { ReactNode } from "react";
 
 import { isPageNew } from "@/lib/docs/is-recently-released";
+import { useIsClient } from "@/lib/use-is-client";
 
 const DocsReleaseDatesContext = createContext<Record<string, string>>({});
 
-export function DocsReleaseDatesProvider({
+export const DocsReleaseDatesProvider = ({
   releaseDatesByUrl,
   children,
 }: {
   releaseDatesByUrl: Record<string, string>;
   children: ReactNode;
-}) {
-  return (
-    <DocsReleaseDatesContext.Provider value={releaseDatesByUrl}>
-      {children}
-    </DocsReleaseDatesContext.Provider>
-  );
-}
+}) => (
+  <DocsReleaseDatesContext.Provider value={releaseDatesByUrl}>
+    {children}
+  </DocsReleaseDatesContext.Provider>
+);
 
 /** Evaluates after mount so SSR and hydration markup stay in sync. */
-export function useDocsPageNew(url?: string): boolean {
+export const useDocsPageNew = (url?: string): boolean => {
   const releaseDatesByUrl = useContext(DocsReleaseDatesContext);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   return mounted ? isPageNew(url, releaseDatesByUrl) : false;
-}
+};
 
-export function useCheckDocsPageNew(): (url?: string) => boolean {
+export const useCheckDocsPageNew = (): ((url?: string) => boolean) => {
   const releaseDatesByUrl = useContext(DocsReleaseDatesContext);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   return useCallback(
     (url?: string) => (mounted ? isPageNew(url, releaseDatesByUrl) : false),
     [mounted, releaseDatesByUrl]
   );
-}
+};

@@ -118,7 +118,7 @@ function ServiceHealthScreen({ services, window, onWindowChange, status = "ready
           <RadioGroup aria-label={t.window} className="flex items-center gap-1" onValueChange={(v) => onWindowChange(v as HealthWindow)} value={window}>
             {WINDOWS.map((w) => (
               <Radio.Root
-                className="cursor-pointer rounded-md border border-transparent px-2.5 py-1.5 font-mono text-muted-foreground text-xs outline-none hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:border-border data-checked:bg-background data-checked:text-foreground pointer-coarse:min-h-10"
+                className="cursor-pointer rounded-md border border-transparent px-2.5 py-1.5 font-mono text-muted-foreground text-xs outline-none hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:border-border data-checked:bg-background data-checked:text-foreground pointer-coarse:min-h-10"
                 key={w}
                 value={w}
               >
@@ -184,7 +184,7 @@ function ServiceHealthScreen({ services, window, onWindowChange, status = "ready
 
                           <dl className="grid grid-cols-3 gap-2 px-4 pt-4 sm:gap-3">
                             {metrics.map((m) => (
-                              <div className="rounded-md bg-foreground/[0.03] px-2 py-1.5" key={m.key}>
+                              <div className="rounded-md bg-foreground/3 px-2 py-1.5" key={m.key}>
                                 <dt className="truncate font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:tracking-[0.25em]">{m.label}</dt>
                                 <dd className={cn("mt-0.5 font-mono text-sm tabular-nums", TONE_TEXT[m.tone])}>{m.value}</dd>
                               </div>
@@ -205,7 +205,7 @@ function ServiceHealthScreen({ services, window, onWindowChange, status = "ready
                               <span>{t.slo}</span>
                               <span className="text-foreground tabular-nums">{format.number(s.sloBudget, { style: "percent" })}</span>
                             </div>
-                            <div aria-hidden className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-foreground/[0.06]">
+                            <div aria-hidden className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-foreground/6">
                               <div
                                 className={cn("h-full", s.sloBudget > 0.5 ? "bg-category-2" : s.sloBudget > 0.2 ? "bg-category-3" : "bg-category-4")}
                                 style={{ width: `${s.sloBudget * 100}%` }}

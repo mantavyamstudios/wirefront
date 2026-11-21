@@ -1,7 +1,9 @@
 const NEW_RELEASE_WINDOW_DAYS = 7;
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-export function isRecentlyReleased(date: Date | string | undefined): boolean {
+export const isRecentlyReleased = (
+  date: Date | string | undefined
+): boolean => {
   if (!date) {
     return false;
   }
@@ -13,14 +15,14 @@ export function isRecentlyReleased(date: Date | string | undefined): boolean {
 
   const diffDays = (Date.now() - releaseMs) / MS_PER_DAY;
   return diffDays <= NEW_RELEASE_WINDOW_DAYS;
-}
+};
 
-export function isPageNew(
+export const isPageNew = (
   url: string | undefined,
   releaseDatesByUrl: Record<string, string>
-): boolean {
+): boolean => {
   if (!url) {
     return false;
   }
   return isRecentlyReleased(releaseDatesByUrl[url]);
-}
+};

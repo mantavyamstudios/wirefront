@@ -56,7 +56,7 @@ const ICONS: Record<AuditEvent["kind"], ReactNode> = {
   other: <ActivityIcon className="size-3.5" />,
 };
 const SEV_RING: Record<AuditEvent["severity"], string> = {
-  info: "bg-foreground/[0.06] text-foreground",
+  info: "bg-foreground/6 text-foreground",
   warn: "bg-warning/15 text-warning-foreground",
   danger: "bg-destructive/15 text-destructive-foreground",
 };
@@ -109,10 +109,10 @@ function AuditTrailScreen({ data, status = "ready", error, onRetry, note, onView
             <p className="py-12 text-center text-muted-foreground text-sm">{t.empty}</p>
           ) : (
             <ol className="relative">
-              <span aria-hidden className="absolute start-[1.0625rem] top-2 bottom-2 w-px bg-border/50" />
+              <span aria-hidden className="absolute inset-s-4.25 top-2 bottom-2 w-px bg-border/50" />
               {events.map((e) => (
                 <li className={cn("relative grid items-start gap-3 py-3", onViewEvent ? "grid-cols-[34px_minmax(0,1fr)_auto]" : "grid-cols-[34px_minmax(0,1fr)]")} key={e.id}>
-                  <span aria-hidden className={cn("z-10 grid size-[34px] place-items-center rounded-full ring-4 ring-background", SEV_RING[e.severity])}>
+                  <span aria-hidden className={cn("z-10 grid size-8.5 place-items-center rounded-full ring-4 ring-background", SEV_RING[e.severity])}>
                     {ICONS[e.kind]}
                   </span>
                   <div className="min-w-0 pt-1.5">
@@ -123,21 +123,21 @@ function AuditTrailScreen({ data, status = "ready", error, onRetry, note, onView
                       </Avatar>
                       <span className="font-medium">{e.actor}</span>
                       <span className="text-muted-foreground">{e.action}</span>
-                      {e.target ? <span className="min-w-0 break-words text-foreground/85">{e.target}</span> : null}
+                      {e.target ? <span className="min-w-0 wrap-break-word text-foreground/85">{e.target}</span> : null}
                     </div>
                     {e.diff ? (
                       <details className="group mt-2">
-                        <summary className="inline-flex min-h-6 cursor-pointer list-none items-center gap-1 rounded bg-foreground/[0.04] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:bg-foreground/[0.06]">
+                        <summary className="inline-flex min-h-6 cursor-pointer list-none items-center gap-1 rounded bg-foreground/4 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:bg-foreground/6">
                           <ChevronDownIcon aria-hidden className="size-3 -rotate-90 transition-transform group-open:rotate-0" />
                           {t.diff}
                         </summary>
                         <div className="mt-2 overflow-hidden rounded-md border border-border/60 font-mono text-[11px] [&>div]:break-all">
-                          <div className="border-category-4/20 border-b bg-category-4/[0.06] px-2 py-1 text-category-4-foreground">
+                          <div className="border-category-4/20 border-b bg-category-4/6 px-2 py-1 text-category-4-foreground">
                             <span className="sr-only">{t.before}</span>
                             <span aria-hidden>- </span>
                             {e.diff.before}
                           </div>
-                          <div className="bg-category-2/[0.06] px-2 py-1 text-category-2-foreground">
+                          <div className="bg-category-2/6 px-2 py-1 text-category-2-foreground">
                             <span className="sr-only">{t.after}</span>
                             <span aria-hidden>+ </span>
                             {e.diff.after}
@@ -155,7 +155,7 @@ function AuditTrailScreen({ data, status = "ready", error, onRetry, note, onView
                   {onViewEvent ? (
                     // Text label on wider screens, a chevron with a 40px hit area on phones.
                     <button
-                      className="-me-2 grid min-h-10 min-w-10 place-items-center self-center rounded-md font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring sm:me-0 sm:min-h-8 sm:px-2"
+                      className="-me-2 grid min-h-10 min-w-10 place-items-center self-center rounded-md font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring sm:me-0 sm:min-h-8 sm:px-2"
                       onClick={() => onViewEvent(e.id)}
                       type="button"
                     >

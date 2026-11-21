@@ -21,10 +21,10 @@ interface BlocksMenuMorphButtonProps {
   isExpanded?: boolean;
 }
 
-function BlocksMenuMorphButton({
+const BlocksMenuMorphButton = ({
   className,
   isExpanded = false,
-}: BlocksMenuMorphButtonProps) {
+}: BlocksMenuMorphButtonProps) => {
   const { open, toggle } = useBlocksMenu();
   const shouldReduceMotion = useReducedMotion();
 
@@ -80,9 +80,9 @@ function BlocksMenuMorphButton({
       </button>
     </div>
   );
-}
+};
 
-function BlocksMenuSoloButton({ className }: { className?: string }) {
+const BlocksMenuSoloButton = ({ className }: { className?: string }) => {
   const { open, toggle } = useBlocksMenu();
 
   return (
@@ -101,15 +101,15 @@ function BlocksMenuSoloButton({ className }: { className?: string }) {
       <SidebarToggleIcon className="size-5" isOpen={open} />
     </button>
   );
-}
+};
 
-function BlocksMenuStandardButton({
+const BlocksMenuStandardButton = ({
   className,
   variant,
 }: {
   className?: string;
   variant: "chip" | "dock" | "plain";
-}) {
+}) => {
   const { open, toggle } = useBlocksMenu();
 
   return (
@@ -137,9 +137,9 @@ function BlocksMenuStandardButton({
       />
     </button>
   );
-}
+};
 
-export function ComponentPageBlocksMenuButton({
+export const ComponentPageBlocksMenuButton = ({
   variant = "chip",
   isExpanded = false,
   className,
@@ -148,7 +148,7 @@ export function ComponentPageBlocksMenuButton({
   variant?: "chip" | "solo" | "dock" | "plain" | "morph";
   isExpanded?: boolean;
   className?: string;
-}) {
+}) => {
   if (variant === "morph") {
     return (
       <BlocksMenuMorphButton className={className} isExpanded={isExpanded} />
@@ -160,4 +160,4 @@ export function ComponentPageBlocksMenuButton({
   }
 
   return <BlocksMenuStandardButton className={className} variant={variant} />;
-}
+};

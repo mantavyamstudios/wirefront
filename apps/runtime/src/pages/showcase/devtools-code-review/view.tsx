@@ -302,7 +302,7 @@ function ThreadView({ thread, people, me, onReply, onResolve, t }: { thread: Rev
                   {fmt.relative(c.createdAt)}
                 </time>
               </div>
-              <p className="mt-1 text-pretty text-[13px] text-foreground/90 leading-5 [overflow-wrap:anywhere]">
+              <p className="mt-1 text-pretty text-[13px] text-foreground/90 leading-5 wrap-anywhere">
                 <CommentBody body={c.body} />
               </p>
             </div>
@@ -443,7 +443,7 @@ function ReviewPanel({ openThreads, pending, onClose, onSubmit, t }: { openThrea
     { id: "changes", label: t.verdictChanges, note: t.verdictChangesNote },
   ];
   return (
-    <motion.div animate={{ opacity: 1, scale: 1, y: 0 }} aria-label={t.finish} className="absolute end-3 start-3 top-16 z-40 origin-top-right rounded-2xl border bg-popover p-3 shadow-lg/10 @xl:start-auto @xl:w-[380px]" exit={{ opacity: 0, scale: 0.97, y: -4 }} initial={{ opacity: 0, scale: 0.97, y: -4 }} role="dialog" transition={{ duration: 0.16, ease }}>
+    <motion.div animate={{ opacity: 1, scale: 1, y: 0 }} aria-label={t.finish} className="absolute inset-e-3 inset-s-3 top-16 z-40 origin-top-right rounded-2xl border bg-popover p-3 shadow-lg/10 @xl:inset-s-auto @xl:w-95" exit={{ opacity: 0, scale: 0.97, y: -4 }} initial={{ opacity: 0, scale: 0.97, y: -4 }} role="dialog" transition={{ duration: 0.16, ease }}>
       <div className="flex items-center justify-between">
         <h2 className="font-medium">{t.finish}</h2>
         <Button aria-label={t.close} onClick={onClose} size="icon-xs" variant="ghost">
@@ -697,8 +697,8 @@ function CodeReviewScreen({ pr, people, files, threads: initialThreads, me, view
   const lineNo = "w-10 shrink-0 select-none px-1.5 text-end text-muted-foreground tabular-nums";
   const gutterButton = (file: string, line: number, side: "new" | "old") =>
     onComment ? (
-      <button aria-label={interpolate(t.commentOnLine, { line })} className="group/gutter absolute inset-y-0 start-0 z-10 w-10 cursor-pointer outline-none" onClick={() => setComposer({ file, line, side })} type="button">
-        <span className="absolute start-1 top-0.5 flex size-4 items-center justify-center rounded bg-info text-white opacity-0 transition-[opacity,scale] duration-100 ease-out group-hover/line:opacity-100 group-focus-visible/gutter:opacity-100 group-focus-visible/gutter:ring-2 group-focus-visible/gutter:ring-ring group-active/gutter:scale-90">
+      <button aria-label={interpolate(t.commentOnLine, { line })} className="group/gutter absolute inset-y-0 inset-s-0 z-10 w-10 cursor-pointer outline-none" onClick={() => setComposer({ file, line, side })} type="button">
+        <span className="absolute inset-s-1 top-0.5 flex size-4 items-center justify-center rounded bg-info text-white opacity-0 transition-[opacity,scale] duration-100 ease-out group-hover/line:opacity-100 group-focus-visible/gutter:opacity-100 group-focus-visible/gutter:ring-2 group-focus-visible/gutter:ring-ring group-active/gutter:scale-90">
           <PlusIcon aria-hidden className="size-3" strokeWidth={3} />
         </span>
       </button>
@@ -730,7 +730,7 @@ function CodeReviewScreen({ pr, people, files, threads: initialThreads, me, view
 
   const treeBody = (
     <>
-      <div className="w-64 min-w-64 flex-1 overflow-y-auto p-2 [scrollbar-width:thin]">
+      <div className="w-64 min-w-64 flex-1 overflow-y-auto p-2 scrollbar-thin">
         <ul className="flex flex-col gap-0.5">{renderTree(tree)}</ul>
       </div>
       <div aria-hidden className="flex w-64 flex-col gap-1.5 border-t px-3 py-2.5 text-muted-foreground text-xs">
@@ -853,7 +853,7 @@ function CodeReviewScreen({ pr, people, files, threads: initialThreads, me, view
         <div className="relative flex min-h-0 flex-1">
           {narrow ? (
             <Sheet onOpenChange={setTreeOpen} open={treeOpen}>
-              <SheetContent className="w-[272px] max-w-[85%] gap-0 bg-sidebar p-0" showCloseButton={false} side="left">
+              <SheetContent className="w-68 max-w-[85%] gap-0 bg-sidebar p-0" showCloseButton={false} side="left">
                 <SheetTitle className="sr-only">{t.changedFiles}</SheetTitle>
                 {treeBody}
               </SheetContent>
@@ -868,7 +868,7 @@ function CodeReviewScreen({ pr, people, files, threads: initialThreads, me, view
             </AnimatePresence>
           )}
 
-          <div className="min-w-0 flex-1 overflow-y-auto bg-muted/30 [scrollbar-width:thin]" onScroll={onScroll} ref={scrollRef}>
+          <div className="min-w-0 flex-1 overflow-y-auto bg-muted/30 scrollbar-thin" onScroll={onScroll} ref={scrollRef}>
             <div className="flex flex-col gap-3 p-3 @3xl:p-4">
               {parsed.map(({ file, hunks, adds, dels, pairs: pairMap }) => {
                 const isViewed = viewed.has(file.path);
@@ -931,7 +931,7 @@ function CodeReviewScreen({ pr, people, files, threads: initialThreads, me, view
                                                 <>
                                                   <span className={cn(lineNo, numTone(row.left.kind))}>{row.left.old}</span>
                                                   <span className="w-4 shrink-0 select-none text-center text-muted-foreground">{row.left.kind === "del" ? "−" : ""}</span>
-                                                  <span className="min-w-0 flex-1 whitespace-pre-wrap pe-3 [overflow-wrap:anywhere]">
+                                                  <span className="min-w-0 flex-1 whitespace-pre-wrap pe-3 wrap-anywhere">
                                                     <CodeText line={row.left} md={md} partner={pairMap.get(row.left)} />
                                                   </span>
                                                   {row.left.kind === "del" && row.left.old ? gutterButton(file.path, row.left.old, "old") : null}
@@ -943,7 +943,7 @@ function CodeReviewScreen({ pr, people, files, threads: initialThreads, me, view
                                                 <>
                                                   <span className={cn(lineNo, numTone(row.right.kind === "ctx" ? undefined : row.right.kind))}>{row.right.new}</span>
                                                   <span className="w-4 shrink-0 select-none text-center text-muted-foreground">{row.right.kind === "add" ? "+" : ""}</span>
-                                                  <span className="min-w-0 flex-1 whitespace-pre-wrap pe-3 [overflow-wrap:anywhere]">
+                                                  <span className="min-w-0 flex-1 whitespace-pre-wrap pe-3 wrap-anywhere">
                                                     <CodeText line={row.right} md={md} partner={pairMap.get(row.right)} />
                                                   </span>
                                                   {row.right.new ? gutterButton(file.path, row.right.new, "new") : null}
@@ -963,7 +963,7 @@ function CodeReviewScreen({ pr, people, files, threads: initialThreads, me, view
                                           <span className={cn(lineNo, "hidden @md:block", numTone(l.kind))}>{l.new ?? ""}</span>
                                           <span className={cn(lineNo, "@md:hidden", numTone(l.kind))}>{l.new ?? l.old}</span>
                                           <span className="w-4 shrink-0 select-none text-center text-muted-foreground">{l.kind === "add" ? "+" : l.kind === "del" ? "−" : ""}</span>
-                                          <span className="min-w-0 flex-1 whitespace-pre-wrap pe-3 [overflow-wrap:anywhere]">
+                                          <span className="min-w-0 flex-1 whitespace-pre-wrap pe-3 wrap-anywhere">
                                             <CodeText line={l} md={md} partner={pairMap.get(l)} />
                                           </span>
                                           {(l.new ?? l.old) !== undefined ? gutterButton(file.path, (l.new ?? l.old) as number, l.new ? "new" : "old") : null}

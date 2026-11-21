@@ -20,7 +20,7 @@ export function ThreadsSidePanelShowcasePage() {
     <WirefrontProvider locale="en-US" now={demoNow} timeZone="UTC">
       <div className="relative min-h-svh bg-background text-foreground">
         <div className="grid min-h-svh grid-cols-1 md:grid-cols-[220px_1fr]">
-          <aside aria-hidden className="space-y-2 border-border/60 border-e bg-foreground/[0.02] p-4 max-md:hidden">
+          <aside aria-hidden className="space-y-2 border-border/60 border-e bg-foreground/2 p-4 max-md:hidden">
             <div className="h-3 w-28 rounded bg-foreground/15" />
             <div className="mt-3 h-2 w-32 rounded bg-foreground/10" />
           </aside>
@@ -34,7 +34,7 @@ export function ThreadsSidePanelShowcasePage() {
             </Button>
             <div aria-hidden className="mt-8 space-y-3">
               {ROWS.map((k) => (
-                <div className="h-16 rounded-md border border-border/50 bg-foreground/[0.02]" key={k} />
+                <div className="h-16 rounded-md border border-border/50 bg-foreground/2" key={k} />
               ))}
             </div>
           </main>

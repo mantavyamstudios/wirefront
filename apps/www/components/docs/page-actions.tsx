@@ -24,35 +24,33 @@ import { CopyIcon } from "@/registry/icons/copy";
 
 const cache = new Map<string, string>();
 
-export function LLMCopyButton({
+const fetchAndCopy = async (markdownUrl: string) => {
+  const response = await fetch(markdownUrl);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch markdown (${response.status})`);
+  }
+  const content = await response.text();
+  cache.set(markdownUrl, content);
+  await navigator.clipboard.writeText(content);
+};
+
+export const LLMCopyButton = ({
   /**
    * A URL to fetch the raw Markdown/MDX content of page
    */
   markdownUrl,
 }: {
   markdownUrl: string;
-}) {
-  const [isLoading, setLoading] = useState(false);
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [checked, onClick] = useCopyButton(async () => {
     const cached = cache.get(markdownUrl);
     if (cached) {
       return navigator.clipboard.writeText(cached);
     }
 
-    setLoading(true);
-
-    try {
-      const response = await fetch(markdownUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch markdown (${response.status})`);
-      }
-
-      const content = await response.text();
-      cache.set(markdownUrl, content);
-      await navigator.clipboard.writeText(content);
-    } finally {
-      setLoading(false);
-    }
+    setIsLoading(true);
+    await fetchAndCopy(markdownUrl).finally(() => setIsLoading(false));
   });
 
   return (
@@ -73,13 +71,13 @@ export function LLMCopyButton({
       Copy Markdown
     </button>
   );
-}
+};
 
 const optionVariants = cva(
   "hover:bg-fd-accent hover:text-fd-accent-foreground inline-flex items-center gap-2 rounded-lg p-2 text-sm transition-colors duration-150 ease-out [&_svg]:size-4"
 );
 
-export function ViewOptions({
+export const ViewOptions = ({
   markdownUrl,
   githubUrl,
 }: {
@@ -92,7 +90,7 @@ export function ViewOptions({
    * Source file URL on GitHub
    */
   githubUrl?: string;
-}) {
+}) => {
   const items = useMemo(() => {
     const fullMarkdownUrl = `${SITE_URL}${markdownUrl}`;
     const q = `Read ${fullMarkdownUrl}, I want to ask questions about it.`;
@@ -263,7 +261,7 @@ export function ViewOptions({
         Open
         <ChevronDown className="text-fd-muted-foreground size-3.5" />
       </PopoverTrigger>
-      <PopoverContent className="flex origin-[var(--radix-popover-content-transform-origin)] flex-col overflow-auto">
+      <PopoverContent className="flex origin-(--radix-popover-content-transform-origin) flex-col overflow-auto">
         {items.map((item) => (
           <a
             className={cn(optionVariants())}
@@ -280,7 +278,7 @@ export function ViewOptions({
       </PopoverContent>
     </Popover>
   );
-}
+};
 
 const layoutTransition = {
   type: "spring",
@@ -288,7 +286,7 @@ const layoutTransition = {
   duration: 0.3,
 } as const;
 
-export function PageActionButtons({
+export const PageActionButtons = ({
   markdownUrl,
   githubUrl,
   url,
@@ -296,11 +294,10 @@ export function PageActionButtons({
   markdownUrl: string;
   githubUrl?: string;
   url: string;
-}): JSX.Element {
+}): JSX.Element => {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    setIsReady(false);
     const raf = requestAnimationFrame(() => {
       setIsReady(true);
     });
@@ -333,7 +330,7 @@ export function PageActionButtons({
       </motion.div>
     </LayoutGroup>
   );
-}
+};
 
 export {
   LLMCopyButton as MarkdownCopyButton,

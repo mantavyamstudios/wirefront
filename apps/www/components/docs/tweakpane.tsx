@@ -5,7 +5,7 @@ import { Button } from "@workspace/ui/components/ui/button";
 import { cn } from "@workspace/ui/lib/utils";
 import { SlidersHorizontal, Undo2 } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import type { ReactNode } from "react";
 
 import {
@@ -132,9 +132,9 @@ const renderNumber = (
   );
 };
 
-const HEX_COLOR_REGEX = /^#(?:[\da-fA-F]{3,4}|[\da-fA-F]{6}|[\da-fA-F]{8})$/;
+const HEX_COLOR_REGEX = /^#(?:[\da-fA-F]{3,4}|[\da-fA-F]{6}|[\da-fA-F]{8})$/u;
 const FUNCTIONAL_COLOR_REGEX =
-  /^(?:oklch|rgb|rgba|hsl|hsla|color|lab|lch|oklab|hwb)\(/i;
+  /^(?:oklch|rgb|rgba|hsl|hsla|color|lab|lch|oklab|hwb)\(/iu;
 
 const isColorValue = (value: string): boolean => {
   const trimmed = value.trim();
@@ -250,7 +250,7 @@ const renderNestedBinds = (
   const groups = Object.entries(binds);
 
   if (groups.length === 1) {
-    const [groupKey, groupBind] = groups[0];
+    const [[groupKey, groupBind]] = groups;
     return renderFlatBinds(
       groupBind,
       (updatedGroupBind) =>
@@ -300,19 +300,16 @@ const Tweakpane = (props: TweakpaneProps) => {
     binds ?? initialBinds ?? ({} as Binds)
   );
 
+  // Controlled when `binds` is given; the local copy is used otherwise.
+  const shownBinds = "binds" in props ? props.binds : localBinds;
+
   const handleBindsChange = useCallback(
-    (binds: Binds) => {
-      setLocalBinds(binds);
-      onBindsChange?.(binds);
+    (nextBinds: Binds) => {
+      setLocalBinds(nextBinds);
+      onBindsChange?.(nextBinds);
     },
     [onBindsChange]
   );
-
-  useEffect(() => {
-    if ("binds" in props) {
-      setLocalBinds(props.binds);
-    }
-  }, [props]);
 
   const canReset = Boolean(onReset || initialBinds);
 
@@ -355,7 +352,7 @@ const Tweakpane = (props: TweakpaneProps) => {
       </div>
 
       <div className="w-full">
-        {renderBinds(localBinds, handleBindsChange, columns)}
+        {renderBinds(shownBinds, handleBindsChange, columns)}
       </div>
     </div>
   );

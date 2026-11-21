@@ -361,7 +361,7 @@ function ToolsTab({ calls, step }: { calls: WorkspaceToolCall[]; step: number })
         </div>
       </div>
       <ol className="relative flex flex-col">
-        <span aria-hidden className="absolute top-5 bottom-5 left-[19px] w-px bg-border" />
+        <span aria-hidden className="absolute top-5 bottom-5 left-4.75 w-px bg-border" />
         {calls.map((c, i) => {
           const state = i < done ? "done" : i === done ? "running" : "queued";
           const expanded = open === c.id && state === "done";
@@ -462,7 +462,7 @@ function BrowserTab({ reading }: { reading: boolean }) {
           </span>
         </div>
       </div>
-      <div className="relative min-h-0 flex-1 overflow-y-auto rounded-xl border bg-background [scrollbar-width:thin]">
+      <div className="relative min-h-0 flex-1 overflow-y-auto rounded-xl border bg-background scrollbar-thin">
         <div className="flex items-center gap-2 border-b px-4 py-2.5">
           <span className="size-3.5 rounded bg-orange-500" />
           <span className="font-semibold text-xs">Quillpad</span>
@@ -604,7 +604,7 @@ function WorkPanel({
   return (
     <Tabs className="h-full min-h-0 gap-0" onValueChange={(v) => setTab(v as string)} value={tab}>
       <div className="flex h-13 shrink-0 items-center gap-2 border-b px-3">
-        <TabsList className="h-7 min-w-0 overflow-x-auto text-muted-foreground [scrollbar-width:none]">
+        <TabsList className="h-7 min-w-0 overflow-x-auto text-muted-foreground scrollbar-none">
           <TabsTrigger className="text-foreground/70" value="tools">
             <WrenchIcon />
             Tools

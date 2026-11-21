@@ -77,20 +77,20 @@ function Rail({ people, me, t, onToggleDnd }: { people: PresencePerson[]; me?: P
         if (!group.length) return null;
         return (
           <details className="group" key={presence} open={presence !== "offline"}>
-            <summary className="flex min-h-9 cursor-pointer list-none items-center gap-2 px-4 py-1.5 hover:bg-foreground/[0.02]">
+            <summary className="flex min-h-9 cursor-pointer list-none items-center gap-2 px-4 py-1.5 hover:bg-foreground/2">
               <ChevronDownIcon aria-hidden className="size-3 -rotate-90 text-muted-foreground transition-transform group-open:rotate-0" />
               <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{t[presence]}</span>
               <span className="ms-auto font-mono text-[10px] text-muted-foreground">{group.length}</span>
             </summary>
             <ul className="border-border/40 border-t">
               {group.map((p) => (
-                <li className="flex items-center gap-2.5 px-4 py-2 transition-colors hover:bg-foreground/[0.02]" key={p.id}>
+                <li className="flex items-center gap-2.5 px-4 py-2 transition-colors hover:bg-foreground/2" key={p.id}>
                   <div aria-hidden className="relative shrink-0">
                     <Avatar className={cn("size-7", p.presence === "offline" && "opacity-60")}>
                       {p.avatarUrl ? <AvatarImage alt="" src={p.avatarUrl} /> : null}
                       <AvatarFallback className="text-[10px]">{initials(p.name)}</AvatarFallback>
                     </Avatar>
-                    <span className={cn("absolute end-0 bottom-0 size-2.5 rounded-full border-2 border-background", DOT[p.presence])} />
+                    <span className={cn("absolute inset-e-0 bottom-0 size-2.5 rounded-full border-2 border-background", DOT[p.presence])} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm">
@@ -128,7 +128,7 @@ function Rail({ people, me, t, onToggleDnd }: { people: PresencePerson[]; me?: P
               <button
                 aria-label={me.presence === "dnd" ? t.clearDnd : t.setDnd}
                 aria-pressed={me.presence === "dnd"}
-                className="grid size-8 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring aria-pressed:text-category-4-foreground pointer-coarse:size-10"
+                className="grid size-8 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring aria-pressed:text-category-4-foreground pointer-coarse:size-10"
                 onClick={onToggleDnd}
                 type="button"
               >
@@ -189,7 +189,7 @@ function PresenceRailScreen({ workspace, people, meId, status = "ready", error, 
               </p>
             ) : null}
             <Sheet>
-              <SheetTrigger className="mt-4 flex w-full items-center gap-3 rounded-lg border border-border/60 bg-background px-3 py-2.5 text-start outline-none hover:bg-foreground/[0.02] focus-visible:ring-2 focus-visible:ring-ring md:hidden">
+              <SheetTrigger className="mt-4 flex w-full items-center gap-3 rounded-lg border border-border/60 bg-background px-3 py-2.5 text-start outline-none hover:bg-foreground/2 focus-visible:ring-2 focus-visible:ring-ring md:hidden">
                 <span aria-hidden className="flex -space-x-2">
                   {online.slice(0, 4).map((p) => (
                     <Avatar className="size-8 border-2 border-background" key={p.id}>

@@ -176,7 +176,7 @@ function SecurityOverviewScreen({
               aria-labelledby="security-2fa"
               className={cn(
                 "mt-8 overflow-hidden rounded-xl border",
-                ready.twoFactor.enabled ? "border-category-2/30 bg-gradient-to-br from-category-2/[0.07] to-category-2/[0.02]" : "border-category-3/30 bg-category-3/[0.04]",
+                ready.twoFactor.enabled ? "border-category-2/30 bg-linear-to-br from-category-2/[0.07] to-category-2/2" : "border-category-3/30 bg-category-3/4",
               )}
             >
               <div className="flex flex-wrap items-start gap-3 p-4 sm:flex-nowrap sm:gap-4 sm:p-5">
@@ -211,7 +211,7 @@ function SecurityOverviewScreen({
                   ) : null}
                 </div>
                 {twoFactorHref ? (
-                  <WirefrontLink className={cn(buttonVariants({ size: "sm", variant: "ghost" }), "max-sm:ms-[3.25rem]")} href={twoFactorHref}>
+                  <WirefrontLink className={cn(buttonVariants({ size: "sm", variant: "ghost" }), "max-sm:ms-13")} href={twoFactorHref}>
                     {ready.twoFactor.enabled ? t.manage : t.setUp}
                   </WirefrontLink>
                 ) : null}
@@ -243,7 +243,7 @@ function SecurityOverviewScreen({
                 <ul>
                   {ready.passkeys.map((p) => (
                     <li className="flex items-center gap-3 border-border/40 border-b px-4 py-3.5 last:border-b-0 sm:gap-4 sm:px-5" key={p.id}>
-                      <div aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06] text-muted-foreground">
+                      <div aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/6 text-muted-foreground">
                         {KIND_ICON[p.kind]}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -293,13 +293,13 @@ function SecurityOverviewScreen({
                   <li
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-3 sm:gap-4",
-                      s.current ? "bg-category-2/[0.06] ring-1 ring-category-2/25" : "transition-colors hover:bg-foreground/[0.03]",
+                      s.current ? "bg-category-2/6 ring-1 ring-category-2/25" : "transition-colors hover:bg-foreground/3",
                     )}
                     key={s.id}
                   >
                     <div
                       aria-hidden
-                      className={cn("flex size-9 shrink-0 items-center justify-center rounded-md", s.current ? "bg-category-2/15 text-category-2-foreground" : "bg-foreground/[0.06] text-muted-foreground")}
+                      className={cn("flex size-9 shrink-0 items-center justify-center rounded-md", s.current ? "bg-category-2/15 text-category-2-foreground" : "bg-foreground/6 text-muted-foreground")}
                     >
                       {KIND_ICON[s.kind]}
                     </div>
@@ -325,11 +325,11 @@ function SecurityOverviewScreen({
                       <span className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{format.relative(s.lastActiveAt)}</span>
                     </div>
                     {s.current ? (
-                      <span className="shrink-0 text-end font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:w-[68px]">{t.current}</span>
+                      <span className="shrink-0 text-end font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:w-17">{t.current}</span>
                     ) : onRevokeSession ? (
                       <button
                         aria-label={interpolate(t.revokeIn, { location: s.location })}
-                        className="inline-flex shrink-0 items-center justify-center gap-1 rounded-md border border-border/60 bg-background/40 px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none transition-colors hover:border-destructive/40 hover:text-destructive-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 sm:w-[68px] pointer-coarse:min-h-10"
+                        className="inline-flex shrink-0 items-center justify-center gap-1 rounded-md border border-border/60 bg-background/40 px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none transition-colors hover:border-destructive/40 hover:text-destructive-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 sm:w-17 pointer-coarse:min-h-10"
                         disabled={revoke.isPending(s.id)}
                         onClick={() => void revoke.run(s.id, s.id)}
                         type="button"
@@ -410,7 +410,7 @@ function SecurityOverviewScreen({
                 </div>
 
                 {onRegenerateCodes ? (
-                  <div className="mt-5 flex flex-col gap-3 rounded-lg border border-category-3/30 bg-category-3/[0.06] p-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mt-5 flex flex-col gap-3 rounded-lg border border-category-3/30 bg-category-3/6 p-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-start gap-2.5">
                       <AlertTriangleIcon aria-hidden className="mt-0.5 size-3.5 shrink-0 text-category-3-foreground" />
                       <p className="text-category-3-foreground text-xs leading-relaxed">{t.regenerateWarning}</p>

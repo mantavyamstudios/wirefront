@@ -88,10 +88,10 @@ function ProductCardsScreen({ products, total, collection, onAddToBag, onWishlis
             return (
               <li key={p.id}>
                 <Card className="h-full overflow-hidden">
-                  <div className="relative aspect-[4/3] w-full bg-muted" style={p.imageUrl ? undefined : { background: `${COVERS[i % COVERS.length]}, var(--muted)` }}>
+                  <div className="relative aspect-4/3 w-full bg-muted" style={p.imageUrl ? undefined : { background: `${COVERS[i % COVERS.length]}, var(--muted)` }}>
                     {p.imageUrl ? <img alt="" className="size-full object-cover" src={p.imageUrl} /> : null}
                     {p.tag ? (
-                      <Badge className="absolute start-3 top-3 font-mono text-[10px] uppercase tracking-wider" variant="secondary">
+                      <Badge className="absolute inset-s-3 top-3 font-mono text-[10px] uppercase tracking-wider" variant="secondary">
                         {t[p.tag]}
                       </Badge>
                     ) : null}
@@ -99,7 +99,7 @@ function ProductCardsScreen({ products, total, collection, onAddToBag, onWishlis
                       <Button
                         aria-label={interpolate(t.wishlist, { name: p.name })}
                         aria-pressed={isWished}
-                        className="absolute end-2 top-2 rounded-full bg-background/80 backdrop-blur"
+                        className="absolute inset-e-2 top-2 rounded-full bg-background/80 backdrop-blur"
                         disabled={wish.isPending(p.id)}
                         onClick={() => void wish.run({ productId: p.id, saved: !isWished }, p.id)}
                         size="icon-sm"
@@ -109,7 +109,7 @@ function ProductCardsScreen({ products, total, collection, onAddToBag, onWishlis
                       </Button>
                     ) : null}
                     {p.colors.length ? (
-                      <ul aria-label={interpolate(t.colors, { names: p.colors.map((c) => c.name).join(", ") })} className="absolute end-3 bottom-3 flex items-center gap-1">
+                      <ul aria-label={interpolate(t.colors, { names: p.colors.map((c) => c.name).join(", ") })} className="absolute inset-e-3 bottom-3 flex items-center gap-1">
                         {p.colors.map((c) => (
                           <li aria-hidden className="size-3.5 rounded-full border border-foreground/10 shadow-sm" key={c.name} style={{ background: c.swatch }} title={c.name} />
                         ))}

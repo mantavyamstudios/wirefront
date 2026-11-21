@@ -8,7 +8,11 @@ import { cache } from "react";
 
 import type { NeighborNavItem } from "@/components/docs/neighbor-nav-buttons";
 import type { ComponentGallerySection } from "@/lib/registry/component-gallery-sections";
-import type { ComponentGalleryItem, ComponentPageHeaderData, ComponentTocItem } from "@/lib/registry/types";
+import type {
+  ComponentGalleryItem,
+  ComponentPageHeaderData,
+  ComponentTocItem,
+} from "@/lib/registry/types";
 
 import { getScreenDoc, screenReferenceToc } from "./docs";
 import manifestJson from "./screens.manifest.json";
@@ -67,61 +71,82 @@ export interface ScreenDetail {
   toc: ComponentTocItem[];
 }
 
-export const screenHref = (group: string, kind: string, screen: string) => `/${group}/${kind}/${screen}`;
+export const screenHref = (group: string, kind: string, screen: string) =>
+  `/${group}/${kind}/${screen}`;
 
 /** The light preview captured by `bun run snapshot` (public/previews), when there is one. */
-function cardPreviewFor(kind: string, screen: string): ComponentGalleryItem["cardPreview"] {
+const cardPreviewFor = (
+  kind: string,
+  screen: string
+): ComponentGalleryItem["cardPreview"] => {
   const poster = `/previews/${kind}__${screen}--light.png`;
   if (!existsSync(path.join(process.cwd(), "public", poster))) {
     return undefined;
   }
   return { poster };
-}
+};
 
-function pageFor(group: string, kind: string, screen: string): ScreenDocPage {
+const pageFor = (
+  group: string,
+  kind: string,
+  screen: string
+): ScreenDocPage => {
   const page = screensSource.getPage([group, kind, screen]);
   if (!page) {
-    throw new Error(`Missing content/screens/${group}/${kind}/${screen}.mdx — run \`bun run screens:manifest\`.`);
+    throw new Error(
+      `Missing content/screens/${group}/${kind}/${screen}.mdx — run \`bun run screens:manifest\`.`
+    );
   }
   return page;
-}
+};
 
 /** Depth-2 headings, titled from fumadocs' plain-text `structuredData`. */
-function tocFor(page: ScreenDocPage): ComponentTocItem[] {
-  const structured = page.data.structuredData as { headings?: { content: string; id: string }[] } | undefined;
-  const headings = new Map((structured?.headings ?? []).map((heading) => [`#${heading.id}`, heading.content]));
+const tocFor = (page: ScreenDocPage): ComponentTocItem[] => {
+  const structured = page.data.structuredData as
+    | { headings?: { content: string; id: string }[] }
+    | undefined;
+  const headings = new Map(
+    (structured?.headings ?? []).map((heading) => [
+      `#${heading.id}`,
+      heading.content,
+    ])
+  );
   return (page.data.toc ?? [])
     .filter((item) => item.depth === 2)
     .map((item) => ({
       depth: item.depth,
       url: item.url,
-      title: headings.get(item.url) ?? (typeof item.title === "string" ? item.title : item.url.slice(1)),
+      title:
+        headings.get(item.url) ??
+        (typeof item.title === "string" ? item.title : item.url.slice(1)),
     }));
-}
+};
 
 export const getScreenGroups = (): ManifestGroup[] => manifest.groups;
 
 export const getScreenTotals = () => manifest.totals;
 
-export function getScreenGroup(group: string): ManifestGroup | undefined {
-  return manifest.groups.find((g) => g.slug === group);
-}
+export const getScreenGroup = (group: string): ManifestGroup | undefined =>
+  manifest.groups.find((g) => g.slug === group);
 
-export function getScreenKind(group: string, kind: string): ManifestKind | undefined {
-  return getScreenGroup(group)?.kinds.find((k) => k.slug === kind);
-}
+export const getScreenKind = (
+  group: string,
+  kind: string
+): ManifestKind | undefined =>
+  getScreenGroup(group)?.kinds.find((k) => k.slug === kind);
 
 /** One gallery section per kind, in group order (optionally one group's kinds only). */
-export const getScreenGallerySections = cache((group?: string): ComponentGallerySection[] =>
-  manifest.groups
-    .filter((g) => !group || g.slug === group)
-    .flatMap((g) =>
-      g.kinds.map((k) => ({
-        id: k.slug,
-        title: k.title,
-        description: k.blurb,
-      })),
-    ),
+export const getScreenGallerySections = cache(
+  (group?: string): ComponentGallerySection[] =>
+    manifest.groups
+      .filter((g) => !group || g.slug === group)
+      .flatMap((g) =>
+        g.kinds.map((k) => ({
+          id: k.slug,
+          title: k.title,
+          description: k.blurb,
+        }))
+      )
 );
 
 export const getScreenGalleryItems = cache((): ComponentGalleryItem[] =>
@@ -135,16 +160,23 @@ export const getScreenGalleryItems = cache((): ComponentGalleryItem[] =>
         collection: k.title,
         category: k.slug,
         cardPreview: cardPreviewFor(k.slug, s.slug),
-      })),
-    ),
-  ),
+      }))
+    )
+  )
 );
 
 export const getScreenDetails = cache((): ScreenDetail[] => {
-  const ordered = manifest.groups.flatMap((g) => g.kinds.flatMap((k) => k.screens.map((s) => ({ g, k, s }))));
+  const ordered = manifest.groups.flatMap((g) =>
+    g.kinds.flatMap((k) => k.screens.map((s) => ({ g, k, s })))
+  );
   const nav = (index: number): NeighborNavItem | undefined => {
     const item = ordered[index];
-    return item ? { name: item.s.title, url: screenHref(item.g.slug, item.k.slug, item.s.slug) } : undefined;
+    return item
+      ? {
+          name: item.s.title,
+          url: screenHref(item.g.slug, item.k.slug, item.s.slug),
+        }
+      : undefined;
   };
 
   return ordered.map(({ g, k, s }, index) => {
@@ -165,7 +197,10 @@ export const getScreenDetails = cache((): ScreenDetail[] => {
         docsUrl: page.url,
       },
       githubPath: `apps/www/content/screens/${g.slug}/${k.slug}/${s.slug}.mdx`,
-      toc: [...tocFor(page), ...screenReferenceToc(getScreenDoc(s.registry), s.states)],
+      toc: [
+        ...tocFor(page),
+        ...screenReferenceToc(getScreenDoc(s.registry), s.states),
+      ],
       previous: nav(index - 1),
       next: nav(index + 1),
       files: s.files,
@@ -177,6 +212,8 @@ export const getScreenDetails = cache((): ScreenDetail[] => {
   });
 });
 
-export function getScreenPage(group: string, kind: string, screen: string): ScreenDocPage | undefined {
-  return screensSource.getPage([group, kind, screen]);
-}
+export const getScreenPage = (
+  group: string,
+  kind: string,
+  screen: string
+): ScreenDocPage | undefined => screensSource.getPage([group, kind, screen]);

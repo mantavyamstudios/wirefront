@@ -6,7 +6,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -15,16 +14,18 @@ const EFFECTS_STORAGE_KEY = "docs-shell-motion-effects";
 
 const EffectsContext = createContext<{ enabled: boolean; toggle: () => void }>({
   enabled: true,
-  toggle: () => {},
+  toggle: () => {
+    // Outside the provider there is nothing to update.
+  },
 });
 
-export function DocsShellEffectsProvider({
+export const DocsShellEffectsProvider = ({
   children,
   defaultEnabled = true,
 }: {
   children: React.ReactNode;
   defaultEnabled?: boolean;
-}) {
+}) => {
   const [enabled, setEnabled] = useState(() => {
     if (typeof window === "undefined") {
       return defaultEnabled;
@@ -45,11 +46,9 @@ export function DocsShellEffectsProvider({
   return (
     <EffectsContext.Provider value={value}>{children}</EffectsContext.Provider>
   );
-}
+};
 
-export function useDocsShellEffects() {
-  return useContext(EffectsContext);
-}
+export const useDocsShellEffects = () => useContext(EffectsContext);
 
 export interface DocsShellHoverRect {
   height: number;
@@ -66,17 +65,19 @@ const HoverContext = createContext<{
   hovered: null,
   hoverRect: null,
   containerRef: { current: null },
-  setHovered: () => {},
+  setHovered: () => {
+    // Outside the provider there is nothing to update.
+  },
 });
 
-export function DocsShellHoverProvider({
+export const DocsShellHoverProvider = ({
   children,
   containerRef,
 }: {
   children: React.ReactNode;
   containerRef: React.RefObject<HTMLDivElement | null>;
-}) {
-  const [hovered, setHoveredId] = useState<string | null>(null);
+}) => {
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hoverRect, setHoverRect] = useState<DocsShellHoverRect | null>(null);
 
   const setHovered = useCallback(
@@ -87,25 +88,19 @@ export function DocsShellHoverProvider({
     []
   );
 
-  useEffect(() => {
-    setHovered(null);
-  }, [setHovered]);
-
   const value = useMemo(
-    () => ({ hovered, hoverRect, containerRef, setHovered }),
-    [hovered, hoverRect, containerRef, setHovered]
+    () => ({ hovered: hoveredId, hoverRect, containerRef, setHovered }),
+    [hoveredId, hoverRect, containerRef, setHovered]
   );
 
   return (
     <HoverContext.Provider value={value}>{children}</HoverContext.Provider>
   );
-}
+};
 
-export function useDocsShellHover() {
-  return useContext(HoverContext);
-}
+export const useDocsShellHover = () => useContext(HoverContext);
 
-export function DocsShellHoverHighlight() {
+export const DocsShellHoverHighlight = () => {
   const { hoverRect, hovered } = useDocsShellHover();
   const { enabled } = useDocsShellEffects();
 
@@ -129,4 +124,4 @@ export function DocsShellHoverHighlight() {
       )}
     </AnimatePresence>
   );
-}
+};

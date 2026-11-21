@@ -41,7 +41,7 @@ function Hero() {
         <ul className="mt-8 flex flex-col gap-4">
           {FEATURES.map((f) => (
             <li key={f.title} className="flex items-start gap-3">
-              <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border border-border bg-foreground/[0.04]">
+              <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border border-border bg-foreground/4">
                 <CheckIcon className="size-3 text-foreground/70" />
               </span>
               <div>
@@ -90,7 +90,7 @@ function DashboardMock() {
         {tiles.map((t) => (
           <div
             key={t.label}
-            className="rounded-lg border border-border/70 bg-foreground/[0.02] px-2 py-2"
+            className="rounded-lg border border-border/70 bg-foreground/2 px-2 py-2"
           >
             <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
               {t.label}
@@ -104,7 +104,7 @@ function DashboardMock() {
           </div>
         ))}
       </div>
-      <div className="mt-2 rounded-lg border border-border/70 bg-foreground/[0.02] p-2">
+      <div className="mt-2 rounded-lg border border-border/70 bg-foreground/2 p-2">
         <svg
           viewBox="0 0 200 60"
           aria-hidden

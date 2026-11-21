@@ -108,7 +108,7 @@ const MODE_ICON: Record<Mode, ReactNode> = {
 };
 const MODE_PREVIEW: Record<Mode, "light" | "dark" | "split"> = { light: "light", dark: "dark", system: "split" };
 
-const card = "relative cursor-pointer rounded-xl border outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/[0.04] border-border/60 bg-background/40 hover:border-border data-disabled:cursor-default";
+const card = "relative cursor-pointer rounded-xl border outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/4 border-border/60 bg-background/40 hover:border-border data-disabled:cursor-default";
 
 // Reading matchMedia during render made server and client HTML differ.
 // useSyncExternalStore hydrates with the server snapshot, then switches to
@@ -216,7 +216,7 @@ function AppearanceSettingsScreen({ prefs: saved, status = "ready", error, onRet
                           <span className="-ms-3 relative size-7 rounded-full ring-2 ring-background" style={{ background: b }} />
                         </span>
                         <span className="font-medium text-xs">{t[p]}</span>
-                        {prefs.palette === p ? <CheckIcon aria-hidden className="absolute end-1.5 top-1.5 size-3 opacity-80" /> : null}
+                        {prefs.palette === p ? <CheckIcon aria-hidden className="absolute inset-e-1.5 top-1.5 size-3 opacity-80" /> : null}
                       </Radio.Root>
                     );
                   })}
@@ -234,7 +234,7 @@ function AppearanceSettingsScreen({ prefs: saved, status = "ready", error, onRet
                 >
                   {DENSITY_ORDER.map((d) => (
                     <Radio.Root
-                      className="cursor-pointer rounded-lg px-3 py-2.5 text-muted-foreground text-sm outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground data-checked:text-background data-disabled:cursor-default"
+                      className="cursor-pointer rounded-lg px-3 py-2.5 text-muted-foreground text-sm outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground data-checked:text-background data-disabled:cursor-default"
                       key={d}
                       value={d}
                     >
@@ -253,7 +253,7 @@ function AppearanceSettingsScreen({ prefs: saved, status = "ready", error, onRet
                         {t.fontSample}
                       </span>
                       <span className="mt-2 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{FONTS[f].label}</span>
-                      {prefs.font === f ? <CheckIcon aria-hidden className="absolute end-2.5 top-2.5 size-3.5 opacity-80" /> : null}
+                      {prefs.font === f ? <CheckIcon aria-hidden className="absolute inset-e-2.5 top-2.5 size-3.5 opacity-80" /> : null}
                     </Radio.Root>
                   ))}
                 </RadioGroup>
@@ -534,7 +534,7 @@ function RailItem({
     <div className="relative">
       {active ? (
         <span
-          className="-translate-y-1/2 absolute top-1/2 -start-2 h-3 w-1 rounded-e-full"
+          className="-translate-y-1/2 absolute top-1/2 -inset-s-2 h-3 w-1 rounded-e-full"
           style={{ background: accent }}
         />
       ) : null}
@@ -630,7 +630,7 @@ function MiniChrome({ scheme }: { scheme: "light" | "dark" }) {
   return (
     <div className="flex h-24" style={{ background: s.bg }}>
       <div
-        className="flex w-[26px] flex-col items-center gap-1.5 border-e py-2"
+        className="flex w-6.5 flex-col items-center gap-1.5 border-e py-2"
         style={{ background: s.rail, borderColor: s.railBorder }}
       >
         <span

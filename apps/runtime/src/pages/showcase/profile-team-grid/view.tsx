@@ -138,7 +138,7 @@ function TeamDirectoryScreen({ people, company, status = "ready", error, onRetry
                           {m.avatarUrl ? <AvatarImage alt="" src={m.avatarUrl} /> : null}
                           <AvatarFallback>{initials(m.name)}</AvatarFallback>
                         </Avatar>
-                        <span className={cn("absolute end-0 bottom-0 size-3 rounded-full border-2 border-background", DOT[m.presence])} />
+                        <span className={cn("absolute inset-e-0 bottom-0 size-3 rounded-full border-2 border-background", DOT[m.presence])} />
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-x-1.5">

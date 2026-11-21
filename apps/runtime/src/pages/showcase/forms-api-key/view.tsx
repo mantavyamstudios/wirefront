@@ -128,7 +128,7 @@ function CreateApiKeyScreen({
     return (
       <div className={cn("flex min-h-svh justify-center bg-background px-4 py-8 text-foreground sm:items-center sm:px-6", className)}>
         <div className="w-full max-w-md sm:rounded-2xl sm:border sm:border-border/60 sm:bg-background/60 sm:p-6">
-          <div className="inline-flex size-10 items-center justify-center rounded-full bg-foreground/[0.06]">
+          <div className="inline-flex size-10 items-center justify-center rounded-full bg-foreground/6">
             <KeyIcon aria-hidden className="size-5" />
           </div>
           <h2 className="mt-4 font-heading text-xl">{t.createdTitle}</h2>
@@ -139,7 +139,7 @@ function CreateApiKeyScreen({
             {/* Wraps on small screens so the whole secret can be checked. */}
             <span className="min-w-0 flex-1 break-all sm:truncate sm:break-normal">{created.secret}</span>
             <button
-              className="inline-flex min-h-7 shrink-0 items-center gap-1 rounded px-2 text-[11px] text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:min-h-11"
+              className="inline-flex min-h-7 shrink-0 items-center gap-1 rounded px-2 text-[11px] text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:bg-foreground/5 hover:text-foreground pointer-coarse:min-h-11"
               onClick={() => void copySecret(created.secret)}
               type="button"
             >
@@ -218,8 +218,8 @@ function CreateApiKeyScreen({
                             "flex cursor-pointer items-start gap-3 rounded-lg border px-3 py-2.5 transition-colors",
                             checked
                               ? s.destructive
-                                ? "border-destructive/40 bg-destructive/[0.04]"
-                                : "border-foreground/30 bg-foreground/[0.03]"
+                                ? "border-destructive/40 bg-destructive/4"
+                                : "border-foreground/30 bg-foreground/3"
                               : "border-border/60 bg-background/40 hover:border-border",
                           )}
                           htmlFor={`${id}-${s.id}`}
@@ -284,7 +284,7 @@ function CreateApiKeyScreen({
             </select>
             <svg
               aria-hidden
-              className="pointer-events-none absolute end-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
+              className="pointer-events-none absolute inset-e-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
               fill="none"
               stroke="currentColor"
               strokeLinecap="round"

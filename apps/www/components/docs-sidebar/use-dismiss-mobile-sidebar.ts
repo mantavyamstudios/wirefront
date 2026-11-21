@@ -11,15 +11,13 @@ import {
 const SIDEBAR_PANEL = "[data-docs-sidebar]";
 const MENU_TOGGLE = "[data-sidebar-menu-toggle]";
 
-function isMobileViewport() {
-  return window.matchMedia("(max-width: 767px)").matches;
-}
+const isMobileViewport = () => window.matchMedia("(max-width: 767px)").matches;
 
 /**
  * Close the drawer on outside pointer / Escape. Ignores the header hamburger
  * so capture-phase pointerdown does not close and the click then toggle-open.
  */
-export function useDismissMobileSidebarOnOutside() {
+export const useDismissMobileSidebarOnOutside = () => {
   const { open, setOpen } = useSidebar();
   const drawerOpen = open && !isMobileSidebarSuppressed();
 
@@ -81,4 +79,4 @@ export function useDismissMobileSidebarOnOutside() {
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [drawerOpen, setOpen]);
-}
+};

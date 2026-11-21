@@ -64,7 +64,7 @@ function TooltipTourScreen({ steps, open, onClose, onStepChange }: TooltipTourPr
             className="w-[min(18rem,calc(100vw-2rem))] rounded-lg bg-foreground p-4 text-background shadow-2xl outline-none motion-safe:transition-[opacity,scale] data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0"
             initialFocus={false}
           >
-            <Popover.Arrow className="size-3 rotate-45 rounded-[2px] bg-foreground data-[side=bottom]:-top-1.5 data-[side=left]:-end-1.5 data-[side=right]:-start-1.5 data-[side=top]:-bottom-1.5" />
+            <Popover.Arrow className="size-3 rotate-45 rounded-xs bg-foreground data-[side=bottom]:-top-1.5 data-[side=left]:-inset-e-1.5 data-[side=right]:-inset-s-1.5 data-[side=top]:-bottom-1.5" />
             {current ? (
               <>
                 <div className="flex items-start justify-between gap-3">

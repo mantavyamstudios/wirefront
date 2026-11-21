@@ -2,7 +2,7 @@
 
 /** Scroll viewport — size container so demos can use `100cqh` inside a fixed-height panel. */
 export const blocksPreviewViewportClassName =
-  "@container/preview [container-type:size]";
+  "@container/preview @container-size";
 
 /** One full “screen” inside the preview panel (not browser `100vh`). */
 export const blocksPreviewScreenClassName =
@@ -27,7 +27,7 @@ export const blocksPreviewMobilePanelClassName =
  * Inset inside the preview panel so demo content clears the fixed header chips.
  * The panel background extends under the transparent header instead of a blank spacer.
  */
-export const blocksPreviewMobileChromeInsetClassName = "max-lg:pt-[4.5rem]";
+export const blocksPreviewMobileChromeInsetClassName = "max-lg:pt-18";
 
 /**
  * Stacked layout viewport — no size containment so demo content sets panel height
@@ -63,7 +63,7 @@ export const blocksChromeToolbarHeightClassName = "h-11";
 export const blocksChromeToolbarSurfaceClassName = [
   "rounded-2xl border border-border/40",
   "bg-background/75 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl",
-  "dark:border-white/[0.06] dark:bg-[#121212]/80",
+  "dark:border-white/6 dark:bg-[#121212]/80",
 ].join(" ");
 
 /** Floating chrome toolbar surface (docs header + preview toolbar). */
@@ -77,7 +77,7 @@ export const blocksChromeToolbarClassName = [
 export const blocksMenuToggleChipClassName = [
   "flex size-8 shrink-0 items-center justify-center rounded-2xl border border-border/40",
   "bg-zinc-200/65 text-foreground/65 shadow-sm backdrop-blur-xl",
-  "dark:border-white/[0.06] dark:bg-zinc-800/75",
+  "dark:border-white/6 dark:bg-zinc-800/75",
 ].join(" ");
 
 /**
@@ -141,15 +141,15 @@ export const blocksDocsHeaderDesktopRowClassName =
 
 /** Scroll offset so in-flow sections clear the fixed mobile header when scrolled into view. */
 export const blocksDocsHeaderMobileScrollPaddingClassName =
-  "max-lg:scroll-pt-[4.5rem]";
+  "max-lg:scroll-pt-18";
 
 /** Fixed chrome on stacked layout — stays visible while page scrolls.
- * Keep below AI chat (`z-[100]` in `components/ai/search.tsx`). */
+ * Keep below AI chat (`z-100` in `components/ai/search.tsx`). */
 export const blocksDocsHeaderMobileFixedClassName = [
-  "max-lg:fixed max-lg:inset-x-0 max-lg:top-(--fd-banner-height) max-lg:z-[60]",
+  "max-lg:fixed max-lg:inset-x-0 max-lg:top-(--fd-banner-height) max-lg:z-60",
   "max-lg:border-border/40 max-lg:border-b",
   "max-lg:bg-background/95 max-lg:backdrop-blur-md",
-  "max-lg:supports-[backdrop-filter]:bg-background/80",
+  "max-lg:supports-backdrop-filter:bg-background/80",
   "max-lg:transition-[background-color,border-color,backdrop-filter] max-lg:duration-450 max-lg:ease-[cubic-bezier(0.32,0.72,0,1)]",
   "lg:static lg:z-auto lg:border-0 lg:bg-transparent lg:backdrop-blur-none",
 ].join(" ");
@@ -157,17 +157,17 @@ export const blocksDocsHeaderMobileFixedClassName = [
 /** Stacked layout — floating menu chip instead of a full-width chrome bar. */
 export const blocksDocsHeaderMobileFloatingClassName = [
   "max-lg:border-0 max-lg:bg-transparent max-lg:backdrop-blur-none",
-  "max-lg:supports-[backdrop-filter]:bg-transparent",
+  "max-lg:supports-backdrop-filter:bg-transparent",
 ].join(" ");
 
 /** When the blocks flyout is open — chrome bar stays under the aside overlay. */
 export const blocksDocsHeaderMobileMenuOpenClassName = [
-  "max-lg:pointer-events-none max-lg:!transition-none",
+  "max-lg:pointer-events-none max-lg:transition-none!",
   "max-lg:border-transparent max-lg:bg-transparent max-lg:backdrop-blur-none",
-  "max-lg:supports-[backdrop-filter]:bg-transparent",
+  "max-lg:supports-backdrop-filter:bg-transparent",
 ].join(" ");
 
-/** Desktop flyout open — parent column is `lg:z-[120]`; keep header in flow. */
+/** Desktop flyout open — parent column is `lg:z-120`; keep header in flow. */
 export const blocksDocsHeaderDesktopMenuOpenClassName = "lg:relative";
 
 // Mobile menu
@@ -180,18 +180,18 @@ export const blocksMobileMenuChipFixedClassName = [
   "left-4 sm:left-8 md:left-16",
 ].join(" ");
 
-/** Idle chip — above header toolbar (`z-[60]`), below AI chat (`z-[100]`). */
-export const blocksMobileMenuChipIdleLayerClassName = "z-[90]";
+/** Idle chip — above header toolbar (`z-60`), below AI chat (`z-100`). */
+export const blocksMobileMenuChipIdleLayerClassName = "z-90";
 
-/** Open chip — above the flyout aside (`z-[111]`) so the toggle stays clickable. */
-export const blocksMobileMenuChipMenuOpenLayerClassName = "z-[120]";
+/** Open chip — above the flyout aside (`z-111`) so the toggle stays clickable. */
+export const blocksMobileMenuChipMenuOpenLayerClassName = "z-120";
 
 /**
- * Cursor-following nav preview — above the flyout aside (`z-[111]`),
- * below the open menu chip (`z-[120]`).
+ * Cursor-following nav preview — above the flyout aside (`z-111`),
+ * below the open menu chip (`z-120`).
  */
 export const blocksNavHoverPreviewLayerClassName = [
-  "pointer-events-none fixed top-0 left-0 z-[115] w-56",
+  "pointer-events-none fixed top-0 left-0 z-115 w-56",
 ].join(" ");
 
 /** Stacked layout — menu left, preview toolbar right. */
@@ -220,10 +220,10 @@ export const blocksSourcePanelGutterClassName = [
 ].join(" ");
 
 /**
- * Mobile source sheet — above AI chat (`z-[100]`), below blocks flyout
- * (`z-[110]`). Height is capped under the header so `</>` stays visible.
+ * Mobile source sheet — above AI chat (`z-100`), below blocks flyout
+ * (`z-110`). Height is capped under the header so `</>` stays visible.
  */
-export const blocksSourcePanelMobileLayerClassName = "max-lg:z-[105]";
+export const blocksSourcePanelMobileLayerClassName = "max-lg:z-105";
 
 /** Desktop split view — overlays the preview column. */
 export const blocksSourcePanelDesktopLayerClassName = "lg:z-70";
@@ -243,7 +243,7 @@ export const blocksPreviewShellClassName = [
 
 /** Fixed width during expand/collapse so demo layout does not reflow mid-animation. */
 export const blocksPreviewShellFixedWidthClassName =
-  "lg:w-[var(--blocks-layout-width,100%)]";
+  "lg:w-(--blocks-layout-width,100%)";
 
 /**
  * Desktop preview toolbar — overlays the scroll viewport (not in flex flow).
@@ -260,11 +260,11 @@ export const blocksPreviewToolbarRowClassName = [
 
 /**
  * Dimmed overlay behind the flyout blocks menu.
- * Above AI chat (`z-[100]`) at every breakpoint so Ask AI cannot sit on
- * the backdrop. Aside is `z-[111]`; open chrome is `z-[120]`.
+ * Above AI chat (`z-100`) at every breakpoint so Ask AI cannot sit on
+ * the backdrop. Aside is `z-111`; open chrome is `z-120`.
  */
 export const blocksSidebarBackdropClassName = [
-  "fixed inset-0 z-[110] bg-background/50 backdrop-blur-[2px]",
+  "fixed inset-0 z-110 bg-background/50 backdrop-blur-[2px]",
   "pointer-events-auto",
   "lg:bg-background/40",
 ].join(" ");
@@ -272,7 +272,7 @@ export const blocksSidebarBackdropClassName = [
 /** Flyout blocks sidebar (Skiper-style rail), toggled from the menu button. */
 export const blocksDesktopSidebarAsideClassName = [
   "fixed top-(--fd-banner-height) h-[calc(100dvh-var(--fd-banner-height))]",
-  "pointer-events-auto left-0 z-[111]",
+  "pointer-events-auto left-0 z-111",
   "w-[min(20rem,calc(100vw-0.5rem))] p-3",
   "lg:left-2 lg:w-[320px] lg:p-4 lg:pr-2 lg:pl-2",
 ].join(" ");
@@ -280,7 +280,7 @@ export const blocksDesktopSidebarAsideClassName = [
 export const blocksDesktopSidebarPanelClassName = [
   "relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded-3xl",
   "bg-white/35 backdrop-blur-xl backdrop-saturate-150 dark:bg-[#080808]/30",
-  "supports-[backdrop-filter]:bg-white/35 dark:supports-[backdrop-filter]:bg-[#080808]/30",
+  "supports-backdrop-filter:bg-white/35 dark:supports-backdrop-filter:bg-[#080808]/30",
 ].join(" ");
 
 /** Top inset inside the flyout list — clears fixed header / menu row. */

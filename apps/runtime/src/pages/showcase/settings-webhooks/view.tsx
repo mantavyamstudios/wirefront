@@ -203,7 +203,7 @@ function PayloadBlock({ label, body, status, t }: { label: string; body: string;
           ) : null}
         </div>
         <button
-          className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           onClick={() => void copy.run()}
           type="button"
         >
@@ -379,7 +379,7 @@ function WebhookSettingsScreen({
                       {rotate.isPending() ? <Spinner /> : <TriangleAlertIcon aria-hidden className="size-3.5" />}
                       {t.rotate}
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-[260px] p-2 text-start" side="top">
+                    <TooltipContent className="max-w-65 p-2 text-start" side="top">
                       <p className="font-medium text-foreground">{t.rotateTitle}</p>
                       <p className="mt-0.5 text-muted-foreground">{t.rotateHint}</p>
                     </TooltipContent>
@@ -399,10 +399,10 @@ function WebhookSettingsScreen({
                       size="icon"
                       variant="ghost"
                     >
-                      {shown ? <EyeOffIcon className="!size-3" /> : <EyeIcon className="!size-3" />}
+                      {shown ? <EyeOffIcon className="size-3!" /> : <EyeIcon className="size-3!" />}
                     </Button>
                     <Button aria-label={t.copySecret} className="-me-1 size-7 shrink-0 pointer-coarse:size-9" onClick={() => void copySecret.run()} size="icon" variant="ghost">
-                      {copiedSecret ? <CheckIcon className="!size-3 text-category-2-foreground" /> : <CopyIcon className="!size-3" />}
+                      {copiedSecret ? <CheckIcon className="size-3! text-category-2-foreground" /> : <CopyIcon className="size-3!" />}
                     </Button>
                   </>
                 ) : null}
@@ -441,7 +441,7 @@ function WebhookSettingsScreen({
                       return (
                         <TableRow key={ep.id}>
                           <TableCell className="w-full max-w-0 ps-4 sm:w-auto sm:max-w-none">
-                            <div className="flex items-center gap-2 font-mono text-xs sm:max-w-[280px]">
+                            <div className="flex items-center gap-2 font-mono text-xs sm:max-w-70">
                               <span className="truncate text-foreground/90">{ep.url}</span>
                             </div>
                             <div className="mt-0.5 flex flex-wrap items-center gap-x-2 font-mono text-[10px] text-muted-foreground">
@@ -522,7 +522,7 @@ function WebhookSettingsScreen({
                 <RadioGroup aria-label={t.filter} className="inline-flex items-center rounded-md border bg-background p-0.5 text-xs" onValueChange={(v) => setFilter(v as "all" | "failed")} value={filter}>
                   {(["all", "failed"] as const).map((f) => (
                     <Radio.Root
-                      className="cursor-pointer rounded px-2 py-0.5 font-mono text-[11px] text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground/[0.08] data-checked:text-foreground pointer-coarse:min-h-9 pointer-coarse:px-3"
+                      className="cursor-pointer rounded px-2 py-0.5 font-mono text-[11px] text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground/8 data-checked:text-foreground pointer-coarse:min-h-9 pointer-coarse:px-3"
                       key={f}
                       value={f}
                     >
@@ -544,7 +544,7 @@ function WebhookSettingsScreen({
                         <button
                           aria-expanded={expanded}
                           // Below sm: event + status + chevron on line 1, time · endpoint · ms on line 2.
-                          className="grid w-full grid-cols-[minmax(0,1fr)_auto_16px] items-center gap-x-3 gap-y-0.5 px-4 py-2.5 text-start outline-none transition-colors hover:bg-foreground/[0.03] focus-visible:bg-foreground/[0.05] sm:grid-cols-[64px_minmax(0,160px)_minmax(0,1fr)_56px_64px_24px]"
+                          className="grid w-full grid-cols-[minmax(0,1fr)_auto_16px] items-center gap-x-3 gap-y-0.5 px-4 py-2.5 text-start outline-none transition-colors hover:bg-foreground/3 focus-visible:bg-foreground/5 sm:grid-cols-[64px_minmax(0,160px)_minmax(0,1fr)_56px_64px_24px]"
                           onClick={() => setExpandedId(expanded ? null : d.id)}
                           type="button"
                         >
@@ -566,7 +566,7 @@ function WebhookSettingsScreen({
                           </span>
                         </button>
                         {expanded ? (
-                          <div className="border-t bg-foreground/[0.02] px-4 py-3 dark:bg-white/[0.02]">
+                          <div className="border-t bg-foreground/2 px-4 py-3 dark:bg-white/2">
                             <dl className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px]">
                               <div className="flex gap-1">
                                 <dt className="text-muted-foreground">{t.deliveryId}</dt>

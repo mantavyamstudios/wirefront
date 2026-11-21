@@ -14,9 +14,9 @@ const [ChangelogItemProvider, useChangelogItem] =
 
 export type ChangelogProps = React.ComponentProps<"div">;
 
-export function Changelog(props: ChangelogProps) {
-  return <div className="mt-4 flex flex-col" {...props} />;
-}
+export const Changelog = (props: ChangelogProps) => (
+  <div className="mt-4 flex flex-col" {...props} />
+);
 
 export type ChangelogItemProps = React.ComponentProps<"div"> & {
   date: string;
@@ -36,7 +36,7 @@ export const ChangelogItem = ({
           {format(new Date(date), "MMM d, yyyy", { locale: enUS })}
         </p>
       </div>
-      <div className="relative hidden h-auto w-2.5 shrink-0 flex-col items-center pt-[5px] sm:flex">
+      <div className="relative hidden h-auto w-2.5 shrink-0 flex-col items-center pt-1.25 sm:flex">
         <div
           className={cn(
             "relative size-2.5 shrink-0 rounded-full",
@@ -47,7 +47,7 @@ export const ChangelogItem = ({
             <div className="border-primary absolute top-1/2 left-1/2 size-4.5 shrink-0 -translate-x-1/2 -translate-y-1/2 rounded-full border" />
           )}
         </div>
-        <div className="absolute top-[18px] -bottom-[2px] left-1/2 w-px -translate-x-1/2 rounded-full bg-neutral-300 dark:bg-neutral-700" />
+        <div className="absolute top-4.5 -bottom-0.5 left-1/2 w-px -translate-x-1/2 rounded-full bg-neutral-300 dark:bg-neutral-700" />
       </div>
       <div className="h-auto flex-1 pb-24">{children}</div>
     </div>
@@ -65,7 +65,7 @@ export const ChangelogItemVersion = ({
   return (
     <div
       className={cn(
-        "[&_a]:bg-accent [&_a]:text-foreground -mt-[3px] [&_a]:rounded-md [&_a]:border [&_a]:px-1.5 [&_a]:py-0.5 [&_a]:text-sm [&_a]:font-normal [&>h2]:mt-0 [&>h2]:mb-6 [&>h2]:w-fit",
+        "[&_a]:bg-accent [&_a]:text-foreground -mt-0.75 [&_a]:rounded-md [&_a]:border [&_a]:px-1.5 [&_a]:py-0.5 [&_a]:text-sm [&_a]:font-normal [&>h2]:mt-0 [&>h2]:mb-6 [&>h2]:w-fit",
         major &&
           "[&_a]:bg-primary [&_a]:text-primary-foreground [&_a]:border-neutral-600 dark:[&_a]:border-neutral-300"
       )}

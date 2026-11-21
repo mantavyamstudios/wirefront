@@ -35,11 +35,11 @@ export function AuthSplitLayout({
         className,
       )}
     >
-      {actions ? <div className="absolute top-4 end-4 z-30 sm:top-6 sm:end-6">{actions}</div> : null}
+      {actions ? <div className="absolute top-4 inset-e-4 z-30 sm:top-6 sm:inset-e-6">{actions}</div> : null}
       <div
         className={cn(
-          "relative mx-auto flex h-full w-full max-w-[1600px]",
-          "2xl:h-auto 2xl:min-h-0 2xl:w-[min(94vw,calc(92svh*16/9))] 2xl:max-w-none 2xl:aspect-[16/9]",
+          "relative mx-auto flex h-full w-full max-w-400",
+          "2xl:h-auto 2xl:min-h-0 2xl:w-[min(94vw,calc(92svh*16/9))] 2xl:max-w-none 2xl:aspect-video",
           "2xl:overflow-hidden 2xl:rounded-2xl 2xl:border 2xl:border-border/70 2xl:bg-background/95 2xl:shadow-[0_25px_80px_-24px_rgba(0,0,0,0.75)]",
           frameClassName,
         )}
@@ -57,7 +57,7 @@ export function AuthSplitLayout({
             // `justify-center-safe`: centred when it fits, top-aligned when the
             // form is taller than the viewport (landscape phones, zoom) so the
             // heading never ends up above the scroll origin.
-            "relative flex w-full flex-col items-center justify-center-safe overflow-y-auto px-4 py-16 sm:px-6 lg:w-[560px] lg:px-14",
+            "relative flex w-full flex-col items-center justify-center-safe overflow-y-auto px-4 py-16 sm:px-6 lg:w-140 lg:px-14",
             rightClassName,
           )}
         >

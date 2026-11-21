@@ -1,8 +1,8 @@
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { ElementContent, Root, RootContent } from "hast";
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
-import { Children, Suspense, use, useDeferredValue } from "react";
-import type { ComponentProps, ReactElement, ReactNode } from "react";
+import { isValidElement, Suspense, use, useDeferredValue } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
@@ -15,48 +15,46 @@ export interface Processor {
   process: (content: string) => Promise<ReactNode>;
 }
 
-const WORD_BOUNDARY_REGEX = /(?=\s)/;
+const WORD_BOUNDARY_REGEX = /(?=\s)/u;
 
-export function rehypeWrapWords() {
-  return (tree: Root) => {
-    visit(tree, ["text", "element"], (node, index, parent) => {
-      if (node.type === "element" && node.tagName === "pre") {
-        return "skip";
+export const rehypeWrapWords = () => (tree: Root) => {
+  visit(tree, ["text", "element"], (node, index, parent) => {
+    if (node.type === "element" && node.tagName === "pre") {
+      return "skip";
+    }
+    if (node.type !== "text" || !parent || index === undefined) {
+      return;
+    }
+
+    const words = node.value.split(WORD_BOUNDARY_REGEX);
+
+    // Create new span nodes for each word and whitespace
+    const newNodes: ElementContent[] = words.flatMap((word) => {
+      if (word.length === 0) {
+        return [];
       }
-      if (node.type !== "text" || !parent || index === undefined) {
-        return;
-      }
 
-      const words = node.value.split(WORD_BOUNDARY_REGEX);
-
-      // Create new span nodes for each word and whitespace
-      const newNodes: ElementContent[] = words.flatMap((word) => {
-        if (word.length === 0) {
-          return [];
-        }
-
-        return {
-          type: "element",
-          tagName: "span",
-          properties: {
-            class: "animate-fd-fade-in",
-          },
-          children: [{ type: "text", value: word }],
-        };
-      });
-
-      Object.assign(node, {
+      return {
         type: "element",
         tagName: "span",
-        properties: {},
-        children: newNodes,
-      } satisfies RootContent);
-      return "skip";
+        properties: {
+          class: "animate-fd-fade-in",
+        },
+        children: [{ type: "text", value: word }],
+      };
     });
-  };
-}
 
-function createProcessor(): Processor {
+    Object.assign(node, {
+      type: "element",
+      tagName: "span",
+      properties: {},
+      children: newNodes,
+    } satisfies RootContent);
+    return "skip";
+  });
+};
+
+const createProcessor = (): Processor => {
   const processor = remark()
     .use(remarkGfm)
     .use(remarkRehype)
@@ -75,15 +73,20 @@ function createProcessor(): Processor {
         components: {
           ...defaultMdxComponents,
           pre: Pre,
-          img: undefined, // use JSX
+          // Images render through JSX, not this map.
+          img: undefined,
         },
       });
     },
   };
-}
+};
 
-function Pre(props: ComponentProps<"pre">) {
-  const code = Children.only(props.children) as ReactElement;
+const Pre = (props: ComponentProps<"pre">) => {
+  // Markdown code blocks are a <pre> holding a single <code>.
+  const code = props.children;
+  if (!isValidElement(code)) {
+    return null;
+  }
   const codeProps = code.props as ComponentProps<"code">;
   const content = codeProps.children;
   if (typeof content !== "string") {
@@ -101,11 +104,11 @@ function Pre(props: ComponentProps<"pre">) {
   }
 
   return <DynamicCodeBlock code={content.trimEnd()} lang={lang} />;
-}
+};
 
 const processor = createProcessor();
 
-export function Markdown({ text }: { text: string }) {
+export const Markdown = ({ text }: { text: string }) => {
   const deferredText = useDeferredValue(text);
 
   return (
@@ -113,13 +116,13 @@ export function Markdown({ text }: { text: string }) {
       <Renderer text={deferredText} />
     </Suspense>
   );
-}
+};
 
 const cache = new Map<string, Promise<ReactNode>>();
 
-function Renderer({ text }: { text: string }) {
+const Renderer = ({ text }: { text: string }) => {
   const result = cache.get(text) ?? processor.process(text);
   cache.set(text, result);
 
   return use(result);
-}
+};

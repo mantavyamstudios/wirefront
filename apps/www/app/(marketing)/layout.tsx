@@ -6,19 +6,19 @@ import { HomeProviders } from "@/components/home-providers";
 import { Navbar } from "@/components/navbar";
 import { fontBrisaPro } from "@/lib/fonts";
 
-export default function HomeLayout({ children }: { children: ReactNode }) {
-  return (
-    <HomeProviders>
-      <div
-        className={cn(
-          "flex min-h-screen flex-col antialiased",
-          fontBrisaPro.variable
-        )}
-      >
-        <Navbar />
-        <div className="flex-1">{children}</div>
-        <Footer />
-      </div>
-    </HomeProviders>
-  );
-}
+const HomeLayout = ({ children }: { children: ReactNode }) => (
+  <HomeProviders>
+    <div
+      className={cn(
+        "flex min-h-screen flex-col antialiased",
+        fontBrisaPro.variable
+      )}
+    >
+      <Navbar />
+      <div className="flex-1">{children}</div>
+      <Footer />
+    </div>
+  </HomeProviders>
+);
+
+export default HomeLayout;

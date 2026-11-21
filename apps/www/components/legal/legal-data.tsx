@@ -3,19 +3,16 @@ import { COMMUNITY_ISSUES_URL, CONTACT_EMAIL, SITE_NAME } from "@/lib/site";
 
 import type { TermItem } from "./legal-scroll-view";
 
-function ContactLine({ topic }: { topic: string }) {
-  return (
-    <p className="lg:text-lg">
-      Questions about {topic} can go to{" "}
-      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>, or open an issue
-      on{" "}
-      <a href={COMMUNITY_ISSUES_URL} rel="noopener noreferrer" target="_blank">
-        GitHub
-      </a>
-      .
-    </p>
-  );
-}
+const ContactLine = ({ topic }: { topic: string }) => (
+  <p className="lg:text-lg">
+    Questions about {topic} can go to{" "}
+    <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>, or open an issue on{" "}
+    <a href={COMMUNITY_ISSUES_URL} rel="noopener noreferrer" target="_blank">
+      GitHub
+    </a>
+    .
+  </p>
+);
 
 export const TERMS_OF_SERVICE_ITEMS: TermItem[] = [
   {
@@ -29,8 +26,8 @@ export const TERMS_OF_SERVICE_ITEMS: TermItem[] = [
         </p>
         <p className="lg:text-lg">
           The screens are provided as ready-to-wire starting points. You are
-          free to run them in the browser, study how they work and install
-          them in your own projects.
+          free to run them in the browser, study how they work and install them
+          in your own projects.
         </p>
         <p className="lg:text-lg">
           Please don&apos;t disrupt the site, try to gain unauthorized access to
@@ -46,8 +43,8 @@ export const TERMS_OF_SERVICE_ITEMS: TermItem[] = [
       <>
         <p className="lg:text-lg">
           Wirefront is open source under the MIT License: you may use, copy,
-          modify and distribute the screens in personal and commercial
-          projects, provided the copyright and license notice stay with them.
+          modify and distribute the screens in personal and commercial projects,
+          provided the copyright and license notice stay with them.
         </p>
         <p className="lg:text-lg">
           See the <Link href="/docs/license">License</Link> page for the full
@@ -61,8 +58,8 @@ export const TERMS_OF_SERVICE_ITEMS: TermItem[] = [
     title: "3. No warranty",
     content: (
       <p className="lg:text-lg">
-        The screens and site are provided &ldquo;as is&rdquo;, without warranty of
-        any kind. Use in production is at your own discretion.
+        The screens and site are provided &ldquo;as is&rdquo;, without warranty
+        of any kind. Use in production is at your own discretion.
       </p>
     ),
   },

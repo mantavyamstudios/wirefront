@@ -308,7 +308,7 @@ function SidebarBody({
           </div>
         ) : null}
 
-        <nav aria-label={t.primary} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2 [scrollbar-width:thin]">
+        <nav aria-label={t.primary} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2 scrollbar-thin">
           {sections.map((section, index) => {
             const open = collapsed || !closed.has(section.id);
             return (
@@ -335,7 +335,7 @@ function SidebarBody({
                       {section.label}
                       <ChevronDownIcon className={cn("size-3 transition-transform duration-200", !open && "-rotate-90")} />
                     </button>
-                    {collapsed && <span className="absolute start-4 h-px w-6 bg-border" />}
+                    {collapsed && <span className="absolute inset-s-4 h-px w-6 bg-border" />}
                     {section.addHref ? (
                       <WirefrontLink
                         aria-label={interpolate(t.addTo, { section: section.label })}
@@ -402,7 +402,7 @@ function SidebarBody({
                                     </span>
                                   )}
                                   {collapsed && item.attention && item.count ? (
-                                    <span className="absolute top-1.5 start-7 size-1.5 rounded-full bg-info ring-2 ring-sidebar" />
+                                    <span className="absolute top-1.5 inset-s-7 size-1.5 rounded-full bg-info ring-2 ring-sidebar" />
                                   ) : null}
                                 </WirefrontLink>
                               )}
@@ -489,7 +489,7 @@ export function InsetShell({
   return (
     <MotionConfig reducedMotion="user">
       <TooltipProvider delay={400}>
-        <div className={cn("@container relative isolate flex h-[760px] w-full overflow-hidden bg-sidebar text-foreground text-sm", className)}>
+        <div className={cn("@container relative isolate flex h-190 w-full overflow-hidden bg-sidebar text-foreground text-sm", className)}>
           <motion.aside
             animate={{ width: collapsed ? 56 : 248 }}
             aria-label={t.sidebar}
@@ -503,7 +503,7 @@ export function InsetShell({
           </motion.aside>
 
           <Sheet onOpenChange={setDrawer} open={drawer}>
-            <SheetContent className="w-[272px] max-w-[calc(100%-3rem)] bg-sidebar p-0" showCloseButton={false} side="left">
+            <SheetContent className="w-68 max-w-[calc(100%-3rem)] bg-sidebar p-0" showCloseButton={false} side="left">
               <SheetTitle className="sr-only">{t.navigation}</SheetTitle>
               <SidebarBody {...sidebar} collapsed={false} onClose={() => setDrawer(false)} t={t} />
             </SheetContent>
@@ -561,7 +561,7 @@ export function InsetShell({
                       href={notificationsHref}
                     >
                       <BellIcon />
-                      {unread ? <span className="absolute top-1.5 end-1.5 size-1.5 rounded-full bg-info" /> : null}
+                      {unread ? <span className="absolute top-1.5 inset-e-1.5 size-1.5 rounded-full bg-info" /> : null}
                     </WirefrontLink>
                   ) : null}
                 </div>

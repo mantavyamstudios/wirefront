@@ -278,7 +278,7 @@ function SupportQueueScreen({ data, status = "ready", error, onRetry, scope, bre
                                 <span className="truncate text-sm">{b.customer}</span>
                               </div>
                             </td>
-                            <td className="truncate pe-3 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.1em] max-sm:hidden">
+                            <td className="truncate pe-3 font-mono text-[11px] text-muted-foreground uppercase tracking-widest max-sm:hidden">
                               {interpolate(b.target === "first-response" ? t.firstResponseTarget : t.resolutionTarget, { priority: b.priority })}
                             </td>
                             <td className="text-end">
@@ -348,7 +348,7 @@ function SupportQueueScreen({ data, status = "ready", error, onRetry, scope, bre
                             </Avatar>
                             <div className="min-w-0">
                               <div className="truncate text-sm">{a.name}</div>
-                              <div aria-hidden className="mt-1 h-1 overflow-hidden rounded-full bg-foreground/[0.04]">
+                              <div aria-hidden className="mt-1 h-1 overflow-hidden rounded-full bg-foreground/4">
                                 <div className={cn("h-full", a.load > HIGH_LOAD ? "bg-category-3" : "bg-category-2/60")} style={{ width: `${a.load * 100}%` }} />
                               </div>
                               <div className="mt-1 font-mono text-[10px] text-muted-foreground sm:hidden">
@@ -394,7 +394,7 @@ function SupportQueueScreen({ data, status = "ready", error, onRetry, scope, bre
                             <span>{tag.name}</span>
                             <span className="font-mono text-muted-foreground text-xs tabular-nums">{format.number(tag.count)}</span>
                           </div>
-                          <div aria-hidden className="mt-1 h-1.5 overflow-hidden rounded-full bg-foreground/[0.04]">
+                          <div aria-hidden className="mt-1 h-1.5 overflow-hidden rounded-full bg-foreground/4">
                             <div className={cn("h-full", TAG_COLOURS[i % TAG_COLOURS.length])} style={{ width: `${(tag.count / tagMax) * 100}%` }} />
                           </div>
                         </li>

@@ -36,7 +36,7 @@ export type CheckoutCard = z.infer<typeof CheckoutCard>;
 
 export const PlaceOrder = z
   .object({
-    email: z.string().email(),
+    email: z.email(),
     newsletter: z.boolean(),
     address: CheckoutAddress,
     shippingId: z.string(),

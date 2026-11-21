@@ -256,11 +256,11 @@ function seededShuffle<T>(list: T[], seed: number) {
 function EqBars({ playing, className }: { playing: boolean; className?: string }) {
   const reduce = useReducedMotionAfterMount();
   return (
-    <span aria-hidden className={cn("flex h-3 items-end gap-[2px]", className)}>
+    <span aria-hidden className={cn("flex h-3 items-end gap-0.5", className)}>
       {EQ_KEYS.map((key, i) => {
         const h = EQ_HEIGHTS[i] ?? 1;
         return (
-        <motion.span animate={playing && !reduce ? { scaleY: [h, 0.3, 1, 0.5, h] } : { scaleY: h * 0.6 }} className="h-3 w-[3px] origin-bottom rounded-full bg-current" key={key} transition={playing && !reduce ? { duration: 1.1, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: i * 0.18 } : { duration: 0.2 }} />
+        <motion.span animate={playing && !reduce ? { scaleY: [h, 0.3, 1, 0.5, h] } : { scaleY: h * 0.6 }} className="h-3 w-0.75 origin-bottom rounded-full bg-current" key={key} transition={playing && !reduce ? { duration: 1.1, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: i * 0.18 } : { duration: 0.2 }} />
         );
       })}
     </span>
@@ -288,7 +288,7 @@ function Scrubber({ track, position, onSeek, t, bars = 72 }: { track: MusicTrack
     e.preventDefault();
   };
   const layer = (cls: string) => (
-    <div className={cn("absolute inset-0 flex items-center gap-[2px]", cls)}>
+    <div className={cn("absolute inset-0 flex items-center gap-0.5", cls)}>
       {heights.map((b) => (
         <span className="min-w-0 flex-1 rounded-full bg-current" key={b.key} style={{ height: `${Math.round(b.h * 100)}%` }} />
       ))}
@@ -351,7 +351,7 @@ function QueueRow({ track, index, total, onPlay, onRemove, onMove, t }: { track:
   const controls: DragControls = useDragControls();
   const reduce = useReducedMotionAfterMount();
   return (
-    <Reorder.Item as="li" className="group/row relative flex items-center gap-1 rounded-xl bg-background pe-1 [&:has(:focus-visible)]:bg-accent" dragControls={controls} dragListener={false} exit={reduce ? { opacity: 0, transition: { duration: 0.12 } } : { opacity: 0, scale: 0.97, transition: { duration: 0.15, ease: easeOut } }} initial={false} layout={reduce ? undefined : "position"} transition={spring} value={track} whileDrag={{ scale: 1.02, boxShadow: "0 8px 24px -8px rgb(0 0 0 / 0.25)", zIndex: 10 }}>
+    <Reorder.Item as="li" className="group/row relative flex items-center gap-1 rounded-xl bg-background pe-1 has-focus-visible:bg-accent" dragControls={controls} dragListener={false} exit={reduce ? { opacity: 0, transition: { duration: 0.12 } } : { opacity: 0, scale: 0.97, transition: { duration: 0.15, ease: easeOut } }} initial={false} layout={reduce ? undefined : "position"} transition={spring} value={track} whileDrag={{ scale: 1.02, boxShadow: "0 8px 24px -8px rgb(0 0 0 / 0.25)", zIndex: 10 }}>
       <button
         aria-label={interpolate(t.reorder, { title: track.title })}
         className={cn("flex h-12 w-7 shrink-0 cursor-grab touch-none items-center justify-center rounded-lg text-muted-foreground hover:text-foreground active:cursor-grabbing", ring)}
@@ -550,7 +550,7 @@ function MusicPlayerScreen({ appName, tracks, playlists, likedIds = NO_LIKES, li
         <span className="text-pretty text-muted-foreground text-xs">{interpolate(t.noLyricsHint, { artist: current.artist, title: current.title })}</span>
       </div>
     ) : (
-      <div className="relative h-full overflow-y-auto px-5 [mask-image:linear-gradient(to_bottom,transparent,#000_15%,#000_85%,transparent)] [scrollbar-width:none]" ref={refObj}>
+      <div className="relative h-full overflow-y-auto px-5 mask-[linear-gradient(to_bottom,transparent,#000_15%,#000_85%,transparent)] scrollbar-none" ref={refObj}>
         <ol className="flex flex-col gap-1 py-[45%]">
           {lyrics.map((l, i) => {
             const state = i === activeLine ? "now" : i < activeLine ? "past" : "next";
@@ -721,7 +721,7 @@ function MusicPlayerScreen({ appName, tracks, playlists, likedIds = NO_LIKES, li
             onVolumeChange?.(muted ? volume : 0);
             setMuted((m) => !m);
           },
-          <VolumeIcon aria-hidden className="!size-4.5" />,
+          <VolumeIcon aria-hidden className="size-4.5!" />,
           undefined,
           "size-8 text-muted-foreground",
         )}
@@ -730,7 +730,7 @@ function MusicPlayerScreen({ appName, tracks, playlists, likedIds = NO_LIKES, li
         </span>
         <Slider
           aria-labelledby={volumeId}
-          className="flex-1 [&_[data-slot=slider-control]]:min-w-0"
+          className="flex-1 **:data-[slot=slider-control]:min-w-0"
           max={100}
           onValueChange={(v) => {
             const next = Array.isArray(v) ? (v[0] ?? 0) : (v as number);
@@ -752,7 +752,7 @@ function MusicPlayerScreen({ appName, tracks, playlists, likedIds = NO_LIKES, li
       <Sheet onOpenChange={setDrawer} open={drawer}>
         <SheetContent className="w-72 max-w-[85%] gap-0 overflow-y-auto p-0" showCloseButton={false} side="left">
           <SheetTitle className="sr-only">{t.library}</SheetTitle>
-          <Button aria-label={t.closeLibrary} className="absolute end-3 top-3" onClick={() => setDrawer(false)} size="icon-sm" variant="ghost">
+          <Button aria-label={t.closeLibrary} className="absolute inset-e-3 top-3" onClick={() => setDrawer(false)} size="icon-sm" variant="ghost">
             <XIcon />
           </Button>
           {sidebar}

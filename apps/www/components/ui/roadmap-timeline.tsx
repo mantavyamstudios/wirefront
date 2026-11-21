@@ -689,7 +689,7 @@ const MOTIONSCORE_BENCHMARKS = [
   },
 ];
 
-function getStatusLabel(status: ComponentStatus): string {
+const getStatusLabel = (status: ComponentStatus): string => {
   if (status === "completed") {
     return "Completed";
   }
@@ -697,9 +697,9 @@ function getStatusLabel(status: ComponentStatus): string {
     return "In Progress";
   }
   return "Planned";
-}
+};
 
-function StatusNodeIcon({ status }: { status: ComponentStatus }) {
+const StatusNodeIcon = ({ status }: { status: ComponentStatus }) => {
   if (status === "completed") {
     return <CheckCircle2 className="size-3 md:size-3.5" />;
   }
@@ -707,9 +707,9 @@ function StatusNodeIcon({ status }: { status: ComponentStatus }) {
     return <Flame className="size-3 md:size-3.5" />;
   }
   return <Clock className="size-3 md:size-3.5" />;
-}
+};
 
-function RoadmapCard({
+const RoadmapCard = ({
   item,
   index,
   shouldReduceMotion,
@@ -717,7 +717,7 @@ function RoadmapCard({
   item: RoadmapItem;
   index: number;
   shouldReduceMotion: boolean | null;
-}) {
+}) => {
   const isCompleted = item.status === "completed";
   const isInProgress = item.status === "in-progress";
 
@@ -804,9 +804,9 @@ function RoadmapCard({
       </div>
     </motion.div>
   );
-}
+};
 
-export function RoadmapTimeline() {
+export const RoadmapTimeline = () => {
   const shouldReduceMotion = useReducedMotion();
   const searchInputId = useId();
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -896,7 +896,7 @@ export function RoadmapTimeline() {
   return (
     <div className="not-prose my-8 flex flex-col gap-10">
       {/* Priority Strategy Banner */}
-      <div className="border-primary/20 from-primary/10 via-background to-accent/30 relative overflow-hidden rounded-2xl border bg-gradient-to-br p-6 md:p-8">
+      <div className="border-primary/20 from-primary/10 via-background to-accent/30 relative overflow-hidden rounded-2xl border bg-linear-to-br p-6 md:p-8">
         <div className="relative z-10 flex flex-col gap-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <span className="border-primary/30 bg-primary/10 text-primary inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium">
@@ -1145,7 +1145,7 @@ export function RoadmapTimeline() {
       </div>
 
       {/* 100% Free & Open Source Banner */}
-      <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-r from-neutral-900 to-neutral-950 p-6 text-white md:p-8 dark:border-neutral-800">
+      <div className="relative overflow-hidden rounded-2xl border bg-linear-to-r from-neutral-900 to-neutral-950 p-6 text-white md:p-8 dark:border-neutral-800">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-2">
             <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300">
@@ -1172,4 +1172,4 @@ export function RoadmapTimeline() {
       </div>
     </div>
   );
-}
+};

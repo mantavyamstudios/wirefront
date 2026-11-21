@@ -38,7 +38,7 @@ function Viewport({ className }: { className?: string }) {
   const { toasts } = Toast.useToastManager();
   return (
     <Toast.Portal>
-      <Toast.Viewport className={cn("fixed inset-x-0 top-0 z-50 flex flex-col gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] outline-none sm:inset-x-auto sm:end-6 sm:top-6 sm:w-80 sm:px-0 sm:pt-0", className)}>
+      <Toast.Viewport className={cn("fixed inset-x-0 top-0 z-50 flex flex-col gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] outline-none sm:inset-x-auto sm:inset-e-6 sm:top-6 sm:w-80 sm:px-0 sm:pt-0", className)}>
         {toasts.map((toast) => (
           <Toast.Root
             className="flex translate-x-(--toast-swipe-movement-x) translate-y-(--toast-swipe-movement-y) items-center gap-3 rounded-lg border border-border/70 bg-background px-3.5 py-3 shadow-lg transition-[translate,opacity] duration-300 data-ending-style:opacity-0 data-starting-style:-translate-y-3 data-starting-style:opacity-0 motion-reduce:transition-none"
@@ -53,7 +53,7 @@ function Viewport({ className }: { className?: string }) {
               <Toast.Title className="font-medium text-sm" />
               <Toast.Description className="mt-0.5 text-muted-foreground text-xs" />
             </div>
-            <Toast.Close aria-label={t.dismiss} className="-me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10">
+            <Toast.Close aria-label={t.dismiss} className="-me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10">
               <XIcon aria-hidden className="size-3.5" />
             </Toast.Close>
           </Toast.Root>

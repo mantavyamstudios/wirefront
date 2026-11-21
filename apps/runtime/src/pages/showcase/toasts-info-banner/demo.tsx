@@ -13,7 +13,7 @@ export function ToastsInfoBannerShowcasePage() {
       <SystemBanner announcement={fixtures.getAnnouncement} onDismiss={() => wait(200)} />
       {/* flex-1 instead of a fixed height: the banner's height varies once it wraps. */}
       <div className="grid flex-1 grid-cols-1 md:grid-cols-[220px_1fr]">
-        <aside className="border-border/60 border-e bg-foreground/[0.02] p-4 max-md:hidden">
+        <aside className="border-border/60 border-e bg-foreground/2 p-4 max-md:hidden">
           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">Workspace</div>
           <div className="mt-1 font-medium text-sm">Acme inc.</div>
           <ul className="mt-6 space-y-1.5 text-muted-foreground text-sm">

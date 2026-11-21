@@ -14,17 +14,15 @@ interface ComponentPageBlocksShellProps {
   navItems: ComponentGalleryItem[];
 }
 
-export function ComponentPageBlocksShell({
+export const ComponentPageBlocksShell = ({
   children,
   navItems,
-}: ComponentPageBlocksShellProps) {
-  return (
-    <BlocksMenuProvider navItems={navItems}>
-      <BlocksMobileChromeProvider>
-        <ComponentPageBlocksMobileMenuLayer />
-        <ComponentPageBlocksSidebar />
-        <div className="min-h-0 min-w-0 flex-1">{children}</div>
-      </BlocksMobileChromeProvider>
-    </BlocksMenuProvider>
-  );
-}
+}: ComponentPageBlocksShellProps) => (
+  <BlocksMenuProvider navItems={navItems}>
+    <BlocksMobileChromeProvider>
+      <ComponentPageBlocksMobileMenuLayer />
+      <ComponentPageBlocksSidebar />
+      <div className="min-h-0 min-w-0 flex-1">{children}</div>
+    </BlocksMobileChromeProvider>
+  </BlocksMenuProvider>
+);

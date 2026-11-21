@@ -51,7 +51,7 @@ const KIND: Record<ActivityEvent["kind"], { icon: ReactNode; tone: string }> = {
   commit: { icon: <GitCommitIcon className="size-3.5" />, tone: "bg-category-8/15 text-category-8-foreground" },
   reaction: { icon: <HeartIcon className="size-3.5" />, tone: "bg-category-4/15 text-category-4-foreground" },
   merge: { icon: <GitMergeIcon className="size-3.5" />, tone: "bg-category-2/15 text-category-2-foreground" },
-  other: { icon: <ActivityIcon className="size-3.5" />, tone: "bg-foreground/[0.06] text-foreground" },
+  other: { icon: <ActivityIcon className="size-3.5" />, tone: "bg-foreground/6 text-foreground" },
 };
 
 function initials(name: string) {
@@ -115,10 +115,10 @@ function ActivityFeedScreen({ events, status = "ready", error, onRetry, hasMore,
                 </div>
 
                 <ol className="relative ps-7">
-                  <span aria-hidden className="absolute start-[15px] top-2 bottom-2 w-px bg-border/40" />
+                  <span aria-hidden className="absolute inset-s-3.75 top-2 bottom-2 w-px bg-border/40" />
                   {s.items.map((e) => (
                     <li className="relative grid grid-cols-1 gap-3 py-2.5" key={e.id}>
-                      <span aria-hidden className={cn("absolute -start-7 top-3 z-10 grid size-[30px] place-items-center rounded-full ring-4 ring-background", KIND[e.kind].tone)}>
+                      <span aria-hidden className={cn("absolute -inset-s-7 top-3 z-10 grid size-7.5 place-items-center rounded-full ring-4 ring-background", KIND[e.kind].tone)}>
                         {KIND[e.kind].icon}
                       </span>
                       <div className="flex items-start gap-2.5 rounded-lg border border-border/60 bg-background/40 px-3 py-2.5">

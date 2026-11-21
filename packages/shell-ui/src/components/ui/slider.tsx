@@ -1,4 +1,4 @@
-/* oxlint-disable react/no-array-index-key, react-doctor/no-array-index-as-key -- Slider thumbs are positional controls whose identity is their index. */
+/* oxlint-disable react/no-array-index-key -- Slider thumbs are positional controls whose identity is their index. */
 "use client";
 
 import { cn } from "@workspace/ui/lib/utils";
@@ -6,14 +6,14 @@ import { Slider as SliderPrimitive } from "radix-ui";
 import type * as React from "react";
 import { useMemo } from "react";
 
-function Slider({
+const Slider = ({
   className,
   defaultValue,
   value,
   min = 0,
   max = 100,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: React.ComponentProps<typeof SliderPrimitive.Root>) => {
   const _values = useMemo(() => {
     if (Array.isArray(value)) {
       return value;
@@ -27,7 +27,7 @@ function Slider({
   return (
     <SliderPrimitive.Root
       className={cn(
-        "relative flex w-full touch-none items-center select-none data-[disabled]:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col",
+        "relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col",
         className
       )}
       data-slot="slider"
@@ -59,6 +59,6 @@ function Slider({
       ))}
     </SliderPrimitive.Root>
   );
-}
+};
 
 export { Slider };

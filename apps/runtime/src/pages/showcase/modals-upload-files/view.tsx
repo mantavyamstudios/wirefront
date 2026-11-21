@@ -109,7 +109,7 @@ function UploadDialogScreen({ uploads, onAddFiles, onCancel, onResume, onCancelA
                 aria-label={t.dropZone}
                 className={cn(
                   "rounded-xl border-2 border-dashed bg-background px-6 py-8 text-center transition-colors",
-                  over ? "border-primary/60 bg-primary/[0.04]" : "border-border/70 hover:border-foreground/40",
+                  over ? "border-primary/60 bg-primary/4" : "border-border/70 hover:border-foreground/40",
                 )}
                 onDragLeave={() => setOver(false)}
                 onDragOver={(e) => {
@@ -136,7 +136,7 @@ function UploadDialogScreen({ uploads, onAddFiles, onCancel, onResume, onCancelA
                   tabIndex={-1}
                   type="file"
                 />
-                <div className="mx-auto flex size-10 items-center justify-center rounded-full bg-foreground/[0.06]">
+                <div className="mx-auto flex size-10 items-center justify-center rounded-full bg-foreground/6">
                   <CloudUploadIcon aria-hidden className="size-5 opacity-70" />
                 </div>
                 {/* Drag-and-drop copy only where a pointer can drag. */}
@@ -184,7 +184,7 @@ function UploadDialogScreen({ uploads, onAddFiles, onCancel, onResume, onCancelA
                               : null;
                       return (
                         <li className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/80 px-3 py-2.5" key={u.id}>
-                          <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06]">
+                          <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-foreground/6">
                             <Icon aria-hidden className="size-4 opacity-70" />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -206,7 +206,7 @@ function UploadDialogScreen({ uploads, onAddFiles, onCancel, onResume, onCancelA
                           ) : action ? (
                             <button
                               aria-label={action.label}
-                              className="grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
+                              className="grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-foreground/5 hover:text-foreground pointer-coarse:size-10"
                               onClick={action.run}
                               type="button"
                             >

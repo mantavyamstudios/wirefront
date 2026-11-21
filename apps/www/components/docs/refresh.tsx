@@ -21,7 +21,7 @@ export interface RefreshButtonProps
   onRefresh?: () => void | Promise<void>;
 }
 
-export function RefreshButton({
+export const RefreshButton = ({
   className,
   variant = "ghost",
   size,
@@ -32,7 +32,7 @@ export function RefreshButton({
   title = "Reload preview",
   "aria-label": ariaLabel = "Reload preview",
   ...props
-}: RefreshButtonProps) {
+}: RefreshButtonProps) => {
   const resolvedSize = size ?? (label ? "sm" : "icon-sm");
 
   return (
@@ -53,4 +53,4 @@ export function RefreshButton({
       {label && <span>{label}</span>}
     </Button>
   );
-}
+};

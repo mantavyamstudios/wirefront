@@ -662,7 +662,7 @@ function Summary({ model }: { model: Model }) {
 
   return (
     <div className="min-w-0 @3xl:min-h-24">
-      <p className="max-w-[46rem] text-balance font-heading text-[22px] text-muted-foreground leading-[1.3] tracking-[-0.015em] @3xl:text-[27px] @3xl:leading-[1.25]">
+      <p className="max-w-184 text-balance font-heading text-[22px] text-muted-foreground leading-[1.3] tracking-[-0.015em] @3xl:text-[27px] @3xl:leading-tight">
         {change !== null && lead
           ? rich(t.thisPeriodChange, {
               total,
@@ -877,7 +877,7 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
         </div>
       </div>
 
-      <div className="relative mt-3 h-[300px] min-h-0 w-full @4xl:h-auto @4xl:min-h-[260px] @4xl:flex-1" ref={surroundRef}>
+      <div className="relative mt-3 h-75 min-h-0 w-full @4xl:h-auto @4xl:min-h-65 @4xl:flex-1" ref={surroundRef}>
         <div
           aria-label={t.scrub}
           aria-valuemax={n - 1}
@@ -1052,9 +1052,9 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                   aria-expanded={isOpen}
                   aria-label={`${spot.compact ? "" : `${text.label}${text.delta ? ` ${text.delta}` : ""}, `}${interpolate(t.chipNote, { title: m.title, dates: momentDates(fmt, m) })}`}
                   className={cn(
-                    "absolute top-0 start-0 z-10 inline-flex h-6 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border bg-background text-xs shadow-xs/5 outline-none before:absolute before:-inset-x-1 before:-inset-y-1 focus-visible:ring-2 focus-visible:ring-ring",
+                    "absolute top-0 inset-s-0 z-10 inline-flex h-6 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border bg-background text-xs shadow-xs/5 outline-none before:absolute before:-inset-x-1 before:-inset-y-1 focus-visible:ring-2 focus-visible:ring-ring",
                     "transition-[background-color,border-color,scale] duration-150 ease-out active:scale-[0.97] [@media(hover:hover)]:hover:bg-accent",
-                    spot.compact ? "w-6 justify-center" : "ps-[3px] pe-2",
+                    spot.compact ? "w-6 justify-center" : "ps-0.75 pe-2",
                     isOpen && "border-foreground/25 bg-accent",
                   )}
                   exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.12 } }}
@@ -1089,7 +1089,7 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
           {ready && open && (
             <motion.div
               animate={{ opacity: 1, scale: 1, x: cardLeft, y: cardTop }}
-              className="pointer-events-none absolute top-0 start-0 z-20 rounded-xl border bg-popover p-3 text-popover-foreground shadow-lg/5"
+              className="pointer-events-none absolute top-0 inset-s-0 z-20 rounded-xl border bg-popover p-3 text-popover-foreground shadow-lg/5"
               exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.12 } }}
               id={cardId}
               initial={{ opacity: 0, scale: 0.97, x: cardLeft, y: cardTop }}
@@ -1140,7 +1140,7 @@ function Breakdown({ model }: { model: Model }) {
       </div>
       <div
         aria-label={interpolate(t.shareLabel, { summary: ranked.map((c) => `${c.label} ${share(c.total / total)}`).join(", ") })}
-        className="mt-3 flex h-2.5 gap-[3px]"
+        className="mt-3 flex h-2.5 gap-0.75"
         role="img"
       >
         {ranked.map((c, i) => (
@@ -1201,7 +1201,7 @@ function MomentList({ model, handlers, cardId }: { model: Model; handlers: Momen
         <span className="text-muted-foreground text-xs tabular-nums">{model.moments.length ? interpolate(t.momentsCount, { count: model.moments.length }) : t.noMoments}</span>
       </div>
       {model.moments.length ? (
-        <ul className="-mx-2.5 mt-1.5 flex min-h-0 flex-col overflow-y-auto p-0.5 pb-3 [mask-image:linear-gradient(to_bottom,black_calc(100%-1.25rem),transparent)] [scrollbar-width:thin]">
+        <ul className="-mx-2.5 mt-1.5 flex min-h-0 flex-col overflow-y-auto p-0.5 pb-3 mask-[linear-gradient(to_bottom,black_calc(100%-1.25rem),transparent)] scrollbar-thin">
           {model.moments.map((m) => {
             const isOpen = handlers.openId === m.id;
             return (
@@ -1356,7 +1356,7 @@ function RevenueStoryScreen({
   return (
     <FmtContext.Provider value={fmt}>
       <TooltipProvider>
-        <div className={cn("@container relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm", className)}>
+        <div className={cn("@container relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm", className)}>
           <aside aria-label={t.app} className="hidden w-14 shrink-0 flex-col items-center gap-1 border-e bg-muted/40 py-3 @3xl:flex">
             <span aria-label={store.name} className="mb-3 flex size-8 items-center justify-center rounded-lg bg-primary font-heading font-semibold text-primary-foreground text-sm" role="img">
               {store.name[0]}
@@ -1432,7 +1432,7 @@ function RevenueStoryScreen({
                   ) : null}
                 </div>
               ) : ready ? (
-                <div className="@container mx-auto flex min-h-full max-w-[1280px] flex-col @5xl:h-full gap-5 px-4 pt-5 pb-6 @3xl:px-7 @3xl:pt-6">
+                <div className="@container mx-auto flex min-h-full max-w-7xl flex-col @5xl:h-full gap-5 px-4 pt-5 pb-6 @3xl:px-7 @3xl:pt-6">
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
                       <p className="text-muted-foreground text-xs tabular-nums">
@@ -1459,9 +1459,9 @@ function RevenueStoryScreen({
                   </div>
                 </div>
               ) : (
-                <div className="mx-auto flex h-full max-w-[1280px] flex-col gap-5 px-4 pt-5 pb-6 @3xl:px-7 @3xl:pt-6">
-                  <Skeleton className="h-24 w-full max-w-[46rem] motion-reduce:animate-none" />
-                  <Skeleton className="min-h-[260px] w-full flex-1 motion-reduce:animate-none" />
+                <div className="mx-auto flex h-full max-w-7xl flex-col gap-5 px-4 pt-5 pb-6 @3xl:px-7 @3xl:pt-6">
+                  <Skeleton className="h-24 w-full max-w-184 motion-reduce:animate-none" />
+                  <Skeleton className="min-h-65 w-full flex-1 motion-reduce:animate-none" />
                 </div>
               )}
             </main>

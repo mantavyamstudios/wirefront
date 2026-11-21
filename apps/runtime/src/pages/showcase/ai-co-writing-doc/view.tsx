@@ -133,9 +133,9 @@ function Caret({ person, label, layoutId, idle }: { person: Collaborator; label:
   return (
     <motion.span aria-hidden className="group/caret relative inline-block h-[1.15em] w-0 translate-y-[0.18em] align-baseline" layoutId={layoutId} transition={{ type: "spring", stiffness: 260, damping: 28 }}>
       <span className="absolute -inset-x-1.5 -top-1.5 bottom-0" />
-      <motion.span animate={idle && !reduce ? { opacity: [1, 1, 0.25, 1] } : { opacity: 1 }} className={cn("absolute inset-y-0 -start-px w-0.5 rounded-full", t.caret)} transition={{ duration: 1.4, repeat: Number.POSITIVE_INFINITY }} />
-      <span className={cn("absolute -top-1 -start-px size-1.5 rounded-[calc(var(--radius)*0.2)] transition-opacity duration-200", t.caret, tag ? "opacity-0" : "opacity-100 group-hover/caret:opacity-0")} />
-      <span className={cn("pointer-events-none absolute bottom-full -start-px mb-0.5 inline-flex origin-bottom-left items-center gap-1 whitespace-nowrap rounded-md rounded-es-none px-1.5 py-px font-medium font-sans text-[10px] leading-4 shadow-xs/5 transition-[opacity,scale] duration-200 ease-out motion-reduce:transition-none", t.tag, tag ? "scale-100 opacity-100" : "scale-95 opacity-0 group-hover/caret:scale-100 group-hover/caret:opacity-100")}>
+      <motion.span animate={idle && !reduce ? { opacity: [1, 1, 0.25, 1] } : { opacity: 1 }} className={cn("absolute inset-y-0 -inset-s-px w-0.5 rounded-full", t.caret)} transition={{ duration: 1.4, repeat: Number.POSITIVE_INFINITY }} />
+      <span className={cn("absolute -top-1 -inset-s-px size-1.5 rounded-[calc(var(--radius)*0.2)] transition-opacity duration-200", t.caret, tag ? "opacity-0" : "opacity-100 group-hover/caret:opacity-0")} />
+      <span className={cn("pointer-events-none absolute bottom-full -inset-s-px mb-0.5 inline-flex origin-bottom-left items-center gap-1 whitespace-nowrap rounded-md rounded-es-none px-1.5 py-px font-medium font-sans text-[10px] leading-4 shadow-xs/5 transition-[opacity,scale] duration-200 ease-out motion-reduce:transition-none", t.tag, tag ? "scale-100 opacity-100" : "scale-95 opacity-0 group-hover/caret:scale-100 group-hover/caret:opacity-100")}>
         {person.agent ? <SparklesIcon className="size-2.5" /> : null}
         {label}
       </span>
@@ -312,7 +312,7 @@ function CoWritingDocScreen({
 
     if (flash === b.id) {
       parts.push(
-        <motion.span animate={{ opacity: [0.9, 0] }} className="ms-1 inline-flex translate-y-[-1px] items-center gap-1 rounded-full bg-success/12 px-1.5 align-middle font-medium font-sans text-[10px] text-success-foreground" key="flash" transition={{ duration: 1.4, ease: "easeOut", delay: 0.2 }}>
+        <motion.span animate={{ opacity: [0.9, 0] }} className="ms-1 inline-flex -translate-y-px items-center gap-1 rounded-full bg-success/12 px-1.5 align-middle font-medium font-sans text-[10px] text-success-foreground" key="flash" transition={{ duration: 1.4, ease: "easeOut", delay: 0.2 }}>
           <CheckIcon className="size-2.5" />
           {t.accepted}
         </motion.span>,
@@ -326,7 +326,7 @@ function CoWritingDocScreen({
       );
       if (pending && (onAcceptSuggestion || onRejectSuggestion)) {
         parts.push(
-          <motion.span animate={{ opacity: 1, y: 0, scale: 1 }} className="ms-2 inline-flex origin-left translate-y-[-2px] items-center gap-0.5 rounded-lg border bg-popover p-0.5 align-middle font-sans text-xs shadow-sm/5" initial={{ opacity: 0, y: 4, scale: 0.95 }} key="actions" transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}>
+          <motion.span animate={{ opacity: 1, y: 0, scale: 1 }} className="ms-2 inline-flex origin-left -translate-y-0.5 items-center gap-0.5 rounded-lg border bg-popover p-0.5 align-middle font-sans text-xs shadow-sm/5" initial={{ opacity: 0, y: 4, scale: 0.95 }} key="actions" transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}>
             {onAcceptSuggestion ? (
               <button className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md px-2 font-medium text-success-foreground outline-none transition-[background-color,scale] duration-150 ease-out hover:bg-success/10 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97]" onClick={() => decide(true)} type="button">
                 <CheckIcon aria-hidden className="size-3.5" />
@@ -477,7 +477,7 @@ function CoWritingDocScreen({
                     <Avatar className={cn("size-7 bg-background", p.agent && "rounded-lg")}>
                       <AvatarFallback className={cn("text-[10px]", toneCls[p.tone].avatar, p.agent && "rounded-lg")}>{p.agent ? <SparklesIcon className="size-3.5" /> : p.initials}</AvatarFallback>
                     </Avatar>
-                    <span className={cn("absolute -bottom-0.5 start-1/2 h-0.5 w-3 -translate-x-1/2 rounded-full rtl:translate-x-1/2", toneCls[p.tone].caret)} />
+                    <span className={cn("absolute -bottom-0.5 inset-s-1/2 h-0.5 w-3 -translate-x-1/2 rounded-full rtl:translate-x-1/2", toneCls[p.tone].caret)} />
                   </TooltipTrigger>
                   <TooltipContent>{p.agent ? interpolate(t.agentTip, { name: p.name }) : p.name}</TooltipContent>
                 </Tooltip>
@@ -492,7 +492,7 @@ function CoWritingDocScreen({
           </header>
 
           {hasToolbar ? (
-            <div aria-label={t.toolbar} className="flex h-11 shrink-0 items-center gap-0.5 overflow-x-auto border-b px-2 [scrollbar-width:none] @3xl:px-3" role="toolbar">
+            <div aria-label={t.toolbar} className="flex h-11 shrink-0 items-center gap-0.5 overflow-x-auto border-b px-2 scrollbar-none @3xl:px-3" role="toolbar">
               {onUndo ? (
                 <Button aria-label={t.undo} onClick={onUndo} size="icon-sm" variant="ghost">
                   <UndoIcon />
@@ -558,7 +558,7 @@ function CoWritingDocScreen({
                           <h2 className="font-heading font-semibold text-lg tracking-tight">{renderText(b)}</h2>
                         ) : (
                           <p className="text-[15px] text-foreground/88 leading-7">
-                            {b.type === "li" ? <span aria-hidden className="absolute start-1.5 top-[0.8em] size-1.5 rounded-full bg-muted-foreground/60" /> : null}
+                            {b.type === "li" ? <span aria-hidden className="absolute inset-s-1.5 top-[0.8em] size-1.5 rounded-full bg-muted-foreground/60" /> : null}
                             {renderText(b)}
                           </p>
                         )}

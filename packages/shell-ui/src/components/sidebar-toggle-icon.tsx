@@ -23,41 +23,39 @@ export interface SidebarToggleIconProps {
   strokeWidth?: number;
 }
 
-export function SidebarToggleIcon({
+export const SidebarToggleIcon = ({
   isOpen,
   strokeWidth = 1.5,
   className,
-}: SidebarToggleIconProps) {
-  return (
-    <svg
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      height="24"
-      viewBox="0 0 24 24"
-      width="24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Outer border — foreground fill + stroke */}
-      <path
-        d={OUTER}
-        fill="currentColor"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={strokeWidth}
-      />
+}: SidebarToggleIconProps) => (
+  <svg
+    aria-hidden="true"
+    className={className}
+    fill="none"
+    height="24"
+    viewBox="0 0 24 24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {/* Outer border — foreground fill + stroke */}
+    <path
+      d={OUTER}
+      fill="currentColor"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={strokeWidth}
+    />
 
-      {/* Inner panel — pure path morph, no opacity / translate tricks */}
-      <motion.path
-        animate={{ d: isOpen ? PANEL_OPEN : PANEL_CLOSED }}
-        d={isOpen ? PANEL_OPEN : PANEL_CLOSED}
-        // Start at the target shape: without it Motion has no starting `d`
-        // on mount and writes d="undefined" (console error).
-        initial={false}
-        style={{ fill: "var(--background)" }}
-        transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-      />
-    </svg>
-  );
-}
+    {/* Inner panel — pure path morph, no opacity / translate tricks */}
+    <motion.path
+      animate={{ d: isOpen ? PANEL_OPEN : PANEL_CLOSED }}
+      d={isOpen ? PANEL_OPEN : PANEL_CLOSED}
+      // Start at the target shape: without it Motion has no starting `d`
+      // on mount and writes d="undefined" (console error).
+      initial={false}
+      style={{ fill: "var(--background)" }}
+      transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+    />
+  </svg>
+);

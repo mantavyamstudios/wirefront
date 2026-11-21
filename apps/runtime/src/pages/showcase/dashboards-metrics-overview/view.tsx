@@ -212,7 +212,7 @@ function MetricsOverviewScreen({
                         aria-pressed={r === range}
                         className={cn(
                           "min-h-7 rounded px-2.5 py-1 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10",
-                          r === range ? "bg-foreground/[0.08] text-foreground" : "hover:bg-foreground/[0.05]",
+                          r === range ? "bg-foreground/8 text-foreground" : "hover:bg-foreground/5",
                         )}
                         key={r}
                         onClick={() => r !== range && onRangeChange(r)}
@@ -285,7 +285,7 @@ function MetricsOverviewScreen({
 function ActivityItem({ a, when }: { a: Activity; when: string }) {
   return (
     <li className="flex items-start gap-3 text-sm">
-      <span className="mt-1 flex size-6 items-center justify-center rounded-full bg-foreground/[0.06] font-medium text-[10px]">
+      <span className="mt-1 flex size-6 items-center justify-center rounded-full bg-foreground/6 font-medium text-[10px]">
         {initials(a.actor)}
       </span>
       <div className="min-w-0 flex-1 leading-snug">

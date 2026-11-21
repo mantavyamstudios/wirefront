@@ -83,7 +83,7 @@ export function InboxRail({
 
   return (
     <div className={cn("min-h-svh bg-background text-foreground md:grid md:grid-cols-[minmax(280px,340px)_minmax(0,1fr)]", className)}>
-      <aside className={cn("flex min-h-svh flex-col border-border/60 bg-foreground/[0.02] md:sticky md:top-0 md:h-svh md:min-h-0 md:border-e", detailOpen && "max-md:hidden")}>
+      <aside className={cn("flex min-h-svh flex-col border-border/60 bg-foreground/2 md:sticky md:top-0 md:h-svh md:min-h-0 md:border-e", detailOpen && "max-md:hidden")}>
         <div className="border-border/60 border-b px-4 py-3">
           <div className="flex items-center gap-2">
             <InboxIcon aria-hidden className="size-4 opacity-70" />
@@ -115,7 +115,7 @@ export function InboxRail({
         >
           {FILTERS.map((f) => (
             <Radio.Root
-              className="min-h-7 cursor-pointer rounded px-2 py-1 text-muted-foreground uppercase outline-none transition-colors hover:bg-foreground/[0.03] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground/[0.08] data-checked:text-foreground pointer-coarse:min-h-11"
+              className="min-h-7 cursor-pointer rounded px-2 py-1 text-muted-foreground uppercase outline-none transition-colors hover:bg-foreground/3 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground/8 data-checked:text-foreground pointer-coarse:min-h-11"
               key={f}
               value={f}
             >
@@ -133,12 +133,12 @@ export function InboxRail({
               <li className="border-border/40 border-b" key={thread.id}>
                 <button
                   aria-current={active ? "true" : undefined}
-                  className={cn("relative w-full px-4 py-3 text-start outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", active ? "md:bg-foreground/[0.06]" : "hover:bg-foreground/[0.03]")}
+                  className={cn("relative w-full px-4 py-3 text-start outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", active ? "md:bg-foreground/6" : "hover:bg-foreground/3")}
                   onClick={() => onSelect(thread.id)}
                   type="button"
                 >
                   {thread.unread ? (
-                    <span className="absolute top-1/2 start-1.5 size-1.5 -translate-y-1/2 rounded-full bg-primary">
+                    <span className="absolute top-1/2 inset-s-1.5 size-1.5 -translate-y-1/2 rounded-full bg-primary">
                       <span className="sr-only">{t.unreadDot}</span>
                     </span>
                   ) : null}
@@ -190,7 +190,7 @@ export function InboxRail({
         {onBack ? (
           <div className="sticky top-0 z-10 flex h-14 items-center gap-2 border-border/60 border-b bg-background/90 px-2 backdrop-blur md:hidden">
             <button
-              className="flex min-h-11 items-center gap-1 rounded-md px-2 text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+              className="flex min-h-11 items-center gap-1 rounded-md px-2 text-muted-foreground text-sm transition-colors hover:bg-foreground/4 hover:text-foreground"
               onClick={onBack}
               type="button"
             >

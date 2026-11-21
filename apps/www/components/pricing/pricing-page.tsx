@@ -8,7 +8,7 @@ import { PricingCards } from "./pricing-cards";
 import { PricingFaq } from "./pricing-faq";
 import { PricingHero } from "./pricing-hero";
 
-export function PricingPage() {
+export const PricingPage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   useButton3DHover(containerRef);
 
@@ -21,4 +21,4 @@ export function PricingPage() {
       </main>
     </div>
   );
-}
+};

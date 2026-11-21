@@ -2,29 +2,27 @@ import type { Page } from "@/lib/docs/source";
 import { PUBLISHER_JSON_LD } from "@/lib/json-ld";
 import { SITE_URL } from "@/lib/site";
 
-function getBreadcrumbJsonLd(page: Page) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Docs",
-        item: `${SITE_URL}/docs`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: page.data.title,
-        item: `${SITE_URL}${page.url}`,
-      },
-    ],
-  };
-}
+const getBreadcrumbJsonLd = (page: Page) => ({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Docs",
+      item: `${SITE_URL}/docs`,
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: page.data.title,
+      item: `${SITE_URL}${page.url}`,
+    },
+  ],
+});
 
-export function getDocsPageJsonLd(page: Page) {
+export const getDocsPageJsonLd = (page: Page) => {
   const url = `${SITE_URL}${page.url}`;
   const modified = page.data.lastModified
     ? new Date(page.data.lastModified).toISOString()
@@ -52,4 +50,4 @@ export function getDocsPageJsonLd(page: Page) {
   };
 
   return [techArticle, getBreadcrumbJsonLd(page)];
-}
+};

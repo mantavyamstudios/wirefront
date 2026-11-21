@@ -256,7 +256,7 @@ function ProfileAvatar({ crop, initials, className }: { crop: AvatarCrop | null;
       <span
         aria-hidden
         className={cn(
-          "flex shrink-0 items-center justify-center rounded-full border bg-muted font-medium text-muted-foreground [container-type:size]",
+          "flex shrink-0 items-center justify-center rounded-full border bg-muted font-medium text-muted-foreground @container-size",
           className,
         )}
       >
@@ -473,7 +473,7 @@ function CropDialog({
                   <Radio.Root
                     aria-label={palettes[key].label}
                     className={cn(
-                      "relative size-10 rounded-lg bg-gradient-to-br outline-none ring-offset-2 ring-offset-popover focus-visible:ring-2 focus-visible:ring-ring",
+                      "relative size-10 rounded-lg bg-linear-to-br outline-none ring-offset-2 ring-offset-popover focus-visible:ring-2 focus-visible:ring-ring",
                       press,
                       palettes[key].swatch,
                       active && "ring-2 ring-foreground",
@@ -554,14 +554,14 @@ function MiniClock({ hours, minutes }: { hours: number | null; minutes: number |
     >
       <motion.span
         className={cn(
-          "absolute bottom-1/2 start-[calc(50%-1px)] h-2 w-0.5 origin-bottom rounded-full bg-current transition-opacity",
+          "absolute bottom-1/2 inset-s-[calc(50%-1px)] h-2 w-0.5 origin-bottom rounded-full bg-current transition-opacity",
           ready ? "opacity-100" : "opacity-0",
         )}
         style={{ rotate: hour }}
       />
       <motion.span
         className={cn(
-          "absolute bottom-1/2 start-[calc(50%-0.75px)] h-3 w-[1.5px] origin-bottom rounded-full bg-current transition-opacity",
+          "absolute bottom-1/2 inset-s-[calc(50%-0.75px)] h-3 w-[1.5px] origin-bottom rounded-full bg-current transition-opacity",
           ready ? "opacity-100" : "opacity-0",
         )}
         style={{ rotate: minute }}

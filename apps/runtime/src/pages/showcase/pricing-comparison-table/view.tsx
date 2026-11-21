@@ -77,14 +77,14 @@ function PlanComparisonScreen({ plans, sections, onChoose, defaultPlanId, classN
         </RadioGroup>
 
         <ScrollRegion aria-label={t.table} className="mt-4 rounded-xl border border-border/60 md:mt-10" orientation="horizontal">
-          <table className="w-full text-sm md:min-w-[720px]">
+          <table className="w-full text-sm md:min-w-180">
             <thead>
-              <tr className="bg-foreground/[0.02]">
-                <th className="sticky start-0 z-10 w-[45%] bg-background px-4 py-4 text-start font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em] md:w-[28%]" scope="col">
+              <tr className="bg-foreground/2">
+                <th className="sticky inset-s-0 z-10 w-[45%] bg-background px-4 py-4 text-start font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em] md:w-[28%]" scope="col">
                   {t.plan}
                 </th>
                 {plans.map((p) => (
-                  <th className={cn(col(p.id), "px-4 py-4 text-start", p.featured && "bg-foreground/[0.06]")} key={p.id} scope="col">
+                  <th className={cn(col(p.id), "px-4 py-4 text-start", p.featured && "bg-foreground/6")} key={p.id} scope="col">
                     <div className="font-medium">{p.name}</div>
                     <div className="mt-1 flex flex-wrap items-baseline gap-x-1">
                       <span className="font-heading text-xl">{p.price === null ? t.custom : format.money(p.price, p.currency, { maximumFractionDigits: 0 })}</span>
@@ -99,7 +99,7 @@ function PlanComparisonScreen({ plans, sections, onChoose, defaultPlanId, classN
                 <Fragment key={section.title}>
                   <tr>
                     <th
-                      className="border-border/50 border-y bg-foreground/[0.02] px-4 py-2 text-start font-mono text-[11px] text-muted-foreground uppercase tracking-[0.25em]"
+                      className="border-border/50 border-y bg-foreground/2 px-4 py-2 text-start font-mono text-[11px] text-muted-foreground uppercase tracking-[0.25em]"
                       colSpan={plans.length + 1}
                       scope="colgroup"
                     >
@@ -108,13 +108,13 @@ function PlanComparisonScreen({ plans, sections, onChoose, defaultPlanId, classN
                   </tr>
                   {section.rows.map((row, i) => (
                     <tr className={i < section.rows.length - 1 ? "border-border/30 border-b" : undefined} key={row.label}>
-                      <th className="sticky start-0 z-10 bg-background px-4 py-3 text-start font-normal text-foreground/85" scope="row">
+                      <th className="sticky inset-s-0 z-10 bg-background px-4 py-3 text-start font-normal text-foreground/85" scope="row">
                         {row.label}
                       </th>
                       {plans.map((p) => {
                         const v = row.values[p.id] ?? false;
                         return (
-                          <td className={cn(col(p.id), "px-4 py-3", p.featured && "bg-foreground/[0.04]")} key={p.id}>
+                          <td className={cn(col(p.id), "px-4 py-3", p.featured && "bg-foreground/4")} key={p.id}>
                             {typeof v === "boolean" ? (
                               <>
                                 {v ? <CheckIcon aria-hidden className="size-4 text-category-2-foreground" /> : <MinusIcon aria-hidden className="size-4 text-muted-foreground" />}
@@ -130,8 +130,8 @@ function PlanComparisonScreen({ plans, sections, onChoose, defaultPlanId, classN
                   ))}
                 </Fragment>
               ))}
-              <tr className="bg-foreground/[0.02]">
-                <td className="sticky start-0 z-10 bg-background" />
+              <tr className="bg-foreground/2">
+                <td className="sticky inset-s-0 z-10 bg-background" />
                 {plans.map((p) => (
                   <td className={cn(col(p.id), "px-4 py-4")} key={p.id}>
                     <Button className="max-md:w-full" onClick={() => onChoose(p)} size="sm" type="button" variant={p.featured ? "default" : "outline"}>

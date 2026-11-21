@@ -62,7 +62,7 @@ export const DocsShellNavItem = memo(
         {isActive && (
           <motion.span
             animate={{ width: 23 }}
-            className="pointer-events-none absolute top-1/2 left-[4px] z-35 h-[1.8px] -translate-y-1/2 rounded-full"
+            className="pointer-events-none absolute top-1/2 left-1 z-35 h-[1.8px] -translate-y-1/2 rounded-full"
             layoutId="docs-shell-active-indicator"
             style={{ backgroundColor: "var(--accent-pro)" }}
             transition={
@@ -85,9 +85,9 @@ export const DocsShellNavItem = memo(
                   : { type: "spring", stiffness: 600, damping: 30 }
               }
             />
-            <motion.span className="bg-foreground/30 pointer-events-none absolute top-1/4 left-0 z-0 h-px w-[13px]" />
-            <motion.span className="bg-foreground/30 pointer-events-none absolute top-0 left-0 z-0 h-px w-[16px]" />
-            <motion.span className="bg-foreground/30 pointer-events-none absolute top-3/4 left-0 z-0 h-px w-[13px]" />
+            <motion.span className="bg-foreground/30 pointer-events-none absolute top-1/4 left-0 z-0 h-px w-3.25" />
+            <motion.span className="bg-foreground/30 pointer-events-none absolute top-0 left-0 z-0 h-px w-4" />
+            <motion.span className="bg-foreground/30 pointer-events-none absolute top-3/4 left-0 z-0 h-px w-3.25" />
           </>
         )}
 

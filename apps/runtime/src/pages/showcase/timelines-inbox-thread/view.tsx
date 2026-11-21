@@ -131,7 +131,7 @@ function EmailThreadScreen({ thread, status = "ready", error, onRetry, onToggleS
             <button
               aria-label={t.star}
               aria-pressed={starred}
-              className="-me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring aria-pressed:text-category-3-foreground pointer-coarse:size-10"
+              className="-me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring aria-pressed:text-category-3-foreground pointer-coarse:size-10"
               onClick={() => void star.run(!starred)}
               type="button"
             >
@@ -144,7 +144,7 @@ function EmailThreadScreen({ thread, status = "ready", error, onRetry, onToggleS
           <span aria-hidden>·</span>
           <span>{plural(participants.length, t.participantsOne, t.participantsOther)}</span>
           {thread.labels.map((l) => (
-            <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 normal-case tracking-normal" key={l}>
+            <span className="rounded bg-foreground/6 px-1.5 py-0.5 normal-case tracking-normal" key={l}>
               {l}
             </span>
           ))}
@@ -175,7 +175,7 @@ function EmailThreadScreen({ thread, status = "ready", error, onRetry, onToggleS
                     </time>
                   </header>
                   {m.quoted ? (
-                    <blockquote className="mt-3 flex gap-3 break-words border-foreground/30 border-s-2 ps-3 text-muted-foreground text-sm italic">
+                    <blockquote className="mt-3 flex gap-3 wrap-break-word border-foreground/30 border-s-2 ps-3 text-muted-foreground text-sm italic">
                       <CornerUpLeftIcon aria-hidden className="mt-0.5 size-3 shrink-0 opacity-60" />
                       <span>
                         <span className="sr-only">{t.quoted}</span>“{m.quoted}”
@@ -191,7 +191,7 @@ function EmailThreadScreen({ thread, status = "ready", error, onRetry, onToggleS
                         return (
                           <li key={a.id}>
                             {a.href ? (
-                              <WirefrontLink className={cn(chip, "outline-none hover:bg-foreground/[0.03] focus-visible:ring-2 focus-visible:ring-ring")} href={a.href}>
+                              <WirefrontLink className={cn(chip, "outline-none hover:bg-foreground/3 focus-visible:ring-2 focus-visible:ring-ring")} href={a.href}>
                                 <PaperclipIcon aria-hidden className="size-3 shrink-0 opacity-60" />
                                 <span className="min-w-0 truncate">{label}</span>
                               </WirefrontLink>
@@ -209,7 +209,7 @@ function EmailThreadScreen({ thread, status = "ready", error, onRetry, onToggleS
                   {onReply && i < thread.messages.length - 1 ? (
                     <div className="mt-2 -ms-2 flex items-center gap-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                       <button
-                        className="inline-flex min-h-8 items-center gap-1 rounded-md px-2 outline-none hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10"
+                        className="inline-flex min-h-8 items-center gap-1 rounded-md px-2 outline-none hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10"
                         onClick={() => boxRef.current?.focus()}
                         type="button"
                       >

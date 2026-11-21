@@ -66,7 +66,7 @@ const MENU_PAGES = [
   { title: "Terms of Service", url: "/legal/terms" },
 ];
 
-function GuideItem({
+const GuideItem = ({
   item,
   Item,
   onNavigate,
@@ -74,7 +74,7 @@ function GuideItem({
   item: GuideLink;
   Item: SiteSidebarPrimitives["Item"];
   onNavigate?: () => void;
-}) {
+}) => {
   const pathname = usePathname();
   const isNew = useDocsPageNew(item.external ? undefined : item.url);
   return (
@@ -87,15 +87,15 @@ function GuideItem({
       onClick={item.external ? undefined : onNavigate}
     />
   );
-}
+};
 
-export function SiteSidebarNav({
+export const SiteSidebarNav = ({
   components: { Group, Item, Section },
   onNavigate,
 }: {
   components: SiteSidebarPrimitives;
   onNavigate?: () => void;
-}) {
+}) => {
   const pathname = usePathname();
 
   return (
@@ -165,4 +165,4 @@ export function SiteSidebarNav({
       </Section>
     </>
   );
-}
+};

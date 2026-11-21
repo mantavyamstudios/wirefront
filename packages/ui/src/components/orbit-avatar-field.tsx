@@ -145,9 +145,8 @@ export function OrbitAvatarField({
 
   return (
     <span
-      aria-hidden={title ? undefined : true}
-      role={title ? "img" : undefined}
-      aria-label={title}
+      // Labelled image when titled, decorative otherwise.
+      {...(title ? { role: "img", "aria-label": title } : { "aria-hidden": true })}
       className={cn(
         "inline-block shrink-0 align-middle leading-none",
         toneClass,

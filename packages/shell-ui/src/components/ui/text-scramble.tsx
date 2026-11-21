@@ -2,7 +2,7 @@
 
 import { getMotionComponent } from "@workspace/ui/lib/get-motion-component";
 import type { MotionProps } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import type {
   ComponentType,
   ElementType,
@@ -59,34 +59,30 @@ export type TextScrambleProps = {
 const defaultChars =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-function randomScrambleChar(characterSet: string): string {
-  return characterSet[Math.floor(Math.random() * characterSet.length)] ?? "";
-}
+const randomScrambleChar = (characterSet: string): string =>
+  characterSet[Math.floor(Math.random() * characterSet.length)] ?? "";
 
-function buildScrambledText(
+const buildScrambledText = (
   source: string,
   revealedLength: number,
   characterSet: string
-): string {
+): string => {
   let scrambled = "";
 
-  for (let i = 0; i < source.length; i++) {
+  for (let i = 0; i < source.length; i += 1) {
     if (source[i] === " ") {
       scrambled += " ";
       continue;
     }
 
-    if (i < revealedLength) {
-      scrambled += source[i];
-    } else {
-      scrambled += randomScrambleChar(characterSet);
-    }
+    scrambled +=
+      i < revealedLength ? source[i] : randomScrambleChar(characterSet);
   }
 
   return scrambled;
-}
+};
 
-export function TextScramble({
+export const TextScramble = ({
   children,
   duration = 0.8,
   speed = 0.04,
@@ -100,10 +96,11 @@ export function TextScramble({
   onScrambleComplete,
   onMouseEnter,
   ...props
-}: TextScrambleProps) {
+}: TextScrambleProps) => {
   const MotionComponent = getMotionComponent(Component) as MotionTextComponent;
   const [frame, setFrame] = useState<ScrambleFrame | null>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
+  // Not rendered: only guards against starting a second run.
+  const isAnimatingRef = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const text = children;
   const shouldTriggerOnMount = trigger && !triggerOnHover;
@@ -116,12 +113,12 @@ export function TextScramble({
   };
 
   const scramble = () => {
-    if (isAnimating) {
+    if (isAnimatingRef.current) {
       return;
     }
 
     clearAnimationInterval();
-    setIsAnimating(true);
+    isAnimatingRef.current = true;
 
     const holdSteps = holdDuration / speed;
     const revealSteps = duration / speed;
@@ -145,34 +142,27 @@ export function TextScramble({
         });
       }
 
-      step++;
+      step += 1;
 
       if (step > totalSteps) {
         clearAnimationInterval();
         setFrame(null);
-        setIsAnimating(false);
+        isAnimatingRef.current = false;
         onScrambleComplete?.();
       }
     }, speed * 1000);
   };
 
-  // oxlint-disable-next-line react-hooks/exhaustive-deps -- unmount cleanup only
-  useEffect(
-    () => () => {
-      clearAnimationInterval();
-    },
-    []
-  );
+  const stopOnUnmount = useEffectEvent(clearAnimationInterval);
+  useEffect(() => () => stopOnUnmount(), []);
 
-  /* oxlint-disable react-hooks/exhaustive-deps -- re-run only when mount trigger changes */
+  // Scrambles when the mount trigger turns on, with the latest props.
+  const scrambleOnTrigger = useEffectEvent(scramble);
   useEffect(() => {
-    if (!shouldTriggerOnMount) {
-      return;
+    if (shouldTriggerOnMount) {
+      scrambleOnTrigger();
     }
-
-    scramble();
-  }, [shouldTriggerOnMount, trigger]);
-  /* oxlint-enable react-hooks/exhaustive-deps */
+  }, [shouldTriggerOnMount]);
 
   const handleMouseEnter: MouseEventHandler<Element> = (event) => {
     onMouseEnter?.(event);
@@ -193,7 +183,7 @@ export function TextScramble({
 
     return frame.text.split("").map((char, index) => (
       <span
-        // oxlint-disable-next-line react/no-array-index-key, react-doctor/no-array-index-as-key -- static string indices per frame
+        // oxlint-disable-next-line react/no-array-index-key -- static string indices per frame
         key={index}
         style={
           index < frame.revealedLength ? undefined : { color: scrambleColor }
@@ -214,4 +204,4 @@ export function TextScramble({
       {renderContent()}
     </MotionComponent>
   );
-}
+};

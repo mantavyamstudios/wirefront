@@ -69,7 +69,7 @@ function MentionComposerScreen({ members, groups = [], value: controlled, defaul
     setActiveIdx(0);
     onMention?.(handle);
   };
-  const optionClass = (i: number) => cn("flex w-full cursor-pointer items-center gap-3 px-3 py-2 text-start transition-colors pointer-coarse:py-2.5", i === active ? "bg-foreground/[0.06]" : "hover:bg-foreground/[0.03]");
+  const optionClass = (i: number) => cn("flex w-full cursor-pointer items-center gap-3 px-3 py-2 text-start transition-colors pointer-coarse:py-2.5", i === active ? "bg-foreground/6" : "hover:bg-foreground/3");
   const listId = `${uid}-list`;
   const inputId = `${uid}-input`;
 
@@ -111,7 +111,7 @@ function MentionComposerScreen({ members, groups = [], value: controlled, defaul
         value={value}
       />
       {open ? (
-        <div className="z-30 mt-2 overflow-hidden rounded-xl border border-border/70 bg-background shadow-2xl sm:absolute sm:start-4 sm:top-full sm:mt-1 sm:w-80">
+        <div className="z-30 mt-2 overflow-hidden rounded-xl border border-border/70 bg-background shadow-2xl sm:absolute sm:inset-s-4 sm:top-full sm:mt-1 sm:w-80">
           <div aria-label={t.suggestions} className="max-h-[40svh] overflow-y-auto" id={listId} role="listbox">
             {people.length ? (
               <div className="px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]" role="presentation">
@@ -147,7 +147,7 @@ function MentionComposerScreen({ members, groups = [], value: controlled, defaul
                     </>
                   ) : (
                     <>
-                      <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-full bg-foreground/[0.08] font-mono text-[11px]">
+                      <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-full bg-foreground/8 font-mono text-[11px]">
                         #
                       </span>
                       <div className="min-w-0 flex-1">
@@ -160,7 +160,7 @@ function MentionComposerScreen({ members, groups = [], value: controlled, defaul
               </Fragment>
             ))}
           </div>
-          <div aria-hidden className="flex items-center justify-between gap-3 border-border/60 border-t bg-foreground/[0.02] px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] pointer-coarse:hidden">
+          <div aria-hidden className="flex items-center justify-between gap-3 border-border/60 border-t bg-foreground/2 px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] pointer-coarse:hidden">
             <span className="flex items-center gap-1">
               <kbd className="rounded border border-border/60 bg-background/80 px-1 normal-case">↑</kbd>
               <kbd className="rounded border border-border/60 bg-background/80 px-1 normal-case">↓</kbd>

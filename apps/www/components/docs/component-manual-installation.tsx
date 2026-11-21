@@ -15,6 +15,9 @@ import {
   isCodeBlockCached,
 } from "@/components/docs/dynamic-codeblock";
 
+/** The package names back from a comma-joined key (package names have no commas). */
+const fromKey = (key: string) => (key ? key.split(",") : undefined);
+
 const getDepsCommands = (dependencies?: string[]) => {
   const packageNames = dependencies?.flatMap((dep) => {
     const trimmed = dep.trim();
@@ -114,13 +117,13 @@ const getExpandButtonContent = (isReady: boolean, isOpen: boolean) => {
   return isOpen ? "Collapse" : "Expand";
 };
 
-function getCollapsedHtml(fullHtml: string, maxLines = 10): string {
+const getCollapsedHtml = (fullHtml: string, maxLines = 10): string => {
   const parts = fullHtml.split('<span class="line">');
   if (parts.length <= maxLines) {
     return fullHtml;
   }
   return `${parts.slice(0, maxLines).join('<span class="line">')}</code></pre>`;
-}
+};
 
 const ManualCodeViewer = ({
   code,
@@ -147,11 +150,10 @@ const ManualCodeViewer = ({
 
   const activeHtml = isOpened ? html : collapsedHtml;
 
-  useEffect(() => {
-    if (!isActive) {
-      setIsOpened(false);
-    }
-  }, [isActive]);
+  // Collapses again when this tab is no longer active.
+  if (!isActive && isOpened) {
+    setIsOpened(false);
+  }
 
   useEffect(() => {
     if (prevCodeRef.current !== code) {
@@ -220,7 +222,7 @@ const ManualCodeViewer = ({
             : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
         }
       >
-        <div className="[&_.fd-codeblock]:my-0 [&_.fd-codeblock]:rounded-xl [&_.fd-codeblock]:border-0 [&_code]:pb-16 [&_pre]:my-0 [&_pre]:max-h-[650px] [&_pre]:p-4 [&_pre]:focus-visible:outline-none">
+        <div className="[&_.fd-codeblock]:my-0 [&_.fd-codeblock]:rounded-xl [&_.fd-codeblock]:border-0 [&_code]:pb-16 [&_pre]:my-0 [&_pre]:max-h-162.5 [&_pre]:p-4 [&_pre]:focus-visible:outline-none">
           {codeBlockNode}
         </div>
       </motion.div>
@@ -229,8 +231,8 @@ const ManualCodeViewer = ({
         className={cn(
           "pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center pb-3 transition-[height,background] duration-300",
           isOpened && isCodeReady
-            ? "from-background/90 via-background/40 h-16 bg-gradient-to-t to-transparent"
-            : "from-background via-background/80 h-24 bg-gradient-to-t to-transparent"
+            ? "from-background/90 via-background/40 h-16 bg-linear-to-t to-transparent"
+            : "from-background via-background/80 h-24 bg-linear-to-t to-transparent"
         )}
       >
         <Button
@@ -251,10 +253,10 @@ const ManualCodeViewer = ({
   );
 };
 
-function resolveFileGroups(
+const resolveFileGroups = (
   files: ManualInstallFile[],
   groupConfigs?: RegistryFileGroupConfig[]
-): ManualFileGroup[] | null {
+): ManualFileGroup[] | null => {
   if (groupConfigs && groupConfigs.length > 0) {
     const assignedFiles = new Set<ManualInstallFile>();
     const groups: ManualFileGroup[] = [];
@@ -302,7 +304,7 @@ function resolveFileGroups(
 
   // Automatic smart grouping when files >= 4 and no custom groups specified
   if (files.length >= 4) {
-    const mainFile = files[0];
+    const [mainFile] = files;
     if (!mainFile) {
       return null;
     }
@@ -319,7 +321,7 @@ function resolveFileGroups(
   }
 
   return null;
-}
+};
 
 interface ManualFilesListProps {
   fileGroups: ManualFileGroup[] | null;
@@ -383,6 +385,21 @@ const ManualFilesList = ({
   );
 };
 
+/** An install step for one kind of dependency; nothing when there are none. */
+const DependencyStep = ({
+  codes,
+  title,
+}: {
+  codes: Record<string, string> | null | undefined;
+  title: string;
+}) =>
+  codes ? (
+    <Step>
+      <h4 className="pt-1 pb-4">{title}</h4>
+      <CodeTabs codes={codes} />
+    </Step>
+  ) : null;
+
 export const ComponentManualInstallation = ({
   path,
   dependencies,
@@ -402,22 +419,24 @@ export const ComponentManualInstallation = ({
   const devDepsKey = devDependencies?.join(",") ?? "";
   const regDepsKey = registryDependencies?.join(",") ?? "";
 
-  /* oxlint-disable react-hooks/exhaustive-deps -- stringified keys track array dependency changes stably */
-  const depsCommands = useMemo(() => getDepsCommands(dependencies), [depsKey]);
+  // Recomputed from the joined names, so equal arrays reuse the same commands.
+  const depsCommands = useMemo(
+    () => getDepsCommands(fromKey(depsKey)),
+    [depsKey]
+  );
   const devDepsCommands = useMemo(
-    () => getDepsCommands(devDependencies),
+    () => getDepsCommands(fromKey(devDepsKey)),
     [devDepsKey]
   );
   const registryDepsCommands = useMemo(
-    () => getRegistryDepsCommands(registryDependencies),
+    () => getRegistryDepsCommands(fromKey(regDepsKey)),
     [regDepsKey]
   );
-  /* oxlint-enable react-hooks/exhaustive-deps */
 
+  const isMultiFile = files !== undefined && files.length > 1;
   const fileGroupsResolved = useMemo(
-    () =>
-      files && files.length > 1 ? resolveFileGroups(files, fileGroups) : null,
-    [files, fileGroups]
+    () => (isMultiFile ? resolveFileGroups(files, fileGroups) : null),
+    [isMultiFile, files, fileGroups]
   );
 
   return (
@@ -425,39 +444,29 @@ export const ComponentManualInstallation = ({
       <Steps>
         {beforeSteps}
 
-        {depsCommands && (
-          <Step>
-            <h4 className="pt-1 pb-4">Install the following dependencies:</h4>
-            <CodeTabs codes={depsCommands} />
-          </Step>
-        )}
+        <DependencyStep
+          codes={depsCommands}
+          title="Install the following dependencies:"
+        />
 
-        {devDepsCommands && (
-          <Step>
-            <h4 className="pt-1 pb-4">
-              Install the following dev dependencies:
-            </h4>
-            <CodeTabs codes={devDepsCommands} />
-          </Step>
-        )}
+        <DependencyStep
+          codes={devDepsCommands}
+          title="Install the following dev dependencies:"
+        />
 
-        {registryDepsCommands && (
-          <Step>
-            <h4 className="pt-1 pb-4">
-              Install the following registry dependencies:
-            </h4>
-            <CodeTabs codes={registryDepsCommands} />
-          </Step>
-        )}
+        <DependencyStep
+          codes={registryDepsCommands}
+          title="Install the following registry dependencies:"
+        />
 
         {(code !== undefined || Boolean(path) || files?.length) && (
           <Step>
             <h4 className="pt-1 pb-4">
-              {files && files.length > 1
+              {isMultiFile
                 ? "Create each file below at the path shown in its header:"
                 : "Copy and paste the following code into your project:"}
             </h4>
-            {files && files.length > 1 ? (
+            {isMultiFile ? (
               <ManualFilesList
                 fileGroups={fileGroupsResolved}
                 files={files}

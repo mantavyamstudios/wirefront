@@ -25,7 +25,7 @@ const useIsomorphicLayoutEffect =
  * waits one imperceptible frame for the animation to start, instead of a
  * reduced-motion user getting a live trigger they were never supposed to.
  */
-export function usePrefersReducedMotion(): boolean {
+export const usePrefersReducedMotion = (): boolean => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(true);
 
   useIsomorphicLayoutEffect(() => {
@@ -41,4 +41,4 @@ export function usePrefersReducedMotion(): boolean {
   }, []);
 
   return prefersReducedMotion;
-}
+};

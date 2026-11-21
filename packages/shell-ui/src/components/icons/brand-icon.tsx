@@ -15,26 +15,24 @@ export const BRAND_LOGO_PATH =
 /** The mark's own box, tight around the tile. */
 export const BRAND_LOGO_VIEWBOX = "2 2 44 44";
 
-export function BrandIcon({
+export const BrandIcon = ({
   size = "sm",
   className,
   ...props
 }: {
   size?: keyof typeof sizes;
   className?: string;
-} & React.ComponentProps<"svg">) {
-  return (
-    <svg
-      className={cn(sizes[size], className)}
-      fill="currentColor"
-      viewBox={BRAND_LOGO_VIEWBOX}
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <title>Enterprise UI Playground</title>
-      <path d={BRAND_LOGO_PATH} />
-    </svg>
-  );
-}
+} & React.ComponentProps<"svg">) => (
+  <svg
+    className={cn(sizes[size], className)}
+    fill="currentColor"
+    viewBox={BRAND_LOGO_VIEWBOX}
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <title>Enterprise UI Playground</title>
+    <path d={BRAND_LOGO_PATH} />
+  </svg>
+);
 
 export default BrandIcon;

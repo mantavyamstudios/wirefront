@@ -27,23 +27,23 @@ type CursorProviderProps = Omit<CursorProviderPropsPrimitive, "children"> &
     children?: React.ReactNode;
   };
 
-function CursorProvider({ global, children, ...props }: CursorProviderProps) {
-  return (
-    <CursorProviderPrimitive global={global}>
-      {global ? (
-        children
-      ) : (
-        <CursorContainerPrimitive {...props}>
-          {children}
-        </CursorContainerPrimitive>
-      )}
-    </CursorProviderPrimitive>
-  );
-}
+const CursorProvider = ({
+  global,
+  children,
+  ...props
+}: CursorProviderProps) => (
+  <CursorProviderPrimitive global={global}>
+    {global ? (
+      children
+    ) : (
+      <CursorContainerPrimitive {...props}>{children}</CursorContainerPrimitive>
+    )}
+  </CursorProviderPrimitive>
+);
 
 type CursorProps = Omit<CursorPropsPrimitive, "children" | "asChild">;
 
-function Cursor({ className, ...props }: CursorProps) {
+const Cursor = ({ className, ...props }: CursorProps) => {
   const { cursorPos } = useCursor();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -78,7 +78,8 @@ function Cursor({ className, ...props }: CursorProps) {
       style={{
         top: smoothY,
         left: smoothX,
-        transform: "translate(-4.5%, -11%)", // Override default centering to align tip
+        // Override the default centering to align the tip.
+        transform: "translate(-4.5%, -11%)",
       }}
       {...props}
     >
@@ -87,7 +88,8 @@ function Cursor({ className, ...props }: CursorProps) {
         style={{
           rotate,
           scale,
-          transformOrigin: "4.5% 11%", // Tip of the SVG path
+          // The tip of the SVG path.
+          transformOrigin: "4.5% 11%",
         }}
         viewBox="0 0 40 40"
         xmlns="http://www.w3.org/2000/svg"
@@ -99,17 +101,17 @@ function Cursor({ className, ...props }: CursorProps) {
       </motion.svg>
     </CursorPrimitive>
   );
-}
+};
 
 type CursorFollowProps = Omit<CursorFollowPropsPrimitive, "asChild">;
 
-function CursorFollow({
+const CursorFollow = ({
   className,
   children,
   sideOffset = 15,
   alignOffset = 5,
   ...props
-}: CursorFollowProps) {
+}: CursorFollowProps) => {
   const { cursorPos } = useCursor();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -154,7 +156,7 @@ function CursorFollow({
       </motion.div>
     </CursorFollowPrimitive>
   );
-}
+};
 
 export {
   Cursor,

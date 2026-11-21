@@ -22,13 +22,13 @@ interface BlocksMenuContextValue {
 
 const BlocksMenuContext = createContext<BlocksMenuContextValue | null>(null);
 
-export function BlocksMenuProvider({
+export const BlocksMenuProvider = ({
   children,
   navItems,
 }: {
   children: ReactNode;
   navItems: ComponentGalleryItem[];
-}) {
+}) => {
   const [open, setOpen] = useState(false);
 
   const close = useCallback(() => {
@@ -82,12 +82,12 @@ export function BlocksMenuProvider({
       {children}
     </BlocksMenuContext.Provider>
   );
-}
+};
 
-export function useBlocksMenu() {
+export const useBlocksMenu = () => {
   const context = useContext(BlocksMenuContext);
   if (!context) {
     throw new Error("useBlocksMenu must be used within BlocksMenuProvider");
   }
   return context;
-}
+};

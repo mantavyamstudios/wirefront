@@ -77,14 +77,14 @@ interface TooltipPosition {
   y: number;
 }
 
-function getResolvedSide(placement: Side | `${Side}-${Align}`) {
+const getResolvedSide = (placement: Side | `${Side}-${Align}`) => {
   if (placement.includes("-")) {
     return placement.split("-")[0] as Side;
   }
   return placement as Side;
-}
+};
 
-function initialFromSide(side: Side): Partial<Record<"x" | "y", number>> {
+const initialFromSide = (side: Side): Partial<Record<"x" | "y", number>> => {
   if (side === "top") {
     return { y: 15 };
   }
@@ -95,7 +95,7 @@ function initialFromSide(side: Side): Partial<Record<"x" | "y", number>> {
     return { x: 15 };
   }
   return { x: -15 };
-}
+};
 
 interface TooltipProviderProps {
   children: React.ReactNode;
@@ -105,13 +105,19 @@ interface TooltipProviderProps {
   transition?: Transition;
 }
 
-function TooltipProvider({
+const TOOLTIP_PROVIDER_DEFAULT_TRANSITION = {
+  type: "spring",
+  stiffness: 300,
+  damping: 35,
+} as const;
+
+const TooltipProvider = ({
   children,
   id,
   openDelay = 700,
   closeDelay = 300,
-  transition = { type: "spring", stiffness: 300, damping: 35 },
-}: TooltipProviderProps) {
+  transition = TOOLTIP_PROVIDER_DEFAULT_TRANSITION,
+}: TooltipProviderProps) => {
   const globalId = useId();
   const [currentTooltip, setCurrentTooltip] = useState<TooltipData | null>(
     null
@@ -194,7 +200,7 @@ function TooltipProvider({
       <TooltipOverlay />
     </GlobalTooltipProvider>
   );
-}
+};
 
 interface RenderedTooltipContextType {
   align: Align;
@@ -206,7 +212,8 @@ const [RenderedTooltipProvider, useRenderedTooltip] =
   getStrictContext<RenderedTooltipContextType>("RenderedTooltipContext");
 
 interface FloatingContextType {
-  arrowRef: React.RefObject<SVGSVGElement | null>;
+  arrowElement: SVGSVGElement | null;
+  setArrowElement: (element: SVGSVGElement | null) => void;
   context: UseFloatingReturn["context"];
 }
 
@@ -222,15 +229,15 @@ type TooltipArrowProps = Omit<
   withTransition?: boolean;
 };
 
-function TooltipArrow({
+const TooltipArrow = ({
   ref,
   withTransition = true,
   ...props
-}: TooltipArrowProps) {
+}: TooltipArrowProps) => {
   const { side, align, open } = useRenderedTooltip();
-  const { context, arrowRef } = useFloatingContext();
+  const { context, arrowElement, setArrowElement } = useFloatingContext();
   const { transition, globalId } = useGlobalTooltip();
-  useImperativeHandle(ref, () => arrowRef.current as SVGSVGElement);
+  useImperativeHandle(ref, () => arrowElement as SVGSVGElement, [arrowElement]);
 
   const deg = { top: 0, right: 90, bottom: 180, left: -90 }[side];
 
@@ -242,21 +249,47 @@ function TooltipArrow({
       data-slot="tooltip-arrow"
       data-state={open ? "open" : "closed"}
       layoutId={withTransition ? `tooltip-arrow-${globalId}` : undefined}
-      ref={arrowRef}
+      ref={setArrowElement}
       style={{ rotate: deg }}
       transition={withTransition ? transition : undefined}
       {...props}
     />
   );
-}
+};
 
 type TooltipPortalProps = React.ComponentProps<typeof FloatingPortal>;
 
-function TooltipPortal(props: TooltipPortalProps) {
-  return <FloatingPortal {...props} />;
-}
+const TooltipPortal = (props: TooltipPortalProps) => (
+  <FloatingPortal {...props} />
+);
 
-function TooltipOverlay() {
+/** Placement and middleware for the shared tooltip showing `data`. */
+const floatingOptions = (
+  data: TooltipData | null,
+  arrowElement: SVGSVGElement | null
+) => {
+  const side = data?.side ?? "top";
+  const align = data?.align ?? "center";
+  return {
+    placement: align === "center" ? side : (`${side}-${align}` as const),
+    whileElementsMounted: autoUpdate,
+    middleware: [
+      floatingOffset({
+        mainAxis: data?.sideOffset ?? 0,
+        crossAxis: data?.alignOffset ?? 0,
+      }),
+      flip(),
+      shift({ padding: 8 }),
+      floatingArrow({ element: arrowElement }),
+    ],
+  };
+};
+
+/** floating-ui reports no position until it has measured the tooltip. */
+const isPlaced = (value: number | null | undefined): value is number =>
+  value !== null && value !== undefined;
+
+const TooltipOverlay = () => {
   const { currentTooltip, transition, globalId, referenceElRef } =
     useGlobalTooltip();
 
@@ -265,42 +298,40 @@ function TooltipOverlay() {
     open: boolean;
   }>({ data: null, open: false });
 
-  const arrowRef = useRef<SVGSVGElement | null>(null);
+  // State, not a ref: floating-ui reads the arrow element while rendering.
+  const [arrowElement, setArrowElement] = useState<SVGSVGElement | null>(null);
 
-  const side = rendered.data?.side ?? "top";
-  const align = rendered.data?.align ?? "center";
+  const {
+    refs: { setFloating, setReference },
+    x,
+    y,
+    strategy,
+    context,
+    update,
+  } = useFloating(floatingOptions(rendered.data, arrowElement));
 
-  const { refs, x, y, strategy, context, update } = useFloating({
-    placement: align === "center" ? side : `${side}-${align}`,
-    whileElementsMounted: autoUpdate,
-    middleware: [
-      floatingOffset({
-        mainAxis: rendered.data?.sideOffset ?? 0,
-        crossAxis: rendered.data?.alignOffset ?? 0,
-      }),
-      flip(),
-      shift({ padding: 8 }),
-      floatingArrow({ element: arrowRef }),
-    ],
-  });
-
-  useEffect(() => {
+  // Keeps the last tooltip's data while it animates out.
+  const [lastTooltip, setLastTooltip] = useState<typeof currentTooltip | null>(
+    null
+  );
+  if (lastTooltip !== currentTooltip) {
+    setLastTooltip(currentTooltip);
     if (currentTooltip) {
       setRendered({ data: currentTooltip, open: true });
-    } else {
-      setRendered((p) => (p.data ? { ...p, open: false } : p));
+    } else if (rendered.data) {
+      setRendered({ ...rendered, open: false });
     }
-  }, [currentTooltip]);
+  }
 
-  // oxlint-disable-next-line react-hooks/exhaustive-deps -- rendered.data must re-run this so the shared tooltip re-anchors to each new trigger as the cursor moves between elements
+  // Re-anchors the shared tooltip to each new trigger as the cursor moves between elements.
   useLayoutEffect(() => {
-    if (referenceElRef.current) {
-      refs.setReference(referenceElRef.current);
+    if (rendered.data && referenceElRef.current) {
+      setReference(referenceElRef.current);
       update();
     }
-  }, [referenceElRef, refs, update, rendered.data]);
+  }, [referenceElRef, setReference, update, rendered.data]);
 
-  const ready = x !== null && x !== undefined && y !== null && y !== undefined;
+  const ready = isPlaced(x) && isPlaced(y);
   const Component = rendered.data?.contentAsChild ? Slot : motion.div;
   const resolvedSide = getResolvedSide(context.placement);
 
@@ -313,7 +344,7 @@ function TooltipOverlay() {
             data-side={resolvedSide}
             data-slot="tooltip-overlay"
             data-state={rendered.open ? "open" : "closed"}
-            ref={refs.setFloating}
+            ref={setFloating}
             style={{
               position: strategy,
               top: 0,
@@ -322,7 +353,9 @@ function TooltipOverlay() {
               transform: `translate3d(${x ?? 0}px, ${y ?? 0}px, 0)`,
             }}
           >
-            <FloatingProvider value={{ context, arrowRef }}>
+            <FloatingProvider
+              value={{ context, arrowElement, setArrowElement }}
+            >
               <RenderedTooltipProvider
                 value={{
                   side: resolvedSide,
@@ -374,7 +407,7 @@ function TooltipOverlay() {
       )}
     </AnimatePresence>
   );
-}
+};
 
 interface TooltipProps {
   align?: Align;
@@ -384,13 +417,13 @@ interface TooltipProps {
   sideOffset?: number;
 }
 
-function Tooltip({
+const Tooltip = ({
   children,
   side = "top",
   sideOffset = 0,
   align = "center",
   alignOffset = 0,
-}: TooltipProps) {
+}: TooltipProps) => {
   const id = useId();
   const [props, setProps] = useState<HTMLMotionProps<"div">>({});
   const [asChild, setAsChild] = useState(false);
@@ -412,14 +445,14 @@ function Tooltip({
       {children}
     </LocalTooltipProvider>
   );
-}
+};
 
 type TooltipContentProps = WithAsChild<HTMLMotionProps<"div">>;
 
-function shallowEqualWithoutChildren(
+const shallowEqualWithoutChildren = (
   a?: HTMLMotionProps<"div">,
   b?: HTMLMotionProps<"div">
-) {
+) => {
   if (a === b) {
     return true;
   }
@@ -438,9 +471,9 @@ function shallowEqualWithoutChildren(
     }
   }
   return true;
-}
+};
 
-function TooltipContent({ asChild = false, ...props }: TooltipContentProps) {
+const TooltipContent = ({ asChild = false, ...props }: TooltipContentProps) => {
   const { setProps, setAsChild } = useTooltip();
   const lastPropsRef = useRef<HTMLMotionProps<"div"> | undefined>(undefined);
 
@@ -449,7 +482,6 @@ function TooltipContent({ asChild = false, ...props }: TooltipContentProps) {
       lastPropsRef.current = props;
       setProps(props);
     }
-    // oxlint-disable-next-line react-hooks/exhaustive-deps -- This rest-props object is intentionally compared shallowly before updating provider state.
   }, [props, setProps]);
 
   useEffect(() => {
@@ -457,11 +489,11 @@ function TooltipContent({ asChild = false, ...props }: TooltipContentProps) {
   }, [asChild, setAsChild]);
 
   return null;
-}
+};
 
 type TooltipTriggerProps = WithAsChild<HTMLMotionProps<"div">>;
 
-function TooltipTrigger({
+const TooltipTrigger = ({
   ref,
   onMouseEnter,
   onMouseLeave,
@@ -470,7 +502,7 @@ function TooltipTrigger({
   onPointerDown,
   asChild = false,
   ...props
-}: TooltipTriggerProps) {
+}: TooltipTriggerProps) => {
   const {
     props: contentProps,
     asChild: contentAsChild,
@@ -527,7 +559,7 @@ function TooltipTrigger({
       if (currentTooltip?.id === id) {
         suppressNextFocusRef.current = true;
         hideImmediate();
-        Promise.resolve().then(() => {
+        queueMicrotask(() => {
           suppressNextFocusRef.current = false;
         });
       }
@@ -587,7 +619,7 @@ function TooltipTrigger({
       {...props}
     />
   );
-}
+};
 
 export {
   type GlobalTooltipContextType,

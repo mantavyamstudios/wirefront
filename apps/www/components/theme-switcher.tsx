@@ -2,18 +2,15 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 
 import { setThemeWithTransition } from "@/lib/theme-transition";
+import { useIsClient } from "@/lib/use-is-client";
 import { Switch } from "@/registry/ui/base/switch";
 
 export const ThemeSwitcher = ({ className }: { className?: string }) => {
   const { resolvedTheme: theme, setTheme } = useTheme();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const isClient = useIsClient();
 
   const handleThemeChange = useCallback(
     (checked: boolean) => {

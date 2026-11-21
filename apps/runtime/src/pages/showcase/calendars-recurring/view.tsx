@@ -183,7 +183,7 @@ function Row({ label, children }: { label: string; children: (labelId: string) =
   return (
     // Question on the left, answer on the right at every width.
     <div className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[110px_minmax(0,1fr)]">
-      <div className="break-words pt-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.1em] sm:tracking-[0.25em]" id={id}>
+      <div className="wrap-break-word pt-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-widest sm:tracking-[0.25em]" id={id}>
         {label}
       </div>
       <div className="min-w-0">{children(id)}</div>

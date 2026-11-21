@@ -8,11 +8,11 @@ export interface UnderNavMarqueeProps {
   text?: string;
 }
 
-export function UnderNavMarquee({
+export const UnderNavMarquee = ({
   isMenuOpen = false,
   isScrollingStarted: isScrollingStartedProp,
   text = "Production-grade screens, ready to wire to any backend",
-}: UnderNavMarqueeProps = {}) {
+}: UnderNavMarqueeProps = {}) => {
   const [internalScrollingStarted, setInternalScrollingStarted] =
     useState(false);
 
@@ -56,7 +56,7 @@ export function UnderNavMarquee({
           >
             <div className="marquee-css__list" data-css-marquee-list="nav">
               {Array.from({ length: 4 }).map((_, i) => (
-                // oxlint-disable-next-line react/no-array-index-key, react-doctor/no-array-index-as-key -- Static repeated marquee item
+                // oxlint-disable-next-line react/no-array-index-key -- Static repeated marquee item
                 <div className="marquee-css__item" key={i}>
                   <p
                     className="eyebrow is--nav-marquee text-white"
@@ -79,7 +79,7 @@ export function UnderNavMarquee({
             </div>
             <div className="marquee-css__list" data-css-marquee-list="nav">
               {Array.from({ length: 4 }).map((_, i) => (
-                // oxlint-disable-next-line react/no-array-index-key, react-doctor/no-array-index-as-key -- Static repeated marquee item
+                // oxlint-disable-next-line react/no-array-index-key -- Static repeated marquee item
                 <div className="marquee-css__item" key={`repeat-${i}`}>
                   <p
                     className="eyebrow is--nav-marquee text-white"
@@ -105,4 +105,4 @@ export function UnderNavMarquee({
       </div>
     </div>
   );
-}
+};

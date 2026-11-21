@@ -18,7 +18,7 @@ type CopyButtonProps = Omit<ButtonProps, "children"> & {
   delay?: number;
 };
 
-function CopyButton({
+const CopyButton = ({
   className,
   content,
   copied,
@@ -31,7 +31,7 @@ function CopyButton({
   size = "icon-sm",
   delay = 3000,
   ...props
-}: CopyButtonProps) {
+}: CopyButtonProps) => {
   const [isCopied, setIsCopied] = useControlledState({
     value: copied ?? isCopiedProp,
     onChange: (val) => {
@@ -41,27 +41,27 @@ function CopyButton({
   });
 
   const handleCopy = useCallback(
-    (e: Parameters<NonNullable<ButtonProps["onClick"]>>[0]) => {
+    async (e: Parameters<NonNullable<ButtonProps["onClick"]>>[0]) => {
       onClick?.(e);
       if (isCopied) {
         return;
       }
-      if (content) {
-        navigator.clipboard
-          .writeText(content)
-          .then(() => {
-            setIsCopied(true);
-            onCopiedChange?.(true, content);
-            onCopy?.(content);
-            setTimeout(() => {
-              setIsCopied(false);
-              onCopiedChange?.(false);
-            }, delay);
-          })
-          .catch((error) => {
-            console.error("Error copying command", error);
-          });
+      if (!content) {
+        return;
       }
+      try {
+        await navigator.clipboard.writeText(content);
+      } catch (error) {
+        console.error("Error copying command", error);
+        return;
+      }
+      setIsCopied(true);
+      onCopiedChange?.(true, content);
+      onCopy?.(content);
+      setTimeout(() => {
+        setIsCopied(false);
+        onCopiedChange?.(false);
+      }, delay);
     },
     [onClick, isCopied, content, setIsCopied, onCopiedChange, onCopy, delay]
   );
@@ -78,6 +78,6 @@ function CopyButton({
       <CopyIcon animate={isCopied} size={16} />
     </Button>
   );
-}
+};
 
 export { CopyButton, type CopyButtonProps };

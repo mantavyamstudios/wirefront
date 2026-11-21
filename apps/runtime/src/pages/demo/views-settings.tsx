@@ -17,6 +17,7 @@ import { Separator } from "@wirefront/ui/separator";
 import { Switch } from "@wirefront/ui/switch";
 import { useTheme } from "@wirefront/ui/theme-provider";
 import { useDemo, type SettingsTab } from "./store";
+import { must } from "@/lib/must";
 
 const TABS: { id: SettingsTab; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
   { id: "general", label: "General", Icon: SettingsIcon },
@@ -41,10 +42,10 @@ export function SettingsView() {
                 onClick={() => setSettingsTab(t.id)}
                 className={`flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors ${
                   settingsTab === t.id
-                    ? "bg-foreground/[0.06] text-foreground"
-                    : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"
+                    ? "bg-foreground/6 text-foreground"
+                    : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground"
                 } ${t.id === "danger" ? "text-destructive hover:bg-destructive/10 hover:text-destructive" : ""} ${
-                  settingsTab === "danger" && t.id === "danger" ? "bg-destructive/[0.08]" : ""
+                  settingsTab === "danger" && t.id === "danger" ? "bg-destructive/8" : ""
                 }`}
               >
                 <t.Icon className="size-4 opacity-70" />
@@ -67,7 +68,7 @@ export function SettingsView() {
 
 function GeneralPane() {
   const { workspaces, currentWorkspaceId, pushToast } = useDemo();
-  const ws = workspaces.find((w) => w.id === currentWorkspaceId)!;
+  const ws = must(workspaces.find((w) => w.id === currentWorkspaceId), "the current workspace");
   const [name, setName] = useState(ws.name);
   const [slug, setSlug] = useState("acme");
   const [dirty, setDirty] = useState(false);
@@ -84,7 +85,7 @@ function GeneralPane() {
 
       <Section title="Identity" hint="Visible to anyone with access.">
         <div className="flex items-center gap-4">
-          <div className="size-14 rounded-lg bg-gradient-to-br from-primary/40 to-primary/10 ring-1 ring-border/60" />
+          <div className="size-14 rounded-lg bg-linear-to-br from-primary/40 to-primary/10 ring-1 ring-border/60" />
           <div className="flex-1">
             <Button size="sm" variant="outline" type="button">
               <UploadIcon />
@@ -192,7 +193,7 @@ function AppearancePane() {
   const [palette, setPalette] = useState("graphite");
   const [density, setDensity] = useState<"comfortable" | "cozy" | "compact">("cozy");
 
-  const accent = PALETTES.find((p) => p.id === palette)!.swatch[0];
+  const accent = must(PALETTES.find((p) => p.id === palette), `the ${palette} palette`).swatch[0];
 
   return (
     <>
@@ -212,7 +213,7 @@ function AppearancePane() {
               aria-pressed={preference === m}
               className={`rounded-lg border p-3 text-left transition-colors ${
                 preference === m
-                  ? "border-foreground/60 bg-foreground/[0.04]"
+                  ? "border-foreground/60 bg-foreground/4"
                   : "border-border/60 bg-background/40 hover:border-border"
               }`}
             >
@@ -237,7 +238,7 @@ function AppearancePane() {
               aria-pressed={palette === p.id}
               className={`relative flex flex-col items-center gap-2 rounded-xl border p-3 transition-colors ${
                 palette === p.id
-                  ? "border-foreground/60 bg-foreground/[0.04]"
+                  ? "border-foreground/60 bg-foreground/4"
                   : "border-border/60 bg-background/40 hover:border-border"
               }`}
             >
@@ -273,7 +274,7 @@ function AppearancePane() {
               className={`rounded-md px-3 py-1.5 text-sm capitalize transition-colors ${
                 density === d
                   ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:bg-foreground/[0.05]"
+                  : "text-muted-foreground hover:bg-foreground/5"
               }`}
             >
               {d}
@@ -366,7 +367,7 @@ function MembersPane() {
               <div className="flex items-center gap-2">
                 <span className="truncate font-medium text-sm">{m.name}</span>
                 {i === 0 ? (
-                  <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">
+                  <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">
                     You
                   </span>
                 ) : null}
@@ -398,7 +399,7 @@ function MembersPane() {
 
 function DangerPane() {
   const { workspaces, currentWorkspaceId, pushToast } = useDemo();
-  const ws = workspaces.find((w) => w.id === currentWorkspaceId)!;
+  const ws = must(workspaces.find((w) => w.id === currentWorkspaceId), "the current workspace");
   const [phrase, setPhrase] = useState("");
   const matches = phrase === ws.name;
 
@@ -410,7 +411,7 @@ function DangerPane() {
         sub="Irreversible actions. We'll prompt for confirmation before each."
       />
 
-      <div className="rounded-xl border border-destructive/40 bg-destructive/[0.03] p-5">
+      <div className="rounded-xl border border-destructive/40 bg-destructive/3 p-5">
         <div className="flex items-start gap-3">
           <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-destructive/15 text-destructive">
             <TrashIcon className="size-4" />

@@ -6,17 +6,16 @@ import { getPageAlternates } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description:
-    "The ground rules for using Wirefront and its UI screens.",
+  description: "The ground rules for using Wirefront and its UI screens.",
   alternates: getPageAlternates("/legal/terms"),
 };
 
-export default function LegalTermsPage() {
-  return (
-    <LegalScrollView
-      lastUpdated="November 20, 2026"
-      terms={TERMS_OF_SERVICE_ITEMS}
-      title="Terms of Service"
-    />
-  );
-}
+const LegalTermsPage = () => (
+  <LegalScrollView
+    lastUpdated="November 20, 2026"
+    terms={TERMS_OF_SERVICE_ITEMS}
+    title="Terms of Service"
+  />
+);
+
+export default LegalTermsPage;

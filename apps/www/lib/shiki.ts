@@ -13,7 +13,7 @@ const LANGS: BundledLanguage[] = [
 ];
 const THEMES: BundledTheme[] = ["github-light", "github-dark"];
 
-function getHighlighter(): Promise<Highlighter> {
+const getHighlighter = (): Promise<Highlighter> => {
   if (!highlighterPromise) {
     highlighterPromise = createHighlighter({
       themes: THEMES,
@@ -21,14 +21,14 @@ function getHighlighter(): Promise<Highlighter> {
     });
   }
   return highlighterPromise;
-}
+};
 
 const htmlCache = new Map<string, string>();
 
-export async function highlightCode(
+export const highlightCode = async (
   code: string,
   lang: BundledLanguage = "tsx"
-): Promise<string> {
+): Promise<string> => {
   const cacheKey = `${lang}:${code}`;
   const cached = htmlCache.get(cacheKey);
   if (cached) {
@@ -53,4 +53,4 @@ export async function highlightCode(
   htmlCache.set(cacheKey, html);
 
   return html;
-}
+};

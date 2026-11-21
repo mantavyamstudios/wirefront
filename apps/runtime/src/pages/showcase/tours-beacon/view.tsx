@@ -31,7 +31,7 @@ function FeatureBeaconScreen({ hint, defaultOpen = false, onDismiss }: FeatureBe
   const fmt = useFormat();
   return (
     <Popover.Root defaultOpen={defaultOpen} modal={false}>
-      <Popover.Trigger aria-label={interpolate(t.trigger, { title: hint.title })} className="absolute -end-3 -top-3 z-10 grid size-10 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
+      <Popover.Trigger aria-label={interpolate(t.trigger, { title: hint.title })} className="absolute -inset-e-3 -top-3 z-10 grid size-10 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <span aria-hidden className="absolute size-4 rounded-full bg-primary/60 motion-safe:animate-ping" style={{ animationDuration: "1.6s" }} />
         <span aria-hidden className="relative size-2.5 rounded-full bg-primary ring-2 ring-background" />
       </Popover.Trigger>

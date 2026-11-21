@@ -4,9 +4,18 @@ import { cn } from "@workspace/ui/lib/utils";
 import { ChevronDown, MousePointerClick } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+
+import { useIsClient } from "@/lib/use-is-client";
 
 import { useBlocksMobileChrome } from "./blocks-mobile-chrome-context";
 import {
@@ -45,7 +54,61 @@ const mobileDockTransition = {
   duration: 0.28,
 } as const;
 
-export function ComponentPagePreviewPanel({
+/** The mobile dock's toggle between scrolling the page and using the demo. */
+const InteractToggle = ({
+  isInteracting,
+  onToggle,
+}: {
+  isInteracting: boolean;
+  onToggle: () => void;
+}) => (
+  <motion.button
+    aria-label={
+      isInteracting
+        ? "Lock interaction to scroll page"
+        : "Touch to interact with demo"
+    }
+    className={cn(
+      "flex items-center gap-1.5 rounded-full px-3.5 py-1.5",
+      "border text-xs font-medium transition-colors duration-200 active:scale-95",
+      "shadow-[0_8px_32px_rgba(0,0,0,0.2)] backdrop-blur-xl",
+      isInteracting
+        ? "border-foreground/20 bg-foreground text-background hover:bg-foreground/90 shadow-md dark:border-white/20"
+        : "border-border/60 bg-background/90 text-foreground/90 hover:bg-background hover:text-foreground dark:border-white/10 dark:bg-[#121212]/90"
+    )}
+    layout
+    onClick={onToggle}
+    transition={mobileDockTransition}
+    type="button"
+  >
+    <motion.span
+      className="inline-flex shrink-0 items-center justify-center"
+      layout="position"
+      transition={mobileDockTransition}
+    >
+      <MousePointerClick className="size-3.5" />
+    </motion.span>
+    <motion.span
+      className="inline-flex items-center overflow-hidden"
+      layout="position"
+      transition={mobileDockTransition}
+    >
+      <AnimatePresence initial={false} mode="popLayout">
+        <motion.span
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          initial={{ opacity: 0 }}
+          key={isInteracting ? "scroll" : "interact"}
+          transition={{ duration: 0.14, ease: "easeOut" }}
+        >
+          {isInteracting ? "Scroll" : "Interact"}
+        </motion.span>
+      </AnimatePresence>
+    </motion.span>
+  </motion.button>
+);
+
+export const ComponentPagePreviewPanel = ({
   previewName: _previewName,
   registryName,
   className,
@@ -56,9 +119,9 @@ export function ComponentPagePreviewPanel({
   preview,
   sourceUrl,
   sticky = true,
-}: ComponentPagePreviewPanelProps) {
+}: ComponentPagePreviewPanelProps) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const [isInteracting, setIsInteracting] = useState(false);
   const [previewKey, setPreviewKey] = useState(0);
@@ -67,10 +130,6 @@ export function ComponentPagePreviewPanel({
   const isStacked = useBlocksStackedLayout();
   const { setToolbar } = useBlocksMobileChrome();
   const { resolvedTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const exampleUrl = exampleUrlProp ?? `/examples/blocks/${registryName}`;
   const hasCustomPreview = preview !== undefined;
@@ -118,36 +177,32 @@ export function ComponentPagePreviewPanel({
     syncIframeTheme(resolvedTheme);
   }, [resolvedTheme, syncIframeTheme]);
 
+  const dismissStuckOverlay = useEffectEvent(() => {
+    if (iframeLoaded) {
+      return;
+    }
+    console.warn(
+      `[blocks preview] ${exampleUrl} didn't report ready within 1.2 s; showing it anyway`
+    );
+    setIframeLoaded(true);
+    syncIframeTheme(resolvedTheme);
+  });
+
   // Listen for iframe readiness or dismiss loading overlay after fallback timeout
   useEffect(() => {
     if (previewKey < 0) {
       return;
     }
-    function handleMessage(event: MessageEvent) {
+    const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === "blocks-preview-ready") {
         setIframeLoaded(true);
         syncIframeTheme(resolvedTheme);
       }
-    }
+    };
 
-    // Check if iframe is already loaded
-    try {
-      if (
-        iframeRef.current?.contentDocument?.readyState === "complete" &&
-        iframeRef.current.contentDocument.location.pathname !== "blank"
-      ) {
-        setIframeLoaded(true);
-        syncIframeTheme(resolvedTheme);
-      }
-    } catch {
-      // Cross-origin
-    }
-
+    // The iframe's own onLoad covers a load that finishes before this runs.
     // Safety timeout: dismiss loading overlay after 1.2s so it never gets stuck
-    const safetyTimer = setTimeout(() => {
-      setIframeLoaded(true);
-      syncIframeTheme(resolvedTheme);
-    }, 1200);
+    const safetyTimer = setTimeout(dismissStuckOverlay, 1200);
 
     window.addEventListener("message", handleMessage);
     return () => {
@@ -173,7 +228,7 @@ export function ComponentPagePreviewPanel({
     if (typeof IntersectionObserver !== "undefined") {
       const observer = new IntersectionObserver(
         (entries) => {
-          const entry = entries[0];
+          const [entry] = entries;
           if (!entry) {
             return;
           }
@@ -348,7 +403,7 @@ export function ComponentPagePreviewPanel({
         {previewToolbar}
       </div>
 
-      <div className="bg-background relative isolate w-full flex-1 transform-gpu overflow-hidden max-lg:h-full max-lg:rounded-3xl lg:h-full lg:min-h-[520px] lg:rounded-b-2xl">
+      <div className="bg-background relative isolate w-full flex-1 transform-gpu overflow-hidden max-lg:h-full max-lg:rounded-3xl lg:h-full lg:min-h-130 lg:rounded-b-2xl">
         {hasCustomPreview ? (
           // Always interactive: a custom preview (the framed Wirefront runtime)
           // is a touch target in its own right, and the page still scrolls
@@ -396,50 +451,10 @@ export function ComponentPagePreviewPanel({
                   transition={mobileDockTransition}
                 >
                   {hasCustomPreview ? null : (
-                    <motion.button
-                      aria-label={
-                        isInteracting
-                          ? "Lock interaction to scroll page"
-                          : "Touch to interact with demo"
-                      }
-                      className={cn(
-                        "flex items-center gap-1.5 rounded-full px-3.5 py-1.5",
-                        "border text-xs font-medium transition-colors duration-200 active:scale-95",
-                        "shadow-[0_8px_32px_rgba(0,0,0,0.2)] backdrop-blur-xl",
-                        isInteracting
-                          ? "border-foreground/20 bg-foreground text-background hover:bg-foreground/90 shadow-md dark:border-white/20"
-                          : "border-border/60 bg-background/90 text-foreground/90 hover:bg-background hover:text-foreground dark:border-white/10 dark:bg-[#121212]/90"
-                      )}
-                      layout
-                      onClick={() => setIsInteracting((current) => !current)}
-                      transition={mobileDockTransition}
-                      type="button"
-                    >
-                      <motion.span
-                        className="inline-flex shrink-0 items-center justify-center"
-                        layout="position"
-                        transition={mobileDockTransition}
-                      >
-                        <MousePointerClick className="size-3.5" />
-                      </motion.span>
-                      <motion.span
-                        className="inline-flex items-center overflow-hidden"
-                        layout="position"
-                        transition={mobileDockTransition}
-                      >
-                        <AnimatePresence initial={false} mode="popLayout">
-                          <motion.span
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            initial={{ opacity: 0 }}
-                            key={isInteracting ? "scroll" : "interact"}
-                            transition={{ duration: 0.14, ease: "easeOut" }}
-                          >
-                            {isInteracting ? "Scroll" : "Interact"}
-                          </motion.span>
-                        </AnimatePresence>
-                      </motion.span>
-                    </motion.button>
+                    <InteractToggle
+                      isInteracting={isInteracting}
+                      onToggle={() => setIsInteracting((current) => !current)}
+                    />
                   )}
 
                   <motion.button
@@ -488,4 +503,4 @@ export function ComponentPagePreviewPanel({
       ) : null}
     </div>
   );
-}
+};

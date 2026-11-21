@@ -20,7 +20,49 @@ import {
  * panel suppressed until the hamburger opens it again, and the overlay keeps
  * pointer-events so a leftover tap cannot toggle the menu back open.
  */
-export function DocsMobileDrawer({
+/** The drawer's classes: a mobile drawer that becomes the desktop rail, or a mobile-only drawer. */
+const asideClassName = ({
+  canAnimate,
+  desktopClassName,
+  isResponsive,
+  raised,
+  show,
+}: {
+  canAnimate: boolean;
+  desktopClassName?: string;
+  isResponsive: boolean;
+  raised: boolean;
+  show: boolean;
+}) => {
+  const motionClass = canAnimate
+    ? "max-md:transition-transform max-md:duration-250 max-md:ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:max-md:transition-none"
+    : "max-md:transition-none";
+  const drawerMotionClass = canAnimate
+    ? "transition-transform duration-250 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none"
+    : "transition-none";
+  return isResponsive
+    ? cn(
+        "max-md:fixed max-md:inset-y-2 max-md:inset-s-2 max-md:z-40 max-md:w-[min(300px,calc(100vw-1.5rem))] max-md:max-w-[min(300px,calc(100vw-1.5rem))] max-md:rounded-2xl max-md:border max-md:text-[15px] max-md:shadow-lg",
+        motionClass,
+        show
+          ? "max-md:translate-x-0"
+          : "max-md:pointer-events-none max-md:-translate-x-[calc(100%+1.25rem)]",
+        raised && "max-md:z-111",
+        "md:pointer-events-auto md:fixed md:inset-s-0 md:top-(--fd-sidebar-top) md:bottom-(--fd-sidebar-margin,0px) md:z-20 md:translate-x-0 md:items-end md:rounded-none md:border-e md:bg-transparent md:text-sm md:shadow-none",
+        "md:*:w-(--fd-sidebar-width,260px) md:*:max-w-(--fd-sidebar-width,260px)",
+        desktopClassName
+      )
+    : cn(
+        "fixed inset-y-2 inset-s-2 z-40 w-[min(300px,calc(100vw-1.5rem))] max-w-[min(300px,calc(100vw-1.5rem))] rounded-2xl border text-[15px] shadow-lg md:hidden",
+        drawerMotionClass,
+        show
+          ? "translate-x-0"
+          : "pointer-events-none -translate-x-[calc(100%+1.25rem)]",
+        raised && "z-111"
+      );
+};
+
+export const DocsMobileDrawer = ({
   children,
   className,
   desktopClassName,
@@ -35,7 +77,7 @@ export function DocsMobileDrawer({
   label: string;
   /** `responsive` = one tree for mobile drawer + desktop rail. */
   layout?: "drawer" | "responsive";
-}) {
+}) => {
   useSyncMobileSidebarPathname();
   const { open, setOpen } = useSidebar();
   const [canAnimate, setCanAnimate] = useState(false);
@@ -56,9 +98,12 @@ export function DocsMobileDrawer({
     return () => window.cancelAnimationFrame(frameId);
   }, []);
 
+  // Stays raised while open, and for the close animation after.
+  if (show && !overlayLocked) {
+    setOverlayLocked(true);
+  }
   useLayoutEffect(() => {
     if (show) {
-      setOverlayLocked(true);
       return;
     }
 
@@ -71,12 +116,6 @@ export function DocsMobileDrawer({
   const state = show ? "open" : "closed";
   const raised = show || overlayLocked;
   const isResponsive = layout === "responsive";
-  const motionClass = canAnimate
-    ? "max-md:transition-transform max-md:duration-250 max-md:ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:max-md:transition-none"
-    : "max-md:transition-none";
-  const drawerMotionClass = canAnimate
-    ? "transition-transform duration-250 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none"
-    : "transition-none";
 
   return (
     <>
@@ -85,10 +124,10 @@ export function DocsMobileDrawer({
         aria-label="Close menu"
         className={cn(
           "fixed inset-0 cursor-default backdrop-blur-xs transition-opacity duration-250 motion-reduce:transition-none md:hidden",
-          // Above AI chat (`z-[100]`) while open so Ask AI cannot cover the drawer.
-          raised ? "z-[110]" : "z-[60]",
+          // Above AI chat (`z-100`) while open so Ask AI cannot cover the drawer.
+          raised ? "z-110" : "z-60",
           show ? "opacity-100" : "opacity-0",
-          show || overlayLocked ? "pointer-events-auto" : "pointer-events-none"
+          raised ? "pointer-events-auto" : "pointer-events-none"
         )}
         onPointerDown={(event) => {
           event.preventDefault();
@@ -102,26 +141,13 @@ export function DocsMobileDrawer({
         aria-label={label}
         className={cn(
           "bg-fd-background flex min-h-0 flex-col overflow-hidden outline-none",
-          isResponsive
-            ? cn(
-                "max-md:fixed max-md:inset-y-2 max-md:start-2 max-md:z-40 max-md:w-[min(300px,calc(100vw-1.5rem))] max-md:max-w-[min(300px,calc(100vw-1.5rem))] max-md:rounded-2xl max-md:border max-md:text-[15px] max-md:shadow-lg",
-                motionClass,
-                show
-                  ? "max-md:translate-x-0"
-                  : "max-md:pointer-events-none max-md:-translate-x-[calc(100%+1.25rem)]",
-                raised && "max-md:z-[111]",
-                "md:pointer-events-auto md:fixed md:inset-s-0 md:top-(--fd-sidebar-top) md:bottom-(--fd-sidebar-margin,0px) md:z-20 md:translate-x-0 md:items-end md:rounded-none md:border-e md:bg-transparent md:text-sm md:shadow-none",
-                "md:*:w-[var(--fd-sidebar-width,260px)] md:*:max-w-[var(--fd-sidebar-width,260px)]",
-                desktopClassName
-              )
-            : cn(
-                "fixed inset-y-2 start-2 z-40 w-[min(300px,calc(100vw-1.5rem))] max-w-[min(300px,calc(100vw-1.5rem))] rounded-2xl border text-[15px] shadow-lg md:hidden",
-                drawerMotionClass,
-                show
-                  ? "translate-x-0"
-                  : "pointer-events-none -translate-x-[calc(100%+1.25rem)]",
-                raised && "z-[111]"
-              ),
+          asideClassName({
+            canAnimate,
+            desktopClassName,
+            isResponsive,
+            raised,
+            show,
+          }),
           className
         )}
         data-docs-sidebar=""
@@ -133,4 +159,4 @@ export function DocsMobileDrawer({
       </aside>
     </>
   );
-}
+};

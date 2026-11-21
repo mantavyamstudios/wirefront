@@ -17,7 +17,7 @@ export function ToursBeaconShowcasePage() {
   return (
     <div className="relative min-h-svh bg-background text-foreground">
       <div className="grid min-h-svh grid-cols-1 md:grid-cols-[220px_1fr]">
-        <aside aria-hidden className="space-y-2 border-border/60 border-e bg-foreground/[0.02] p-4 max-md:hidden">
+        <aside aria-hidden className="space-y-2 border-border/60 border-e bg-foreground/2 p-4 max-md:hidden">
           <div className="h-3 w-28 rounded bg-foreground/15" />
           <div className="h-2 w-32 rounded bg-foreground/10" />
         </aside>
@@ -37,11 +37,11 @@ export function ToursBeaconShowcasePage() {
           </div>
           <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {CARDS.map((k, i) => (
-              <div className="relative h-32 rounded-xl border border-border/50 bg-foreground/[0.02] p-4" key={k}>
+              <div className="relative h-32 rounded-xl border border-border/50 bg-foreground/2 p-4" key={k}>
                 <div aria-hidden className="h-2 w-24 rounded bg-foreground/15" />
                 <div aria-hidden className="mt-2 h-2 w-32 max-w-full rounded bg-foreground/10" />
                 {i === 2 && filters ? (
-                  <div className="absolute end-3 bottom-3">
+                  <div className="absolute inset-e-3 bottom-3">
                     <span className="relative inline-flex">
                       <SlidersHorizontalIcon aria-hidden className="size-4 text-muted-foreground" />
                       {!seen.includes(filters.id) ? <FeatureBeacon hint={filters} onDismiss={dismiss} /> : null}

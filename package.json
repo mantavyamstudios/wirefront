@@ -42,12 +42,16 @@
     "@types/pngjs": "6.0.5",
     "axe-core": "4.14.0",
     "esbuild": "^0.28.2",
+    "oxfmt": "^0.79.0",
+    "oxlint": "^1.94.0",
     "pixelmatch": "8.0.0",
     "playwright": "^1.49.0",
     "pngjs": "7.0.0",
-    "tsx": "^4.19.2",
+    "tsx": "^4.23.15",
     "turbo": "^2.9.6",
     "typescript": "~6.0.2",
+    "ultracite": "8.3.1",
+    "wrangler": "^4.166.0",
     "zod": "^4.3.6"
   },
   "overrides": {

@@ -17,7 +17,7 @@ type SiteLinkProps = ComponentProps<typeof NextLink>;
  * section's stylesheet, which this page never applies (Chrome: "preloaded
  * using link preload but not used"). An explicit `prefetch` prop wins.
  */
-export default function SiteLink({ href, prefetch, ...props }: SiteLinkProps) {
+const SiteLink = ({ href, prefetch, ...props }: SiteLinkProps) => {
   const pathname = usePathname();
   const target = typeof href === "string" ? href : (href.pathname ?? "");
   const internal = target.startsWith("/") && !target.startsWith("//");
@@ -31,4 +31,6 @@ export default function SiteLink({ href, prefetch, ...props }: SiteLinkProps) {
       {...props}
     />
   );
-}
+};
+
+export default SiteLink;

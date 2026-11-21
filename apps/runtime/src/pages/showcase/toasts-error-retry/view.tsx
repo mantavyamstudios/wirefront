@@ -61,7 +61,7 @@ function Viewport({ manager, className }: { manager: ErrorToastManager; classNam
   const { toasts } = Toast.useToastManager<ErrorData>();
   return (
     <Toast.Portal>
-      <Toast.Viewport className={cn("fixed inset-x-0 top-0 z-50 flex flex-col gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] outline-none sm:inset-x-auto sm:end-6 sm:top-6 sm:w-96 sm:px-0 sm:pt-0", className)}>
+      <Toast.Viewport className={cn("fixed inset-x-0 top-0 z-50 flex flex-col gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] outline-none sm:inset-x-auto sm:inset-e-6 sm:top-6 sm:w-96 sm:px-0 sm:pt-0", className)}>
         {toasts.map((toast) => {
           const failed = toast.type === "error";
           const data = toast.data ?? {};
@@ -91,7 +91,7 @@ function Viewport({ manager, className }: { manager: ErrorToastManager; classNam
                   </div>
                   <Toast.Description className="mt-1 text-muted-foreground text-xs leading-relaxed" />
                 </div>
-                <Toast.Close aria-label={t.dismiss} className="-me-1 -mt-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10">
+                <Toast.Close aria-label={t.dismiss} className="-me-1 -mt-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10">
                   <XIcon aria-hidden className="size-3.5" />
                 </Toast.Close>
               </div>

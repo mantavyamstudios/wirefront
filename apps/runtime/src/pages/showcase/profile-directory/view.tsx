@@ -189,13 +189,13 @@ function ContactDirectoryScreen({ people, company, status = "ready", error, onRe
                   </h2>
                   <ul className="divide-y divide-border/40">
                     {members.map((p) => (
-                      <li className="group grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 transition-colors hover:bg-foreground/[0.02] sm:grid-cols-[40px_minmax(0,1fr)_auto] sm:px-5" key={p.id}>
+                      <li className="group grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 transition-colors hover:bg-foreground/2 sm:grid-cols-[40px_minmax(0,1fr)_auto] sm:px-5" key={p.id}>
                         <div aria-hidden className="relative">
                           <Avatar className="size-9">
                             {p.avatarUrl ? <AvatarImage alt="" src={p.avatarUrl} /> : null}
                             <AvatarFallback className="text-xs">{initials(p.name)}</AvatarFallback>
                           </Avatar>
-                          <span className={cn("absolute end-0 bottom-0 size-2.5 rounded-full border-2 border-background", DOT[p.presence])} />
+                          <span className={cn("absolute inset-e-0 bottom-0 size-2.5 rounded-full border-2 border-background", DOT[p.presence])} />
                         </div>
                         <div className="min-w-0">
                           <div className="truncate text-sm">
@@ -214,7 +214,7 @@ function ContactDirectoryScreen({ people, company, status = "ready", error, onRe
                               {actions.map((a) => (
                                 <button
                                   aria-label={interpolate(t.actionFor, { action: a.label, name: p.name })}
-                                  className="grid size-7 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                                  className="grid size-7 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
                                   key={a.key}
                                   onClick={() => a.run(p.id)}
                                   type="button"
@@ -227,7 +227,7 @@ function ContactDirectoryScreen({ people, company, status = "ready", error, onRe
                             <DropdownMenu>
                               <DropdownMenuTrigger
                                 aria-label={interpolate(t.actionsFor, { name: p.name })}
-                                className="hidden size-10 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.05] focus-visible:ring-2 focus-visible:ring-ring max-sm:grid pointer-coarse:grid"
+                                className="hidden size-10 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/5 focus-visible:ring-2 focus-visible:ring-ring max-sm:grid pointer-coarse:grid"
                               >
                                 <MoreHorizontalIcon aria-hidden className="size-4" />
                               </DropdownMenuTrigger>
@@ -254,7 +254,7 @@ function ContactDirectoryScreen({ people, company, status = "ready", error, onRe
                 return (
                   <a
                     aria-disabled={!active || undefined}
-                    className={cn("grid size-6 place-items-center rounded outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", active ? "text-foreground hover:bg-foreground/[0.06]" : "text-muted-foreground")}
+                    className={cn("grid size-6 place-items-center rounded outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", active ? "text-foreground hover:bg-foreground/6" : "text-muted-foreground")}
                     data-letter={l}
                     href={`#${anchor(l)}`}
                     key={l}

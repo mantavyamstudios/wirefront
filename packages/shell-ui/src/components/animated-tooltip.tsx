@@ -72,12 +72,12 @@ const SPRING = {
   mass: 0.8,
 };
 
-function AnimatedTooltipGroup({
+const AnimatedTooltipGroup = ({
   children,
   className,
   onPointerLeave: onPointerLeaveProp,
   ...props
-}: AnimatedTooltipGroupProps) {
+}: AnimatedTooltipGroupProps) => {
   const groupRef = useRef<HTMLDivElement>(null);
   const tooltipRefs = useRef(new Map<string, HTMLDivElement>());
   const activeIdRef = useRef<string | null>(null);
@@ -157,7 +157,6 @@ function AnimatedTooltipGroup({
   }, [measureRows]);
 
   const show = useCallback(
-    // oxlint-disable-next-line sonarjs/cognitive-complexity -- Positioning and transition states share one hover handler.
     (id: string) => {
       const group = groupRef.current;
       const item = items.find((entry) => entry.id === id);
@@ -189,7 +188,7 @@ function AnimatedTooltipGroup({
       const triggerRect = trigger.getBoundingClientRect();
       const activeTooltipRect = activeTooltip.getBoundingClientRect();
       let leftWidth = 0;
-      for (let i = 0; i < index; i++) {
+      for (let i = 0; i < index; i += 1) {
         leftWidth +=
           tooltipRefs.current.get(row.items[i].id)?.getBoundingClientRect()
             .width ?? 0;
@@ -206,9 +205,9 @@ function AnimatedTooltipGroup({
       const maxWidth = Math.max(
         ...rows.map((rowItem) =>
           rowItem.items.reduce(
-            (sum, rowItem) =>
+            (sum, tooltipItem) =>
               sum +
-              (tooltipRefs.current.get(rowItem.id)?.getBoundingClientRect()
+              (tooltipRefs.current.get(tooltipItem.id)?.getBoundingClientRect()
                 .width ?? 0),
             0
           )
@@ -393,9 +392,9 @@ function AnimatedTooltipGroup({
       </div>
     </AnimatedTooltipGroupContext.Provider>
   );
-}
+};
 
-function AnimatedTooltip({
+const AnimatedTooltip = ({
   children,
   className,
   content,
@@ -407,7 +406,7 @@ function AnimatedTooltip({
   side = "top",
   sideOffset = 10,
   ...props
-}: AnimatedTooltipProps) {
+}: AnimatedTooltipProps) => {
   const group = useContext(AnimatedTooltipGroupContext);
   const register = group?.register;
   const tooltipId = useId();
@@ -470,7 +469,7 @@ function AnimatedTooltip({
       {children}
     </div>
   );
-}
+};
 
 export type { AnimatedTooltipGroupProps, AnimatedTooltipProps };
 export { AnimatedTooltip, AnimatedTooltipGroup };

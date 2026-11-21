@@ -60,9 +60,7 @@ const resolveNavItem = (url: string, fallbackName: string): DocsPagerItem => {
   };
 };
 
-export default async function Page(props: {
-  params: Promise<{ slug?: string[] }>;
-}) {
+const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
   const params = await props.params;
 
   if (!source.getPage(params.slug)) {
@@ -71,9 +69,11 @@ export default async function Page(props: {
   }
 
   return <DocsPageBody slug={params.slug} />;
-}
+};
 
-async function DocsPageBody({ slug }: { slug?: string[] }) {
+export default Page;
+
+const DocsPageBody = ({ slug }: { slug?: string[] }) => {
   const page = source.getPage(slug);
   if (!page) {
     return null;
@@ -190,15 +190,13 @@ async function DocsPageBody({ slug }: { slug?: string[] }) {
       </DocsBody>
     </DocsPage>
   );
-}
+};
 
-export async function generateStaticParams() {
-  return source.generateParams();
-}
+export const generateStaticParams = () => source.generateParams();
 
-export async function generateMetadata(props: {
+export const generateMetadata = async (props: {
   params: Promise<{ slug?: string[] }>;
-}): Promise<Metadata> {
+}): Promise<Metadata> => {
   const { slug = [] } = await props.params;
 
   const page = source.getPage(slug);
@@ -241,4 +239,4 @@ export async function generateMetadata(props: {
       images: getTwitterMetadataImages(ogPath),
     },
   };
-}
+};

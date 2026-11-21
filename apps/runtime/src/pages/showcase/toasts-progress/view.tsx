@@ -50,12 +50,12 @@ function UploadDockScreen({ uploads, onCancel, onClose, className }: UploadDockP
   const done = uploads.filter((u) => u.progress >= 1).length;
   const finished = done === uploads.length;
   const size = (b: number) => (b >= 1_048_576 ? fmt.number(b / 1_048_576, { style: "unit", unit: "megabyte", maximumFractionDigits: 1 }) : fmt.number(Math.max(1, Math.round(b / 1024)), { style: "unit", unit: "kilobyte" }));
-  const iconButton = "grid size-8 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10";
+  const iconButton = "grid size-8 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10";
 
   return (
     <section
       aria-label={t.region}
-      className={cn("fixed inset-x-0 bottom-0 z-50 border-border/70 border-t bg-background pb-[env(safe-area-inset-bottom)] shadow-lg sm:inset-x-auto sm:end-6 sm:bottom-6 sm:w-96 sm:rounded-xl sm:border sm:pb-0", className)}
+      className={cn("fixed inset-x-0 bottom-0 z-50 border-border/70 border-t bg-background pb-[env(safe-area-inset-bottom)] shadow-lg sm:inset-x-auto sm:inset-e-6 sm:bottom-6 sm:w-96 sm:rounded-xl sm:border sm:pb-0", className)}
     >
       <div className="flex items-center justify-between gap-2 border-border/60 border-b py-1.5 ps-3.5 pe-1.5">
         <div className="flex min-w-0 items-center gap-2">
@@ -82,7 +82,7 @@ function UploadDockScreen({ uploads, onCancel, onClose, className }: UploadDockP
             const pct = Math.round(u.progress * 100);
             return (
               <li className="flex items-center gap-3 px-3.5 py-2.5" key={u.id}>
-                <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-md bg-foreground/[0.05]">
+                <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-md bg-foreground/5">
                   {KIND_ICON[u.kind]}
                 </span>
                 <div className="min-w-0 flex-1">
@@ -90,7 +90,7 @@ function UploadDockScreen({ uploads, onCancel, onClose, className }: UploadDockP
                     <span className="truncate font-medium text-sm">{u.name}</span>
                     <span className="shrink-0 font-mono text-[11px] text-muted-foreground tabular-nums">{fmt.number(u.progress, { style: "percent" })}</span>
                   </div>
-                  <div aria-label={interpolate(t.uploadingFile, { name: u.name })} aria-valuemax={100} aria-valuemin={0} aria-valuenow={pct} className="mt-1.5 h-1 overflow-hidden rounded-full bg-foreground/[0.06]" role="progressbar">
+                  <div aria-label={interpolate(t.uploadingFile, { name: u.name })} aria-valuemax={100} aria-valuemin={0} aria-valuenow={pct} className="mt-1.5 h-1 overflow-hidden rounded-full bg-foreground/6" role="progressbar">
                     <div className="h-full rounded-full bg-foreground/70 transition-[width] motion-reduce:transition-none" style={{ width: `${pct}%` }} />
                   </div>
                   <div className="mt-0.5 flex items-center justify-between text-muted-foreground text-xs">

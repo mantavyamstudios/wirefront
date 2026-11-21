@@ -177,7 +177,7 @@ function HomeDashboardScreen({ userName, data, status = "ready", error, onRetry,
                   {ready ? (
                     tasks.length ? (
                       tasks.map((task) => (
-                        <li className="group flex items-start gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.03] sm:items-center" key={task.id}>
+                        <li className="group flex items-start gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/3 sm:items-center" key={task.id}>
                           {/* 20px circle inside a 28px (44px on touch) hit area. */}
                           <button
                             aria-label={interpolate(task.done ? t.markNotDone : t.markDone, { title: task.title })}
@@ -189,7 +189,7 @@ function HomeDashboardScreen({ userName, data, status = "ready", error, onRetry,
                             <span
                               className={cn(
                                 "flex size-5 items-center justify-center rounded-full border border-foreground/30 transition-colors",
-                                task.done ? "bg-foreground/10 text-foreground" : "text-transparent hover:bg-foreground/[0.06]",
+                                task.done ? "bg-foreground/10 text-foreground" : "text-transparent hover:bg-foreground/6",
                               )}
                             >
                               {task.done ? <CheckIcon aria-hidden className="size-3" /> : <CircleIcon aria-hidden className="size-3" />}
@@ -200,7 +200,7 @@ function HomeDashboardScreen({ userName, data, status = "ready", error, onRetry,
                             <span className={cn("block text-sm sm:flex-1 sm:truncate", task.done && "text-muted-foreground line-through")}>{task.title}</span>
                             <span className="mt-1 flex items-center gap-2 sm:mt-0 sm:contents">
                               {task.project ? (
-                                <span className="rounded bg-foreground/[0.05] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">{task.project}</span>
+                                <span className="rounded bg-foreground/5 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">{task.project}</span>
                               ) : null}
                               {task.due ? <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] sm:w-16 sm:text-end">{due(task.due)}</span> : null}
                             </span>
@@ -228,7 +228,7 @@ function HomeDashboardScreen({ userName, data, status = "ready", error, onRetry,
                   {ready ? (
                     ready.events.length ? (
                       ready.events.map((e) => (
-                        <li className="flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.03]" key={e.id}>
+                        <li className="flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/3" key={e.id}>
                           <time className="w-14 shrink-0 text-center font-mono text-[11px] text-foreground" dateTime={e.start}>
                             {format.time(e.start)}
                           </time>

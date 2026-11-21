@@ -75,7 +75,7 @@ const initialsOf = (name: string) =>
     .join("");
 
 function Mark() {
-  return <div aria-hidden className="size-7 shrink-0 rounded-md bg-gradient-to-br from-primary/70 to-primary/30 ring-1 ring-border/60" />;
+  return <div aria-hidden className="size-7 shrink-0 rounded-md bg-linear-to-br from-primary/70 to-primary/30 ring-1 ring-border/60" />;
 }
 
 export function WorkspaceRailShell({ children, context, sections, activeId, onSwitchWorkspace, onSearch, settingsHref, className }: WorkspaceRailShellProps) {
@@ -110,7 +110,7 @@ export function WorkspaceRailShell({ children, context, sections, activeId, onSw
       <div className="flex h-full min-h-0 flex-col">
         {onSwitchWorkspace ? (
           <button
-            className={cn("flex w-full items-center justify-between gap-2 border-border/60 border-b px-3.5 py-3 text-start outline-none transition-colors hover:bg-foreground/[0.03] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", inSheet && "pe-14")}
+            className={cn("flex w-full items-center justify-between gap-2 border-border/60 border-b px-3.5 py-3 text-start outline-none transition-colors hover:bg-foreground/3 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", inSheet && "pe-14")}
             onClick={onSwitchWorkspace}
             type="button"
           >
@@ -152,7 +152,7 @@ export function WorkspaceRailShell({ children, context, sections, activeId, onSw
                     <li key={item.id}>
                       <WirefrontLink
                         aria-current={active ? "page" : undefined}
-                        className={cn(ROW, "justify-between", active ? "bg-foreground/[0.06] text-foreground" : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground")}
+                        className={cn(ROW, "justify-between", active ? "bg-foreground/6 text-foreground" : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground")}
                         href={item.href}
                         onClick={close}
                       >
@@ -177,7 +177,7 @@ export function WorkspaceRailShell({ children, context, sections, activeId, onSw
                 {section.action ? (
                   <li>
                     <button
-                      className={cn(ROW, "gap-2 text-muted-foreground text-xs hover:bg-foreground/[0.03] hover:text-foreground")}
+                      className={cn(ROW, "gap-2 text-muted-foreground text-xs hover:bg-foreground/3 hover:text-foreground")}
                       onClick={() => {
                         close();
                         section.action?.onClick();
@@ -211,7 +211,7 @@ export function WorkspaceRailShell({ children, context, sections, activeId, onSw
           {settingsHref ? (
             <WirefrontLink
               aria-label={t.settings}
-              className="flex items-center justify-center rounded-md p-1.5 text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-11"
+              className="flex items-center justify-center rounded-md p-1.5 text-muted-foreground outline-none transition-colors hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-11"
               href={settingsHref}
               onClick={close}
             >
@@ -228,10 +228,10 @@ export function WorkspaceRailShell({ children, context, sections, activeId, onSw
       {/* Phones: top bar + off-canvas rail. */}
       <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-border/60 border-b bg-background/90 px-2 backdrop-blur md:hidden">
         <Sheet onOpenChange={setNavOpen} open={navOpen}>
-          <SheetTrigger aria-label={t.openNavigation} className="flex size-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground">
+          <SheetTrigger aria-label={t.openNavigation} className="flex size-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/4 hover:text-foreground">
             <MenuIcon className="size-5" />
           </SheetTrigger>
-          <SheetContent className="max-w-[300px] bg-background" side="left">
+          <SheetContent className="max-w-75 bg-background" side="left">
             <SheetTitle className="sr-only">{t.navigation}</SheetTitle>
             {rail(true)}
           </SheetContent>
@@ -241,7 +241,7 @@ export function WorkspaceRailShell({ children, context, sections, activeId, onSw
         {onSearch ? (
           <button
             aria-label={t.search}
-            className="ms-auto flex size-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+            className="ms-auto flex size-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/4 hover:text-foreground"
             onClick={onSearch}
             type="button"
           >
@@ -251,7 +251,7 @@ export function WorkspaceRailShell({ children, context, sections, activeId, onSw
       </header>
 
       {/* md+: docked rail. */}
-      <aside className="sticky top-0 hidden h-svh flex-col border-border/60 border-e bg-foreground/[0.02] md:flex">{rail(false)}</aside>
+      <aside className="sticky top-0 hidden h-svh flex-col border-border/60 border-e bg-foreground/2 md:flex">{rail(false)}</aside>
 
       <main className="min-w-0">{children}</main>
     </div>

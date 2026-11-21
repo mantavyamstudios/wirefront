@@ -41,5 +41,3 @@ export const PRICING_FAQ_ITEMS: PricingFaqItem[] = [
       "Run the shadcn CLI command on the screen's page. The screen lands in your project as source you own: pass your data in as props, connect its actions to your backend and tweak anything you like.",
   },
 ];
-
-

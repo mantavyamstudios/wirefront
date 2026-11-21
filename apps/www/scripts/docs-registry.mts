@@ -11,7 +11,13 @@
  *
  * Each entry's `component` is the screen running in the runtime iframe.
  */
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 
 import manifest from "../lib/screens/screens.manifest.json" with { type: "json" };
@@ -38,28 +44,50 @@ interface RegistryItem {
   type: string;
 }
 
-const DEVL_DEV = { type: "adapted", label: "devl.dev", url: "https://github.com/sean-brydon/devl.dev" };
+const DEVL_DEV = {
+  type: "adapted",
+  label: "devl.dev",
+  url: "https://github.com/sean-brydon/devl.dev",
+};
 
 /** `@components/x` → `components/x`, the path the CLI writes in the project. */
-const projectPath = (target?: string) => target?.replace(/^@/, "");
+const projectPath = (target?: string) => target?.replace(/^@/u, "");
 
 if (!existsSync(path.join(REGISTRY, "registry.json"))) {
-  console.error("docs-registry: public/r is missing. Run `bun run registry` at the repo root first.");
+  console.error(
+    "docs-registry: public/r is missing. Run `bun run registry` at the repo root first."
+  );
   process.exit(1);
 }
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(path.join(OUT, "sources"), { recursive: true });
 
+const toIdentifier = (name: string) =>
+  name
+    .replaceAll(/(?:^|-)(?<char>[a-z0-9])/gu, (_, c: string) => c.toUpperCase())
+    .replace(/^(?<digit>\d)/u, "Screen$<digit>");
+
 const entries: string[] = [];
 const loaders: string[] = [];
 for (const group of manifest.groups) {
   for (const kind of group.kinds) {
     for (const screen of kind.screens) {
-      const item = JSON.parse(readFileSync(path.join(REGISTRY, `${screen.registry}.json`), "utf8")) as RegistryItem;
-      const view = screen.files.find((f) => f.endsWith("view.tsx")) ?? screen.files[0];
-      const ported = view ? readFileSync(path.join(SHOWCASE, view), "utf8").includes("Ported from devl.dev") : false;
-      const files = item.files.map((f) => ({ path: f.path, type: f.type, target: projectPath(f.target) }));
+      const item = JSON.parse(
+        readFileSync(path.join(REGISTRY, `${screen.registry}.json`), "utf-8")
+      ) as RegistryItem;
+      const view =
+        screen.files.find((f) => f.endsWith("view.tsx")) ?? screen.files[0];
+      const ported = view
+        ? readFileSync(path.join(SHOWCASE, view), "utf-8").includes(
+            "Ported from devl.dev"
+          )
+        : false;
+      const files = item.files.map((f) => ({
+        path: f.path,
+        type: f.type,
+        target: projectPath(f.target),
+      }));
       const entry = {
         name: item.name,
         description: item.description ?? "",
@@ -75,21 +103,19 @@ for (const group of manifest.groups) {
         inspiration: ported ? DEVL_DEV : null,
         command: `${SITE_URL}/r/${item.name}.json`,
       };
-      const json = JSON.stringify(entry, null, 2).replace(/\n}$/, "");
+      const json = JSON.stringify(entry, null, 2).replace(/\n\}$/u, "");
       entries.push(
-        `  ${JSON.stringify(item.name)}: ${json},\n    component: function ${toIdentifier(item.name)}() {\n      return <ScreenRuntimePreview kind=${JSON.stringify(kind.slug)} screen=${JSON.stringify(screen.slug)} title=${JSON.stringify(screen.title)} />;\n    },\n  },`,
+        `  ${JSON.stringify(item.name)}: ${json},\n    component: function ${toIdentifier(item.name)}() {\n      return <ScreenRuntimePreview kind=${JSON.stringify(kind.slug)} screen=${JSON.stringify(screen.slug)} title=${JSON.stringify(screen.title)} />;\n    },\n  },`
       );
       writeFileSync(
         path.join(OUT, "sources", `${item.name}.json`),
-        `${JSON.stringify({ name: item.name, code: item.files[0]?.content ?? "", files: item.files.map((f) => ({ ...f, target: projectPath(f.target) })) })}\n`,
+        `${JSON.stringify({ name: item.name, code: item.files[0]?.content ?? "", files: item.files.map((f) => ({ ...f, target: projectPath(f.target) })) })}\n`
       );
-      loaders.push(`  ${JSON.stringify(item.name)}: () => import("./sources/${item.name}.json"),`);
+      loaders.push(
+        `  ${JSON.stringify(item.name)}: () => import("./sources/${item.name}.json"),`
+      );
     }
   }
-}
-
-function toIdentifier(name: string) {
-  return name.replace(/(^|-)([a-z0-9])/g, (_, __, c: string) => c.toUpperCase()).replace(/^(\d)/, "Screen$1");
 }
 
 writeFileSync(
@@ -103,7 +129,7 @@ ${entries.join("\n")}
 };
 
 export { loadComponentFiles, loadComponentHtml, loadComponentSource } from "./sources";
-`,
+`
 );
 
 writeFileSync(
@@ -145,7 +171,7 @@ export async function loadComponentFiles(name: string): Promise<any[] | null> {
   const data = await load(name);
   return data?.files ?? null;
 }
-`,
+`
 );
 
 console.log(`docs-registry: wrote __registry__ for ${entries.length} screens.`);

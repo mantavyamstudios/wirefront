@@ -111,10 +111,10 @@ export interface PageTransitionShaderConfig {
   noiseStrength?: number;
 }
 
-function bindProgram(gl: WebGLRenderingContext, program: WebGLProgram) {
+const bindProgram = (gl: WebGLRenderingContext, program: WebGLProgram) => {
   const method = "useProgram" as const;
   gl[method](program);
-}
+};
 
 export class PageTransitionShader {
   private readonly canvas: HTMLCanvasElement;
@@ -325,17 +325,17 @@ export class PageTransitionShader {
     this.uProgress = 0;
     this.startTicker();
 
-    return new Promise((resolve) => {
-      this.activeTween = gsap.to(this, {
-        duration,
-        ease,
-        onComplete: () => {
-          this.activeTween = null;
-          resolve();
-        },
-        uProgress: 1,
-      });
+    const { promise, resolve } = Promise.withResolvers<undefined>();
+    this.activeTween = gsap.to(this, {
+      duration,
+      ease,
+      onComplete: () => {
+        this.activeTween = null;
+        resolve();
+      },
+      uProgress: 1,
     });
+    return promise;
   }
 
   hide(duration = 1.5, ease = "power2.inOut"): Promise<void> {
@@ -348,18 +348,18 @@ export class PageTransitionShader {
     this.uProgress = 1;
     this.startTicker();
 
-    return new Promise((resolve) => {
-      this.activeTween = gsap.to(this, {
-        duration,
-        ease,
-        onComplete: () => {
-          this.activeTween = null;
-          this.stopTicker();
-          resolve();
-        },
-        uProgress: 0,
-      });
+    const { promise, resolve } = Promise.withResolvers<undefined>();
+    this.activeTween = gsap.to(this, {
+      duration,
+      ease,
+      onComplete: () => {
+        this.activeTween = null;
+        this.stopTicker();
+        resolve();
+      },
+      uProgress: 0,
     });
+    return promise;
   }
 
   destroy() {

@@ -11,6 +11,18 @@ import { GalleryCardThumbnail } from "./gallery-card-thumbnail";
 
 const VIDEO_READY_STATE = 3;
 
+/** Plays a preview; on failure the poster stays up and the reason is logged. */
+const playPreview = async (video: HTMLVideoElement) => {
+  try {
+    await video.play();
+  } catch (error) {
+    console.warn(
+      "[gallery] preview video didn't play (autoplay blocked or load failed)",
+      error
+    );
+  }
+};
+
 interface GalleryCardPreviewProps {
   active: boolean;
   category?: string;
@@ -20,16 +32,14 @@ interface GalleryCardPreviewProps {
   title: string;
 }
 
-function GalleryCardMediaSkeleton() {
-  return (
-    <Skeleton
-      className="bg-muted-foreground/15 absolute inset-0 size-full"
-      rounded="none"
-    />
-  );
-}
+const GalleryCardMediaSkeleton = () => (
+  <Skeleton
+    className="bg-muted-foreground/15 absolute inset-0 size-full"
+    rounded="none"
+  />
+);
 
-function useCanHoverPreview() {
+const useCanHoverPreview = () => {
   const [canHoverPreview, setCanHoverPreview] = useState(false);
 
   useEffect(() => {
@@ -46,9 +56,9 @@ function useCanHoverPreview() {
   }, []);
 
   return canHoverPreview;
-}
+};
 
-function GalleryCardBaseLayer({
+const GalleryCardBaseLayer = ({
   category,
   poster,
   priority,
@@ -62,7 +72,7 @@ function GalleryCardBaseLayer({
   showVideoLayer: boolean;
   showVideoOnlySkeleton: boolean;
   title: string;
-}) {
+}) => {
   if (poster) {
     return (
       <BlogOgImage
@@ -89,15 +99,15 @@ function GalleryCardBaseLayer({
   }
 
   return <GalleryCardThumbnail category={category} title={title} />;
-}
+};
 
-function GalleryCardPreviewMedia({
+const GalleryCardPreviewMedia = ({
   active,
   category,
   priority = false,
   preview,
   title,
-}: GalleryCardPreviewProps) {
+}: GalleryCardPreviewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canHoverPreview = useCanHoverPreview();
@@ -133,38 +143,16 @@ function GalleryCardPreviewMedia({
     };
   }, [canHoverPreview, hasVideo]);
 
+  // A video that unmounts has to load again before it shows.
+  if (!shouldMountVideo && videoReady) {
+    setVideoReady(false);
+  }
+
   useEffect(() => {
-    if (!shouldMountVideo) {
-      setVideoReady(false);
-      return;
-    }
-
     const video = videoRef.current;
-    if (!video) {
-      return;
-    }
-
-    const handleCanPlay = () => {
-      setVideoReady(true);
-    };
-
-    const handleVideoError = () => {
-      setVideoFailed(true);
-      setVideoReady(false);
-    };
-
-    if (video.readyState >= VIDEO_READY_STATE) {
-      handleCanPlay();
-    } else {
-      video.addEventListener("canplay", handleCanPlay);
-      video.addEventListener("error", handleVideoError);
+    if (shouldMountVideo && video && video.readyState < VIDEO_READY_STATE) {
       video.load();
     }
-
-    return () => {
-      video.removeEventListener("canplay", handleCanPlay);
-      video.removeEventListener("error", handleVideoError);
-    };
   }, [shouldMountVideo]);
 
   useEffect(() => {
@@ -174,9 +162,7 @@ function GalleryCardPreviewMedia({
     }
 
     if (active && videoReady) {
-      video.play().catch(() => {
-        /* autoplay blocked */
-      });
+      playPreview(video);
       return;
     }
 
@@ -202,6 +188,7 @@ function GalleryCardPreviewMedia({
           )}
           loop
           muted
+          onCanPlay={() => setVideoReady(true)}
           onError={() => {
             setVideoFailed(true);
             setVideoReady(false);
@@ -216,9 +203,9 @@ function GalleryCardPreviewMedia({
       ) : null}
     </div>
   );
-}
+};
 
-export function GalleryCardPreview(props: GalleryCardPreviewProps) {
+export const GalleryCardPreview = (props: GalleryCardPreviewProps) => {
   const poster = props.preview?.poster;
   const videoWebm = props.preview?.videoWebm;
   const videoMp4 = props.preview?.videoMp4;
@@ -232,4 +219,4 @@ export function GalleryCardPreview(props: GalleryCardPreviewProps) {
   }
 
   return <GalleryCardPreviewMedia key={previewMediaKey} {...props} />;
-}
+};

@@ -9,7 +9,7 @@ import { screensSource } from "@/lib/screens/source";
  * always has complete badge info regardless of the active section layout.
  * Defaults to git lastModified per page; `releaseDate` in frontmatter overrides.
  */
-export function getReleaseDatesByUrl(): Record<string, string> {
+export const getReleaseDatesByUrl = (): Record<string, string> => {
   const map: Record<string, string> = {};
 
   const allPages = [...source.getPages(), ...screensSource.getPages()];
@@ -22,4 +22,4 @@ export function getReleaseDatesByUrl(): Record<string, string> {
   }
 
   return map;
-}
+};

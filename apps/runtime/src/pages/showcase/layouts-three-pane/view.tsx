@@ -151,7 +151,7 @@ function ChatWorkspaceScreen({
       {/* Workspace rail: always visible, pinned to the start edge on phones. */}
       <aside
         aria-label={t.workspaces}
-        className="fixed inset-y-0 start-0 z-40 flex w-16 flex-col items-center gap-2 border-border/60 border-e bg-background py-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:sticky md:top-0 md:z-auto md:h-svh md:w-auto md:bg-foreground/[0.02] md:pt-3"
+        className="fixed inset-y-0 inset-s-0 z-40 flex w-16 flex-col items-center gap-2 border-border/60 border-e bg-background py-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:sticky md:top-0 md:z-auto md:h-svh md:w-auto md:bg-foreground/2 md:pt-3"
       >
         {workspaces.map((w) => {
           const active = w.id === workspace?.id;
@@ -161,7 +161,7 @@ function ChatWorkspaceScreen({
                 aria-current={active ? "true" : undefined}
                 aria-label={w.name}
                 className={cn(
-                  "flex size-9 items-center justify-center rounded-lg bg-gradient-to-br font-medium text-[12px] text-foreground/85 outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring motion-reduce:hover:scale-100 pointer-coarse:size-11",
+                  "flex size-9 items-center justify-center rounded-lg bg-linear-to-br font-medium text-[12px] text-foreground/85 outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring motion-reduce:hover:scale-100 pointer-coarse:size-11",
                   TINT[w.color],
                 )}
                 onClick={() => {
@@ -172,14 +172,14 @@ function ChatWorkspaceScreen({
               >
                 <span aria-hidden>{w.name.charAt(0).toUpperCase()}</span>
               </button>
-              {active ? <span aria-hidden className="absolute top-1/2 start-0 h-5 w-1 -translate-y-1/2 rounded-e bg-foreground" /> : null}
+              {active ? <span aria-hidden className="absolute top-1/2 inset-s-0 h-5 w-1 -translate-y-1/2 rounded-e bg-foreground" /> : null}
             </div>
           );
         })}
         {onAddWorkspace ? (
           <button
             aria-label={t.addWorkspace}
-            className="flex size-9 items-center justify-center rounded-lg border border-border/70 border-dashed text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:size-11"
+            className="flex size-9 items-center justify-center rounded-lg border border-border/70 border-dashed text-muted-foreground transition-colors hover:bg-foreground/4 hover:text-foreground pointer-coarse:size-11"
             onClick={onAddWorkspace}
             type="button"
           >
@@ -200,7 +200,7 @@ function ChatWorkspaceScreen({
       <aside
         aria-label={t.channelsRegion}
         className={cn(
-          "flex flex-col border-border/60 bg-background max-md:fixed max-md:inset-y-0 max-md:start-16 max-md:z-40 max-md:w-[calc(78vw-4rem)] max-md:max-w-[300px] max-md:pt-[env(safe-area-inset-top)] max-md:shadow-2xl max-md:transition-[translate,opacity] max-md:duration-200 motion-reduce:transition-none md:sticky md:top-0 md:h-svh md:border-e md:bg-foreground/[0.015]",
+          "flex flex-col border-border/60 bg-background max-md:fixed max-md:inset-y-0 max-md:inset-s-16 max-md:z-40 max-md:w-[calc(78vw-4rem)] max-md:max-w-75 max-md:pt-[env(safe-area-inset-top)] max-md:shadow-2xl max-md:transition-[translate,opacity] max-md:duration-200 motion-reduce:transition-none md:sticky md:top-0 md:h-svh md:border-e md:bg-foreground/1.5",
           !drawerOpen && "max-md:pointer-events-none max-md:-translate-x-full max-md:opacity-0 max-md:rtl:translate-x-full",
         )}
         inert={channelsHidden || undefined}
@@ -218,7 +218,7 @@ function ChatWorkspaceScreen({
                 <li key={c.id}>
                   <button
                     aria-current={active ? "page" : undefined}
-                    className={cn(row, active ? "bg-foreground/[0.08] text-foreground" : c.unread ? "font-medium text-foreground hover:bg-foreground/[0.04]" : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground")}
+                    className={cn(row, active ? "bg-foreground/8 text-foreground" : c.unread ? "font-medium text-foreground hover:bg-foreground/4" : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground")}
                     onClick={() => pick(c.id)}
                     type="button"
                   >
@@ -246,14 +246,14 @@ function ChatWorkspaceScreen({
                 <li key={d.id}>
                   <button
                     aria-current={active ? "page" : undefined}
-                    className={cn(row, active ? "bg-foreground/[0.08] text-foreground" : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground")}
+                    className={cn(row, active ? "bg-foreground/8 text-foreground" : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground")}
                     onClick={() => pick(d.id)}
                     type="button"
                   >
                     <span className="flex min-w-0 items-center gap-2">
                       <span aria-hidden className="relative">
                         <span className="flex size-5 items-center justify-center rounded-full bg-foreground/10 font-medium text-[10px] text-foreground">{initialsOf(d.name)}</span>
-                        <span className={cn("absolute -end-0.5 -bottom-0.5 size-1.5 rounded-full ring-2 ring-background", PRESENCE[d.presence])} />
+                        <span className={cn("absolute -inset-e-0.5 -bottom-0.5 size-1.5 rounded-full ring-2 ring-background", PRESENCE[d.presence])} />
                       </span>
                       <span className="truncate">{d.name}</span>
                       <span className="sr-only">, {t[d.presence]}</span>
@@ -277,7 +277,7 @@ function ChatWorkspaceScreen({
           <button
             aria-expanded={drawerOpen}
             aria-label={t.showList}
-            className="flex size-11 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground md:hidden"
+            className="flex size-11 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/4 hover:text-foreground md:hidden"
             onClick={() => setDrawerOpen(true)}
             type="button"
           >
@@ -296,7 +296,7 @@ function ChatWorkspaceScreen({
             {channel && onShowMembers ? (
               <button
                 aria-label={interpolate(t.showMembers, { count: channel.memberCount })}
-                className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:size-11"
+                className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/4 hover:text-foreground pointer-coarse:size-11"
                 onClick={onShowMembers}
                 type="button"
               >
@@ -306,7 +306,7 @@ function ChatWorkspaceScreen({
             {channel && onChannelSettings ? (
               <button
                 aria-label={t.channelSettings}
-                className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:size-11"
+                className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/4 hover:text-foreground pointer-coarse:size-11"
                 onClick={onChannelSettings}
                 type="button"
               >
@@ -330,7 +330,7 @@ function ChatWorkspaceScreen({
                   </div>
                 ) : null}
                 <div className="flex gap-3">
-                  <div aria-hidden className={cn("mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md bg-gradient-to-br font-medium text-[11px] text-foreground/85", TINT[m.author.color])}>
+                  <div aria-hidden className={cn("mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md bg-linear-to-br font-medium text-[11px] text-foreground/85", TINT[m.author.color])}>
                     {initialsOf(m.author.name)}
                   </div>
                   <div className="min-w-0 flex-1">
@@ -374,7 +374,7 @@ function ChatWorkspaceScreen({
           <div className="flex items-end gap-2 rounded-2xl border border-border bg-card p-3 focus-within:ring-2 focus-within:ring-ring">
             <textarea
               aria-label={interpolate(t.messageChannel, { name: title })}
-              className="min-h-10 flex-1 resize-none bg-transparent text-sm outline-none placeholder:text-muted-foreground md:min-h-[56px]"
+              className="min-h-10 flex-1 resize-none bg-transparent text-sm outline-none placeholder:text-muted-foreground md:min-h-14"
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder={interpolate(t.messageChannel, { name: title })}

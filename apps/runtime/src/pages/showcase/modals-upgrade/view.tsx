@@ -82,9 +82,9 @@ function UpgradeDialogScreen({ plans, currentPlan, limit, onChoosePlan, compareH
 
             <div className="-mx-4 grid min-h-0 min-w-0 grid-cols-1 gap-3 overflow-y-auto px-4 pt-2 sm:grid-cols-2">
               {plans.map((p) => (
-                <div className={cn("relative rounded-xl border p-4 sm:p-5", p.recommended ? "border-foreground/60 bg-foreground/[0.04]" : "border-border/60")} key={p.id}>
+                <div className={cn("relative rounded-xl border p-4 sm:p-5", p.recommended ? "border-foreground/60 bg-foreground/4" : "border-border/60")} key={p.id}>
                   {p.recommended ? (
-                    <span className="absolute end-4 -top-2 rounded-full bg-foreground px-2 py-0.5 font-mono text-[10px] text-background uppercase tracking-[0.2em]">{t.recommended}</span>
+                    <span className="absolute inset-e-4 -top-2 rounded-full bg-foreground px-2 py-0.5 font-mono text-[10px] text-background uppercase tracking-[0.2em]">{t.recommended}</span>
                   ) : null}
                   <h2 className="font-heading text-base">{p.name}</h2>
                   <div className="mt-1 flex items-baseline gap-1">

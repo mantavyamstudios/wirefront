@@ -357,7 +357,7 @@ function StatusConsoleScreen({
   return (
     <MotionConfig reducedMotion="user">
       <TooltipProvider delay={300}>
-        <div className={cn("@container relative isolate flex h-[760px] w-full overflow-hidden bg-sidebar text-foreground text-sm outline-none", className)} ref={rootRef}>
+        <div className={cn("@container relative isolate flex h-190 w-full overflow-hidden bg-sidebar text-foreground text-sm outline-none", className)} ref={rootRef}>
           <nav aria-label={t.console} className="hidden w-14 shrink-0 flex-col items-center gap-1 py-3 @3xl:flex">
             <span aria-hidden className="mb-3 flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <ActivityIcon className="size-4" />
@@ -381,7 +381,7 @@ function StatusConsoleScreen({
                     }
                   >
                     <r.icon aria-hidden className="size-4" />
-                    {id === "incidents" && !resolved && <span aria-hidden className="absolute top-1.5 end-1.5 size-1.5 rounded-full bg-destructive" />}
+                    {id === "incidents" && !resolved && <span aria-hidden className="absolute top-1.5 inset-e-1.5 size-1.5 rounded-full bg-destructive" />}
                   </TooltipTrigger>
                   <TooltipContent side="right">{t[r.label]}</TooltipContent>
                 </Tooltip>
@@ -412,7 +412,7 @@ function StatusConsoleScreen({
                 {ago !== null ? (
                   <span className="hidden items-center gap-1.5 text-muted-foreground text-xs tabular-nums @lg:flex">
                     <span aria-hidden className="relative flex size-2">
-                      <span className="absolute inset-0 rounded-full bg-success opacity-60 motion-safe:animate-ping motion-reduce:hidden [animation-duration:2s]" />
+                      <span className="absolute inset-0 rounded-full bg-success opacity-60 motion-safe:animate-ping motion-reduce:hidden animation-duration-[2s]" />
                       <span className="relative size-2 rounded-full bg-success" />
                     </span>
                     {interpolate(t.live, { ago: `${ago}s` })}
@@ -440,7 +440,7 @@ function StatusConsoleScreen({
               </div>
             </header>
 
-            <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:thin]" ref={scrollRef}>
+            <div className="min-h-0 flex-1 overflow-y-auto scrollbar-thin" ref={scrollRef}>
               {status === "error" ? (
                 <div className="flex h-full flex-col items-center justify-center px-6 text-center">
                   <p className="font-medium">{t.errorTitle}</p>
@@ -497,7 +497,7 @@ function StatusConsoleScreen({
                               )}
                               key={s.id}
                             >
-                              {on && <motion.span className="absolute inset-y-0 start-0 w-0.5 bg-foreground" layoutId="service-rail" transition={{ type: "spring", stiffness: 520, damping: 42 }} />}
+                              {on && <motion.span className="absolute inset-y-0 inset-s-0 w-0.5 bg-foreground" layoutId="service-rail" transition={{ type: "spring", stiffness: 520, damping: 42 }} />}
                               {/* The filter toggle covers the whole row (before:inset-0); its name is the service, health and region. */}
                               <button
                                 aria-pressed={on}
@@ -545,7 +545,7 @@ function StatusConsoleScreen({
                       </div>
                       <div
                         aria-label={interpolate(t.uptimeSummary, { value: pct(data.uptime.value), days: days.length, incidents: days.filter((d) => d.degradedMinutes > 0).length })}
-                        className="mt-3 flex h-6 gap-[3px]"
+                        className="mt-3 flex h-6 gap-0.75"
                         role="img"
                       >
                         {days.map((d, i) => {
@@ -575,7 +575,7 @@ function StatusConsoleScreen({
                     </section>
                   </div>
 
-                  <div className="order-first flex min-w-0 flex-col gap-4 @5xl:order-none @5xl:col-start-2 @5xl:row-start-1">
+                  <div className="order-first flex min-w-0 flex-col gap-4 @5xl:order-0 @5xl:col-start-2 @5xl:row-start-1">
                     <section aria-labelledby="console-incident" className="flex flex-col overflow-hidden rounded-xl border bg-card" data-rail="incidents">
                       {incident ? (
                         <>
@@ -621,7 +621,7 @@ function StatusConsoleScreen({
                           </ol>
                           <ol
                             aria-live="polite"
-                            className="relative mt-1 flex max-h-72 flex-col gap-3 overflow-y-auto px-3 pt-2 pb-3 [mask-image:linear-gradient(to_bottom,transparent,black_12px)] [scrollbar-width:thin]"
+                            className="relative mt-1 flex max-h-72 flex-col gap-3 overflow-y-auto px-3 pt-2 pb-3 mask-[linear-gradient(to_bottom,transparent,black_12px)] scrollbar-thin"
                             ref={timelineRef}
                           >
                             <AnimatePresence initial={false}>
@@ -630,7 +630,7 @@ function StatusConsoleScreen({
                                 const tone = stateTone[u.state];
                                 return (
                                   <motion.li animate={{ opacity: 1, y: 0 }} className="relative flex gap-2.5" initial={{ opacity: 0, y: 8 }} key={u.id} transition={{ duration: 0.3, ease }}>
-                                    {i < updates.length - 1 && <span aria-hidden className="absolute top-6 bottom-[-12px] start-[11px] w-px bg-border" />}
+                                    {i < updates.length - 1 && <span aria-hidden className="absolute top-6 -bottom-3 inset-s-2.75 w-px bg-border" />}
                                     <span className="relative">
                                       <PersonAvatar person={p} />
                                     </span>
@@ -706,7 +706,7 @@ function StatusConsoleScreen({
                             <li className="flex items-center gap-2.5" key={slot.personId}>
                               <span className="relative">
                                 <PersonAvatar person={p} size="size-8" />
-                                <span aria-hidden className="absolute -end-0.5 -bottom-0.5 size-2.5 rounded-full bg-success ring-2 ring-card" />
+                                <span aria-hidden className="absolute -inset-e-0.5 -bottom-0.5 size-2.5 rounded-full bg-success ring-2 ring-card" />
                               </span>
                               <div className="min-w-0 flex-1 leading-tight">
                                 <div className="truncate font-medium">{p?.name ?? slot.personId}</div>

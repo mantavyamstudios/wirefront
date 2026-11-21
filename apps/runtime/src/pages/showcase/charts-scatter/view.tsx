@@ -8,7 +8,7 @@ import { Skeleton } from "@wirefront/ui/skeleton";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { Cell, LabelList, ReferenceArea, ReferenceLine, Scatter, ScatterChart, ZAxis } from "recharts";
+import { LabelList, ReferenceArea, ReferenceLine, Scatter, ScatterChart, type ScatterShapeProps, Symbols, ZAxis } from "recharts";
 import { ChartAxis, ChartContainer, ChartGrid, ChartTooltip, chartColor } from "@/components/chart";
 import type { AccountHealth } from "./schema";
 
@@ -91,11 +91,15 @@ function AccountHealthScatterScreen({ accounts, riskSatisfaction = 5.5, riskRete
                   <ReferenceArea fill={RISK} fillOpacity={0.06} stroke="none" x1={1} x2={riskSatisfaction} y1={0} y2={riskRetention} />
                   <ReferenceLine stroke="currentColor" strokeDasharray="4 4" strokeOpacity={0.3} x={riskSatisfaction} />
                   <ReferenceLine stroke="currentColor" strokeDasharray="4 4" strokeOpacity={0.3} y={riskRetention} />
-                  <Scatter data={list} fillOpacity={0.2}>
-                    {list.map((a) => {
-                      const color = isRisk(a) ? RISK : chartColor(0);
-                      return <Cell fill={color} key={a.id} stroke={color} strokeWidth={1.5} />;
-                    })}
+                  <Scatter
+                    data={list}
+                    fillOpacity={0.2}
+                    shape={(props: ScatterShapeProps) => {
+                      const account = list[props.index];
+                      const color = account && isRisk(account) ? RISK : chartColor(0);
+                      return <Symbols {...props} fill={color} stroke={color} strokeWidth={1.5} type="circle" />;
+                    }}
+                  >
                     <LabelList
                       className="font-mono"
                       dataKey="name"

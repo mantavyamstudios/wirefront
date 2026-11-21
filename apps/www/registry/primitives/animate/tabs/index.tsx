@@ -57,7 +57,7 @@ const [TabsPrewarmProvider, useTabsPrewarm] =
 const [TabsActionsProvider, useTabsActions] =
   getStrictContext<TabsActionsContextType>("TabsActionsContext");
 
-function useTabs(): TabsContextType {
+const useTabs = (): TabsContextType => {
   const state = useTabsState();
   const prewarm = useTabsPrewarm();
   const actions = useTabsActions();
@@ -67,7 +67,7 @@ function useTabs(): TabsContextType {
     ...prewarm,
     ...actions,
   };
-}
+};
 
 type BaseTabsProps = React.ComponentProps<"div"> & {
   children: React.ReactNode;
@@ -87,13 +87,13 @@ type ControlledTabsProps = BaseTabsProps & {
 
 type TabsProps = UnControlledTabsProps | ControlledTabsProps;
 
-function Tabs({
+const Tabs = ({
   defaultValue,
   value,
   onValueChange,
   children,
   ...props
-}: TabsProps) {
+}: TabsProps) => {
   const [activeValue, setActiveValue] = useState<string | undefined>(
     defaultValue
   );
@@ -103,48 +103,24 @@ function Tabs({
   const triggersRef = useRef(new Map<string, HTMLElement>());
   const initialSet = useRef(false);
   const isControlled = value !== undefined;
-  const activeValueRef = useRef(activeValue);
-  activeValueRef.current = activeValue;
 
   const prewarmValue = useCallback((val: string) => {
     setPrewarmedValues((prev) => {
       if (prev.has(val)) {
         return prev;
       }
-      const next = new Set(prev);
-      next.add(val);
-      return next;
+      return new Set([...prev, val]);
     });
   }, []);
-
-  useEffect(() => {
-    if (
-      !isControlled &&
-      activeValue === undefined &&
-      triggersRef.current.size > 0 &&
-      !initialSet.current
-    ) {
-      const firstTab = triggersRef.current.keys().next().value as
-        | string
-        | undefined;
-      if (firstTab !== undefined) {
-        setActiveValue(firstTab);
-        initialSet.current = true;
-      }
-    }
-  }, [activeValue, isControlled]);
 
   const registerTrigger = useCallback(
     (val: string, node: HTMLElement | null) => {
       if (node) {
         triggersRef.current.set(val, node);
-        if (
-          !isControlled &&
-          activeValueRef.current === undefined &&
-          !initialSet.current
-        ) {
-          setActiveValue(val);
+        // Uncontrolled with no default: the first trigger to register is active.
+        if (!isControlled && !initialSet.current) {
           initialSet.current = true;
+          setActiveValue((prev) => prev ?? val);
         }
       } else {
         triggersRef.current.delete(val);
@@ -195,16 +171,22 @@ function Tabs({
       </TabsPrewarmProvider>
     </TabsStateProvider>
   );
-}
+};
 
 type TabsHighlightProps = Omit<HighlightProps, "value"> & {
   containerClassName?: string;
 };
 
-function TabsHighlight({
-  transition = { type: "spring", stiffness: 200, damping: 25 },
+const TABS_HIGHLIGHT_DEFAULT_TRANSITION = {
+  type: "spring",
+  stiffness: 200,
+  damping: 25,
+} as const;
+
+const TabsHighlight = ({
+  transition = TABS_HIGHLIGHT_DEFAULT_TRANSITION,
   ...props
-}: TabsHighlightProps) {
+}: TabsHighlightProps) => {
   const { activeValue } = useTabsState();
 
   return (
@@ -215,23 +197,23 @@ function TabsHighlight({
       {...props}
     />
   );
-}
+};
 
 type TabsListProps = React.ComponentProps<"div"> & {
   children: React.ReactNode;
 };
 
-function TabsList(props: TabsListProps) {
-  return <div data-slot="tabs-list" role="tablist" {...props} />;
-}
+const TabsList = (props: TabsListProps) => (
+  <div data-slot="tabs-list" role="tablist" {...props} />
+);
 
 type TabsHighlightItemProps = HighlightItemProps & {
   value: string;
 };
 
-function TabsHighlightItem(props: TabsHighlightItemProps) {
-  return <HighlightItem data-slot="tabs-highlight-item" {...props} />;
-}
+const TabsHighlightItem = (props: TabsHighlightItemProps) => (
+  <HighlightItem data-slot="tabs-highlight-item" {...props} />
+);
 
 type TabsTriggerProps = WithAsChild<
   {
@@ -240,14 +222,14 @@ type TabsTriggerProps = WithAsChild<
   } & HTMLMotionProps<"button">
 >;
 
-function TabsTrigger({
+const TabsTrigger = ({
   ref,
   value,
   asChild = false,
   onMouseEnter,
   onFocus,
   ...props
-}: TabsTriggerProps) {
+}: TabsTriggerProps) => {
   const { activeValue } = useTabsState();
   const { handleValueChange, registerTrigger, prewarmValue } = useTabsActions();
 
@@ -283,7 +265,7 @@ function TabsTrigger({
       {...props}
     />
   );
-}
+};
 
 type TabsContentsProps = HTMLMotionProps<"div"> & {
   children: React.ReactNode;
@@ -307,21 +289,23 @@ type TabsContentsProps = HTMLMotionProps<"div"> & {
   animateHeight?: boolean;
 };
 
-function TabsContents({
+const TABS_CONTENTS_DEFAULT_TRANSITION = {
+  type: "spring",
+  stiffness: 300,
+  damping: 30,
+  bounce: 0,
+  restDelta: 0.01,
+} as const;
+
+const TabsContents = ({
   children,
-  transition = {
-    type: "spring",
-    stiffness: 300,
-    damping: 30,
-    bounce: 0,
-    restDelta: 0.01,
-  },
+  transition = TABS_CONTENTS_DEFAULT_TRANSITION,
   lazyMount = true,
   keepMounted = true,
   animateHeight = true,
   onAnimationComplete,
   ...props
-}: TabsContentsProps) {
+}: TabsContentsProps) => {
   const { activeValue } = useTabsState();
   const { prewarmedValues } = useTabsPrewarm();
   const prefersReducedMotion = useReducedMotion();
@@ -337,54 +321,23 @@ function TabsContents({
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [height, setHeight] = useState(0);
-  const roRef = useRef<ResizeObserver | null>(null);
-  const rafRef = useRef<number | null>(null);
+  // `instant` while growing from nothing on the first measure, so mounting doesn't animate.
+  const [size, setSize] = useState({ height: 0, instant: true });
 
+  // Animating from the tab that was active before, until the slide completes.
   const [animatingFrom, setAnimatingFrom] = useState<number | null>(null);
-  const prevActiveRef = useRef(activeIndex);
-
-  const isSwitching = prevActiveRef.current !== activeIndex;
-  const effectiveAnimatingFrom = isSwitching
-    ? prevActiveRef.current
-    : animatingFrom;
-
-  useLayoutEffect(() => {
-    if (prevActiveRef.current !== activeIndex) {
-      setAnimatingFrom(prevActiveRef.current);
-      prevActiveRef.current = activeIndex;
-    }
-  }, [activeIndex, prevActiveRef]);
-
+  const [lastActiveIndex, setLastActiveIndex] = useState(activeIndex);
   const [visitedIndices, setVisitedIndices] = useState<Set<number>>(
     () => new Set(activeIndex === -1 ? [0] : [activeIndex])
   );
-
-  useEffect(() => {
-    if (activeIndex !== -1) {
-      setVisitedIndices((prev) => {
-        if (prev.has(activeIndex)) {
-          return prev;
-        }
-        const next = new Set(prev);
-        next.add(activeIndex);
-        return next;
-      });
+  if (lastActiveIndex !== activeIndex) {
+    setLastActiveIndex(activeIndex);
+    setAnimatingFrom(lastActiveIndex);
+    if (activeIndex !== -1 && !visitedIndices.has(activeIndex)) {
+      setVisitedIndices(new Set([...visitedIndices, activeIndex]));
     }
-  }, [activeIndex]);
-
-  const scheduleHeight = useCallback((next: number) => {
-    if (next <= 0) {
-      return;
-    }
-    if (rafRef.current !== null) {
-      cancelAnimationFrame(rafRef.current);
-    }
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = null;
-      setHeight((prev) => (Math.abs(prev - next) > 0.5 ? next : prev));
-    });
-  }, []);
+  }
+  const effectiveAnimatingFrom = animatingFrom;
 
   const measure = useCallback((index: number) => {
     const pane = itemRefs.current[index];
@@ -397,12 +350,10 @@ function TabsContents({
 
     const cs = getComputedStyle(container);
     const isBorderBox = cs.boxSizing === "border-box";
-    const paddingY =
-      (Number.parseFloat(cs.paddingTop || "0") || 0) +
-      (Number.parseFloat(cs.paddingBottom || "0") || 0);
-    const borderY =
-      (Number.parseFloat(cs.borderTopWidth || "0") || 0) +
-      (Number.parseFloat(cs.borderBottomWidth || "0") || 0);
+    // Computed lengths are always in px ("12px").
+    const px = (value: string) => Number(value.replace(/px$/u, "")) || 0;
+    const paddingY = px(cs.paddingTop) + px(cs.paddingBottom);
+    const borderY = px(cs.borderTopWidth) + px(cs.borderBottomWidth);
 
     let total = base + (isBorderBox ? paddingY + borderY : 0);
 
@@ -413,61 +364,33 @@ function TabsContents({
     return total;
   }, []);
 
+  // The observer reports the active pane's size before the first paint, then on every change.
   useLayoutEffect(() => {
-    if (!animateHeight) {
-      return;
-    }
-    if (activeIndex !== -1) {
-      const next = measure(activeIndex);
-      if (next > 0) {
-        setHeight((prev) => (Math.abs(prev - next) > 0.5 ? next : prev));
-      }
-    }
-  }, [activeIndex, animateHeight, measure]);
-
-  useEffect(() => {
-    if (!animateHeight) {
-      return;
-    }
-    if (roRef.current) {
-      roRef.current.disconnect();
-      roRef.current = null;
-    }
-
     const pane = itemRefs.current[activeIndex];
-    if (!pane) {
+    if (!(animateHeight && pane)) {
       return;
     }
-
     const ro = new ResizeObserver(() => {
-      scheduleHeight(measure(activeIndex));
-    });
-
-    ro.observe(pane);
-
-    roRef.current = ro;
-    return () => {
-      ro.disconnect();
-      roRef.current = null;
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
+      const next = measure(activeIndex);
+      if (next <= 0) {
+        return;
       }
-    };
-  }, [activeIndex, animateHeight, measure, scheduleHeight]);
-
-  const isInitialRef = useRef(true);
-
-  useEffect(() => {
-    isInitialRef.current = false;
-  }, []);
+      setSize((prev) =>
+        Math.abs(prev.height - next) > 0.5
+          ? { height: next, instant: prev.height === 0 }
+          : prev
+      );
+    });
+    ro.observe(pane);
+    return () => ro.disconnect();
+  }, [activeIndex, animateHeight, measure]);
 
   const contentsTransition = prefersReducedMotion
     ? { duration: 0 }
     : transition;
 
   const heightTransition: Transition =
-    prefersReducedMotion || isInitialRef.current || !animateHeight
+    prefersReducedMotion || size.instant || !animateHeight
       ? { duration: 0 }
       : ((transition as { height?: Transition })?.height ?? {
           duration: 0.3,
@@ -482,7 +405,7 @@ function TabsContents({
 
   return (
     <motion.div
-      animate={{ height: animateHeight ? height || "auto" : "auto" }}
+      animate={{ height: animateHeight ? size.height || "auto" : "auto" }}
       data-slot="tabs-contents"
       initial={false}
       ref={containerRef}
@@ -542,7 +465,7 @@ function TabsContents({
       </motion.div>
     </motion.div>
   );
-}
+};
 
 type TabsContentProps = WithAsChild<
   {
@@ -551,13 +474,13 @@ type TabsContentProps = WithAsChild<
   } & HTMLMotionProps<"div">
 >;
 
-function TabsContent({
+const TabsContent = ({
   ref,
   value,
   style,
   asChild = false,
   ...props
-}: TabsContentProps) {
+}: TabsContentProps) => {
   const { activeValue } = useTabsState();
   const isActive = activeValue === value;
 
@@ -574,7 +497,7 @@ function TabsContent({
       {...props}
     />
   );
-}
+};
 
 export {
   Tabs,

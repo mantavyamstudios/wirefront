@@ -72,17 +72,17 @@ function initials(name: string) {
 function Item({ n, t, when }: { n: Notification; t: typeof NOTIFICATION_CENTER_MESSAGES; when: string }) {
   const body = (
     <>
-      {!n.read ? <span aria-hidden className="absolute start-1.5 top-4 size-1.5 rounded-full bg-category-1" /> : null}
+      {!n.read ? <span aria-hidden className="absolute inset-s-1.5 top-4 size-1.5 rounded-full bg-category-1" /> : null}
       <div aria-hidden className="relative shrink-0">
         <Avatar className="size-9">
           <AvatarFallback className="text-[11px]">{initials(n.actor)}</AvatarFallback>
         </Avatar>
-        <span className="absolute -end-1 -bottom-1 grid size-4 place-items-center rounded-full bg-background">
+        <span className="absolute -inset-e-1 -bottom-1 grid size-4 place-items-center rounded-full bg-background">
           <span className="grid size-3.5 place-items-center rounded-full bg-foreground text-background">{ICONS[n.kind]}</span>
         </span>
       </div>
       <div className="min-w-0 flex-1 leading-snug">
-        <div className="break-words text-sm">
+        <div className="wrap-break-word text-sm">
           {!n.read ? <span className="sr-only">{t.unreadPrefix} </span> : null}
           <span className="font-medium">{n.actor}</span> <span className="text-muted-foreground">{n.verb}</span> {n.context ? <span className="text-foreground/85">{n.context}</span> : null}
         </div>
@@ -92,7 +92,7 @@ function Item({ n, t, when }: { n: Notification; t: typeof NOTIFICATION_CENTER_M
       </div>
     </>
   );
-  const row = cn("relative flex items-start gap-3 px-4 py-3 transition-colors hover:bg-foreground/[0.02]", !n.read && "bg-foreground/[0.015]");
+  const row = cn("relative flex items-start gap-3 px-4 py-3 transition-colors hover:bg-foreground/2", !n.read && "bg-foreground/1.5");
   return (
     <li>
       {n.href ? (
@@ -168,7 +168,7 @@ function NotificationCenterScreen({ notifications, status = "ready", error, onRe
           <RadioGroup aria-label={t.filter} className="flex items-center gap-1 border-border/60 border-b px-3 py-2" onValueChange={(v) => setFilter(v as Filter)} value={filter}>
             {FILTERS.map((f) => (
               <Radio.Root
-                className="inline-flex min-h-8 cursor-pointer items-center rounded-md px-3 text-muted-foreground text-sm outline-none hover:bg-foreground/[0.03] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground data-checked:text-background pointer-coarse:min-h-10 sm:text-xs"
+                className="inline-flex min-h-8 cursor-pointer items-center rounded-md px-3 text-muted-foreground text-sm outline-none hover:bg-foreground/3 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground data-checked:text-background pointer-coarse:min-h-10 sm:text-xs"
                 key={f}
                 value={f}
               >

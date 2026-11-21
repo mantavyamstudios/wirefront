@@ -10,16 +10,16 @@ const VIEWPORT_PAD = 12;
 const RETRY_DELAYS_MS = [0, 50, 150, 350, 600];
 const MAX_ATTEMPTS = 12;
 
-function findScrollViewport(el: HTMLElement): HTMLElement | null {
+const findScrollViewport = (el: HTMLElement): HTMLElement | null => {
   const marked = el.closest(`[${DOCS_SIDEBAR_SCROLL_VIEWPORT_ATTR}]`);
   if (marked instanceof HTMLElement) {
     return marked;
   }
   const radix = el.closest("[data-radix-scroll-area-viewport]");
   return radix instanceof HTMLElement ? radix : null;
-}
+};
 
-function scrollDelta(el: HTMLElement, viewport: HTMLElement): number {
+const scrollDelta = (el: HTMLElement, viewport: HTMLElement): number => {
   const vpRect = viewport.getBoundingClientRect();
   const elRect = el.getBoundingClientRect();
   if (elRect.top < vpRect.top + VIEWPORT_PAD) {
@@ -29,13 +29,13 @@ function scrollDelta(el: HTMLElement, viewport: HTMLElement): number {
     return elRect.bottom - vpRect.bottom + VIEWPORT_PAD;
   }
   return 0;
-}
+};
 
-function applyScroll(
+const applyScroll = (
   el: HTMLElement,
   viewport: HTMLElement,
   behavior: ScrollBehavior
-): void {
+): void => {
   const delta = scrollDelta(el, viewport);
   if (delta === 0) {
     return;
@@ -44,9 +44,9 @@ function applyScroll(
     top: viewport.scrollTop + delta,
     behavior,
   });
-}
+};
 
-export function useScrollActiveItemIntoView(active: boolean) {
+export const useScrollActiveItemIntoView = (active: boolean) => {
   const ref = useRef<HTMLDivElement>(null);
   const scrolled = useRef(false);
 
@@ -140,4 +140,4 @@ export function useScrollActiveItemIntoView(active: boolean) {
   }, [active]);
 
   return ref;
-}
+};

@@ -192,9 +192,9 @@ function PersonAvatar({ person, size = 7, className }: { person: CallPerson; siz
 
 function SpeakingBars({ reduce }: { reduce: boolean }) {
   return (
-    <span aria-hidden className="flex h-3 items-center gap-[2px]">
+    <span aria-hidden className="flex h-3 items-center gap-0.5">
       {[0, 0.15, 0.3].map((delay) => (
-        <motion.span animate={reduce ? { scaleY: 0.7 } : { scaleY: [0.35, 1, 0.5, 0.85, 0.35] }} className="h-3 w-[3px] origin-center rounded-full bg-category-2" key={delay} transition={reduce ? { duration: 0 } : { duration: 0.9, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay }} />
+        <motion.span animate={reduce ? { scaleY: 0.7 } : { scaleY: [0.35, 1, 0.5, 0.85, 0.35] }} className="h-3 w-0.75 origin-center rounded-full bg-category-2" key={delay} transition={reduce ? { duration: 0 } : { duration: 0.9, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay }} />
       ))}
     </span>
   );
@@ -203,8 +203,8 @@ function SpeakingBars({ reduce }: { reduce: boolean }) {
 function Ambient({ hue }: { hue: CallHue }) {
   return (
     <div aria-hidden className={cn("absolute inset-0", hues[hue].wash)}>
-      <div className={cn("absolute -start-1/4 -top-1/3 h-full w-3/4 rounded-full blur-3xl", hues[hue].glowA)} />
-      <div className={cn("absolute -end-1/4 -bottom-1/2 h-full w-3/4 rounded-full blur-3xl", hues[hue].glowB)} />
+      <div className={cn("absolute -inset-s-1/4 -top-1/3 h-full w-3/4 rounded-full blur-3xl", hues[hue].glowA)} />
+      <div className={cn("absolute -inset-e-1/4 -bottom-1/2 h-full w-3/4 rounded-full blur-3xl", hues[hue].glowB)} />
     </div>
   );
 }
@@ -288,13 +288,13 @@ function CallTile({ tile, speaking, compact, style, className, you, ns, t }: { t
           </>
         ) : null}
         {p?.hand ? (
-          <motion.span animate={{ opacity: 1, y: 0 }} className="absolute start-2 top-2 flex h-6 items-center gap-1 rounded-full bg-category-3/60 px-2 font-medium text-category-3-foreground text-xs" initial={reduce ? { opacity: 0 } : { opacity: 0, y: -4 }} layout={!reduce} transition={{ duration: 0.2, ease: easeOut }}>
+          <motion.span animate={{ opacity: 1, y: 0 }} className="absolute inset-s-2 top-2 flex h-6 items-center gap-1 rounded-full bg-category-3/60 px-2 font-medium text-category-3-foreground text-xs" initial={reduce ? { opacity: 0 } : { opacity: 0, y: -4 }} layout={!reduce} transition={{ duration: 0.2, ease: easeOut }}>
             <HandIcon aria-hidden className="size-3.5" />
             {compact ? <span className="sr-only">{t.handRaised}</span> : <span className="hidden @[10rem]/tile:inline">{t.handRaised}</span>}
           </motion.span>
         ) : null}
         {p && (p.muted || p.cameraOff) ? (
-          <motion.span aria-hidden className="absolute end-2 top-2 flex items-center gap-1" layout={!reduce}>
+          <motion.span aria-hidden className="absolute inset-e-2 top-2 flex items-center gap-1" layout={!reduce}>
             {p.cameraOff && !compact ? (
               <span className="flex size-6 items-center justify-center rounded-full bg-background/85 text-muted-foreground shadow-xs/5 backdrop-blur-sm">
                 <VideoOffIcon className="size-3.5" />
@@ -307,7 +307,7 @@ function CallTile({ tile, speaking, compact, style, className, you, ns, t }: { t
             ) : null}
           </motion.span>
         ) : null}
-        <motion.span aria-hidden className="absolute start-2 bottom-2 flex h-6 max-w-[calc(100%-1rem)] items-center gap-1.5 rounded-md bg-background/85 px-2 font-medium text-foreground text-xs shadow-xs/5 backdrop-blur-sm" layout={!reduce}>
+        <motion.span aria-hidden className="absolute inset-s-2 bottom-2 flex h-6 max-w-[calc(100%-1rem)] items-center gap-1.5 rounded-md bg-background/85 px-2 font-medium text-foreground text-xs shadow-xs/5 backdrop-blur-sm" layout={!reduce}>
           {tile.kind === "screen" ? <MonitorUpIcon className="size-3.5 shrink-0 text-muted-foreground" /> : null}
           {speaking ? <SpeakingBars reduce={reduce} /> : null}
           <span className={cn("truncate", compact && "max-w-16")}>{label}</span>
@@ -326,7 +326,7 @@ function ControlButton({ label, shortcut, onClick, tone = "default", children, b
           <button
             aria-label={label}
             aria-pressed={pressed}
-            className={cn("relative flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background [&_svg]:size-[18px]", press, tone === "off" && "bg-destructive text-white hover:bg-destructive/90", tone === "on" && "bg-primary text-primary-foreground hover:bg-primary/90", tone === "default" && "bg-secondary text-secondary-foreground hover:bg-accent", className)}
+            className={cn("relative flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background [&_svg]:size-4.5", press, tone === "off" && "bg-destructive text-white hover:bg-destructive/90", tone === "on" && "bg-primary text-primary-foreground hover:bg-primary/90", tone === "default" && "bg-secondary text-secondary-foreground hover:bg-accent", className)}
             onClick={onClick}
             type="button"
           />
@@ -335,7 +335,7 @@ function ControlButton({ label, shortcut, onClick, tone = "default", children, b
         {children}
         <AnimatePresence>
           {badge ? (
-            <motion.span animate={{ opacity: 1, scale: 1 }} aria-hidden className="absolute -end-0.5 -top-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 font-medium text-[10px] text-primary-foreground tabular-nums ring-2 ring-background" exit={{ opacity: 0, scale: 0.9 }} initial={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.15, ease: easeOut }}>
+            <motion.span animate={{ opacity: 1, scale: 1 }} aria-hidden className="absolute -inset-e-0.5 -top-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 font-medium text-[10px] text-primary-foreground tabular-nums ring-2 ring-background" exit={{ opacity: 0, scale: 0.9 }} initial={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.15, ease: easeOut }}>
               {badge}
             </motion.span>
           ) : null}
@@ -638,7 +638,7 @@ function VideoCallScreen({ title, meetingCode, startedAt, you: youProp, particip
                             </time>
                           </span>
                         )}
-                        <p className="text-pretty break-words">{m.text}</p>
+                        <p className="text-pretty wrap-break-word">{m.text}</p>
                       </div>
                     </motion.li>
                   );
@@ -890,10 +890,10 @@ function VideoCallScreen({ title, meetingCode, startedAt, you: youProp, particip
                             {spotTile ? <CallTile className="size-full" key={tileKey(spotTile)} speaking={isSpeaking(spotTile)} t={t} tile={spotTile} you={me} /> : null}
                           </AnimatePresence>
                         </div>
-                        <div className="-mx-1 -mb-1 flex h-26 shrink-0 justify-center-safe gap-2 overflow-x-auto p-1 [scrollbar-width:none] @xl/stage:h-30">
+                        <div className="-mx-1 -mb-1 flex h-26 shrink-0 justify-center-safe gap-2 overflow-x-auto p-1 scrollbar-none @xl/stage:h-30">
                           <AnimatePresence initial={false} mode="popLayout">
                             {stripTiles.map((tile) => (
-                              <CallTile className="aspect-[4/3] h-full" compact key={tileKey(tile)} ns="strip" speaking={isSpeaking(tile)} t={t} tile={tile} you={me} />
+                              <CallTile className="aspect-4/3 h-full" compact key={tileKey(tile)} ns="strip" speaking={isSpeaking(tile)} t={t} tile={tile} you={me} />
                             ))}
                           </AnimatePresence>
                         </div>
@@ -943,7 +943,7 @@ function VideoCallScreen({ title, meetingCode, startedAt, you: youProp, particip
           </AnimatePresence>
         </div>
 
-        <footer className="flex h-[72px] shrink-0 items-center gap-3 px-4">
+        <footer className="flex h-18 shrink-0 items-center gap-3 px-4">
           <div className="hidden min-w-0 flex-1 items-center gap-2 text-muted-foreground text-xs @4xl:flex">
             {inviteUrl ? (
               <button className="flex h-8 cursor-pointer items-center gap-1.5 rounded-lg px-2 font-mono outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring" onClick={copyInvite} title={t.copyInvite} type="button">
@@ -980,7 +980,7 @@ function VideoCallScreen({ title, meetingCode, startedAt, you: youProp, particip
               ) : null}
               {onReact ? (
                 <Popover onOpenChange={setReactOpen} open={reactOpen}>
-                  <PopoverTrigger aria-label={t.react} className={cn("flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-secondary text-secondary-foreground outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background data-popup-open:bg-accent [&_svg]:size-[18px]", press)}>
+                  <PopoverTrigger aria-label={t.react} className={cn("flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-secondary text-secondary-foreground outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background data-popup-open:bg-accent [&_svg]:size-4.5", press)}>
                     <SmilePlusIcon />
                   </PopoverTrigger>
                   <PopoverContent className={cn("w-auto rounded-full p-1 before:rounded-full", menuPop)} side="top" sideOffset={10}>
@@ -1004,7 +1004,7 @@ function VideoCallScreen({ title, meetingCode, startedAt, you: youProp, particip
                 <MessageSquareIcon />
               </ControlButton>
               <DropdownMenu>
-                <DropdownMenuTrigger aria-label={t.more} className={cn("flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-secondary text-secondary-foreground outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background data-popup-open:bg-accent [&_svg]:size-[18px]", press)}>
+                <DropdownMenuTrigger aria-label={t.more} className={cn("flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-secondary text-secondary-foreground outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background data-popup-open:bg-accent [&_svg]:size-4.5", press)}>
                   <EllipsisIcon />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center" className={cn("w-52", menuPop)} side="top" sideOffset={10}>
@@ -1038,7 +1038,7 @@ function VideoCallScreen({ title, meetingCode, startedAt, you: youProp, particip
               {onLeave ? (
                 <Tooltip>
                   <TooltipTrigger render={<button aria-label={t.leaveCall} className={cn("ms-1 flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-destructive px-3.5 font-medium text-white outline-none hover:bg-destructive/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background @md:px-4", press)} onClick={leave} type="button" />}>
-                    <PhoneOffIcon aria-hidden className="size-[18px]" />
+                    <PhoneOffIcon aria-hidden className="size-4.5" />
                     <span className="hidden @md:inline">{t.leave}</span>
                   </TooltipTrigger>
                   <TooltipContent side="top" sideOffset={8}>

@@ -133,7 +133,7 @@ function ContactSalesScreen({ onSubmit, features, customers = [], className }: C
                         </option>
                       ))}
                     </select>
-                    <svg aria-hidden className="pointer-events-none absolute end-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 16 16">
+                    <svg aria-hidden className="pointer-events-none absolute inset-e-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 16 16">
                       <polyline points="4 6 8 10 12 6" />
                     </svg>
                   </div>

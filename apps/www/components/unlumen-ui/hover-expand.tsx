@@ -42,28 +42,67 @@ export interface HoverExpandProps {
   items: HoverExpandItem[];
 }
 
-function RowShell({
+const RowShell = ({
   children,
   href,
 }: {
   children: React.ReactNode;
   href?: string;
-}) {
-  return href ? (
+}) =>
+  href ? (
     <Link className="block size-full" href={href}>
       {children}
     </Link>
   ) : (
     children
   );
-}
 
-export function HoverExpand({
+/** A row's background: the item's own media, or its image under a dark gradient. */
+const RowMedia = ({ item }: { item: HoverExpandItem }) =>
+  item.media === undefined ? (
+    <>
+      {item.image ? (
+        <Image
+          alt={item.imageAlt ?? ""}
+          className="object-cover"
+          fill
+          sizes="100vw"
+          src={item.image}
+          unoptimized
+        />
+      ) : null}
+      <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-black/10" />
+    </>
+  ) : (
+    item.media
+  );
+
+const RowSublabel = ({
+  onImage,
+  sublabel,
+}: {
+  onImage: boolean;
+  sublabel: HoverExpandItem["sublabel"];
+}) =>
+  sublabel ? (
+    <motion.span
+      animate={{
+        color: onImage ? "rgba(255,255,255,0.55)" : "currentColor",
+        opacity: onImage ? 1 : 0.45,
+      }}
+      className="shrink-0 text-xs tracking-widest uppercase"
+      transition={{ duration: 0.2 }}
+    >
+      {sublabel}
+    </motion.span>
+  ) : null;
+
+export const HoverExpand = ({
   items,
   collapsedHeight = 68,
   expandedHeight = 320,
   className,
-}: HoverExpandProps) {
+}: HoverExpandProps) => {
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
 
   return (
@@ -113,23 +152,7 @@ export function HoverExpand({
                     scale: { duration: 0.55, ease: [0.23, 1, 0.32, 1] },
                   }}
                 >
-                  {custom ? (
-                    item.media
-                  ) : (
-                    <>
-                      {item.image ? (
-                        <Image
-                          alt={item.imageAlt ?? ""}
-                          className="object-cover"
-                          fill
-                          sizes="100vw"
-                          src={item.image}
-                          unoptimized
-                        />
-                      ) : null}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
-                    </>
-                  )}
+                  <RowMedia item={item} />
                 </motion.div>
 
                 <div className="pointer-events-none absolute inset-0 flex items-end px-5 pb-4">
@@ -179,20 +202,7 @@ export function HoverExpand({
                       ) : null}
                     </div>
 
-                    {item.sublabel ? (
-                      <motion.span
-                        animate={{
-                          color: onImage
-                            ? "rgba(255,255,255,0.55)"
-                            : "currentColor",
-                          opacity: onImage ? 1 : 0.45,
-                        }}
-                        className="shrink-0 text-xs tracking-widest uppercase"
-                        transition={{ duration: 0.2 }}
-                      >
-                        {item.sublabel}
-                      </motion.span>
-                    ) : null}
+                    <RowSublabel onImage={onImage} sublabel={item.sublabel} />
                   </div>
                 </div>
               </RowShell>
@@ -204,4 +214,4 @@ export function HoverExpand({
       })}
     </div>
   );
-}
+};

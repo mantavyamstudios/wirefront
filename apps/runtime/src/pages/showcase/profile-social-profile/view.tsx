@@ -208,7 +208,7 @@ function Art({ art, className, large }: { art: ProfileArt; className?: string; l
     <span
       aria-hidden
       className={cn(
-        "relative flex items-center justify-center overflow-hidden bg-gradient-to-br text-white",
+        "relative flex items-center justify-center overflow-hidden bg-linear-to-br text-white",
         hues[art.hue].art,
         className,
       )}
@@ -229,7 +229,7 @@ function Art({ art, className, large }: { art: ProfileArt; className?: string; l
         </>
       ) : (
         <>
-          <span className="absolute -top-1/4 -start-1/4 size-3/4 rounded-full bg-white/20 blur-2xl" />
+          <span className="absolute -top-1/4 -inset-s-1/4 size-3/4 rounded-full bg-white/20 blur-2xl" />
           <span
             className={cn(
               "relative font-heading font-semibold leading-none drop-shadow-sm",
@@ -388,13 +388,13 @@ function SocialProfileScreen({
   return (
     <div
       className={cn(
-        "@container relative isolate flex h-[760px] w-full overflow-hidden bg-background text-foreground text-sm",
+        "@container relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm",
         className,
       )}
     >
       <div className="relative min-w-0 flex-1 overflow-y-auto" ref={scrollRef}>
-        <div className="mx-auto flex max-w-[1000px] justify-center gap-6">
-          <main className="relative w-full max-w-[600px] min-w-0 @3xl:border-x">
+        <div className="mx-auto flex max-w-250 justify-center gap-6">
+          <main className="relative w-full max-w-150 min-w-0 @3xl:border-x">
             <div className="sticky top-0 z-20 flex h-14 items-center gap-3 px-3">
               <motion.span aria-hidden className="absolute inset-0 -z-10 border-b bg-background/85 backdrop-blur-md" style={{ opacity: barBg }} />
               {onBack && (
@@ -439,7 +439,7 @@ function SocialProfileScreen({
                 <span className="-mt-12 rounded-full bg-background p-1 @3xl:-mt-14">
                   <Avatar className="[--avatar-size:--spacing(22)] @3xl:[--avatar-size:--spacing(26)]">
                     <AvatarFallback
-                      className={cn("bg-gradient-to-br font-heading font-semibold text-2xl text-white @3xl:text-3xl", hues.violet.avatar)}
+                      className={cn("bg-linear-to-br font-heading font-semibold text-2xl text-white @3xl:text-3xl", hues.violet.avatar)}
                     >
                       {initials(user.name)}
                     </AvatarFallback>
@@ -551,7 +551,7 @@ function SocialProfileScreen({
                     {mutuals.slice(0, 3).map((m, i) => (
                       <Avatar className="ring-2 ring-background [--avatar-size:--spacing(5)]" key={m}>
                         <AvatarFallback
-                          className={cn("bg-gradient-to-br font-semibold text-[10px] text-white", hues[(["teal", "sky", "rose"] as const)[i % 3]].avatar)}
+                          className={cn("bg-linear-to-br font-semibold text-[10px] text-white", hues[(["teal", "sky", "rose"] as const)[i % 3]].avatar)}
                         >
                           {m[0]}
                         </AvatarFallback>
@@ -602,7 +602,7 @@ function SocialProfileScreen({
                       {label}
                       {on && (
                         <motion.span
-                          className="absolute bottom-0 left-1/2 h-[3px] w-12 -translate-x-1/2 rounded-full bg-foreground"
+                          className="absolute bottom-0 left-1/2 h-0.75 w-12 -translate-x-1/2 rounded-full bg-foreground"
                           layoutId={`${uid}-tab`}
                           transition={reduce ? { duration: 0 } : spring}
                         />
@@ -613,7 +613,7 @@ function SocialProfileScreen({
               </div>
             </div>
 
-            <div aria-labelledby={`${uid}-tab-${tab}`} className="min-h-[656px]" id={`${uid}-panel`} role="tabpanel">
+            <div aria-labelledby={`${uid}-tab-${tab}`} className="min-h-164" id={`${uid}-panel`} role="tabpanel">
               <AnimatePresence initial={false} mode="wait">
                 <motion.div
                   animate={{ opacity: 1 }}
@@ -671,7 +671,7 @@ function SocialProfileScreen({
             </div>
           </main>
 
-          <aside className="sticky top-0 hidden w-[300px] shrink-0 flex-col gap-4 self-start py-4 @5xl:flex">
+          <aside className="sticky top-0 hidden w-75 shrink-0 flex-col gap-4 self-start py-4 @5xl:flex">
             <section aria-labelledby={`${uid}-sugg`} className="rounded-2xl border bg-card p-4 shadow-xs/5">
               <h3 className="font-heading font-semibold" id={`${uid}-sugg`}>
                 {t.youMightLike}
@@ -683,7 +683,7 @@ function SocialProfileScreen({
                   return (
                     <li className="flex items-center gap-3" key={s.handle}>
                       <Avatar aria-hidden className="[--avatar-size:--spacing(9)]">
-                        <AvatarFallback className={cn("bg-gradient-to-br font-semibold text-white text-xs", hues[s.hue].avatar)}>
+                        <AvatarFallback className={cn("bg-linear-to-br font-semibold text-white text-xs", hues[s.hue].avatar)}>
                           {initials(s.name)}
                         </AvatarFallback>
                       </Avatar>
@@ -693,7 +693,7 @@ function SocialProfileScreen({
                       </div>
                       <Button
                         aria-pressed={on}
-                        className={cn("min-w-[5.5rem]", press)}
+                        className={cn("min-w-22", press)}
                         onClick={toggleSuggestion}
                         size="sm"
                         variant={on ? "ghost" : "outline"}
@@ -713,7 +713,7 @@ function SocialProfileScreen({
                   </h3>
                   <span className="text-muted-foreground text-xs tabular-nums">{interpolate(t.streakProgress, { done: streak.done, total: streak.total })}</span>
                 </div>
-                <div aria-hidden className="mt-3 grid grid-cols-[repeat(15,minmax(0,1fr))] gap-[3px]">
+                <div aria-hidden className="mt-3 grid grid-cols-15 gap-0.75">
                   {streakCells.map((c) => (
                     <span
                       className={cn(
@@ -755,7 +755,7 @@ const COVER_LINES = Array.from({ length: 9 }, (_, i) => i);
 
 function Cover() {
   return (
-    <div aria-hidden className="relative -mt-14 h-[168px] overflow-hidden @3xl:h-[200px]">
+    <div aria-hidden className="relative -mt-14 h-42 overflow-hidden @3xl:h-50">
       <div
         className="absolute inset-0"
         style={{
@@ -824,13 +824,13 @@ function FollowButton({
       <span aria-hidden className="absolute inset-0" style={{ filter: `url(#${filterId})` }}>
         <motion.span
           animate={{ width: pillW }}
-          className="absolute inset-y-0 end-0 rounded-full bg-(--goo) transition-[background-color] duration-200"
+          className="absolute inset-y-0 inset-e-0 rounded-full bg-(--goo) transition-[background-color] duration-200"
           initial={false}
           transition={move}
         />
         <motion.span
           animate={{ scale: following ? 1 : 0.6 }}
-          className="absolute top-0 start-0 size-9 rounded-full bg-(--goo) transition-[background-color] duration-200"
+          className="absolute top-0 inset-s-0 size-9 rounded-full bg-(--goo) transition-[background-color] duration-200"
           initial={false}
           transition={move}
         />
@@ -843,7 +843,7 @@ function FollowButton({
             aria-label={interpolate(bell ? t.notifyOff : t.notifyOn, { name })}
             aria-pressed={bell}
             className={cn(
-              "absolute top-0 start-0 flex size-9 cursor-pointer items-center justify-center rounded-full text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              "absolute top-0 inset-s-0 flex size-9 cursor-pointer items-center justify-center rounded-full text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               press,
             )}
             exit={{ opacity: 0, transition: { duration: 0.08 } }}
@@ -871,7 +871,7 @@ function FollowButton({
         aria-label={interpolate(following ? t.unfollowName : t.followName, { name })}
         aria-pressed={following}
         className={cn(
-          "absolute top-0 end-0 flex h-9 cursor-pointer items-center justify-center rounded-full font-medium outline-none transition-[color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97]",
+          "absolute top-0 inset-e-0 flex h-9 cursor-pointer items-center justify-center rounded-full font-medium outline-none transition-[color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97]",
           following ? (hover ? "text-destructive-foreground" : "text-foreground") : "text-primary-foreground",
         )}
         onBlur={() => setHover(false)}
@@ -952,9 +952,9 @@ function PostItem({
       )}
       {post.replyTo && (
         <div className="relative flex gap-3">
-          <span aria-hidden className="absolute top-11 bottom-[-0.875rem] start-[19px] w-0.5 rounded-full bg-border" />
+          <span aria-hidden className="absolute top-11 -bottom-3.5 inset-s-4.75 w-0.5 rounded-full bg-border" />
           <Avatar aria-hidden className="[--avatar-size:--spacing(10)]">
-            <AvatarFallback className={cn("bg-gradient-to-br font-semibold text-white text-xs", hues[post.replyTo.hue].avatar)}>
+            <AvatarFallback className={cn("bg-linear-to-br font-semibold text-white text-xs", hues[post.replyTo.hue].avatar)}>
               {initials(post.replyTo.name)}
             </AvatarFallback>
           </Avatar>
@@ -969,7 +969,7 @@ function PostItem({
       )}
       <article className="flex gap-3">
         <Avatar aria-hidden className="[--avatar-size:--spacing(10)]">
-          <AvatarFallback className={cn("bg-gradient-to-br font-heading font-semibold text-white text-xs", hues.violet.avatar)}>
+          <AvatarFallback className={cn("bg-linear-to-br font-heading font-semibold text-white text-xs", hues.violet.avatar)}>
             {initials(user.name)}
           </AvatarFallback>
         </Avatar>
@@ -990,7 +990,7 @@ function PostItem({
                   aria-label={interpolate(t.openImage, { caption: m.caption })}
                   className={cn(
                     "@container block cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-                    post.media && post.media.length > 1 ? "aspect-[4/5]" : "aspect-[16/10]",
+                    post.media && post.media.length > 1 ? "aspect-4/5" : "aspect-16/10",
                   )}
                   disabled={!m.glyph || !onOpenMedia}
                   key={m.caption}
@@ -1011,7 +1011,7 @@ function PostItem({
               rel="noreferrer"
               target="_blank"
             >
-              <span aria-hidden className={cn("flex w-24 shrink-0 items-end gap-0.5 bg-gradient-to-br p-2.5 @md:w-32", hues[post.link.hue].art)}>
+              <span aria-hidden className={cn("flex w-24 shrink-0 items-end gap-0.5 bg-linear-to-br p-2.5 @md:w-32", hues[post.link.hue].art)}>
                 {["bg-category-3/12", "bg-category-7", "bg-category-4-strong", "bg-category-6-strong", "bg-category-8-strong"].map((c) => (
                   <span className={cn("h-7 flex-1 rounded-sm ring-1 ring-black/10", c)} key={c} />
                 ))}
@@ -1230,7 +1230,7 @@ function Lightbox({
           <button aria-hidden className="absolute inset-0 -z-10 cursor-default" onClick={onClose} tabIndex={-1} type="button" />
           <button
             aria-label={t.close}
-            className="absolute top-3 end-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white outline-none hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white"
+            className="absolute top-3 inset-e-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white outline-none hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white"
             onClick={onClose}
             ref={closeRef}
             type="button"
@@ -1239,7 +1239,7 @@ function Lightbox({
           </button>
           <motion.div
             animate={{ opacity: 1, scale: 1 }}
-            className="@container w-full max-w-[440px]"
+            className="@container w-full max-w-110"
             initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.22, ease: easeOut }}
           >

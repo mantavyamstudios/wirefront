@@ -108,7 +108,7 @@ function PlatformUsageChartScreen({ data, status = "ready", error, onRetry, rang
                   >
                     {ranges.map((r) => (
                       <Radio.Root
-                        className="inline-flex min-h-7 cursor-pointer items-center rounded px-2.5 py-1 normal-case outline-none hover:bg-foreground/[0.05] focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground/[0.08] data-checked:text-foreground pointer-coarse:min-h-10"
+                        className="inline-flex min-h-7 cursor-pointer items-center rounded px-2.5 py-1 normal-case outline-none hover:bg-foreground/5 focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground/8 data-checked:text-foreground pointer-coarse:min-h-10"
                         key={r.id}
                         value={r.id}
                       >

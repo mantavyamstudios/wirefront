@@ -106,7 +106,7 @@ function Section({ title, badge, children }: { title: string; badge?: number; ch
             </Badge>
           ) : null}
         </span>
-        <ChevronDownIcon aria-hidden className="size-4 text-muted-foreground transition-transform group-data-[panel-open]:-rotate-180 motion-reduce:transition-none" />
+        <ChevronDownIcon aria-hidden className="size-4 text-muted-foreground transition-transform group-data-panel-open:-rotate-180 motion-reduce:transition-none" />
       </CollapsibleTrigger>
       <CollapsibleContent className="overflow-hidden">
         <div className="pt-3">{children}</div>
@@ -305,7 +305,7 @@ function ProductFilterSidebarScreen({
       <div aria-busy className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3">
         {SKELETON_CARDS.map((key) => (
           <div className="rounded-xl border bg-card p-2 sm:p-3" key={key}>
-            <Skeleton className="aspect-[4/3] w-full rounded-lg motion-reduce:animate-none sm:aspect-auto sm:h-28" />
+            <Skeleton className="aspect-4/3 w-full rounded-lg motion-reduce:animate-none sm:aspect-auto sm:h-28" />
             <Skeleton className="mt-2 h-3.5 w-24 motion-reduce:animate-none" />
           </div>
         ))}
@@ -346,17 +346,17 @@ function ProductFilterSidebarScreen({
           return (
             <li className="relative min-w-0 rounded-xl border bg-card p-2 shadow-xs/5 sm:p-3" key={p.id}>
               <div
-                className="relative aspect-[4/3] overflow-hidden rounded-lg bg-muted sm:aspect-auto sm:h-28"
+                className="relative aspect-4/3 overflow-hidden rounded-lg bg-muted sm:aspect-auto sm:h-28"
                 style={p.imageUrl ? undefined : { background: `linear-gradient(135deg, ${first} 0%, ${swatches[1]?.swatch ?? first} 100%)` }}
               >
                 {p.imageUrl ? <img alt="" className="size-full object-cover" src={p.imageUrl} /> : null}
                 {p.onSale ? (
-                  <Badge className="absolute start-2 top-2 font-mono text-[10px] uppercase" variant="secondary">
+                  <Badge className="absolute inset-s-2 top-2 font-mono text-[10px] uppercase" variant="secondary">
                     {t.sale}
                   </Badge>
                 ) : null}
                 {p.isNew ? (
-                  <Badge className="absolute end-2 top-2 border-foreground/20 bg-background/80 font-mono text-[10px] uppercase backdrop-blur" variant="outline">
+                  <Badge className="absolute inset-e-2 top-2 border-foreground/20 bg-background/80 font-mono text-[10px] uppercase backdrop-blur" variant="outline">
                     {t.new}
                   </Badge>
                 ) : null}
@@ -417,7 +417,7 @@ function ProductFilterSidebarScreen({
                 </Badge>
               ) : null}
             </SheetTrigger>
-            <SheetContent className="max-w-[340px] bg-card pb-[env(safe-area-inset-bottom)]" showCloseButton={false} side="left">
+            <SheetContent className="max-w-85 bg-card pb-[env(safe-area-inset-bottom)]" showCloseButton={false} side="left">
               <SheetTitle className="sr-only">{t.filters}</SheetTitle>
               {panel(true)}
             </SheetContent>

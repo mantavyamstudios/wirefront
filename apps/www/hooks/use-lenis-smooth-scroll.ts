@@ -5,7 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { useEffect, useRef } from "react";
 
-export function useLenisSmoothScroll(enabled = true) {
+export const useLenisSmoothScroll = (enabled = true) => {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
@@ -64,4 +64,4 @@ export function useLenisSmoothScroll(enabled = true) {
   }, [enabled]);
 
   return lenisRef;
-}
+};

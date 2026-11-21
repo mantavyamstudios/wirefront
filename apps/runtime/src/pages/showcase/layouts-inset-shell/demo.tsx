@@ -354,7 +354,7 @@ function ProjectOverview({ project }: { project: ShellProject }) {
         <Properties className="rounded-xl border bg-card px-4 py-3 @4xl:hidden" d={d} project={project} />
 
         <LayoutGroup id={tabId}>
-          <div className="flex gap-1 overflow-x-auto border-b [scrollbar-width:none]" role="tablist">
+          <div className="flex gap-1 overflow-x-auto border-b scrollbar-none" role="tablist">
             {tabs.map((t) => (
               <button
                 aria-selected={tab === t.id}

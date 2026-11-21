@@ -122,7 +122,7 @@ function DateRangePickerScreen({ defaultValue, onApply, weekStartsOn = 1, classN
                   aria-pressed={active === p}
                   className={cn(
                     "min-h-8 w-full whitespace-nowrap rounded-full border px-3 py-1.5 text-start text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10 md:rounded-md md:border-0 md:px-2 md:pointer-coarse:min-h-8",
-                    active === p ? "border-foreground bg-foreground text-background" : "border-border/60 text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground",
+                    active === p ? "border-foreground bg-foreground text-background" : "border-border/60 text-muted-foreground hover:bg-foreground/3 hover:text-foreground",
                   )}
                   onClick={() => choose(presetRange(p, today))}
                   type="button"

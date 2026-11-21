@@ -82,7 +82,7 @@ function ChangelogFeedScreen({ entries, product, subscribeHref, status = "ready"
           </div>
         ) : !entries || status === "loading" ? (
           <div aria-busy="true" className="mt-10 flex flex-col gap-6">
-            <Skeleton className="aspect-[16/7] w-full rounded-xl motion-reduce:animate-none" />
+            <Skeleton className="aspect-16/7 w-full rounded-xl motion-reduce:animate-none" />
             <Skeleton className="h-40 w-full motion-reduce:animate-none" />
           </div>
         ) : entries.length === 0 ? (
@@ -117,7 +117,7 @@ function ChangelogFeedScreen({ entries, product, subscribeHref, status = "ready"
 
                 <div>
                   {i === 0 && r.headline ? (
-                    <div className="mb-5 aspect-[16/7] w-full overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-category-8/10 via-foreground/[0.04] to-category-6/10">
+                    <div className="mb-5 aspect-16/7 w-full overflow-hidden rounded-xl border border-border/60 bg-linear-to-br from-category-8/10 via-foreground/4 to-category-6/10">
                       <div className="grid h-full place-items-center">
                         <div className="text-center">
                           <SparklesIcon aria-hidden className="mx-auto size-6 opacity-50" />

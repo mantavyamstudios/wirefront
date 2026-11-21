@@ -318,12 +318,12 @@ function CardPreview({ number, holder, expiry, cvc, flipped, t }: { number: stri
   const reduce = useReducedMotion();
   const d = digits(number).padEnd(16, "•");
   return (
-    <div aria-hidden className="mx-auto w-full max-w-[260px] [perspective:900px] @lg:mt-6" dir="ltr">
+    <div aria-hidden className="mx-auto w-full max-w-65 perspective-[900px] @lg:mt-6" dir="ltr">
       <motion.div animate={{ rotateY: flipped && !reduce ? 180 : 0 }} className="relative aspect-[1.586] w-full" initial={false} style={{ transformStyle: "preserve-3d" }} transition={{ duration: 0.45, ease: [0.645, 0.045, 0.355, 1] }}>
         <div className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-xl bg-linear-to-br from-muted-foreground via-muted-foreground to-muted-foreground p-4 text-white shadow-lg/16 ring-1 ring-white/10" style={{ backfaceVisibility: "hidden" }}>
-          <span className="pointer-events-none absolute -end-12 -top-16 size-44 rounded-full bg-white/6" />
+          <span className="pointer-events-none absolute -inset-e-12 -top-16 size-44 rounded-full bg-white/6" />
           <div className="relative flex items-center justify-between">
-            <span className="h-6 w-8 rounded-md bg-gradient-to-br from-category-3/20 to-category-3/60 ring-1 ring-black/10" />
+            <span className="h-6 w-8 rounded-md bg-linear-to-br from-category-3/20 to-category-3/60 ring-1 ring-black/10" />
             <NfcIcon className="size-5 opacity-80" />
           </div>
           <div className="relative flex justify-between font-mono text-[15px] tabular-nums tracking-wider">
@@ -392,8 +392,8 @@ function Placed({ orderNo, email, eta, address, paid, onReset, onTrack, t }: { o
       <motion.ol aria-label={t.whatNext} className="flex w-full flex-col" {...rise(2)}>
         {next.map((step, i) => (
           <li className="relative flex gap-3 pb-4 last:pb-0" key={step.title}>
-            {i < next.length - 1 ? <span aria-hidden className="absolute start-[7px] top-5 bottom-0 w-px bg-border" /> : null}
-            <span aria-hidden className={cn("relative mt-0.5 flex size-[15px] shrink-0 items-center justify-center rounded-full", step.done ? "bg-success text-white" : "border-2 border-border bg-background")}>
+            {i < next.length - 1 ? <span aria-hidden className="absolute inset-s-1.75 top-5 bottom-0 w-px bg-border" /> : null}
+            <span aria-hidden className={cn("relative mt-0.5 flex size-3.75 shrink-0 items-center justify-center rounded-full", step.done ? "bg-success text-white" : "border-2 border-border bg-background")}>
               {step.done ? <CheckIcon className="size-2.5" strokeWidth={3} /> : null}
             </span>
             <span className="flex min-w-0 flex-col gap-0.5">
@@ -794,7 +794,7 @@ function CheckoutScreen({ storeName, items: initialItems, shippingOptions, count
     <div className={cn("@container relative isolate flex h-svh w-full flex-col overflow-hidden bg-background text-foreground text-sm", className)}>
       <header className="flex h-14 shrink-0 border-b">
         <div className="flex min-w-0 flex-1 basis-0 items-center">
-          <div className="mx-auto flex w-full max-w-[600px] items-center gap-2.5 px-4 @3xl:px-10 @4xl:me-0">
+          <div className="mx-auto flex w-full max-w-150 items-center gap-2.5 px-4 @3xl:px-10 @4xl:me-0">
             <span aria-hidden className="flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
               <svg aria-hidden className="size-3.5" fill="none" viewBox="0 0 16 16">
                 <path d="M3 13V7.5L8 3l5 4.5V13" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.6" />
@@ -808,7 +808,7 @@ function CheckoutScreen({ storeName, items: initialItems, shippingOptions, count
           </div>
         </div>
         <div className="hidden min-w-0 flex-1 basis-0 items-center border-s bg-muted/40 @4xl:flex">
-          <div className="flex w-full max-w-[440px] items-center px-10">
+          <div className="flex w-full max-w-110 items-center px-10">
             <span className="flex items-center gap-1.5 text-muted-foreground text-xs">
               <LockIcon aria-hidden className="size-3.5" /> {t.secure}
             </span>
@@ -842,7 +842,7 @@ function CheckoutScreen({ storeName, items: initialItems, shippingOptions, count
         </AnimatePresence>
 
         <div className="min-w-0 flex-1 basis-0 overflow-y-auto" ref={formRef}>
-          <div className="mx-auto flex max-w-[600px] flex-col gap-3 px-4 py-6 @3xl:px-10 @3xl:py-10 @4xl:me-0">
+          <div className="mx-auto flex max-w-150 flex-col gap-3 px-4 py-6 @3xl:px-10 @3xl:py-10 @4xl:me-0">
             <AnimatePresence initial={false} mode="wait">
               {order ? (
                 <Placed address={addressLine} email={v.email} eta={ship?.eta ?? ""} key="placed" onReset={reset} onTrack={onTrackOrder ? () => onTrackOrder(order.orderNo) : undefined} orderNo={order.orderNo} paid={interpolate(t.paidSummary, { amount: money(order.total), method: paidWith })} t={t} />
@@ -857,7 +857,7 @@ function CheckoutScreen({ storeName, items: initialItems, shippingOptions, count
                       const isOpen = open === s;
                       const isDone = done.includes(s) && !isOpen;
                       return (
-                        <section aria-labelledby={`${uid}-h${s}`} className={cn("transition-[opacity] duration-200", !isOpen && !isDone && "text-muted-foreground")} key={s}>
+                        <section aria-labelledby={`${uid}-h${s}`} className={cn("transition-opacity duration-200", !isOpen && !isDone && "text-muted-foreground")} key={s}>
                           <div className="flex items-center gap-3 p-4">
                             <span aria-hidden className={cn("flex size-6 shrink-0 items-center justify-center rounded-full font-medium text-xs tabular-nums transition-colors duration-200", isDone ? "bg-primary text-primary-foreground" : isOpen ? "border border-foreground/72 text-foreground" : "border text-muted-foreground")}>
                               <AnimatePresence initial={false} mode="popLayout">
@@ -914,7 +914,7 @@ function CheckoutScreen({ storeName, items: initialItems, shippingOptions, count
         </div>
 
         <aside aria-label={t.orderSummary} className="hidden min-w-0 flex-1 basis-0 overflow-y-auto border-s bg-muted/40 @4xl:block">
-          <div className="w-full max-w-[440px] px-10 py-10">
+          <div className="w-full max-w-110 px-10 py-10">
             <h2 className="mb-5 font-medium">{t.orderSummary}</h2>
             {summary}
           </div>

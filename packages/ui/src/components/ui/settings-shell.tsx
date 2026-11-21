@@ -69,7 +69,7 @@ export function SettingsShell({ children, groups, activeId, back, user, classNam
   const focus = "outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
   return (
-    <div className={cn("flex h-[760px] w-full bg-background text-foreground", className)}>
+    <div className={cn("flex h-190 w-full bg-background text-foreground", className)}>
       <aside className="hidden w-60 shrink-0 flex-col border-e bg-muted/30 px-3 py-4 md:flex">
         {back ? (
           <WirefrontLink
@@ -135,7 +135,7 @@ export function SettingsShell({ children, groups, activeId, back, user, classNam
           </div>
           <nav
             aria-label={t.settings}
-            className="overflow-x-auto border-b px-4 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="overflow-x-auto border-b px-4 py-2.5 scrollbar-none [&::-webkit-scrollbar]:hidden"
             ref={pillsRef}
           >
             <div className="flex w-max gap-1.5">

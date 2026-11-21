@@ -28,7 +28,7 @@ const [TabsProvider, useTabs] =
 
 type TabsProps = React.ComponentProps<typeof TabsPrimitive.Root>;
 
-function Tabs(props: TabsProps) {
+const Tabs = (props: TabsProps) => {
   const [value, setValue] = useControlledState({
     value: props.value,
     defaultValue: props.defaultValue,
@@ -44,14 +44,20 @@ function Tabs(props: TabsProps) {
       />
     </TabsProvider>
   );
-}
+};
 
 type TabsHighlightProps = Omit<HighlightProps, "value">;
 
-function TabsHighlight({
-  transition = { type: "spring", stiffness: 200, damping: 25 },
+const TABS_HIGHLIGHT_DEFAULT_TRANSITION = {
+  type: "spring",
+  stiffness: 200,
+  damping: 25,
+} as const;
+
+const TabsHighlight = ({
+  transition = TABS_HIGHLIGHT_DEFAULT_TRANSITION,
   ...props
-}: TabsHighlightProps) {
+}: TabsHighlightProps) => {
   const { value } = useTabs();
 
   return (
@@ -62,37 +68,42 @@ function TabsHighlight({
       {...props}
     />
   );
-}
+};
 
 type TabsListProps = React.ComponentProps<typeof TabsPrimitive.List>;
 
-function TabsList(props: TabsListProps) {
-  return <TabsPrimitive.List data-slot="tabs-list" {...props} />;
-}
+const TabsList = (props: TabsListProps) => (
+  <TabsPrimitive.List data-slot="tabs-list" {...props} />
+);
 
 type TabsHighlightItemProps = HighlightItemProps & {
   value: string;
 };
 
-function TabsHighlightItem(props: TabsHighlightItemProps) {
-  return <HighlightItem data-slot="tabs-highlight-item" {...props} />;
-}
+const TabsHighlightItem = (props: TabsHighlightItemProps) => (
+  <HighlightItem data-slot="tabs-highlight-item" {...props} />
+);
 
 type TabsTriggerProps = React.ComponentProps<typeof TabsPrimitive.Trigger>;
 
-function TabsTrigger(props: TabsTriggerProps) {
-  return <TabsPrimitive.Trigger data-slot="tabs-trigger" {...props} />;
-}
+const TabsTrigger = (props: TabsTriggerProps) => (
+  <TabsPrimitive.Trigger data-slot="tabs-trigger" {...props} />
+);
 
 type TabsContentProps = React.ComponentProps<typeof TabsPrimitive.Content> &
   HTMLMotionProps<"div">;
 
-function TabsContent({
+const TABS_CONTENT_DEFAULT_TRANSITION = {
+  duration: 0.2,
+  ease: "easeOut",
+} as const;
+
+const TabsContent = ({
   value,
   forceMount,
-  transition = { duration: 0.2, ease: "easeOut" },
+  transition = TABS_CONTENT_DEFAULT_TRANSITION,
   ...props
-}: TabsContentProps) {
+}: TabsContentProps) => {
   const prefersReducedMotion = useReducedMotion();
   const resolvedTransition = prefersReducedMotion
     ? { duration: 0 }
@@ -112,7 +123,7 @@ function TabsContent({
       </TabsPrimitive.Content>
     </AnimatePresence>
   );
-}
+};
 
 type TabsContentsAutoProps = AutoHeightProps & {
   mode?: "auto-height";
@@ -134,11 +145,10 @@ const defaultTransition: Transition = {
   damping: 30,
 };
 
-function isAutoMode(props: TabsContentsProps): props is TabsContentsAutoProps {
-  return !("mode" in props) || props.mode === "auto-height";
-}
+const isAutoMode = (props: TabsContentsProps): props is TabsContentsAutoProps =>
+  !("mode" in props) || props.mode === "auto-height";
 
-function TabsContents(props: TabsContentsProps) {
+const TabsContents = (props: TabsContentsProps) => {
   const { value } = useTabs();
   const prefersReducedMotion = useReducedMotion();
 
@@ -151,7 +161,6 @@ function TabsContents(props: TabsContentsProps) {
     return (
       <AutoHeight
         data-slot="tabs-contents"
-        deps={[value]}
         transition={resolvedTransition}
         {...autoProps}
       />
@@ -173,7 +182,7 @@ function TabsContents(props: TabsContentsProps) {
       {...layoutProps}
     />
   );
-}
+};
 
 export {
   Tabs,

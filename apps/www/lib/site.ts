@@ -3,22 +3,22 @@ import type { Metadata } from "next";
 /** Production site origin — used for sitemap, robots, metadata, and JSON-LD. */
 export const SITE_URL = "https://wirefront.mantavyam.in" as const;
 
-function toAbsoluteSiteUrl(pathname: string): string {
+const toAbsoluteSiteUrl = (pathname: string): string => {
   if (pathname === "/" || pathname === "") {
     return SITE_URL;
   }
 
   return `${SITE_URL}${pathname.startsWith("/") ? pathname : `/${pathname}`}`;
-}
+};
 
 /**
  * Self-referencing canonical + hreflang (en + x-default).
  * Always absolute on `SITE_URL` so Google never treats a preview host
  * as the canonical, even when the request hits that host.
  */
-export function getPageAlternates(
+export const getPageAlternates = (
   pathname: string
-): NonNullable<Metadata["alternates"]> {
+): NonNullable<Metadata["alternates"]> => {
   let canonical = pathname;
   if (pathname === "") {
     canonical = "/";
@@ -35,7 +35,7 @@ export function getPageAlternates(
       "x-default": href,
     },
   };
-}
+};
 
 export const CONTACT_EMAIL = "hello@mantavyam.in" as const;
 export const SUPPORT_EMAIL = CONTACT_EMAIL;
@@ -44,7 +44,8 @@ export const STUDIO_URL = "https://github.com/mantavyamstudios" as const;
 
 export const GITHUB_REPO_URL =
   "https://github.com/mantavyamstudios/wirefront" as const;
-export const GITHUB_PROFILE_URL = "https://github.com/mantavyamstudios" as const;
+export const GITHUB_PROFILE_URL =
+  "https://github.com/mantavyamstudios" as const;
 export const X_PROFILE_URL = "https://x.com/mantavyam_" as const;
 
 /** Public community hub — bug reports, discussions, and feature requests. */
@@ -69,7 +70,7 @@ export const SITE_OG_HERO_SUBLINE = "Wire them to any backend";
  * - Dev: `NEXT_PUBLIC_SITE_URL` or localhost
  * - Fallback: `SITE_URL`
  */
-export function getMetadataBaseUrl(): string {
+export const getMetadataBaseUrl = (): string => {
   if (process.env.VERCEL_ENV === "production") {
     return SITE_URL;
   }
@@ -83,4 +84,4 @@ export function getMetadataBaseUrl(): string {
   }
 
   return SITE_URL;
-}
+};

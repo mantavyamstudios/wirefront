@@ -282,11 +282,11 @@ function RouteMap({ progress, delivered, label, t }: { progress: number; deliver
               const x1 = XS[i + 1] ?? W;
               const y1 = YS[j + 1] ?? H;
               const park = i === 2 && j === 1;
-              return <rect className={park ? "fill-category-2/18" : "fill-foreground/[0.025]"} height={y1 - y0 - 22} key={`${x0}-${y0}`} rx={park ? 14 : 5} width={x1 - x0 - 22} x={x0 + 11} y={y0 + 11} />;
+              return <rect className={park ? "fill-category-2/18" : "fill-foreground/2.5"} height={y1 - y0 - 22} key={`${x0}-${y0}`} rx={park ? 14 : 5} width={x1 - x0 - 22} x={x0 + 11} y={y0 + 11} />;
             }),
           )}
           {BUILDINGS.map(([x, y, w, h]) => (
-            <rect className="fill-foreground/[0.045]" height={h} key={`${x}-${y}`} rx={3} width={w} x={x} y={y} />
+            <rect className="fill-foreground/4.5" height={h} key={`${x}-${y}`} rx={3} width={w} x={x} y={y} />
           ))}
           {TREES.map(([x, y]) => (
             <circle className="fill-category-2/30" cx={x} cy={y} key={`${x}-${y}`} r={9} />
@@ -346,7 +346,7 @@ function RouteMap({ progress, delivered, label, t }: { progress: number; deliver
           </g>
         </g>
       </svg>
-      <div className="absolute end-3 bottom-3 flex flex-col overflow-hidden rounded-xl border bg-popover shadow-xs/5">
+      <div className="absolute inset-e-3 bottom-3 flex flex-col overflow-hidden rounded-xl border bg-popover shadow-xs/5">
         <button aria-label={t.zoomIn} className="flex size-9 cursor-pointer items-center justify-center text-foreground outline-none transition-colors hover:bg-accent focus-visible:bg-accent disabled:cursor-default disabled:opacity-40" disabled={zoomIdx === ZOOMS.length - 1} onClick={() => setZoomIdx((z) => Math.min(ZOOMS.length - 1, z + 1))} type="button">
           <PlusIcon aria-hidden className="size-4" />
         </button>
@@ -430,7 +430,7 @@ function CourierChat({ courierName, messages, typing, quickReplies, pending, err
     <>
       <div className="flex items-center gap-3 border-b px-4 py-3">
         <Avatar aria-hidden className="[--avatar-size:--spacing(8)]">
-          <AvatarFallback className="bg-gradient-to-br from-category-6/60 to-category-1 font-semibold text-white text-xs">{initials(courierName)}</AvatarFallback>
+          <AvatarFallback className="bg-linear-to-br from-category-6/60 to-category-1 font-semibold text-white text-xs">{initials(courierName)}</AvatarFallback>
         </Avatar>
         <div className="flex min-w-0 flex-1 flex-col">
           <SheetTitle className="truncate font-medium text-sm">{interpolate(t.chatWith, { name: first })}</SheetTitle>
@@ -466,7 +466,7 @@ function CourierChat({ courierName, messages, typing, quickReplies, pending, err
           </p>
         ) : null}
         {quickReplies.length ? (
-          <div className="-mx-3 flex gap-1.5 overflow-x-auto px-3 [scrollbar-width:none]">
+          <div className="-mx-3 flex gap-1.5 overflow-x-auto px-3 scrollbar-none">
             {quickReplies.map((q) => (
               <button className={cn("h-8 shrink-0 cursor-pointer rounded-full border bg-background px-3 text-xs outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring", press)} disabled={pending} key={q} onClick={() => send(q)} type="button">
                 {q}
@@ -601,12 +601,12 @@ function DeliveryTrackerScreen({ order, tracking, mapSlot, messages: initialMess
       </header>
 
       <div className="flex min-h-0 flex-1 flex-col @3xl:flex-row">
-        <div className="relative h-[280px] shrink-0 overflow-hidden bg-muted @3xl:h-auto @3xl:min-w-0 @3xl:flex-1">
+        <div className="relative h-70 shrink-0 overflow-hidden bg-muted @3xl:h-auto @3xl:min-w-0 @3xl:flex-1">
           {mapSlot ?? <RouteMap delivered={delivered} label={tracking.location ? interpolate(t.map, { location: tracking.location }) : t.mapNoLocation} progress={tracking.progress} t={t} />}
           <div className="pointer-events-none absolute inset-x-3 top-3 flex items-start justify-between gap-2">
             <span className="flex h-7 items-center gap-2 rounded-full border bg-popover/90 px-2.5 text-xs shadow-xs/5 backdrop-blur-sm">
               <span aria-hidden className="relative flex size-2">
-                {delivered ? null : <span className="absolute inset-0 animate-ping rounded-full bg-success opacity-60 [animation-duration:1.6s] motion-reduce:hidden" />}
+                {delivered ? null : <span className="absolute inset-0 animate-ping rounded-full bg-success opacity-60 animation-duration-[1.6s] motion-reduce:hidden" />}
                 <span className={cn("relative size-2 rounded-full", delivered ? "bg-muted-foreground" : "bg-success")} />
               </span>
               {delivered ? t.stage_delivered : t.live}
@@ -614,7 +614,7 @@ function DeliveryTrackerScreen({ order, tracking, mapSlot, messages: initialMess
           </div>
         </div>
 
-        <div className="relative min-h-0 flex-1 overflow-y-auto border-t @3xl:w-[380px] @3xl:flex-none @3xl:border-s @3xl:border-t-0">
+        <div className="relative min-h-0 flex-1 overflow-y-auto border-t @3xl:w-95 @3xl:flex-none @3xl:border-s @3xl:border-t-0">
           <div className="flex flex-col divide-y">
             <section aria-live="polite" className="flex flex-col gap-4 px-5 py-5">
               <AnimatePresence initial={false} mode="popLayout">
@@ -667,7 +667,7 @@ function DeliveryTrackerScreen({ order, tracking, mapSlot, messages: initialMess
             <section aria-label={t.yourCourier} className="flex flex-col gap-4 px-5 py-4">
               <div className="flex items-center gap-3">
                 <Avatar aria-hidden className="[--avatar-size:--spacing(10)]">
-                  <AvatarFallback className="bg-gradient-to-br from-category-6/60 to-category-1 font-semibold text-white">{initials(courier.name)}</AvatarFallback>
+                  <AvatarFallback className="bg-linear-to-br from-category-6/60 to-category-1 font-semibold text-white">{initials(courier.name)}</AvatarFallback>
                 </Avatar>
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                   <span className="truncate font-medium">{courier.name}</span>
@@ -837,7 +837,7 @@ function DeliveryTrackerScreen({ order, tracking, mapSlot, messages: initialMess
           }}
           open={chat && !delivered}
         >
-          <SheetContent className="w-full gap-0 p-0 sm:max-w-[380px]" showCloseButton={false} side="right">
+          <SheetContent className="w-full gap-0 p-0 sm:max-w-95" showCloseButton={false} side="right">
             {chat ? (
               <CourierChat
                 courierName={courier.name}

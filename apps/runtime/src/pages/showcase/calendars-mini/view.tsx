@@ -69,7 +69,7 @@ function MiniCalendarScreen({ month, onMonthChange, events, weekStartsOn = 1, sh
     return { key: inMonth ? date : `pad-${n}`, inMonth, date, day };
   });
   const header = Array.from({ length: 7 }, (_, n) => new Date(Date.UTC(2026, 1, 1 + ((weekStartsOn + n) % 7))));
-  const navButton = "grid size-7 place-items-center rounded text-muted-foreground outline-none hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10";
+  const navButton = "grid size-7 place-items-center rounded text-muted-foreground outline-none hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10";
   const todayCount = (byDay.get(today) ?? []).length;
   const dayEvents = byDay.get(selected) ?? [];
 
@@ -106,7 +106,7 @@ function MiniCalendarScreen({ month, onMonthChange, events, weekStartsOn = 1, sh
             <button
               aria-current={isToday ? "date" : undefined}
               aria-pressed={selected === c.date}
-              className="relative grid h-9 place-items-center rounded-md font-mono text-xs outline-none hover:bg-foreground/[0.05] focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-10"
+              className="relative grid h-9 place-items-center rounded-md font-mono text-xs outline-none hover:bg-foreground/5 focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-10"
               key={c.key}
               onClick={() => setPicked(c.date)}
               type="button"

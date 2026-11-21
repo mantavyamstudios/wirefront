@@ -116,7 +116,7 @@ function SendFeedbackScreen({ onSend, product, allowScreenshot = true, allowLogs
                     const Icon = KINDS[k];
                     return (
                       <Radio.Root
-                        className="flex cursor-pointer flex-col items-center gap-1.5 rounded-lg border border-border/60 px-2 py-3 text-center outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/[0.05] sm:px-3"
+                        className="flex cursor-pointer flex-col items-center gap-1.5 rounded-lg border border-border/60 px-2 py-3 text-center outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/5 sm:px-3"
                         key={k}
                         value={k}
                       >

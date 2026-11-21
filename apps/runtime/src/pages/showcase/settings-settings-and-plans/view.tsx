@@ -792,7 +792,7 @@ function MembersPanel({
                 <div className={cn("grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 px-4 py-3 sm:gap-x-4", memberGrid)}>
                   <div className="col-start-1 row-start-1 flex min-w-0 items-center gap-3">
                     <Avatar className="size-8">
-                      <AvatarFallback className={cn("bg-gradient-to-br font-medium text-white text-xs", hueFor(m.id))}>{initials(m.name)}</AvatarFallback>
+                      <AvatarFallback className={cn("bg-linear-to-br font-medium text-white text-xs", hueFor(m.id))}>{initials(m.name)}</AvatarFallback>
                     </Avatar>
                     <div className="min-w-0">
                       <p className="flex min-w-0 items-center gap-2 font-medium text-sm">
@@ -1111,7 +1111,7 @@ function UsageRow({ item }: { item: PlansUsage }) {
         {projPct > pct ? (
           <motion.div
             animate={{ scaleX: 1 }}
-            className={cn("absolute inset-y-0 start-0 origin-left rounded-full", over ? "bg-warning/32" : "bg-foreground/12")}
+            className={cn("absolute inset-y-0 inset-s-0 origin-left rounded-full", over ? "bg-warning/32" : "bg-foreground/12")}
             initial={false}
             style={{ width: `${projPct}%` }}
             transition={{ ...fill, delay: reduce ? 0 : 0.15 }}
@@ -1119,7 +1119,7 @@ function UsageRow({ item }: { item: PlansUsage }) {
         ) : null}
         <motion.div
           animate={{ scaleX: 1 }}
-          className={cn("absolute inset-y-0 start-0 origin-left rounded-full", pct >= 85 ? "bg-warning" : "bg-primary")}
+          className={cn("absolute inset-y-0 inset-s-0 origin-left rounded-full", pct >= 85 ? "bg-warning" : "bg-primary")}
           initial={false}
           style={{ width: `${pct}%` }}
           transition={fill}

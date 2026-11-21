@@ -1,28 +1,24 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 interface CommonControlledStateProps<T> {
   defaultValue?: T;
   value?: T;
 }
 
-export function useControlledState<T, Rest extends unknown[] = []>(
+export const useControlledState = <T, Rest extends unknown[] = []>(
   props: CommonControlledStateProps<T> & {
     onChange?: (value: T, ...args: Rest) => void;
   }
-): readonly [T, (next: T, ...args: Rest) => void] {
+): readonly [T, (next: T, ...args: Rest) => void] => {
   const { value, defaultValue, onChange } = props;
 
-  const [state, setInternalState] = useState<T>(
+  const [internalState, setInternalState] = useState<T>(
     value === undefined ? (defaultValue as T) : value
   );
-
-  useEffect(() => {
-    if (value !== undefined) {
-      setInternalState(value);
-    }
-  }, [value]);
+  // Controlled when `value` is given; the internal state is used otherwise.
+  const state = value === undefined ? internalState : value;
 
   const setState = useCallback(
     (next: T, ...args: Rest) => {
@@ -33,4 +29,4 @@ export function useControlledState<T, Rest extends unknown[] = []>(
   );
 
   return [state, setState] as const;
-}
+};

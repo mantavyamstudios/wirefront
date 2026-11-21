@@ -70,7 +70,7 @@ function Viewport({ manager, className }: { manager: UndoToastManager; className
             </div>
             {/* Drains over the undo window; pauses while the toast is expanded (hovered/focused), like Base UI's timer. */}
             <div aria-hidden className="h-0.5 bg-background/10">
-              <div className="h-full origin-left bg-background/40 [animation:undo-drain_linear_forwards] group-data-expanded/toast:[animation-play-state:paused] motion-reduce:hidden" style={{ animationDuration: `${toast.data?.window ?? 8000}ms` }} />
+              <div className="h-full origin-left bg-background/40 animate-[undo-drain_linear_forwards] group-data-expanded/toast:paused motion-reduce:hidden" style={{ animationDuration: `${toast.data?.window ?? 8000}ms` }} />
             </div>
           </Toast.Root>
         ))}

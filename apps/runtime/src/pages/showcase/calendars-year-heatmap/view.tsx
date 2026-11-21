@@ -154,7 +154,7 @@ function ContributionHeatmapScreen({ data, status = "ready", error, onRetry, onS
             }}
           >
             <div className="relative min-w-0 flex-1 sm:max-w-xs">
-              <span aria-hidden className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <span aria-hidden className="absolute inset-s-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                 @
               </span>
               <Input aria-label={t.username} autoComplete="off" className="ps-7" onChange={(e) => setQuery(e.target.value)} placeholder={t.usernamePlaceholder} spellCheck={false} value={query} />
@@ -194,7 +194,7 @@ function ContributionHeatmapScreen({ data, status = "ready", error, onRetry, onS
                 <AvatarFallback>{data.profile.login.slice(0, 2).toUpperCase()}</AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
-                <h1 className="break-words font-heading text-2xl">{data.profile.name ?? data.profile.login}</h1>
+                <h1 className="wrap-break-word font-heading text-2xl">{data.profile.name ?? data.profile.login}</h1>
                 {data.profile.href ? (
                   <WirefrontLink className="text-muted-foreground text-sm hover:text-foreground" href={data.profile.href}>
                     @{data.profile.login}
@@ -222,7 +222,7 @@ function ContributionHeatmapScreen({ data, status = "ready", error, onRetry, onS
             <div className="mt-4 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-5">
               <ScrollRegion aria-label={t.calendar} className="pb-1" orientation="horizontal">
                 <div aria-label={interpolate(t.calendarLabel, { count: fmt.number(s.total), days: days.length })} className="grid w-max grid-cols-[28px_auto] gap-2" ref={gridRef} role="img">
-                  <div className="flex flex-col gap-[3px] pt-5">
+                  <div className="flex flex-col gap-0.75 pt-5">
                     {[0, 1, 2, 3, 4, 5, 6].map((dow) => (
                       <span className="flex h-3 items-center font-mono text-[10px] text-muted-foreground" key={dow}>
                         {weekdayLabels.find((w) => w.dow === dow)?.label ?? ""}
@@ -237,9 +237,9 @@ function ContributionHeatmapScreen({ data, status = "ready", error, onRetry, onS
                         </span>
                       ))}
                     </div>
-                    <div className="mt-1 flex gap-[3px]">
+                    <div className="mt-1 flex gap-0.75">
                       {weeks.map((w) => (
-                        <div className="flex flex-col gap-[3px]" key={w.key}>
+                        <div className="flex flex-col gap-0.75" key={w.key}>
                           {w.cells.map((c) =>
                             c.date ? (
                               <span className="size-3 rounded-sm" data-date={c.date} key={c.key} style={{ backgroundColor: LEVELS[level(byDate.get(c.date) ?? 0)] }} title={interpolate(t.day, { count: byDate.get(c.date) ?? 0, date: long(c.date) })} />
@@ -259,7 +259,7 @@ function ContributionHeatmapScreen({ data, status = "ready", error, onRetry, onS
                 </span>
                 <div aria-hidden className="flex items-center gap-2">
                   <span>{t.less}</span>
-                  <div className="flex gap-[3px]">
+                  <div className="flex gap-0.75">
                     {LEVELS.map((color) => (
                       <span className="size-3 rounded-sm" key={color} style={{ backgroundColor: color }} />
                     ))}
@@ -307,7 +307,7 @@ function ContributionHeatmapScreen({ data, status = "ready", error, onRetry, onS
                     return (
                       <li key={c.sha}>
                         {c.href ? (
-                          <WirefrontLink className="block px-4 py-3 outline-none transition-colors hover:bg-foreground/[0.02] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset" href={c.href}>
+                          <WirefrontLink className="block px-4 py-3 outline-none transition-colors hover:bg-foreground/2 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset" href={c.href}>
                             {body}
                           </WirefrontLink>
                         ) : (

@@ -3,10 +3,10 @@
  * `/docs` → `/llms.mdx/index`, `/docs/installation` → `/llms.mdx/installation`,
  * `/accounts/pricing/three-tier` → `/llms-screens.mdx/accounts/pricing/three-tier`.
  */
-export function getMarkdownUrl(pageUrl: string): string {
+export const getMarkdownUrl = (pageUrl: string): string => {
   if (!(pageUrl === "/docs" || pageUrl.startsWith("/docs/"))) {
     return `/llms-screens.mdx${pageUrl}`;
   }
-  const docsPath = pageUrl.replace(/^\/docs/, "");
+  const docsPath = pageUrl.replace(/^\/docs/u, "");
   return `/llms.mdx${docsPath || "/index"}`;
-}
+};

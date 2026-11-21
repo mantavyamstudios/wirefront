@@ -34,8 +34,6 @@ const blocksDocSchema = frontmatterSchema.extend({
       videoMp4: z.string().optional(),
     })
     .optional(),
-  /** @deprecated Use `cardPreview.videoMp4`. */
-  previewVideo: z.string().optional(),
 });
 
 const blocksDocPostprocess = {

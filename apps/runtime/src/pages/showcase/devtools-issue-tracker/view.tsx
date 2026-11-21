@@ -303,7 +303,7 @@ function Palette({ open, mode, commands, target, onClose, onBack, t }: { open: b
 
   return (
     <Dialog onOpenChange={(next) => !next && onClose()} open={open}>
-      <DialogContent className="top-16 flex max-h-[420px] translate-y-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-lg" showCloseButton={false}>
+      <DialogContent className="top-16 flex max-h-105 translate-y-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-lg" showCloseButton={false}>
         <DialogTitle className="sr-only">{t.commandMenu}</DialogTitle>
         <div className="flex items-center gap-2 px-3 pt-3">
           <span className="max-w-full truncate rounded-md bg-muted px-1.5 py-0.5 font-medium font-mono text-[11px] text-muted-foreground">{target}</span>
@@ -342,7 +342,7 @@ function Palette({ open, mode, commands, target, onClose, onBack, t }: { open: b
           />
           <Kbd>{t.escape}</Kbd>
         </div>
-        <div aria-label={placeholder[mode]} className="min-h-0 flex-1 overflow-y-auto p-1.5 [scrollbar-width:thin]" id={`${uid}-list`} ref={listRef} role="listbox">
+        <div aria-label={placeholder[mode]} className="min-h-0 flex-1 overflow-y-auto p-1.5 scrollbar-thin" id={`${uid}-list`} ref={listRef} role="listbox">
           {filtered.length === 0 ? (
             <div className="px-3 py-8 text-center text-muted-foreground text-sm" role="presentation">
               {interpolate(t.noCommands, { query })}
@@ -820,7 +820,7 @@ function IssueTrackerScreen({ team, cycle, me, people, labels, issues: initialIs
         </aside>
 
         <Sheet onOpenChange={setDrawer} open={drawer}>
-          <SheetContent className="w-[248px] max-w-[calc(100%-3rem)] gap-0 bg-sidebar p-0" showCloseButton={false} side="left">
+          <SheetContent className="w-62 max-w-[calc(100%-3rem)] gap-0 bg-sidebar p-0" showCloseButton={false} side="left">
             <SheetTitle className="sr-only">{t.navigation}</SheetTitle>
             {sidebar(() => setDrawer(false))}
           </SheetContent>
@@ -953,7 +953,7 @@ function IssueTrackerScreen({ team, cycle, me, people, labels, issues: initialIs
               ) : null}
             </AnimatePresence>
 
-            <div className="relative min-h-0 flex-1 overflow-y-auto [scrollbar-width:thin]" ref={listRef}>
+            <div className="relative min-h-0 flex-1 overflow-y-auto scrollbar-thin" ref={listRef}>
               {groups.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center px-6 text-center">
                   <span aria-hidden className="flex size-10 items-center justify-center rounded-xl border bg-card text-muted-foreground shadow-xs/5">
@@ -991,7 +991,7 @@ function IssueTrackerScreen({ team, cycle, me, people, labels, issues: initialIs
                                 return (
                                   <motion.li animate={{ opacity: 1 }} exit={{ opacity: 0 }} initial={{ opacity: 0 }} key={issue.id} layout="position" layoutId={issue.id} transition={{ layout: glide, opacity: { duration: 0.15 } }}>
                                     <div className={cn("group/row relative flex h-10 items-center gap-2.5 border-border/60 border-b ps-3 pe-3 @lg:ps-4", isCursor ? "bg-accent" : "hover:bg-accent/50", isPicked && "bg-info/8 hover:bg-info/10", issue.id === openId && "bg-accent")}>
-                                      {isCursor ? <span aria-hidden className="absolute inset-y-0 start-0 w-0.5 bg-foreground/70" /> : null}
+                                      {isCursor ? <span aria-hidden className="absolute inset-y-0 inset-s-0 w-0.5 bg-foreground/70" /> : null}
                                       <Checkbox
                                         aria-label={interpolate(isPicked ? t.deselectIssue : t.selectIssue, { id: issue.id })}
                                         checked={isPicked}
@@ -1058,7 +1058,7 @@ function IssueTrackerScreen({ team, cycle, me, people, labels, issues: initialIs
 
           <AnimatePresence>
             {open ? (
-              <motion.aside animate={{ x: 0, opacity: 1 }} aria-label={interpolate(t.details, { id: open.id })} className="absolute inset-0 z-30 flex flex-col bg-background @4xl:static @4xl:z-auto @4xl:w-[400px] @4xl:shrink-0 @4xl:border-s @6xl:w-[440px]" exit={{ x: 32, opacity: 0 }} initial={{ x: 32, opacity: 0 }} key="detail" transition={{ duration: 0.2, ease }}>
+              <motion.aside animate={{ x: 0, opacity: 1 }} aria-label={interpolate(t.details, { id: open.id })} className="absolute inset-0 z-30 flex flex-col bg-background @4xl:static @4xl:z-auto @4xl:w-100 @4xl:shrink-0 @4xl:border-s @6xl:w-110" exit={{ x: 32, opacity: 0 }} initial={{ x: 32, opacity: 0 }} key="detail" transition={{ duration: 0.2, ease }}>
                 <header className="flex h-13 shrink-0 items-center gap-2 border-b px-3">
                   <Button aria-label={t.back} className="@4xl:hidden" onClick={() => setOpenId(null)} size="icon-sm" variant="ghost">
                     <ArrowLeftIcon className="rtl:-scale-x-100" />
@@ -1076,11 +1076,11 @@ function IssueTrackerScreen({ team, cycle, me, people, labels, issues: initialIs
                     </Button>
                   </div>
                 </header>
-                <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:thin]" ref={detailRef}>
+                <div className="min-h-0 flex-1 overflow-y-auto scrollbar-thin" ref={detailRef}>
                   <div className="flex flex-col gap-5 p-4">
                     <textarea
                       aria-label={t.title}
-                      className="w-full resize-none bg-transparent font-heading font-semibold text-lg leading-snug tracking-tight outline-none [field-sizing:content] placeholder:text-muted-foreground/60"
+                      className="w-full resize-none bg-transparent font-heading font-semibold text-lg leading-snug tracking-tight outline-none field-sizing-content placeholder:text-muted-foreground/60"
                       onBlur={(e) => {
                         const title = e.target.value.trim();
                         if (onUpdate && title !== open.title) update.run({ ids: [open.id], patch: { title } });
@@ -1152,7 +1152,7 @@ function IssueTrackerScreen({ team, cycle, me, people, labels, issues: initialIs
 
                     <div>
                       <div className="mb-2 font-medium text-muted-foreground text-xs">{t.activity}</div>
-                      <ol className="relative flex flex-col gap-3 before:absolute before:start-[9px] before:top-2 before:bottom-2 before:w-px before:bg-border">
+                      <ol className="relative flex flex-col gap-3 before:absolute before:inset-s-2.25 before:top-2 before:bottom-2 before:w-px before:bg-border">
                         {(open.activity ?? [{ who: open.assignee ?? me, text: t.logCreated, at: open.created }]).map((a) => {
                           const p = person(a.who);
                           const key = `${a.at}-${a.who}-${a.text}`;
@@ -1192,7 +1192,7 @@ function IssueTrackerScreen({ team, cycle, me, people, labels, issues: initialIs
                     <div className="flex items-end gap-2 rounded-xl border bg-card p-1.5 ps-3 shadow-xs/5 transition-shadow focus-within:border-ring/60 focus-within:ring-3 focus-within:ring-ring/16">
                       <textarea
                         aria-label={t.comment}
-                        className="max-h-28 min-h-8 flex-1 resize-none bg-transparent py-1.5 text-sm leading-5 outline-none [field-sizing:content] placeholder:text-muted-foreground/70"
+                        className="max-h-28 min-h-8 flex-1 resize-none bg-transparent py-1.5 text-sm leading-5 outline-none field-sizing-content placeholder:text-muted-foreground/70"
                         onChange={(e) => setComment(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {

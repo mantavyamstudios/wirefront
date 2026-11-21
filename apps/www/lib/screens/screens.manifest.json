@@ -398,10 +398,7 @@
               "title": "Reset password",
               "blurb": "Choose a new password from a reset link: typed twice, sent with the link's token, with an expired-link state.",
               "status": null,
-              "states": [
-                "ready",
-                "error"
-              ],
+              "states": ["ready", "error"],
               "readiness": "ready",
               "files": [
                 "auth-reset-password/view.tsx",
@@ -443,10 +440,7 @@
               "title": "Minimal sign-in",
               "blurb": "A minimal centred sign-in wired to your auth: email and password, OAuth providers, SSO, passkey and magic link, each shown only when you connect it.",
               "status": "new",
-              "states": [
-                "ready",
-                "error"
-              ],
+              "states": ["ready", "error"],
               "readiness": "ready",
               "files": [
                 "auth-sign-in/view.tsx",
@@ -551,11 +545,7 @@
               "title": "Billing",
               "blurb": "Plan with live status (active, trial, past due, canceled), payment method via your billing portal, credits, tax ID and hosted invoices, with a confirmed cancel.",
               "status": null,
-              "states": [
-                "ready",
-                "loading",
-                "error"
-              ],
+              "states": ["ready", "loading", "error"],
               "readiness": "ready",
               "files": [
                 "settings-billing/view.tsx",
@@ -1073,12 +1063,7 @@
               "title": "Metrics overview",
               "blurb": "Stat tiles, a trend chart and an activity feed for a date range, formatted in your locale and currency from raw numbers your API returns.",
               "status": null,
-              "states": [
-                "ready",
-                "loading",
-                "empty",
-                "error"
-              ],
+              "states": ["ready", "loading", "empty", "error"],
               "readiness": "ready",
               "files": [
                 "dashboards-metrics-overview/view.tsx",
@@ -1092,11 +1077,7 @@
               "title": "Plan usage",
               "blurb": "Plan, billing cycle and usage meters from your billing API, with amber warnings near each limit and optional manage and upgrade links.",
               "status": null,
-              "states": [
-                "ready",
-                "loading",
-                "error"
-              ],
+              "states": ["ready", "loading", "error"],
               "readiness": "ready",
               "files": [
                 "dashboards-usage/view.tsx",
@@ -1257,12 +1238,7 @@
               "title": "Invoices",
               "blurb": "Invoices from your API with search, status filter, sorting and paging, amounts in each invoice's currency, and the outstanding total across all matches.",
               "status": null,
-              "states": [
-                "ready",
-                "loading",
-                "empty",
-                "error"
-              ],
+              "states": ["ready", "loading", "empty", "error"],
               "readiness": "ready",
               "files": [
                 "table-invoices/view.tsx",
@@ -1276,12 +1252,7 @@
               "title": "Team members",
               "blurb": "Search, role filter, sorting and paging driven by your API; invite, role changes that roll back on failure, and confirmed removal.",
               "status": "new",
-              "states": [
-                "ready",
-                "loading",
-                "empty",
-                "error"
-              ],
+              "states": ["ready", "loading", "empty", "error"],
               "readiness": "ready",
               "files": [
                 "table-members/view.tsx",
@@ -1323,12 +1294,7 @@
               "title": "API keys",
               "blurb": "API keys listed by prefix only: create with scopes, rotate and revoke with confirmation, and each new secret shown once to copy.",
               "status": "wip",
-              "states": [
-                "ready",
-                "loading",
-                "empty",
-                "error"
-              ],
+              "states": ["ready", "loading", "empty", "error"],
               "readiness": "ready",
               "files": [
                 "table-api-keys/view.tsx",
@@ -1384,12 +1350,7 @@
               "title": "Audit log",
               "blurb": "Security events with filter chips, outcome badges and older pages loaded on demand, times shown in your time zone.",
               "status": null,
-              "states": [
-                "ready",
-                "loading",
-                "empty",
-                "error"
-              ],
+              "states": ["ready", "loading", "empty", "error"],
               "readiness": "ready",
               "files": [
                 "table-audit-log/view.tsx",
@@ -1403,12 +1364,7 @@
               "title": "Admin Users",
               "blurb": "A members admin with seat and 2FA stats, server-side status, role and search filters, a sortable table you can bulk-edit, an invite dialog that checks emails as chips, and a drawer that loads each person's devices and activity.",
               "status": "new",
-              "states": [
-                "ready",
-                "loading",
-                "empty",
-                "error"
-              ],
+              "states": ["ready", "loading", "empty", "error"],
               "readiness": "ready",
               "files": [
                 "table-admin-users/view.tsx",

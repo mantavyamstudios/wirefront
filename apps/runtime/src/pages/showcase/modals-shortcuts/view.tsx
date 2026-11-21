@@ -108,7 +108,7 @@ function ShortcutsDialogScreen({ groups, openKeys = ["⌘", "/"], footerNote, de
                   <h2 className="mb-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{g.name}</h2>
                   <ul className="flex flex-col">
                     {g.shortcuts.map((s) => (
-                      <li className="flex items-center justify-between gap-3 rounded-md px-2 py-1.5 hover:bg-foreground/[0.03]" key={s.label}>
+                      <li className="flex items-center justify-between gap-3 rounded-md px-2 py-1.5 hover:bg-foreground/3" key={s.label}>
                         <span className="min-w-0 text-sm">{s.label}</span>
                         <KbdGroup>
                           {s.keys.map((k) => (

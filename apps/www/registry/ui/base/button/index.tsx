@@ -9,7 +9,7 @@ import type { Transition } from "motion/react";
 import type { ComponentProps } from "react";
 
 const buttonVariants = cva(
-  "group/button focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors will-change-transform outline-none select-none [backface-visibility:hidden] focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors will-change-transform outline-none select-none backface-hidden focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -73,7 +73,7 @@ interface ButtonProps
 /**
  * Animated Button component based on Base UI and Motion for React with shadcn/ui variants.
  */
-function Button({
+const Button = ({
   className,
   variant,
   size,
@@ -83,7 +83,7 @@ function Button({
   transition,
   render,
   ...props
-}: ButtonProps) {
+}: ButtonProps) => {
   const prefersReducedMotion = useReducedMotion();
   const shouldAnimate = !(disableAnimation || prefersReducedMotion);
 
@@ -116,7 +116,7 @@ function Button({
       {...props}
     />
   );
-}
+};
 
 export type { ButtonProps };
 export { Button, Button as BaseButton, Button as default, buttonVariants };
