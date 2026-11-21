@@ -1,6 +1,6 @@
 # Third-party notices
 
-Wirefront is Copyright (c) 2026 Mantavyam Studios and licensed under AGPL-3.0 (see LICENSE). It includes code from the projects below, which keeps its original license and copyright notice.
+Wirefront is Copyright (c) 2026 Mantavyam Studios and licensed under the MIT License (see LICENSE). It includes code from the projects below, which keeps its original license and copyright notice.
 
 ## devl.dev: MIT
 

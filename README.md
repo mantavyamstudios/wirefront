@@ -66,6 +66,6 @@ Wirefront started from [devl.dev](https://github.com/sean-brydon/devl.dev) by Se
 
 ## License
 
-Copyright (c) 2026 Mantavyam Studios. Wirefront is licensed under the [GNU Affero General Public License v3.0](LICENSE).
+Copyright (c) 2026 Mantavyam Studios. Wirefront is licensed under the [MIT License](LICENSE).
 
 Code that came from devl.dev keeps its MIT notice (Copyright (c) 2026 Sean Brydon), and the shadcn/ui components in `packages/ui` keep theirs (Copyright (c) 2023 shadcn). Both are listed in [NOTICE.md](NOTICE.md).
