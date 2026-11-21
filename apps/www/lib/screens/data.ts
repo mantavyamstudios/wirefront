@@ -10,6 +10,7 @@ import type { NeighborNavItem } from "@/components/docs/neighbor-nav-buttons";
 import type { ComponentGallerySection } from "@/lib/registry/component-gallery-sections";
 import type { ComponentGalleryItem, ComponentPageHeaderData, ComponentTocItem } from "@/lib/registry/types";
 
+import { getScreenDoc, screenReferenceToc } from "./docs";
 import manifestJson from "./screens.manifest.json";
 import { screensSource } from "./source";
 import type { ScreenDocPage } from "./source";
@@ -164,7 +165,7 @@ export const getScreenDetails = cache((): ScreenDetail[] => {
         docsUrl: page.url,
       },
       githubPath: `apps/www/content/screens/${g.slug}/${k.slug}/${s.slug}.mdx`,
-      toc: tocFor(page),
+      toc: [...tocFor(page), ...screenReferenceToc(getScreenDoc(s.registry), s.states)],
       previous: nav(index - 1),
       next: nav(index + 1),
       files: s.files,

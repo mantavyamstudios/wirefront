@@ -113,7 +113,7 @@ jobs:
           if-no-files-found: warn
 
   site:
-    name: Site (screens manifest, bridge, built site in a browser)
+    name: Site (screens manifest, bridge, screen docs, built site in a browser)
     # Playwright 1.59 has no Chromium build for ubuntu-latest (26.04) yet.
     runs-on: ubuntu-24.04
     needs: checks
@@ -131,5 +131,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: bun run test:bridge
       - run: bun run build
+      - name: Every screen's usage example typechecks against the screen
+        run: bun run --cwd apps/www screens:docs --check
       - name: Built site, served by wrangler, in a browser
         run: bun run test:site

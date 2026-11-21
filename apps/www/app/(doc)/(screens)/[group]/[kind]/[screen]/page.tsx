@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ComponentPageDocs } from "@/components/blocks/blocks-docs";
-import { ScreenFacts } from "@/components/screens/screen-facts";
+import { ScreenReference } from "@/components/screens/screen-reference";
 import { screenSocialMetadata } from "@/lib/og/screen-social-metadata";
 import { getScreenDetails, getScreenPage } from "@/lib/screens/data";
+import { getScreenDoc } from "@/lib/screens/docs";
 import { getPageAlternates } from "@/lib/site";
 import { getMDXComponents } from "@/mdx-components";
 
@@ -34,7 +35,7 @@ export default async function ScreenPage(props: PageProps) {
   return (
     <ComponentPageDocs>
       <MDXContent components={getMDXComponents()} />
-      <ScreenFacts detail={detail} />
+      <ScreenReference detail={detail} doc={getScreenDoc(detail.registry)} />
     </ComponentPageDocs>
   );
 }
