@@ -1,5 +1,5 @@
 {
-  "name": "@wirefront/www",
+  "name": "@wirefront/runtime",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -20,6 +20,7 @@
     "@tanstack/react-router": "^1.138.0",
     "@tanstack/react-start": "^1.138.0",
     "@vercel/og": "^0.10.1",
+    "@wirefront/bridge": "*",
     "@wirefront/ui": "*",
     "motion": "^14.9.1",
     "nitro": "^3.0.260415-beta",

@@ -61,7 +61,7 @@ export interface Design {
   blurb: string;
   status?: DesignStatus;
   /**
-   * States the screen renders, switchable from the interaction panel
+   * States the screen renders, switchable from the site's preview toolbar
    * (ready-to-wire screens). The first is the default view.
    */
   states?: ScreenState[];

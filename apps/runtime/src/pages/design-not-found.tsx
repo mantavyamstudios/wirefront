@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-import { Link } from "@tanstack/react-router";
-
 export function DesignNotFound({
   category,
   design,
@@ -28,12 +26,13 @@ export function DesignNotFound({
           </>
         )}
       </p>
-      <Link
-        to="/"
+      <a
+        href="/"
+        target="_top"
         className="mt-3 text-[11px] text-foreground uppercase tracking-[0.2em] underline-offset-4 hover:underline"
       >
-        ← Back to folders
-      </Link>
+        ← Back to Wirefront
+      </a>
     </div>
   );
 }

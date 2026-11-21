@@ -20,6 +20,7 @@
     "./orbit-avatar": "./src/components/orbit-avatar.tsx",
     "./orbit-avatar-field": "./src/components/orbit-avatar-field.tsx",
     "./themes": "./src/themes/index.ts",
+    "./themes/types": "./src/themes/types.ts",
     "./*": "./src/components/ui/*.tsx",
     "./wirefront/api": "./src/wirefront/api.ts",
     "./wirefront/types": "./src/wirefront/types.ts",

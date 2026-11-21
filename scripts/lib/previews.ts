@@ -12,7 +12,7 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
-import { SOURCE_FILES } from "../../apps/www/src/pages/showcase/source-files";
+import { SOURCE_FILES } from "../../apps/runtime/src/pages/showcase/source-files";
 import { withAppServer } from "./app-server";
 import { captureDesign, makeDeterministic, type Rect } from "./capture";
 import { trackProgress } from "./progress";
@@ -73,7 +73,7 @@ export async function runCaptures(check: string, tasks: PreviewTask[], handle: C
             let ok = false;
             try {
               await makeDeterministic(page);
-              ok = await handle(t, await captureDesign(page, `${base}/c/${t.category}/${t.design}?preview=1`));
+              ok = await handle(t, await captureDesign(page, `${base}/preview/${t.category}/${t.design}`));
               if (!ok) failures.push(key);
             } catch (err) {
               const msg = err instanceof Error ? (err.message.split("\n")[0] ?? "") : String(err);

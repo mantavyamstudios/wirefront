@@ -15,9 +15,10 @@ import { componentName, getShowcase } from "@/pages/showcase/registry";
 import { SOURCE_FILES } from "@/pages/showcase/source-files";
 import { must } from "./must";
 
-const WWW = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const SHOWCASE_DIR = path.join(WWW, "src/pages/showcase");
-const PREVIEWS_DIR = path.join(WWW, "public/previews");
+const RUNTIME = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const SHOWCASE_DIR = path.join(RUNTIME, "src/pages/showcase");
+// Previews are the site's gallery images, so they live with the site.
+const PREVIEWS_DIR = path.join(RUNTIME, "../www/public/previews");
 
 const designs = CATEGORIES.flatMap((c) => c.designs.map((d) => ({ category: c.slug, ...d })));
 

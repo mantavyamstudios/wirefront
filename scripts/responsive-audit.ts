@@ -38,14 +38,14 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium, type Browser, type BrowserContext } from "playwright";
 
-import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
+import { SOURCE_FILES } from "../apps/runtime/src/pages/showcase/source-files";
 import { withAppServer } from "./lib/app-server";
 import { type Progress, trackProgress } from "./lib/progress";
 import { waitForSettledLayout } from "./lib/settle";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const SHOWCASE_DIR = resolve(ROOT, "apps/www/src/pages/showcase");
+const SHOWCASE_DIR = resolve(ROOT, "apps/runtime/src/pages/showcase");
 const OUT_DIR = resolve(ROOT, ".audit/responsive");
 const CONCURRENCY = Math.max(
   1,
@@ -327,11 +327,8 @@ async function runWorker(
       const errors: string[] = [];
       page.on("pageerror", (e) => errors.push(String(e).split("\n")[0]!.slice(0, 200)));
       try {
-        // The viewer's validateSearch only accepts a string, and TanStack
-        // JSON-parses search params, so `preview=1` arrives as a number.
-        // Pass a JSON string to hide the viewer chrome.
         await page.goto(
-          `${base}/c/${task.category}/${task.design}?preview=%221%22${rtl ? "&dir=%22rtl%22" : ""}`,
+          `${base}/preview/${task.category}/${task.design}${rtl ? "?dir=%22rtl%22" : ""}`,
           { waitUntil: "networkidle", timeout: 45_000 },
         );
         // Only a settled layout is measured (scripts/lib/settle.ts).

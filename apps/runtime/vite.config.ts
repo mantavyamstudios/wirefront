@@ -39,11 +39,11 @@ function serveDepSourcemaps(): Plugin {
 // Every page is prerendered to static HTML so the site can be served from
 // static hosting (Cloudflare Workers static assets) with no server code.
 // Design pages have path parameters, so they are listed here rather than
-// discovered. Pages are written as /c/<category>/<design>.html (not
+// discovered. Pages are written as /preview/<category>/<design>.html (not
 // .../index.html) so Cloudflare serves the slash-less URLs the app links to
 // without a redirect.
 const designPaths = Object.entries(SOURCE_FILES).flatMap(([category, designs]) =>
-  Object.keys(designs ?? {}).map((design) => `/c/${category}/${design}`),
+  Object.keys(designs ?? {}).map((design) => `/preview/${category}/${design}`),
 )
 
 export default defineConfig({
@@ -60,8 +60,9 @@ export default defineConfig({
     serveDepSourcemaps(),
     tailwindcss(),
     tanstackStart({
-      prerender: { enabled: true, crawlLinks: true, failOnError: true, autoSubfolderIndex: false },
-      pages: designPaths.map((path) => ({ path, prerender: { enabled: true } })),
+      // The runtime has no page at "/" (the site owns it); route discovery would add it.
+      prerender: { enabled: true, crawlLinks: false, failOnError: true, autoSubfolderIndex: false, filter: (page) => page.path !== "/" },
+      pages: [...designPaths, "/demo"].map((path) => ({ path, prerender: { enabled: true } })),
     }),
     nitro(),
     viteReact(),

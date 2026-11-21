@@ -42,7 +42,7 @@ Browser checks start and stop their own server; you don't need `npm run dev` run
 ## Adding or changing a screen
 
 1. Follow [SCREEN-CONTRACT.md](SCREEN-CONTRACT.md).
-2. Map the screen in `apps/www/src/pages/showcase/source-files.ts` and list it in `apps/www/src/lib/designs.ts`.
+2. Map the screen in `apps/runtime/src/pages/showcase/source-files.ts` and list it in `apps/runtime/src/lib/designs.ts`.
 3. Add its previews: `SNAPSHOT_ONLY_MISSING=1 npm run snapshot` with the dev server running.
 4. Run `npm run spdx` so the new file gets its licence header.
 

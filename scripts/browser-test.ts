@@ -30,7 +30,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { type Browser, chromium } from "playwright";
 
-import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
+import { SOURCE_FILES } from "../apps/runtime/src/pages/showcase/source-files";
 import { withAppServer } from "./lib/app-server";
 import { readyScreens } from "./lib/contract";
 import { readDesignMeta } from "./lib/registry-meta";
@@ -100,8 +100,8 @@ async function checkScreen(
   try {
     // Real clock on purpose: this check is about runtime behaviour, and a frozen
     // browser clock would cause hydration mismatches the app doesn't have.
-    const stateParam = state === "ready" ? "" : `&state=${state}`;
-    await page.goto(`${base}/c/${design}?preview=%221%22${stateParam}`, { waitUntil: "networkidle", timeout: 60_000 });
+    const stateParam = state === "ready" ? "" : `?state=${state}`;
+    await page.goto(`${base}/preview/${design}${stateParam}`, { waitUntil: "networkidle", timeout: 60_000 });
     result.settleMs = await waitForSettledLayout(page);
     await page.addScriptTag({ content: AXE_SOURCE });
     const runAxe = async (only: { type: "tag" | "rule"; values: string[] }) =>
