@@ -1,4 +1,4 @@
-import manifest from "@/lib/flows/flows.manifest.json";
+import manifest from "@/lib/screens/screens.manifest.json";
 
 export function Hero() {
   return (
@@ -12,17 +12,17 @@ export function Hero() {
         <div className="home-hero__content">
           <div className="home-hero__title-row">
             <h1 className="h-xl">
-              Enterprise UI <span className="sr-only">Playground</span>
+              Wire<span className="sr-only">front</span>
             </h1>
             <p aria-hidden className="h-xl">
-              Playground
+              front
             </p>
           </div>
           <div className="home-hero__description-row">
             <p className="home-hero__description-p">
-              {manifest.totals.subflows} real Flutter user flows, from sign-in
-              to checkout, that you can tap through live, with the full Dart
-              source of every screen.
+              {manifest.totals.screens} responsive, ready-to-wire UI screens,
+              from sign-in to checkout, that you can try live, then install
+              with the shadcn CLI and wire to your own data.
             </p>
           </div>
         </div>

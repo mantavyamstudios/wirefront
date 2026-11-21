@@ -18,7 +18,7 @@ function releaseBlocksDocumentScroll() {
   delete document.documentElement.dataset.blocksMenuOpen;
 }
 
-const DEFAULT_GALLERY_PATHS = ["/flows"];
+const DEFAULT_GALLERY_PATHS = ["/screens"];
 
 interface ComponentsRouteLayoutProps {
   children: ReactNode;

@@ -1,10 +1,11 @@
-import manifest from "@/lib/flows/flows.manifest.json";
+import manifest from "@/lib/screens/screens.manifest.json";
 
 import {
   COMMUNITY_ISSUES_URL,
   CONTACT_EMAIL,
   GITHUB_PROFILE_URL,
   GITHUB_REPO_URL,
+  STUDIO_URL,
   X_PROFILE_URL,
 } from "./site";
 
@@ -35,22 +36,22 @@ export interface FooterCreatorLink extends NavItem {
   shape?: "round" | "";
 }
 
-/** One link per flow category, scrolling `/flows` to that category's heading. */
-const FLOW_CATEGORY_LINKS: NavItem[] = manifest.categories.map((category) => ({
-  label: category.title,
-  href: `/flows#${category.slug}`,
+/** One link per group (`/{group}`), in display order. */
+const SCREEN_GROUP_LINKS: NavItem[] = manifest.groups.map((group) => ({
+  label: group.title,
+  href: `/${group.slug}`,
 }));
 
 /**
- * Landing menu "Flows" column: one link per category.
+ * Landing menu "Screens" column: one link per group.
  */
-export const NAV_FLOWS: NavItem[] = FLOW_CATEGORY_LINKS;
+export const NAV_SCREENS: NavItem[] = SCREEN_GROUP_LINKS;
 
 /**
  * Landing menu "Explore" column items
  */
 export const NAV_EXPLORE: NavItem[] = [
-  { label: "All Flows", href: "/flows" },
+  { label: "All Screens", href: "/screens" },
   { label: "Documentation", href: "/docs" },
   { label: "Pricing", href: "/pricing" },
   { label: "Privacy Policy", href: "/legal/privacy" },
@@ -76,16 +77,16 @@ export const NAV_SOCIALS: NavSocialItem[] = [
  */
 export const FOOTER_COLUMNS: FooterColumn[] = [
   {
-    id: "flows",
-    title: "Flows",
-    links: [{ label: "All Flows", href: "/flows" }, ...FLOW_CATEGORY_LINKS],
+    id: "screens",
+    title: "Screens",
+    links: [{ label: "All Screens", href: "/screens" }, ...SCREEN_GROUP_LINKS],
   },
   {
     id: "documentation",
     title: "Documentation",
     links: [
       { label: "Introduction", href: "/docs" },
-      { label: "Using a flow", href: "/docs/installation" },
+      { label: "Installing a screen", href: "/docs/installation" },
       { label: "Pricing", href: "/pricing" },
     ],
   },
@@ -107,7 +108,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
 export const FOOTER_LEGAL_LINKS: FooterLegalLink[] = [
   {
     label: "License",
-    href: `${GITHUB_REPO_URL}/blob/main/LICENSE.md`,
+    href: `${GITHUB_REPO_URL}/blob/main/LICENSE`,
     external: true,
     shape: "square",
   },
@@ -134,14 +135,14 @@ export const FOOTER_LEGAL_LINKS: FooterLegalLink[] = [
  */
 export const FOOTER_CREATORS: FooterCreatorLink[] = [
   {
-    label: "devesh",
+    label: "mantavyam",
     href: GITHUB_PROFILE_URL,
     external: true,
     shape: "",
   },
   {
-    label: "mishra",
-    href: X_PROFILE_URL,
+    label: "studios",
+    href: STUDIO_URL,
     external: true,
     shape: "round",
   },

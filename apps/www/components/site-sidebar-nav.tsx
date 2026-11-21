@@ -8,11 +8,11 @@ import type { ComponentType, ReactNode } from "react";
 import { baseOptions } from "@/app/layout.config";
 import { useDocsPageNew } from "@/components/docs-sidebar/release-dates-context";
 import { Separator } from "@/lib/docs/attach-separator";
-import manifest from "@/lib/flows/flows.manifest.json";
+import manifest from "@/lib/screens/screens.manifest.json";
 
 /**
  * The one site navigation shown in both sidebars: the docs sidebar and the
- * mobile drawer on the flows pages. Each passes in its own primitives, which
+ * mobile drawer on the screens pages. Each passes in its own primitives, which
  * share these props.
  */
 export interface SiteSidebarPrimitives {
@@ -58,7 +58,7 @@ const GUIDE_ITEMS = guideLinks.filter(
   (link): link is GuideLink => "url" in link
 );
 
-/** Pages outside the guide, listed under "Menu" after the flows. */
+/** Pages outside the guide, listed under "Menu" after the screens. */
 const MENU_PAGES = [
   { title: "Contact", url: "/docs/contact" },
   { title: "Pricing", url: "/pricing" },
@@ -133,21 +133,21 @@ export function SiteSidebarNav({
         className="mt-4"
         label={<Separator icon={<SquareMenu strokeWidth={2} />} name="Menu" />}
       >
-        <Group defaultOpen label="Flows">
+        <Group defaultOpen label="Screens">
           <Item
-            href="/flows"
-            isActive={pathname === "/flows"}
-            itemKey="nav-flows"
-            label="All Flows"
+            href="/screens"
+            isActive={pathname === "/screens"}
+            itemKey="nav-screens"
+            label="All Screens"
             onClick={onNavigate}
           />
-          {manifest.categories.map((category) => (
+          {manifest.groups.map((group) => (
             <Item
-              href={`/flows#${category.slug}`}
-              isActive={false}
-              itemKey={`nav-flows-${category.slug}`}
-              key={category.slug}
-              label={category.title}
+              href={`/${group.slug}`}
+              isActive={isActive(`/${group.slug}`, pathname, true)}
+              itemKey={`nav-screens-${group.slug}`}
+              key={group.slug}
+              label={group.title}
               onClick={onNavigate}
             />
           ))}

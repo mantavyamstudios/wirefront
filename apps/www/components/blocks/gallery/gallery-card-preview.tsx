@@ -3,7 +3,6 @@
 import { cn } from "@workspace/ui/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
-import { FlowCardPreview } from "@/components/flows/flow-card-preview";
 import type { ComponentGalleryCardPreview } from "@/lib/registry/types";
 import { Skeleton } from "@/registry/primitives/effects/skeleton";
 
@@ -220,10 +219,6 @@ function GalleryCardPreviewMedia({
 }
 
 export function GalleryCardPreview(props: GalleryCardPreviewProps) {
-  if (props.preview?.flow) {
-    return <FlowCardPreview active={props.active} media={props.preview.flow} />;
-  }
-
   const poster = props.preview?.poster;
   const videoWebm = props.preview?.videoWebm;
   const videoMp4 = props.preview?.videoMp4;

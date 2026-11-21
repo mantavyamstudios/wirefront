@@ -9,10 +9,10 @@ import { SITE_URL } from "@/lib/site";
 /** Font family registered with `next/og` for share images. */
 export const OG_FONT_FAMILY = "Inter";
 
-/** `@fontsource/inter` (OFL), linked into `apps/www/node_modules`. */
+/** `@fontsource/inter` (OFL); bun hoists it to the monorepo's root `node_modules`. */
 const FONT_FILE = path.join(
   process.cwd(),
-  "node_modules/@fontsource/inter/files/inter-latin-500-normal.woff"
+  "../../node_modules/@fontsource/inter/files/inter-latin-500-normal.woff"
 );
 
 let interMediumData: Promise<ArrayBuffer> | undefined;

@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
     "localhost:3000",
     "127.0.0.1:3000",
   ],
-  transpilePackages: ["@workspace/ui"],
+  transpilePackages: ["@workspace/ui", "@wirefront/bridge"],
   experimental: {
     optimizePackageImports: [
       "lucide-react",

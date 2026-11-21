@@ -1,0 +1,3056 @@
+{
+  "totals": {
+    "groups": 6,
+    "kinds": 23,
+    "screens": 200
+  },
+  "groups": [
+    {
+      "slug": "shells",
+      "title": "Shells",
+      "meaning": "App frames and navigation",
+      "kinds": [
+        {
+          "slug": "layouts",
+          "title": "Layouts",
+          "blurb": "App shells, sidebars, multi-pane splits, focus modes, canvases.",
+          "screens": [
+            {
+              "slug": "workspace-rail",
+              "title": "Workspace rail",
+              "blurb": "Workspace switcher, sections, projects, user row.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "sidebars-workspace-rail/view.tsx",
+                "sidebars-workspace-rail/schema.ts",
+                "sidebars-workspace-rail/fixtures.ts"
+              ],
+              "registry": "layouts-workspace-rail"
+            },
+            {
+              "slug": "mini-rail",
+              "title": "Mini icon rail",
+              "blurb": "Collapsed 60px rail with workspace dots and active marker.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "sidebars-mini-rail/view.tsx",
+                "sidebars-mini-rail/schema.ts",
+                "sidebars-mini-rail/fixtures.ts"
+              ],
+              "registry": "layouts-mini-rail"
+            },
+            {
+              "slug": "docs-tree",
+              "title": "Docs tree",
+              "blurb": "Nested folder/file tree with expand/collapse and search.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "sidebars-docs-tree/view.tsx",
+                "sidebars-docs-tree/schema.ts",
+                "sidebars-docs-tree/fixtures.ts"
+              ],
+              "registry": "layouts-docs-tree"
+            },
+            {
+              "slug": "inbox-rail",
+              "title": "Inbox rail",
+              "blurb": "Conversation list with unread dots, tabs, and avatars.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "sidebars-inbox-rail/view.tsx",
+                "sidebars-inbox-rail/schema.ts",
+                "sidebars-inbox-rail/fixtures.ts"
+              ],
+              "registry": "layouts-inbox-rail"
+            },
+            {
+              "slug": "app-shell",
+              "title": "App shell",
+              "blurb": "Top bar + left sidebar + main content — the canonical product frame.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-app-shell/view.tsx",
+                "layouts-app-shell/schema.ts",
+                "layouts-app-shell/fixtures.ts"
+              ],
+              "registry": "layouts-app-shell"
+            },
+            {
+              "slug": "two-pane",
+              "title": "Two-pane",
+              "blurb": "List on left, detail on right — Mail / Linear desktop pattern.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-two-pane/view.tsx",
+                "layouts-two-pane/schema.ts",
+                "layouts-two-pane/fixtures.ts"
+              ],
+              "registry": "layouts-two-pane"
+            },
+            {
+              "slug": "three-pane",
+              "title": "Three-pane",
+              "blurb": "Workspace rail + channel list + main — Slack-style shell.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-three-pane/view.tsx",
+                "layouts-three-pane/schema.ts",
+                "layouts-three-pane/fixtures.ts"
+              ],
+              "registry": "layouts-three-pane"
+            },
+            {
+              "slug": "split-resizable",
+              "title": "Split resizable",
+              "blurb": "Two panes with a draggable handle — code editor + live preview.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-split-resizable/view.tsx",
+                "layouts-split-resizable/schema.ts",
+                "layouts-split-resizable/fixtures.ts"
+              ],
+              "registry": "layouts-split-resizable"
+            },
+            {
+              "slug": "focus-mode",
+              "title": "Focus mode",
+              "blurb": "Toggleable distraction-free reading layout with collapsing rails.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-focus-mode/view.tsx",
+                "layouts-focus-mode/schema.ts",
+                "layouts-focus-mode/fixtures.ts"
+              ],
+              "registry": "layouts-focus-mode"
+            },
+            {
+              "slug": "floating-toolbar",
+              "title": "Floating toolbar",
+              "blurb": "Selection-anchored bubble menu over a rich-text document.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-floating-toolbar/view.tsx",
+                "layouts-floating-toolbar/schema.ts",
+                "layouts-floating-toolbar/fixtures.ts"
+              ],
+              "registry": "layouts-floating-toolbar"
+            },
+            {
+              "slug": "canvas-tools",
+              "title": "Canvas tools",
+              "blurb": "Full-bleed canvas with floating tool palette + inspector — Figma-style.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-canvas-tools/view.tsx",
+                "layouts-canvas-tools/schema.ts",
+                "layouts-canvas-tools/fixtures.ts"
+              ],
+              "registry": "layouts-canvas-tools"
+            },
+            {
+              "slug": "bottom-nav",
+              "title": "Bottom nav",
+              "blurb": "Mobile shell inside a phone-frame mock with a 5-tab bottom bar.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-bottom-nav/view.tsx",
+                "layouts-bottom-nav/schema.ts",
+                "layouts-bottom-nav/fixtures.ts"
+              ],
+              "registry": "layouts-bottom-nav"
+            },
+            {
+              "slug": "inset-shell",
+              "title": "Inset Shell",
+              "blurb": "The frame an app lives in: a sidebar with workspace switcher, nav, colour-dotted projects and an account menu that folds down to an icon rail, beside a rounded inset page with live breadcrumbs and a floating drawer on phones.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-inset-shell/view.tsx",
+                "layouts-inset-shell/schema.ts",
+                "layouts-inset-shell/fixtures.ts"
+              ],
+              "registry": "layouts-inset-shell"
+            },
+            {
+              "slug": "hairline-shell",
+              "title": "Hairline Shell",
+              "blurb": "An app frame drawn edge to edge on single hairlines, with header and footer rules running straight across, a marker that slides along the edge to the current page and a dense issue list you can walk with J and K.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-hairline-shell/view.tsx",
+                "layouts-hairline-shell/schema.ts",
+                "layouts-hairline-shell/fixtures.ts"
+              ],
+              "registry": "layouts-hairline-shell"
+            },
+            {
+              "slug": "split-shell",
+              "title": "Split Shell",
+              "blurb": "A frame for working with an agent: tasks on the left, its thread in the middle, and a work panel you can drag or nudge with arrow keys to watch its tool calls tick by, the page it's reading and the sources it will cite.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "layouts-split-shell/view.tsx",
+                "layouts-split-shell/schema.ts",
+                "layouts-split-shell/fixtures.ts"
+              ],
+              "registry": "layouts-split-shell"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "accounts",
+      "title": "Accounts",
+      "meaning": "Identity, access, plan",
+      "kinds": [
+        {
+          "slug": "auth",
+          "title": "Auth & Onboarding",
+          "blurb": "Sign-in, magic-link, OAuth, waitlist.",
+          "screens": [
+            {
+              "slug": "login",
+              "title": "Split login",
+              "blurb": "Split layout — particle field, magic-link + OAuth.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "login/view.tsx",
+                "login/schema.ts",
+                "login/fixtures.ts"
+              ],
+              "registry": "auth-login"
+            },
+            {
+              "slug": "onboarding",
+              "title": "Setup with progress dots",
+              "blurb": "Multi-step workspace setup with progress dots.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "onboarding/view.tsx",
+                "onboarding/schema.ts",
+                "onboarding/fixtures.ts"
+              ],
+              "registry": "auth-onboarding"
+            },
+            {
+              "slug": "waitlist",
+              "title": "Waitlist landing",
+              "blurb": "Full-bleed empty-room figure with soft CTA.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "waitlist/view.tsx",
+                "waitlist/schema.ts",
+                "waitlist/fixtures.ts"
+              ],
+              "registry": "auth-waitlist"
+            },
+            {
+              "slug": "check-email",
+              "title": "Check your email",
+              "blurb": "Magic-link sent confirmation with resend countdown and re-route options.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-check-email/view.tsx",
+                "auth-check-email/schema.ts",
+                "auth-check-email/fixtures.ts"
+              ],
+              "registry": "auth-check-email"
+            },
+            {
+              "slug": "inset-login",
+              "title": "Inset login",
+              "blurb": "Dark cloth split inside a rounded card — OAuth, magic link, password.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "inset-login/view.tsx",
+                "inset-login/schema.ts",
+                "inset-login/fixtures.ts"
+              ],
+              "registry": "auth-inset-login"
+            },
+            {
+              "slug": "centered-signin",
+              "title": "Centered signin",
+              "blurb": "Classic centered card on a soft gradient — OAuth + email/password.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-centered-signin/view.tsx",
+                "auth-centered-signin/schema.ts",
+                "auth-centered-signin/fixtures.ts"
+              ],
+              "registry": "auth-centered-signin"
+            },
+            {
+              "slug": "centered-signup",
+              "title": "Centered signup",
+              "blurb": "Benefit pills, OAuth row, full signup form with a live strength meter.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-centered-signup/view.tsx",
+                "auth-centered-signup/schema.ts",
+                "auth-centered-signup/fixtures.ts"
+              ],
+              "registry": "auth-centered-signup"
+            },
+            {
+              "slug": "left-signin",
+              "title": "Left signin",
+              "blurb": "Form left, testimonial card + customer logo strip on the right.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-left-signin/view.tsx",
+                "auth-left-signin/schema.ts",
+                "auth-left-signin/fixtures.ts"
+              ],
+              "registry": "auth-left-signin"
+            },
+            {
+              "slug": "right-signin",
+              "title": "Right signin",
+              "blurb": "Feature hero left with a dashboard mock, signin card on the right.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-right-signin/view.tsx",
+                "auth-right-signin/schema.ts",
+                "auth-right-signin/fixtures.ts"
+              ],
+              "registry": "auth-right-signin"
+            },
+            {
+              "slug": "glass-signup",
+              "title": "Glass signup",
+              "blurb": "Glass-morphic card over five drifting blurred color blobs.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-glass-signup/view.tsx",
+                "auth-glass-signup/schema.ts",
+                "auth-glass-signup/fixtures.ts"
+              ],
+              "registry": "auth-glass-signup"
+            },
+            {
+              "slug": "otp-verify",
+              "title": "OTP verify",
+              "blurb": "6-digit code entry with split separator and live resend countdown.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-otp-verify/view.tsx",
+                "auth-otp-verify/schema.ts",
+                "auth-otp-verify/fixtures.ts"
+              ],
+              "registry": "auth-otp-verify"
+            },
+            {
+              "slug": "reset-password",
+              "title": "Reset password",
+              "blurb": "Choose a new password from a reset link: typed twice, sent with the link's token, with an expired-link state.",
+              "status": null,
+              "states": [
+                "ready",
+                "error"
+              ],
+              "readiness": "ready",
+              "files": [
+                "auth-reset-password/view.tsx",
+                "auth-reset-password/schema.ts",
+                "auth-reset-password/fixtures.ts"
+              ],
+              "registry": "auth-reset-password"
+            },
+            {
+              "slug": "two-factor",
+              "title": "Two-factor",
+              "blurb": "Authenticator code with switch + recovery-code fallback state.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-two-factor/view.tsx",
+                "auth-two-factor/schema.ts",
+                "auth-two-factor/fixtures.ts"
+              ],
+              "registry": "auth-two-factor"
+            },
+            {
+              "slug": "magic-link-sent",
+              "title": "Magic link sent",
+              "blurb": "Animated envelope confirmation with Open Gmail and resend countdown.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-magic-link-sent/view.tsx",
+                "auth-magic-link-sent/schema.ts",
+                "auth-magic-link-sent/fixtures.ts"
+              ],
+              "registry": "auth-magic-link-sent"
+            },
+            {
+              "slug": "sign-in",
+              "title": "Minimal sign-in",
+              "blurb": "A minimal centred sign-in wired to your auth: email and password, OAuth providers, SSO, passkey and magic link, each shown only when you connect it.",
+              "status": "new",
+              "states": [
+                "ready",
+                "error"
+              ],
+              "readiness": "ready",
+              "files": [
+                "auth-sign-in/view.tsx",
+                "auth-sign-in/schema.ts",
+                "auth-sign-in/fixtures.ts"
+              ],
+              "registry": "auth-sign-in"
+            },
+            {
+              "slug": "sign-up",
+              "title": "Minimal sign-up",
+              "blurb": "A minimal centred sign-up: name, work email and a password whose length hint ticks green as you type, with inline errors and the terms in one quiet line.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-sign-up/view.tsx",
+                "auth-sign-up/schema.ts",
+                "auth-sign-up/fixtures.ts"
+              ],
+              "registry": "auth-sign-up"
+            },
+            {
+              "slug": "forgot-password",
+              "title": "Forgot Password",
+              "blurb": "Ask for a reset link, then a confirmation with the address it went to, a resend countdown and a way back to sign in.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-forgot-password/view.tsx",
+                "auth-forgot-password/schema.ts",
+                "auth-forgot-password/fixtures.ts"
+              ],
+              "registry": "auth-forgot-password"
+            },
+            {
+              "slug": "verify-email",
+              "title": "Verify Email",
+              "blurb": "The 6-digit code step: a centred code field split 3 + 3, a shake when the code is wrong, a resend timer that counts down and a mail icon that turns into a check.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-verify-email/view.tsx",
+                "auth-verify-email/schema.ts",
+                "auth-verify-email/fixtures.ts"
+              ],
+              "registry": "auth-verify-email"
+            },
+            {
+              "slug": "first-run",
+              "title": "AI workspace setup",
+              "blurb": "A four-step setup for a brand-new AI workspace, with a springy stepper, tools that connect right where they sit, invites as chips, a live preview of your first agent and a calm summary you can jump back from.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "auth-first-run/view.tsx",
+                "auth-first-run/schema.ts",
+                "auth-first-run/fixtures.ts"
+              ],
+              "registry": "auth-first-run"
+            }
+          ]
+        },
+        {
+          "slug": "settings",
+          "title": "Settings",
+          "blurb": "Profile, appearance, billing, integrations.",
+          "screens": [
+            {
+              "slug": "profile",
+              "title": "Account profile",
+              "blurb": "Photo, identity, locale, security rows with destructive zone.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-profile/view.tsx",
+                "settings-profile/schema.ts",
+                "settings-profile/fixtures.ts"
+              ],
+              "registry": "settings-profile"
+            },
+            {
+              "slug": "appearance",
+              "title": "Appearance options",
+              "blurb": "Mode previews, palette swatches, density toggle, font cards.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-appearance/view.tsx",
+                "settings-appearance/schema.ts",
+                "settings-appearance/fixtures.ts"
+              ],
+              "registry": "settings-appearance"
+            },
+            {
+              "slug": "billing",
+              "title": "Billing",
+              "blurb": "Plan with live status (active, trial, past due, canceled), payment method via your billing portal, credits, tax ID and hosted invoices, with a confirmed cancel.",
+              "status": null,
+              "states": [
+                "ready",
+                "loading",
+                "error"
+              ],
+              "readiness": "ready",
+              "files": [
+                "settings-billing/view.tsx",
+                "settings-billing/schema.ts",
+                "settings-billing/fixtures.ts"
+              ],
+              "registry": "settings-billing"
+            },
+            {
+              "slug": "integrations",
+              "title": "Integrations grid",
+              "blurb": "Searchable grid with category filters and connect actions.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-integrations/view.tsx",
+                "settings-integrations/schema.ts",
+                "settings-integrations/fixtures.ts"
+              ],
+              "registry": "settings-integrations"
+            },
+            {
+              "slug": "security",
+              "title": "Security overview",
+              "blurb": "2FA banner, passkeys list, active sessions, recovery codes.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-security/view.tsx",
+                "settings-security/schema.ts",
+                "settings-security/fixtures.ts"
+              ],
+              "registry": "settings-security"
+            },
+            {
+              "slug": "permissions",
+              "title": "Permission matrix",
+              "blurb": "Role sidebar with a sticky-header capability matrix grid.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-permissions/view.tsx",
+                "settings-permissions/schema.ts",
+                "settings-permissions/fixtures.ts"
+              ],
+              "registry": "settings-permissions"
+            },
+            {
+              "slug": "branding",
+              "title": "Workspace branding",
+              "blurb": "Logo upload, color palette + live preview, custom domain.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-branding/view.tsx",
+                "settings-branding/schema.ts",
+                "settings-branding/fixtures.ts"
+              ],
+              "registry": "settings-branding"
+            },
+            {
+              "slug": "localization",
+              "title": "Localization",
+              "blurb": "Language, timezone, formats — with a live Intl preview card.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-localization/view.tsx",
+                "settings-localization/schema.ts",
+                "settings-localization/fixtures.ts"
+              ],
+              "registry": "settings-localization"
+            },
+            {
+              "slug": "webhooks",
+              "title": "Webhooks",
+              "blurb": "Endpoints table, signing secret reveal, recent deliveries log.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-webhooks/view.tsx",
+                "settings-webhooks/schema.ts",
+                "settings-webhooks/fixtures.ts"
+              ],
+              "registry": "settings-webhooks"
+            },
+            {
+              "slug": "privacy",
+              "title": "Privacy & data",
+              "blurb": "Export archive, retention sliders, account-deletion countdown.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-privacy/view.tsx",
+                "settings-privacy/schema.ts",
+                "settings-privacy/fixtures.ts"
+              ],
+              "registry": "settings-privacy"
+            },
+            {
+              "slug": "developer",
+              "title": "Developer",
+              "blurb": "Feature flags, debug console, environment switcher.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-developer/view.tsx",
+                "settings-developer/schema.ts",
+                "settings-developer/fixtures.ts"
+              ],
+              "registry": "settings-developer"
+            },
+            {
+              "slug": "sso",
+              "title": "Single sign-on",
+              "blurb": "IdP picker with a 4-step setup wizard and attribute mapping.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-sso/view.tsx",
+                "settings-sso/schema.ts",
+                "settings-sso/fixtures.ts"
+              ],
+              "registry": "settings-sso"
+            },
+            {
+              "slug": "appearance-settings",
+              "title": "Appearance with live preview",
+              "blurb": "Theme cards with miniature previews above a compact live app that re-themes with a circular wipe, eases into your accent colour and glides between densities as you change them.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-appearance-settings/view.tsx",
+                "settings-appearance-settings/schema.ts",
+                "settings-appearance-settings/fixtures.ts"
+              ],
+              "registry": "settings-appearance-settings"
+            },
+            {
+              "slug": "profile-settings",
+              "title": "Profile editor",
+              "blurb": "Edit your profile: crop a generated photo in a small dialog, claim a username with a live availability check and suggestions, see your local time on a tiny clock, and save from a bar that springs up when something changes.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-profile-settings/view.tsx",
+                "settings-profile-settings/schema.ts",
+                "settings-profile-settings/fixtures.ts"
+              ],
+              "registry": "settings-profile-settings"
+            },
+            {
+              "slug": "security-settings",
+              "title": "Security checklist",
+              "blurb": "Password, two-factor, passkeys and sessions in grouped rows: a tiny ring counts recommended steps, passkeys are added inline while your device confirms, and signed-out sessions slide off the table one after another.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-security-settings/view.tsx",
+                "settings-security-settings/schema.ts",
+                "settings-security-settings/fixtures.ts"
+              ],
+              "registry": "settings-security-settings"
+            },
+            {
+              "slug": "developer-settings",
+              "title": "API Keys & Webhooks",
+              "blurb": "Scoped API keys with a show-once secret, roll and revoke, plus webhook endpoints with event picking, a signing secret and a deliveries log where failed sends retry and flip to 200.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-developer-settings/view.tsx",
+                "settings-developer-settings/schema.ts",
+                "settings-developer-settings/fixtures.ts"
+              ],
+              "registry": "settings-developer-settings"
+            },
+            {
+              "slug": "notification-settings",
+              "title": "Notification channels",
+              "blurb": "Channels you can open and tune, per-event email, push and chat toggles grouped under section switches, quiet hours on a small 24-hour track, and a digest line whose item count rolls as you change things.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-notification-settings/view.tsx",
+                "settings-notification-settings/schema.ts",
+                "settings-notification-settings/fixtures.ts"
+              ],
+              "registry": "settings-notification-settings"
+            },
+            {
+              "slug": "team-roles",
+              "title": "Members & Roles",
+              "blurb": "Invite people, manage members and pending invites, and tune a role-by-permission matrix with a locked owner column, live head counts and a duplicate-to-customise role.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-team-roles/view.tsx",
+                "settings-team-roles/schema.ts",
+                "settings-team-roles/fixtures.ts"
+              ],
+              "registry": "settings-team-roles"
+            },
+            {
+              "slug": "settings-and-plans",
+              "title": "Settings & Plans",
+              "blurb": "Workspace, members, API keys and billing in one calm settings screen: grouped rows, an unsaved-changes bar that springs up, invites and role changes, keys shown once, and usage bars that fill when you open Billing.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-settings-and-plans/view.tsx",
+                "settings-settings-and-plans/schema.ts",
+                "settings-settings-and-plans/fixtures.ts"
+              ],
+              "registry": "settings-settings-and-plans"
+            },
+            {
+              "slug": "connectors",
+              "title": "Connector directory",
+              "blurb": "Browse every app your product plugs into, grouped by category in tidy two-up cards, with a sticky search, filters that glide, connect buttons that spin and settle into a quiet connected state, and a slide-over for permissions and settings.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "settings-connectors/view.tsx",
+                "settings-connectors/schema.ts",
+                "settings-connectors/fixtures.ts"
+              ],
+              "registry": "settings-connectors"
+            }
+          ]
+        },
+        {
+          "slug": "profile",
+          "title": "Profile",
+          "blurb": "User pages, hover cards, team grids, presence rails.",
+          "screens": [
+            {
+              "slug": "hero",
+              "title": "Profile hero",
+              "blurb": "Cover banner, avatar overlap, identity, action row.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-hero/view.tsx",
+                "profile-hero/schema.ts",
+                "profile-hero/fixtures.ts"
+              ],
+              "registry": "profile-hero"
+            },
+            {
+              "slug": "hover-card",
+              "title": "Hover card",
+              "blurb": "Mention preview with avatar, role, and follow CTA.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-hover-card/view.tsx",
+                "profile-hover-card/schema.ts",
+                "profile-hover-card/fixtures.ts"
+              ],
+              "registry": "profile-hover-card"
+            },
+            {
+              "slug": "team-grid",
+              "title": "Team grid",
+              "blurb": "Department-grouped grid of teammate cards.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-team-grid/view.tsx",
+                "profile-team-grid/schema.ts",
+                "profile-team-grid/fixtures.ts"
+              ],
+              "registry": "profile-team-grid"
+            },
+            {
+              "slug": "directory",
+              "title": "Contact directory",
+              "blurb": "Searchable A–Z member directory with letter rail.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-directory/view.tsx",
+                "profile-directory/schema.ts",
+                "profile-directory/fixtures.ts"
+              ],
+              "registry": "profile-directory"
+            },
+            {
+              "slug": "compact-card",
+              "title": "Compact user card",
+              "blurb": "Dense list-row card with role, status dot, and menu.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-compact-card/view.tsx",
+                "profile-compact-card/schema.ts",
+                "profile-compact-card/fixtures.ts"
+              ],
+              "registry": "profile-compact-card"
+            },
+            {
+              "slug": "org-chart",
+              "title": "Org chart",
+              "blurb": "Tree of reporting lines with collapsed direct-reports.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-org-chart/view.tsx",
+                "profile-org-chart/schema.ts",
+                "profile-org-chart/fixtures.ts"
+              ],
+              "registry": "profile-org-chart"
+            },
+            {
+              "slug": "skills",
+              "title": "Skills matrix",
+              "blurb": "Tag cloud with proficiency dots and endorsement counts.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-skills/view.tsx",
+                "profile-skills/schema.ts",
+                "profile-skills/fixtures.ts"
+              ],
+              "registry": "profile-skills"
+            },
+            {
+              "slug": "presence-rail",
+              "title": "Presence rail",
+              "blurb": "Live online-now strip with idle and DND markers.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-presence-rail/view.tsx",
+                "profile-presence-rail/schema.ts",
+                "profile-presence-rail/fixtures.ts"
+              ],
+              "registry": "profile-presence-rail"
+            },
+            {
+              "slug": "introductions",
+              "title": "Suggested intros",
+              "blurb": "People-you-may-know cards with shared-context hints.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-introductions/view.tsx",
+                "profile-introductions/schema.ts",
+                "profile-introductions/fixtures.ts"
+              ],
+              "registry": "profile-introductions"
+            },
+            {
+              "slug": "credentials",
+              "title": "Security credentials",
+              "blurb": "Sessions list with device icons and revoke action.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-credentials/view.tsx",
+                "profile-credentials/schema.ts",
+                "profile-credentials/fixtures.ts"
+              ],
+              "registry": "profile-credentials"
+            },
+            {
+              "slug": "social-profile",
+              "title": "Social profile",
+              "blurb": "A social profile with a painted cover, a Follow button that pinches off a notification bell like a droplet, followers that roll up, and posts, replies and a media grid that opens into a lightbox.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "profile-social-profile/view.tsx",
+                "profile-social-profile/schema.ts",
+                "profile-social-profile/fixtures.ts"
+              ],
+              "registry": "profile-social-profile"
+            }
+          ]
+        },
+        {
+          "slug": "pricing",
+          "title": "Pricing",
+          "blurb": "Tier comparisons, sliders, contact-sales, billing toggles.",
+          "screens": [
+            {
+              "slug": "three-tier",
+              "title": "Three-tier",
+              "blurb": "Classic three-column plan grid with featured center card.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "pricing-three-tier/view.tsx",
+                "pricing-three-tier/schema.ts",
+                "pricing-three-tier/fixtures.ts"
+              ],
+              "registry": "pricing-three-tier"
+            },
+            {
+              "slug": "comparison-table",
+              "title": "Feature matrix",
+              "blurb": "Detailed comparison table across plans.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "pricing-comparison-table/view.tsx",
+                "pricing-comparison-table/schema.ts",
+                "pricing-comparison-table/fixtures.ts"
+              ],
+              "registry": "pricing-comparison-table"
+            },
+            {
+              "slug": "slider-seats",
+              "title": "Seat slider",
+              "blurb": "Live-priced slider that updates the total.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "pricing-slider-seats/view.tsx",
+                "pricing-slider-seats/schema.ts",
+                "pricing-slider-seats/fixtures.ts"
+              ],
+              "registry": "pricing-slider-seats"
+            },
+            {
+              "slug": "simple-card",
+              "title": "Single plan",
+              "blurb": "Lone offer card with prominent CTA.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "pricing-simple-card/view.tsx",
+                "pricing-simple-card/schema.ts",
+                "pricing-simple-card/fixtures.ts"
+              ],
+              "registry": "pricing-simple-card"
+            },
+            {
+              "slug": "contact-sales",
+              "title": "Contact sales",
+              "blurb": "Enterprise card with embedded contact form.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "pricing-contact-sales/view.tsx",
+                "pricing-contact-sales/schema.ts",
+                "pricing-contact-sales/fixtures.ts"
+              ],
+              "registry": "pricing-contact-sales"
+            },
+            {
+              "slug": "monthly-yearly",
+              "title": "Billing toggle",
+              "blurb": "Monthly / yearly toggle with savings badge.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "pricing-monthly-yearly/view.tsx",
+                "pricing-monthly-yearly/schema.ts",
+                "pricing-monthly-yearly/fixtures.ts"
+              ],
+              "registry": "pricing-monthly-yearly"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "data",
+      "title": "Data",
+      "meaning": "Reading and slicing numbers",
+      "kinds": [
+        {
+          "slug": "dashboards",
+          "title": "Dashboards",
+          "blurb": "Metric grids, sparklines, activity feeds, plan usage.",
+          "screens": [
+            {
+              "slug": "metrics-overview",
+              "title": "Metrics overview",
+              "blurb": "Stat tiles, a trend chart and an activity feed for a date range, formatted in your locale and currency from raw numbers your API returns.",
+              "status": null,
+              "states": [
+                "ready",
+                "loading",
+                "empty",
+                "error"
+              ],
+              "readiness": "ready",
+              "files": [
+                "dashboards-metrics-overview/view.tsx",
+                "dashboards-metrics-overview/schema.ts",
+                "dashboards-metrics-overview/fixtures.ts"
+              ],
+              "registry": "dashboards-metrics-overview"
+            },
+            {
+              "slug": "usage",
+              "title": "Plan usage",
+              "blurb": "Plan, billing cycle and usage meters from your billing API, with amber warnings near each limit and optional manage and upgrade links.",
+              "status": null,
+              "states": [
+                "ready",
+                "loading",
+                "error"
+              ],
+              "readiness": "ready",
+              "files": [
+                "dashboards-usage/view.tsx",
+                "dashboards-usage/schema.ts",
+                "dashboards-usage/fixtures.ts"
+              ],
+              "registry": "dashboards-usage"
+            },
+            {
+              "slug": "analytics",
+              "title": "Analytics",
+              "blurb": "Bar chart + breakdown cards for sources, pages, geography.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "dashboards-analytics/view.tsx",
+                "dashboards-analytics/schema.ts",
+                "dashboards-analytics/fixtures.ts"
+              ],
+              "registry": "dashboards-analytics"
+            },
+            {
+              "slug": "home",
+              "title": "Personal home",
+              "blurb": "Greeting, today's tasks, schedule, fact tiles.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "dashboards-home/view.tsx",
+                "dashboards-home/schema.ts",
+                "dashboards-home/fixtures.ts"
+              ],
+              "registry": "dashboards-home"
+            },
+            {
+              "slug": "revenue",
+              "title": "MRR overview",
+              "blurb": "MRR hero with trend area, plan-tier breakdown, top accounts.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "dashboards-revenue/view.tsx",
+                "dashboards-revenue/schema.ts",
+                "dashboards-revenue/fixtures.ts"
+              ],
+              "registry": "dashboards-revenue"
+            },
+            {
+              "slug": "services",
+              "title": "Service health",
+              "blurb": "Services grid — status, latency p99, error sparklines, SLO budget.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "dashboards-services/view.tsx",
+                "dashboards-services/schema.ts",
+                "dashboards-services/fixtures.ts"
+              ],
+              "registry": "dashboards-services"
+            },
+            {
+              "slug": "engineering",
+              "title": "Engineering velocity",
+              "blurb": "DORA tiles, weekly PR throughput, CI health, contributor leaderboard.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "dashboards-engineering/view.tsx",
+                "dashboards-engineering/schema.ts",
+                "dashboards-engineering/fixtures.ts"
+              ],
+              "registry": "dashboards-engineering"
+            },
+            {
+              "slug": "support",
+              "title": "Support queue",
+              "blurb": "Ticket donut, SLA breach list, agent leaderboard, tag mix.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "dashboards-support/view.tsx",
+                "dashboards-support/schema.ts",
+                "dashboards-support/fixtures.ts"
+              ],
+              "registry": "dashboards-support"
+            },
+            {
+              "slug": "market",
+              "title": "Markets",
+              "blurb": "Featured ticker chart, watchlist with row sparklines, allocation.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "dashboards-market/view.tsx",
+                "dashboards-market/schema.ts",
+                "dashboards-market/fixtures.ts"
+              ],
+              "registry": "dashboards-market"
+            },
+            {
+              "slug": "revenue-overview",
+              "title": "Revenue Story",
+              "blurb": "A store's revenue told as a story: one big annotated line you can scrub day by day against last period, a plain-sentence summary whose numbers roll, a range switch that morphs the line and moves its notes, and a ranked strip of where the money came from.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "dashboards-revenue-overview/view.tsx",
+                "dashboards-revenue-overview/schema.ts",
+                "dashboards-revenue-overview/fixtures.ts"
+              ],
+              "registry": "dashboards-revenue-overview"
+            },
+            {
+              "slug": "status-console",
+              "title": "Status Console",
+              "blurb": "An ops console where an incident plays out live: services with ticking p95 sparklines, a timeline that moves from investigating to resolved, the fix rolling out in recent deploys, and an on-call card you can page from the keyboard.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "dashboards-status-console/view.tsx",
+                "dashboards-status-console/schema.ts",
+                "dashboards-status-console/fixtures.ts"
+              ],
+              "registry": "dashboards-status-console"
+            },
+            {
+              "slug": "pipeline-today",
+              "title": "Pipeline Today",
+              "blurb": "A salesperson's morning view: drag deals between stages (or move them with the keyboard) while each column's weighted value and the forecast roll live, and a Focus rail tells you who to act on and why, with one-click email, call and snooze that update the deal.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "dashboards-pipeline-today/view.tsx",
+                "dashboards-pipeline-today/schema.ts",
+                "dashboards-pipeline-today/fixtures.ts"
+              ],
+              "registry": "dashboards-pipeline-today"
+            }
+          ]
+        },
+        {
+          "slug": "tables",
+          "title": "Tables",
+          "blurb": "Sortable rows, density, bulk actions.",
+          "screens": [
+            {
+              "slug": "invoices",
+              "title": "Invoices",
+              "blurb": "Invoices from your API with search, status filter, sorting and paging, amounts in each invoice's currency, and the outstanding total across all matches.",
+              "status": null,
+              "states": [
+                "ready",
+                "loading",
+                "empty",
+                "error"
+              ],
+              "readiness": "ready",
+              "files": [
+                "table-invoices/view.tsx",
+                "table-invoices/schema.ts",
+                "table-invoices/fixtures.ts"
+              ],
+              "registry": "tables-invoices"
+            },
+            {
+              "slug": "members",
+              "title": "Team members",
+              "blurb": "Search, role filter, sorting and paging driven by your API; invite, role changes that roll back on failure, and confirmed removal.",
+              "status": "new",
+              "states": [
+                "ready",
+                "loading",
+                "empty",
+                "error"
+              ],
+              "readiness": "ready",
+              "files": [
+                "table-members/view.tsx",
+                "table-members/schema.ts",
+                "table-members/fixtures.ts"
+              ],
+              "registry": "tables-members"
+            },
+            {
+              "slug": "orders",
+              "title": "Orders",
+              "blurb": "Card-variant table with selection checkboxes and timeline status.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "table-orders/view.tsx",
+                "table-orders/schema.ts",
+                "table-orders/fixtures.ts"
+              ],
+              "registry": "tables-orders"
+            },
+            {
+              "slug": "logs",
+              "title": "Server logs",
+              "blurb": "Dense monospace log viewer with severity dots and request IDs.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "table-logs/view.tsx",
+                "table-logs/schema.ts",
+                "table-logs/fixtures.ts"
+              ],
+              "registry": "tables-logs"
+            },
+            {
+              "slug": "api-keys",
+              "title": "API keys",
+              "blurb": "API keys listed by prefix only: create with scopes, rotate and revoke with confirmation, and each new secret shown once to copy.",
+              "status": "wip",
+              "states": [
+                "ready",
+                "loading",
+                "empty",
+                "error"
+              ],
+              "readiness": "ready",
+              "files": [
+                "table-api-keys/view.tsx",
+                "table-api-keys/schema.ts",
+                "table-api-keys/fixtures.ts"
+              ],
+              "registry": "tables-api-keys"
+            },
+            {
+              "slug": "inventory",
+              "title": "Inventory",
+              "blurb": "Product rows with thumbnails, SKU, and stock-level meters.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "table-inventory/view.tsx",
+                "table-inventory/schema.ts",
+                "table-inventory/fixtures.ts"
+              ],
+              "registry": "tables-inventory"
+            },
+            {
+              "slug": "issues",
+              "title": "Faceted issues table",
+              "blurb": "Issues grid with faceted filter row above — Linear-style filtering.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "table-issues/view.tsx",
+                "table-issues/schema.ts",
+                "table-issues/fixtures.ts"
+              ],
+              "registry": "tables-issues"
+            },
+            {
+              "slug": "transactions",
+              "title": "Transactions",
+              "blurb": "Transactions table with a search + select toolbar and pagination.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "table-transactions/view.tsx",
+                "table-transactions/schema.ts",
+                "table-transactions/fixtures.ts"
+              ],
+              "registry": "tables-transactions"
+            },
+            {
+              "slug": "audit-log",
+              "title": "Audit log",
+              "blurb": "Security events with filter chips, outcome badges and older pages loaded on demand, times shown in your time zone.",
+              "status": null,
+              "states": [
+                "ready",
+                "loading",
+                "empty",
+                "error"
+              ],
+              "readiness": "ready",
+              "files": [
+                "table-audit-log/view.tsx",
+                "table-audit-log/schema.ts",
+                "table-audit-log/fixtures.ts"
+              ],
+              "registry": "tables-audit-log"
+            },
+            {
+              "slug": "admin-users",
+              "title": "Admin Users",
+              "blurb": "A members admin with seat and 2FA stats, server-side status, role and search filters, a sortable table you can bulk-edit, an invite dialog that checks emails as chips, and a drawer that loads each person's devices and activity.",
+              "status": "new",
+              "states": [
+                "ready",
+                "loading",
+                "empty",
+                "error"
+              ],
+              "readiness": "ready",
+              "files": [
+                "table-admin-users/view.tsx",
+                "table-admin-users/schema.ts",
+                "table-admin-users/fixtures.ts"
+              ],
+              "registry": "tables-admin-users"
+            }
+          ]
+        },
+        {
+          "slug": "charts",
+          "title": "Charts",
+          "blurb": "Area, bar, donut, funnel, heatmap, gauge — pure SVG.",
+          "screens": [
+            {
+              "slug": "revenue-area",
+              "title": "Revenue area",
+              "blurb": "Stacked area chart with legend toggles and hover crosshair.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "charts-revenue-area/view.tsx",
+                "charts-revenue-area/schema.ts",
+                "charts-revenue-area/fixtures.ts"
+              ],
+              "registry": "charts-revenue-area"
+            },
+            {
+              "slug": "cohort-heatmap",
+              "title": "Cohort heatmap",
+              "blurb": "Retention grid with diagonal-fading opacity ramp.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "charts-cohort-heatmap/view.tsx",
+                "charts-cohort-heatmap/schema.ts",
+                "charts-cohort-heatmap/fixtures.ts"
+              ],
+              "registry": "charts-cohort-heatmap"
+            },
+            {
+              "slug": "funnel",
+              "title": "Funnel",
+              "blurb": "Conversion funnel with drop-off pills between stages.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "charts-funnel/view.tsx",
+                "charts-funnel/schema.ts",
+                "charts-funnel/fixtures.ts"
+              ],
+              "registry": "charts-funnel"
+            },
+            {
+              "slug": "gauges",
+              "title": "Radial gauges",
+              "blurb": "Three SLO gauges with target lines and breach colour.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "charts-gauges/view.tsx",
+                "charts-gauges/schema.ts",
+                "charts-gauges/fixtures.ts"
+              ],
+              "registry": "charts-gauges"
+            },
+            {
+              "slug": "bar-grouped",
+              "title": "Grouped bars",
+              "blurb": "Period-over-period grouped bars with axis ticks.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "charts-bar-grouped/view.tsx",
+                "charts-bar-grouped/schema.ts",
+                "charts-bar-grouped/fixtures.ts"
+              ],
+              "registry": "charts-bar-grouped"
+            },
+            {
+              "slug": "line-multi",
+              "title": "Multi-series line",
+              "blurb": "Three-series line with legend chips and last-point dots.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "charts-line-multi/view.tsx",
+                "charts-line-multi/schema.ts",
+                "charts-line-multi/fixtures.ts"
+              ],
+              "registry": "charts-line-multi"
+            },
+            {
+              "slug": "donut",
+              "title": "Donut breakdown",
+              "blurb": "Donut chart with side legend and total in centre.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "charts-donut/view.tsx",
+                "charts-donut/schema.ts",
+                "charts-donut/fixtures.ts"
+              ],
+              "registry": "charts-donut"
+            },
+            {
+              "slug": "scatter",
+              "title": "Scatter plot",
+              "blurb": "X/Y scatter with quadrant lines and outlier callouts.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "charts-scatter/view.tsx",
+                "charts-scatter/schema.ts",
+                "charts-scatter/fixtures.ts"
+              ],
+              "registry": "charts-scatter"
+            },
+            {
+              "slug": "waterfall",
+              "title": "Waterfall",
+              "blurb": "Net-revenue waterfall with positive / negative bars.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "charts-waterfall/view.tsx",
+                "charts-waterfall/schema.ts",
+                "charts-waterfall/fixtures.ts"
+              ],
+              "registry": "charts-waterfall"
+            }
+          ]
+        },
+        {
+          "slug": "filters",
+          "title": "Filters",
+          "blurb": "Toolbars, faceted popovers, chips, and sidebar filter rails.",
+          "screens": [
+            {
+              "slug": "toolbar",
+              "title": "Filter toolbar",
+              "blurb": "Search, select, date range, and a view-density toggle in one bar.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "filter-toolbar/view.tsx",
+                "filter-toolbar/schema.ts",
+                "filter-toolbar/fixtures.ts"
+              ],
+              "registry": "filters-toolbar"
+            },
+            {
+              "slug": "faceted",
+              "title": "Faceted popover",
+              "blurb": "Linear-style add-filter popover with multi-select checkbox facets.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "filter-faceted/view.tsx",
+                "filter-faceted/schema.ts",
+                "filter-faceted/fixtures.ts"
+              ],
+              "registry": "filters-faceted"
+            },
+            {
+              "slug": "chips",
+              "title": "Active filter chips",
+              "blurb": "Removable filter pills with operators and a clear-all action.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "filter-chips/view.tsx",
+                "filter-chips/schema.ts",
+                "filter-chips/fixtures.ts"
+              ],
+              "registry": "filters-chips"
+            },
+            {
+              "slug": "sidebar",
+              "title": "Filter sidebar",
+              "blurb": "Left rail with collapsible sections, sliders, and switches.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "filter-sidebar/view.tsx",
+                "filter-sidebar/schema.ts",
+                "filter-sidebar/fixtures.ts"
+              ],
+              "registry": "filters-sidebar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "activity",
+      "title": "Activity",
+      "meaning": "Things happening over time or between people",
+      "kinds": [
+        {
+          "slug": "cards",
+          "title": "Cards",
+          "blurb": "Stat tiles, list items, surface containers.",
+          "screens": [
+            {
+              "slug": "stat-tile",
+              "title": "Stat tile",
+              "blurb": "KPI grid with sparklines and period-over-period delta.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "card-stat-tile/view.tsx",
+                "card-stat-tile/schema.ts",
+                "card-stat-tile/fixtures.ts"
+              ],
+              "registry": "cards-stat-tile"
+            },
+            {
+              "slug": "profile",
+              "title": "Profile card",
+              "blurb": "Cover gradient, avatar, badges, and split actions.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "card-profile/view.tsx",
+                "card-profile/schema.ts",
+                "card-profile/fixtures.ts"
+              ],
+              "registry": "cards-profile"
+            },
+            {
+              "slug": "pricing",
+              "title": "Pricing tiers",
+              "blurb": "Three-tier pricing with a 'most popular' callout.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "card-pricing/view.tsx",
+                "card-pricing/schema.ts",
+                "card-pricing/fixtures.ts"
+              ],
+              "registry": "cards-pricing"
+            },
+            {
+              "slug": "product",
+              "title": "Product card",
+              "blurb": "E-commerce tile with swatches, rating, and add-to-bag CTA.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "card-product/view.tsx",
+                "card-product/schema.ts",
+                "card-product/fixtures.ts"
+              ],
+              "registry": "cards-product"
+            },
+            {
+              "slug": "invoice",
+              "title": "Invoice line",
+              "blurb": "Compact list row with status pill and amount.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "card-invoice/view.tsx",
+                "card-invoice/schema.ts",
+                "card-invoice/fixtures.ts"
+              ],
+              "registry": "cards-invoice"
+            },
+            {
+              "slug": "task",
+              "title": "Kanban task",
+              "blurb": "Issue card with priority, labels, assignees, and progress.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "card-task/view.tsx",
+                "card-task/schema.ts",
+                "card-task/fixtures.ts"
+              ],
+              "registry": "cards-task"
+            },
+            {
+              "slug": "event",
+              "title": "Calendar event",
+              "blurb": "Date stripe, attendees stack, and live-meeting badge.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "card-event/view.tsx",
+                "card-event/schema.ts",
+                "card-event/fixtures.ts"
+              ],
+              "registry": "cards-event"
+            },
+            {
+              "slug": "integration",
+              "title": "Integration",
+              "blurb": "Connected service row with health pill and Switch toggle.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "card-integration/view.tsx",
+                "card-integration/schema.ts",
+                "card-integration/fixtures.ts"
+              ],
+              "registry": "cards-integration"
+            },
+            {
+              "slug": "media",
+              "title": "Article preview",
+              "blurb": "Editorial card with patterned cover and bookmark action.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "card-media/view.tsx",
+                "card-media/schema.ts",
+                "card-media/fixtures.ts"
+              ],
+              "registry": "cards-media"
+            },
+            {
+              "slug": "payment-method",
+              "title": "Payment method",
+              "blurb": "Stylised credit card art with primary-card switching.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "card-payment-method/view.tsx",
+                "card-payment-method/schema.ts",
+                "card-payment-method/fixtures.ts"
+              ],
+              "registry": "cards-payment-method"
+            }
+          ]
+        },
+        {
+          "slug": "timelines",
+          "title": "Timelines",
+          "blurb": "Audit trails, changelogs, deploys, status, mentions.",
+          "screens": [
+            {
+              "slug": "audit",
+              "title": "Audit trail",
+              "blurb": "Vertical event rail with actor avatars and JSON diff.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-audit/view.tsx",
+                "timelines-audit/schema.ts",
+                "timelines-audit/fixtures.ts"
+              ],
+              "registry": "timelines-audit"
+            },
+            {
+              "slug": "notifications",
+              "title": "Notifications panel",
+              "blurb": "Grouped panel with unread filter and clear-all.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-notifications/view.tsx",
+                "timelines-notifications/schema.ts",
+                "timelines-notifications/fixtures.ts"
+              ],
+              "registry": "timelines-notifications"
+            },
+            {
+              "slug": "changelog",
+              "title": "Changelog",
+              "blurb": "Versioned release notes with category tags.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-changelog/view.tsx",
+                "timelines-changelog/schema.ts",
+                "timelines-changelog/fixtures.ts"
+              ],
+              "registry": "timelines-changelog"
+            },
+            {
+              "slug": "commits",
+              "title": "Commit history",
+              "blurb": "Git log with branch graph and commit hashes.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-commits/view.tsx",
+                "timelines-commits/schema.ts",
+                "timelines-commits/fixtures.ts"
+              ],
+              "registry": "timelines-commits"
+            },
+            {
+              "slug": "approvals",
+              "title": "Approvals",
+              "blurb": "PR approval timeline with reviewer states and CI badges.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-approvals/view.tsx",
+                "timelines-approvals/schema.ts",
+                "timelines-approvals/fixtures.ts"
+              ],
+              "registry": "timelines-approvals"
+            },
+            {
+              "slug": "pull-request",
+              "title": "Pull request",
+              "blurb": "Ship checklist PR — merge readiness hero, inline diff comments, single timeline.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-pull-request/view.tsx",
+                "timelines-pull-request/schema.ts",
+                "timelines-pull-request/fixtures.ts"
+              ],
+              "registry": "timelines-pull-request"
+            },
+            {
+              "slug": "pr-ops-console",
+              "title": "PR ops console",
+              "blurb": "Mission-control PR view — pipeline DAG, env metrics, merge queue.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-pr-ops-console/view.tsx",
+                "timelines-pr-ops-console/schema.ts",
+                "timelines-pr-ops-console/fixtures.ts"
+              ],
+              "registry": "timelines-pr-ops-console"
+            },
+            {
+              "slug": "releases",
+              "title": "Release timeline",
+              "blurb": "Stage progression — staging, canary, production.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-releases/view.tsx",
+                "timelines-releases/schema.ts",
+                "timelines-releases/fixtures.ts"
+              ],
+              "registry": "timelines-releases"
+            },
+            {
+              "slug": "status-page",
+              "title": "Status page",
+              "blurb": "Public incident timeline with severity ribbons.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-status-page/view.tsx",
+                "timelines-status-page/schema.ts",
+                "timelines-status-page/fixtures.ts"
+              ],
+              "registry": "timelines-status-page"
+            },
+            {
+              "slug": "deploys",
+              "title": "Deploy history",
+              "blurb": "Deploy log with environment badges and roll-back action.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-deploys/view.tsx",
+                "timelines-deploys/schema.ts",
+                "timelines-deploys/fixtures.ts"
+              ],
+              "registry": "timelines-deploys"
+            },
+            {
+              "slug": "inbox-thread",
+              "title": "Inbox thread",
+              "blurb": "Threaded conversation with quoted replies.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-inbox-thread/view.tsx",
+                "timelines-inbox-thread/schema.ts",
+                "timelines-inbox-thread/fixtures.ts"
+              ],
+              "registry": "timelines-inbox-thread"
+            },
+            {
+              "slug": "activity-feed",
+              "title": "Activity feed",
+              "blurb": "Mixed event feed with day separators and avatar stack.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "timelines-activity-feed/view.tsx",
+                "timelines-activity-feed/schema.ts",
+                "timelines-activity-feed/fixtures.ts"
+              ],
+              "registry": "timelines-activity-feed"
+            }
+          ]
+        },
+        {
+          "slug": "calendars",
+          "title": "Calendars",
+          "blurb": "Month grids, week schedules, agenda lists, heatmaps.",
+          "screens": [
+            {
+              "slug": "month",
+              "title": "Month view",
+              "blurb": "Full month grid with multi-day events and overflow chip.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "calendars-month/view.tsx",
+                "calendars-month/schema.ts",
+                "calendars-month/fixtures.ts"
+              ],
+              "registry": "calendars-month"
+            },
+            {
+              "slug": "week",
+              "title": "Week schedule",
+              "blurb": "Hour-grid week view with overlapping events.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "calendars-week/view.tsx",
+                "calendars-week/schema.ts",
+                "calendars-week/fixtures.ts"
+              ],
+              "registry": "calendars-week"
+            },
+            {
+              "slug": "agenda",
+              "title": "Agenda list",
+              "blurb": "Day-grouped event list with travel time gaps.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "calendars-agenda/view.tsx",
+                "calendars-agenda/schema.ts",
+                "calendars-agenda/fixtures.ts"
+              ],
+              "registry": "calendars-agenda"
+            },
+            {
+              "slug": "date-range",
+              "title": "Date range picker",
+              "blurb": "Two-month picker with preset shortcuts rail.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "calendars-date-range/view.tsx",
+                "calendars-date-range/schema.ts",
+                "calendars-date-range/fixtures.ts"
+              ],
+              "registry": "calendars-date-range"
+            },
+            {
+              "slug": "timezone",
+              "title": "Timezone planner",
+              "blurb": "Stacked timezone bars with overlap window highlighted.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "calendars-timezone/view.tsx",
+                "calendars-timezone/schema.ts",
+                "calendars-timezone/fixtures.ts"
+              ],
+              "registry": "calendars-timezone"
+            },
+            {
+              "slug": "mini",
+              "title": "Mini calendar",
+              "blurb": "Compact inline calendar with event dots under days.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "calendars-mini/view.tsx",
+                "calendars-mini/schema.ts",
+                "calendars-mini/fixtures.ts"
+              ],
+              "registry": "calendars-mini"
+            },
+            {
+              "slug": "year-heatmap",
+              "title": "Contribution heatmap",
+              "blurb": "GitHub-style year heatmap with month / weekday axes.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "calendars-year-heatmap/view.tsx",
+                "calendars-year-heatmap/schema.ts",
+                "calendars-year-heatmap/fixtures.ts"
+              ],
+              "registry": "calendars-year-heatmap"
+            },
+            {
+              "slug": "recurring",
+              "title": "Recurring event",
+              "blurb": "RRULE editor with weekday picker and end-date options.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "calendars-recurring/view.tsx",
+                "calendars-recurring/schema.ts",
+                "calendars-recurring/fixtures.ts"
+              ],
+              "registry": "calendars-recurring"
+            },
+            {
+              "slug": "holidays",
+              "title": "Holidays & PTO",
+              "blurb": "Team-wide PTO calendar with overlap warnings.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "calendars-holidays/view.tsx",
+                "calendars-holidays/schema.ts",
+                "calendars-holidays/fixtures.ts"
+              ],
+              "registry": "calendars-holidays"
+            },
+            {
+              "slug": "calendar-week",
+              "title": "Drag-and-drop week",
+              "blurb": "A week calendar you can push around: drag events to move or stretch them on a 15-minute snap, drag empty time to create one, nudge with the arrow keys, and watch the now line creep down the day.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "calendars-calendar-week/view.tsx",
+                "calendars-calendar-week/schema.ts",
+                "calendars-calendar-week/fixtures.ts"
+              ],
+              "registry": "calendars-calendar-week"
+            }
+          ]
+        },
+        {
+          "slug": "threads",
+          "title": "Threads & comments",
+          "blurb": "Inline threads, side panels, reactions, mention popovers.",
+          "screens": [
+            {
+              "slug": "inline-thread",
+              "title": "Inline thread",
+              "blurb": "Right-margin thread anchored to a doc paragraph.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "threads-inline-thread/view.tsx",
+                "threads-inline-thread/schema.ts",
+                "threads-inline-thread/fixtures.ts"
+              ],
+              "registry": "threads-inline-thread"
+            },
+            {
+              "slug": "side-panel",
+              "title": "Side panel",
+              "blurb": "Slide-out conversation pane with participant list.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "threads-side-panel/view.tsx",
+                "threads-side-panel/schema.ts",
+                "threads-side-panel/fixtures.ts"
+              ],
+              "registry": "threads-side-panel"
+            },
+            {
+              "slug": "comment-row",
+              "title": "Comment row",
+              "blurb": "Single comment with reactions, replies, more menu.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "threads-comment-row/view.tsx",
+                "threads-comment-row/schema.ts",
+                "threads-comment-row/fixtures.ts"
+              ],
+              "registry": "threads-comment-row"
+            },
+            {
+              "slug": "mention-popover",
+              "title": "@mention popover",
+              "blurb": "Typeahead member list under an active mention.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "threads-mention-popover/view.tsx",
+                "threads-mention-popover/schema.ts",
+                "threads-mention-popover/fixtures.ts"
+              ],
+              "registry": "threads-mention-popover"
+            },
+            {
+              "slug": "resolved",
+              "title": "Resolved thread",
+              "blurb": "Collapsed resolved state with reopen action.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "threads-resolved/view.tsx",
+                "threads-resolved/schema.ts",
+                "threads-resolved/fixtures.ts"
+              ],
+              "registry": "threads-resolved"
+            },
+            {
+              "slug": "compose-rich",
+              "title": "Rich composer",
+              "blurb": "Reply box with formatting toolbar and attach.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "threads-compose-rich/view.tsx",
+                "threads-compose-rich/schema.ts",
+                "threads-compose-rich/fixtures.ts"
+              ],
+              "registry": "threads-compose-rich"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "interaction",
+      "title": "Interaction",
+      "meaning": "How the UI asks, confirms, warns and guides",
+      "kinds": [
+        {
+          "slug": "forms",
+          "title": "Forms",
+          "blurb": "Settings, invites, preferences, API keys.",
+          "screens": [
+            {
+              "slug": "workspace-settings",
+              "title": "Workspace settings",
+              "blurb": "Sidebar nav, sectioned form, sticky save bar.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "forms-workspace-settings/view.tsx",
+                "forms-workspace-settings/schema.ts",
+                "forms-workspace-settings/fixtures.ts"
+              ],
+              "registry": "forms-workspace-settings"
+            },
+            {
+              "slug": "invite-teammates",
+              "title": "Invite teammates",
+              "blurb": "Multi-row email + role with optional message.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "forms-invite-teammates/view.tsx",
+                "forms-invite-teammates/schema.ts",
+                "forms-invite-teammates/fixtures.ts"
+              ],
+              "registry": "forms-invite-teammates"
+            },
+            {
+              "slug": "notifications",
+              "title": "Notification matrix",
+              "blurb": "Grouped switch matrix for email and push.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "forms-notifications/view.tsx",
+                "forms-notifications/schema.ts",
+                "forms-notifications/fixtures.ts"
+              ],
+              "registry": "forms-notifications"
+            },
+            {
+              "slug": "api-key",
+              "title": "Create API key",
+              "blurb": "Scope checkboxes, expiry, post-create reveal.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "forms-api-key/view.tsx",
+                "forms-api-key/schema.ts",
+                "forms-api-key/fixtures.ts"
+              ],
+              "registry": "forms-api-key"
+            }
+          ]
+        },
+        {
+          "slug": "modals",
+          "title": "Modals",
+          "blurb": "Dialogs, drawers, command palettes, confirmations.",
+          "screens": [
+            {
+              "slug": "confirm-delete",
+              "title": "Confirm delete",
+              "blurb": "Destructive AlertDialog with type-to-confirm phrase guard.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "modals-confirm-delete/view.tsx",
+                "modals-confirm-delete/schema.ts",
+                "modals-confirm-delete/fixtures.ts"
+              ],
+              "registry": "modals-confirm-delete"
+            },
+            {
+              "slug": "share-link",
+              "title": "Share link",
+              "blurb": "Permission selector, copy field, member access table.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "modals-share-link/view.tsx",
+                "modals-share-link/schema.ts",
+                "modals-share-link/fixtures.ts"
+              ],
+              "registry": "modals-share-link"
+            },
+            {
+              "slug": "upload-files",
+              "title": "Upload files",
+              "blurb": "Drag-zone with progress rows and per-file cancel.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "modals-upload-files/view.tsx",
+                "modals-upload-files/schema.ts",
+                "modals-upload-files/fixtures.ts"
+              ],
+              "registry": "modals-upload-files"
+            },
+            {
+              "slug": "command-palette",
+              "title": "Command palette",
+              "blurb": "Cmd-K overlay with grouped commands and ⌘ shortcuts.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "modals-command-palette/view.tsx",
+                "modals-command-palette/schema.ts",
+                "modals-command-palette/fixtures.ts"
+              ],
+              "registry": "modals-command-palette"
+            },
+            {
+              "slug": "feedback",
+              "title": "Feedback",
+              "blurb": "Bug / idea / praise picker with screenshot attach.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "modals-feedback/view.tsx",
+                "modals-feedback/schema.ts",
+                "modals-feedback/fixtures.ts"
+              ],
+              "registry": "modals-feedback"
+            },
+            {
+              "slug": "shortcuts",
+              "title": "Keyboard shortcuts",
+              "blurb": "Cheatsheet with grouped sections and Kbd glyphs.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "modals-shortcuts/view.tsx",
+                "modals-shortcuts/schema.ts",
+                "modals-shortcuts/fixtures.ts"
+              ],
+              "registry": "modals-shortcuts"
+            },
+            {
+              "slug": "upgrade",
+              "title": "Upgrade plan",
+              "blurb": "Limit-reached modal with comparison and CTA.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "modals-upgrade/view.tsx",
+                "modals-upgrade/schema.ts",
+                "modals-upgrade/fixtures.ts"
+              ],
+              "registry": "modals-upgrade"
+            },
+            {
+              "slug": "export",
+              "title": "Export data",
+              "blurb": "Format radio, range picker, includes checklist.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "modals-export/view.tsx",
+                "modals-export/schema.ts",
+                "modals-export/fixtures.ts"
+              ],
+              "registry": "modals-export"
+            },
+            {
+              "slug": "create-workspace",
+              "title": "Create workspace",
+              "blurb": "Name + slug + visibility, with live URL preview.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "modals-create-workspace/view.tsx",
+                "modals-create-workspace/schema.ts",
+                "modals-create-workspace/fixtures.ts"
+              ],
+              "registry": "modals-create-workspace"
+            },
+            {
+              "slug": "two-factor",
+              "title": "Two-factor setup",
+              "blurb": "QR code, recovery codes, OTP confirm step.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "modals-two-factor/view.tsx",
+                "modals-two-factor/schema.ts",
+                "modals-two-factor/fixtures.ts"
+              ],
+              "registry": "modals-two-factor"
+            }
+          ]
+        },
+        {
+          "slug": "toasts",
+          "title": "Toasts & banners",
+          "blurb": "Ephemeral feedback — confirmation, errors, undos, progress.",
+          "screens": [
+            {
+              "slug": "success",
+              "title": "Success toast",
+              "blurb": "Top-right confirmation with check glyph.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "toasts-success/view.tsx",
+                "toasts-success/schema.ts",
+                "toasts-success/fixtures.ts"
+              ],
+              "registry": "toasts-success"
+            },
+            {
+              "slug": "error-retry",
+              "title": "Error with retry",
+              "blurb": "Failed action with an inline retry button.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "toasts-error-retry/view.tsx",
+                "toasts-error-retry/schema.ts",
+                "toasts-error-retry/fixtures.ts"
+              ],
+              "registry": "toasts-error-retry"
+            },
+            {
+              "slug": "info-banner",
+              "title": "System banner",
+              "blurb": "Sticky top banner with dismiss.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "toasts-info-banner/view.tsx",
+                "toasts-info-banner/schema.ts",
+                "toasts-info-banner/fixtures.ts"
+              ],
+              "registry": "toasts-info-banner"
+            },
+            {
+              "slug": "progress",
+              "title": "Progress toast",
+              "blurb": "Upload toast with embedded progress bar.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "toasts-progress/view.tsx",
+                "toasts-progress/schema.ts",
+                "toasts-progress/fixtures.ts"
+              ],
+              "registry": "toasts-progress"
+            },
+            {
+              "slug": "undo",
+              "title": "Undo toast",
+              "blurb": "Snackbar with undo action and timer.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "toasts-undo/view.tsx",
+                "toasts-undo/schema.ts",
+                "toasts-undo/fixtures.ts"
+              ],
+              "registry": "toasts-undo"
+            },
+            {
+              "slug": "rich",
+              "title": "Rich toast",
+              "blurb": "Stacked card toasts with avatar, title, body, actions.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "toasts-rich/view.tsx",
+                "toasts-rich/schema.ts",
+                "toasts-rich/fixtures.ts"
+              ],
+              "registry": "toasts-rich"
+            }
+          ]
+        },
+        {
+          "slug": "tours",
+          "title": "Tours & coachmarks",
+          "blurb": "Welcome modals, spotlights, beacons, onboarding checklists.",
+          "screens": [
+            {
+              "slug": "welcome-carousel",
+              "title": "Welcome carousel",
+              "blurb": "Multi-step intro with dot pagination and 'skip'.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "tours-welcome-carousel/view.tsx",
+                "tours-welcome-carousel/schema.ts",
+                "tours-welcome-carousel/fixtures.ts"
+              ],
+              "registry": "tours-welcome-carousel"
+            },
+            {
+              "slug": "spotlight",
+              "title": "Spotlight tour",
+              "blurb": "Dim mask with cutout around the target element.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "tours-spotlight/view.tsx",
+                "tours-spotlight/schema.ts",
+                "tours-spotlight/fixtures.ts"
+              ],
+              "registry": "tours-spotlight"
+            },
+            {
+              "slug": "arrow-tooltip",
+              "title": "Arrow tooltip",
+              "blurb": "Tooltip with caret, step counter, and prev/next.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "tours-arrow-tooltip/view.tsx",
+                "tours-arrow-tooltip/schema.ts",
+                "tours-arrow-tooltip/fixtures.ts"
+              ],
+              "registry": "tours-arrow-tooltip"
+            },
+            {
+              "slug": "beacon",
+              "title": "Beacon hint",
+              "blurb": "Pulsing dot anchored to a feature with hint card.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "tours-beacon/view.tsx",
+                "tours-beacon/schema.ts",
+                "tours-beacon/fixtures.ts"
+              ],
+              "registry": "tours-beacon"
+            },
+            {
+              "slug": "inline-hint",
+              "title": "Inline hint",
+              "blurb": "Subtle bottom-right floating hint with dismiss.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "tours-inline-hint/view.tsx",
+                "tours-inline-hint/schema.ts",
+                "tours-inline-hint/fixtures.ts"
+              ],
+              "registry": "tours-inline-hint"
+            },
+            {
+              "slug": "checklist",
+              "title": "Onboarding checklist",
+              "blurb": "Linear-style task list with progress meter.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "tours-checklist/view.tsx",
+                "tours-checklist/schema.ts",
+                "tours-checklist/fixtures.ts"
+              ],
+              "registry": "tours-checklist"
+            }
+          ]
+        },
+        {
+          "slug": "empty-states",
+          "title": "Empty states",
+          "blurb": "First-run, zero-data, end-of-list.",
+          "screens": [
+            {
+              "slug": "inbox-zero",
+              "title": "Inbox zero",
+              "blurb": "All caught up — soft sunrise gradient with quiet actions.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "empty-inbox-zero/view.tsx",
+                "empty-inbox-zero/schema.ts",
+                "empty-inbox-zero/fixtures.ts"
+              ],
+              "registry": "empty-states-inbox-zero"
+            },
+            {
+              "slug": "no-results",
+              "title": "No results",
+              "blurb": "Search with active filter pills and a one-click reset.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "empty-no-results/view.tsx",
+                "empty-no-results/schema.ts",
+                "empty-no-results/fixtures.ts"
+              ],
+              "registry": "empty-states-no-results"
+            },
+            {
+              "slug": "first-project",
+              "title": "First project",
+              "blurb": "Day-one workspace with create or import-from-Linear paths.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "empty-first-project/view.tsx",
+                "empty-first-project/schema.ts",
+                "empty-first-project/fixtures.ts"
+              ],
+              "registry": "empty-states-first-project"
+            },
+            {
+              "slug": "end-of-feed",
+              "title": "End of feed",
+              "blurb": "Activity list with a 'you're all caught up' end marker.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "empty-end-of-feed/view.tsx",
+                "empty-end-of-feed/schema.ts",
+                "empty-end-of-feed/fixtures.ts"
+              ],
+              "registry": "empty-states-end-of-feed"
+            },
+            {
+              "slug": "no-team",
+              "title": "No teammates",
+              "blurb": "Invite link with placeholder avatar slots and email CTA.",
+              "status": "wip",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "empty-no-team/view.tsx",
+                "empty-no-team/schema.ts",
+                "empty-no-team/fixtures.ts"
+              ],
+              "registry": "empty-states-no-team"
+            },
+            {
+              "slug": "trash",
+              "title": "Empty trash",
+              "blurb": "Settings-style trash folder with 30-day retention copy.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "empty-trash/view.tsx",
+                "empty-trash/schema.ts",
+                "empty-trash/fixtures.ts"
+              ],
+              "registry": "empty-states-trash"
+            },
+            {
+              "slug": "404",
+              "title": "404",
+              "blurb": "Big numerals on a faded grid backdrop with go-back actions.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "empty-404/view.tsx",
+                "empty-404/schema.ts",
+                "empty-404/fixtures.ts"
+              ],
+              "registry": "empty-states-404"
+            },
+            {
+              "slug": "maintenance",
+              "title": "Maintenance",
+              "blurb": "Scheduled downtime with live countdown and progress bar.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "empty-maintenance/view.tsx",
+                "empty-maintenance/schema.ts",
+                "empty-maintenance/fixtures.ts"
+              ],
+              "registry": "empty-states-maintenance"
+            },
+            {
+              "slug": "no-files",
+              "title": "No files",
+              "blurb": "Drag-and-drop zone with stacked file-icon preview.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "empty-no-files/view.tsx",
+                "empty-no-files/schema.ts",
+                "empty-no-files/fixtures.ts"
+              ],
+              "registry": "empty-states-no-files"
+            },
+            {
+              "slug": "offline",
+              "title": "Offline",
+              "blurb": "Connection lost with pulsing destructive ring and retry.",
+              "status": null,
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "empty-offline/view.tsx",
+                "empty-offline/schema.ts",
+                "empty-offline/fixtures.ts"
+              ],
+              "registry": "empty-states-offline"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "products",
+      "title": "Products",
+      "meaning": "Whole apps built from the pieces above",
+      "kinds": [
+        {
+          "slug": "apps",
+          "title": "Apps",
+          "blurb": "Full product screens: mail, chat, calls, notes, drive, help.",
+          "screens": [
+            {
+              "slug": "mail",
+              "title": "Mail",
+              "blurb": "A three-pane mail client you can run from the keyboard: J and K walk the threads, E archives with an undo, R drops you into a quick reply, and the reading pane slides over the list on phones.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "apps-mail/view.tsx",
+                "apps-mail/schema.ts",
+                "apps-mail/fixtures.ts"
+              ],
+              "registry": "apps-mail"
+            },
+            {
+              "slug": "team-chat",
+              "title": "Team Chat",
+              "blurb": "Channels and DMs with grouped messages, reactions that roll their counts, and threads that open in a side panel; send something and a teammate starts typing back.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "apps-team-chat/view.tsx",
+                "apps-team-chat/schema.ts",
+                "apps-team-chat/fixtures.ts"
+              ],
+              "registry": "apps-team-chat"
+            },
+            {
+              "slug": "video-call",
+              "title": "Video Call",
+              "blurb": "A video call where the grid reflows as people drop in and out, whoever is talking gets a soft ring and a pulse, reactions float up the stage, and chat and people slide in beside it.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "apps-video-call/view.tsx",
+                "apps-video-call/schema.ts",
+                "apps-video-call/fixtures.ts"
+              ],
+              "registry": "apps-video-call"
+            },
+            {
+              "slug": "notes",
+              "title": "Notes",
+              "blurb": "A notes app with folders, pinned notes that glide to the top, search that highlights matches as you type, and an editor where typing “[] ”, “- ” or “# ” turns a line into a checklist, bullet or heading.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "apps-notes/view.tsx",
+                "apps-notes/schema.ts",
+                "apps-notes/fixtures.ts"
+              ],
+              "registry": "apps-notes"
+            },
+            {
+              "slug": "drive",
+              "title": "Drive",
+              "blurb": "A cloud drive home with a sidebar of places and quick access, start-from-template cards, and folders that glide between a card grid and a tidy table when you switch views, with search, sort and stars.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "apps-drive/view.tsx",
+                "apps-drive/schema.ts",
+                "apps-drive/fixtures.ts"
+              ],
+              "registry": "apps-drive"
+            },
+            {
+              "slug": "folder-view",
+              "title": "Folder View",
+              "blurb": "One folder opened inside a drive, with a folder tree in the sidebar, type filters with counts, a grid of file cards with little drawn previews or a dense table, a bulk bar that rises with a rolling count when you pick a few, and ghost files fanning out of an empty sub-folder.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "apps-folder-view/view.tsx",
+                "apps-folder-view/schema.ts",
+                "apps-folder-view/fixtures.ts"
+              ],
+              "registry": "apps-folder-view"
+            },
+            {
+              "slug": "help-centre",
+              "title": "Help Centre",
+              "blurb": "A support site with a search that suggests articles as you type, topic cards, readable articles with a table of contents that follows you, and a feedback form that asks what went wrong.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "apps-help-centre/view.tsx",
+                "apps-help-centre/schema.ts",
+                "apps-help-centre/fixtures.ts"
+              ],
+              "registry": "apps-help-centre"
+            }
+          ]
+        },
+        {
+          "slug": "ai",
+          "title": "AI & Agents",
+          "blurb": "Assistant home, agent runs, prompt evals, co-writing.",
+          "screens": [
+            {
+              "slug": "assistant-start",
+              "title": "Assistant Start",
+              "blurb": "The first screen of an AI assistant, with chats and projects down the side, a gooey orb that says hello and a prompt box that gathers tools and connected apps as context, then glides down into the conversation when you send.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "ai-assistant-start/view.tsx",
+                "ai-assistant-start/schema.ts",
+                "ai-assistant-start/fixtures.ts"
+              ],
+              "registry": "ai-assistant-start"
+            },
+            {
+              "slug": "conductor",
+              "title": "Conductor",
+              "blurb": "Chat with a lead agent while it works: it streams its replies, hands tasks to helpers whose progress ticks along in a side panel and writes what it learns straight into a launch brief you can edit beside the chat.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "ai-conductor/view.tsx",
+                "ai-conductor/schema.ts",
+                "ai-conductor/fixtures.ts"
+              ],
+              "registry": "ai-conductor"
+            },
+            {
+              "slug": "run-replay",
+              "title": "Run Replay",
+              "blurb": "Watch an agent work a task from start to finish: plan steps tick off, tool calls stream into a log, it stops to ask before sending anything, and the draft it's writing fills in beside it.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "ai-run-replay/view.tsx",
+                "ai-run-replay/schema.ts",
+                "ai-run-replay/fixtures.ts"
+              ],
+              "registry": "ai-run-replay"
+            },
+            {
+              "slug": "prompt-test-bench",
+              "title": "Prompt Test Bench",
+              "blurb": "Check a prompt before it ships, with pass rate by version against the bar it has to clear, a unified or side-by-side diff of what changed, and test cases that re-run live from queued to a rolling score.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "ai-prompt-test-bench/view.tsx",
+                "ai-prompt-test-bench/schema.ts",
+                "ai-prompt-test-bench/fixtures.ts"
+              ],
+              "registry": "ai-prompt-test-bench"
+            },
+            {
+              "slug": "co-writing-doc",
+              "title": "Co-writing Doc",
+              "blurb": "A document where AI agents write alongside you: coloured cursors with name tags glide between words, an agent types its suggestion letter by letter for you to accept or reject, and comments sit in the margin next to the lines they're about.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "ai-co-writing-doc/view.tsx",
+                "ai-co-writing-doc/schema.ts",
+                "ai-co-writing-doc/fixtures.ts"
+              ],
+              "registry": "ai-co-writing-doc"
+            }
+          ]
+        },
+        {
+          "slug": "dev-tools",
+          "title": "Dev tools",
+          "blurb": "Code review, docs sites, keyboard-driven issue tracking.",
+          "screens": [
+            {
+              "slug": "code-review",
+              "title": "Code Review",
+              "blurb": "A pull request review with a file tree, split or unified diffs with word-level highlights, inline threads you can reply to and resolve, Viewed checkboxes that fold files away, and an approve or request-changes panel.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "devtools-code-review/view.tsx",
+                "devtools-code-review/schema.ts",
+                "devtools-code-review/fixtures.ts"
+              ],
+              "registry": "dev-tools-code-review"
+            },
+            {
+              "slug": "docs-site",
+              "title": "Docs Site",
+              "blurb": "A documentation site with a top nav, collapsible sidebar, code samples whose language choice follows you across the page, a table of contents that tracks your scroll, ⌘K search over pages and headings, and prev and next cards.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "devtools-docs-site/view.tsx",
+                "devtools-docs-site/schema.ts",
+                "devtools-docs-site/fixtures.ts"
+              ],
+              "registry": "dev-tools-docs-site"
+            },
+            {
+              "slug": "issue-tracker",
+              "title": "Keyboard issue tracker",
+              "blurb": "An issue list you drive with your hands on the keys: J and K to move, S, P, A and L to change status, priority, assignee and labels, X to multi-select, ⌘K for everything else, and rows glide to their new group when they change.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "devtools-issue-tracker/view.tsx",
+                "devtools-issue-tracker/schema.ts",
+                "devtools-issue-tracker/fixtures.ts"
+              ],
+              "registry": "dev-tools-issue-tracker"
+            }
+          ]
+        },
+        {
+          "slug": "personal",
+          "title": "Personal",
+          "blurb": "Consumer screens: money, habits, music.",
+          "screens": [
+            {
+              "slug": "money",
+              "title": "Money",
+              "blurb": "A personal finance home: the balance rolls digit by digit as you switch accounts or pay a bill, the payment lands in your transactions, spending donut and budgets at once, and each budget shows if you’re spending ahead of pace.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "personal-money/view.tsx",
+                "personal-money/schema.ts",
+                "personal-money/fixtures.ts"
+              ],
+              "registry": "personal-money"
+            },
+            {
+              "slug": "habits",
+              "title": "Habits",
+              "blurb": "A habit tracker that makes ticking things off feel good: checks fill and draw in a beat, counted habits fill like a glass, streaks roll up, and a week grid lets you patch the days you forgot to log.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "personal-habits/view.tsx",
+                "personal-habits/schema.ts",
+                "personal-habits/fixtures.ts"
+              ],
+              "registry": "personal-habits"
+            },
+            {
+              "slug": "music-player",
+              "title": "Music Player",
+              "blurb": "A music app with gradient cover art that glows into the room, a waveform you can scrub, a drag-to-reorder queue and lyrics that follow the song line by line.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "personal-music-player/view.tsx",
+                "personal-music-player/schema.ts",
+                "personal-music-player/fixtures.ts"
+              ],
+              "registry": "personal-music-player"
+            }
+          ]
+        },
+        {
+          "slug": "commerce",
+          "title": "Commerce",
+          "blurb": "Checkout and live order tracking.",
+          "screens": [
+            {
+              "slug": "checkout",
+              "title": "Checkout",
+              "blurb": "A one-page checkout that folds each finished step into a one-line summary: inline validation that clears as you type, delivery choices that re-total the order, a card that flips when you reach the CVC, and a calm confirmation.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "commerce-checkout/view.tsx",
+                "commerce-checkout/schema.ts",
+                "commerce-checkout/fixtures.ts"
+              ],
+              "registry": "commerce-checkout"
+            },
+            {
+              "slug": "delivery-tracker",
+              "title": "Delivery Tracker",
+              "blurb": "Live order tracking on a hand-drawn city map: the courier rides the route as the ETA counts down, you can zoom in to follow them, message with quick replies, and rate and tip once it lands.",
+              "status": "new",
+              "states": [],
+              "readiness": "ready",
+              "files": [
+                "commerce-delivery-tracker/view.tsx",
+                "commerce-delivery-tracker/schema.ts",
+                "commerce-delivery-tracker/fixtures.ts"
+              ],
+              "registry": "commerce-delivery-tracker"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

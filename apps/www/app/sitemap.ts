@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { source } from "@/lib/docs/source";
-import { flowsSource } from "@/lib/flows/source";
+import { screensSource } from "@/lib/screens/source";
 import { SITE_URL } from "@/lib/site";
 
 /** Static export (Cloudflare Pages): render once at build time. */
@@ -29,9 +29,9 @@ function latest(
 
 async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
   const docPages = source.getPages();
-  const flowPages = flowsSource.getPages();
-  const latestFlow = latest(flowPages);
-  const latestContent = [latest(docPages), latestFlow]
+  const screenPages = screensSource.getPages();
+  const latestScreen = latest(screenPages);
+  const latestContent = [latest(docPages), latestScreen]
     .filter((date): date is Date => Boolean(date))
     .toSorted((a, b) => b.getTime() - a.getTime())[0];
 
@@ -43,12 +43,12 @@ async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     {
-      url: `${SITE_URL}/flows`,
-      lastModified: latestFlow,
+      url: `${SITE_URL}/screens`,
+      lastModified: latestScreen,
       changeFrequency: "weekly",
       priority: 0.95,
     },
-    ...flowPages.map((page) => ({
+    ...screenPages.map((page) => ({
       url: `${SITE_URL}${page.url}`,
       lastModified: toLastModified(page.data.lastModified),
       changeFrequency: "monthly" as const,

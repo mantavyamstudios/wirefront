@@ -3,14 +3,14 @@ import type { AdvancedIndex } from "fumadocs-core/search/server";
 import type { InferPageType } from "fumadocs-core/source";
 
 import { source } from "@/lib/docs/source";
-import { flowsSource } from "@/lib/flows/source";
+import { screensSource } from "@/lib/screens/source";
 
 type SearchablePage =
   | InferPageType<typeof source>
-  | InferPageType<typeof flowsSource>;
+  | InferPageType<typeof screensSource>;
 
 function getSearchTag(page: SearchablePage): string {
-  return page.url.startsWith("/flows/") ? "flows" : "docs";
+  return page.url === "/docs" || page.url.startsWith("/docs/") ? "docs" : "screens";
 }
 
 function pageToAdvancedIndex(page: SearchablePage): AdvancedIndex {
@@ -34,7 +34,7 @@ function pageToAdvancedIndex(page: SearchablePage): AdvancedIndex {
 }
 
 export function getSearchablePages(): SearchablePage[] {
-  return [...source.getPages(), ...flowsSource.getPages()];
+  return [...source.getPages(), ...screensSource.getPages()];
 }
 
 export function getSearchIndexes(): AdvancedIndex[] {

@@ -118,7 +118,7 @@ export function Footer() {
                 <div className="flex w-full max-w-full! flex-col items-start justify-start gap-[var(--gap-xxl)] lg:max-w-[35.1875em]!">
                   <Link
                     className="site-footer-card relative flex aspect-[4/3] w-full flex-col items-center justify-center overflow-hidden rounded-[2.5rem] border text-white dark:text-neutral-100"
-                    href="/flows"
+                    href="/screens"
                   >
                     <div className="box-border flex size-full flex-col justify-between px-10 py-10">
                       <div className="flex justify-center gap-1.5">
@@ -169,10 +169,10 @@ export function Footer() {
                             />
                             <div className="button-label__wrap">
                               <div className="button-label">
-                                <span>Explore Flows</span>
+                                <span>Explore Screens</span>
                               </div>
                               <div aria-hidden="true" className="button-label">
-                                <span>Explore Flows</span>
+                                <span>Explore Screens</span>
                               </div>
                             </div>
                           </span>
@@ -282,7 +282,7 @@ export function Footer() {
                           data-shape=""
                           data-size=""
                           data-theme=""
-                          href="/flows"
+                          href="/screens"
                           style={{ borderRadius: ".875rem" }}
                         >
                           <div
@@ -292,13 +292,13 @@ export function Footer() {
                           />
                           <div className="button-label__wrap">
                             <div className="button-label text-white">
-                              <span>Flows</span>
+                              <span>Screens</span>
                             </div>
                             <div
                               aria-hidden="true"
                               className="button-label text-white"
                             >
-                              <span>Flows</span>
+                              <span>Screens</span>
                             </div>
                           </div>
                         </Link>

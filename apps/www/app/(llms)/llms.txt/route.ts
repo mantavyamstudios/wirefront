@@ -1,13 +1,13 @@
 import { buildLlmsIndex } from "@/lib/docs/llms-index";
 import { source } from "@/lib/docs/source";
-import { flowsSource } from "@/lib/flows/source";
+import { screensSource } from "@/lib/screens/source";
 
 /** Static export (Cloudflare Pages): render once at build time. */
 export const dynamic = "force-static";
 
 async function getLlmsIndexContent() {
   return await Promise.resolve(
-    buildLlmsIndex(source.getPages(), flowsSource.getPages())
+    buildLlmsIndex(source.getPages(), screensSource.getPages())
   );
 }
 

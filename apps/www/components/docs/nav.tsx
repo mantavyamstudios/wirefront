@@ -29,7 +29,7 @@ import { usePageTransition } from "@/components/page-transition/page-transition-
 import Link from "@/components/site-link";
 import { SiteLogo } from "@/components/site-logo";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import manifest from "@/lib/flows/flows.manifest.json";
+import manifest from "@/lib/screens/screens.manifest.json";
 import { GITHUB_REPO_URL } from "@/lib/site";
 import {
   Highlight,
@@ -56,14 +56,14 @@ interface LibraryNavItem extends NavItem {
 
 const LIBRARY_NAV_ITEMS: LibraryNavItem[] = [
   {
-    title: "All Flows",
-    url: "/flows",
-    description: "Every flow, live in the browser.",
+    title: "All Screens",
+    url: "/screens",
+    description: "Every screen, live in the browser.",
   },
-  ...manifest.categories.map((category) => ({
-    title: category.title,
-    url: `/flows#${category.slug}`,
-    description: `${category.subflows.length} flows`,
+  ...manifest.groups.map((group) => ({
+    title: group.title,
+    url: `/${group.slug}`,
+    description: `${group.kinds.reduce((n, kind) => n + kind.screens.length, 0)} screens · ${group.meaning}`,
   })),
 ];
 
@@ -98,15 +98,15 @@ interface MenuFeature {
 }
 
 const LIBRARY_FEATURE: MenuFeature = {
-  title: "Enterprise UI Playground",
-  url: "/flows",
-  description: "Live Flutter user flows with full Dart source.",
+  title: "Wirefront",
+  url: "/screens",
+  description: "Ready-to-wire UI screens with full source.",
 };
 
 const RESOURCES_FEATURE: MenuFeature = {
   title: "Documentation",
   url: DOCS_GUIDE_URL,
-  description: "How the playground works and how to use a flow.",
+  description: "How Wirefront works and how to install a screen.",
 };
 
 const NAV_LINK_CLASS = cn(

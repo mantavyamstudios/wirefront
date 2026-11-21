@@ -1,9 +1,9 @@
 import type { InferPageType } from "fumadocs-core/source";
 
 import type { source } from "@/lib/docs/source";
-import type { flowsSource } from "@/lib/flows/source";
+import type { screensSource } from "@/lib/screens/source";
 
-type LLMPage = InferPageType<typeof source> | InferPageType<typeof flowsSource>;
+type LLMPage = InferPageType<typeof source> | InferPageType<typeof screensSource>;
 
 const FRONTMATTER_RE = /^---[\s\S]*?---\s*/;
 const TITLE_RE = /^title:\s*["']?([^"'\n]+)["']?/m;

@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 
 import { source } from "@/lib/docs/source";
-import { flowsSource } from "@/lib/flows/source";
+import { getScreenGroup, getScreenKind } from "@/lib/screens/data";
+import { screensSource } from "@/lib/screens/source";
 import type { OgPageContent as OgPageData } from "@/lib/og/og-shared";
 import {
   getOgFontData,
@@ -21,10 +22,10 @@ const SITE_DEFAULT: OgPageData = {
   description: `${SITE_OG_HERO_SUBLINE}. ${SITE_DESCRIPTION}`,
 };
 
-const FLOWS_INDEX: OgPageData = {
-  title: "Flows",
+const SCREENS_INDEX: OgPageData = {
+  title: "Screens",
   description:
-    "Real Flutter app flows running live in your browser, grouped by category.",
+    "Ready-to-wire UI screens running live in your browser, grouped by kind.",
 };
 
 function pageContent(
@@ -35,15 +36,29 @@ function pageContent(
     : null;
 }
 
-/** `[]` → site, `["flows", ...]` → a flow, anything else → a docs page. */
+/**
+ * `[]` → site; `["screens"]` → the gallery; `["screens", group]`,
+ * `["screens", group, kind]` and `["screens", group, kind, screen]` → those
+ * pages; anything else → a docs page.
+ */
 export function resolveOgPage(slug: string[]): OgPageData | null {
   if (slug.length === 0) {
     return SITE_DEFAULT;
   }
-  if (slug[0] === "flows") {
-    return slug.length === 1
-      ? FLOWS_INDEX
-      : pageContent(flowsSource.getPage(slug.slice(1)));
+  if (slug[0] === "screens") {
+    const [, group, kind, screen] = slug;
+    if (!group) {
+      return SCREENS_INDEX;
+    }
+    if (!kind) {
+      const found = getScreenGroup(group);
+      return found ? { title: found.title, description: found.meaning } : null;
+    }
+    if (!screen) {
+      const found = getScreenKind(group, kind);
+      return found ? { title: found.title, description: found.blurb } : null;
+    }
+    return pageContent(screensSource.getPage([group, kind, screen]));
   }
   if (slug.length === 1 && slug[0] === "index") {
     return pageContent(source.getPage([]));
