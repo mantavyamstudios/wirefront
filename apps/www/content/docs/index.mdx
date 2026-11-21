@@ -1,37 +1,58 @@
 ---
 title: Introduction
-description: What Wirefront is, what a screen is, and how to preview, install and wire responsive UI screens.
+description: What Wirefront is, the three principles every screen is built on, and how to install a screen and wire it to your backend.
 ---
 
-**Wirefront is a catalogue of 200 responsive, ready-to-wire UI screens** built on [shadcn/ui](https://ui.shadcn.com) with [Base UI](https://base-ui.com) and Tailwind CSS v4. Every screen runs live in your browser, so you can click through it before you install it with the shadcn CLI.
+**Wirefront is a backend-agnostic catalogue of production-grade UI screens**, built on [shadcn/ui](https://ui.shadcn.com) with [Base UI](https://base-ui.com) and Tailwind CSS v4. Screens are organised by the experience they serve, from an app's frame to its accounts, data, activity, interactions and whole products. Install the one you need with the shadcn CLI, wire it to your backend and tweak it locally: no screen built from scratch, and no backend you have to adopt.
 
 ## What's a screen?
 
-A screen is one self-contained page or panel: a pricing table, a members list, a sign-in form, an AI chat. Each ready-to-wire screen is a folder of three files:
+A screen is one self-contained page or panel: a pricing table, a members list, a sign-in form, an AI chat. Each screen is a folder of three files that install into your project as source you own:
 
-- **`view.tsx`** — the screen itself: props in, UI out. No data, no fetching, no router.
-- **`schema.ts`** — zod schemas, the screen's types and its API contract.
-- **`fixtures.ts`** — demo data that satisfies the schema, for tests and mocks.
+- **`view.tsx`**: the screen itself. Props in, UI out: no data, no fetching, no router.
+- **`schema.ts`**: zod schemas, the types they infer and the screen's API contract (`defineApi`), the operations your backend answers.
+- **`fixtures.ts`**: demo data that satisfies the schemas, for tests, stories and mocks.
 
-Screens come in 23 kinds, grouped six ways:
+## Three principles
 
-- **Shells** — layouts: app frames and navigation.
-- **Accounts** — auth and onboarding, settings, profile, pricing.
-- **Data** — dashboards, tables, charts, filters.
-- **Activity** — cards, timelines, calendars, threads and comments.
-- **Interaction** — forms, modals, toasts and banners, tours and coachmarks, empty states.
-- **Products** — apps, AI and agents, dev tools, personal, commerce.
+### Adaptive
 
-Browse them all on the [Screens](/screens) page.
+Screens fit your stack, not ours. One [`WirefrontProvider`](/docs/wiring#app-wide-setup) at the root of your app hands every screen your router's link component, your toast function, your locale, time zone and currency, copy overrides for every string, and a permission check. Screens use semantic theme tokens, so they follow your shadcn/ui theme in light and dark mode, and logical properties, so they mirror for right-to-left languages.
 
-## Live in your browser
+### Dynamic
 
-Each screen page runs the real React component inside a phone, tablet or laptop frame. Switch devices to check the responsive layout, replay the screen to begin again, and toggle light or dark mode. Nothing is a screenshot or a video.
+Data in, events out. Every list, user, number and label arrives through props, and every action leaves as a promise-returning callback: the screen shows pending state, applies optimistic updates where they are safe, rolls back and shows the error when an action fails. Lists are controlled through one query object (page, sort, filters, search) you send to your API. Raw values go in, formatted text comes out, in your user's locale.
 
-## Read the source
+### Responsive
 
-Every screen page has a **Code** tab with the files the screen installs. See [Installing a screen](/docs/installation) to add one to your own app.
+From phone to wide desktop. Each screen is audited at 375, 768, 1024 and 1440 pixels wide, with tap targets, keyboard paths and reduced motion checked. Preview any screen in a phone, tablet or laptop frame before you install it.
 
-## Questions and feedback
+## Production grade
+
+Every screen passes the same checks before it ships:
+
+- typechecked under the strictest template settings, with fixtures that satisfy its schemas;
+- zero axe accessibility violations in every state it declares;
+- wiring tests for what each action receives and what the screen shows on success, failure and thrown errors;
+- installed and built in fresh Next.js, Vite and TanStack Start apps.
+
+## How it's organised
+
+Screens sit in kinds, and kinds sit in six groups. A screen's address follows the same path, `/{group}/{kind}/{screen}`:
+
+- **Shells**: app frames and navigation.
+- **Accounts**: identity, access and plan: auth, settings, profile, pricing.
+- **Data**: reading and slicing numbers: dashboards, tables, charts, filters.
+- **Activity**: things happening over time or between people: cards, timelines, calendars, threads.
+- **Interaction**: how the UI asks, confirms, warns and guides: forms, modals, toasts, tours, empty states.
+- **Products**: whole apps built from the pieces above: apps, AI, dev tools, personal, commerce.
+
+The catalogue keeps growing; browse what's there today on the [Screens](/screens) page.
+
+## Next steps
+
+- [Installing a screen](/docs/installation): preview it, read its source and add it with the shadcn CLI.
+- [Wiring a screen](/docs/wiring): connect its props and actions to your backend.
+- Each screen's own page documents its props, its backend contract, its data types and the files it installs.
 
 Found a bug in a screen, or want to suggest a new one? See [Contact & support](/docs/contact).

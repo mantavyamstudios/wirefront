@@ -87,6 +87,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     links: [
       { label: "Introduction", href: "/docs" },
       { label: "Installing a screen", href: "/docs/installation" },
+      { label: "Wiring a screen", href: "/docs/wiring" },
       { label: "Pricing", href: "/pricing" },
     ],
   },
