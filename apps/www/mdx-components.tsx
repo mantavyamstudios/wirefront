@@ -5,10 +5,19 @@ import { Step, Steps } from "fumadocs-ui/components/steps";
 import { Tab } from "fumadocs-ui/components/tabs";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
+import dynamic from "next/dynamic";
 import type { ComponentProps } from "react";
 
+import {
+  Changelog,
+  ChangelogItem,
+  ChangelogItemDescription,
+  ChangelogItemTitle,
+  ChangelogItemVersion,
+} from "@/components/docs/changelog";
 import { DocsTypeTable } from "@/components/docs/docs-type-table";
 import { ExternalLink } from "@/components/docs/external-link";
+import { RoadmapTimeline } from "@/components/ui/roadmap-timeline";
 import {
   Tabs,
   TabsContent,
@@ -20,6 +29,30 @@ import {
 import { Callout } from "./components/docs/callout";
 import { CodeBlock, Pre } from "./components/docs/codeblock";
 import type { CodeBlockProps } from "./components/docs/codeblock";
+
+const ComponentCredits = dynamic(() =>
+  import("@/components/docs/component-credits").then((m) => ({
+    default: m.ComponentCredits,
+  }))
+);
+
+const ComponentInstallation = dynamic(() =>
+  import("@/components/docs/component-installation").then((m) => ({
+    default: m.ComponentInstallation,
+  }))
+);
+
+const InstallationFileStructure = dynamic(() =>
+  import("@/components/docs/component-file-structure").then((m) => ({
+    default: m.InstallationFileStructure,
+  }))
+);
+
+const ComponentPreview = dynamic(() =>
+  import("@/components/docs/component-preview").then((m) => ({
+    default: m.ComponentPreview,
+  }))
+);
 
 // use this function to get MDX components, you will need it for rendering MDX
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
@@ -37,6 +70,16 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
         {children}
       </Card>
     ),
+    ComponentPreview,
+    ComponentInstallation,
+    InstallationFileStructure,
+    ComponentCredits,
+    RoadmapTimeline,
+    Changelog,
+    ChangelogItem,
+    ChangelogItemVersion,
+    ChangelogItemTitle,
+    ChangelogItemDescription,
     TypeTable: DocsTypeTable,
     ExternalLink,
     Steps,

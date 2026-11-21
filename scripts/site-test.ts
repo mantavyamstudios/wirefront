@@ -171,6 +171,20 @@ async function main() {
       );
     check(themed, "the site's theme switch reaches the iframe");
 
+    // Docs toolkit: ComponentPreview embeds the runtime, ComponentInstallation shows the registry command.
+    await page.goto(`${BASE}/docs/installation`, { waitUntil: "load" });
+    // The preview mounts once it scrolls into view.
+    await page.locator("#component-preview").first().scrollIntoViewIfNeeded({ timeout: TIMEOUT_MS }).catch(() => null);
+    const docsPreview = await page.waitForSelector('iframe[title="Three-tier preview"]', { timeout: TIMEOUT_MS }).catch(() => null);
+    const docsFrame = await docsPreview?.contentFrame();
+    check(Boolean(docsFrame && (await waitForScreen(docsFrame, "pricing", "three-tier"))), "docs ComponentPreview shows the screen from the runtime");
+    const command = await page
+      .getByText("npx shadcn@latest add https://wirefront.mantavyam.in/r/pricing-three-tier.json")
+      .first()
+      .isVisible({ timeout: TIMEOUT_MS })
+      .catch(() => false);
+    check(command, "docs ComponentInstallation shows the screen's shadcn command");
+
     check(errors.length === 0, `no console errors or uncaught exceptions${errors.length ? `:\n    ${errors.join("\n    ")}` : ""}`);
   } finally {
     await browser.close();
