@@ -179,7 +179,7 @@ export function PricingCards() {
 
             <div className="mt-[2.25em] flex flex-col gap-[0.625em]">
               <a
-                aria-label="Sponsor Wirefront on GitHub"
+                aria-label="Sponsor Wirefront"
                 className="button w-inline-block rounded-[.875rem]!"
                 data-button-rotate=""
                 data-button-rotate-hover=""

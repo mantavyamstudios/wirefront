@@ -152,9 +152,10 @@ function ComponentPageDocsContent({
           releaseDate={releaseDate}
         />
 
-        <div className="min-w-0">{children}</div>
+        {/* Above the docs, so a reader sees what the page covers first. */}
+        <ComponentPageToc className="static flex" items={toc} />
 
-        <ComponentPageToc className="lg:hidden" items={toc} />
+        <div className="min-w-0">{children}</div>
 
         <div className="flex w-full flex-col gap-6">
           <DocsPager next={nextNav} previous={previousNav} />

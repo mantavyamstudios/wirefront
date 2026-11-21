@@ -58,7 +58,7 @@ const LIBRARY_NAV_ITEMS: LibraryNavItem[] = [
   {
     title: "All Screens",
     url: "/screens",
-    description: "Every screen, live in the browser.",
+    description: "Every screen in the catalogue.",
   },
   ...manifest.groups.map((group) => ({
     title: group.title,

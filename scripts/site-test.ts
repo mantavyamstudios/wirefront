@@ -189,14 +189,14 @@ async function main() {
     );
 
     // Direction: right to left, without a reload.
-    await page.getByRole("button", { name: "Right-to-left layout" }).click();
+    await page.getByRole("button", { name: "RTL layout" }).click();
     check(
       await frame
         .waitForFunction(() => document.querySelector('[dir="rtl"]') !== null, null, { timeout: TIMEOUT_MS })
         .then(() => true, () => false),
       "the toolbar's direction switch lays the screen out right to left",
     );
-    await page.getByRole("button", { name: "Right-to-left layout" }).click();
+    await page.getByRole("button", { name: "RTL layout" }).click();
 
     // Generated reference on the screen page.
     for (const id of ["installation", "usage", "props", "backend-contract", "dependencies"]) {
@@ -231,11 +231,11 @@ async function main() {
     await page.goto(`${BASE}/docs/installation`, { waitUntil: "load" });
     // The preview mounts once it scrolls into view.
     await page.locator("#component-preview").first().scrollIntoViewIfNeeded({ timeout: TIMEOUT_MS }).catch(() => null);
-    const docsPreview = await page.waitForSelector('iframe[title="Three-tier preview"]', { timeout: TIMEOUT_MS }).catch(() => null);
+    const docsPreview = await page.waitForSelector('iframe[title="Team members preview"]', { timeout: TIMEOUT_MS }).catch(() => null);
     const docsFrame = await docsPreview?.contentFrame();
-    check(Boolean(docsFrame && (await waitForScreen(docsFrame, "pricing", "three-tier"))), "docs ComponentPreview shows the screen from the runtime");
+    check(Boolean(docsFrame && (await waitForScreen(docsFrame, "tables", "members"))), "docs ComponentPreview shows the screen from the runtime");
     const command = await page
-      .getByText("npx shadcn@latest add https://wirefront.mantavyam.in/r/pricing-three-tier.json")
+      .getByText("npx shadcn@latest add https://wirefront.mantavyam.in/r/tables-members.json")
       .first()
       .isVisible({ timeout: TIMEOUT_MS })
       .catch(() => false);
