@@ -1,0 +1,35 @@
+# Cloudflare Pages response headers (static export has no `headers()`).
+# https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Link: </llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="sitemap"; type="application/xml"
+
+# Flutter flow previews: the same-origin runtime iframe needs the device
+# APIs some demos use (camera, microphone, location).
+/flows/*
+  ! Permissions-Policy
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=(self)
+
+/runtime/*
+  ! Permissions-Policy
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=(self)
+
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Extensionless build outputs: give them their real content types.
+/llms.mdx/*
+  Content-Type: text/markdown; charset=utf-8
+
+/llms-flows.mdx/*
+  Content-Type: text/markdown; charset=utf-8
+
+/api/*
+  Content-Type: application/json; charset=utf-8
