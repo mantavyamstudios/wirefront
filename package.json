@@ -20,6 +20,7 @@
     "typecheck": "turbo run typecheck && tsc -p scripts",
     "registry": "tsx scripts/build-registry.ts",
     "snapshot": "tsx scripts/snapshot.ts",
+    "screen:new": "tsx scripts/new-screen.ts",
     "audit:responsive": "tsx scripts/responsive-audit.ts",
     "spdx": "tsx scripts/spdx.ts",
     "spdx:check": "tsx scripts/spdx.ts --check",
