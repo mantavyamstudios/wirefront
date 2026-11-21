@@ -1,12 +1,13 @@
 // Wirefront on Cloudflare Workers: static assets only, no Worker script.
-// `npm run registry && npm run build` prerenders every page and writes the
-// shadcn registry (/r/*.json) into apps/runtime/.output/public, which is served as is.
+// `bun run build` writes the shadcn registry (/r/*.json), prerenders the
+// preview runtime (apps/runtime) and the site (apps/www), and copies the
+// runtime's pages into apps/www/out, which is served as is.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "wirefront",
   "compatibility_date": "2026-11-18",
   "assets": {
-    "directory": "./apps/runtime/.output/public",
+    "directory": "./apps/www/out",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
   }
