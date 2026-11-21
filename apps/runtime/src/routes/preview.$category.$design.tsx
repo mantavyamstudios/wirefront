@@ -94,7 +94,7 @@ function PreviewRoute() {
           return;
         case "wf:theme":
           setPreference(message.mode);
-          if (isOrbitThemePalette(message.palette)) setPalette(message.palette);
+          if (message.palette !== undefined && isOrbitThemePalette(message.palette)) setPalette(message.palette);
           return;
         case "wf:state":
           void navigate({

@@ -17,7 +17,7 @@ export type Direction = "ltr" | "rtl";
 export type HostMessage =
   | { type: "wf:navigate"; category: string; design: string }
   | { type: "wf:reset" }
-  | { type: "wf:theme"; mode: ThemeMode; palette: string }
+  | { type: "wf:theme"; mode: ThemeMode; palette?: string }
   | { type: "wf:state"; state: ScreenState }
   | { type: "wf:dir"; dir: Direction };
 
@@ -55,9 +55,9 @@ export function parseHostMessage(data: unknown): HostMessage | null {
     case "wf:reset":
       return { type };
     case "wf:theme":
-      return (m.mode === "light" || m.mode === "dark") && isString(m.palette)
-        ? { type, mode: m.mode, palette: m.palette }
-        : null;
+      if (!(m.mode === "light" || m.mode === "dark")) return null;
+      if (m.palette === undefined) return { type, mode: m.mode };
+      return isString(m.palette) ? { type, mode: m.mode, palette: m.palette } : null;
     case "wf:state":
       return (SCREEN_STATES as readonly unknown[]).includes(m.state) ? { type, state: m.state as ScreenState } : null;
     case "wf:dir":
