@@ -128,7 +128,7 @@ export function Footer() {
                             data-wf--button-theme--variant="neutral-800"
                           />
                           <span className="is--relative eyebrow text-neutral-200">
-                            Live
+                            MIT
                           </span>
                         </div>
                         <div className="tag" data-shape="round" data-theme="">

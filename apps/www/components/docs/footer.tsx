@@ -39,7 +39,7 @@ export const Footer = ({ lastUpdate }: { lastUpdate?: Date }) => {
             >
               Mantavyam Studios
             </a>
-            . Ready-to-wire screens, live in your browser.
+            . Ready-to-wire screens for any backend.
           </p>
 
           {!isMobile && <Bunny className="mb-2" sleeping={isNightTime} />}

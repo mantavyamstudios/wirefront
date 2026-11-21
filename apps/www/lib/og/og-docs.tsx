@@ -25,7 +25,7 @@ const SITE_DEFAULT: OgPageData = {
 const SCREENS_INDEX: OgPageData = {
   title: "Screens",
   description:
-    "Ready-to-wire UI screens running live in your browser, grouped by kind.",
+    "Production-grade UI screens, organised by the experience they serve.",
 };
 
 function pageContent(

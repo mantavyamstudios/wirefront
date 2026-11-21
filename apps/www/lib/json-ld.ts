@@ -21,7 +21,7 @@ export const PUBLISHER_JSON_LD = {
     height: 192,
   },
   sameAs: [GITHUB_REPO_URL],
-  slogan: "Ready-to-wire screens, live in your browser",
+  slogan: "Ready-to-wire screens for any backend",
   knowsAbout: ["React", "shadcn/ui", "Tailwind CSS", "Responsive UI", "UI design"],
   founder: {
     "@type": "Organization",
