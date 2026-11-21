@@ -11,15 +11,15 @@ const KEY = "eup:sound";
 const listeners = new Set<() => void>();
 let context: AudioContext | null = null;
 
-function read() {
+const read = () => {
   try {
     return localStorage.getItem(KEY) !== "off";
   } catch {
     return true;
   }
-}
+};
 
-export function setSoundEnabled(enabled: boolean) {
+export const setSoundEnabled = (enabled: boolean) => {
   try {
     localStorage.setItem(KEY, enabled ? "on" : "off");
   } catch {
@@ -28,10 +28,10 @@ export function setSoundEnabled(enabled: boolean) {
   for (const listener of listeners) {
     listener();
   }
-}
+};
 
-export function useSoundEnabled() {
-  return useSyncExternalStore(
+export const useSoundEnabled = () =>
+  useSyncExternalStore(
     (listener) => {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -39,16 +39,15 @@ export function useSoundEnabled() {
     read,
     () => false
   );
-}
 
-function drop(
+const drop = (
   ctx: AudioContext,
   at: number,
   from: number,
   to: number,
   length: number,
   peak: number
-) {
+) => {
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   const filter = ctx.createBiquadFilter();
@@ -63,28 +62,39 @@ function drop(
   osc.connect(filter).connect(gain).connect(ctx.destination);
   osc.start(at);
   osc.stop(at + length + 0.02);
-}
+};
 
-export function playTap() {
+const resumeAudio = async (audio: AudioContext) => {
+  try {
+    await audio.resume();
+  } catch (error) {
+    console.warn(
+      "[sound] couldn't resume audio; this click plays silently",
+      error
+    );
+  }
+};
+
+export const playTap = () => {
   if (typeof window === "undefined" || !read()) {
     return;
   }
   context ??= new AudioContext();
   if (context.state === "suspended") {
-    context.resume().catch(() => {});
+    resumeAudio(context);
   }
   const now = context.currentTime;
   const base = 420;
   drop(context, now, base * 1.35, base * 0.7, 0.09, 0.07);
   drop(context, now + 0.035, base * 2.1, base * 1.5, 0.05, 0.025);
-}
+};
 
 /**
  * `onClickCapture` for a group of controls: taps on any enabled button, link
  * or tab inside play the sound. Controls marked `data-no-tap-sound` (the
  * sound toggle itself) are skipped.
  */
-export function playTapOnControl(event: React.MouseEvent) {
+export const playTapOnControl = (event: React.MouseEvent) => {
   const control = (event.target as Element).closest<HTMLElement>(
     "button, a, [role=tab]"
   );
@@ -96,4 +106,4 @@ export function playTapOnControl(event: React.MouseEvent) {
     return;
   }
   playTap();
-}
+};

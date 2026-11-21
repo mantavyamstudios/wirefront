@@ -55,7 +55,7 @@ function OfflineScreen({ onRetry, tips, className }: OfflineProps) {
       <div className="relative mx-auto flex min-h-svh max-w-md flex-col items-center justify-center-safe px-6 py-10 text-center">
         <div className="relative flex size-16 items-center justify-center rounded-2xl border border-border bg-card text-foreground shadow-xs/5">
           <WifiOffIcon aria-hidden className="size-7" />
-          <span aria-hidden className="absolute end-2 -bottom-1 size-3 rounded-full border-2 border-background bg-destructive" />
+          <span aria-hidden className="absolute inset-e-2 -bottom-1 size-3 rounded-full border-2 border-background bg-destructive" />
         </div>
         <div className="mt-8 font-mono text-[10px] text-destructive-foreground uppercase tracking-[0.4em]">{t.status}</div>
         <h1 className="mt-3 font-heading text-2xl leading-tight">{t.title}</h1>

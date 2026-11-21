@@ -88,9 +88,10 @@ function useGlobalShortcuts() {
           i: "inbox",
           s: "settings",
         };
-        if (map[key]) {
+        const target = map[key];
+        if (target) {
           e.preventDefault();
-          setView(map[key]!);
+          setView(target);
           chordRef.current = null;
           return;
         }

@@ -1,7 +1,7 @@
 import type * as React from "react";
 import { createContext, useContext } from "react";
 
-function getStrictContext<T>(
+const getStrictContext = <T,>(
   name?: string
 ): readonly [
   ({
@@ -12,7 +12,7 @@ function getStrictContext<T>(
     children?: React.ReactNode;
   }) => React.JSX.Element,
   () => T,
-] {
+] => {
   const Context = createContext<T | undefined>(undefined);
 
   const Provider = ({
@@ -32,6 +32,6 @@ function getStrictContext<T>(
   };
 
   return [Provider, useSafeContext] as const;
-}
+};
 
 export { getStrictContext };

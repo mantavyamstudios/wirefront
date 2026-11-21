@@ -227,7 +227,7 @@ function TeamTimeOffScreen({ month, team, data, status = "ready", error, onRetry
                     <PlusIcon aria-hidden />
                     {t.addMember}
                   </PopoverTrigger>
-                  <PopoverContent align="end" className="!w-72 !p-0" side="bottom">
+                  <PopoverContent align="end" className="w-72! p-0!" side="bottom">
                     <Form className="flex flex-col gap-3 p-3" errors={addForm.formProps.errors} noValidate onFormSubmit={(values) => void addForm.submit(values)}>
                       <Field.Root className="flex flex-col gap-1.5" name="name">
                         <Field.Label className="font-mono text-[10px] uppercase tracking-[0.25em]">{t.name}</Field.Label>
@@ -306,7 +306,7 @@ function TeamTimeOffScreen({ month, team, data, status = "ready", error, onRetry
               <ScrollRegion aria-label={interpolate(t.grid, { month: monthLabel })} orientation="horizontal">
                 <div className="min-w-max">
                   <div className="grid grid-cols-[148px_auto] border-border/40 border-b bg-background sm:grid-cols-[220px_auto]">
-                    <div className="sticky start-0 z-20 border-border/40 border-e bg-background px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4">{interpolate(t.members, { count: members.length })}</div>
+                    <div className="sticky inset-s-0 z-20 border-border/40 border-e bg-background px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:px-4">{interpolate(t.members, { count: members.length })}</div>
                     <div className="relative flex" style={{ width: dw(dates.length) }}>
                       {dates.map((d, i) => {
                         const inBest = best && i >= best.start && i <= best.end;
@@ -315,7 +315,7 @@ function TeamTimeOffScreen({ month, team, data, status = "ready", error, onRetry
                           <div
                             className={cn(
                               "flex flex-col items-center border-border/40 border-e py-2 font-mono text-[10px] transition-colors",
-                              inBest ? "bg-category-2/[0.18] text-category-2-foreground" : busy ? "bg-category-4/[0.08] text-category-4-foreground" : weekend(d) ? "bg-foreground/[0.02] text-muted-foreground" : "text-foreground/85",
+                              inBest ? "bg-category-2/18 text-category-2-foreground" : busy ? "bg-category-4/8 text-category-4-foreground" : weekend(d) ? "bg-foreground/2 text-muted-foreground" : "text-foreground/85",
                             )}
                             key={d}
                             style={{ width: dw(1) }}
@@ -333,8 +333,8 @@ function TeamTimeOffScreen({ month, team, data, status = "ready", error, onRetry
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[148px_auto] border-border/40 border-b bg-category-3/[0.04] sm:grid-cols-[220px_auto]">
-                    <div className="sticky start-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-3 py-2 font-mono text-[10px] text-category-3-foreground uppercase tracking-[0.2em] sm:px-4 sm:tracking-[0.25em]">{t.holidays}</div>
+                  <div className="grid grid-cols-[148px_auto] border-border/40 border-b bg-category-3/4 sm:grid-cols-[220px_auto]">
+                    <div className="sticky inset-s-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-3 py-2 font-mono text-[10px] text-category-3-foreground uppercase tracking-[0.2em] sm:px-4 sm:tracking-[0.25em]">{t.holidays}</div>
                     <div className="relative flex h-9" style={{ width: dw(dates.length) }}>
                       {dates.map((d) => {
                         const holiday = holidays.find((h) => h.date === d);
@@ -377,7 +377,7 @@ function TeamTimeOffScreen({ month, team, data, status = "ready", error, onRetry
                   ) : (
                     members.map((m) => (
                       <div className="group grid grid-cols-[148px_auto] border-border/40 border-b last:border-b-0 sm:grid-cols-[220px_auto]" key={m.id}>
-                        <div className="sticky start-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-3 py-3 sm:gap-2.5 sm:px-4">
+                        <div className="sticky inset-s-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-3 py-3 sm:gap-2.5 sm:px-4">
                           <Avatar aria-hidden className={cn("size-7 shrink-0 text-white max-sm:hidden", toneFor(m.name))}>
                             <AvatarFallback className="bg-transparent text-[10px] text-current">{initials(m.name)}</AvatarFallback>
                           </Avatar>
@@ -388,7 +388,7 @@ function TeamTimeOffScreen({ month, team, data, status = "ready", error, onRetry
                           {onRemoveMember ? (
                             <button
                               aria-label={interpolate(t.removeMember, { name: m.name })}
-                              className="grid size-6 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 outline-none transition-all hover:bg-foreground/[0.05] hover:text-destructive focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
+                              className="grid size-6 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 outline-none transition-all hover:bg-foreground/5 hover:text-destructive focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
                               onClick={() => void remove.run(m.id, m.id)}
                               type="button"
                             >
@@ -399,11 +399,11 @@ function TeamTimeOffScreen({ month, team, data, status = "ready", error, onRetry
                         <div className="relative flex h-12" style={{ width: dw(dates.length) }}>
                           {dates.map((d) => {
                             const filled = m.map[d];
-                            const cell = cn("border-border/30 border-e transition-colors", weekend(d) ? "bg-foreground/[0.02]" : "");
+                            const cell = cn("border-border/30 border-e transition-colors", weekend(d) ? "bg-foreground/2" : "");
                             return onSetDay ? (
                               <button
                                 aria-label={interpolate(filled ? t.clearDay : t.markDay, { type: t[filled ?? activeType], name: m.name, date: dayLabel(d) })}
-                                className={cn(cell, "outline-none hover:bg-foreground/[0.04] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset")}
+                                className={cn(cell, "outline-none hover:bg-foreground/4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset")}
                                 key={d}
                                 onClick={() => void setDay.run({ memberId: m.id, date: d, type: filled === activeType ? null : activeType }, `${m.id}:${d}`)}
                                 style={{ width: dw(1) }}

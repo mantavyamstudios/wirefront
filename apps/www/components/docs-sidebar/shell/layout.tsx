@@ -17,7 +17,7 @@ import {
 } from "./context";
 import { DOCS_SIDEBAR_SCROLL_VIEWPORT_ATTR } from "./scroll-active-nearest";
 
-export function DocsShellContent({
+export const DocsShellContent = ({
   children,
   className,
   viewportClassName,
@@ -25,7 +25,7 @@ export function DocsShellContent({
   children: React.ReactNode;
   className?: string;
   viewportClassName?: string;
-}) {
+}) => {
   const { containerRef } = useDocsShellHover();
 
   return (
@@ -45,7 +45,7 @@ export function DocsShellContent({
       </ScrollViewport>
     </ScrollArea>
   );
-}
+};
 
 export interface DocsShellProps {
   children: React.ReactNode;
@@ -53,11 +53,11 @@ export interface DocsShellProps {
   defaultEffectsEnabled?: boolean;
 }
 
-export function DocsShell({
+export const DocsShell = ({
   children,
   className,
   defaultEffectsEnabled = true,
-}: DocsShellProps) {
+}: DocsShellProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -74,28 +74,24 @@ export function DocsShell({
       </DocsShellHoverProvider>
     </DocsShellEffectsProvider>
   );
-}
+};
 
-export function DocsShellHeader({
+export const DocsShellHeader = ({
   children,
   className,
 }: {
   children?: React.ReactNode;
   className?: string;
-}) {
-  return (
-    <div className={cn("shrink-0 px-3 pt-4 pb-2", className)}>{children}</div>
-  );
-}
+}) => (
+  <div className={cn("shrink-0 px-3 pt-4 pb-2", className)}>{children}</div>
+);
 
-export function DocsShellFooter({
+export const DocsShellFooter = ({
   children,
   className,
 }: {
   children?: React.ReactNode;
   className?: string;
-}) {
-  return (
-    <div className={cn("shrink-0 px-3 pt-2 pb-4", className)}>{children}</div>
-  );
-}
+}) => (
+  <div className={cn("shrink-0 px-3 pt-2 pb-4", className)}>{children}</div>
+);

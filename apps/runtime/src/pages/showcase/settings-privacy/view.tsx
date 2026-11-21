@@ -159,7 +159,7 @@ function PrivacyDataScreen({ data, status = "ready", error, onRetry, onRequestEx
             {onRequestExport ? (
               <section aria-labelledby={`${id}-export`} className="mt-8 rounded-xl border border-border/60 bg-background/40">
                 <div className="flex flex-wrap items-start gap-3 p-4 sm:flex-nowrap sm:gap-4 sm:p-6">
-                  <div aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06]">
+                  <div aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/6">
                     <FileArchiveIcon className="size-4" />
                   </div>
                   <div className="min-w-0 flex-1 max-sm:basis-[calc(100%-3rem)]">
@@ -180,7 +180,7 @@ function PrivacyDataScreen({ data, status = "ready", error, onRetry, onRequestEx
                     {ready.categories.map((c) => {
                       const boxId = `${id}-cat-${c.id}`;
                       return (
-                        <li className="flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.03] pointer-coarse:min-h-11" key={c.id}>
+                        <li className="flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/3 pointer-coarse:min-h-11" key={c.id}>
                           <Checkbox checked={Boolean(include[c.id])} id={boxId} onCheckedChange={(v) => setInclude((s) => ({ ...s, [c.id]: v === true }))} />
                           {/* Below sm the hint drops under the label so the label keeps its width. */}
                           <label className="min-w-0 flex-1 cursor-pointer text-sm sm:flex sm:items-center sm:gap-3" htmlFor={boxId}>
@@ -208,7 +208,7 @@ function PrivacyDataScreen({ data, status = "ready", error, onRetry, onRequestEx
                       <p className="text-muted-foreground text-xs">{interpolate(t.compressing, { count: chosen.length })}</p>
                     </div>
                   ) : exp?.status === "ready" ? (
-                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-category-2/[0.08] px-3 py-2">
+                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-category-2/8 px-3 py-2">
                       <div className="flex items-center gap-2">
                         <CheckCircle2Icon aria-hidden className="size-4 text-category-2-foreground" />
                         <div>
@@ -249,7 +249,7 @@ function PrivacyDataScreen({ data, status = "ready", error, onRetry, onRequestEx
 
             <section aria-labelledby={`${id}-retention`} className="mt-3 rounded-xl border border-border/60 bg-background/40">
               <div className="flex items-start gap-3 p-4 sm:gap-4 sm:p-6">
-                <div aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06]">
+                <div aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/6">
                   <TimerResetIcon className="size-4" />
                 </div>
                 <div className="flex-1">
@@ -273,7 +273,7 @@ function PrivacyDataScreen({ data, status = "ready", error, onRetry, onRequestEx
                     <div className="border-border/40 border-b py-5 last:border-b-0" key={rule.id}>
                       <div className="flex items-center justify-between">
                         <h3 className="font-medium text-sm">{rule.label}</h3>
-                        <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums">{stopLabel(stop)}</span>
+                        <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums">{stopLabel(stop)}</span>
                       </div>
                       <div className="mt-3 px-1">
                         <span className="sr-only" id={labelId}>
@@ -308,7 +308,7 @@ function PrivacyDataScreen({ data, status = "ready", error, onRetry, onRequestEx
             </section>
 
             {onRequestDeletion || (deletion && onCancelDeletion) ? (
-              <section aria-labelledby={`${id}-delete`} className="relative mt-3 overflow-hidden rounded-xl border border-destructive/40 bg-destructive/[0.025]">
+              <section aria-labelledby={`${id}-delete`} className="relative mt-3 overflow-hidden rounded-xl border border-destructive/40 bg-destructive/2.5">
                 <div className="flex items-start gap-3 p-4 sm:gap-4 sm:p-6">
                   <div aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-md bg-destructive/10 text-destructive-foreground">
                     {deletion ? <AlertTriangleIcon className="size-4" /> : <ShieldOffIcon className="size-4" />}
@@ -348,7 +348,7 @@ function PrivacyDataScreen({ data, status = "ready", error, onRetry, onRequestEx
                       <div className="flex-1">
                         <h3 className="font-medium text-sm">{t.scheduled}</h3>
                         <p className="mt-1 text-muted-foreground text-sm">{interpolate(t.scheduledOn, { date: format.date(deletion.scheduledFor, { dateStyle: "long", timeStyle: "short" }) })}</p>
-                        <div className="mt-3 inline-flex items-center gap-2 rounded-md bg-foreground/[0.04] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.2em]">
+                        <div className="mt-3 inline-flex items-center gap-2 rounded-md bg-foreground/4 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.2em]">
                           <span aria-hidden className="size-1.5 rounded-full bg-destructive" />
                           {interpolate(t.requested, { date: day(deletion.requestedAt) })}
                         </div>

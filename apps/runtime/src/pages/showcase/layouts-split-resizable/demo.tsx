@@ -115,7 +115,7 @@ function EditorTab({ label, active = false }: { label: string; active?: boolean 
   return (
     <span
       className={`rounded-md px-2.5 py-1 font-mono text-[11px] ${
-        active ? "bg-foreground/[0.06] text-foreground" : "text-muted-foreground"
+        active ? "bg-foreground/6 text-foreground" : "text-muted-foreground"
       }`}
     >
       {label}

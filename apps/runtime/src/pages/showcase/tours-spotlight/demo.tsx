@@ -15,7 +15,7 @@ export function ToursSpotlightShowcasePage() {
   return (
     <div className="relative min-h-svh bg-background text-foreground">
       <div className="grid min-h-svh grid-cols-1 md:grid-cols-[220px_1fr]">
-        <aside aria-hidden className="space-y-2 border-border/60 border-e bg-foreground/[0.02] p-4 max-md:hidden">
+        <aside aria-hidden className="space-y-2 border-border/60 border-e bg-foreground/2 p-4 max-md:hidden">
           <div className="h-3 w-24 rounded bg-foreground/15" />
           <div className="h-2 w-32 rounded bg-foreground/10" />
           <div className="h-2 w-28 rounded bg-foreground/10" />
@@ -38,7 +38,7 @@ export function ToursSpotlightShowcasePage() {
           <div aria-hidden className="mt-8 h-3 w-48 max-w-full rounded bg-foreground/20" />
           <div aria-hidden className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3" data-tour="projects">
             {CARDS.map((k) => (
-              <div className="h-24 rounded-xl border border-border/50 bg-foreground/[0.02]" key={k} />
+              <div className="h-24 rounded-xl border border-border/50 bg-foreground/2" key={k} />
             ))}
           </div>
           {open ? null : (

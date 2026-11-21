@@ -10,19 +10,17 @@ interface BlocksLayoutReadyState {
   isReady: boolean;
 }
 
-function subscribeLargeScreen(onStoreChange: () => void) {
+const subscribeLargeScreen = (onStoreChange: () => void) => {
   const media = window.matchMedia(LG_MEDIA);
   media.addEventListener("change", onStoreChange);
   return () => media.removeEventListener("change", onStoreChange);
-}
+};
 
-function getLargeScreenSnapshot() {
-  return window.matchMedia(LG_MEDIA).matches;
-}
+const getLargeScreenSnapshot = () => window.matchMedia(LG_MEDIA).matches;
 
-export function useBlocksLayoutReady(
+export const useBlocksLayoutReady = (
   layoutRef: RefObject<HTMLDivElement | null>
-): BlocksLayoutReadyState {
+): BlocksLayoutReadyState => {
   const isLargeScreen = useSyncExternalStore(
     subscribeLargeScreen,
     getLargeScreenSnapshot,
@@ -61,4 +59,4 @@ export function useBlocksLayoutReady(
   }, [layoutRef]);
 
   return { isLargeScreen, isReady };
-}
+};

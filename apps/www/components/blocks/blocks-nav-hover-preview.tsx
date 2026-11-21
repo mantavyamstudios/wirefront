@@ -13,6 +13,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import type { ResolvedCardPreviewMedia } from "@/lib/registry/resolve-card-preview-media";
+import { useIsClient } from "@/lib/use-is-client";
 
 import { blocksNavHoverPreviewLayerClassName } from "./blocks-preview-classes";
 
@@ -42,22 +43,21 @@ export interface BlocksNavHoverPreviewState {
   videoSrc: string | null;
 }
 
-export function getBlocksNavHoverPreviewPosition(
+export const getBlocksNavHoverPreviewPosition = (
   event: React.MouseEvent<HTMLElement>
-) {
+) => {
   const maxX = Math.max(16, window.innerWidth - PREVIEW_WIDTH - 16);
   const maxY = Math.max(16, window.innerHeight - PREVIEW_HEIGHT - 16);
   const x = Math.max(16, Math.min(event.clientX + PREVIEW_OFFSET, maxX));
   const y = Math.max(16, Math.min(event.clientY + PREVIEW_OFFSET, maxY));
 
   return { x, y };
-}
+};
 
-function getPreviewKey(preview: BlocksNavHoverPreviewState) {
-  return preview.videoSrc ?? preview.media.poster ?? preview.title;
-}
+const getPreviewKey = (preview: BlocksNavHoverPreviewState) =>
+  preview.videoSrc ?? preview.media.poster ?? preview.title;
 
-function useCanHoverPreview() {
+const useCanHoverPreview = () => {
   const [canHoverPreview, setCanHoverPreview] = useState(false);
 
   useEffect(() => {
@@ -74,15 +74,15 @@ function useCanHoverPreview() {
   }, []);
 
   return canHoverPreview;
-}
+};
 
-function BlocksNavPreviewMedia({
+const BlocksNavPreviewMedia = ({
   media,
   videoSrc,
 }: {
   media: ResolvedCardPreviewMedia;
   videoSrc: string | null;
-}) {
+}) => {
   const [isVideoReady, setIsVideoReady] = useState(false);
 
   return (
@@ -136,12 +136,12 @@ function BlocksNavPreviewMedia({
       ) : null}
     </>
   );
-}
+};
 
-function useSmoothPreviewPosition(
+const useSmoothPreviewPosition = (
   position: { x: number; y: number } | null,
   previewKey: string | null
-) {
+) => {
   const prefersReducedMotion = useReducedMotion();
   const targetX = useMotionValue(0);
   const targetY = useMotionValue(0);
@@ -176,25 +176,21 @@ function useSmoothPreviewPosition(
   }, [position, previewKey, prefersReducedMotion, targetX, targetY, x, y]);
 
   return { x, y };
-}
+};
 
 interface BlocksNavHoverPreviewProps {
   position: { x: number; y: number } | null;
   preview: BlocksNavHoverPreviewState | null;
 }
 
-export function BlocksNavHoverPreview({
+export const BlocksNavHoverPreview = ({
   position,
   preview,
-}: BlocksNavHoverPreviewProps) {
+}: BlocksNavHoverPreviewProps) => {
   const canHoverPreview = useCanHoverPreview();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const previewKey = preview ? getPreviewKey(preview) : null;
   const { x, y } = useSmoothPreviewPosition(position, previewKey);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   if (!(mounted && canHoverPreview)) {
     return null;
@@ -236,4 +232,4 @@ export function BlocksNavHoverPreview({
     </AnimatePresence>,
     document.body
   );
-}
+};

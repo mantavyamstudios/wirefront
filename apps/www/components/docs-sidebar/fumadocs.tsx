@@ -44,14 +44,13 @@ interface NavItemFlags {
   new?: boolean;
 }
 
-function getNavItemLabel(item: PageTree.Item): string {
-  return typeof item.name === "string" ? item.name : String(item.name ?? "");
-}
+const getNavItemLabel = (item: PageTree.Item): string =>
+  typeof item.name === "string" ? item.name : String(item.name ?? "");
 
-function getNavItemIsNew(
+const getNavItemIsNew = (
   item: PageTree.Item,
   isPageNewByUrl: (url?: string) => boolean
-): boolean {
+): boolean => {
   const href =
     (item as { index?: { url: string } }).index?.url ??
     (item as { url?: string }).url;
@@ -59,13 +58,13 @@ function getNavItemIsNew(
     Boolean(href && isPageNewByUrl(href)) ||
     Boolean((item as NavItemFlags).isNew ?? (item as NavItemFlags).new)
   );
-}
+};
 
-function pageTreeNodeKey(
+const pageTreeNodeKey = (
   item: PageTree.Node,
   index: number,
   parentKey: string
-): string {
+): string => {
   if (item.type === "separator") {
     return `${parentKey}/sep/${encodeURIComponent(String(item.name))}/${index}`;
   }
@@ -77,25 +76,24 @@ function pageTreeNodeKey(
     return url;
   }
   return `${parentKey}/item/${index}`;
-}
+};
 
 const DEFAULT_OPEN_LEVEL = 0;
 
-function isRootFolder(
+const isRootFolder = (
   item: PageTree.Node
-): item is PageTree.Folder & { root: true } {
-  return item.type === "folder" && Boolean((item as PageTree.Folder).root);
-}
+): item is PageTree.Folder & { root: true } =>
+  item.type === "folder" && Boolean((item as PageTree.Folder).root);
 
 /**
  * Section trees (Motion, Icons, UI) only appear after opening that section.
  * Guide pages keep the layout `links` above Menu and must not duplicate Guide links below Menu.
  */
-function getPageTreeSidebarItems(
+const getPageTreeSidebarItems = (
   root: PageTree.Root,
   treePath: PageTree.Node[],
   pathname?: string
-): PageTree.Node[] | null {
+): PageTree.Node[] | null => {
   if (pathname && (pathname === "/docs" || pathname.startsWith("/docs/"))) {
     return null;
   }
@@ -114,12 +112,12 @@ function getPageTreeSidebarItems(
   }
 
   return root.children;
-}
+};
 
-export function SidebarPageTree(props: {
+export const SidebarPageTree = (props: {
   components?: Partial<SidebarComponents>;
   onNavigate?: () => void;
-}) {
+}) => {
   const { root } = useTreeContext();
   const pathname = usePathname();
   const treePath = useTreePath();
@@ -133,12 +131,12 @@ export function SidebarPageTree(props: {
       return null;
     }
 
-    function renderSeparator(
+    const renderSeparator = (
       item: PageTree.Separator,
       key: string,
       i: number,
       _level: number
-    ) {
+    ) => {
       if (Separator) {
         return <Separator item={item} key={key} />;
       }
@@ -156,14 +154,14 @@ export function SidebarPageTree(props: {
           {null}
         </DocsShellSection>
       );
-    }
+    };
 
-    function renderFolder(
+    const renderFolder = (
       item: PageTree.Folder,
       key: string,
       level: number,
       parentKey: string
-    ) {
+    ) => {
       const indexUrl = item.index?.url;
       const folderChildren = indexUrl
         ? item.children.filter(
@@ -210,9 +208,9 @@ export function SidebarPageTree(props: {
           {children}
         </DocsShellNavGroup>
       );
-    }
+    };
 
-    function renderPage(item: PageTree.Item, key: string, level: number) {
+    const renderPage = (item: PageTree.Item, key: string, level: number) => {
       if (Item) {
         return <Item item={item} key={key} />;
       }
@@ -232,14 +230,14 @@ export function SidebarPageTree(props: {
           showConnector={level === 1}
         />
       );
-    }
+    };
 
-    function renderSidebarList(
+    const renderSidebarList = (
       items: PageTree.Node[],
       level: number,
       parentKey: string
-    ): ReactNode[] {
-      return items.flatMap((item, i) => {
+    ): ReactNode[] =>
+      items.flatMap((item, i) => {
         const key = pageTreeNodeKey(item, i, parentKey);
         if (item.type === "separator") {
           return renderSeparator(item, key, i, level);
@@ -249,7 +247,6 @@ export function SidebarPageTree(props: {
         }
         return renderPage(item, key, level);
       });
-    }
 
     return (
       <div className="mt-4">
@@ -257,7 +254,7 @@ export function SidebarPageTree(props: {
       </div>
     );
   }, [props.components, root, pathname, treePath, onNavigate, checkPageNew]);
-}
+};
 
 export const DocsSidebar = (
   all: DocsLayoutProps & {
@@ -281,7 +278,7 @@ export const DocsSidebar = (
   const releaseDatesByUrl = all.releaseDatesByUrl ?? {};
 
   const content = (
-    <DocsShell className="h-full min-h-0 max-md:w-full max-md:max-w-full md:w-[var(--fd-sidebar-width,260px)] md:max-w-[var(--fd-sidebar-width,260px)]">
+    <DocsShell className="h-full min-h-0 max-md:w-full max-md:max-w-full md:w-(--fd-sidebar-width,260px) md:max-w-(--fd-sidebar-width,260px)">
       <DocsShellHeader className="flex items-center justify-between border-b px-4 py-3 md:hidden">
         <Link
           aria-label="Wirefront home"
@@ -305,7 +302,7 @@ export const DocsSidebar = (
             buttonVariants({
               color: "ghost",
               size: "icon-sm",
-              className: "!size-8 [&_svg]:!size-5 text-fd-muted-foreground",
+              className: "size-8! [&_svg]:size-5! text-fd-muted-foreground",
             })
           )}
           onClick={closeMobile}
@@ -318,7 +315,7 @@ export const DocsSidebar = (
       <DocsShellContent
         className={cn(
           "min-h-0",
-          "max-md:pt-2 [&_[data-radix-scroll-area-viewport]]:pb-4 md:[&_[data-radix-scroll-area-viewport]]:pb-14"
+          "**:data-radix-scroll-area-viewport:pb-4 max-md:pt-2 md:**:data-radix-scroll-area-viewport:pb-14"
         )}
       >
         <SiteSidebarNav

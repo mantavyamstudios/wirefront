@@ -149,7 +149,7 @@ export function SelectionToolbar({ children, actions, onAction, forceOpen, class
                   render={
                     <button
                       aria-label={a.label}
-                      className="inline-flex size-7 shrink-0 items-center justify-center rounded-full text-foreground/80 transition-colors hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 pointer-coarse:size-10 [&_svg]:size-4"
+                      className="inline-flex size-7 shrink-0 items-center justify-center rounded-full text-foreground/80 transition-colors hover:bg-foreground/6 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 pointer-coarse:size-10 [&_svg]:size-4"
                       onClick={() => onAction(a.id, { text: rangeRef.current?.toString() ?? "", range: rangeRef.current })}
                       type="button"
                     >

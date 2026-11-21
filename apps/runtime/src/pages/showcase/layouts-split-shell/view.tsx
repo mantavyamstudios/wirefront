@@ -259,7 +259,7 @@ export function SplitShell({
     <MotionConfig reducedMotion="user">
       <TooltipProvider delay={400}>
         <div
-          className={cn("@container relative isolate flex h-[760px] w-full overflow-hidden bg-sidebar text-foreground text-sm", dragging && "cursor-col-resize select-none", className)}
+          className={cn("@container relative isolate flex h-190 w-full overflow-hidden bg-sidebar text-foreground text-sm", dragging && "cursor-col-resize select-none", className)}
           ref={rootRef}
         >
           <aside aria-label={t.sidebar} className="hidden w-60 shrink-0 @3xl:block">

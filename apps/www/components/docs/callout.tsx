@@ -13,9 +13,9 @@ type CalloutProps = Omit<
 
 const iconClass = "size-5 -me-0.5 fill-(--callout-color) text-fd-accent";
 
-function resolveCalloutType(
+const resolveCalloutType = (
   type: CalloutProps["type"]
-): "info" | "warning" | "error" | "success" {
+): "info" | "warning" | "error" | "success" => {
   if (type === "warn") {
     return "warning";
   }
@@ -23,7 +23,7 @@ function resolveCalloutType(
     return type;
   }
   return "info";
-}
+};
 
 export const Callout = ({
   className,
@@ -60,7 +60,7 @@ export const Callout = ({
           success: <CircleCheck className={iconClass} />,
         }[type]}
       <div className="flex min-w-0 flex-1 flex-col gap-2">
-        {title && <p className="!my-0 font-medium">{title}</p>}
+        {title && <p className="my-0! font-medium">{title}</p>}
         <div className="prose-no-margin text-fd-muted-foreground empty:hidden">
           {children}
         </div>

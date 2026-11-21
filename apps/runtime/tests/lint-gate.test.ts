@@ -1,19 +1,24 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-/** The lint ratchet: existing debt may shrink, never grow (scripts/lint-gate.ts). */
+/** The lint ratchet: errors may shrink, never grow; warnings are reported (scripts/lint-gate.ts). */
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { compare, countDiagnostics } from "../../../scripts/lint-gate";
+import { compare, countDiagnostics, warningLines } from "../../../scripts/lint-gate";
 
 const diag = (path: string, category: string, severity = "error") => ({ category, severity, location: { path } });
 
 describe("lint gate", () => {
-  it("counts errors and warnings per file and rule, ignoring infos", () => {
+  it("counts errors per file and rule; warnings and infos never count", () => {
     expect(
       countDiagnostics([diag("a.tsx", "lint/x"), diag("a.tsx", "lint/x", "warning"), diag("a.tsx", "lint/y", "information"), diag("b.tsx", "lint/z")]),
-    ).toEqual({ "a.tsx": { "lint/x": 2 }, "b.tsx": { "lint/z": 1 } });
+    ).toEqual({ "a.tsx": { "lint/x": 1 }, "b.tsx": { "lint/z": 1 } });
+  });
+
+  it("lists every warning with its location, rule and message", () => {
+    const warning = { ...diag("a.tsx", "lint/x", "warning"), message: "Avoid it.", location: { path: "a.tsx", start: { line: 3, column: 7 } } };
+    expect(warningLines([warning, diag("b.tsx", "lint/z")])).toEqual(["a.tsx:3:7 lint/x: Avoid it."]);
   });
 
   it("passes when nothing changed", () => {

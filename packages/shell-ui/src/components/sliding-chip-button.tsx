@@ -5,16 +5,13 @@ import { cva } from "class-variance-authority";
 import type { VariantProps } from "class-variance-authority";
 import { motion, useReducedMotion } from "motion/react";
 import type { Transition, Variants } from "motion/react";
-import { cloneElement, isValidElement, useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import type {
   ComponentPropsWithoutRef,
   FocusEvent,
   MouseEvent,
-  ReactElement,
   ReactNode,
   Ref,
-  RefCallback,
-  RefObject,
 } from "react";
 
 const DEFAULT_EASE = [0.77, 0, 0.175, 1] as const;
@@ -111,112 +108,72 @@ const slidingChipButtonGroupVariants = cva(
   }
 );
 
-type WithAsChild<Base extends object> =
-  | (Base & { asChild: true; children: ReactElement })
-  | (Base & { asChild?: false; children?: string });
-
 type SlidingChipButtonSize = NonNullable<
   VariantProps<typeof slidingChipButtonVariants>["size"]
 >;
 
-function SlidingChipButtonPlusIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      viewBox="0 0 12 12"
-    >
-      <path
-        d="M6 1v10M1 6h10"
-        stroke="currentColor"
-        strokeLinecap="square"
-        strokeWidth="1.5"
-      />
-    </svg>
-  );
-}
+const SlidingChipButtonPlusIcon = ({ className }: { className?: string }) => (
+  <svg aria-hidden="true" className={className} fill="none" viewBox="0 0 12 12">
+    <path
+      d="M6 1v10M1 6h10"
+      stroke="currentColor"
+      strokeLinecap="square"
+      strokeWidth="1.5"
+    />
+  </svg>
+);
 
-function mergeRefs<T>(...refs: (Ref<T> | undefined)[]): RefCallback<T> {
-  return (node) => {
-    for (const ref of refs) {
-      if (!ref) {
-        continue;
-      }
-
-      if (typeof ref === "function") {
-        ref(node);
-      } else {
-        (ref as RefObject<T | null>).current = node;
-      }
-    }
-  };
-}
-
-function getLinkLabel(
-  asChild: boolean,
-  children: string | ReactElement | undefined,
+const getLinkLabel = (
+  children: string | undefined,
   label: string | undefined
-): string {
-  if (asChild && isValidElement(children)) {
-    const childText = (children.props as { children?: unknown }).children;
-
-    if (typeof childText === "string") {
-      return childText;
-    }
-
-    return label ?? "";
-  }
-
+): string => {
   if (typeof children === "string") {
     return children;
   }
 
   return label ?? "";
-}
+};
 
-function useResponsiveLabelOffset(
+const LARGE_SCREEN_QUERY = "(min-width: 1024px)";
+
+const subscribeLargeScreen = (onChange: () => void) => {
+  const mediaQuery = window.matchMedia(LARGE_SCREEN_QUERY);
+  mediaQuery.addEventListener("change", onChange);
+  return () => mediaQuery.removeEventListener("change", onChange);
+};
+
+const useResponsiveLabelOffset = (
   size: SlidingChipButtonSize,
   labelOffset?: number,
   labelOffsetLg?: number
-): number {
+): number => {
   const offsets = LABEL_OFFSET_BY_SIZE[size ?? "default"];
   const baseOffset = labelOffset ?? offsets.default;
   const largeOffset = labelOffsetLg ?? offsets.lg;
-  const [offset, setOffset] = useState(baseOffset);
+  const isLarge = useSyncExternalStore(
+    subscribeLargeScreen,
+    () => window.matchMedia(LARGE_SCREEN_QUERY).matches,
+    () => false
+  );
 
-  useEffect(() => {
-    if (labelOffsetLg === undefined && labelOffset !== undefined) {
-      setOffset(labelOffset);
-      return;
-    }
+  // An explicit base offset with no large one applies at every size.
+  if (labelOffsetLg === undefined && labelOffset !== undefined) {
+    return labelOffset;
+  }
+  return isLarge ? largeOffset : baseOffset;
+};
 
-    const mediaQuery = window.matchMedia("(min-width: 1024px)");
-    const update = () => {
-      setOffset(mediaQuery.matches ? largeOffset : baseOffset);
-    };
-
-    update();
-    mediaQuery.addEventListener("change", update);
-    return () => {
-      mediaQuery.removeEventListener("change", update);
-    };
-  }, [baseOffset, largeOffset, labelOffset, labelOffsetLg]);
-
-  return offset;
-}
-
-function resolveMotionTransition(
+const resolveMotionTransition = (
   shouldReduceMotion: boolean | null,
   duration: number,
   ease: readonly [number, number, number, number]
-): Transition {
+): Transition => {
   if (shouldReduceMotion) {
     return { duration: 0 };
   }
 
   return { duration, ease };
-}
+};
 
 type SlidingChipButtonBaseProps = Omit<
   ComponentPropsWithoutRef<"a">,
@@ -274,7 +231,12 @@ type SlidingChipButtonBaseProps = Omit<
     iconClassName?: string;
   };
 
-export type SlidingChipButtonProps = WithAsChild<SlidingChipButtonBaseProps>;
+export type SlidingChipButtonProps = SlidingChipButtonBaseProps & {
+  /** The link text; `label` is used when this is empty. */
+  children?: string;
+  /** Renders a `<button>` with these props in place of the link. */
+  buttonProps?: ComponentPropsWithoutRef<"button">;
+};
 
 interface SlidingChipButtonAnimatedContentProps {
   chipClassName?: string;
@@ -305,7 +267,7 @@ interface SlidingChipButtonAnimatedContentProps {
   variant: NonNullable<SlidingChipButtonProps["variant"]>;
 }
 
-function SlidingChipButtonAnimatedContent({
+const SlidingChipButtonAnimatedContent = ({
   variant = "accent",
   size = "default",
   label,
@@ -331,7 +293,7 @@ function SlidingChipButtonAnimatedContent({
   endChipActiveRotate,
   endChipRestScale,
   endChipActiveScale,
-}: SlidingChipButtonAnimatedContentProps) {
+}: SlidingChipButtonAnimatedContentProps) => {
   const shouldReduceMotion = useReducedMotion();
   const motionTransition = resolveMotionTransition(
     shouldReduceMotion,
@@ -403,10 +365,9 @@ function SlidingChipButtonAnimatedContent({
       </motion.span>
     </motion.span>
   );
-}
+};
 
-function SlidingChipButton({
-  asChild = false,
+const SlidingChipButton = ({
   variant = "accent",
   size = "default",
   duration = DEFAULT_DURATION,
@@ -436,6 +397,7 @@ function SlidingChipButton({
   endIcon,
   href,
   ref,
+  buttonProps,
   "aria-label": ariaLabel,
   onBlur,
   onFocus,
@@ -444,8 +406,8 @@ function SlidingChipButton({
   ...props
 }: SlidingChipButtonProps & {
   ref?: Ref<HTMLAnchorElement>;
-}) {
-  const text = getLinkLabel(asChild, children, label);
+}) => {
+  const text = getLinkLabel(children, label);
   const resolvedSize = size ?? "default";
   const resolvedLabelOffset = useResponsiveLabelOffset(
     resolvedSize,
@@ -506,57 +468,18 @@ function SlidingChipButton({
     },
   };
 
-  if (asChild) {
-    if (!isValidElement(children)) {
-      return null;
-    }
-
-    const {
-      ref: childRef,
-      className: childClassName,
-      "aria-label": childAriaLabel,
-      onBlur: childOnBlur,
-      onFocus: childOnFocus,
-      onMouseEnter: childOnMouseEnter,
-      onMouseLeave: childOnMouseLeave,
-      ...childProps
-    } = children.props as {
-      ref?: Ref<HTMLElement>;
-      className?: string;
-      "aria-label"?: string;
-      onBlur?: (event: FocusEvent<HTMLElement>) => void;
-      onFocus?: (event: FocusEvent<HTMLElement>) => void;
-      onMouseEnter?: (event: MouseEvent<HTMLElement>) => void;
-      onMouseLeave?: (event: MouseEvent<HTMLElement>) => void;
-    };
-
-    return cloneElement(
-      children,
-      {
-        ...childProps,
-        ...props,
-        ...interactionHandlers,
-        "aria-label": ariaLabel ?? childAriaLabel ?? (text || undefined),
-        className: cn(childClassName, rootClassName),
-        onBlur: (event: FocusEvent<HTMLElement>) => {
-          childOnBlur?.(event);
-          interactionHandlers.onBlur(event);
-        },
-        onFocus: (event: FocusEvent<HTMLElement>) => {
-          childOnFocus?.(event);
-          interactionHandlers.onFocus(event);
-        },
-        onMouseEnter: (event: MouseEvent<HTMLElement>) => {
-          childOnMouseEnter?.(event);
-          interactionHandlers.onMouseEnter(event);
-        },
-        onMouseLeave: (event: MouseEvent<HTMLElement>) => {
-          childOnMouseLeave?.(event);
-          interactionHandlers.onMouseLeave(event);
-        },
-        ref: mergeRefs(childRef, ref),
-      } as Record<string, unknown>,
-      animatedContent
+  if (buttonProps) {
+    const { className: buttonClassName, ...buttonRest } = buttonProps;
+    return (
+      <button
+        aria-label={ariaLabel ?? (text || undefined)}
+        className={cn(buttonClassName, rootClassName)}
+        type="button"
+        {...buttonRest}
+        {...interactionHandlers}
+      >
+        {animatedContent}
+      </button>
     );
   }
 
@@ -572,7 +495,7 @@ function SlidingChipButton({
       {animatedContent}
     </a>
   );
-}
+};
 
 export {
   SlidingChipButton,

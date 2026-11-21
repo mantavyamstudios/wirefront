@@ -22,7 +22,7 @@ import {
   SITE_URL,
 } from '@/lib/site'
 
-const ORBIT_THEME_HEAD_SCRIPT = `!function(){try{var k=${JSON.stringify(ORBIT_THEME_STORAGE_KEY)};var p=localStorage.getItem(k);if(p!=="light"&&p!=="dark"&&p!=="system")p="system";var dark=p==="dark"||(p==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);}catch(e){}}();`
+const ORBIT_THEME_HEAD_SCRIPT = `!function(){try{var k=${JSON.stringify(ORBIT_THEME_STORAGE_KEY)};var p=localStorage.getItem(k);if(p!=="light"&&p!=="dark"&&p!=="system")p="system";var dark=p==="dark"||(p==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);}catch(e){console.warn("[wirefront] couldn't read the saved theme; using the light theme until the app loads",e)}}();`
 
 const OG_IMAGE = `${SITE_URL}/og.png`
 const ICON_VERSION = '2'
@@ -63,6 +63,8 @@ export const Route = createRootRoute({
       { rel: 'apple-touch-icon', href: `/apple-touch-icon.png?v=${ICON_VERSION}` },
       { rel: 'manifest', href: `/site.webmanifest?v=${ICON_VERSION}` },
     ],
+    // Applies the saved theme before first paint, so dark mode doesn't flash light.
+    scripts: [{ children: ORBIT_THEME_HEAD_SCRIPT }],
   }),
   component: RootComponent,
   errorComponent: DesignError,
@@ -80,9 +82,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
-          dangerouslySetInnerHTML={{ __html: ORBIT_THEME_HEAD_SCRIPT }}
-        />
         <HeadContent />
       </head>
       <body className="bg-background text-foreground antialiased">

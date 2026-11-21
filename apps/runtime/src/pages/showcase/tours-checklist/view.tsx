@@ -54,8 +54,8 @@ function SetupChecklistScreen({ tasks: initial, icons = {}, onToggle, onHide }: 
   const pct = total ? (done / total) * 100 : 0;
 
   return (
-    <section aria-label={t.region} className="fixed inset-x-0 bottom-0 z-50 flex max-h-[75svh] flex-col rounded-t-2xl border border-border/70 bg-background pb-[env(safe-area-inset-bottom)] shadow-2xl sm:inset-x-auto sm:end-6 sm:bottom-6 sm:max-h-[calc(100svh-3rem)] sm:w-96 sm:rounded-xl sm:pb-0">
-      <button aria-controls={listId} aria-expanded={open} className="flex w-full shrink-0 items-center justify-between gap-3 rounded-t-2xl px-4 py-3 text-start outline-none transition-colors hover:bg-foreground/[0.02] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:rounded-t-xl" onClick={() => setOpen((o) => !o)} type="button">
+    <section aria-label={t.region} className="fixed inset-x-0 bottom-0 z-50 flex max-h-[75svh] flex-col rounded-t-2xl border border-border/70 bg-background pb-[env(safe-area-inset-bottom)] shadow-2xl sm:inset-x-auto sm:inset-e-6 sm:bottom-6 sm:max-h-[calc(100svh-3rem)] sm:w-96 sm:rounded-xl sm:pb-0">
+      <button aria-controls={listId} aria-expanded={open} className="flex w-full shrink-0 items-center justify-between gap-3 rounded-t-2xl px-4 py-3 text-start outline-none transition-colors hover:bg-foreground/2 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:rounded-t-xl" onClick={() => setOpen((o) => !o)} type="button">
         <div>
           <div className="font-medium text-sm">{t.title}</div>
           <p className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{interpolate(t.progress, { done, total })}</p>
@@ -75,7 +75,7 @@ function SetupChecklistScreen({ tasks: initial, icons = {}, onToggle, onHide }: 
         <ul className="divide-y divide-border/50 overflow-y-auto overscroll-contain border-border/60 border-t" id={listId}>
           {tasks.map((x) => (
             <li key={x.id}>
-              <label className="flex w-full cursor-pointer items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-foreground/[0.02] has-focus-visible:ring-2 has-focus-visible:ring-ring has-focus-visible:ring-inset">
+              <label className="flex w-full cursor-pointer items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-foreground/2 has-focus-visible:ring-2 has-focus-visible:ring-ring has-focus-visible:ring-inset">
                 <input checked={x.done} className="sr-only" onChange={() => toggle.run({ id: x.id, done: !x.done }, x.id)} type="checkbox" />
                 <span aria-hidden className={cn("flex size-6 shrink-0 items-center justify-center rounded-full transition-colors", x.done ? "bg-category-2/15 text-category-2-foreground" : "border border-foreground/30 text-transparent")}>
                   {x.done ? <CheckIcon className="size-3.5" /> : <CircleIcon className="size-3" />}
@@ -98,7 +98,7 @@ function SetupChecklistScreen({ tasks: initial, icons = {}, onToggle, onHide }: 
             </li>
           ) : null}
           {total > 0 && done === total ? (
-            <li className="bg-foreground/[0.02] px-4 py-3 text-center">
+            <li className="bg-foreground/2 px-4 py-3 text-center">
               <p className="text-sm">{t.allDone}</p>
               {onHide ? (
                 <Button className="mt-1" onClick={onHide} size="sm" type="button" variant="ghost">

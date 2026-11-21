@@ -12,15 +12,17 @@ interface RouteContext {
 }
 
 /** Highlighted source of one screen (the files the registry installs), prerendered at build time. */
-export async function GET(_request: Request, { params }: RouteContext) {
+export const GET = async (_request: Request, { params }: RouteContext) => {
   const { kind, screen } = await params;
   const files = await getScreenSourceFiles(kind, screen);
   if (!files) {
     notFound();
   }
   return NextResponse.json({ files });
-}
+};
 
-export function generateStaticParams() {
-  return getScreenDetails().map((d) => ({ kind: d.kindSlug, screen: d.screenSlug }));
-}
+export const generateStaticParams = () =>
+  getScreenDetails().map((d) => ({
+    kind: d.kindSlug,
+    screen: d.screenSlug,
+  }));

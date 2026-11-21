@@ -12,11 +12,11 @@ interface ComponentsShellProps {
   topBar?: ReactNode;
 }
 
-export function ComponentsShell({
+export const ComponentsShell = ({
   children,
   className,
   topBar,
-}: ComponentsShellProps) {
+}: ComponentsShellProps) => {
   useEffect(() => {
     document.documentElement.classList.add("blocks-scroll-lock");
 
@@ -31,7 +31,7 @@ export function ComponentsShell({
         className={cn(
           "relative flex min-h-0 flex-1 flex-col overflow-hidden",
           // Scroll on the shell below lg; hide the OS bar so horizontal padding stays even.
-          "max-lg:[scrollbar-width:none] max-lg:overflow-x-clip max-lg:overflow-y-auto max-lg:[&::-webkit-scrollbar]:hidden",
+          "max-lg:scrollbar-none max-lg:overflow-x-clip max-lg:overflow-y-auto max-lg:[&::-webkit-scrollbar]:hidden",
           blocksDocsHeaderMobileScrollPaddingClassName,
           className
         )}
@@ -46,4 +46,4 @@ export function ComponentsShell({
       </main>
     </div>
   );
-}
+};

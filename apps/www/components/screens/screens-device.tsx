@@ -38,7 +38,8 @@ export interface FlowDeviceSpec {
 const PHONE_RIM = 2;
 const PHONE_INSET_X = 8;
 const PHONE_INSET_Y = 8;
-const PHONE_SIDE = 4; // room for the side keys
+// Room for the side keys.
+const PHONE_SIDE = 4;
 const PHONE_BODY_RADIUS = 14;
 const PHONE_SCREEN_RADIUS = 6;
 
@@ -122,10 +123,10 @@ const BODY_SHADOW =
  * The spec turned on its side for a landscape screen (phone and tablet only;
  * the laptop is always landscape). Keys end up on the top edge.
  */
-export function orientDevice(
+export const orientDevice = (
   spec: FlowDeviceSpec,
   landscape: boolean
-): FlowDeviceSpec {
+): FlowDeviceSpec => {
   if (!landscape || spec.id === "desktop") {
     return spec;
   }
@@ -145,16 +146,16 @@ export function orientDevice(
       top: 0,
     },
   };
-}
+};
 
 /** Device body drawn behind the screen. Purely decorative. */
-export function FlowDeviceChrome({
+export const FlowDeviceChrome = ({
   device,
   landscape = false,
 }: {
   device: FlowDevice;
   landscape?: boolean;
-}) {
+}) => {
   const { frame } = orientDevice(FLOW_DEVICES[device], landscape);
 
   if (device === "phone") {
@@ -229,9 +230,9 @@ export function FlowDeviceChrome({
       />
     </div>
   );
-}
+};
 
-function Body({
+const Body = ({
   height,
   left,
   radius,
@@ -245,25 +246,23 @@ function Body({
   rim: number;
   top?: number;
   width: number;
-}) {
-  return (
+}) => (
+  <div
+    className="absolute"
+    style={{
+      left,
+      top,
+      width,
+      height,
+      borderRadius: radius,
+      padding: rim,
+      background: METAL,
+      boxShadow: BODY_SHADOW,
+    }}
+  >
     <div
-      className="absolute"
-      style={{
-        left,
-        top,
-        width,
-        height,
-        borderRadius: radius,
-        padding: rim,
-        background: METAL,
-        boxShadow: BODY_SHADOW,
-      }}
-    >
-      <div
-        className="size-full bg-[#0a0a0b]"
-        style={{ borderRadius: radius - rim }}
-      />
-    </div>
-  );
-}
+      className="size-full bg-[#0a0a0b]"
+      style={{ borderRadius: radius - rim }}
+    />
+  </div>
+);

@@ -14,7 +14,12 @@ export interface ScreenGroup {
 }
 
 export const SCREEN_GROUPS: ScreenGroup[] = [
-  { slug: "shells", title: "Shells", meaning: "App frames and navigation", kinds: ["layouts"] },
+  {
+    slug: "shells",
+    title: "Shells",
+    meaning: "App frames and navigation",
+    kinds: ["layouts"],
+  },
   {
     slug: "accounts",
     title: "Accounts",

@@ -12,11 +12,11 @@ import type { ComponentGalleryItem } from "@/lib/registry/types";
 
 import { ComponentsGalleryLayout } from "./components-gallery-layout";
 
-function releaseBlocksDocumentScroll() {
+const releaseBlocksDocumentScroll = () => {
   document.documentElement.classList.remove("blocks-scroll-lock");
   document.body.style.removeProperty("overflow");
   delete document.documentElement.dataset.blocksMenuOpen;
-}
+};
 
 const DEFAULT_GALLERY_PATHS = ["/screens"];
 
@@ -29,13 +29,13 @@ interface ComponentsRouteLayoutProps {
   tree: PageTree.Root;
 }
 
-export function ComponentsRouteLayout({
+export const ComponentsRouteLayout = ({
   children,
   galleryPaths = DEFAULT_GALLERY_PATHS,
   navItems,
   releaseDatesByUrl,
   tree,
-}: ComponentsRouteLayoutProps) {
+}: ComponentsRouteLayoutProps) => {
   const pathname = usePathname();
   const isGalleryIndex = galleryPaths.includes(pathname);
   const { setOpen: setSidebarOpen } = useSidebar();
@@ -66,4 +66,4 @@ export function ComponentsRouteLayout({
       </ComponentPageBlocksShell>
     </ComponentsShell>
   );
-}
+};

@@ -54,18 +54,16 @@ interface ScrambleTimingProps {
   scrambleSpeed?: number;
 }
 
-function resolveVariant(
+const resolveVariant = (
   variant: SlidingChipButtonVariant | null | undefined
-): SlidingChipButtonVariant {
-  return variant ?? "accent";
-}
+): SlidingChipButtonVariant => variant ?? "accent";
 
 type SectionCtaScrambleBaseProps = ScrambleTimingProps & {
   label: string;
   variant?: SlidingChipButtonVariant | null;
 };
 
-function useScrambleInteraction({
+const useScrambleInteraction = ({
   label,
   variant = "accent",
   characterSet = SECTION_CTA_SCRAMBLE_CHARS,
@@ -82,7 +80,7 @@ function useScrambleInteraction({
   onFocus?: (event: FocusEvent<HTMLElement>) => void;
   onMouseEnter?: (event: MouseEvent<HTMLElement>) => void;
   onMouseLeave?: (event: MouseEvent<HTMLElement>) => void;
-}) {
+}) => {
   const [isActive, setIsActive] = useState(false);
   const theme = SCRAMBLE_VARIANT_THEME[resolveVariant(variant)];
 
@@ -122,18 +120,18 @@ function useScrambleInteraction({
   );
 
   return { interactionHandlers, labelSlot };
-}
+};
 
 export type SectionCtaScrambleProps = Omit<
   SlidingChipButtonProps,
-  "asChild" | "children" | "labelSlot" | "variant"
+  "buttonProps" | "children" | "labelSlot" | "variant"
 > &
   ScrambleTimingProps & {
     label: string;
     variant?: SlidingChipButtonVariant;
   };
 
-export function SectionCtaScramble({
+export const SectionCtaScramble = ({
   label,
   variant = "accent",
   characterSet,
@@ -146,7 +144,7 @@ export function SectionCtaScramble({
   onMouseEnter,
   onMouseLeave,
   ...props
-}: SectionCtaScrambleProps) {
+}: SectionCtaScrambleProps) => {
   const { interactionHandlers, labelSlot } = useScrambleInteraction({
     label,
     variant,
@@ -170,11 +168,11 @@ export function SectionCtaScramble({
       {...props}
     />
   );
-}
+};
 
 export type SectionCtaScrambleButtonProps = Omit<
   SlidingChipButtonProps,
-  "asChild" | "children" | "href" | "labelSlot" | "variant"
+  "buttonProps" | "children" | "href" | "labelSlot" | "variant"
 > &
   ScrambleTimingProps &
   ComponentPropsWithoutRef<"button"> & {
@@ -182,7 +180,7 @@ export type SectionCtaScrambleButtonProps = Omit<
     variant?: SlidingChipButtonVariant;
   };
 
-export function SectionCtaScrambleButton({
+export const SectionCtaScrambleButton = ({
   label,
   variant = "accent",
   characterSet,
@@ -196,7 +194,7 @@ export function SectionCtaScrambleButton({
   onMouseLeave,
   type = "button",
   ...props
-}: SectionCtaScrambleButtonProps) {
+}: SectionCtaScrambleButtonProps) => {
   const { interactionHandlers, labelSlot } = useScrambleInteraction({
     label,
     variant,
@@ -213,14 +211,11 @@ export function SectionCtaScrambleButton({
 
   return (
     <SlidingChipButton
-      asChild
+      buttonProps={{ type, ...props }}
       label={label}
       labelSlot={labelSlot}
       variant={variant}
       {...interactionHandlers}
-    >
-      {/* oxlint-disable-next-line react/button-has-type -- forwarded button type with default "button" */}
-      <button type={type} {...props} />
-    </SlidingChipButton>
+    />
   );
-}
+};

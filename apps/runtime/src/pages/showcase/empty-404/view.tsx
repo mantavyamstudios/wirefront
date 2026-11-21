@@ -43,7 +43,7 @@ function NotFoundScreen({ onBack, homeHref, className }: NotFoundProps) {
       <div className="relative mx-auto flex min-h-svh max-w-3xl flex-col items-center justify-center-safe px-6 py-10 text-center">
         <div className="mb-6 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.4em]">{t.eyebrow}</div>
         <div aria-hidden className="relative font-bold font-heading text-[clamp(8rem,22vw,16rem)] leading-none tracking-tighter">
-          <span className="bg-gradient-to-b from-foreground to-foreground/30 bg-clip-text text-transparent">{t.code}</span>
+          <span className="bg-linear-to-b from-foreground to-foreground/30 bg-clip-text text-transparent">{t.code}</span>
           <div
             className="pointer-events-none absolute inset-x-0 -bottom-2 h-1/2"
             style={{ background: "radial-gradient(60% 100% at 50% 100%, color-mix(in srgb, var(--background) 80%, transparent) 50%, transparent 100%)" }}

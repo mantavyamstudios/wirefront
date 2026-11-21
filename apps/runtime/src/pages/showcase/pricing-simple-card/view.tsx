@@ -65,7 +65,7 @@ function SinglePlanPricingScreen({ plan, onStart, contactHref, className }: Sing
               <p className="mt-2 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{interpolate(t.trial, { days: plan.trialDays })}</p>
             ) : null}
           </div>
-          <div className="border-border/60 border-t bg-foreground/[0.02] px-5 py-5 sm:px-7 sm:py-6">
+          <div className="border-border/60 border-t bg-foreground/2 px-5 py-5 sm:px-7 sm:py-6">
             <h3 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.includes}</h3>
             <ul className="mt-3 grid grid-cols-1 gap-2.5">
               {plan.features.map((f) => (

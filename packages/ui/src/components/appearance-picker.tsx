@@ -164,7 +164,7 @@ function ModePreviewCard({
 }) {
   if (mode === "system") {
     return (
-      <div aria-hidden className="relative h-[108px] w-full overflow-hidden">
+      <div aria-hidden className="relative h-27 w-full overflow-hidden">
         <div className="absolute inset-0" style={{ clipPath: "polygon(0 0, 100% 0, 0 100%)" }}>
           <MiniAppChrome scheme="light" accent={accent} accentSoft={accent} />
         </div>
@@ -197,12 +197,12 @@ function MiniAppChrome({
   return (
     <div
       aria-hidden
-      className="flex h-[108px] w-full"
+      className="flex h-27 w-full"
       style={{ background: s.bg }}
     >
       {/* Rail */}
       <div
-        className="flex w-[26px] flex-col items-center gap-2 border-e py-2"
+        className="flex w-6.5 flex-col items-center gap-2 border-e py-2"
         style={{ background: s.sidebar, borderColor: s.sidebarBorder }}
       >
         <span

@@ -260,7 +260,7 @@ function PersonAvatar({ person, size = "size-9", presence }: { person?: ChatPers
       <Avatar className={cn(size, tiny ? "rounded-md" : "rounded-lg")}>
         <AvatarFallback className={cn("font-medium", tiny ? cn("rounded-md", tinyText) : "rounded-lg text-xs", avatarTone[person.tone])}>{initials(person.name)}</AvatarFallback>
       </Avatar>
-      {presence ? <span className={cn("absolute -end-0.5 -bottom-0.5 size-2 rounded-full ring-2 ring-sidebar", person.presence === "active" ? "bg-success" : person.presence === "away" ? "bg-warning" : "border border-muted-foreground/60 bg-sidebar")} /> : null}
+      {presence ? <span className={cn("absolute -inset-e-0.5 -bottom-0.5 size-2 rounded-full ring-2 ring-sidebar", person.presence === "active" ? "bg-success" : person.presence === "away" ? "bg-warning" : "border border-muted-foreground/60 bg-sidebar")} /> : null}
     </span>
   );
 }
@@ -401,7 +401,7 @@ function ChannelNav({ workspace, channels, people, active, view, viewCounts, onS
           <Kbd aria-hidden>{t.jumpKeys}</Kbd>
         </button>
       </div>
-      <nav aria-label={t.conversations} className="min-h-0 flex-1 overflow-y-auto px-2 pb-3 [scrollbar-width:thin]">
+      <nav aria-label={t.conversations} className="min-h-0 flex-1 overflow-y-auto px-2 pb-3 scrollbar-thin">
         <LayoutGroup id="chat-nav">
           <div className="mt-2 flex flex-col gap-0.5">
             {VIEWS.map((v) => {
@@ -500,7 +500,7 @@ function MessageRow({ message, grouped, people, me, inThread, isNew, onReact, on
   const lastReply = replies?.at(-1);
   const hasTools = Boolean(onReact || onSave || (!inThread && onOpenThread));
   return (
-    <motion.div animate={{ opacity: 1, y: 0 }} className={cn("group/msg relative flex gap-3 rounded-xl px-3 transition-colors duration-300 focus-within:bg-accent/50 hover:bg-accent/50", grouped ? "py-0.5" : "pt-2 pb-1 [&:not(:first-child)]:mt-1.5", threadOpen && "bg-info/6 hover:bg-info/8", message.saved && "bg-warning/6 hover:bg-warning/8", flash && "bg-warning/16 duration-0")} data-msg={message.id} initial={isNew ? { opacity: 0, y: 8 } : false} transition={spring}>
+    <motion.div animate={{ opacity: 1, y: 0 }} className={cn("group/msg relative flex gap-3 rounded-xl px-3 transition-colors duration-300 focus-within:bg-accent/50 hover:bg-accent/50", grouped ? "py-0.5" : "pt-2 pb-1 not-first:mt-1.5", threadOpen && "bg-info/6 hover:bg-info/8", message.saved && "bg-warning/6 hover:bg-warning/8", flash && "bg-warning/16 duration-0")} data-msg={message.id} initial={isNew ? { opacity: 0, y: 8 } : false} transition={spring}>
       <div className="w-9 shrink-0">{grouped ? <span className="block pt-0.5 text-end text-[10px] text-muted-foreground tabular-nums leading-5 opacity-0 group-hover/msg:opacity-100">{time(message.sentAt)}</span> : <PersonAvatar person={author} />}</div>
       <div className="min-w-0 flex-1">
         {message.saved ? (
@@ -515,7 +515,7 @@ function MessageRow({ message, grouped, people, me, inThread, isNew, onReact, on
             <span className="text-muted-foreground text-xs tabular-nums">{time(message.sentAt)}</span>
           </div>
         )}
-        <p className="text-pretty leading-6 [overflow-wrap:anywhere]">
+        <p className="text-pretty leading-6 wrap-anywhere">
           <RichText me={me} people={people} text={message.text} />
         </p>
         {full.file ? (
@@ -545,7 +545,7 @@ function MessageRow({ message, grouped, people, me, inThread, isNew, onReact, on
       </div>
 
       {hasTools ? (
-        <div className="pointer-events-none absolute -top-3 end-3 z-10 flex items-center gap-0.5 rounded-lg border bg-popover p-0.5 opacity-0 shadow-xs/5 transition-opacity duration-100 group-focus-within/msg:pointer-events-auto group-hover/msg:pointer-events-auto group-focus-within/msg:opacity-100 group-hover/msg:opacity-100">
+        <div className="pointer-events-none absolute -top-3 inset-e-3 z-10 flex items-center gap-0.5 rounded-lg border bg-popover p-0.5 opacity-0 shadow-xs/5 transition-opacity duration-100 group-focus-within/msg:pointer-events-auto group-hover/msg:pointer-events-auto group-focus-within/msg:opacity-100 group-hover/msg:opacity-100">
           {onReact ? (
             <>
               {QUICK_EMOJI.map((e) => (
@@ -748,7 +748,7 @@ function JumpPalette({ mode, onOpenChange, channels, people, me, canStartDm, onC
       }}
       open={mode !== null}
     >
-      <DialogContent className="top-16 flex max-h-[420px] translate-y-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-md" showCloseButton={false}>
+      <DialogContent className="top-16 flex max-h-105 translate-y-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-md" showCloseButton={false}>
         <DialogTitle className="sr-only">{mode === "people" ? t.newDm : t.jumpDialog}</DialogTitle>
         <div className="flex h-12 shrink-0 items-center gap-2.5 border-b px-4">
           <SearchIcon aria-hidden className="size-4 shrink-0 text-muted-foreground" />
@@ -781,7 +781,7 @@ function JumpPalette({ mode, onOpenChange, channels, people, me, canStartDm, onC
           />
           <Kbd aria-hidden>{t.escape}</Kbd>
         </div>
-        <div aria-label={t.results} className="min-h-0 overflow-y-auto p-1.5 [scrollbar-width:thin]" id={`${uid}-list`} role="listbox">
+        <div aria-label={t.results} className="min-h-0 overflow-y-auto p-1.5 scrollbar-thin" id={`${uid}-list`} role="listbox">
           {items.length === 0 ? (
             <p className="px-3 py-6 text-center text-muted-foreground text-xs" role="presentation">
               {interpolate(t.noJump, { query })}
@@ -830,7 +830,7 @@ function ViewList({ view, hits, people, me, onOpen, onMenu, time, t }: { view: C
         <h2 className="font-semibold">{title}</h2>
         <span className="text-muted-foreground text-xs tabular-nums">{hits.length}</span>
       </header>
-      <div className="min-h-0 flex-1 overflow-y-auto px-1 py-2 @lg:px-2 [scrollbar-width:thin]">
+      <div className="min-h-0 flex-1 overflow-y-auto px-1 py-2 @lg:px-2 scrollbar-thin">
         {hits.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center px-8 pb-10 text-center">
             <span aria-hidden className="flex size-10 items-center justify-center rounded-xl border bg-card text-muted-foreground shadow-xs/5">
@@ -1175,7 +1175,7 @@ function TeamChatScreen({ workspace, me, people, channels: initialChannels, typi
           </aside>
 
           <Sheet onOpenChange={setDrawer} open={drawer}>
-            <SheetContent className="w-[264px] max-w-[calc(100%-3rem)] gap-0 bg-sidebar p-0" showCloseButton={false} side="left">
+            <SheetContent className="w-66 max-w-[calc(100%-3rem)] gap-0 bg-sidebar p-0" showCloseButton={false} side="left">
               <SheetTitle className="sr-only">{t.channels}</SheetTitle>
               <ChannelNav {...navProps} onClose={() => setDrawer(false)} />
             </SheetContent>
@@ -1334,7 +1334,7 @@ function TeamChatScreen({ workspace, me, people, channels: initialChannels, typi
                 ) : null}
 
                 <div
-                  className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:thin]"
+                  className="min-h-0 flex-1 overflow-y-auto scrollbar-thin"
                   onScroll={(e) => {
                     const el = e.currentTarget;
                     atBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
@@ -1370,8 +1370,8 @@ function TeamChatScreen({ workspace, me, people, channels: initialChannels, typi
                           {newDay ? (
                             <>
                               <div aria-hidden className="mx-3 mt-4 h-px bg-border" />
-                              <div className="pointer-events-none sticky top-2 z-10 -mt-[11px] mb-3 flex justify-center">
-                                <h4 className="h-[22px] rounded-full border bg-background px-2.5 font-medium text-muted-foreground text-xs leading-5">{day}</h4>
+                              <div className="pointer-events-none sticky top-2 z-10 -mt-2.75 mb-3 flex justify-center">
+                                <h4 className="h-5.5 rounded-full border bg-background px-2.5 font-medium text-muted-foreground text-xs leading-5">{day}</h4>
                               </div>
                             </>
                           ) : null}
@@ -1402,7 +1402,7 @@ function TeamChatScreen({ workspace, me, people, channels: initialChannels, typi
 
             <AnimatePresence>
               {thread && channel ? (
-                <motion.aside animate={{ x: 0, opacity: 1 }} aria-label={t.thread} className="absolute inset-0 z-30 flex flex-col border-s bg-background @5xl:static @5xl:z-auto @5xl:w-[380px] @5xl:shrink-0" exit={{ x: 40, opacity: 0 }} initial={{ x: 40, opacity: 0 }} key="thread" transition={{ duration: 0.22, ease }}>
+                <motion.aside animate={{ x: 0, opacity: 1 }} aria-label={t.thread} className="absolute inset-0 z-30 flex flex-col border-s bg-background @5xl:static @5xl:z-auto @5xl:w-95 @5xl:shrink-0" exit={{ x: 40, opacity: 0 }} initial={{ x: 40, opacity: 0 }} key="thread" transition={{ duration: 0.22, ease }}>
                   <header className="flex h-13 shrink-0 items-center gap-2 border-b px-3">
                     <Button aria-label={t.backToChannel} className="@5xl:hidden" onClick={() => setThreadId(null)} size="icon-sm" variant="ghost">
                       <ArrowLeftIcon className="rtl:-scale-x-100" />
@@ -1418,7 +1418,7 @@ function TeamChatScreen({ workspace, me, people, channels: initialChannels, typi
                       <XIcon />
                     </Button>
                   </header>
-                  <div className="min-h-0 flex-1 overflow-y-auto px-1 py-3 [scrollbar-width:thin]" ref={threadScrollRef}>
+                  <div className="min-h-0 flex-1 overflow-y-auto px-1 py-3 scrollbar-thin" ref={threadScrollRef}>
                     <MessageRow grouped={false} inThread me={me} message={thread} onReact={onToggleReaction ? reactTo({ channelId: channel.id, messageId: thread.id }) : undefined} onSave={onToggleSaved ? saveFor({ channelId: channel.id, messageId: thread.id }, thread.saved) : undefined} people={people} t={t} time={time} />
                     <div className="relative my-3 flex items-center px-3">
                       <span className="pe-2 text-muted-foreground text-xs tabular-nums">{plural(threadCount, t.oneReply, t.replies)}</span>

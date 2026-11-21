@@ -51,12 +51,12 @@ const TermSection = ({
   );
 };
 
-export function LegalScrollView({
+export const LegalScrollView = ({
   title,
   terms,
   lastUpdated = "June 24, 2026",
   className,
-}: LegalScrollViewProps) {
+}: LegalScrollViewProps) => {
   const [activeTerm, setActiveTerm] = useState(0);
   const pathname = usePathname();
 
@@ -103,14 +103,14 @@ export function LegalScrollView({
         </h1>
       </div>
 
-      <div className="relative mb-0 flex gap-12 pt-[40px] pb-0 md:pt-[60px]">
-        <ul className="border-foreground/10 sticky top-28 hidden h-fit w-full max-w-[300px] space-y-4 border-l md:block">
+      <div className="relative mb-0 flex gap-12 pt-10 pb-0 md:pt-15">
+        <ul className="border-foreground/10 sticky top-28 hidden h-fit w-full max-w-75 space-y-4 border-l md:block">
           {terms.map((term, index) => (
             <li className="relative cursor-pointer pl-3" key={term.id}>
               <a href={`#${term.id}`}>
                 {activeTerm === index && (
                   <motion.span
-                    className="bg-foreground absolute top-1/2 -left-[1.5px] inline-block h-5 w-[2px] -translate-y-1/2 rounded-2xl"
+                    className="bg-foreground absolute top-1/2 left-[-1.5px] inline-block h-5 w-0.5 -translate-y-1/2 rounded-2xl"
                     layoutId="active-term"
                     transition={{
                       damping: 30,
@@ -133,7 +133,7 @@ export function LegalScrollView({
           ))}
         </ul>
 
-        <div className="flex flex-1 flex-col gap-[40px] md:gap-[60px]">
+        <div className="flex flex-1 flex-col gap-10 md:gap-15">
           {terms.map((term, index) => (
             <TermSection
               index={index}
@@ -153,4 +153,4 @@ export function LegalScrollView({
       </div>
     </div>
   );
-}
+};

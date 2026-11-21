@@ -114,82 +114,80 @@ const NAV_LINK_CLASS = cn(
   "data-[active=true]:bg-transparent data-[active=true]:text-black data-[active=true]:hover:bg-transparent data-[active=true]:focus:bg-transparent dark:data-[active=true]:text-white"
 );
 
-function LibraryMenuContent({
+const LibraryMenuContent = ({
   feature,
   libraryItems,
 }: {
   feature: MenuFeature;
   libraryItems: LibraryNavItem[];
-}) {
-  return (
-    <Highlight
-      className="bg-accent pointer-events-none rounded-sm"
-      containerClassName="flex w-120 gap-2"
-      mode="parent"
-      trigger="hover"
-    >
-      <HighlightItem asChild value="home">
-        <NavigationMenuLink
-          asChild
-          className="bg-muted/60 hover:bg-muted/60 focus:bg-muted data-[active=true]:bg-muted/60 data-[active=true]:hover:bg-muted/60 relative z-10 w-45 shrink-0 p-3"
-        >
-          <Link href={feature.url}>
-            <span className="bg-background flex size-9 items-center justify-center rounded-md border">
-              <SiteLogo className="rounded-sm" size="sm" />
-            </span>
-            <span className="mt-8 text-sm font-medium">{feature.title}</span>
-            <span className="text-muted-foreground mt-1 text-xs leading-relaxed">
-              {feature.description}
-            </span>
-          </Link>
-        </NavigationMenuLink>
-      </HighlightItem>
-      <div className="grid flex-1 grid-cols-2 content-start gap-1">
-        {libraryItems.map((item) => {
-          if (item.comingSoon) {
-            return (
-              <div
-                aria-disabled="true"
-                className="relative z-10 flex cursor-default flex-col gap-1 p-3 opacity-50"
-                key={item.title}
-              >
+}) => (
+  <Highlight
+    className="bg-accent pointer-events-none rounded-sm"
+    containerClassName="flex w-120 gap-2"
+    mode="parent"
+    trigger="hover"
+  >
+    <HighlightItem asChild value="home">
+      <NavigationMenuLink
+        asChild
+        className="bg-muted/60 hover:bg-muted/60 focus:bg-muted data-[active=true]:bg-muted/60 data-[active=true]:hover:bg-muted/60 relative z-10 w-45 shrink-0 p-3"
+      >
+        <Link href={feature.url}>
+          <span className="bg-background flex size-9 items-center justify-center rounded-md border">
+            <SiteLogo className="rounded-sm" size="sm" />
+          </span>
+          <span className="mt-8 text-sm font-medium">{feature.title}</span>
+          <span className="text-muted-foreground mt-1 text-xs leading-relaxed">
+            {feature.description}
+          </span>
+        </Link>
+      </NavigationMenuLink>
+    </HighlightItem>
+    <div className="grid flex-1 grid-cols-2 content-start gap-1">
+      {libraryItems.map((item) => {
+        if (item.comingSoon) {
+          return (
+            <div
+              aria-disabled="true"
+              className="relative z-10 flex cursor-default flex-col gap-1 p-3 opacity-50"
+              key={item.title}
+            >
+              <span className="flex items-center justify-between text-sm font-medium">
+                {item.title}
+                <span className="text-muted-foreground rounded-full border px-1.5 py-0.5 text-[10px] leading-none font-normal">
+                  Soon
+                </span>
+              </span>
+              <span className="text-muted-foreground text-xs leading-relaxed">
+                {item.description}
+              </span>
+            </div>
+          );
+        }
+        return (
+          <HighlightItem asChild key={item.title} value={item.title}>
+            <NavigationMenuLink
+              asChild
+              className="relative z-10 gap-1 p-3 hover:bg-transparent data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent"
+            >
+              <Link href={item.url}>
                 <span className="flex items-center justify-between text-sm font-medium">
                   {item.title}
-                  <span className="text-muted-foreground rounded-full border px-1.5 py-0.5 text-[10px] leading-none font-normal">
-                    Soon
-                  </span>
+                  <ArrowUpRight className="text-muted-foreground size-3.5" />
                 </span>
                 <span className="text-muted-foreground text-xs leading-relaxed">
                   {item.description}
                 </span>
-              </div>
-            );
-          }
-          return (
-            <HighlightItem asChild key={item.title} value={item.title}>
-              <NavigationMenuLink
-                asChild
-                className="relative z-10 gap-1 p-3 hover:bg-transparent data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent"
-              >
-                <Link href={item.url}>
-                  <span className="flex items-center justify-between text-sm font-medium">
-                    {item.title}
-                    <ArrowUpRight className="text-muted-foreground size-3.5" />
-                  </span>
-                  <span className="text-muted-foreground text-xs leading-relaxed">
-                    {item.description}
-                  </span>
-                </Link>
-              </NavigationMenuLink>
-            </HighlightItem>
-          );
-        })}
-      </div>
-    </Highlight>
-  );
-}
+              </Link>
+            </NavigationMenuLink>
+          </HighlightItem>
+        );
+      })}
+    </div>
+  </Highlight>
+);
 
-function NavMenuDropdown({
+const NavMenuDropdown = ({
   feature,
   items,
   label,
@@ -197,27 +195,25 @@ function NavMenuDropdown({
   feature: MenuFeature;
   items: LibraryNavItem[];
   label: string;
-}) {
-  return (
-    <NavigationMenuItem>
-      <HighlightItem asChild value={label}>
-        <NavigationMenuTrigger
-          className={cn(
-            NAV_LINK_CLASS,
-            "data-[state=open]:bg-transparent data-[state=open]:text-black data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent dark:data-[state=open]:text-white"
-          )}
-        >
-          {label}
-        </NavigationMenuTrigger>
-      </HighlightItem>
-      <NavigationMenuContent>
-        <LibraryMenuContent feature={feature} libraryItems={items} />
-      </NavigationMenuContent>
-    </NavigationMenuItem>
-  );
-}
+}) => (
+  <NavigationMenuItem>
+    <HighlightItem asChild value={label}>
+      <NavigationMenuTrigger
+        className={cn(
+          NAV_LINK_CLASS,
+          "data-[state=open]:bg-transparent data-[state=open]:text-black data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent dark:data-[state=open]:text-white"
+        )}
+      >
+        {label}
+      </NavigationMenuTrigger>
+    </HighlightItem>
+    <NavigationMenuContent>
+      <LibraryMenuContent feature={feature} libraryItems={items} />
+    </NavigationMenuContent>
+  </NavigationMenuItem>
+);
 
-function NavMenuItems({ libraryItems }: { libraryItems: LibraryNavItem[] }) {
+const NavMenuItems = ({ libraryItems }: { libraryItems: LibraryNavItem[] }) => {
   const pathname = usePathname();
   const { setActiveValue, clearBounds } = useHighlight();
   // Reset highlight bounds on route change
@@ -260,7 +256,7 @@ function NavMenuItems({ libraryItems }: { libraryItems: LibraryNavItem[] }) {
       />
     </>
   );
-}
+};
 
 export const Nav = () => {
   useSyncMobileSidebarPathname();

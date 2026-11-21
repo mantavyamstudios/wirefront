@@ -30,6 +30,5 @@ const BlocksSectionContext = createContext<BlocksSection>(BLOCKS_SECTION);
 
 export const BlocksSectionProvider = BlocksSectionContext.Provider;
 
-export function useBlocksSection(): BlocksSection {
-  return useContext(BlocksSectionContext);
-}
+export const useBlocksSection = (): BlocksSection =>
+  useContext(BlocksSectionContext);

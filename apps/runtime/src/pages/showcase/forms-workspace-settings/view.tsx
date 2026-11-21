@@ -173,11 +173,11 @@ function WorkspaceSettingsScreen({
                             "flex w-full items-center gap-2 whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm transition-colors pointer-coarse:min-h-11",
                             item.danger
                               ? current
-                                ? "bg-destructive/[0.08] text-destructive-foreground"
-                                : "text-destructive-foreground hover:bg-destructive/[0.06]"
+                                ? "bg-destructive/8 text-destructive-foreground"
+                                : "text-destructive-foreground hover:bg-destructive/6"
                               : current
-                                ? "bg-foreground/[0.06] text-foreground"
-                                : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground",
+                                ? "bg-foreground/6 text-foreground"
+                                : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground",
                           )}
                           href={item.href}
                         >
@@ -205,7 +205,7 @@ function WorkspaceSettingsScreen({
               {avatar ? (
                 <img alt={t.avatar} className="size-14 shrink-0 rounded-lg object-cover ring-1 ring-border/60" src={avatar} />
               ) : (
-                <div aria-hidden className="size-14 shrink-0 rounded-lg bg-gradient-to-br from-primary/40 to-primary/10 ring-1 ring-border/60" />
+                <div aria-hidden className="size-14 shrink-0 rounded-lg bg-linear-to-br from-primary/40 to-primary/10 ring-1 ring-border/60" />
               )}
               {onUploadAvatar ? (
                 <div className="flex-1">
@@ -381,7 +381,7 @@ function NativeSelect({ className, ...props }: SelectHTMLAttributes<HTMLSelectEl
       />
       <svg
         aria-hidden
-        className="pointer-events-none absolute end-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
+        className="pointer-events-none absolute inset-e-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
         fill="none"
         stroke="currentColor"
         strokeLinecap="round"

@@ -3,7 +3,7 @@
 "use client";
 
 import {
-  type MutableRefObject,
+  type RefObject,
   useEffect,
   useRef,
   useSyncExternalStore,
@@ -68,7 +68,7 @@ export type ParticleFieldProps = {
    * POC: parent bumps `current` on keydown (e.g. +0.12); field decays each frame and uses it
    * to add extra drift / twinkle so typing on the auth column subtly animates the figure.
    */
-  typingImpulseRef?: MutableRefObject<number>;
+  typingImpulseRef?: RefObject<number>;
   /**
    * When true, keeps every sampled pixel above `threshold` (skips the random luminance thinning).
    * Use for small fixed-size embeds where the default sparse falloff erases the figure.
@@ -105,7 +105,7 @@ const SUBMIT_IMPULSE_SECONDARY = 0.2;
 
 /** Add energy to `typingImpulseRef` (keyboard, preset chips, etc.). */
 export function pulseParticleTypingImpulse(
-  impulseRef: MutableRefObject<number>,
+  impulseRef: RefObject<number>,
   amount = TYPING_IMPULSE_ADD,
 ) {
   impulseRef.current = Math.min(
@@ -119,7 +119,7 @@ export function pulseParticleTypingImpulse(
  * follow-up while the first is still decaying (reads like a soft “launch”).
  */
 export function pulseParticleSubmitImpulse(
-  impulseRef: MutableRefObject<number>,
+  impulseRef: RefObject<number>,
 ) {
   pulseParticleTypingImpulse(impulseRef, SUBMIT_IMPULSE_PRIMARY);
   window.setTimeout(() => {
@@ -129,7 +129,7 @@ export function pulseParticleSubmitImpulse(
 
 /** Bump `typingImpulseRef` from a `keydown` handler (used with `ParticleField` typing POC). */
 export function bumpParticleTypingImpulse(
-  impulseRef: MutableRefObject<number>,
+  impulseRef: RefObject<number>,
   e: Pick<KeyboardEvent, "repeat" | "metaKey" | "ctrlKey" | "altKey" | "key">,
 ) {
   if (e.repeat) return;
@@ -204,6 +204,8 @@ export function ParticleField({
   invertRef.current = invert;
   const denseParticlesRef = useRef(denseParticles);
   denseParticlesRef.current = denseParticles;
+  const typingImpulsePropRef = useRef(typingImpulseRef);
+  typingImpulsePropRef.current = typingImpulseRef;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -464,9 +466,10 @@ export function ParticleField({
       const mr = mouseRadiusV * dpr;
       const mr2 = mr * mr;
 
-      let typing = reduced ? 0 : (typingImpulseRef?.current ?? 0);
-      if (typingImpulseRef && typing > 1e-4) {
-        typingImpulseRef.current *= 0.93;
+      const impulse = typingImpulsePropRef.current;
+      const typing = reduced ? 0 : (impulse?.current ?? 0);
+      if (impulse && typing > 1e-4) {
+        impulse.current *= 0.93;
       }
       const typingBoost = 1 + typing * 10;
       const rippleCx = (offsetX + clusterW * 0.5) * dpr;

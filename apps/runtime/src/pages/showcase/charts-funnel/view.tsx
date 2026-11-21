@@ -107,13 +107,13 @@ function ConversionFunnelScreen({ data, status = "ready", error, onRetry, classN
                         <div className="absolute inset-0 rounded-md bg-background" />
                         <div
                           aria-hidden
-                          className="absolute inset-y-0 start-0 rounded-md transition-all"
+                          className="absolute inset-y-0 inset-s-0 rounded-md transition-all"
                           style={{
                             width: `${share * 100}%`,
                             background: "linear-gradient(90deg, color-mix(in srgb, var(--chart-1) 95%, transparent), color-mix(in srgb, var(--chart-1) 55%, transparent))",
                           }}
                         />
-                        <div className="absolute inset-y-0 end-3 flex items-center">
+                        <div className="absolute inset-y-0 inset-e-3 flex items-center">
                           <span className="font-mono text-[11px] text-muted-foreground">
                             <span className="sr-only">{interpolate(t.ofFirst, { share: pct(share) })}</span>
                             <span aria-hidden>{pct(share)}</span>
@@ -126,7 +126,7 @@ function ConversionFunnelScreen({ data, status = "ready", error, onRetry, classN
                       </div>
                     </div>
                     {prev ? (
-                      <div className="absolute -top-3 end-0 inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 font-mono text-[10px] text-category-4-foreground ring-1 ring-category-4/20 sm:end-auto sm:start-[196px] md:start-[216px]">
+                      <div className="absolute -top-3 inset-e-0 inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 font-mono text-[10px] text-category-4-foreground ring-1 ring-category-4/20 sm:inset-e-auto sm:inset-s-49 md:inset-s-54">
                         <ArrowDownRightIcon aria-hidden className="size-3" />
                         {interpolate(t.drop, { rate: pct(-rate(prev.count, lost)), count: fmt.number(lost) })}
                       </div>

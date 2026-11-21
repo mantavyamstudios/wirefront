@@ -709,7 +709,7 @@ function AdminUsersScreen({
         </div>
 
         <div className="hidden @3xl:block">
-          <Table className="min-w-[860px] table-fixed">
+          <Table className="min-w-215 table-fixed">
             <TableHeader>
               <TableRow className="bg-muted/30 text-muted-foreground text-xs not-in-data-[variant=card]:hover:bg-muted/30 dark:not-in-data-[variant=card]:hover:bg-muted/30 [&_th]:h-9 [&_th]:font-medium [&_th]:text-muted-foreground [&_th]:text-xs">
                 <TableHead aria-sort={ariaSort("name")} className="ps-4">
@@ -772,7 +772,7 @@ function AdminUsersScreen({
   const confirmRows = (confirm ?? []).map(byId).filter((u): u is AdminUser => !!u);
 
   return (
-    <div className={cn("@container relative isolate flex h-full min-h-[640px] w-full flex-col overflow-hidden bg-background text-foreground text-sm", className)}>
+    <div className={cn("@container relative isolate flex h-full min-h-160 w-full flex-col overflow-hidden bg-background text-foreground text-sm", className)}>
       <div className="min-h-0 flex-1 overflow-y-auto">
         <div className="flex flex-col gap-5 px-4 pt-5 pb-28 @3xl:px-6 @3xl:pt-6">
           <div className="flex flex-wrap items-center gap-3">
@@ -838,7 +838,7 @@ function AdminUsersScreen({
           </section>
 
           <div className="flex flex-col gap-3 @4xl:flex-row @4xl:items-center">
-            <div className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] @3xl:-mx-6 @3xl:px-6 @4xl:mx-0 @4xl:px-0">
+            <div className="-mx-4 overflow-x-auto px-4 scrollbar-none @3xl:-mx-6 @3xl:px-6 @4xl:mx-0 @4xl:px-0">
               <fieldset className="relative flex w-fit items-center gap-0.5 rounded-lg bg-muted p-0.5">
                 <legend className="sr-only">{t.statusFilter}</legend>
                 {STATUS_TABS.map((value) => (
@@ -879,7 +879,7 @@ function AdminUsersScreen({
                   <FilterIcon />
                   <span className="hidden @md:inline">{t.filter}</span>
                   {filterCount > 0 ? (
-                    <span className="absolute -top-1.5 -end-1.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 font-medium text-[10px] text-primary-foreground tabular-nums ring-2 ring-background">
+                    <span className="absolute -top-1.5 -inset-e-1.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 font-medium text-[10px] text-primary-foreground tabular-nums ring-2 ring-background">
                       {filterCount}
                     </span>
                   ) : null}
@@ -962,7 +962,7 @@ function AdminUsersScreen({
             <motion.div
               animate={{ y: 0, opacity: 1, scale: 1 }}
               aria-label={t.bulkActions}
-              className={cn(barSurface, "pointer-events-auto flex max-w-full items-center gap-1 overflow-x-auto p-1 [scrollbar-width:none]")}
+              className={cn(barSurface, "pointer-events-auto flex max-w-full items-center gap-1 overflow-x-auto p-1 scrollbar-none")}
               exit={{ y: 8, opacity: 0, scale: 0.97, transition: { duration: 0.12, ease: easeOut } }}
               initial={reduce ? { opacity: 0 } : { y: 16, opacity: 0, scale: 0.96 }}
               key="bulk"
@@ -1043,7 +1043,7 @@ function AdminUsersScreen({
       </div>
 
       <Sheet onOpenChange={(open) => !open && setDetailId(null)} open={detail !== null}>
-        <SheetContent className="w-full gap-0 p-0 sm:max-w-[420px]">
+        <SheetContent className="w-full gap-0 p-0 sm:max-w-105">
           {detail ? (
             <MemberDetails
               detail={detail}
@@ -1250,7 +1250,7 @@ function MemberDetails({
                   <section className="flex flex-col gap-3">
                     <h4 className="font-medium text-muted-foreground text-xs">{t.activity}</h4>
                     <ol className="relative flex flex-col gap-4">
-                      <span aria-hidden className="absolute top-3 bottom-3 start-[13px] w-px bg-border" />
+                      <span aria-hidden className="absolute top-3 bottom-3 inset-s-3.25 w-px bg-border" />
                       {data.data.activity.map((a) => (
                         <li className="relative flex gap-3" key={a.id}>
                           <span className="relative flex size-7 shrink-0 items-center justify-center rounded-full border bg-background text-muted-foreground [&_svg]:size-3.5">

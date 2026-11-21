@@ -129,10 +129,10 @@ function StatusPageScreen({ data, product, host, status = "ready", error, onRetr
                           <div className="text-sm">{c.name}</div>
                           <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{t[c.status]}</div>
                         </div>
-                        <div aria-label={interpolate(t.daysLabel, { name: c.name, bad, days: c.days.length })} className="flex w-full basis-full gap-[2px] sm:w-auto sm:basis-auto" role="img">
+                        <div aria-label={interpolate(t.daysLabel, { name: c.name, bad, days: c.days.length })} className="flex w-full basis-full gap-0.5 sm:w-auto sm:basis-auto" role="img">
                           {c.days.map((d, i) => (
                             <span
-                              className={cn("h-6 min-w-0 flex-1 rounded-sm sm:h-7 sm:w-[3px] sm:flex-none", i < c.days.length - PHONE_DAYS && "max-sm:hidden", DAY_BAR[d.status])}
+                              className={cn("h-6 min-w-0 flex-1 rounded-sm sm:h-7 sm:w-0.75 sm:flex-none", i < c.days.length - PHONE_DAYS && "max-sm:hidden", DAY_BAR[d.status])}
                               key={d.date}
                             />
                           ))}
@@ -169,10 +169,10 @@ function StatusPageScreen({ data, product, host, status = "ready", error, onRetr
                       </div>
 
                       <ol className="relative mt-5">
-                        <span aria-hidden className="absolute start-[5px] top-1 bottom-1 w-px bg-border/50" />
+                        <span aria-hidden className="absolute inset-s-1.25 top-1 bottom-1 w-px bg-border/50" />
                         {inc.updates.map((u) => (
                           <li className="relative grid grid-cols-[24px_1fr] gap-3 py-2" key={u.id}>
-                            <span aria-hidden className="z-10 mt-1.5 grid size-[12px] place-items-center rounded-full ring-2 ring-background">
+                            <span aria-hidden className="z-10 mt-1.5 grid size-3 place-items-center rounded-full ring-2 ring-background">
                               <span className={cn("size-2 rounded-full", STATE_DOT[u.state])} />
                             </span>
                             <div>

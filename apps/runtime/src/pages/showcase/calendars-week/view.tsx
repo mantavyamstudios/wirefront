@@ -100,7 +100,7 @@ function WeekScheduleScreen({ weekStart, days = 5, onWeekChange, events, dayStar
   const first = dates[0] ?? weekStart;
   const last = dates[dates.length - 1] ?? weekStart;
   // The day count is a CSS variable so the class stays static for Tailwind.
-  const columns = "grid-cols-[48px_repeat(var(--days),minmax(calc((100cqw_-_48px)/2),1fr))] sm:grid-cols-[64px_repeat(var(--days),minmax(0,1fr))]";
+  const columns = "grid-cols-[48px_repeat(var(--days),minmax(calc((100cqw-48px)/2),1fr))] sm:grid-cols-[64px_repeat(var(--days),minmax(0,1fr))]";
   const daysVar = { "--days": days } as CSSProperties;
   const placed = (date: string) =>
     layout(
@@ -109,7 +109,7 @@ function WeekScheduleScreen({ weekStart, days = 5, onWeekChange, events, dayStar
         .filter(({ s }) => s.date === date)
         .map(({ e, s, en }) => ({ e, from: s.minutes, to: en.date === date ? en.minutes : 24 * 60 })),
     );
-  const navButton = "grid size-8 place-items-center rounded-md border border-border/60 outline-none hover:bg-foreground/[0.04] focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10";
+  const navButton = "grid size-8 place-items-center rounded-md border border-border/60 outline-none hover:bg-foreground/4 focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10";
   const hourLabel = (h: number) => fmt.time(new Date(Date.UTC(2026, 0, 1, h)), { hour: "2-digit", minute: "2-digit", timeZone: "UTC" });
 
   return (
@@ -156,14 +156,14 @@ function WeekScheduleScreen({ weekStart, days = 5, onWeekChange, events, dayStar
             ) : null}
           </div>
         ) : !events || status === "loading" ? (
-          <Skeleton aria-busy="true" className="mt-6 h-[660px] w-full rounded-xl motion-reduce:animate-none" />
+          <Skeleton aria-busy="true" className="mt-6 h-165 w-full rounded-xl motion-reduce:animate-none" />
         ) : (
           // Equal day columns from sm up. On phones the grid scrolls horizontally,
           // two days per screen, while the hour rail stays pinned.
           <div className="mt-6 overflow-hidden rounded-xl border border-border/60 bg-background/40">
             <ScrollRegion aria-label={t.grid} className="@container" orientation="horizontal" style={daysVar}>
               <div className={cn("grid border-border/40 border-b", columns)}>
-                <div className="sticky start-0 z-20 border-border/40 border-e bg-background" />
+                <div className="sticky inset-s-0 z-20 border-border/40 border-e bg-background" />
                 {dates.map((date) => (
                   <div className="border-border/40 border-e px-3 py-3 last:border-e-0" key={date}>
                     <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{new Intl.DateTimeFormat(locale, { weekday: "short", timeZone: "UTC" }).format(utc(date))}</div>
@@ -174,7 +174,7 @@ function WeekScheduleScreen({ weekStart, days = 5, onWeekChange, events, dayStar
                 ))}
               </div>
               <div className={cn("grid", columns)}>
-                <div aria-hidden className="sticky start-0 z-20 border-border/40 border-e bg-background">
+                <div aria-hidden className="sticky inset-s-0 z-20 border-border/40 border-e bg-background">
                   {hours.map((h) => (
                     <div className="flex items-start justify-end px-1.5 py-1 font-mono text-[10px] text-muted-foreground sm:px-2" key={h} style={{ height: HOUR_PX }}>
                       {hourLabel(h)}

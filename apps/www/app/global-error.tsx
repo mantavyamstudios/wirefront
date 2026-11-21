@@ -9,13 +9,13 @@ import { useEffect } from "react";
 import { fontInter } from "@/lib/fonts";
 import { COMMUNITY_ISSUES_URL } from "@/lib/site";
 
-export default function GlobalError({
+const GlobalError = ({
   error,
   unstable_retry,
 }: {
   error: Error & { digest?: string };
   unstable_retry: () => void;
-}) {
+}) => {
   useEffect(() => {
     // Detect dark theme from localStorage or system preferences
     const savedTheme = localStorage.getItem("theme");
@@ -60,4 +60,6 @@ export default function GlobalError({
       </body>
     </html>
   );
-}
+};
+
+export default GlobalError;

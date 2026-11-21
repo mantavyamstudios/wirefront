@@ -143,7 +143,7 @@ function EngineeringVelocityScreen({ data, range, onRangeChange, status = "ready
           <RadioGroup aria-label={t.range} className="flex items-center gap-1" onValueChange={(v) => onRangeChange(v as VelocityRange)} value={range}>
             {RANGES.map((r) => (
               <Radio.Root
-                className="cursor-pointer rounded-md border border-transparent px-2.5 py-1.5 font-mono text-muted-foreground text-xs outline-none hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:border-border data-checked:bg-background data-checked:text-foreground pointer-coarse:min-h-10"
+                className="cursor-pointer rounded-md border border-transparent px-2.5 py-1.5 font-mono text-muted-foreground text-xs outline-none hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:border-border data-checked:bg-background data-checked:text-foreground pointer-coarse:min-h-10"
                 key={r}
                 value={r}
               >
@@ -240,7 +240,7 @@ function EngineeringVelocityScreen({ data, range, onRangeChange, status = "ready
                               <div className="bg-category-1/60" style={{ height: `${(w.open / total) * 100}%` }} />
                               <div className="bg-category-2" style={{ height: `${(w.merged / total) * 100}%` }} />
                             </div>
-                            <span aria-hidden className="whitespace-nowrap font-mono text-[10px] text-muted-foreground uppercase tracking-[0.05em] max-sm:hidden sm:tracking-[0.1em]">
+                            <span aria-hidden className="whitespace-nowrap font-mono text-[10px] text-muted-foreground uppercase tracking-wider max-sm:hidden sm:tracking-widest">
                               {day(w.weekStart)}
                             </span>
                           </li>
@@ -318,7 +318,7 @@ function EngineeringVelocityScreen({ data, range, onRangeChange, status = "ready
                         </Avatar>
                         <div className="min-w-0">
                           <div className="truncate text-sm">{c.name}</div>
-                          <div aria-hidden className="mt-1 h-1.5 overflow-hidden rounded-full bg-foreground/[0.04]">
+                          <div aria-hidden className="mt-1 h-1.5 overflow-hidden rounded-full bg-foreground/4">
                             <div className="h-full bg-category-2/70" style={{ width: `${(c.merged / topMerged) * 100}%` }} />
                           </div>
                         </div>

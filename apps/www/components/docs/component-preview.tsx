@@ -48,20 +48,20 @@ interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
 }
 
-const UI_FRAMEWORK_PREFIX = /^(base|radix)-/;
+const UI_FRAMEWORK_PREFIX = /^(?:base|radix)-/u;
 
 type RegistryIndexEntry = (typeof index)[string];
 
-function isCanonicalDemoForItem(demoName: string, depName: string): boolean {
+const isCanonicalDemoForItem = (demoName: string, depName: string): boolean => {
   const strippedDep = depName.replace(UI_FRAMEWORK_PREFIX, "");
   return (
     demoName === depName ||
     demoName === `demo-${depName}` ||
     demoName === `demo-${strippedDep}`
   );
-}
+};
 
-function resolveDemoProps(name: string): Record<string, unknown> {
+const resolveDemoProps = (name: string): Record<string, unknown> => {
   const entry = index[name] as RegistryIndexEntry | undefined;
   const direct = entry?.component?.demoProps;
   if (direct && Object.keys(direct).length > 0) {
@@ -85,13 +85,13 @@ function resolveDemoProps(name: string): Record<string, unknown> {
   }
 
   return {};
-}
+};
 
 /** Usage example source for the Code tab; preview still uses `name`. */
-function resolveUsageCodeEntry(
+const resolveUsageCodeEntry = (
   previewName: string,
   explicitDemo?: string
-): RegistryIndexEntry | undefined {
+): RegistryIndexEntry | undefined => {
   if (explicitDemo) {
     const entry = index[explicitDemo] as RegistryIndexEntry | undefined;
     if (entry?.hasSource || entry?.files?.length) {
@@ -106,9 +106,86 @@ function resolveUsageCodeEntry(
   }
 
   return index[previewName] as RegistryIndexEntry | undefined;
-}
+};
 
-export function ComponentPreview({
+/** The demo's source: pre-highlighted HTML, then raw code, then a loading placeholder. */
+const UsageCodeBlock = ({
+  staticHtml,
+  staticContent,
+  title,
+  minHeight,
+}: {
+  staticHtml: string | null;
+  staticContent: string | null;
+  title: string;
+  minHeight: number;
+}): ReactNode => {
+  if (staticHtml) {
+    return (
+      <CodeBlock
+        className="my-0 rounded-none border-0"
+        code={staticContent ?? undefined}
+        icon={<ReactIcon />}
+        title={title}
+      >
+        <div
+          className="w-full text-sm [&_pre]:my-0 [&_pre]:bg-transparent [&_pre]:p-4 [&_pre]:focus-visible:outline-none"
+          // oxlint-disable-next-line react/no-danger -- pre-highlighted code html generated at build time
+          dangerouslySetInnerHTML={{ __html: staticHtml }}
+          data-code-block
+        />
+      </CodeBlock>
+    );
+  }
+  if (staticContent) {
+    return (
+      <DynamicCodeBlock
+        code={staticContent}
+        icon={<ReactIcon />}
+        lang="tsx"
+        loadingMinHeight={minHeight}
+        title={title}
+      />
+    );
+  }
+  return (
+    <CodeBlock
+      allowCopy={false}
+      className="my-0 rounded-none border-0"
+      icon={<ReactIcon />}
+      title={title}
+    >
+      <Pre
+        className="text-muted-foreground flex items-center justify-center gap-2"
+        style={{ minHeight: `${minHeight}px` }}
+      >
+        <Loader aria-hidden className="size-4 animate-spin" />
+        <span className="text-sm">Loading code…</span>
+      </Pre>
+    </CodeBlock>
+  );
+};
+
+/** A demo's source and highlighted HTML; a failure is logged and the Code tab loads it when opened. */
+const fetchSource = async (
+  sourceName: string
+): Promise<[string | null, string | null]> => {
+  try {
+    const [code, html] = await Promise.all([
+      loadComponentSource(sourceName),
+      loadComponentHtml(sourceName),
+    ]);
+    return [code ?? null, html ?? null];
+  } catch (error) {
+    console.warn(
+      `[component preview] couldn't preload the source of ${sourceName}; the Code tab loads it when opened`,
+      error
+    );
+    return [null, null];
+  }
+};
+
+export const ComponentPreview = ({
   name,
   demo,
   description,
@@ -116,12 +193,8 @@ export function ComponentPreview({
   iframe = false,
   bigScreen = false,
   ...props
-}: ComponentPreviewProps) {
+}: ComponentPreviewProps) => {
   const [binds, setBinds] = useState<Binds | null>(null);
-  const [componentProps, setComponentProps] = useState<Record<
-    string,
-    unknown
-  > | null>(null);
   const [previewKey, setPreviewKey] = useState(0);
   const [activeTab, setActiveTab] = useState("preview");
   const [staticContent, setStaticContent] = useState<string | null>(null);
@@ -135,6 +208,23 @@ export function ComponentPreview({
   });
 
   const demoPropsConfig = useMemo(() => resolveDemoProps(name), [name]);
+
+  // The Tweakpane controls start from the demo's configured props.
+  const [lastPropsConfig, setLastPropsConfig] = useState<
+    typeof demoPropsConfig | null
+  >(null);
+  if (lastPropsConfig !== demoPropsConfig) {
+    setLastPropsConfig(demoPropsConfig);
+    setBinds(
+      Object.keys(demoPropsConfig).length === 0
+        ? null
+        : (demoPropsConfig as Binds)
+    );
+  }
+  const componentProps = useMemo(
+    () => (binds ? unwrapValues(binds) : null),
+    [binds]
+  );
 
   const usageCodeMeta = useMemo(() => {
     const entry = resolveUsageCodeEntry(name, demo);
@@ -153,40 +243,54 @@ export function ComponentPreview({
   const previewPaneRef = useRef<HTMLDivElement>(null);
   const [previewHeight, setPreviewHeight] = useState(496);
 
-  const preloadSource = useCallback(() => {
-    if ((staticContent !== null && staticHtml !== null) || !sourceName) {
-      return;
-    }
-    Promise.all([
-      loadComponentSource(sourceName),
-      loadComponentHtml(sourceName),
-    ]).then(([code, html]) => {
+  // A different source starts with no preloaded code.
+  const [lastSourceName, setLastSourceName] = useState(sourceName);
+  if (lastSourceName !== sourceName) {
+    setLastSourceName(sourceName);
+    setStaticContent(null);
+    setStaticHtml(null);
+  }
+
+  const hasSource = staticContent !== null && staticHtml !== null;
+  const applySource = useCallback(
+    ([code, html]: [string | null, string | null]) => {
       if (code) {
         setStaticContent(code);
       }
       if (html) {
         setStaticHtml(html);
       }
-    });
-  }, [sourceName, staticContent, staticHtml]);
-
-  // oxlint-disable-next-line react-hooks/exhaustive-deps -- reset static code on source change
-  useEffect(() => {
-    setStaticContent(null);
-    setStaticHtml(null);
-  }, [sourceName]);
-
-  useEffect(() => {
-    if (isInView) {
-      preloadSource();
+    },
+    []
+  );
+  const preloadSource = useCallback(async () => {
+    if (hasSource || !sourceName) {
+      return;
     }
-  }, [isInView, preloadSource]);
+    applySource(await fetchSource(sourceName));
+  }, [sourceName, hasSource, applySource]);
 
+  // Preloads once the preview scrolls near, so the Code tab opens at once.
   useEffect(() => {
-    if (activeTab === "code") {
-      setHasOpenedCode(true);
+    if (!isInView || hasSource || !sourceName) {
+      return;
     }
-  }, [activeTab]);
+    let cancelled = false;
+    const load = async () => {
+      const source = await fetchSource(sourceName);
+      if (!cancelled) {
+        applySource(source);
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [isInView, hasSource, sourceName, applySource]);
+
+  if (activeTab === "code" && !hasOpenedCode) {
+    setHasOpenedCode(true);
+  }
 
   useEffect(() => {
     const el = previewPaneRef.current;
@@ -199,7 +303,7 @@ export function ComponentPreview({
         setPreviewHeight(Math.round(h));
       }
     };
-    updateHeight();
+    // The observer reports the first size as soon as it starts observing.
     const observer = new ResizeObserver(updateHeight);
     observer.observe(el);
     return () => observer.disconnect();
@@ -237,23 +341,6 @@ export function ComponentPreview({
   }, [name, componentProps, demoPropsConfig, isInView]);
 
   useEffect(() => {
-    if (Object.keys(demoPropsConfig).length === 0) {
-      setBinds(null);
-      setComponentProps(null);
-    } else {
-      setBinds(demoPropsConfig as Binds);
-      setComponentProps(unwrapValues(demoPropsConfig));
-    }
-  }, [demoPropsConfig]);
-
-  useEffect(() => {
-    if (!binds) {
-      return;
-    }
-    setComponentProps(unwrapValues(binds));
-  }, [binds]);
-
-  useEffect(() => {
     if (componentProps === null) {
       return;
     }
@@ -273,51 +360,14 @@ export function ComponentPreview({
     setPreviewKey((current) => current + 1);
   }, [componentProps]);
 
-  let codeBlockNode: ReactNode;
-  if (staticHtml) {
-    codeBlockNode = (
-      <CodeBlock
-        className="my-0 rounded-none border-0"
-        code={staticContent ?? undefined}
-        icon={<ReactIcon />}
-        title={usageCodeMeta.title}
-      >
-        <div
-          className="w-full text-sm [&_pre]:my-0 [&_pre]:bg-transparent [&_pre]:p-4 [&_pre]:focus-visible:outline-none"
-          // oxlint-disable-next-line react/no-danger -- pre-highlighted code html generated at build time
-          dangerouslySetInnerHTML={{ __html: staticHtml }}
-          data-code-block
-        />
-      </CodeBlock>
-    );
-  } else if (staticContent) {
-    codeBlockNode = (
-      <DynamicCodeBlock
-        code={staticContent}
-        icon={<ReactIcon />}
-        lang="tsx"
-        loadingMinHeight={previewHeight}
-        title={usageCodeMeta.title}
-      />
-    );
-  } else {
-    codeBlockNode = (
-      <CodeBlock
-        allowCopy={false}
-        className="my-0 rounded-none border-0"
-        icon={<ReactIcon />}
-        title={usageCodeMeta.title}
-      >
-        <Pre
-          className="text-muted-foreground flex items-center justify-center gap-2"
-          style={{ minHeight: `${previewHeight}px` }}
-        >
-          <Loader aria-hidden className="size-4 animate-spin" />
-          <span className="text-sm">Loading code…</span>
-        </Pre>
-      </CodeBlock>
-    );
-  }
+  const codeBlockNode = (
+    <UsageCodeBlock
+      minHeight={previewHeight}
+      staticContent={staticContent}
+      staticHtml={staticHtml}
+      title={usageCodeMeta.title}
+    />
+  );
 
   return (
     <div
@@ -488,7 +538,7 @@ export function ComponentPreview({
                         {preview}
                       </Suspense>
                     ) : (
-                      <div className="text-muted-foreground flex min-h-[200px] items-center justify-center text-sm">
+                      <div className="text-muted-foreground flex min-h-50 items-center justify-center text-sm">
                         <Loader className="mr-2 size-4 animate-spin" />
                         Loading...
                       </div>
@@ -536,7 +586,6 @@ export function ComponentPreview({
                             onBindsChange={setBinds}
                             onReset={() => {
                               setBinds(demoPropsConfig as Binds);
-                              setComponentProps(unwrapValues(demoPropsConfig));
                               setPreviewKey((prev) => prev + 1);
                             }}
                           />
@@ -556,7 +605,7 @@ export function ComponentPreview({
                 value="code"
               >
                 {shouldRenderCode ? (
-                  <div className="relative w-full overflow-hidden [&_.fd-codeblock]:my-0 [&_.fd-codeblock]:rounded-none [&_.fd-codeblock]:border-0 [&_[data-slot=codeblock-viewport]]:max-h-[500px]">
+                  <div className="relative w-full overflow-hidden **:data-[slot=codeblock-viewport]:max-h-125 [&_.fd-codeblock]:my-0 [&_.fd-codeblock]:rounded-none [&_.fd-codeblock]:border-0">
                     {codeBlockNode}
                   </div>
                 ) : null}
@@ -575,6 +624,6 @@ export function ComponentPreview({
       ) : null}
     </div>
   );
-}
+};
 
 export default ComponentPreview;

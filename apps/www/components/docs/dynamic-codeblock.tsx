@@ -7,7 +7,7 @@ import type {
 } from "fumadocs-core/highlight";
 import { useShiki } from "fumadocs-core/highlight/client";
 import { Loader } from "lucide-react";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useEffectEvent } from "react";
 
 import { CodeBlock, Pre } from "@/components/docs/codeblock";
 
@@ -53,7 +53,7 @@ export interface DynamicCodeBlockProps {
   title?: string;
 }
 
-export function DynamicCodeBlockLoading({
+export const DynamicCodeBlockLoading = ({
   className,
   icon,
   title,
@@ -61,40 +61,33 @@ export function DynamicCodeBlockLoading({
 }: Pick<
   DynamicCodeBlockProps,
   "className" | "icon" | "title" | "loadingMinHeight"
->) {
-  return (
-    <CodeBlock
-      allowCopy={false}
-      className={className}
-      icon={icon}
-      title={title}
+>) => (
+  <CodeBlock allowCopy={false} className={className} icon={icon} title={title}>
+    <Pre
+      className="text-muted-foreground flex items-center justify-center gap-2"
+      style={{
+        minHeight:
+          typeof loadingMinHeight === "number"
+            ? `${loadingMinHeight}px`
+            : loadingMinHeight,
+      }}
     >
-      <Pre
-        className="text-muted-foreground flex items-center justify-center gap-2"
-        style={{
-          minHeight:
-            typeof loadingMinHeight === "number"
-              ? `${loadingMinHeight}px`
-              : loadingMinHeight,
-        }}
-      >
-        <Loader aria-hidden className="size-4 animate-spin" />
-        <span className="text-sm">Loading code…</span>
-      </Pre>
-    </CodeBlock>
-  );
-}
+      <Loader aria-hidden className="size-4 animate-spin" />
+      <span className="text-sm">Loading code…</span>
+    </Pre>
+  </CodeBlock>
+);
 
 const jsxCache = new Map<string, React.ReactNode>();
 
-export function isCodeBlockCached(lang: string, code?: string): boolean {
+export const isCodeBlockCached = (lang: string, code?: string): boolean => {
   if (!code) {
     return false;
   }
   return jsxCache.has(`${lang}:${code}`);
-}
+};
 
-function ShikiHighlight({
+const ShikiHighlight = ({
   lang,
   code = "",
   options,
@@ -104,7 +97,7 @@ function ShikiHighlight({
   onLoaded,
   className,
   loading,
-}: DynamicCodeBlockProps & { loading: React.ReactNode }) {
+}: DynamicCodeBlockProps & { loading: React.ReactNode }) => {
   const cacheKey = `${lang}:${code}`;
   const components = getComponents({ title, code, icon, onCopy, className });
 
@@ -127,17 +120,16 @@ function ShikiHighlight({
   }, [result, loading, cacheKey, onLoaded]);
 
   return result;
-}
+};
 
-export function DynamicCodeBlock(props: DynamicCodeBlockProps) {
+export const DynamicCodeBlock = (props: DynamicCodeBlockProps) => {
   const cacheKey = `${props.lang}:${props.code ?? ""}`;
   const cached = props.code ? jsxCache.get(cacheKey) : null;
-  const onLoadedRef = useRef(props.onLoaded);
-  onLoadedRef.current = props.onLoaded;
+  const notifyLoaded = useEffectEvent(() => props.onLoaded?.());
 
   useEffect(() => {
     if (cached) {
-      onLoadedRef.current?.();
+      notifyLoaded();
     }
   }, [cached]);
 
@@ -163,4 +155,4 @@ export function DynamicCodeBlock(props: DynamicCodeBlockProps) {
       <ShikiHighlight {...props} loading={loading} />
     </Suspense>
   );
-}
+};

@@ -11,7 +11,10 @@ interface ComponentPageTocProps {
   items: ComponentTocItem[];
 }
 
-export function ComponentPageToc({ items, className }: ComponentPageTocProps) {
+export const ComponentPageToc = ({
+  items,
+  className,
+}: ComponentPageTocProps) => {
   if (items.length === 0) {
     return null;
   }
@@ -43,4 +46,4 @@ export function ComponentPageToc({ items, className }: ComponentPageTocProps) {
       </BlocksScrollArea>
     </nav>
   );
-}
+};

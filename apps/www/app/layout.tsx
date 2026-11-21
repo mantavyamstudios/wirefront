@@ -10,9 +10,9 @@ import type { ReactNode } from "react";
 
 import { CommandPaletteGroupsProvider } from "@/components/command-palette/command-palette-groups-provider";
 import { CommandPaletteSearchDialog } from "@/components/command-palette/command-palette-search-dialog";
-import { ScreensAnchorLinks } from "@/components/screens/screens-anchor-links";
 import { GlobalCursorToggle } from "@/components/global-cursor-toggle";
 import { PageTransitionProvider } from "@/components/page-transition/page-transition-provider";
+import { ScreensAnchorLinks } from "@/components/screens/screens-anchor-links";
 import { getCommandPaletteGroups } from "@/lib/command-palette/get-command-palette-items";
 import { fontInter } from "@/lib/fonts";
 import { jsonLd } from "@/lib/json-ld";
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Layout({ children }: { children: ReactNode }) {
+const Layout = ({ children }: { children: ReactNode }) => {
   const commandGroups = getCommandPaletteGroups();
 
   const app = (
@@ -134,4 +134,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       </body>
     </html>
   );
-}
+};
+
+export default Layout;

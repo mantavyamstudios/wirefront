@@ -38,7 +38,7 @@ const EXPAND_TRANSITION = {
   ease: [0.32, 0.72, 0, 1] as const,
 };
 
-function usePreviewShortcuts({
+const usePreviewShortcuts = ({
   isExpanded,
   onCollapse,
   onToggle,
@@ -46,7 +46,7 @@ function usePreviewShortcuts({
   isExpanded: boolean;
   onCollapse: () => void;
   onToggle: () => void;
-}) {
+}) => {
   // Collapse preview on Escape
   useEffect(() => {
     if (!isExpanded) {
@@ -94,10 +94,11 @@ function usePreviewShortcuts({
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [onToggle]);
-}
+};
 
-function useResponsiveBreakpointTransition(onReset: () => void) {
-  const [isBreakpointTransition, setIsBreakpointTransition] = useState(false);
+const useResponsiveBreakpointTransition = (onReset: () => void) => {
+  // True for the first frame, so the layout doesn't animate into place on mount.
+  const [isBreakpointTransition, setIsBreakpointTransition] = useState(true);
 
   useEffect(() => {
     const media = window.matchMedia(LG_MEDIA);
@@ -111,15 +112,14 @@ function useResponsiveBreakpointTransition(onReset: () => void) {
   }, [onReset]);
 
   useEffect(() => {
-    setIsBreakpointTransition(true);
     const id = requestAnimationFrame(() => setIsBreakpointTransition(false));
     return () => cancelAnimationFrame(id);
   }, []);
 
   return isBreakpointTransition;
-}
+};
 
-function ComponentPageDocsContent({
+const ComponentPageDocsContent = ({
   children,
   githubPath,
   header,
@@ -135,38 +135,36 @@ function ComponentPageDocsContent({
   previousNav?: NeighborNavItem;
   releaseDate?: string;
   toc: ComponentTocItem[];
-}) {
-  return (
-    <div className="flex w-full min-w-0 justify-center">
-      <div
-        className={cn(
-          "flex w-full max-w-4xl min-w-0 flex-col gap-6 pt-8 pb-3 md:gap-10 md:pt-14 md:pb-6",
-          blocksStackedHorizontalGutterClassName
-        )}
-      >
-        <ComponentPageHeader
-          data={header}
-          githubPath={githubPath}
-          nextNav={nextNav}
-          previousNav={previousNav}
-          releaseDate={releaseDate}
-        />
+}) => (
+  <div className="flex w-full min-w-0 justify-center">
+    <div
+      className={cn(
+        "flex w-full max-w-4xl min-w-0 flex-col gap-6 pt-8 pb-3 md:gap-10 md:pt-14 md:pb-6",
+        blocksStackedHorizontalGutterClassName
+      )}
+    >
+      <ComponentPageHeader
+        data={header}
+        githubPath={githubPath}
+        nextNav={nextNav}
+        previousNav={previousNav}
+        releaseDate={releaseDate}
+      />
 
-        {/* Above the docs, so a reader sees what the page covers first. */}
-        <ComponentPageToc className="static flex" items={toc} />
+      {/* Above the docs, so a reader sees what the page covers first. */}
+      <ComponentPageToc className="static flex" items={toc} />
 
-        <div className="min-w-0">{children}</div>
+      <div className="min-w-0">{children}</div>
 
-        <div className="flex w-full flex-col gap-6">
-          <DocsPager next={nextNav} previous={previousNav} />
-          <Footer />
-        </div>
+      <div className="flex w-full flex-col gap-6">
+        <DocsPager next={nextNav} previous={previousNav} />
+        <Footer />
       </div>
     </div>
-  );
-}
+  </div>
+);
 
-function ComponentPageDocsPanel({
+const ComponentPageDocsPanel = ({
   children,
   isExpanded,
   isLayoutReady,
@@ -176,42 +174,40 @@ function ComponentPageDocsPanel({
   isExpanded: boolean;
   isLayoutReady: boolean;
   isStacked: boolean;
-}) {
-  return (
+}) => (
+  <div
+    className={cn(
+      "max-lg:order-3 max-lg:flex-none",
+      "relative min-h-0 min-w-0",
+      "lg:absolute lg:inset-0 lg:z-0 lg:h-full lg:overflow-hidden lg:pr-[50%]",
+      isExpanded &&
+        "pointer-events-none select-none lg:opacity-0 lg:transition-opacity lg:duration-550 lg:ease-[cubic-bezier(0.32,0.72,0,1)]",
+      !isLayoutReady && "pointer-events-none"
+    )}
+    data-blocks-docs-panel
+  >
     <div
-      className={cn(
-        "max-lg:order-3 max-lg:flex-none",
-        "relative min-h-0 min-w-0",
-        "lg:absolute lg:inset-0 lg:z-0 lg:h-full lg:overflow-hidden lg:pr-[50%]",
-        isExpanded &&
-          "pointer-events-none select-none lg:opacity-0 lg:transition-opacity lg:duration-550 lg:ease-[cubic-bezier(0.32,0.72,0,1)]",
-        !isLayoutReady && "pointer-events-none"
-      )}
-      data-blocks-docs-panel
-    >
-      <div
-        aria-hidden="true"
-        className="from-background via-background/80 pointer-events-none absolute inset-x-0 top-0 z-10 h-16 bg-gradient-to-b to-transparent max-lg:hidden lg:w-1/2"
-      />
-      <div
-        aria-hidden="true"
-        className="from-background via-background/80 pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-gradient-to-t to-transparent max-lg:hidden lg:right-1/2"
-      />
+      aria-hidden="true"
+      className="from-background via-background/80 pointer-events-none absolute inset-x-0 top-0 z-10 h-16 bg-linear-to-b to-transparent max-lg:hidden lg:w-1/2"
+    />
+    <div
+      aria-hidden="true"
+      className="from-background via-background/80 pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-linear-to-t to-transparent max-lg:hidden lg:right-1/2"
+    />
 
-      {isStacked ? (
-        <div className="min-h-0 min-w-0">{children}</div>
-      ) : (
-        <div
-          className="size-full min-h-0 min-w-0 [scrollbar-width:none] overflow-x-hidden overflow-y-auto overscroll-y-contain lg:pt-12 [&::-webkit-scrollbar]:hidden"
-          data-blocks-docs-scroller
-          style={{ WebkitOverflowScrolling: "touch" }}
-        >
-          {children}
-        </div>
-      )}
-    </div>
-  );
-}
+    {isStacked ? (
+      <div className="min-h-0 min-w-0">{children}</div>
+    ) : (
+      <div
+        className="size-full min-h-0 min-w-0 scrollbar-none overflow-x-hidden overflow-y-auto overscroll-y-contain lg:pt-12 [&::-webkit-scrollbar]:hidden"
+        data-blocks-docs-scroller
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
+        {children}
+      </div>
+    )}
+  </div>
+);
 
 interface ComponentPageLayoutClientProps {
   children: ReactNode;
@@ -234,7 +230,7 @@ interface ComponentPageLayoutClientProps {
   toc: ComponentTocItem[];
 }
 
-export function ComponentPageLayoutClient({
+export const ComponentPageLayoutClient = ({
   children,
   exampleUrl,
   header,
@@ -249,7 +245,7 @@ export function ComponentPageLayoutClient({
   releaseDate,
   sourceUrl,
   toc,
-}: ComponentPageLayoutClientProps) {
+}: ComponentPageLayoutClientProps) => {
   const layoutRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPreviewAnimating, setIsPreviewAnimating] = useState(false);
@@ -325,7 +321,7 @@ export function ComponentPageLayoutClient({
           "pointer-events-none max-lg:order-1",
           "lg:absolute lg:top-0 lg:left-0",
           isExpanded ? "lg:w-fit" : "lg:right-1/2",
-          isBlocksMenuOpen ? "lg:z-[120]" : "lg:z-30"
+          isBlocksMenuOpen ? "lg:z-120" : "lg:z-30"
         )}
       >
         <div
@@ -364,7 +360,7 @@ export function ComponentPageLayoutClient({
         }
         className={cn(
           "z-20 flex shrink-0 overflow-hidden max-lg:z-0 max-lg:order-2",
-          "max-lg:bg-background max-lg:relative max-lg:inset-auto max-lg:!left-0 max-lg:h-auto max-lg:!w-full max-lg:max-w-full max-lg:shrink-0 max-lg:overflow-visible max-lg:pb-0",
+          "max-lg:bg-background max-lg:relative max-lg:inset-auto max-lg:left-0! max-lg:h-auto max-lg:w-full! max-lg:max-w-full max-lg:shrink-0 max-lg:overflow-visible max-lg:pb-0",
           "lg:absolute lg:top-0 lg:left-1/2 lg:h-full lg:min-h-[min(420px,55vh)] lg:w-1/2 lg:bg-transparent",
           isExpanded &&
             "max-lg:bg-background max-lg:fixed max-lg:inset-0 max-lg:h-full max-lg:overflow-hidden max-lg:p-6",
@@ -399,4 +395,4 @@ export function ComponentPageLayoutClient({
       </motion.div>
     </div>
   );
-}
+};

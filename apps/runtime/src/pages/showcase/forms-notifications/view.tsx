@@ -116,7 +116,7 @@ function NotificationSettingsScreen({ sections, defaultPreferences, onChange, qu
                     {CHANNELS.map((channel) => (
                       // Each cell is a label so the whole 44px area toggles.
                       <label
-                        className="flex min-h-11 w-14 cursor-pointer items-center justify-center rounded-md hover:bg-foreground/[0.03] sm:w-16"
+                        className="flex min-h-11 w-14 cursor-pointer items-center justify-center rounded-md hover:bg-foreground/3 sm:w-16"
                         htmlFor={`${id}-${p.key}-${channel}`}
                         key={channel}
                       >

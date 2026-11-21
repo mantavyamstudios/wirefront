@@ -537,7 +537,7 @@ function CanvasEditorScreen({ defaultShapes, onChange, collaborators = [], onSha
         : "cursor-default";
 
   return (
-    <div className={cn("relative h-svh w-full select-none overflow-hidden bg-foreground/[0.02] text-foreground", className)} ref={rootRef}>
+    <div className={cn("relative h-svh w-full select-none overflow-hidden bg-foreground/2 text-foreground", className)} ref={rootRef}>
       <DotGrid pan={pan} zoom={zoom} />
 
       <div
@@ -547,7 +547,7 @@ function CanvasEditorScreen({ defaultShapes, onChange, collaborators = [], onSha
         onPointerDown={onCanvasPointerDown}
       >
         <div
-          className="absolute top-0 start-0"
+          className="absolute top-0 inset-s-0"
           style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
             transformOrigin: "0 0",
@@ -601,7 +601,7 @@ function CanvasEditorScreen({ defaultShapes, onChange, collaborators = [], onSha
           <Sheet>
             <SheetTrigger
               aria-label={t.openInspector}
-              className="grid size-11 shrink-0 place-items-center rounded-md text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground"
+              className="grid size-11 shrink-0 place-items-center rounded-md text-foreground/70 hover:bg-foreground/6 hover:text-foreground"
             >
               <SlidersHorizontal className="size-4" />
             </SheetTrigger>
@@ -770,8 +770,8 @@ function ToolsPalette({
               className={cn(
                 "grid size-9 shrink-0 place-items-center rounded-md transition-colors pointer-coarse:size-11",
                 isActive
-                  ? "bg-foreground/[0.1] text-foreground"
-                  : "text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground",
+                  ? "bg-foreground/10 text-foreground"
+                  : "text-foreground/70 hover:bg-foreground/6 hover:text-foreground",
               )}
             >
               <Icon className="size-4" />
@@ -844,25 +844,25 @@ function ZoomControls({
 }) {
   const t = useMessages("canvasEditor", CANVAS_EDITOR_MESSAGES);
   return (
-    <div className="absolute top-3 end-3 z-10 flex items-center gap-0.5 rounded-full border border-border bg-card/85 p-1 shadow-lg backdrop-blur">
+    <div className="absolute top-3 inset-e-3 z-10 flex items-center gap-0.5 rounded-full border border-border bg-card/85 p-1 shadow-lg backdrop-blur">
       <Tooltip>
         <TooltipTrigger
           aria-label={t.zoomOut}
           onClick={onOut}
-          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:size-9"
+          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/6 hover:text-foreground pointer-coarse:size-9"
         >
           <MinusIcon className="size-3.5" />
         </TooltipTrigger>
         <TooltipContent>{t.zoomOut}</TooltipContent>
       </Tooltip>
-      <span className="min-w-[42px] px-2 text-center font-mono text-foreground/80 text-xs tabular-nums">
+      <span className="min-w-10.5 px-2 text-center font-mono text-foreground/80 text-xs tabular-nums">
         {Math.round(zoom * 100)}%
       </span>
       <Tooltip>
         <TooltipTrigger
           aria-label={t.zoomIn}
           onClick={onIn}
-          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:size-9"
+          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/6 hover:text-foreground pointer-coarse:size-9"
         >
           <PlusIcon className="size-3.5" />
         </TooltipTrigger>
@@ -873,7 +873,7 @@ function ZoomControls({
         <TooltipTrigger
           aria-label={t.fit}
           onClick={onFit}
-          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:size-9"
+          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/6 hover:text-foreground pointer-coarse:size-9"
         >
           <Maximize2 className="size-3.5" />
         </TooltipTrigger>
@@ -883,7 +883,7 @@ function ZoomControls({
         <TooltipTrigger
           aria-label={t.fullscreen}
           onClick={onFullscreen}
-          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground max-sm:hidden pointer-coarse:size-9"
+          className="grid size-7 place-items-center rounded-full text-foreground/70 hover:bg-foreground/6 hover:text-foreground max-sm:hidden pointer-coarse:size-9"
         >
           <Maximize className="size-3.5" />
         </TooltipTrigger>
@@ -904,7 +904,7 @@ function StatusPill({
   return (
     <div
       aria-live="polite"
-      className="absolute bottom-3 start-3 z-10 hidden rounded-md border border-border bg-card/85 px-2 py-1 font-mono text-[10px] text-foreground/70 uppercase tracking-[0.2em] backdrop-blur md:block"
+      className="absolute bottom-3 inset-s-3 z-10 hidden rounded-md border border-border bg-card/85 px-2 py-1 font-mono text-[10px] text-foreground/70 uppercase tracking-[0.2em] backdrop-blur md:block"
     >
       {selected
         ? interpolate(t.selectedSize, { width: Math.round(selected.width), height: Math.round(selected.height) })
@@ -938,7 +938,7 @@ function Inspector({
   return (
     <div
       className={cn(
-        "absolute end-3 bottom-3 z-10 w-72 overflow-hidden rounded-xl border border-border bg-card/85 shadow-lg backdrop-blur",
+        "absolute inset-e-3 bottom-3 z-10 w-72 overflow-hidden rounded-xl border border-border bg-card/85 shadow-lg backdrop-blur",
         className && "static",
         className,
       )}
@@ -1054,7 +1054,7 @@ function Inspector({
                     "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-start text-[11px] transition-colors pointer-coarse:min-h-11 pointer-coarse:text-xs",
                     isActive
                       ? "bg-category-1/10 text-category-1-foreground"
-                      : "hover:bg-foreground/[0.05]",
+                      : "hover:bg-foreground/5",
                   )}
                 >
                   <button

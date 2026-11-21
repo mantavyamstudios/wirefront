@@ -117,15 +117,15 @@ function ThreadPanelScreen({ open, onOpenChange, subject, comments: initial, cur
 
   return (
     <Sheet onOpenChange={onOpenChange} open={open}>
-      <SheetContent className="h-svh w-full max-w-none sm:max-w-[420px]" showCloseButton={false} side="right">
+      <SheetContent className="h-svh w-full max-w-none sm:max-w-105" showCloseButton={false} side="right">
         <header className="border-border/60 border-b px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3">
           <div className="flex items-center justify-between">
             <div className="flex min-w-0 items-center gap-2">
               <MessageSquareIcon aria-hidden className="size-3.5 shrink-0 opacity-70" />
               <SheetTitle className="font-medium text-sm">{t.title}</SheetTitle>
-              <span className="rounded-full bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{interpolate(t.replies, { count: comments.length })}</span>
+              <span className="rounded-full bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{interpolate(t.replies, { count: comments.length })}</span>
             </div>
-            <SheetClose aria-label={t.close} className="grid size-8 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10">
+            <SheetClose aria-label={t.close} className="grid size-8 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10">
               <XIcon aria-hidden className="size-3.5" />
             </SheetClose>
           </div>
@@ -140,7 +140,7 @@ function ThreadPanelScreen({ open, onOpenChange, subject, comments: initial, cur
             </div>
             <div className="min-w-0 truncate font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{interpolate(t.on, { subject })}</div>
             {onSubscribedChange ? (
-              <button aria-pressed={Boolean(subscribed)} className="ms-auto inline-flex min-h-8 items-center gap-1 rounded px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none transition-colors hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10" onClick={() => onSubscribedChange(!subscribed)} type="button">
+              <button aria-pressed={Boolean(subscribed)} className="ms-auto inline-flex min-h-8 items-center gap-1 rounded px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none transition-colors hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10" onClick={() => onSubscribedChange(!subscribed)} type="button">
                 {subscribed ? <BellIcon aria-hidden className="size-3" /> : <BellOffIcon aria-hidden className="size-3" />}
                 {subscribed ? t.subscribed : t.subscribe}
               </button>
@@ -159,7 +159,7 @@ function ThreadPanelScreen({ open, onOpenChange, subject, comments: initial, cur
                   {fmt.relative(c.createdAt)}
                 </time>
               </div>
-              <p className="ms-9 text-muted-foreground text-sm leading-relaxed [&_code]:rounded [&_code]:bg-foreground/[0.06] [&_code]:px-1 [&_code]:font-mono [&_code]:text-[12px]">
+              <p className="ms-9 text-muted-foreground text-sm leading-relaxed [&_code]:rounded [&_code]:bg-foreground/6 [&_code]:px-1 [&_code]:font-mono [&_code]:text-[12px]">
                 <RichText text={c.body} />
               </p>
               {c.reactions?.length || onReact ? (
@@ -168,7 +168,7 @@ function ThreadPanelScreen({ open, onOpenChange, subject, comments: initial, cur
                     <button
                       aria-label={interpolate(t.reaction, { emoji: r.emoji, count: r.count })}
                       aria-pressed={Boolean(r.mine)}
-                      className={cn("inline-flex min-h-7 items-center gap-1 rounded-full border px-2 text-xs outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default pointer-coarse:min-h-9", r.mine ? "border-foreground/30 bg-foreground/[0.06]" : "border-border/60 bg-background/40 hover:border-border")}
+                      className={cn("inline-flex min-h-7 items-center gap-1 rounded-full border px-2 text-xs outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default pointer-coarse:min-h-9", r.mine ? "border-foreground/30 bg-foreground/6" : "border-border/60 bg-background/40 hover:border-border")}
                       disabled={!onReact}
                       key={r.emoji}
                       onClick={() => react.run({ commentId: c.id, emoji: r.emoji, mine: !r.mine }, `${c.id}:${r.emoji}`)}

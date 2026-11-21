@@ -254,7 +254,7 @@ function FolderNav({ account, folder, counts, labels, label, storage, onFolder, 
           </Button>
         </div>
       ) : null}
-      <nav aria-label={t.folders} className="min-h-0 flex-1 overflow-y-auto px-2 [scrollbar-width:thin]">
+      <nav aria-label={t.folders} className="min-h-0 flex-1 overflow-y-auto px-2 scrollbar-thin">
         <LayoutGroup id="mail-folders">
           <ul className="flex flex-col gap-0.5">
             {FOLDERS.map((f) => {
@@ -310,7 +310,7 @@ function FolderNav({ account, folder, counts, labels, label, storage, onFolder, 
 
 function LabelChip({ label }: { label: MailLabel }) {
   return (
-    <span className="inline-flex h-[18px] shrink-0 items-center gap-1 rounded-md bg-muted px-1.5 font-normal text-[11px] text-muted-foreground leading-none">
+    <span className="inline-flex h-4.5 shrink-0 items-center gap-1 rounded-md bg-muted px-1.5 font-normal text-[11px] text-muted-foreground leading-none">
       <span aria-hidden className={cn("size-1.5 rounded-full", dotTone[label.tone])} />
       {label.name}
     </span>
@@ -329,7 +329,7 @@ function ThreadRow({ thread, account, selected, labels, when, onOpen, onStar, ro
     <div className="group/thread relative">
       <button aria-current={selected ? "true" : undefined} className={cn("relative flex w-full cursor-pointer items-start gap-3 rounded-lg py-2.5 ps-3.5 pe-3 text-start outline-none transition-colors duration-100 focus-visible:ring-2 focus-visible:ring-ring", selected ? "bg-accent" : "hover:bg-accent/60")} onClick={onOpen} ref={rowRef} type="button">
         {thread.unread ? (
-          <span className="absolute start-1 top-[18px] size-1.5 rounded-full bg-info">
+          <span className="absolute inset-s-1 top-4.5 size-1.5 rounded-full bg-info">
             <span className="sr-only">{t.unreadDot}</span>
           </span>
         ) : null}
@@ -356,7 +356,7 @@ function ThreadRow({ thread, account, selected, labels, when, onOpen, onStar, ro
         </span>
       </button>
       {onStar ? (
-        <button aria-label={thread.starred ? t.unstar : t.star} aria-pressed={Boolean(thread.starred)} className={cn("absolute end-1.5 top-1.5 flex size-8 cursor-pointer items-center justify-center rounded-md outline-none transition-[opacity,color,scale] duration-150 ease-out hover:bg-background/80 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring active:scale-90", thread.starred ? "text-category-3-foreground" : "text-muted-foreground opacity-0 group-hover/thread:opacity-100")} onClick={onStar} type="button">
+        <button aria-label={thread.starred ? t.unstar : t.star} aria-pressed={Boolean(thread.starred)} className={cn("absolute inset-e-1.5 top-1.5 flex size-8 cursor-pointer items-center justify-center rounded-md outline-none transition-[opacity,color,scale] duration-150 ease-out hover:bg-background/80 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring active:scale-90", thread.starred ? "text-category-3-foreground" : "text-muted-foreground opacity-0 group-hover/thread:opacity-100")} onClick={onStar} type="button">
           <StarIcon aria-hidden className={cn("size-3.5", thread.starred && "fill-current")} />
         </button>
       ) : null}
@@ -454,7 +454,7 @@ function QuickReply({ to, draft, onDraft, onSend, textareaRef, files, onFiles, q
         />
         <PendingFiles files={files} onRemove={(name) => onFiles(files.filter((f) => f.name !== name))} t={t} />
         <div className="flex items-center gap-1.5 px-2 pb-2">
-          <div className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto pe-4 [mask-image:linear-gradient(to_right,black_calc(100%-1.5rem),transparent)] [scrollbar-width:none]">
+          <div className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto pe-4 mask-[linear-gradient(to_right,black_calc(100%-1.5rem),transparent)] scrollbar-none">
             {draft.length === 0
               ? quickReplies.map((q) => (
                   <button
@@ -512,7 +512,7 @@ function Compose({ onClose, onSend, pending, error, t }: { onClose: () => void; 
     return () => el.removeEventListener("keydown", onKey);
   }, []);
   return (
-    <motion.div animate={{ opacity: 1, scale: 1, y: 0 }} aria-label={t.newMessage} className="absolute end-3 start-3 bottom-3 z-40 flex origin-bottom-right flex-col overflow-hidden rounded-2xl border bg-popover shadow-lg/10 @xl:start-auto @xl:w-[440px]" exit={{ opacity: 0, scale: 0.96, y: 8 }} initial={{ opacity: 0, scale: 0.96, y: 8 }} ref={boxRef} role="dialog" transition={{ duration: 0.2, ease }}>
+    <motion.div animate={{ opacity: 1, scale: 1, y: 0 }} aria-label={t.newMessage} className="absolute inset-e-3 inset-s-3 bottom-3 z-40 flex origin-bottom-right flex-col overflow-hidden rounded-2xl border bg-popover shadow-lg/10 @xl:inset-s-auto @xl:w-110" exit={{ opacity: 0, scale: 0.96, y: 8 }} initial={{ opacity: 0, scale: 0.96, y: 8 }} ref={boxRef} role="dialog" transition={{ duration: 0.2, ease }}>
       <div className="flex h-11 items-center justify-between border-b ps-4 pe-2">
         <span className="font-medium">{t.newMessage}</span>
         <Button aria-label={t.discard} onClick={onClose} size="icon-sm" variant="ghost">
@@ -800,14 +800,14 @@ function MailScreen({ account, threads: initialThreads, labels, storage, quickRe
           </aside>
 
           <Sheet onOpenChange={setDrawer} open={drawer}>
-            <SheetContent className="w-[264px] max-w-[calc(100%-3rem)] gap-0 bg-sidebar p-0" showCloseButton={false} side="left">
+            <SheetContent className="w-66 max-w-[calc(100%-3rem)] gap-0 bg-sidebar p-0" showCloseButton={false} side="left">
               <SheetTitle className="sr-only">{t.mailboxes}</SheetTitle>
               <FolderNav {...navProps} onClose={() => setDrawer(false)} />
             </SheetContent>
           </Sheet>
 
           <main className="relative flex min-w-0 flex-1 overflow-hidden bg-background @5xl:my-2 @5xl:me-2 @5xl:rounded-2xl @5xl:border @5xl:shadow-xs/5">
-            <section aria-label={interpolate(t.conversations, { title })} className="flex w-full min-w-0 flex-col @3xl:w-[340px] @3xl:shrink-0 @3xl:border-e @6xl:w-[380px]">
+            <section aria-label={interpolate(t.conversations, { title })} className="flex w-full min-w-0 flex-col @3xl:w-85 @3xl:shrink-0 @3xl:border-e @6xl:w-95">
               <header className="flex shrink-0 flex-col gap-3 px-3 pt-3 pb-2">
                 <div className="flex h-8 items-center gap-1.5">
                   <Button aria-label={t.openMailboxes} className="@5xl:hidden" onClick={() => setDrawer(true)} size="icon-sm" variant="ghost">
@@ -861,7 +861,7 @@ function MailScreen({ account, threads: initialThreads, labels, storage, quickRe
                 </p>
               ) : null}
 
-              <div className="relative min-h-0 flex-1 overflow-y-auto px-1.5 pb-2 [scrollbar-width:thin]" ref={listRef}>
+              <div className="relative min-h-0 flex-1 overflow-y-auto px-1.5 pb-2 scrollbar-thin" ref={listRef}>
                 {visible.length === 0 ? (
                   <div className="flex h-full flex-col items-center justify-center px-8 pb-10 text-center">
                     <span aria-hidden className="flex size-10 items-center justify-center rounded-xl border bg-card text-muted-foreground shadow-xs/5">
@@ -970,7 +970,7 @@ function MailScreen({ account, threads: initialThreads, labels, storage, quickRe
                     </Tip>
                   </header>
 
-                  <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:thin]" ref={readerRef}>
+                  <div className="min-h-0 flex-1 overflow-y-auto scrollbar-thin" ref={readerRef}>
                     <div className="mx-auto flex max-w-3xl flex-col px-2 pt-5 pb-6 @lg:px-4">
                       <div className="px-3 pb-3">
                         <h1 className="text-balance font-heading font-semibold text-lg tracking-tight">{selected.subject}</h1>
@@ -1037,7 +1037,7 @@ function MailScreen({ account, threads: initialThreads, labels, storage, quickRe
 
             <AnimatePresence>{composing && onSend ? <Compose error={compose.error} key={`${uid}-compose`} onClose={() => setComposing(false)} onSend={(to, subject, body, files) => compose.run({ to, subject, body, files })} pending={compose.isPending()} t={t} /> : null}</AnimatePresence>
 
-            <div aria-live="polite" className="pointer-events-none absolute inset-x-0 bottom-4 z-30 flex justify-center px-4 @3xl:end-auto @3xl:bottom-12 @3xl:w-[340px] @6xl:w-[380px]">
+            <div aria-live="polite" className="pointer-events-none absolute inset-x-0 bottom-4 z-30 flex justify-center px-4 @3xl:inset-e-auto @3xl:bottom-12 @3xl:w-85 @6xl:w-95">
               <AnimatePresence mode="popLayout">
                 {toast && !composing ? (
                   <motion.div animate={{ opacity: 1, y: 0, scale: 1 }} className="pointer-events-auto flex h-10 items-center gap-3 rounded-full border bg-popover ps-4 pe-1.5 shadow-lg/10" exit={{ opacity: 0, y: 6, scale: 0.98 }} initial={{ opacity: 0, y: 8, scale: 0.98 }} key={toast.key} transition={{ duration: 0.2, ease }}>

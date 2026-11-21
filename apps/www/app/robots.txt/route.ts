@@ -5,7 +5,7 @@ export const dynamic = "force-static";
 
 const DISALLOWED_PATHS = ["/api/", "/runtime/", "/static.json"];
 
-async function getRobotsContent() {
+const getRobotsContent = async () => {
   const lines = [
     "User-Agent: *",
     "Allow: /",
@@ -19,9 +19,9 @@ async function getRobotsContent() {
   ];
 
   return await Promise.resolve(lines.join("\n"));
-}
+};
 
-export async function GET() {
+export const GET = async () => {
   const content = await getRobotsContent();
 
   return new Response(content, {
@@ -29,4 +29,4 @@ export async function GET() {
       "Content-Type": "text/plain; charset=utf-8",
     },
   });
-}
+};

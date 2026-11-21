@@ -1,30 +1,35 @@
 "use client";
 
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 import { GITHUB_PROFILE_URL } from "@/lib/site";
 
 import { Bunny } from "./bunny";
 
+const subscribeNever = () => () => {
+  // Read once per render; the footer doesn't re-render on the hour.
+};
+
+const isVietnamNight = (): boolean => {
+  const hour = Number(
+    new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Ho_Chi_Minh",
+      hour: "numeric",
+      hour12: false,
+    })
+  );
+  return hour >= 18 || hour < 6;
+};
+
 export const Footer = ({ lastUpdate }: { lastUpdate?: Date }) => {
-  const [isNightTime, setIsNightTime] = useState<boolean>(true);
+  // Night in Vietnam (18:00 to 06:00); the server render assumes night.
+  const isNightTime = useSyncExternalStore(
+    subscribeNever,
+    isVietnamNight,
+    () => true
+  );
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    const getVietnamHour = () => {
-      const vnTimeString = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Ho_Chi_Minh",
-        hour: "numeric",
-        hour12: false,
-      });
-      return Number.parseInt(vnTimeString, 10);
-    };
-
-    const vnHour = getVietnamHour();
-    const isNight = vnHour >= 18 || vnHour < 6;
-    setIsNightTime(isNight);
-  }, []);
 
   return (
     <div className="-mt-2 mb-7 flex w-full flex-col-reverse justify-between lg:flex-row lg:items-center lg:gap-2">

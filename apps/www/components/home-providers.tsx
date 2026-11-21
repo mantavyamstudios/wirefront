@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 import { useButton3DHover } from "@/hooks/use-button-3d-hover";
 import { useLenisSmoothScroll } from "@/hooks/use-lenis-smooth-scroll";
 
-export function HomeProviders({ children }: { children: ReactNode }) {
+export const HomeProviders = ({ children }: { children: ReactNode }) => {
   const lenisRef = useLenisSmoothScroll();
   const pathname = usePathname();
 
@@ -27,4 +27,4 @@ export function HomeProviders({ children }: { children: ReactNode }) {
   useButton3DHover();
 
   return children;
-}
+};

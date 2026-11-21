@@ -74,7 +74,7 @@ export interface RichComposerProps {
   className?: string;
 }
 
-const tool = "inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10";
+const tool = "inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10";
 
 function RichComposerScreen({ defaultValue = "", replyingTo, attachments = [], onAttach, onRemoveAttachment, onSubmit, onCancel, className }: RichComposerProps) {
   const t = useMessages("richComposer", RICH_COMPOSER_MESSAGES);
@@ -202,7 +202,7 @@ function RichComposerScreen({ defaultValue = "", replyingTo, attachments = [], o
             {replyingTo ? (
               <>
                 <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{t.replyingTo}</span>
-                <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-foreground/85">{interpolate(t.target, { name: replyingTo.name, when: fmt.relative(replyingTo.createdAt) })}</span>
+                <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-foreground/85">{interpolate(t.target, { name: replyingTo.name, when: fmt.relative(replyingTo.createdAt) })}</span>
               </>
             ) : null}
           </div>

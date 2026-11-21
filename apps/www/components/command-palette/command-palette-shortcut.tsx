@@ -6,7 +6,9 @@ interface CommandPaletteShortcutProps {
   keys: string[];
 }
 
-export function CommandPaletteShortcut({ keys }: CommandPaletteShortcutProps) {
+export const CommandPaletteShortcut = ({
+  keys,
+}: CommandPaletteShortcutProps) => {
   const nonModKeys = keys.filter((key) => key !== "mod");
   const hasMod = keys.includes("mod");
 
@@ -18,13 +20,11 @@ export function CommandPaletteShortcut({ keys }: CommandPaletteShortcutProps) {
       ))}
     </KbdGroup>
   );
-}
+};
 
-export function CommandPaletteInputShortcut() {
-  return (
-    <KbdGroup className="hidden shrink-0 sm:inline-flex">
-      <Kbd>⌘</Kbd>
-      <Kbd>K</Kbd>
-    </KbdGroup>
-  );
-}
+export const CommandPaletteInputShortcut = () => (
+  <KbdGroup className="hidden shrink-0 sm:inline-flex">
+    <Kbd>⌘</Kbd>
+    <Kbd>K</Kbd>
+  </KbdGroup>
+);

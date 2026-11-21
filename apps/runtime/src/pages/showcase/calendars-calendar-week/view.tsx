@@ -276,7 +276,7 @@ function MiniMonth({
       mode="range"
       modifiers={{ busy: [...busy].filter((d) => d !== today).map(toDate) }}
       modifiersClassNames={{
-        busy: "*:before:pointer-events-none *:before:absolute *:before:bottom-1 *:before:start-1/2 *:before:size-[3px] *:before:-translate-x-1/2 *:before:rounded-full *:before:bg-muted-foreground/60 [&[data-selected]:not(.range-middle)>*]:before:bg-primary-foreground/72",
+        busy: "*:before:pointer-events-none *:before:absolute *:before:bottom-1 *:before:inset-s-1/2 *:before:size-0.75 *:before:-translate-x-1/2 *:before:rounded-full *:before:bg-muted-foreground/60 [&[data-selected]:not(.range-middle)>*]:before:bg-primary-foreground/72",
       }}
       month={toDate(month)}
       onDayClick={(day) => onPick(fromDate(day))}
@@ -677,7 +677,7 @@ function CalendarWeekScreen({ calendars: initialCalendars, events: initialEvents
     <MotionConfig reducedMotion="user">
       <div
         className={cn(
-          "@container relative isolate flex h-[760px] w-full select-none overflow-hidden bg-sidebar text-foreground text-sm outline-none",
+          "@container relative isolate flex h-190 w-full select-none overflow-hidden bg-sidebar text-foreground text-sm outline-none",
           className,
         )}
         ref={rootRef}
@@ -807,7 +807,7 @@ function CalendarWeekScreen({ calendars: initialCalendars, events: initialEvents
             </div>
           )}
 
-          <div className="flex shrink-0 overflow-y-hidden border-b [scrollbar-gutter:stable]">
+          <div className="flex shrink-0 overflow-y-hidden border-b scrollbar-gutter-stable">
             <div className="flex w-14 shrink-0 flex-col items-end pe-2 text-[10px] text-muted-foreground">
               {!narrow && (
                 <span className="flex h-11 flex-col items-end justify-center leading-tight">
@@ -855,7 +855,7 @@ function CalendarWeekScreen({ calendars: initialCalendars, events: initialEvents
                   return (
                     <button
                       className={cn(
-                        "relative z-10 mx-1 my-px flex h-6 cursor-pointer items-center truncate rounded-md ps-2.5 pe-2 text-start font-medium text-xs outline-none before:absolute before:inset-y-1 before:start-1 before:w-0.5 before:rounded-full focus-visible:ring-2 focus-visible:ring-ring",
+                        "relative z-10 mx-1 my-px flex h-6 cursor-pointer items-center truncate rounded-md ps-2.5 pe-2 text-start font-medium text-xs outline-none before:absolute before:inset-y-1 before:inset-s-1 before:w-0.5 before:rounded-full focus-visible:ring-2 focus-visible:ring-ring",
                         selectedId === e.id ? toneSolid[cal.tone] : toneBlock[cal.tone],
                       )}
                       key={e.id}
@@ -877,13 +877,13 @@ function CalendarWeekScreen({ calendars: initialCalendars, events: initialEvents
             </div>
           </div>
 
-          <div className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-width:thin]" ref={scrollRef}>
+          <div className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin" ref={scrollRef}>
             <div className="relative flex" style={{ height: 24 * HOUR }}>
               <div aria-hidden className="relative w-14 shrink-0">
                 {Array.from({ length: 23 }, (_, i) => i + 1).map((h) => (
                   <span
                     className={cn(
-                      "absolute end-2 -translate-y-1/2 text-[10px] text-muted-foreground tabular-nums transition-opacity",
+                      "absolute inset-e-2 -translate-y-1/2 text-[10px] text-muted-foreground tabular-nums transition-opacity",
                       todayIdx >= 0 && Math.abs(h * 60 - nowMin) < 24 && "opacity-0",
                     )}
                     key={h}
@@ -894,7 +894,7 @@ function CalendarWeekScreen({ calendars: initialCalendars, events: initialEvents
                 ))}
                 {todayIdx >= 0 && (
                   <span
-                    className="absolute end-1 z-20 -translate-y-1/2 rounded-md bg-category-4-strong px-1 py-px font-medium text-[10px] text-white tabular-nums"
+                    className="absolute inset-e-1 z-20 -translate-y-1/2 rounded-md bg-category-4-strong px-1 py-px font-medium text-[10px] text-white tabular-nums"
                     style={{ top: nowTop }}
                   >
                     {L.clock(nowMin)}
@@ -928,7 +928,7 @@ function CalendarWeekScreen({ calendars: initialCalendars, events: initialEvents
                       {isToday && nowMin <= 24 * 60 && (
                         <div aria-hidden className="pointer-events-none absolute inset-x-0 z-20" style={{ top: nowTop }}>
                           <div className="absolute inset-x-0 h-0.5 -translate-y-1/2 bg-destructive" />
-                          <div className="absolute -start-1.5 size-3 -translate-y-1/2 rounded-full bg-destructive ring-2 ring-background" />
+                          <div className="absolute -inset-s-1.5 size-3 -translate-y-1/2 rounded-full bg-destructive ring-2 ring-background" />
                         </div>
                       )}
                       <AnimatePresence initial={false}>
@@ -944,7 +944,7 @@ function CalendarWeekScreen({ calendars: initialCalendars, events: initialEvents
                             <motion.div
                               animate={{ opacity: 1, scale: 1, y: ev.start * PX }}
                               className={cn(
-                                "group/ev @container absolute top-0 z-10 cursor-grab touch-none overflow-hidden rounded-md bg-clip-padding text-start outline-none before:absolute before:inset-y-1 before:start-1 before:w-0.5 before:rounded-full focus-visible:ring-2 focus-visible:ring-ring",
+                                "group/ev @container absolute top-0 z-10 cursor-grab touch-none overflow-hidden rounded-md bg-clip-padding text-start outline-none before:absolute before:inset-y-1 before:inset-s-1 before:w-0.5 before:rounded-full focus-visible:ring-2 focus-visible:ring-ring",
                                 isSel || isDrag ? toneSolid[cal.tone] : toneBlock[cal.tone],
                                 isDrag && "z-30 cursor-grabbing shadow-lg/20",
                                 faded && "[&>div]:opacity-70 before:opacity-60",
@@ -992,7 +992,7 @@ function CalendarWeekScreen({ calendars: initialCalendars, events: initialEvents
                                 )}
                               </div>
                               {isDrag && height >= 40 && (
-                                <span className="pointer-events-none absolute end-1.5 bottom-1.5 rounded bg-black/20 px-1 font-medium text-[10px] tabular-nums">
+                                <span className="pointer-events-none absolute inset-e-1.5 bottom-1.5 rounded bg-black/20 px-1 font-medium text-[10px] tabular-nums">
                                   {L.duration(ev.end - ev.start)}
                                 </span>
                               )}
@@ -1072,7 +1072,7 @@ function CalendarWeekScreen({ calendars: initialCalendars, events: initialEvents
             )}
           </AnimatePresence>
 
-          <div aria-live="polite" className="pointer-events-none absolute inset-x-0 bottom-4 z-40 flex justify-center px-4 @2xl:justify-start @2xl:ps-[4.5rem]">
+          <div aria-live="polite" className="pointer-events-none absolute inset-x-0 bottom-4 z-40 flex justify-center px-4 @2xl:justify-start @2xl:ps-18">
             <AnimatePresence mode="popLayout">
               {toast && (
                 <motion.div

@@ -12,7 +12,7 @@ import {
   VolumeX,
 } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 
 import { CommandPaletteTrigger } from "@/components/command-palette/command-palette-trigger";
 import {
@@ -22,6 +22,7 @@ import {
   useSoundEnabled,
 } from "@/lib/sound";
 import { setThemeWithTransition } from "@/lib/theme-transition";
+import { useIsClient } from "@/lib/use-is-client";
 
 import {
   blocksChromeToolbarCellActiveClassName,
@@ -44,7 +45,7 @@ interface ComponentPagePreviewToolbarProps {
   onToggleSource?: () => void;
 }
 
-export function PreviewToolbarCell({
+export const PreviewToolbarCell = ({
   active,
   children,
   className,
@@ -52,59 +53,55 @@ export function PreviewToolbarCell({
   active?: boolean;
   children: React.ReactNode;
   className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        blocksChromeToolbarCellClassName,
-        active && blocksChromeToolbarCellActiveClassName,
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
-}
+}) => (
+  <div
+    className={cn(
+      blocksChromeToolbarCellClassName,
+      active && blocksChromeToolbarCellActiveClassName,
+      className
+    )}
+  >
+    {children}
+  </div>
+);
 
-function resolveSourceLabel(isLoading: boolean, isOpen: boolean) {
+const resolveSourceLabel = (isLoading: boolean, isOpen: boolean) => {
   if (isLoading) {
     return "Loading source code...";
   }
   return isOpen ? "Hide source code" : "View source code";
-}
+};
 
-function PreviewToolbarExternalLinkButton({
+const PreviewToolbarExternalLinkButton = ({
   exampleUrl,
 }: {
   exampleUrl?: string;
-}) {
-  return (
-    <PreviewToolbarCell>
-      {exampleUrl ? (
-        <a
-          aria-label="Open preview in new tab"
-          className={blocksChromeToolbarIconClassName}
-          href={exampleUrl}
-          rel="noreferrer"
-          target="_blank"
-          title="Open full page preview in new tab"
-        >
-          <ExternalLink />
-        </a>
-      ) : (
-        <ToolbarIconButton
-          aria-label="Open preview in new tab"
-          disabled
-          title="Open preview in new tab"
-        >
-          <ExternalLink />
-        </ToolbarIconButton>
-      )}
-    </PreviewToolbarCell>
-  );
-}
+}) => (
+  <PreviewToolbarCell>
+    {exampleUrl ? (
+      <a
+        aria-label="Open preview in new tab"
+        className={blocksChromeToolbarIconClassName}
+        href={exampleUrl}
+        rel="noreferrer"
+        target="_blank"
+        title="Open full page preview in new tab"
+      >
+        <ExternalLink />
+      </a>
+    ) : (
+      <ToolbarIconButton
+        aria-label="Open preview in new tab"
+        disabled
+        title="Open preview in new tab"
+      >
+        <ExternalLink />
+      </ToolbarIconButton>
+    )}
+  </PreviewToolbarCell>
+);
 
-function PreviewToolbarSourceButton({
+const PreviewToolbarSourceButton = ({
   isLoading,
   isOpen,
   onToggle,
@@ -112,7 +109,7 @@ function PreviewToolbarSourceButton({
   isLoading?: boolean;
   isOpen?: boolean;
   onToggle?: () => void;
-}) {
+}) => {
   const label = resolveSourceLabel(Boolean(isLoading), Boolean(isOpen));
 
   return (
@@ -132,30 +129,28 @@ function PreviewToolbarSourceButton({
       </ToolbarIconButton>
     </PreviewToolbarCell>
   );
-}
+};
 
-function PreviewToolbarRestartButton({
+const PreviewToolbarRestartButton = ({
   isLoading,
   onRestart,
 }: {
   isLoading?: boolean;
   onRestart?: () => void;
-}) {
-  return (
-    <PreviewToolbarCell>
-      <ToolbarIconButton
-        aria-label="Restart animation"
-        disabled={isLoading || !onRestart}
-        onClick={onRestart}
-        title="Restart animation"
-      >
-        <RotateCcw />
-      </ToolbarIconButton>
-    </PreviewToolbarCell>
-  );
-}
+}) => (
+  <PreviewToolbarCell>
+    <ToolbarIconButton
+      aria-label="Restart animation"
+      disabled={isLoading || !onRestart}
+      onClick={onRestart}
+      title="Restart animation"
+    >
+      <RotateCcw />
+    </ToolbarIconButton>
+  </PreviewToolbarCell>
+);
 
-export function ComponentPagePreviewToolbar({
+export const ComponentPagePreviewToolbar = ({
   className,
   exampleUrl,
   hasSourceCode: _hasSourceCode = false,
@@ -166,57 +161,55 @@ export function ComponentPagePreviewToolbar({
   onRestart,
   onToggleExpanded,
   onToggleSource,
-}: ComponentPagePreviewToolbarProps) {
-  return (
-    <div
-      className={cn(
-        blocksChromeToolbarClassName,
-        "pointer-events-auto",
-        className
-      )}
-      onClickCapture={playTapOnControl}
-    >
-      <PreviewToolbarExternalLinkButton exampleUrl={exampleUrl} />
+}: ComponentPagePreviewToolbarProps) => (
+  <div
+    className={cn(
+      blocksChromeToolbarClassName,
+      "pointer-events-auto",
+      className
+    )}
+    onClickCapture={playTapOnControl}
+  >
+    <PreviewToolbarExternalLinkButton exampleUrl={exampleUrl} />
 
-      <PreviewToolbarSourceButton
-        isLoading={isSourceLoading}
-        isOpen={isSourceOpen}
-        onToggle={onToggleSource}
+    <PreviewToolbarSourceButton
+      isLoading={isSourceLoading}
+      isOpen={isSourceOpen}
+      onToggle={onToggleSource}
+    />
+
+    <PreviewToolbarCell active={isExpanded} className="max-lg:hidden">
+      <ToolbarIconButton
+        aria-label={isExpanded ? "Collapse preview" : "Expand preview"}
+        disabled={!onToggleExpanded}
+        onClick={onToggleExpanded}
+        title={
+          isExpanded
+            ? "Collapse view (⌘J / Ctrl+J)"
+            : "Maximize view (⌘J / Ctrl+J)"
+        }
+      >
+        {isExpanded ? <Minimize2 /> : <Maximize2 />}
+      </ToolbarIconButton>
+    </PreviewToolbarCell>
+
+    <PreviewToolbarRestartButton
+      isLoading={isLoadingPreview}
+      onRestart={onRestart}
+    />
+
+    <PreviewToolbarThemeToggle />
+
+    <PreviewToolbarSoundToggle />
+
+    <PreviewToolbarCell>
+      <CommandPaletteTrigger
+        className={blocksChromeToolbarIconClassName}
+        variant="icon"
       />
-
-      <PreviewToolbarCell active={isExpanded} className="max-lg:hidden">
-        <ToolbarIconButton
-          aria-label={isExpanded ? "Collapse preview" : "Expand preview"}
-          disabled={!onToggleExpanded}
-          onClick={onToggleExpanded}
-          title={
-            isExpanded
-              ? "Collapse view (⌘J / Ctrl+J)"
-              : "Maximize view (⌘J / Ctrl+J)"
-          }
-        >
-          {isExpanded ? <Minimize2 /> : <Maximize2 />}
-        </ToolbarIconButton>
-      </PreviewToolbarCell>
-
-      <PreviewToolbarRestartButton
-        isLoading={isLoadingPreview}
-        onRestart={onRestart}
-      />
-
-      <PreviewToolbarThemeToggle />
-
-      <PreviewToolbarSoundToggle />
-
-      <PreviewToolbarCell>
-        <CommandPaletteTrigger
-          className={blocksChromeToolbarIconClassName}
-          variant="icon"
-        />
-      </PreviewToolbarCell>
-    </div>
-  );
-}
+    </PreviewToolbarCell>
+  </div>
+);
 
 interface ToolbarIconButtonProps {
   "aria-label": string;
@@ -227,37 +220,31 @@ interface ToolbarIconButtonProps {
   title?: string;
 }
 
-function ToolbarIconButton({
+const ToolbarIconButton = ({
   children,
   disabled,
   onClick,
   title,
   ...ariaProps
-}: ToolbarIconButtonProps) {
-  return (
-    <button
-      className={cn(
-        blocksChromeToolbarIconClassName,
-        disabled && "pointer-events-none opacity-60"
-      )}
-      disabled={disabled}
-      onClick={onClick}
-      title={title}
-      type="button"
-      {...ariaProps}
-    >
-      {children}
-    </button>
-  );
-}
+}: ToolbarIconButtonProps) => (
+  <button
+    className={cn(
+      blocksChromeToolbarIconClassName,
+      disabled && "pointer-events-none opacity-60"
+    )}
+    disabled={disabled}
+    onClick={onClick}
+    title={title}
+    type="button"
+    {...ariaProps}
+  >
+    {children}
+  </button>
+);
 
-function PreviewToolbarThemeToggle() {
+const PreviewToolbarThemeToggle = () => {
   const { resolvedTheme, setTheme } = useTheme();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const isClient = useIsClient();
 
   const isDark = resolvedTheme === "dark";
 
@@ -294,15 +281,11 @@ function PreviewToolbarThemeToggle() {
       </button>
     </PreviewToolbarCell>
   );
-}
+};
 
-function PreviewToolbarSoundToggle() {
+const PreviewToolbarSoundToggle = () => {
   const enabled = useSoundEnabled();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const isClient = useIsClient();
 
   const handleToggle = useCallback(() => {
     setSoundEnabled(!enabled);
@@ -330,4 +313,4 @@ function PreviewToolbarSoundToggle() {
       </button>
     </PreviewToolbarCell>
   );
-}
+};

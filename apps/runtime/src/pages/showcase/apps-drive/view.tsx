@@ -142,7 +142,7 @@ function FolderGlyph({ folderTone, className, layoutId }: { folderTone: FolderTo
 }
 
 function TemplatePreview({ kind }: { kind: DriveTemplate["kind"] }) {
-  const line = "h-[3px] rounded-full bg-foreground/12";
+  const line = "h-0.75 rounded-full bg-foreground/12";
   switch (kind) {
     case "doc":
       return (
@@ -438,7 +438,7 @@ function DriveScreen({ workspace, folders: initialFolders, members, templates = 
               <h1 className="font-heading font-semibold text-2xl tracking-tight">{heading}</h1>
 
               <LayoutGroup id={`${group}-pills`}>
-                <nav aria-label={t.views} className="-mx-4 mt-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] @3xl:hidden">
+                <nav aria-label={t.views} className="-mx-4 mt-4 flex gap-1.5 overflow-x-auto px-4 scrollbar-none @3xl:hidden">
                   {TABS.map((id) => (
                     <button aria-current={tab === id ? "page" : undefined} className={cn("relative flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3 font-medium text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring", tab === id ? "border-transparent text-background" : "text-muted-foreground")} key={id} onClick={() => setTab(id)} type="button">
                       {tab === id ? <motion.span className="absolute inset-0 rounded-full bg-foreground" layoutId={`${group}-pill`} transition={spring} /> : null}
@@ -461,7 +461,7 @@ function DriveScreen({ workspace, folders: initialFolders, members, templates = 
                       </Button>
                     ) : null}
                   </div>
-                  <div className="-mx-4 mt-2 flex snap-x scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] @6xl:mx-0 @6xl:grid @6xl:grid-cols-[auto_repeat(5,minmax(0,1fr))] @6xl:px-0 @6xl:[&>*:nth-child(n+7)]:hidden">
+                  <div className="-mx-4 mt-2 flex snap-x scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 scrollbar-none @6xl:mx-0 @6xl:grid @6xl:grid-cols-[auto_repeat(5,minmax(0,1fr))] @6xl:px-0 @6xl:[&>*:nth-child(n+7)]:hidden">
                     <button className="group/tpl flex h-14 w-28 shrink-0 snap-start cursor-pointer items-center gap-3 rounded-xl border border-dashed px-3 text-start text-muted-foreground outline-none transition-[background-color,color,scale] duration-150 ease-out hover:bg-accent/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] @6xl:w-auto @6xl:pe-5" onClick={() => onCreateFromTemplate(null)} type="button">
                       <span aria-hidden className="flex h-9 w-8 shrink-0 items-center justify-center">
                         <PlusIcon className="size-4" />
@@ -576,7 +576,7 @@ function DriveScreen({ workspace, folders: initialFolders, members, templates = 
                               </motion.div>
                             )}
                             {onToggleStar ? (
-                              <motion.button aria-label={interpolate(f.starred ? t.unstar : t.star, { name: f.name })} aria-pressed={Boolean(f.starred)} className={cn("absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-md outline-none transition-opacity hover:bg-accent focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring", grid ? "end-2 top-2" : "end-2 top-2.5", f.starred ? "text-category-3-foreground opacity-100" : "text-muted-foreground opacity-0 group-hover/folder:opacity-100 pointer-coarse:opacity-100")} layout="position" onClick={() => star.run({ id: f.id, starred: !f.starred }, f.id)} transition={spring} type="button">
+                              <motion.button aria-label={interpolate(f.starred ? t.unstar : t.star, { name: f.name })} aria-pressed={Boolean(f.starred)} className={cn("absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-md outline-none transition-opacity hover:bg-accent focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring", grid ? "inset-e-2 top-2" : "inset-e-2 top-2.5", f.starred ? "text-category-3-foreground opacity-100" : "text-muted-foreground opacity-0 group-hover/folder:opacity-100 pointer-coarse:opacity-100")} layout="position" onClick={() => star.run({ id: f.id, starred: !f.starred }, f.id)} transition={spring} type="button">
                                 <motion.span animate={{ scale: f.starred ? [1, 1.25, 1] : 1 }} transition={{ duration: 0.28 }}>
                                   <StarIcon aria-hidden className={cn("size-4", f.starred && "fill-current")} />
                                 </motion.span>

@@ -20,10 +20,10 @@ import type { BlocksNavHoverPreviewState } from "./blocks-nav-hover-preview";
 // cursor smoothly.
 const HOVER_LEAVE_GRACE_MS = 120;
 
-export function useBlocksHoverPreview(
+export const useBlocksHoverPreview = (
   items: ComponentGalleryItem[],
   { warmCount = 5 }: { warmCount?: number } = {}
-) {
+) => {
   const [hoverPreview, setHoverPreview] =
     useState<BlocksNavHoverPreviewState | null>(null);
   const [hoverPosition, setHoverPosition] = useState<{
@@ -43,10 +43,7 @@ export function useBlocksHoverPreview(
     const map = new Map<string, ReturnType<typeof resolveCardPreviewMedia>>();
 
     for (const item of items) {
-      const media = resolveCardPreviewMedia(
-        item.cardPreview,
-        item.previewVideo
-      );
+      const media = resolveCardPreviewMedia(item.cardPreview);
       if (media) {
         map.set(item.slug, media);
       }
@@ -126,4 +123,4 @@ export function useBlocksHoverPreview(
     onItemPointerMove,
     onItemPointerLeave: scheduleClearHoverPreview,
   };
-}
+};

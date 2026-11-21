@@ -12,6 +12,9 @@ const SVG_PROPS = {
   xmlns: "http://www.w3.org/2000/svg",
 };
 
+/** Bar positions for the waveform in WireframePersonal. */
+const WAVEFORM_BARS = Array.from({ length: 14 }, (_, i) => i);
+
 /**
  * Frame: window chrome (rounded outer, top bar, traffic-light dots)
  * gives every icon a consistent "this is a UI screen" read.
@@ -43,7 +46,7 @@ function Frame({
 
 export function WireframeSidebar({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Sidebar pane */}
         <rect
@@ -115,7 +118,7 @@ export function WireframeSidebar({ className }: IconProps) {
 
 export function WireframeForm({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Title */}
         <rect x="14" y="11" width="20" height="2" rx="0.5" fill="currentColor" className="opacity-70" />
@@ -148,7 +151,7 @@ export function WireframeForm({ className }: IconProps) {
 
 export function WireframeAuth({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Left pane (particle field) */}
         <rect
@@ -223,7 +226,7 @@ export function WireframeAuth({ className }: IconProps) {
 
 export function WireframeDashboard({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Title row */}
         <rect x="3" y="10" width="14" height="1.6" rx="0.4" fill="currentColor" className="opacity-70" />
@@ -291,7 +294,7 @@ export function WireframeDashboard({ className }: IconProps) {
 
 export function WireframeTable({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Toolbar */}
         <rect x="3" y="10" width="22" height="3.5" rx="0.8" className="opacity-40" />
@@ -373,7 +376,7 @@ export function WireframeTable({ className }: IconProps) {
 
 export function WireframeEmptyState({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Dashed empty container */}
         <rect
@@ -419,7 +422,7 @@ export function WireframeEmptyState({ className }: IconProps) {
 
 export function WireframeSettings({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Sub-nav */}
         <rect
@@ -488,7 +491,7 @@ export function WireframeSettings({ className }: IconProps) {
 
 export function WireframeFilters({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Title */}
         <rect x="3" y="10" width="14" height="1.5" rx="0.4" fill="currentColor" className="opacity-65" />
@@ -612,7 +615,7 @@ export function WireframeFilters({ className }: IconProps) {
 
 export function WireframeCard({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Section title */}
         <rect x="3" y="10" width="14" height="1.5" rx="0.4" fill="currentColor" className="opacity-65" />
@@ -685,7 +688,7 @@ export function WireframeCard({ className }: IconProps) {
 
 export function WireframeModals({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Backdrop overlay */}
         <rect x="1" y="7" width="78" height="52.5" fill="currentColor" className="opacity-[0.05]" />
@@ -723,7 +726,7 @@ export function WireframeModals({ className }: IconProps) {
 
 export function WireframeCharts({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Title */}
         <rect x="3" y="10" width="14" height="1.5" rx="0.4" fill="currentColor" className="opacity-65" />
@@ -787,7 +790,7 @@ export function WireframeCharts({ className }: IconProps) {
 
 export function WireframeTimelines({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Title */}
         <rect x="3" y="10" width="16" height="1.6" rx="0.4" fill="currentColor" className="opacity-70" />
@@ -842,7 +845,7 @@ export function WireframeTimelines({ className }: IconProps) {
 
 export function WireframeCalendars({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Title */}
         <rect x="3" y="10" width="14" height="1.6" rx="0.4" fill="currentColor" className="opacity-70" />
@@ -850,16 +853,16 @@ export function WireframeCalendars({ className }: IconProps) {
         <rect x="68" y="10" width="8" height="3" rx="0.6" fill="currentColor" className="opacity-75" />
 
         {/* Day headers */}
-        {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
+        {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d, i) => (
           <text
-            key={i}
+            key={d}
             x={5 + i * 10.5}
             y="19"
             fontSize="2.2"
             fill="currentColor"
             className="opacity-40"
           >
-            {d}
+            {d.charAt(0)}
           </text>
         ))}
         <line x1="3" y1="20.5" x2="76" y2="20.5" className="opacity-25" />
@@ -927,7 +930,7 @@ export function WireframeCalendars({ className }: IconProps) {
 
 export function WireframeProfile({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Cover banner */}
         <rect
@@ -996,7 +999,7 @@ export function WireframeProfile({ className }: IconProps) {
 
 export function WireframeToasts({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Faded app behind */}
         <rect x="3" y="11" width="40" height="2" rx="0.4" fill="currentColor" className="opacity-20" />
@@ -1038,7 +1041,7 @@ export function WireframeToasts({ className }: IconProps) {
 
 export function WireframePricing({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Heading row */}
         <rect x="22" y="10" width="36" height="2" rx="0.5" fill="currentColor" className="opacity-70" />
@@ -1075,7 +1078,7 @@ export function WireframePricing({ className }: IconProps) {
 
 export function WireframeTours({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Faded app shell */}
         <line x1="20" y1="7" x2="20" y2="59.5" className="opacity-25" />
@@ -1110,7 +1113,7 @@ export function WireframeTours({ className }: IconProps) {
 
 export function WireframeThreads({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Comment 1 */}
         <circle cx="6" cy="13" r="2" fill="currentColor" className="opacity-65" />
@@ -1165,7 +1168,7 @@ export function WireframeThreads({ className }: IconProps) {
 
 export function WireframeAI({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Chat history */}
         <rect x="1" y="7" width="18" height="52.5" fill="currentColor" className="opacity-[0.04]" />
@@ -1197,7 +1200,7 @@ export function WireframeAI({ className }: IconProps) {
 
 export function WireframeDevTools({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* File tree */}
         <rect x="1" y="7" width="20" height="52.5" fill="currentColor" className="opacity-[0.04]" />
@@ -1233,7 +1236,7 @@ export function WireframeDevTools({ className }: IconProps) {
 
 export function WireframeApps({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Rail */}
         <rect x="1" y="7" width="7" height="52.5" fill="currentColor" className="opacity-[0.06]" />
@@ -1268,7 +1271,7 @@ export function WireframeApps({ className }: IconProps) {
 
 export function WireframePersonal({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Balance */}
         <rect x="5" y="11" width="14" height="0.9" rx="0.3" fill="currentColor" className="opacity-35" />
@@ -1291,8 +1294,8 @@ export function WireframePersonal({ className }: IconProps) {
         <rect x="8" y="43" width="9" height="9" rx="1" fill="currentColor" className="opacity-40" />
         <rect x="20" y="44" width="16" height="1" rx="0.3" fill="currentColor" className="opacity-60" />
         <rect x="20" y="46.5" width="10" height="0.8" rx="0.2" fill="currentColor" className="opacity-30" />
-        {Array.from({ length: 14 }, (_, i) => (
-          <rect key={i} x={40 + i * 2.3} y={49 - ((i * 5) % 4)} width="1.2" height={2 + ((i * 5) % 4) * 1.3} rx="0.3" fill="currentColor" className={i < 6 ? "opacity-70" : "opacity-25"} />
+        {WAVEFORM_BARS.map((i) => (
+          <rect key={`bar-${i}`} x={40 + i * 2.3} y={49 - ((i * 5) % 4)} width="1.2" height={2 + ((i * 5) % 4) * 1.3} rx="0.3" fill="currentColor" className={i < 6 ? "opacity-70" : "opacity-25"} />
         ))}
       </Frame>
     </svg>
@@ -1301,7 +1304,7 @@ export function WireframePersonal({ className }: IconProps) {
 
 export function WireframeCommerce({ className }: IconProps) {
   return (
-    <svg {...SVG_PROPS} className={className}>
+    <svg {...SVG_PROPS} aria-hidden="true" className={className}>
       <Frame>
         {/* Steps */}
         {[11, 26, 41].map((y, i) => (

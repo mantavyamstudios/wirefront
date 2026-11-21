@@ -4,15 +4,13 @@ import { useSyncExternalStore } from "react";
 
 const STACKED_MEDIA = "(max-width: 1023px)";
 
-function subscribeStacked(onStoreChange: () => void) {
+const subscribeStacked = (onStoreChange: () => void) => {
   const media = window.matchMedia(STACKED_MEDIA);
   media.addEventListener("change", onStoreChange);
   return () => media.removeEventListener("change", onStoreChange);
-}
+};
 
-function getStackedSnapshot() {
-  return window.matchMedia(STACKED_MEDIA).matches;
-}
+const getStackedSnapshot = () => window.matchMedia(STACKED_MEDIA).matches;
 
 /**
  * Matches blocks `max-lg` split layout (preview stacked above docs).
@@ -22,10 +20,5 @@ function getStackedSnapshot() {
  * stacked branch post-hydration is minimized by ResizeObserver-based isReady and
  * removal of the key-forced remount on the preview motion.div.
  */
-export function useBlocksStackedLayout() {
-  return useSyncExternalStore(
-    subscribeStacked,
-    getStackedSnapshot,
-    () => false
-  );
-}
+export const useBlocksStackedLayout = () =>
+  useSyncExternalStore(subscribeStacked, getStackedSnapshot, () => false);

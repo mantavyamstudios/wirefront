@@ -157,7 +157,7 @@ function AuditLogScreen({
       const o = OUTCOME[e.outcome];
       const name = e.actor?.name ?? t.system;
       return (
-        <TableRow className={e.outcome === "alert" ? "bg-destructive/[0.04]" : undefined} key={e.id}>
+        <TableRow className={e.outcome === "alert" ? "bg-destructive/4" : undefined} key={e.id}>
           <TableCell className="w-28 ps-4 font-mono text-muted-foreground text-xs tabular-nums max-sm:hidden">
             <time dateTime={e.at}>{time(e.at)}</time>
           </TableCell>
@@ -231,7 +231,7 @@ function AuditLogScreen({
               <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
                 <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{t.filters}</span>
                 <Separator className="h-4 max-sm:hidden" orientation="vertical" />
-                <div className="order-last flex w-full min-w-0 flex-wrap items-center gap-1.5 sm:order-none sm:w-auto sm:flex-1">
+                <div className="order-last flex w-full min-w-0 flex-wrap items-center gap-1.5 sm:order-0 sm:w-auto sm:flex-1">
                   {filters.map((f) => (
                     <FilterChip chip={f} key={f.id} onEdit={onEditFilter} onRemove={onRemoveFilter} t={t} />
                   ))}

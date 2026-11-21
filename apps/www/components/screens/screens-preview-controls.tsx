@@ -18,7 +18,7 @@ const STATE_LABELS: Record<ScreenState, string> = {
 };
 
 const TRIGGER =
-  "text-foreground/70 hover:text-foreground data-[popup-open]:bg-background data-[popup-open]:text-foreground dark:data-[popup-open]:bg-foreground/10 flex h-full min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 text-xs font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  "text-foreground/70 hover:text-foreground data-popup-open:bg-background data-popup-open:text-foreground dark:data-popup-open:bg-foreground/10 flex h-full min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 text-xs font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 interface PreviewMenuProps {
   children: ReactNode;
@@ -29,42 +29,55 @@ interface PreviewMenuProps {
 }
 
 /** A trigger in the switcher bar that opens a single-choice list. */
-function PreviewMenu({ children, label, onValueChange, options, value }: PreviewMenuProps) {
-  return (
-    <Menu.Root modal={false}>
-      <Menu.Trigger aria-label={label} className={TRIGGER} title={label}>
-        {children}
-      </Menu.Trigger>
-      <Menu.Portal>
-        <Menu.Positioner className="z-50" side="top" sideOffset={10}>
-          <Menu.Popup className="bg-popover text-popover-foreground min-w-40 origin-[var(--transform-origin)] rounded-xl border p-1 shadow-lg transition-[transform,opacity] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0">
-            <Menu.Group>
-              <Menu.GroupLabel className="text-muted-foreground px-2 py-1.5 text-xs">{label}</Menu.GroupLabel>
-              <Menu.RadioGroup onValueChange={(next: string) => onValueChange(next)} value={value}>
-                {options.map((option) => (
-                  <Menu.RadioItem
-                    className="data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-none select-none"
-                    closeOnClick
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.swatch ? (
-                      <span aria-hidden className="size-3 shrink-0 rounded-full" style={{ background: option.swatch }} />
-                    ) : null}
-                    <span className="flex-1">{option.label}</span>
-                    <Menu.RadioItemIndicator>
-                      <Check className="size-3.5" />
-                    </Menu.RadioItemIndicator>
-                  </Menu.RadioItem>
-                ))}
-              </Menu.RadioGroup>
-            </Menu.Group>
-          </Menu.Popup>
-        </Menu.Positioner>
-      </Menu.Portal>
-    </Menu.Root>
-  );
-}
+const PreviewMenu = ({
+  children,
+  label,
+  onValueChange,
+  options,
+  value,
+}: PreviewMenuProps) => (
+  <Menu.Root modal={false}>
+    <Menu.Trigger aria-label={label} className={TRIGGER} title={label}>
+      {children}
+    </Menu.Trigger>
+    <Menu.Portal>
+      <Menu.Positioner className="z-50" side="top" sideOffset={10}>
+        <Menu.Popup className="bg-popover text-popover-foreground min-w-40 origin-(--transform-origin) rounded-xl border p-1 shadow-lg transition-[transform,opacity] duration-150 data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0">
+          <Menu.Group>
+            <Menu.GroupLabel className="text-muted-foreground px-2 py-1.5 text-xs">
+              {label}
+            </Menu.GroupLabel>
+            <Menu.RadioGroup
+              onValueChange={(next: string) => onValueChange(next)}
+              value={value}
+            >
+              {options.map((option) => (
+                <Menu.RadioItem
+                  className="data-highlighted:bg-accent data-highlighted:text-accent-foreground flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-none select-none"
+                  closeOnClick
+                  key={option.value}
+                  value={option.value}
+                >
+                  {option.swatch ? (
+                    <span
+                      aria-hidden
+                      className="size-3 shrink-0 rounded-full"
+                      style={{ background: option.swatch }}
+                    />
+                  ) : null}
+                  <span className="flex-1">{option.label}</span>
+                  <Menu.RadioItemIndicator>
+                    <Check className="size-3.5" />
+                  </Menu.RadioItemIndicator>
+                </Menu.RadioItem>
+              ))}
+            </Menu.RadioGroup>
+          </Menu.Group>
+        </Menu.Popup>
+      </Menu.Positioner>
+    </Menu.Portal>
+  </Menu.Root>
+);
 
 interface ScreensPreviewControlsProps {
   dir: Direction;
@@ -82,7 +95,7 @@ interface ScreensPreviewControlsProps {
  * the runtime's accent palettes and the layout direction. Each change goes to
  * the iframe as a bridge message (wf:state, wf:theme, wf:dir).
  */
-export function ScreensPreviewControls({
+export const ScreensPreviewControls = ({
   dir,
   onDirChange,
   onPaletteChange,
@@ -90,7 +103,7 @@ export function ScreensPreviewControls({
   palette,
   state,
   states,
-}: ScreensPreviewControlsProps) {
+}: ScreensPreviewControlsProps) => {
   const screenStates = SCREEN_STATES.filter((s) => states.includes(s));
   const isRtl = dir === "rtl";
 
@@ -100,7 +113,10 @@ export function ScreensPreviewControls({
         <PreviewMenu
           label="Screen state"
           onValueChange={(next) => onStateChange(next as ScreenState)}
-          options={screenStates.map((s) => ({ value: s, label: STATE_LABELS[s] }))}
+          options={screenStates.map((s) => ({
+            value: s,
+            label: STATE_LABELS[s],
+          }))}
           value={state}
         >
           <Layers aria-hidden className="size-4" />
@@ -117,7 +133,11 @@ export function ScreensPreviewControls({
         }))}
         value={palette}
       >
-        <span aria-hidden className="size-3.5 rounded-full" style={{ background: PALETTES[palette].swatch[0] }} />
+        <span
+          aria-hidden
+          className="size-3.5 rounded-full"
+          style={{ background: PALETTES[palette].swatch[0] }}
+        />
       </PreviewMenu>
       <button
         aria-label="RTL layout"
@@ -131,4 +151,4 @@ export function ScreensPreviewControls({
       </button>
     </div>
   );
-}
+};

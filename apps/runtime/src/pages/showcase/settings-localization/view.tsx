@@ -108,7 +108,7 @@ const FIRST_DAY_INDEX: Record<FirstDay, { dow: number; sample: string }> = {
 const SAMPLE_NUMBER = 1234567.89;
 const card = "flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors";
 const checkedCard = "border-ring bg-accent/40";
-const idleCard = "border-border/60 hover:bg-foreground/[0.03]";
+const idleCard = "border-border/60 hover:bg-foreground/3";
 
 /** A flag from a BCP 47 tag's region (en-GB → 🇬🇧); empty when it has none. */
 function flagOf(tag: string) {
@@ -129,7 +129,7 @@ function Section({ id, title, icon, hint, children }: { id: string; title: strin
   return (
     <section aria-labelledby={id}>
       <div className="flex items-center gap-2">
-        <span aria-hidden className="inline-flex size-6 items-center justify-center rounded-md bg-foreground/[0.06]">
+        <span aria-hidden className="inline-flex size-6 items-center justify-center rounded-md bg-foreground/6">
           {icon}
         </span>
         <h2 className="font-heading text-base" id={id}>
@@ -393,7 +393,7 @@ function LocalizationSettingsScreen({ prefs: saved, status = "ready", error, onR
                     <SelectTrigger className="w-full" id={`${id}-currency`}>
                       <SelectValue>
                         <span className="flex items-center gap-2">
-                          <span aria-hidden className="inline-flex size-5 items-center justify-center rounded bg-foreground/[0.06] font-mono text-xs">
+                          <span aria-hidden className="inline-flex size-5 items-center justify-center rounded bg-foreground/6 font-mono text-xs">
                             {currencySymbol(p.currency)}
                           </span>
                           <span>
@@ -406,7 +406,7 @@ function LocalizationSettingsScreen({ prefs: saved, status = "ready", error, onR
                       {currencies.map((code) => (
                         <SelectItem key={code} value={code}>
                           <span className="flex items-center gap-2">
-                            <span aria-hidden className="inline-flex size-5 items-center justify-center rounded bg-foreground/[0.06] font-mono text-xs">
+                            <span aria-hidden className="inline-flex size-5 items-center justify-center rounded bg-foreground/6 font-mono text-xs">
                               {currencySymbol(code)}
                             </span>
                             <span>
@@ -446,7 +446,7 @@ function LocalizationSettingsScreen({ prefs: saved, status = "ready", error, onR
                       {t.livePreview}
                     </h2>
                   </div>
-                  <span aria-hidden className="inline-flex size-8 items-center justify-center rounded-lg bg-foreground/[0.06]">
+                  <span aria-hidden className="inline-flex size-8 items-center justify-center rounded-lg bg-foreground/6">
                     <GlobeIcon className="size-4 opacity-70" />
                   </span>
                 </div>
@@ -466,7 +466,7 @@ function LocalizationSettingsScreen({ prefs: saved, status = "ready", error, onR
                   ].map((row) => (
                     <div className="flex items-center justify-between gap-4 py-2.5" key={row.key}>
                       <dt className="flex items-center gap-2 text-muted-foreground text-xs">
-                        <span aria-hidden className="inline-flex size-5 items-center justify-center rounded bg-foreground/[0.05] text-foreground/70">
+                        <span aria-hidden className="inline-flex size-5 items-center justify-center rounded bg-foreground/5 text-foreground/70">
                           {row.icon}
                         </span>
                         {row.label}
@@ -490,7 +490,7 @@ function LocalizationSettingsScreen({ prefs: saved, status = "ready", error, onR
                     ))}
                   </ol>
                 </div>
-                <p className="mt-4 rounded-lg bg-foreground/[0.04] p-3 text-muted-foreground text-xs leading-relaxed">{interpolate(t.previewNote, { language: p.language })}</p>
+                <p className="mt-4 rounded-lg bg-foreground/4 p-3 text-muted-foreground text-xs leading-relaxed">{interpolate(t.previewNote, { language: p.language })}</p>
               </div>
             </aside>
           </div>

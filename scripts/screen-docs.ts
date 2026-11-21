@@ -388,14 +388,14 @@ class Demo {
         const clause = statement.importClause;
         if (!module || !clause?.namedBindings) continue;
         if (ts.isNamespaceImport(clause.namedBindings)) {
-          this.imports.set(clause.namedBindings.name.text, { module, name: "*", namespace: true, typeOnly: clause.isTypeOnly });
+          this.imports.set(clause.namedBindings.name.text, { module, name: "*", namespace: true, typeOnly: clause.phaseModifier === ts.SyntaxKind.TypeKeyword });
         } else {
           for (const el of clause.namedBindings.elements) {
             this.imports.set(el.name.text, {
               module,
               name: (el.propertyName ?? el.name).text,
               namespace: false,
-              typeOnly: clause.isTypeOnly || el.isTypeOnly,
+              typeOnly: clause.phaseModifier === ts.SyntaxKind.TypeKeyword || el.isTypeOnly,
             });
           }
         }

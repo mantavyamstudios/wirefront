@@ -18,20 +18,20 @@ let epoch = 0;
 let unpublishTimer: ReturnType<typeof setTimeout> | null = null;
 const listeners = new Set<() => void>();
 
-function emit() {
+const emit = () => {
   for (const listener of listeners) {
     listener();
   }
-}
+};
 
-function sameItems(left: HeaderTocItem[], right: HeaderTocItem[]) {
+const sameItems = (left: HeaderTocItem[], right: HeaderTocItem[]) => {
   if (left === right) {
     return true;
   }
   if (left.length !== right.length) {
     return false;
   }
-  for (let index = 0; index < left.length; index++) {
+  for (let index = 0; index < left.length; index += 1) {
     const a = left[index];
     const b = right[index];
     if (
@@ -44,9 +44,9 @@ function sameItems(left: HeaderTocItem[], right: HeaderTocItem[]) {
     }
   }
   return true;
-}
+};
 
-export function publishHeaderToc(nextItems: HeaderTocItem[]) {
+export const publishHeaderToc = (nextItems: HeaderTocItem[]) => {
   epoch += 1;
   if (unpublishTimer) {
     clearTimeout(unpublishTimer);
@@ -58,9 +58,9 @@ export function publishHeaderToc(nextItems: HeaderTocItem[]) {
   }
   items = resolved;
   emit();
-}
+};
 
-export function unpublishHeaderToc() {
+export const unpublishHeaderToc = () => {
   const epochAtUnmount = epoch;
   if (unpublishTimer) {
     clearTimeout(unpublishTimer);
@@ -73,32 +73,27 @@ export function unpublishHeaderToc() {
     items = EMPTY_ITEMS;
     emit();
   }, UNPUBLISH_MS);
-}
+};
 
-function subscribe(listener: () => void) {
+const subscribe = (listener: () => void) => {
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
   };
-}
+};
 
-function getSnapshot() {
-  return items;
-}
+const getSnapshot = () => items;
 
-function getServerSnapshot() {
-  return EMPTY_ITEMS;
-}
+const getServerSnapshot = () => EMPTY_ITEMS;
 
-export function useHeaderTocItems() {
-  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-}
+export const useHeaderTocItems = () =>
+  useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
 /** Page-level publisher. Nav owns the visible chrome so route changes do not remount it. */
-export function usePublishHeaderToc(
+export const usePublishHeaderToc = (
   nextItems: HeaderTocItem[],
   skipEmpty = false
-) {
+) => {
   useLayoutEffect(() => {
     if (skipEmpty && nextItems.length === 0) {
       return;
@@ -108,4 +103,4 @@ export function usePublishHeaderToc(
       unpublishHeaderToc();
     };
   }, [nextItems, skipEmpty]);
-}
+};

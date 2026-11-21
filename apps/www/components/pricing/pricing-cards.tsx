@@ -24,22 +24,22 @@ const COMMUNITY_FEATURES = [
   "Keeps Wirefront UI 100% free for everyone",
 ] as const;
 
-export function PricingCards() {
+export const PricingCards = () => {
   const containerRef = useRef<HTMLElement>(null);
   useButton3DHover(containerRef);
 
   return (
     <section
-      className="relative z-10 py-[var(--padding-s)] pb-[var(--padding-m)]"
+      className="relative z-10 py-(--padding-s) pb-(--padding-m)"
       id="plans"
       ref={containerRef}
     >
       <div className="is--md-m container mx-auto max-w-4xl px-4 sm:px-6">
-        <div className="grid grid-cols-1 items-stretch gap-[var(--gap-m)] sm:grid-cols-2 sm:gap-[var(--gap-l)]">
+        <div className="grid grid-cols-1 items-stretch gap-(--gap-m) sm:grid-cols-2 sm:gap-(--gap-l)">
           {/* Card 1: Free Tier */}
           <div className="pricing-card is--free relative flex flex-col justify-between overflow-hidden">
             <div>
-              <div className="flex items-center justify-between gap-[var(--gap-xs)]">
+              <div className="flex items-center justify-between gap-(--gap-xs)">
                 <div
                   className="tag rounded-[1.5rem]! px-[0.85em] pt-[0.35em] pb-[0.3em]"
                   data-shape="round"
@@ -56,26 +56,22 @@ export function PricingCards() {
                     Free
                   </span>
                 </div>
-                <span className="eyebrow text-[var(--color-neutral-500)]">
-                  Open source
-                </span>
+                <span className="eyebrow text-neutral-500">Open source</span>
               </div>
 
               <div className="mt-[1.25em] flex items-baseline gap-[0.375em]">
-                <h2 className="font-heading m-0 text-[3.25em]! leading-none font-normal tracking-[-0.04em] text-[var(--color-neutral-800)] max-[479px]:text-[2.75em]!">
+                <h2 className="font-heading m-0 text-[3.25em]! leading-none font-normal tracking-[-0.04em] text-neutral-800 max-[479px]:text-[2.75em]!">
                   $0
                 </h2>
-                <span className="eyebrow text-[var(--color-neutral-500)]">
-                  / forever
-                </span>
+                <span className="eyebrow text-neutral-500">/ forever</span>
               </div>
 
-              <p className="mt-[0.75em] mb-0 font-sans text-[1em] leading-[1.5] tracking-[-0.01em] text-[var(--color-neutral-525)]">
+              <p className="mt-[0.75em] mb-0 font-sans text-[1em] leading-normal tracking-[-0.01em] text-(--color-neutral-525)">
                 Every screen, ready to install as source you own and wire to
                 your own backend.
               </p>
 
-              <div className="mt-[1.75em] mb-[1.75em] border-0 border-[var(--color-neutral-400)] border-t-[var(--stroke-weight)]" />
+              <div className="mt-[1.75em] mb-[1.75em] border-0 border-neutral-400 border-t-(--stroke-weight)" />
 
               <ul className="flex list-none flex-col gap-[0.875em] p-0">
                 {FREE_FEATURES.map((feature) => (
@@ -83,10 +79,10 @@ export function PricingCards() {
                     className="flex items-start gap-[0.75em] p-0"
                     key={feature}
                   >
-                    <div className="mt-[0.1875em] flex size-[1.25em] shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-coral)_14%,transparent)] text-[var(--color-coral)]">
+                    <div className="mt-[0.1875em] flex size-[1.25em] shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-coral)_14%,transparent)] text-(--color-coral)">
                       <Check className="size-3 stroke-[2.5]" />
                     </div>
-                    <span className="font-sans text-[0.9375em] leading-[1.45] tracking-[-0.01em] text-[var(--color-neutral-800)]">
+                    <span className="font-sans text-[0.9375em] leading-[1.45] tracking-[-0.01em] text-neutral-800">
                       {feature}
                     </span>
                   </li>
@@ -125,7 +121,7 @@ export function PricingCards() {
           {/* Card 2: Community */}
           <div className="pricing-card is--sponsor relative flex flex-col justify-between overflow-hidden">
             <div>
-              <div className="flex items-center justify-between gap-[var(--gap-xs)]">
+              <div className="flex items-center justify-between gap-(--gap-xs)">
                 <div
                   className="tag rounded-[1.5rem]! px-[0.85em] pt-[0.35em] pb-[0.3em]"
                   data-shape="round"
@@ -145,20 +141,18 @@ export function PricingCards() {
               </div>
 
               <div className="mt-[1.25em] flex items-baseline gap-[0.375em]">
-                <h2 className="font-heading m-0 text-[3.25em]! leading-none font-normal tracking-[-0.04em] text-[var(--color-neutral-800)] max-[479px]:text-[2.75em]!">
+                <h2 className="font-heading m-0 text-[3.25em]! leading-none font-normal tracking-[-0.04em] text-neutral-800 max-[479px]:text-[2.75em]!">
                   Optional
                 </h2>
-                <span className="eyebrow text-[var(--color-neutral-500)]">
-                  / sponsors
-                </span>
+                <span className="eyebrow text-neutral-500">/ sponsors</span>
               </div>
 
-              <p className="mt-[0.75em] mb-0 font-sans text-[1em] leading-[1.5] tracking-[-0.01em] text-[var(--color-neutral-525)]">
+              <p className="mt-[0.75em] mb-0 font-sans text-[1em] leading-normal tracking-[-0.01em] text-(--color-neutral-525)">
                 Support independent open-source development and help keep
                 Wirefront UI actively maintained.
               </p>
 
-              <div className="mt-[1.75em] mb-[1.75em] border-0 border-[var(--color-neutral-400)] border-t-[var(--stroke-weight)]" />
+              <div className="mt-[1.75em] mb-[1.75em] border-0 border-neutral-400 border-t-(--stroke-weight)" />
 
               <ul className="flex list-none flex-col gap-[0.875em] p-0">
                 {COMMUNITY_FEATURES.map((feature) => (
@@ -166,7 +160,7 @@ export function PricingCards() {
                     className="flex items-start gap-[0.75em] p-0"
                     key={feature}
                   >
-                    <div className="mt-[0.1875em] flex size-[1.25em] shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-electric)_16%,transparent)] text-[var(--color-electric)]">
+                    <div className="mt-[0.1875em] flex size-[1.25em] shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-electric)_16%,transparent)] text-(--color-electric)">
                       <Check className="size-3 stroke-[2.5]" />
                     </div>
                     <span className="pricing-card__feature-text">
@@ -211,11 +205,11 @@ export function PricingCards() {
 
         {/* Disclaimer note */}
         <div className="mx-auto mt-[3em] max-w-[42em] text-center">
-          <p className="m-0 font-sans text-[0.875em] leading-[1.5] text-[var(--color-neutral-500)]">
+          <p className="m-0 font-sans text-[0.875em] leading-normal text-neutral-500">
             {PRICING_DISCLAIMER}
           </p>
         </div>
       </div>
     </section>
   );
-}
+};

@@ -19,11 +19,11 @@ type WithAsChild<Base extends object> =
 
 type SlotProps<T extends HTMLElement = HTMLElement> = DOMMotionProps<T>;
 
-function useComposedRefs<T>(
+const useComposedRefs = <T,>(
   childRef: React.Ref<T> | undefined,
   forwardedRef: React.Ref<T> | undefined
-): React.RefCallback<T> {
-  return useCallback(
+): React.RefCallback<T> =>
+  useCallback(
     (node) => {
       for (const ref of [childRef, forwardedRef]) {
         if (!ref) {
@@ -38,12 +38,11 @@ function useComposedRefs<T>(
     },
     [childRef, forwardedRef]
   );
-}
 
-function mergeProps<T extends HTMLElement>(
+const mergeProps = <T extends HTMLElement>(
   childProps: AnyProps,
   slotProps: DOMMotionProps<T>
-): AnyProps {
+): AnyProps => {
   const merged: AnyProps = { ...childProps, ...slotProps };
 
   if (childProps.className || slotProps.className) {
@@ -61,13 +60,13 @@ function mergeProps<T extends HTMLElement>(
   }
 
   return merged;
-}
+};
 
-function Slot<T extends HTMLElement = HTMLElement>({
+const Slot = <T extends HTMLElement = HTMLElement>({
   children,
   ref,
   ...props
-}: SlotProps<T>) {
+}: SlotProps<T>) => {
   const child = isValidElement(children) ? children : null;
   const childType = child?.type as React.ElementType | undefined;
   const isAlreadyMotion =
@@ -93,7 +92,7 @@ function Slot<T extends HTMLElement = HTMLElement>({
   const mergedProps = mergeProps(childProps, props);
 
   return createElement(Base, { ...mergedProps, ref: composedRef });
-}
+};
 
 export {
   type AnyProps,

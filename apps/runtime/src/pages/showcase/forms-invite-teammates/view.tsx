@@ -323,14 +323,14 @@ function ChipPill({
         "group inline-flex h-7 items-center gap-1.5 rounded-full border pe-1 ps-1 text-xs",
         !valid && "border-destructive/50 bg-destructive/8 text-destructive-foreground",
         valid && autoJoin && "border-category-2/30 bg-category-2/8 text-foreground",
-        valid && !autoJoin && "border-border bg-foreground/[0.03] text-foreground",
+        valid && !autoJoin && "border-border bg-foreground/3 text-foreground",
       )}
     >
       <span
         aria-hidden
         className={cn(
           "flex size-5 shrink-0 items-center justify-center rounded-full font-mono text-[9px] uppercase",
-          autoJoin ? "bg-category-2/15 text-category-2-foreground" : valid ? "bg-foreground/[0.06] text-muted-foreground" : "bg-destructive/15 text-destructive-foreground",
+          autoJoin ? "bg-category-2/15 text-category-2-foreground" : valid ? "bg-foreground/6 text-muted-foreground" : "bg-destructive/15 text-destructive-foreground",
         )}
       >
         {valid ? initials(chip.email) : "!"}
@@ -348,7 +348,7 @@ function ChipPill({
             aria-label={interpolate(t.changeRole, { role: t[chip.role], email: chip.email })}
             render={
               <button
-                className="flex h-6 items-center gap-0.5 rounded-full px-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:bg-foreground/[0.06] hover:text-foreground pointer-coarse:h-8"
+                className="flex h-6 items-center gap-0.5 rounded-full px-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:bg-foreground/6 hover:text-foreground pointer-coarse:h-8"
                 type="button"
               />
             }
@@ -360,7 +360,7 @@ function ChipPill({
             {InviteRole.options.map((r) => (
               <button
                 aria-pressed={r === chip.role}
-                className="flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-start text-sm hover:bg-foreground/[0.04]"
+                className="flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-start text-sm hover:bg-foreground/4"
                 key={r}
                 onClick={() => onRole(r)}
                 type="button"
@@ -380,7 +380,7 @@ function ChipPill({
 
       <button
         aria-label={interpolate(t.remove, { email: chip.email })}
-        className="flex size-6 items-center justify-center rounded-full opacity-50 hover:bg-foreground/[0.06] hover:opacity-100 pointer-coarse:size-8"
+        className="flex size-6 items-center justify-center rounded-full opacity-50 hover:bg-foreground/6 hover:opacity-100 pointer-coarse:size-8"
         onClick={onRemove}
         type="button"
       >

@@ -143,7 +143,7 @@ function IntegrationDirectoryScreen({ integrations, status = "ready", error, onR
                             {i.name.slice(0, 2).toUpperCase()}
                           </div>
                         )}
-                        {i.badge ? <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{i.badge}</span> : null}
+                        {i.badge ? <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{i.badge}</span> : null}
                       </div>
                       <div>
                         <h2 className="flex items-center gap-2">

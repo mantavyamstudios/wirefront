@@ -394,7 +394,7 @@
         var(--fd-sidebar-width, 260px) + var(--fd-layout-offset, 0px)
       ) !important;
       background: transparent !important;
-      @apply md:!border-0;
+      @apply md:border-0!;
     }
   }
 
@@ -405,7 +405,7 @@
   #nd-sidebar div div div a[href^="/motion"] > svg[data-icon="true"],
   #nd-sidebar div div div a[href^="/icons"] > svg[data-icon="true"],
   #nd-sidebar div div div a + div[data-state="open"] {
-    @apply !hidden;
+    @apply hidden!;
   }
 
   /* Shared layout width so nav, sidebar, and content use the same centering offset */
@@ -422,7 +422,7 @@
       100%,
       calc(var(--fd-layout-width) - var(--fd-sidebar-width))
     ) !important;
-    @apply mx-auto w-full items-start !pt-0;
+    @apply mx-auto w-full items-start pt-0!;
   }
 
   /* Balance left (sidebar + offset) and right (offset) gutters when banner shifts layout down */
@@ -455,11 +455,11 @@
   }
 
   #nd-page article {
-    @apply !pt-23 max-2xl:max-w-[860px] 2xl:!max-w-[1124px];
+    @apply pt-23! max-2xl:max-w-215 2xl:max-w-281!;
   }
 
   #nd-page article.blog-article {
-    @apply !max-w-none !pt-3;
+    @apply max-w-none! pt-3!;
   }
 
   /* Reserve TOC column width in page flex layout. */
@@ -556,7 +556,7 @@
   #docs-body h4,
   #docs-body h5,
   #docs-body h6 {
-    @apply !font-medium;
+    @apply font-medium!;
   }
 
   @keyframes blink {

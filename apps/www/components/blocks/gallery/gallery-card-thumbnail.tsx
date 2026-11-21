@@ -10,10 +10,10 @@ const TAG_GRADIENTS: Record<string, string> = {
   components: "from-emerald-500/15 via-teal-500/8 to-transparent",
 };
 
-function getTagGradient(tag: string | undefined): string {
+const getTagGradient = (tag: string | undefined): string => {
   const key = (tag ?? "components").toLowerCase();
   return TAG_GRADIENTS[key] ?? TAG_GRADIENTS.components;
-}
+};
 
 interface GalleryCardThumbnailProps {
   category?: string;
@@ -21,11 +21,11 @@ interface GalleryCardThumbnailProps {
   title: string;
 }
 
-export function GalleryCardThumbnail({
+export const GalleryCardThumbnail = ({
   category,
   className,
   title,
-}: GalleryCardThumbnailProps) {
+}: GalleryCardThumbnailProps) => {
   const gradient = getTagGradient(category);
   const hue =
     title.split("").reduce((acc, char) => acc + (char.codePointAt(0) ?? 0), 0) %
@@ -34,7 +34,7 @@ export function GalleryCardThumbnail({
   return (
     <div
       className={cn(
-        "bg-muted/60 absolute inset-0 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br",
+        "bg-muted/60 absolute inset-0 flex flex-col items-center justify-center overflow-hidden bg-linear-to-br",
         gradient,
         className
       )}
@@ -52,4 +52,4 @@ export function GalleryCardThumbnail({
       </span>
     </div>
   );
-}
+};

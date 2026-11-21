@@ -17,9 +17,9 @@ type CachedMotionProps = MotionProps & {
 
 const cache = new Map<ElementType, ComponentType<CachedMotionProps>>();
 
-export function getMotionComponent(
+export const getMotionComponent = (
   Component: ElementType
-): ComponentType<CachedMotionProps> {
+): ComponentType<CachedMotionProps> => {
   const cached = cache.get(Component);
   if (cached) {
     return cached;
@@ -28,4 +28,4 @@ export function getMotionComponent(
   const created = motion.create(Component as never);
   cache.set(Component, created);
   return created;
-}
+};

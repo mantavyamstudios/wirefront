@@ -174,9 +174,9 @@ function GooOrb({ className, busy = false, size = 48 }: { className?: string; bu
       <OrbFilter blur={3.5 * k} id={id} />
       <span className="absolute inset-0" style={{ filter: `url(#${id})` }}>
         <span className={cn(blob, "inset-[12%] bg-info")} />
-        <motion.span animate={loop(busy ? 3 : 7, [0, 5, 3, -1, 0], [0, 2, 6, 3, 0])} className={cn(blob, "start-[20%] top-[20%] size-[38%] bg-success")} />
-        <motion.span animate={loop(busy ? 3.4 : 8, [0, -4, -6, -1, 0], [0, -5, -1, 2, 0])} className={cn(blob, "end-[22%] bottom-[22%] size-[34%] bg-info-foreground")} />
-        <motion.span animate={busy ? loop(2.2, [0, 13, 0], [0, -13, 0]) : loop(6, [0, 2, 0], [0, -2, 0])} className={cn(blob, "end-[28%] top-[28%] size-[26%] bg-info")} />
+        <motion.span animate={loop(busy ? 3 : 7, [0, 5, 3, -1, 0], [0, 2, 6, 3, 0])} className={cn(blob, "inset-s-[20%] top-[20%] size-[38%] bg-success")} />
+        <motion.span animate={loop(busy ? 3.4 : 8, [0, -4, -6, -1, 0], [0, -5, -1, 2, 0])} className={cn(blob, "inset-e-[22%] bottom-[22%] size-[34%] bg-info-foreground")} />
+        <motion.span animate={busy ? loop(2.2, [0, 13, 0], [0, -13, 0]) : loop(6, [0, 2, 0], [0, -2, 0])} className={cn(blob, "inset-e-[28%] top-[28%] size-[26%] bg-info")} />
       </span>
     </span>
   );
@@ -280,7 +280,7 @@ function PromptBox({ value, onChange, onSubmit, streaming, onStop, tools, active
             <TooltipContent>{t.attach}</TooltipContent>
           </Tooltip>
         ) : null}
-        <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto [scrollbar-width:none]">
+        <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto scrollbar-none">
           {tools.map((tool) => {
             const on = activeTools.includes(tool.id);
             return (
@@ -510,7 +510,7 @@ function FadeScroller({ children, className }: { children: ReactNode; className?
     };
   }, []);
   return (
-    <div className={cn("overflow-x-auto [scrollbar-width:none]", className)} ref={ref} style={{ maskImage: `linear-gradient(to right, ${edges.start ? "transparent, black 1.5rem" : "black, black"}, ${edges.end ? "black calc(100% - 1.5rem), transparent" : "black, black"})` }}>
+    <div className={cn("overflow-x-auto scrollbar-none", className)} ref={ref} style={{ maskImage: `linear-gradient(to right, ${edges.start ? "transparent, black 1.5rem" : "black, black"}, ${edges.end ? "black calc(100% - 1.5rem), transparent" : "black, black"})` }}>
       {children}
     </div>
   );

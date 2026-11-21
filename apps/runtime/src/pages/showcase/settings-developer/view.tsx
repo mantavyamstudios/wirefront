@@ -187,7 +187,7 @@ function DeveloperLabsScreen({ data, status = "ready", error, onRetry, onSetFlag
                       {group.flags.map((f) => {
                         const switchId = `${id}-${f.key}`;
                         return (
-                          <li className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-foreground/[0.02]" key={f.key}>
+                          <li className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-foreground/2" key={f.key}>
                             <div className="min-w-0 flex-1">
                               {/* The label covers the text column too, so the whole row toggles the flag. */}
                               <label className="flex cursor-pointer flex-wrap items-center gap-2" htmlFor={switchId}>
@@ -285,7 +285,7 @@ function DeveloperLabsScreen({ data, status = "ready", error, onRetry, onSetFlag
                     <div
                       className={cn(
                         "flex items-start gap-3 rounded-xl border bg-background/40 px-3.5 py-3 transition-colors",
-                        env === opt.id ? "border-foreground/40 bg-foreground/[0.03]" : "border-border/60 hover:border-foreground/20",
+                        env === opt.id ? "border-foreground/40 bg-foreground/3" : "border-border/60 hover:border-foreground/20",
                       )}
                       key={opt.id}
                     >

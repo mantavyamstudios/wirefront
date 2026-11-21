@@ -160,8 +160,8 @@ function SignInScreen({
     "rounded-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring";
 
   return (
-    <div className={cn("flex h-[760px] w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground", className)}>
-      <div className="m-auto flex w-full max-w-[340px] flex-col items-center">
+    <div className={cn("flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground", className)}>
+      <div className="m-auto flex w-full max-w-85 flex-col items-center">
         {logo ?? <Mark />}
         <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">{interpolate(t.title, { product })}</h1>
         <p className="mt-1.5 text-balance text-center text-muted-foreground text-sm">{t.subtitle}</p>

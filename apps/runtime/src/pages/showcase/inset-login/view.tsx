@@ -410,10 +410,10 @@ function InsetSignInScreen({ onSignIn, onSuccess, providers = [], onProvider, la
         }}
       />
       {/* Edge-to-edge on phones; the inset frame appears from sm up. */}
-      <div className="relative mx-auto flex min-h-svh max-w-[1440px] items-stretch sm:p-4 md:p-10 lg:p-16">
+      <div className="relative mx-auto flex min-h-svh max-w-360 items-stretch sm:p-4 md:p-10 lg:p-16">
         <div className="relative grid w-full grid-cols-1 overflow-hidden bg-card sm:rounded-3xl sm:border sm:border-border sm:shadow-2xl sm:shadow-foreground/10 lg:grid-cols-[1fr_minmax(440px,560px)]">
           <ArtPanel backHref={backHref} headline={headline} t={t} tagline={tagline} />
-          <div className="relative flex flex-col overflow-y-auto bg-card text-foreground lg:min-h-[680px]">
+          <div className="relative flex flex-col overflow-y-auto bg-card text-foreground lg:min-h-170">
             <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-5 py-10 sm:px-6 lg:py-14">
               {logo ? <div className="flex items-center justify-center">{logo}</div> : null}
               <div className={cn("flex flex-col gap-1.5", logo && "mt-12")}>
@@ -428,7 +428,7 @@ function InsetSignInScreen({ onSignIn, onSuccess, providers = [], onProvider, la
                       {p.id === lastUsedProvider ? (
                         <span
                           aria-hidden
-                          className="-top-2 absolute end-2 z-10 whitespace-nowrap rounded-sm border border-border bg-muted px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground uppercase tracking-[0.15em]"
+                          className="-top-2 absolute inset-e-2 z-10 whitespace-nowrap rounded-sm border border-border bg-muted px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground uppercase tracking-[0.15em]"
                         >
                           {t.lastUsed}
                         </span>

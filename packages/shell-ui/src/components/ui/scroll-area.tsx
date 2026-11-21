@@ -14,81 +14,73 @@ interface ScrollAreaProps extends React.ComponentProps<
   type?: "auto" | "always" | "scroll" | "hover";
 }
 
-function ScrollArea({
+const ScrollArea = ({
   className,
   children,
   type: _legacyType,
   ...props
-}: ScrollAreaProps) {
-  return (
-    <ScrollAreaPrimitive.Root
-      className={cn("relative overflow-hidden", className)}
-      data-slot="scroll-area"
-      {...props}
-    >
-      {children}
-      <ScrollBar orientation="vertical" />
-      <ScrollAreaPrimitive.Corner data-slot="scroll-area-corner" />
-    </ScrollAreaPrimitive.Root>
-  );
-}
+}: ScrollAreaProps) => (
+  <ScrollAreaPrimitive.Root
+    className={cn("relative overflow-hidden", className)}
+    data-slot="scroll-area"
+    {...props}
+  >
+    {children}
+    <ScrollBar orientation="vertical" />
+    <ScrollAreaPrimitive.Corner data-slot="scroll-area-corner" />
+  </ScrollAreaPrimitive.Root>
+);
 
-function ScrollViewport({
+const ScrollViewport = ({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof ScrollAreaPrimitive.Viewport>) {
-  return (
-    <ScrollAreaPrimitive.Viewport
-      className={cn("size-full rounded-[inherit] outline-none", className)}
-      data-radix-scroll-area-viewport=""
-      data-slot="scroll-area-viewport"
-      {...props}
-    >
-      {children}
-    </ScrollAreaPrimitive.Viewport>
-  );
-}
+}: React.ComponentProps<typeof ScrollAreaPrimitive.Viewport>) => (
+  <ScrollAreaPrimitive.Viewport
+    className={cn("size-full rounded-[inherit] outline-none", className)}
+    data-radix-scroll-area-viewport=""
+    data-slot="scroll-area-viewport"
+    {...props}
+  >
+    {children}
+  </ScrollAreaPrimitive.Viewport>
+);
 
-function ScrollBar({
+const ScrollBar = ({
   className,
   orientation = "vertical",
   ...props
-}: React.ComponentProps<typeof ScrollAreaPrimitive.Scrollbar>) {
-  return (
-    <ScrollAreaPrimitive.Scrollbar
-      className={cn(
-        "group/scrollbar flex touch-none transition-opacity duration-300 ease-out select-none",
-        // Auto-hide when idle (not hovering scroll area and not actively scrolling)
-        "opacity-0 hover:opacity-100 data-hovering:opacity-100 data-scrolling:opacity-100",
-        orientation === "vertical" && "h-full w-2.5 p-px",
-        orientation === "horizontal" && "h-2.5 flex-col p-px",
-        className
-      )}
-      data-radix-scroll-area-scrollbar=""
-      data-slot="scroll-area-scrollbar"
-      orientation={orientation}
-      {...props}
-    >
-      <ScrollAreaPrimitive.Thumb
-        className="bg-fd-border hover:bg-muted-foreground/60 relative flex-1 rounded-full transition-colors"
-        data-slot="scroll-area-thumb"
-      />
-    </ScrollAreaPrimitive.Scrollbar>
-  );
-}
+}: React.ComponentProps<typeof ScrollAreaPrimitive.Scrollbar>) => (
+  <ScrollAreaPrimitive.Scrollbar
+    className={cn(
+      "group/scrollbar flex touch-none transition-opacity duration-300 ease-out select-none",
+      // Auto-hide when idle (not hovering scroll area and not actively scrolling)
+      "opacity-0 hover:opacity-100 data-hovering:opacity-100 data-scrolling:opacity-100",
+      orientation === "vertical" && "h-full w-2.5 p-px",
+      orientation === "horizontal" && "h-2.5 flex-col p-px",
+      className
+    )}
+    data-radix-scroll-area-scrollbar=""
+    data-slot="scroll-area-scrollbar"
+    orientation={orientation}
+    {...props}
+  >
+    <ScrollAreaPrimitive.Thumb
+      className="bg-fd-border hover:bg-muted-foreground/60 relative flex-1 rounded-full transition-colors"
+      data-slot="scroll-area-thumb"
+    />
+  </ScrollAreaPrimitive.Scrollbar>
+);
 
-function ScrollCorner({
+const ScrollCorner = ({
   className,
   ...props
-}: React.ComponentProps<typeof ScrollAreaPrimitive.Corner>) {
-  return (
-    <ScrollAreaPrimitive.Corner
-      className={cn("bg-transparent", className)}
-      data-slot="scroll-area-corner"
-      {...props}
-    />
-  );
-}
+}: React.ComponentProps<typeof ScrollAreaPrimitive.Corner>) => (
+  <ScrollAreaPrimitive.Corner
+    className={cn("bg-transparent", className)}
+    data-slot="scroll-area-corner"
+    {...props}
+  />
+);
 
 export { ScrollArea, ScrollBar, ScrollCorner, ScrollViewport };

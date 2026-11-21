@@ -11,6 +11,58 @@ export interface ControlToggleProps {
   value: boolean;
 }
 
+const PILL_CLASS =
+  "dialkit-segmented-pill absolute inset-0 rounded-[6px] bg-black/12 shadow-xs dark:bg-white/16";
+
+/** One option: a native radio, visually hidden, under the segment's label. */
+const ToggleOption = ({
+  checked,
+  label,
+  layoutId,
+  name,
+  onSelect,
+  reducedMotion,
+}: {
+  checked: boolean;
+  label: string;
+  layoutId: string;
+  name: string;
+  onSelect: () => void;
+  reducedMotion: boolean;
+}) => (
+  <label
+    className={cn(
+      "dialkit-segmented-button relative z-10 flex h-7.5 min-w-12 cursor-pointer items-center justify-center rounded-[6px] px-3.5 text-[13px] leading-none font-medium transition-colors select-none",
+      "has-focus-visible:ring-ring/50 has-focus-visible:ring-2",
+      checked
+        ? "text-(--dial-text-primary)"
+        : "text-(--dial-text-label) hover:text-(--dial-text-primary)"
+    )}
+  >
+    <input
+      checked={checked}
+      className="sr-only"
+      name={name}
+      onChange={onSelect}
+      type="radio"
+    />
+    {checked ? (
+      <motion.div
+        className={PILL_CLASS}
+        layoutId={`toggle-pill-${layoutId}`}
+        style={{ zIndex: -1 }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 500, damping: 35 }
+        }
+      />
+    ) : null}
+    {label}
+  </label>
+);
+
+/** An Off / On choice made of two native radios; arrow keys move between them. */
 export const ControlToggle = ({
   label,
   value,
@@ -18,97 +70,44 @@ export const ControlToggle = ({
   className,
 }: ControlToggleProps) => {
   const layoutId = useId();
-  const shouldReduceMotion = useReducedMotion();
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowLeft" || e.key === "ArrowDown" || e.key === "Home") {
-      e.preventDefault();
-      onChange(false);
-    } else if (
-      e.key === "ArrowRight" ||
-      e.key === "ArrowUp" ||
-      e.key === "End"
-    ) {
-      e.preventDefault();
-      onChange(true);
-    } else if (e.key === " " || e.key === "Enter") {
-      e.preventDefault();
-      onChange(!value);
-    }
-  };
+  const labelId = `${layoutId}-label`;
+  const reducedMotion = Boolean(useReducedMotion());
 
   return (
     <div
       className={cn(
-        "dialkit-labeled-control flex h-[38px] w-full items-center justify-between rounded-[var(--dial-radius,8px)] bg-[var(--dial-surface)] px-3 text-[13px]",
+        "dialkit-labeled-control flex h-9.5 w-full items-center justify-between rounded-(--dial-radius,8px) bg-(--dial-surface) px-3 text-[13px]",
         className
       )}
     >
-      <span className="dialkit-labeled-control-label font-medium text-[var(--dial-text-label)] select-none">
+      <span
+        className="dialkit-labeled-control-label font-medium text-(--dial-text-label) select-none"
+        id={labelId}
+      >
         {label}
       </span>
 
       <div
-        className="dialkit-segmented relative inline-flex h-[34px] items-center rounded-[8px] bg-black/[0.05] p-[2px] select-none dark:bg-white/[0.06]"
-        onKeyDown={handleKeyDown}
+        aria-labelledby={labelId}
+        className="dialkit-segmented relative inline-flex h-8.5 items-center rounded-xl bg-black/5 p-0.5 select-none dark:bg-white/6"
         role="radiogroup"
-        tabIndex={0}
       >
-        <button
-          aria-checked={!value}
-          className={cn(
-            "dialkit-segmented-button relative z-10 flex h-[30px] min-w-[48px] cursor-pointer items-center justify-center rounded-[6px] px-3.5 text-[13px] leading-none font-medium transition-colors select-none",
-            value
-              ? "text-[var(--dial-text-label)] hover:text-[var(--dial-text-primary)]"
-              : "text-[var(--dial-text-primary)]"
-          )}
-          onClick={() => onChange(false)}
-          role="radio"
-          tabIndex={-1}
-          type="button"
-        >
-          {value ? null : (
-            <motion.div
-              className="dialkit-segmented-pill absolute inset-0 rounded-[6px] bg-black/12 shadow-xs dark:bg-white/16"
-              layoutId={`toggle-pill-${layoutId}`}
-              style={{ zIndex: -1 }}
-              transition={
-                shouldReduceMotion
-                  ? { duration: 0 }
-                  : { type: "spring", stiffness: 500, damping: 35 }
-              }
-            />
-          )}
-          Off
-        </button>
-
-        <button
-          aria-checked={value}
-          className={cn(
-            "dialkit-segmented-button relative z-10 flex h-[30px] min-w-[48px] cursor-pointer items-center justify-center rounded-[6px] px-3.5 text-[13px] leading-none font-medium transition-colors select-none",
-            value
-              ? "text-[var(--dial-text-primary)]"
-              : "text-[var(--dial-text-label)] hover:text-[var(--dial-text-primary)]"
-          )}
-          onClick={() => onChange(true)}
-          role="radio"
-          tabIndex={-1}
-          type="button"
-        >
-          {value ? (
-            <motion.div
-              className="dialkit-segmented-pill absolute inset-0 rounded-[6px] bg-black/12 shadow-xs dark:bg-white/16"
-              layoutId={`toggle-pill-${layoutId}`}
-              style={{ zIndex: -1 }}
-              transition={
-                shouldReduceMotion
-                  ? { duration: 0 }
-                  : { type: "spring", stiffness: 500, damping: 35 }
-              }
-            />
-          ) : null}
-          On
-        </button>
+        <ToggleOption
+          checked={!value}
+          label="Off"
+          layoutId={layoutId}
+          name={layoutId}
+          onSelect={() => onChange(false)}
+          reducedMotion={reducedMotion}
+        />
+        <ToggleOption
+          checked={value}
+          label="On"
+          layoutId={layoutId}
+          name={layoutId}
+          onSelect={() => onChange(true)}
+          reducedMotion={reducedMotion}
+        />
       </div>
     </div>
   );

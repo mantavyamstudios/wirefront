@@ -91,7 +91,7 @@ function ProfilePageScreen({ profile, status = "ready", error, onRetry, onToggle
   if (status === "error" || !profile || status === "loading") {
     return (
       <div className={cn("min-h-svh bg-background text-foreground", className)}>
-        <div className="h-32 w-full bg-gradient-to-br from-category-8/30 via-foreground/[0.04] to-category-6/30 sm:h-48" />
+        <div className="h-32 w-full bg-linear-to-br from-category-8/30 via-foreground/4 to-category-6/30 sm:h-48" />
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
           {status === "error" ? (
             <div className="rounded-xl border border-border/60 py-12 text-center">
@@ -173,7 +173,7 @@ function ProfilePageScreen({ profile, status = "ready", error, onRetry, onToggle
     <ul className="mt-3 flex flex-col gap-2.5">
       {profile.activity.map((a) => (
         <li className="flex items-baseline gap-2 text-foreground/85 text-sm" key={a.id}>
-          <span aria-hidden className="size-1.5 shrink-0 translate-y-[-2px] rounded-full bg-foreground/40" />
+          <span aria-hidden className="size-1.5 shrink-0 -translate-y-0.5 rounded-full bg-foreground/40" />
           <span className="shrink-0 text-muted-foreground">{a.verb}</span>
           <span className="min-w-0 truncate">{a.target}</span>
           <time className="ms-auto shrink-0 font-mono text-[10px] text-muted-foreground" dateTime={a.at}>
@@ -188,7 +188,7 @@ function ProfilePageScreen({ profile, status = "ready", error, onRetry, onToggle
 
   return (
     <div className={cn("min-h-svh bg-background text-foreground", className)}>
-      <div className="relative h-32 w-full overflow-hidden bg-gradient-to-br from-category-8/30 via-foreground/[0.04] to-category-6/30 sm:h-48">
+      <div className="relative h-32 w-full overflow-hidden bg-linear-to-br from-category-8/30 via-foreground/4 to-category-6/30 sm:h-48">
         <div aria-hidden className="absolute inset-0" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
       </div>
       <div className="mx-auto max-w-5xl px-4 pb-10 sm:px-6 lg:px-8">
@@ -231,7 +231,7 @@ function ProfilePageScreen({ profile, status = "ready", error, onRetry, onToggle
 
         <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
           {profile.bio ? <p className="max-w-prose text-foreground/85 text-sm leading-relaxed">{profile.bio}</p> : <span />}
-          <div className="flex flex-wrap gap-x-5 gap-y-2 text-muted-foreground text-xs [&>*]:min-w-0 [&>*]:break-all">
+          <div className="flex flex-wrap gap-x-5 gap-y-2 text-muted-foreground text-xs *:min-w-0 *:break-all">
             {profile.location ? <Meta icon={<MapPinIcon className="size-3.5" />}>{profile.location}</Meta> : null}
             {profile.email ? <Meta icon={<MailIcon className="size-3.5" />}>{profile.email}</Meta> : null}
             {profile.website ? <Meta icon={<GlobeIcon className="size-3.5" />}>{profile.website}</Meta> : null}

@@ -51,7 +51,7 @@ export const CHART_COLORS = [
 
 /** Pick a palette colour by index, wrapping if needed. */
 export function chartColor(i: number): string {
-  return CHART_COLORS[i % CHART_COLORS.length]!;
+  return CHART_COLORS[i % CHART_COLORS.length] ?? CHART_COLORS[0];
 }
 
 /**
@@ -97,7 +97,7 @@ export function ChartContainer({
     <div
       ref={ref}
       {...(label ? { role: "img", "aria-label": label } : {})}
-      className={`${className} text-foreground [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:font-mono [&_.recharts-cartesian-axis-tick_text]:text-[10px] [&_.recharts-cartesian-axis-tick_text]:uppercase [&_.recharts-xAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.2em] [&_.recharts-yAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.05em] [&_.recharts-cartesian-grid-bg]:fill-transparent [&_.recharts-cartesian-grid_line]:stroke-border [&_.recharts-polar-grid_line]:stroke-border [&_.recharts-polar-angle-axis-tick_text]:fill-muted-foreground [&_.recharts-polar-angle-axis-tick_text]:font-mono [&_.recharts-polar-angle-axis-tick_text]:text-[10px]`}
+      className={`${className} text-foreground [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:font-mono [&_.recharts-cartesian-axis-tick_text]:text-[10px] [&_.recharts-cartesian-axis-tick_text]:uppercase [&_.recharts-xAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.2em] [&_.recharts-yAxis_.recharts-cartesian-axis-tick_text]:tracking-wider [&_.recharts-cartesian-grid-bg]:fill-transparent [&_.recharts-cartesian-grid_line]:stroke-border [&_.recharts-polar-grid_line]:stroke-border [&_.recharts-polar-angle-axis-tick_text]:fill-muted-foreground [&_.recharts-polar-angle-axis-tick_text]:font-mono [&_.recharts-polar-angle-axis-tick_text]:text-[10px]`}
     >
       {/* Start at a valid size: the default -1x-1 makes Recharts warn on the
           render before the container has been measured. */}
@@ -257,7 +257,7 @@ function ChartTooltipContent({
       ) : null}
       <ul className="mt-1 flex flex-col gap-1">
         {payload.map((p, i) => (
-          <li key={`${p.dataKey ?? p.name}-${i}`} className="flex items-center gap-2">
+          <li key={String(p.dataKey ?? p.name)} className="flex items-center gap-2">
             <span
               aria-hidden
               className="size-2 rounded-full"

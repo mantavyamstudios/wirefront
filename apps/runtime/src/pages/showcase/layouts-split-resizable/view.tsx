@@ -87,7 +87,7 @@ function SplitPanesScreen({ start, end, startLabel, endLabel, title, defaultStar
       <RadioGroup aria-label={t.show} className="flex shrink-0 gap-1 border-border/60 border-b p-1.5 md:hidden" onValueChange={(v) => setMobile(v as "start" | "end")} value={mobile}>
         {(["start", "end"] as const).map((pane) => (
           <Radio.Root
-            className="min-h-10 flex-1 cursor-pointer rounded-md font-mono text-muted-foreground text-xs outline-none transition-colors hover:bg-foreground/[0.04] focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground/[0.08] data-checked:text-foreground"
+            className="min-h-10 flex-1 cursor-pointer rounded-md font-mono text-muted-foreground text-xs outline-none transition-colors hover:bg-foreground/4 focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground/8 data-checked:text-foreground"
             key={pane}
             value={pane}
           >
@@ -99,13 +99,13 @@ function SplitPanesScreen({ start, end, startLabel, endLabel, title, defaultStar
       <div className="relative flex min-h-0 flex-1 overflow-hidden" ref={containerRef} style={{ "--start": `${pct}%` } as CSSProperties}>
         <section
           aria-label={startLabel}
-          className={cn("min-w-0 flex-col overflow-hidden bg-foreground/[0.02] md:flex md:w-[var(--start)] md:shrink-0 md:border-border/60 md:border-e", mobile === "start" ? "flex w-full" : "hidden")}
+          className={cn("min-w-0 flex-col overflow-hidden bg-foreground/2 md:flex md:w-(--start) md:shrink-0 md:border-border/60 md:border-e", mobile === "start" ? "flex w-full" : "hidden")}
           id={`${id}-start`}
         >
           {start}
         </section>
         <PaneResizer
-          className={cn("group relative z-10 -mx-1.5 hidden w-3 shrink-0 items-center justify-center md:flex", dragging ? "bg-foreground/10" : "hover:bg-foreground/[0.06] focus-visible:bg-foreground/[0.08]")}
+          className={cn("group relative z-10 -mx-1.5 hidden w-3 shrink-0 items-center justify-center md:flex", dragging ? "bg-foreground/10" : "hover:bg-foreground/6 focus-visible:bg-foreground/8")}
           controls={`${id}-start`}
           fromDrag={(startPct, grownPx) => (width > 0 ? startPct + (grownPx / width) * 100 : startPct)}
           label={t.resize}

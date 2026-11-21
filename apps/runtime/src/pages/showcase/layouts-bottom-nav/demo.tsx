@@ -43,7 +43,7 @@ export function LayoutsBottomNavShowcasePage() {
   return (
     // Below md this *is* the phone: render the app full-bleed. From md up,
     // show it inside a device mockup.
-    <div className="relative min-h-svh bg-background text-foreground md:flex md:items-center md:justify-center md:bg-foreground/[0.04] md:px-6 md:py-12">
+    <div className="relative min-h-svh bg-background text-foreground md:flex md:items-center md:justify-center md:bg-foreground/4 md:px-6 md:py-12">
       <PageBackdrop />
       <div className="relative md:flex md:flex-col md:items-center md:gap-5">
         <GoContext.Provider value={(id) => setActiveTab(id as TabKey)}>
@@ -76,7 +76,7 @@ function PageBackdrop() {
 
 function PhoneFrame({ activeTab }: { activeTab: TabKey }) {
   return (
-    <div className="relative min-h-svh w-full bg-background md:h-[min(760px,calc(100svh-6rem))] md:min-h-0 md:w-[380px] md:overflow-hidden md:rounded-[40px] md:border-8 md:border-foreground/15 md:shadow-2xl">
+    <div className="relative min-h-svh w-full bg-background md:h-[min(760px,calc(100svh-6rem))] md:min-h-0 md:w-95 md:overflow-hidden md:rounded-[40px] md:border-8 md:border-foreground/15 md:shadow-2xl">
       <div className="relative min-h-svh w-full md:h-full md:min-h-0 md:overflow-hidden md:rounded-[28px]">
         <div aria-hidden className="absolute top-2 left-1/2 z-30 hidden h-6 w-24 -translate-x-1/2 rounded-full bg-foreground/85 md:block" />
         <div className="flex min-h-svh flex-col md:h-full md:min-h-0">
@@ -181,7 +181,7 @@ function HomeFeed() {
             {item.content}
           </p>
           <div
-            className={`mt-2.5 h-24 w-full rounded-xl bg-gradient-to-br ${item.tone}`}
+            className={`mt-2.5 h-24 w-full rounded-xl bg-linear-to-br ${item.tone}`}
           />
           <div className="mt-2.5 flex items-center gap-4 text-[11px] text-muted-foreground">
             <span className="inline-flex items-center gap-1">
@@ -214,7 +214,7 @@ function DiscoverGrid() {
       {DISCOVER.map((item) => (
         <div key={item.title} className="flex flex-col gap-1.5">
           <div
-            className={`aspect-square w-full rounded-2xl bg-gradient-to-br ${item.tone}`}
+            className={`aspect-square w-full rounded-2xl bg-linear-to-br ${item.tone}`}
           />
           <p className="text-xs font-medium">{item.title}</p>
           <p className="text-[10px] text-muted-foreground -mt-1">
@@ -235,7 +235,7 @@ function CreatePrompt() {
         </div>
         <div className="flex flex-col gap-1.5">
           <h2 className="font-heading text-lg">Create something new</h2>
-          <p className="text-xs text-muted-foreground max-w-[220px]">
+          <p className="text-xs text-muted-foreground max-w-55">
             Start a post, capture a thought, or upload from your library.
           </p>
         </div>

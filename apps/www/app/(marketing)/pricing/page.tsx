@@ -10,11 +10,10 @@ export const metadata: Metadata = {
   alternates: getPageAlternates("/pricing"),
   openGraph: {
     title: `Pricing — ${SITE_NAME}`,
-    description:
-      "Every Wirefront screen, free and open source under MIT.",
+    description: "Every Wirefront screen, free and open source under MIT.",
   },
 };
 
-export default function Page() {
-  return <PricingPage />;
-}
+const Page = () => <PricingPage />;
+
+export default Page;

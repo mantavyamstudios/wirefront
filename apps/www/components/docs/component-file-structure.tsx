@@ -29,7 +29,7 @@ interface RegistryEntry {
  * Maps a plain shadcn dep (e.g. `button`) to its standard install target,
  * or null when it installs outside `components/ui` / has no visible file.
  */
-function getShadcnDepTarget(dep: string): string | null {
+const getShadcnDepTarget = (dep: string): string | null => {
   // Skip URL-based deps; only bare names resolve to the shadcn registry.
   if (dep.includes("/") || dep.includes(":")) {
     return null;
@@ -40,13 +40,13 @@ function getShadcnDepTarget(dep: string): string | null {
   }
 
   return `components/ui/${dep}.tsx`;
-}
+};
 
-function appendRegistryInstallTargets(
+const appendRegistryInstallTargets = (
   entry: RegistryEntry,
   queue: string[],
   targets: Set<string>
-) {
+) => {
   for (const file of entry.files ?? []) {
     if (file.target) {
       targets.add(file.target);
@@ -65,7 +65,7 @@ function appendRegistryInstallTargets(
       }
     }
   }
-}
+};
 
 /**
  * Walks `registryDependencies` for internal (`@soralabs/*`) items — e.g. the
@@ -74,7 +74,7 @@ function appendRegistryInstallTargets(
  * component's own file. Plain shadcn deps (e.g. `button`) map to their
  * standard `components/ui/<name>.tsx` install target.
  */
-function getRegistryInstallTargets(name: string): string[] {
+const getRegistryInstallTargets = (name: string): string[] => {
   const targets = new Set<string>();
   const visited = new Set<string>();
   const queue = [name];
@@ -95,7 +95,7 @@ function getRegistryInstallTargets(name: string): string[] {
   }
 
   return [...targets];
-}
+};
 
 export const ComponentFileStructure = memo(
   ({ name, className }: ComponentFileStructureProps) => {
@@ -203,25 +203,21 @@ interface InstallationFileStructureProps {
   className?: string;
 }
 
-export function InstallationFileStructure({
+export const InstallationFileStructure = ({
   className,
-}: InstallationFileStructureProps) {
-  return (
-    <section className={cn("not-prose my-8 flex flex-col gap-3", className)}>
-      <h2 className="text-2xl font-semibold tracking-tight">
-        Project structure
-      </h2>
-      <p className="text-fd-muted-foreground text-sm leading-relaxed">
-        After <code className="text-fd-foreground">shadcn init</code> and
-        adding a screen, your app typically looks like this. Highlighted
-        files are created or updated by the CLI.
-      </p>
-      <FileTree
-        className="bg-muted/30"
-        defaultOpenIds={["your-project"]}
-        elements={INSTALLATION_PROJECT_TREE}
-        highlightColor="var(--code-highlight)"
-      />
-    </section>
-  );
-}
+}: InstallationFileStructureProps) => (
+  <section className={cn("not-prose my-8 flex flex-col gap-3", className)}>
+    <h2 className="text-2xl font-semibold tracking-tight">Project structure</h2>
+    <p className="text-fd-muted-foreground text-sm leading-relaxed">
+      After <code className="text-fd-foreground">shadcn init</code> and adding a
+      screen, your app typically looks like this. Highlighted files are created
+      or updated by the CLI.
+    </p>
+    <FileTree
+      className="bg-muted/30"
+      defaultOpenIds={["your-project"]}
+      elements={INSTALLATION_PROJECT_TREE}
+      highlightColor="var(--code-highlight)"
+    />
+  </section>
+);

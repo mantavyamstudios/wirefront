@@ -83,7 +83,7 @@ function UpcomingEventsScreen({ events, onRsvp, className }: UpcomingEventsProps
               <li key={e.id}>
                 <Card className="overflow-hidden">
                   <CardContent className="flex items-stretch gap-0 p-0">
-                    <div className={cn("flex w-16 shrink-0 flex-col items-center justify-center border-e bg-gradient-to-b p-3 sm:w-20 sm:p-4", TONES[i % TONES.length])}>
+                    <div className={cn("flex w-16 shrink-0 flex-col items-center justify-center border-e bg-linear-to-b p-3 sm:w-20 sm:p-4", TONES[i % TONES.length])}>
                       <time className="contents" dateTime={e.startsAt}>
                         <span className="font-mono text-[10px] text-foreground/70 uppercase tracking-[0.2em]">{format.date(e.startsAt, { month: "short" })}</span>
                         <span className="font-heading text-2xl leading-none sm:text-3xl">{format.date(e.startsAt, { day: "2-digit" })}</span>

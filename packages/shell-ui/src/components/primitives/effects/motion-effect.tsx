@@ -34,12 +34,97 @@ type MotionEffectProps = HTMLMotionProps<"div"> & {
     | boolean;
 };
 
-// oxlint-disable-next-line sonarjs/cognitive-complexity -- The component maps four independent motion options into one variant pair.
-function MotionEffect({
+const MOTION_EFFECT_DEFAULT_TRANSITION = {
+  type: "spring",
+  stiffness: 200,
+  damping: 20,
+} as const;
+
+type EffectOptions = Pick<
+  MotionEffectProps,
+  "blur" | "fade" | "slide" | "zoom"
+>;
+interface VariantPair {
+  hidden: Variant;
+  visible: Variant;
+}
+
+const slideVariants = (slide: MotionEffectProps["slide"]): VariantPair => {
+  if (!slide) {
+    return { hidden: {}, visible: {} };
+  }
+  const offset = typeof slide === "boolean" ? 100 : (slide.offset ?? 100);
+  const direction =
+    typeof slide === "boolean" ? "left" : (slide.direction ?? "left");
+  const axis = direction === "up" || direction === "down" ? "y" : "x";
+  return {
+    hidden: {
+      [axis]: direction === "left" || direction === "up" ? -offset : offset,
+    },
+    visible: { [axis]: 0 },
+  };
+};
+
+const fadeVariants = (fade: MotionEffectProps["fade"]): VariantPair => {
+  if (!fade) {
+    return { hidden: {}, visible: {} };
+  }
+  return typeof fade === "boolean"
+    ? { hidden: { opacity: 0 }, visible: { opacity: 1 } }
+    : {
+        hidden: { opacity: fade.initialOpacity ?? 0 },
+        visible: { opacity: fade.opacity ?? 1 },
+      };
+};
+
+const zoomVariants = (zoom: MotionEffectProps["zoom"]): VariantPair => {
+  if (!zoom) {
+    return { hidden: {}, visible: {} };
+  }
+  return typeof zoom === "boolean"
+    ? { hidden: { scale: 0.5 }, visible: { scale: 1 } }
+    : {
+        hidden: { scale: zoom.initialScale ?? 0.5 },
+        visible: { scale: zoom.scale ?? 1 },
+      };
+};
+
+const blurVariants = (blur: MotionEffectProps["blur"]): VariantPair => {
+  if (!blur) {
+    return { hidden: {}, visible: {} };
+  }
+  return {
+    hidden: {
+      filter: typeof blur === "boolean" ? "blur(10px)" : `blur(${blur})`,
+    },
+    visible: { filter: "blur(0px)" },
+  };
+};
+
+/** The hidden and visible states for the chosen effects, combined. */
+const buildVariants = ({
+  blur,
+  fade,
+  slide,
+  zoom,
+}: EffectOptions): VariantPair => {
+  const parts = [
+    slideVariants(slide),
+    fadeVariants(fade),
+    zoomVariants(zoom),
+    blurVariants(blur),
+  ];
+  return {
+    hidden: Object.assign({}, ...parts.map((part) => part.hidden)),
+    visible: Object.assign({}, ...parts.map((part) => part.visible)),
+  };
+};
+
+const MotionEffect = ({
   ref,
   children,
   className,
-  transition = { type: "spring", stiffness: 200, damping: 20 },
+  transition = MOTION_EFFECT_DEFAULT_TRANSITION,
   delay = 0,
   inView = false,
   inViewMargin = "0px",
@@ -49,7 +134,7 @@ function MotionEffect({
   fade = false,
   zoom = false,
   ...props
-}: MotionEffectProps) {
+}: MotionEffectProps) => {
   const localRef = useRef<HTMLDivElement>(null);
   useImperativeHandle(
     ref as React.Ref<HTMLDivElement>,
@@ -62,37 +147,12 @@ function MotionEffect({
   });
   const isInView = !inView || inViewResult;
 
-  const hiddenVariant: Variant = {};
-  const visibleVariant: Variant = {};
-
-  if (slide) {
-    const offset = typeof slide === "boolean" ? 100 : (slide.offset ?? 100);
-    const direction =
-      typeof slide === "boolean" ? "left" : (slide.direction ?? "left");
-    const axis = direction === "up" || direction === "down" ? "y" : "x";
-    hiddenVariant[axis] =
-      direction === "left" || direction === "up" ? -offset : offset;
-    visibleVariant[axis] = 0;
-  }
-
-  if (fade) {
-    hiddenVariant.opacity =
-      typeof fade === "boolean" ? 0 : (fade.initialOpacity ?? 0);
-    visibleVariant.opacity =
-      typeof fade === "boolean" ? 1 : (fade.opacity ?? 1);
-  }
-
-  if (zoom) {
-    hiddenVariant.scale =
-      typeof zoom === "boolean" ? 0.5 : (zoom.initialScale ?? 0.5);
-    visibleVariant.scale = typeof zoom === "boolean" ? 1 : (zoom.scale ?? 1);
-  }
-
-  if (blur) {
-    hiddenVariant.filter =
-      typeof blur === "boolean" ? "blur(10px)" : `blur(${blur})`;
-    visibleVariant.filter = "blur(0px)";
-  }
+  const { hidden: hiddenVariant, visible: visibleVariant } = buildVariants({
+    blur,
+    fade,
+    slide,
+    zoom,
+  });
 
   return (
     <AnimatePresence>
@@ -117,7 +177,7 @@ function MotionEffect({
       </motion.div>
     </AnimatePresence>
   );
-}
+};
 
 export { MotionEffect, type MotionEffectProps };
 export default MotionEffect;

@@ -15,20 +15,23 @@ const AVATAR_URL = "https://avatars.githubusercontent.com/u/332807507";
 const SIZES = [32, 128, 180, 192, 512] as const;
 const OUT_DIR = path.join(import.meta.dirname, "../public/brand");
 
-async function fetchSize(size: number) {
+const fetchSize = async (size: number) => {
   const response = await fetch(`${AVATAR_URL}?s=${size}`, {
     headers: { "User-Agent": "site-build/0.1" },
     signal: AbortSignal.timeout(15_000),
   });
   const type = response.headers.get("content-type") ?? "";
-  if (!(response.ok && /^image\/(jpeg|png)/.test(type))) {
+  if (!(response.ok && /^image\/(?:jpeg|png)/u.test(type))) {
     throw new Error(`HTTP ${response.status} (${type || "no type"})`);
   }
   const body = Buffer.from(await response.arrayBuffer());
   return type.startsWith("image/png")
-    ? sharp(body).flatten({ background: "#ffffff" }).jpeg({ quality: 90 }).toBuffer()
+    ? sharp(body)
+        .flatten({ background: "#ffffff" })
+        .jpeg({ quality: 90 })
+        .toBuffer()
     : body;
-}
+};
 
 try {
   const images = await Promise.all(SIZES.map(fetchSize));

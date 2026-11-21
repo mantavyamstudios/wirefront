@@ -16,10 +16,10 @@ interface ComponentPageDocsBreadcrumbProps {
   title?: string;
 }
 
-export function ComponentPageDocsBreadcrumb({
+export const ComponentPageDocsBreadcrumb = ({
   className,
   title,
-}: ComponentPageDocsBreadcrumbProps) {
+}: ComponentPageDocsBreadcrumbProps) => {
   const section = useBlocksSection();
   return (
     <div className={className}>
@@ -47,4 +47,4 @@ export function ComponentPageDocsBreadcrumb({
       </Breadcrumb>
     </div>
   );
-}
+};

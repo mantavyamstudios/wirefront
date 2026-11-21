@@ -8,7 +8,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
-  useState,
+  useSyncExternalStore,
 } from "react";
 import type {
   ComponentPropsWithoutRef,
@@ -39,14 +39,14 @@ const remap = (
   outHi: number
 ) => ((v - inLo) * (outHi - outLo)) / (inHi - inLo) + outLo;
 
-function bezierEase(
+const bezierEase = (
   x: number,
   x1: number,
   y1: number,
   x2: number,
   y2: number,
   eps = 1e-6
-): number {
+): number => {
   const bx = (t: number) =>
     3 * (1 - t) ** 2 * t * x1 + 3 * (1 - t) * t ** 2 * x2 + t ** 3;
   const by = (t: number) =>
@@ -55,7 +55,7 @@ function bezierEase(
     3 * (1 - t) ** 2 * x1 + 6 * (1 - t) * t * (x2 - x1) + 3 * t ** 2 * (1 - x2);
 
   let t = x;
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 8; i += 1) {
     const dx = bx(t) - x;
     if (Math.abs(dx) < eps) {
       return by(t);
@@ -82,7 +82,7 @@ function bezierEase(
     t = (lo + hi) / 2;
   }
   return by(t);
-}
+};
 
 export const ALL_VARIATIONS = [
   "charFill",
@@ -115,9 +115,17 @@ interface CharNode {
   el: HTMLSpanElement;
 }
 
-const WHITESPACE_SPLIT_RE = /(\s+)/;
-const WHITESPACE_RE = /\s/g;
-const SPACE_REPLACE_RE = / /g;
+const WHITESPACE_SPLIT_RE = /(?<space>\s+)/u;
+const WHITESPACE_RE = /\s/gu;
+const SPACE_REPLACE_RE = / /gu;
+
+const setNodeClass = (node: CharNode, cls: string) => {
+  if (cls === node.currentClass) {
+    return;
+  }
+  node.currentClass = cls;
+  node.el.className = cls;
+};
 
 class TyperEngine {
   private readonly element: HTMLElement;
@@ -160,7 +168,7 @@ class TyperEngine {
       this.build();
       if (this.initVisible) {
         for (const n of this.charNodes) {
-          this.setClass(n, "char");
+          setNodeClass(n, "char");
         }
         this.type = "done";
         this.element.dataset.typerType = "done";
@@ -322,7 +330,7 @@ class TyperEngine {
     }
     if (this.type === "initial") {
       for (const n of this.charNodes) {
-        this.setClass(n, "char charInit");
+        setNodeClass(n, "char charInit");
       }
       return;
     }
@@ -340,16 +348,8 @@ class TyperEngine {
       let p = progress - node.cp;
       p = roundToStep(p, 0.1);
       p = clamp(p, 0, 1);
-      this.setClass(node, this.resolveClass(phase, p));
+      setNodeClass(node, this.resolveClass(phase, p));
     }
-  }
-
-  private setClass(node: CharNode, cls: string) {
-    if (cls === node.currentClass) {
-      return;
-    }
-    node.currentClass = cls;
-    node.el.className = cls;
   }
 
   private shuffle() {
@@ -363,53 +363,46 @@ class TyperEngine {
   }
 }
 
-class TyperGroup {
-  private readonly typers: TyperEngine[];
+/** Several engines driven together, each starting `stagger` seconds after the last. */
+const createTyperGroup = (
+  elements: HTMLElement[],
+  opts: Omit<TyperOptions, "delay"> = {},
+  stagger = 0.15
+) => {
+  const typers = elements.map(
+    (el, i) => new TyperEngine(el, { ...opts, delay: i * stagger })
+  );
+  return {
+    in: () => {
+      for (const t of typers) {
+        t.in();
+      }
+    },
+    out: () => {
+      for (const t of typers) {
+        t.out();
+      }
+    },
+    inOut: () => {
+      for (const t of typers) {
+        t.inOut();
+      }
+    },
+    getType: (): TyperType => typers[0]?.getType() ?? "initial",
+    reset: (newLines?: string[]) => {
+      for (const [i, t] of typers.entries()) {
+        t.reset(newLines?.[i]);
+      }
+    },
+    destroy: () => {
+      for (const t of typers) {
+        t.destroy();
+      }
+    },
+  };
+};
 
-  constructor(
-    elements: HTMLElement[],
-    opts: Omit<TyperOptions, "delay"> = {},
-    stagger = 0.15
-  ) {
-    this.typers = elements.map(
-      (el, i) => new TyperEngine(el, { ...opts, delay: i * stagger })
-    );
-  }
-
-  in() {
-    for (const t of this.typers) {
-      t.in();
-    }
-  }
-
-  out() {
-    for (const t of this.typers) {
-      t.out();
-    }
-  }
-
-  inOut() {
-    for (const t of this.typers) {
-      t.inOut();
-    }
-  }
-
-  getType(): TyperType {
-    return this.typers[0]?.getType() ?? "initial";
-  }
-
-  reset(newLines?: string[]) {
-    for (let i = 0; i < this.typers.length; i++) {
-      this.typers[i]?.reset(newLines?.[i]);
-    }
-  }
-
-  destroy() {
-    for (const t of this.typers) {
-      t.destroy();
-    }
-  }
-}
+type TyperGroup = ReturnType<typeof createTyperGroup>;
 
 const STYLE_ID = "typer-styles";
 
@@ -533,7 +526,7 @@ const TYPER_CSS = `
 }
 `;
 
-function ensureTyperStyles() {
+const ensureTyperStyles = () => {
   if (typeof document === "undefined") {
     return;
   }
@@ -544,12 +537,12 @@ function ensureTyperStyles() {
     document.head.append(style);
   }
   style.textContent = TYPER_CSS;
-}
+};
 
-function dispatchGroupTrigger(
+const dispatchGroupTrigger = (
   group: TyperGroup,
   trigger: "in" | "out" | "inout"
-) {
+) => {
   if (trigger === "in") {
     group.in();
   } else if (trigger === "out") {
@@ -557,7 +550,7 @@ function dispatchGroupTrigger(
   } else if (trigger === "inout") {
     group.inOut();
   }
-}
+};
 
 export interface TyperHandle {
   /** Gets current TyperType state. */
@@ -636,7 +629,13 @@ export interface TyperProps extends Omit<
   variations?: TyperVariation[];
 }
 
-export function Typer({
+const subscribeReducedMotion = (onChange: () => void) => {
+  const mql = window.matchMedia(REDUCED_MOTION_QUERY);
+  mql.addEventListener("change", onChange);
+  return () => mql.removeEventListener("change", onChange);
+};
+
+export const Typer = ({
   accent,
   accentInk,
   as: Component = "div",
@@ -664,22 +663,15 @@ export function Typer({
   variations,
   onMouseEnter,
   ...props
-}: TyperProps) {
+}: TyperProps) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const groupRef = useRef<TyperGroup | null>(null);
 
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    const mql = window.matchMedia(REDUCED_MOTION_QUERY);
-    setReducedMotion(mql.matches);
-    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
-  }, []);
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    () => window.matchMedia(REDUCED_MOTION_QUERY).matches,
+    () => false
+  );
 
   const rawText = textProp ?? (typeof children === "string" ? children : "");
   const lines = useMemo(
@@ -737,9 +729,12 @@ export function Typer({
     []
   );
 
-  const variationsKey = variations ? variations.join(",") : "";
-  // oxlint-disable-next-line react-hooks/exhaustive-deps -- serialized variationsKey ensures stable array reference
-  const stableVariations = useMemo(() => variations, [variationsKey]);
+  // Same contents, same array: a new array with equal entries doesn't restart the effect below.
+  const variationsKey = JSON.stringify(variations ?? null);
+  const stableVariations = useMemo(
+    () => (JSON.parse(variationsKey) as TyperVariation[] | null) ?? undefined,
+    [variationsKey]
+  );
 
   const prevTriggerRef = useRef(trigger);
 
@@ -772,7 +767,7 @@ export function Typer({
     };
 
     const setup = () => {
-      group = new TyperGroup(
+      group = createTyperGroup(
         lineEls,
         {
           cycleLength,
@@ -878,6 +873,6 @@ export function Typer({
       ))}
     </Component>
   );
-}
+};
 
 export default Typer;

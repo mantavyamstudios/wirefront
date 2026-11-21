@@ -21,20 +21,22 @@ import {
 const MotionChevron = motion.create(ChevronRight);
 
 const EFFECTS_KEY = "sidebar-001-effects";
-const EXTERNAL_HREF_REGEX = /^(?:https?:)?\/\//;
+const EXTERNAL_HREF_REGEX = /^(?:https?:)?\/\//u;
 
 const EffectsContext = createContext<{ enabled: boolean; toggle: () => void }>({
   enabled: true,
-  toggle: () => {},
+  toggle: () => {
+    // Outside the provider there is nothing to update.
+  },
 });
 
-function EffectsProvider({
+const EffectsProvider = ({
   children,
   defaultEnabled = true,
 }: {
   children: React.ReactNode;
   defaultEnabled?: boolean;
-}) {
+}) => {
   const [enabled, setEnabled] = useState(() => {
     if (typeof window === "undefined") {
       return defaultEnabled;
@@ -55,15 +57,11 @@ function EffectsProvider({
   return (
     <EffectsContext.Provider value={value}>{children}</EffectsContext.Provider>
   );
-}
+};
 
-export function useSidebar001Effects() {
-  return useContext(EffectsContext);
-}
+export const useSidebar001Effects = () => useContext(EffectsContext);
 
-export function useSidebar001Hover() {
-  return useContext(HoverContext);
-}
+export const useSidebar001Hover = () => useContext(HoverContext);
 
 // ─── Hover context ────────────────────────────────────────────────────────────
 
@@ -82,17 +80,19 @@ const HoverContext = createContext<{
   hovered: null,
   hoverRect: null,
   containerRef: { current: null },
-  setHovered: () => {},
+  setHovered: () => {
+    // Outside the provider there is nothing to update.
+  },
 });
 
-function HoverProvider({
+const HoverProvider = ({
   children,
   containerRef,
 }: {
   children: React.ReactNode;
   containerRef: React.RefObject<HTMLDivElement | null>;
-}) {
-  const [hovered, setHoveredId] = useState<string | null>(null);
+}) => {
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hoverRect, setHoverRect] = useState<HoverRect | null>(null);
 
   const setHovered = useCallback(
@@ -104,18 +104,18 @@ function HoverProvider({
   );
 
   const value = useMemo(
-    () => ({ hovered, hoverRect, containerRef, setHovered }),
-    [hovered, hoverRect, containerRef, setHovered]
+    () => ({ hovered: hoveredId, hoverRect, containerRef, setHovered }),
+    [hoveredId, hoverRect, containerRef, setHovered]
   );
 
   return (
     <HoverContext.Provider value={value}>{children}</HoverContext.Provider>
   );
-}
+};
 
 // ─── Scroll to active ─────────────────────────────────────────────────────────
 
-function useScrollToActive(active: boolean) {
+const useScrollToActive = (active: boolean) => {
   const ref = useRef<HTMLDivElement>(null);
   const scrolled = useRef(false);
 
@@ -127,8 +127,8 @@ function useScrollToActive(active: boolean) {
     const el = ref.current;
     const schedule =
       typeof requestIdleCallback === "undefined"
-        ? (cb: () => void) => setTimeout(cb, 100)
-        : (cb: () => void) => requestIdleCallback(cb);
+        ? (task: () => void) => setTimeout(task, 100)
+        : (task: () => void) => requestIdleCallback(task);
     const cancel =
       typeof cancelIdleCallback === "undefined"
         ? clearTimeout
@@ -156,11 +156,11 @@ function useScrollToActive(active: boolean) {
   }, [active]);
 
   return ref;
-}
+};
 
 // ─── HoverHighlight ───────────────────────────────────────────────────────────
 
-function HoverHighlight() {
+const HoverHighlight = () => {
   const { hoverRect, hovered } = useContext(HoverContext);
   const { enabled } = useContext(EffectsContext);
 
@@ -184,11 +184,9 @@ function HoverHighlight() {
       )}
     </AnimatePresence>
   );
-}
+};
 
-function isExternalHref(href: string) {
-  return EXTERNAL_HREF_REGEX.test(href);
-}
+const isExternalHref = (href: string) => EXTERNAL_HREF_REGEX.test(href);
 
 const sidebar001ItemLinkClassName =
   "relative ml-2 flex select-none items-center gap-2 py-1.5 pl-4 text-sm";
@@ -304,7 +302,7 @@ export const Sidebar001Item = memo(
         {isActive && (
           <motion.span
             animate={{ width: 23 }}
-            className="bg-accent-pro pointer-events-none absolute top-1/2 left-[4px] z-10 h-[1.8px] -translate-y-1/2 rounded-full"
+            className="bg-accent-pro pointer-events-none absolute top-1/2 left-1 z-10 h-[1.8px] -translate-y-1/2 rounded-full"
             layoutId="sb001-active-bar"
             transition={{ type: "spring", stiffness: 800, damping: 40 }}
           />
@@ -315,9 +313,9 @@ export const Sidebar001Item = memo(
           className="bg-foreground/50 pointer-events-none absolute top-1/2 left-0 h-px -translate-y-1/2"
           transition={{ type: "spring", stiffness: 600, damping: 30 }}
         />
-        <motion.span className="bg-foreground/30 pointer-events-none absolute top-1/4 left-0 h-px w-[13px]" />
-        <motion.span className="bg-foreground/30 pointer-events-none absolute top-0 left-0 h-px w-[16px]" />
-        <motion.span className="bg-foreground/30 pointer-events-none absolute top-3/4 left-0 h-px w-[13px]" />
+        <motion.span className="bg-foreground/30 pointer-events-none absolute top-1/4 left-0 h-px w-3.25" />
+        <motion.span className="bg-foreground/30 pointer-events-none absolute top-0 left-0 h-px w-4" />
+        <motion.span className="bg-foreground/30 pointer-events-none absolute top-3/4 left-0 h-px w-3.25" />
 
         <motion.div
           animate={{ opacity, x }}
@@ -359,24 +357,22 @@ Sidebar001Item.displayName = "Sidebar001Item";
 
 // ─── Sidebar001Separator ──────────────────────────────────────────────────────
 
-export function Sidebar001Separator({
+export const Sidebar001Separator = ({
   children,
   className,
 }: {
   children?: React.ReactNode;
   className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "text-foreground/40 mt-2 px-0 py-3.5 text-sm font-medium",
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
-}
+}) => (
+  <div
+    className={cn(
+      "text-foreground/40 mt-2 px-0 py-3.5 text-sm font-medium",
+      className
+    )}
+  >
+    {children}
+  </div>
+);
 
 // ─── Sidebar001Group ──────────────────────────────────────────────────────────
 
@@ -388,25 +384,26 @@ export interface Sidebar001GroupProps {
   label: React.ReactNode;
 }
 
-export function Sidebar001Group({
+export const Sidebar001Group = ({
   label,
   children,
   defaultOpen = false,
   icon,
   className,
-}: Sidebar001GroupProps) {
+}: Sidebar001GroupProps) => {
   // Start in the requested state: opening in an effect animated the group up
   // from zero height after its items mounted, so `useScrollToActive` measured
   // an active item that then slid out of view.
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  // Follow `defaultOpen` when it changes (navigating to another section).
+  const [lastDefaultOpen, setLastDefaultOpen] = useState(defaultOpen);
+  if (lastDefaultOpen !== defaultOpen) {
+    setLastDefaultOpen(defaultOpen);
+    setIsOpen(defaultOpen);
+  }
   const id = useId();
   const { setHovered, containerRef } = useContext(HoverContext);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    setIsOpen(defaultOpen);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultOpen]);
 
   const handleMouseEnter = useCallback(() => {
     const el = buttonRef.current;
@@ -485,11 +482,11 @@ export function Sidebar001Group({
       </AnimatePresence>
     </div>
   );
-}
+};
 
 // ─── Sidebar001Section ────────────────────────────────────────────────────────
 
-export function Sidebar001Section({
+export const Sidebar001Section = ({
   label,
   children,
   className,
@@ -497,24 +494,22 @@ export function Sidebar001Section({
   label?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
-}) {
-  return (
-    <div className={cn("flex flex-col", className)}>
-      {label && <Sidebar001Separator>{label}</Sidebar001Separator>}
-      {children}
-    </div>
-  );
-}
+}) => (
+  <div className={cn("flex flex-col", className)}>
+    {label && <Sidebar001Separator>{label}</Sidebar001Separator>}
+    {children}
+  </div>
+);
 
 // ─── Sidebar001Content ────────────────────────────────────────────────────────
 
-export function Sidebar001Content({
+export const Sidebar001Content = ({
   children,
   className,
 }: {
   children: React.ReactNode;
   className?: string;
-}) {
+}) => {
   const { containerRef } = useContext(HoverContext);
 
   return (
@@ -528,7 +523,7 @@ export function Sidebar001Content({
       </div>
     </div>
   );
-}
+};
 
 // ─── Sidebar001 (with resize) ─────────────────────────────────────────────────
 
@@ -544,14 +539,14 @@ export interface Sidebar001Props {
   minWidth?: number;
 }
 
-export function Sidebar001({
+export const Sidebar001 = ({
   children,
   className,
   defaultEffectsEnabled = true,
   defaultWidth = 240,
   minWidth = 160,
   maxWidth = 400,
-}: Sidebar001Props) {
+}: Sidebar001Props) => {
   const isMobile = useIsMobile();
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(defaultWidth);
@@ -613,39 +608,35 @@ export function Sidebar001({
       </HoverProvider>
     </EffectsProvider>
   );
-}
+};
 
 // ─── Sidebar001Header ─────────────────────────────────────────────────────────
 
-export function Sidebar001Header({
+export const Sidebar001Header = ({
   children,
   className,
 }: {
   children?: React.ReactNode;
   className?: string;
-}) {
-  return (
-    <div className={cn("shrink-0 px-3 pt-4 pb-2", className)}>{children}</div>
-  );
-}
+}) => (
+  <div className={cn("shrink-0 px-3 pt-4 pb-2", className)}>{children}</div>
+);
 
 // ─── Sidebar001Footer ─────────────────────────────────────────────────────────
 
-export function Sidebar001Footer({
+export const Sidebar001Footer = ({
   children,
   className,
 }: {
   children?: React.ReactNode;
   className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "border-border/50 shrink-0 border-t px-3 pt-2 pb-4",
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
-}
+}) => (
+  <div
+    className={cn(
+      "border-border/50 shrink-0 border-t px-3 pt-2 pb-4",
+      className
+    )}
+  >
+    {children}
+  </div>
+);

@@ -166,7 +166,7 @@ function CreateWorkspaceScreen({
           </DialogTrigger>
           <DialogContent>
             <DialogHeader className="flex-row items-center gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-foreground/[0.06]">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-foreground/6">
                 <BuildingIcon className="size-4 opacity-80" />
               </div>
               <div className="flex flex-col gap-0.5 text-start">
@@ -214,7 +214,7 @@ function CreateWorkspaceScreen({
                       const Icon = ICONS[option];
                       return (
                       <Radio.Root
-                        className="flex w-full cursor-pointer items-start gap-3 rounded-lg border border-border/60 px-3 py-2.5 text-start outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/[0.04]"
+                        className="flex w-full cursor-pointer items-start gap-3 rounded-lg border border-border/60 px-3 py-2.5 text-start outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/4"
                         key={option}
                         value={option}
                       >

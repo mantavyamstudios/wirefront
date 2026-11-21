@@ -115,10 +115,10 @@ function SeatPricingScreen({ plan, onContinue, defaultSeats = 8, defaultBilling 
               value={seats}
             />
             {/* Ticks sit at their real slider positions. */}
-            <div aria-hidden className="relative mt-1 h-4 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.1em]">
+            <div aria-hidden className="relative mt-1 h-4 font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
               {ticks.map((v, i) => (
                 <span
-                  className={cn("absolute", i === 0 ? "start-0" : i === ticks.length - 1 ? "end-0" : "-translate-x-1/2 rtl:translate-x-1/2")}
+                  className={cn("absolute", i === 0 ? "inset-s-0" : i === ticks.length - 1 ? "inset-e-0" : "-translate-x-1/2 rtl:translate-x-1/2")}
                   key={v}
                   style={i > 0 && i < ticks.length - 1 ? { insetInlineStart: `${((v - plan.minSeats) / span) * 100}%` } : undefined}
                 >

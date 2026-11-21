@@ -37,7 +37,7 @@ function BrandMark() {
         width="64"
         height="64"
         rx="14"
-        className="fill-foreground/[0.06]"
+        className="fill-foreground/6"
         stroke="currentColor"
         strokeOpacity="0.12"
       />

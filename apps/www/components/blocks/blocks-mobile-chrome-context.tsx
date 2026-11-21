@@ -11,11 +11,11 @@ interface BlocksMobileChromeContextValue {
 const BlocksMobileChromeContext =
   createContext<BlocksMobileChromeContextValue | null>(null);
 
-export function BlocksMobileChromeProvider({
+export const BlocksMobileChromeProvider = ({
   children,
 }: {
   children: ReactNode;
-}) {
+}) => {
   const [toolbar, setToolbar] = useState<ReactNode>(null);
   const value = useMemo(() => ({ setToolbar, toolbar }), [toolbar]);
 
@@ -24,9 +24,9 @@ export function BlocksMobileChromeProvider({
       {children}
     </BlocksMobileChromeContext.Provider>
   );
-}
+};
 
-export function useBlocksMobileChrome() {
+export const useBlocksMobileChrome = () => {
   const context = useContext(BlocksMobileChromeContext);
 
   if (!context) {
@@ -36,4 +36,4 @@ export function useBlocksMobileChrome() {
   }
 
   return context;
-}
+};

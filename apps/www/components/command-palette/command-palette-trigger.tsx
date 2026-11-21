@@ -6,6 +6,8 @@ import { useSearchContext } from "fumadocs-ui/provider";
 import { CommandIcon } from "lucide-react";
 import { useCallback } from "react";
 
+import { preloadCommandPaletteDialog } from "./preload-dialog";
+
 type CommandPaletteTriggerVariant = "search" | "icon";
 
 interface CommandPaletteTriggerProps {
@@ -13,22 +15,19 @@ interface CommandPaletteTriggerProps {
   variant?: CommandPaletteTriggerVariant;
 }
 
-export function useCommandPaletteOpen() {
+export const useCommandPaletteOpen = () => {
   const { setOpenSearch } = useSearchContext();
 
   return useCallback(() => {
     setOpenSearch(true);
   }, [setOpenSearch]);
-}
+};
 
-export function CommandPaletteTrigger({
+export const CommandPaletteTrigger = ({
   className,
   variant = "search",
-}: CommandPaletteTriggerProps) {
+}: CommandPaletteTriggerProps) => {
   const openCommandPalette = useCommandPaletteOpen();
-  const handlePreload = () => {
-    import("./command-palette-dialog").catch(() => {});
-  };
 
   if (variant === "icon") {
     return (
@@ -36,8 +35,8 @@ export function CommandPaletteTrigger({
         aria-label="Open command palette"
         className={className}
         onClick={openCommandPalette}
-        onFocus={handlePreload}
-        onMouseEnter={handlePreload}
+        onFocus={preloadCommandPaletteDialog}
+        onMouseEnter={preloadCommandPaletteDialog}
         type="button"
       >
         <CommandIcon />
@@ -52,20 +51,20 @@ export function CommandPaletteTrigger({
         className
       )}
       onClick={openCommandPalette}
-      onFocus={handlePreload}
-      onMouseEnter={handlePreload}
+      onFocus={preloadCommandPaletteDialog}
+      onMouseEnter={preloadCommandPaletteDialog}
       type="button"
     >
       <span className="font-normal">Search...</span>
 
       <KbdGroup className="items-center gap-1">
-        <Kbd className="bg-background flex size-5 items-center justify-center rounded-[4px] border leading-none">
+        <Kbd className="bg-background flex size-5 items-center justify-center rounded-lg border leading-none">
           <CommandIcon className="size-2.5" />
         </Kbd>
-        <Kbd className="bg-background flex size-5 items-center justify-center rounded-[4px] border px-0">
+        <Kbd className="bg-background flex size-5 items-center justify-center rounded-lg border px-0">
           <span className="pt-px text-[0.625rem] leading-none">K</span>
         </Kbd>
       </KbdGroup>
     </button>
   );
-}
+};

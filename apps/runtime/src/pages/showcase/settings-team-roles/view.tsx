@@ -153,7 +153,7 @@ function sameGrants(a: string[], b: string[]) {
 function PersonAvatar({ name, hue }: { name: string; hue: TeamHue }) {
   return (
     <Avatar className="size-8">
-      <AvatarFallback className={cn("bg-gradient-to-br font-medium text-white text-xs", avatarHues[hue])}>{initials(name)}</AvatarFallback>
+      <AvatarFallback className={cn("bg-linear-to-br font-medium text-white text-xs", avatarHues[hue])}>{initials(name)}</AvatarFallback>
     </Avatar>
   );
 }
@@ -207,8 +207,8 @@ function CheckCell({
 }) {
   return (
     <span className="relative inline-flex">
-      <Checkbox aria-label={label} checked={checked} className="size-[18px]" disabled={locked} onCheckedChange={onToggle} />
-      {changed ? <span aria-hidden className="-top-1 -end-1 absolute size-1.5 rounded-full bg-warning ring-2 ring-card" /> : null}
+      <Checkbox aria-label={label} checked={checked} className="size-4.5" disabled={locked} onCheckedChange={onToggle} />
+      {changed ? <span aria-hidden className="-top-1 -inset-e-1 absolute size-1.5 rounded-full bg-warning ring-2 ring-card" /> : null}
     </span>
   );
 }
@@ -254,15 +254,15 @@ function PermissionMatrix({
   onRemove: (roleId: string) => void;
   t: Messages;
 }) {
-  const sticky = "sticky start-0 z-10 bg-card";
-  const roleCol = "w-14 min-w-14 px-1 text-center sm:w-[4.75rem] sm:min-w-[4.75rem]";
+  const sticky = "sticky inset-s-0 z-10 bg-card";
+  const roleCol = "w-14 min-w-14 px-1 text-center sm:w-19 sm:min-w-19";
   return (
     <div className="mt-3 overflow-hidden rounded-xl border bg-card">
-      <div className="overflow-x-auto [scrollbar-width:thin]">
+      <div className="overflow-x-auto scrollbar-thin">
         <table className="w-full min-w-fit border-collapse text-start">
           <thead>
             <tr className="border-b">
-              <th className={cn(sticky, "min-w-[7.5rem] px-4 pb-2.5 align-bottom font-medium text-muted-foreground text-xs sm:min-w-44")} scope="col">
+              <th className={cn(sticky, "min-w-30 px-4 pb-2.5 align-bottom font-medium text-muted-foreground text-xs sm:min-w-44")} scope="col">
                 {t.permission}
               </th>
               {roles.map((r) => {
@@ -674,7 +674,7 @@ function TeamRolesScreen({
                         {onResendInvite ? (
                           <Button
                             aria-busy={resend.isPending(inv.id)}
-                            className={cn("min-w-[5.5rem]", press)}
+                            className={cn("min-w-22", press)}
                             disabled={wasResent || resend.isPending(inv.id)}
                             onClick={() => void resend.run(inv.id, inv.id)}
                             size="sm"

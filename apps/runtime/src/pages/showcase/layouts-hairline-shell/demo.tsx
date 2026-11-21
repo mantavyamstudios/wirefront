@@ -248,7 +248,7 @@ function IssueList({ issues, fresh, onAdd }: { issues: HairlineIssue[]; fresh: s
                             onFocus={() => setFocus(issue.id)}
                             type="button"
                           >
-                            {focus === issue.id && <span aria-hidden className="absolute inset-y-0 start-0 w-0.5 bg-foreground" />}
+                            {focus === issue.id && <span aria-hidden className="absolute inset-y-0 inset-s-0 w-0.5 bg-foreground" />}
                             <P
                               aria-label={`${issue.priority} priority`}
                               className={cn(
@@ -453,7 +453,7 @@ export function LayoutsHairlineShellShowcasePage() {
               </>
             }
             activeId={active}
-            className="h-[760px]"
+            className="h-190"
             currentWorkspaceId={workspace}
             footer={
               <>

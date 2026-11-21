@@ -198,7 +198,7 @@ function TimelineBody({ item, t, when, duration }: { item: PrTimelineItem; t: Me
             {when}
           </div>
           {item.diff ? (
-            <div className="mt-2 overflow-hidden rounded-md border border-border/60 bg-foreground/[0.02]">
+            <div className="mt-2 overflow-hidden rounded-md border border-border/60 bg-foreground/2">
               <div className="flex items-center justify-between gap-3 border-border/40 border-b px-3 py-1.5 font-mono text-[10px] text-muted-foreground">
                 <span className="min-w-0 truncate">{item.diff.file}</span>
                 <span className="shrink-0">{interpolate(t.lineN, { n: item.diff.line })}</span>
@@ -302,7 +302,7 @@ function PullRequestPageScreen({ pr, status = "ready", error, onRetry, onMerge, 
   const ready = approvals >= pr.requiredApprovals && !changes && !failing && !running && !pr.conflicts && pr.upToDate;
   const headline = ready ? t.ready : pr.conflicts ? t.conflictsTitle : failing ? interpolate(t.failing, { count: failing }) : running ? interpolate(t.running, { count: running }) : t.waitingReviews;
   const milestonePct = pr.milestone?.total ? (pr.milestone.done / pr.milestone.total) * 100 : 0;
-  const stateTone = pr.state === "closed" ? "bg-category-4/15 text-category-4-foreground" : pr.state === "merged" ? "bg-category-5/15 text-category-5-foreground" : pr.state === "draft" ? "bg-foreground/[0.06] text-muted-foreground" : "bg-category-2/15 text-category-2-foreground";
+  const stateTone = pr.state === "closed" ? "bg-category-4/15 text-category-4-foreground" : pr.state === "merged" ? "bg-category-5/15 text-category-5-foreground" : pr.state === "draft" ? "bg-foreground/6 text-muted-foreground" : "bg-category-2/15 text-category-2-foreground";
 
   return (
     <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10", className)}>
@@ -329,13 +329,13 @@ function PullRequestPageScreen({ pr, status = "ready", error, onRetry, onMerge, 
             </Avatar>
             <span className="text-foreground">{pr.author}</span>
             <span>{interpolate(t.wantsToMerge, { count: pr.commits })}</span>
-            <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[11px] text-foreground">{pr.base}</span>
+            <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[11px] text-foreground">{pr.base}</span>
             <span>{t.from}</span>
-            <span className="break-all rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[11px] text-foreground">{pr.head}</span>
+            <span className="break-all rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[11px] text-foreground">{pr.head}</span>
           </div>
         </div>
 
-        <section aria-label={headline} className="mt-6 overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-background/40 to-background/20">
+        <section aria-label={headline} className="mt-6 overflow-hidden rounded-2xl border border-border/60 bg-linear-to-br from-background/40 to-background/20">
           <div className="grid grid-cols-1 items-center gap-6 p-6 lg:grid-cols-[1fr_auto]">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -449,11 +449,11 @@ function PullRequestPageScreen({ pr, status = "ready", error, onRetry, onMerge, 
                 {t.activity}
               </h2>
               <div className="relative mt-3">
-                <div aria-hidden className="absolute start-3.5 top-2 bottom-2 w-px bg-border/60" />
+                <div aria-hidden className="absolute inset-s-3.5 top-2 bottom-2 w-px bg-border/60" />
                 <ol className="space-y-3">
                   {pr.timeline.map((item) => (
                     <li className="relative ps-10" key={item.id}>
-                      <div aria-hidden className="absolute start-1.5 top-1.5 flex size-5 items-center justify-center rounded-full border border-border/60 bg-background">
+                      <div aria-hidden className="absolute inset-s-1.5 top-1.5 flex size-5 items-center justify-center rounded-full border border-border/60 bg-background">
                         <TimelineIcon item={item} />
                       </div>
                       <TimelineBody
@@ -547,7 +547,7 @@ function PullRequestPageScreen({ pr, status = "ready", error, onRetry, onMerge, 
                     </span>
                   </div>
                   <meter aria-label={pr.milestone.title} className="sr-only" max={pr.milestone.total} min={0} value={pr.milestone.done} />
-                  <div aria-hidden className="mt-1 h-1 w-full overflow-hidden rounded-full bg-foreground/[0.06]">
+                  <div aria-hidden className="mt-1 h-1 w-full overflow-hidden rounded-full bg-foreground/6">
                     <div className="h-full bg-foreground/40" style={{ width: `${milestonePct}%` }} />
                   </div>
                   {pr.milestone.dueAt ? (

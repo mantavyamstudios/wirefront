@@ -1,5 +1,9 @@
 "use client";
 
+import { parseRuntimeMessage } from "@wirefront/bridge";
+import type { Direction, HostMessage, ScreenState } from "@wirefront/bridge";
+import { DEFAULT_PALETTE } from "@wirefront/ui/themes";
+import type { OrbitThemePalette } from "@wirefront/ui/themes/types";
 import { useAnimate, useReducedMotion } from "motion/react";
 import { useTheme } from "next-themes";
 import {
@@ -10,11 +14,6 @@ import {
   useState,
 } from "react";
 import type { Ref } from "react";
-
-import { parseRuntimeMessage } from "@wirefront/bridge";
-import type { Direction, HostMessage, ScreenState } from "@wirefront/bridge";
-import { DEFAULT_PALETTE } from "@wirefront/ui/themes";
-import type { OrbitThemePalette } from "@wirefront/ui/themes/types";
 
 import { BlocksPreviewLoadingOverlay } from "@/components/blocks/blocks-preview-loading";
 import { playTapOnControl } from "@/lib/sound";
@@ -77,7 +76,37 @@ interface Chrome {
   headerGap: { left: number; right: number };
 }
 
-function measureChrome(stage: HTMLElement): Chrome {
+/** Whether a control beside the stage is on screen, shown, and not covered by something else. */
+const isVisibleControl = (
+  el: HTMLElement,
+  box: DOMRect,
+  rect: DOMRect
+): boolean => {
+  const onScreen =
+    box.width > 0 &&
+    box.height > 0 &&
+    box.height < 120 &&
+    box.bottom > 0 &&
+    box.top < window.innerHeight &&
+    box.right > rect.left &&
+    box.left < rect.right;
+  if (!onScreen) {
+    return false;
+  }
+  const style = getComputedStyle(el);
+  if (style.visibility === "hidden" || Number(style.opacity) < 0.05) {
+    return false;
+  }
+  // Covered controls aren't chrome: with the docs column collapsed, its
+  // sticky table of contents still sits underneath the expanded preview.
+  const hit = document.elementFromPoint(
+    box.left + box.width / 2,
+    box.top + box.height / 2
+  );
+  return Boolean(hit && (el.contains(hit) || hit.contains(el)));
+};
+
+const measureChrome = (stage: HTMLElement): Chrome => {
   const root = document.querySelector("[data-blocks-scroll-root]");
   const scrolled = window.scrollY + (root?.scrollTop ?? 0);
   const rect = stage.getBoundingClientRect();
@@ -96,28 +125,7 @@ function measureChrome(stage: HTMLElement): Chrome {
       continue;
     }
     const box = el.getBoundingClientRect();
-    const visible =
-      box.width > 0 &&
-      box.height > 0 &&
-      box.height < 120 &&
-      box.bottom > 0 &&
-      box.top < window.innerHeight &&
-      box.right > rect.left &&
-      box.left < rect.right;
-    if (!visible) {
-      continue;
-    }
-    const style = getComputedStyle(el);
-    if (style.visibility === "hidden" || Number(style.opacity) < 0.05) {
-      continue;
-    }
-    // Covered controls aren't chrome: with the docs column collapsed, its
-    // sticky table of contents still sits underneath the expanded preview.
-    const hit = document.elementFromPoint(
-      box.left + box.width / 2,
-      box.top + box.height / 2
-    );
-    if (!(hit && (el.contains(hit) || hit.contains(el)))) {
+    if (!isVisibleControl(el, box, rect)) {
       continue;
     }
     if (!isFixed(el)) {
@@ -152,21 +160,21 @@ function measureChrome(stage: HTMLElement): Chrome {
     topControls,
     headerGap: { left: Math.round(gapLeft), right: Math.round(gapRight) },
   };
-}
+};
 
-function isFixed(el: HTMLElement): boolean {
+const isFixed = (el: HTMLElement): boolean => {
   for (
     let node: HTMLElement | null = el;
     node && node !== document.body;
     node = node.parentElement
   ) {
-    const position = getComputedStyle(node).position;
+    const { position } = getComputedStyle(node);
     if (position === "fixed" || position === "sticky") {
       return true;
     }
   }
   return false;
-}
+};
 const EASE = [0.32, 0.72, 0, 1] as const;
 /** How long after a host-driven switch/reset a focus jump into the iframe is undone. */
 const FOCUS_GUARD_MS = 1500;
@@ -191,22 +199,21 @@ interface ScreensRuntimeFrameProps {
  * origin in production, the runtime's dev server (NEXT_PUBLIC_RUNTIME_ORIGIN,
  * e.g. http://localhost:4000) in development.
  */
-export function runtimeOrigin(): string {
-  return process.env.NEXT_PUBLIC_RUNTIME_ORIGIN || window.location.origin;
-}
+export const runtimeOrigin = (): string =>
+  process.env.NEXT_PUBLIC_RUNTIME_ORIGIN || window.location.origin;
 
 /**
  * One persistent Wirefront runtime iframe (apps/runtime, `/preview/<kind>/<screen>`).
  * The page loads once; later screen, theme and reset changes are sent over
  * postMessage (@wirefront/bridge), so switching screens never reloads the iframe.
  */
-export function ScreensRuntimeFrame({
+export const ScreensRuntimeFrame = ({
   initialSrc,
   kindSlug,
   ref,
   screenSlug,
   states,
-}: ScreensRuntimeFrameProps) {
+}: ScreensRuntimeFrameProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const shownRef = useRef<string | null>(null);
@@ -220,11 +227,15 @@ export function ScreensRuntimeFrame({
   const [palette, setPalette] = useState<OrbitThemePalette>(DEFAULT_PALETTE);
   const [dir, setDir] = useState<Direction>("ltr");
   // The runtime opens every new screen in its default state.
-  const [stateFor, setStateFor] = useState<{ screen: string; state: ScreenState }>({
+  const [stateFor, setStateFor] = useState<{
+    screen: string;
+    state: ScreenState;
+  }>({
     screen: "",
     state: "ready",
   });
-  const screenState = stateFor.screen === `${kindSlug}/${screenSlug}` ? stateFor.state : "ready";
+  const screenState =
+    stateFor.screen === `${kindSlug}/${screenSlug}` ? stateFor.state : "ready";
   const [stage, animateStage] = useAnimate();
   const prefersReducedMotion = useReducedMotion();
   const [box, setBox] = useState({ width: 0, height: 0 });
@@ -272,9 +283,8 @@ export function ScreensRuntimeFrame({
     [post]
   );
 
-  // oxlint-disable-next-line react-doctor/effect-needs-cleanup -- the timer lives in focusTimer and is cleared in this effect's cleanup.
   useEffect(() => {
-    function onWindowBlur() {
+    const onWindowBlur = () => {
       // activeElement updates after the blur event; check on the next task.
       clearTimeout(focusTimer.current);
       focusTimer.current = setTimeout(() => {
@@ -292,7 +302,7 @@ export function ScreensRuntimeFrame({
           iframeRef.current?.blur();
         }
       }, 0);
-    }
+    };
     window.addEventListener("blur", onWindowBlur);
     return () => {
       clearTimeout(focusTimer.current);
@@ -307,7 +317,7 @@ export function ScreensRuntimeFrame({
   );
 
   useEffect(() => {
-    function onMessage(event: MessageEvent) {
+    const onMessage = (event: MessageEvent) => {
       if (
         event.origin !== runtimeOrigin() ||
         event.source !== iframeRef.current?.contentWindow
@@ -321,7 +331,7 @@ export function ScreensRuntimeFrame({
       } else if (data?.type === "wf:error") {
         console.warn("[screens runtime]", data.message);
       }
-    }
+    };
     window.addEventListener("message", onMessage);
     setSrc(firstSrc.current);
     return () => window.removeEventListener("message", onMessage);
@@ -332,13 +342,21 @@ export function ScreensRuntimeFrame({
     const target = `${kindSlug}/${screenSlug}`;
     if (ready && shownRef.current !== target) {
       shownRef.current = target;
-      restartDemo({ type: "wf:navigate", category: kindSlug, design: screenSlug });
+      restartDemo({
+        type: "wf:navigate",
+        category: kindSlug,
+        design: screenSlug,
+      });
     }
   }, [kindSlug, screenSlug, ready, restartDemo]);
 
   useEffect(() => {
     if (ready && resolvedTheme) {
-      post({ type: "wf:theme", mode: resolvedTheme === "dark" ? "dark" : "light", palette });
+      post({
+        type: "wf:theme",
+        mode: resolvedTheme === "dark" ? "dark" : "light",
+        palette,
+      });
     }
   }, [ready, resolvedTheme, palette, post]);
 
@@ -382,7 +400,6 @@ export function ScreensRuntimeFrame({
     [animateStage, device, prefersReducedMotion, stage]
   );
 
-  // oxlint-disable-next-line react-doctor/effect-needs-cleanup -- the settle timers are cleared in this effect's cleanup.
   useEffect(() => {
     const el = containerRef.current;
     if (!el) {
@@ -465,7 +482,7 @@ export function ScreensRuntimeFrame({
       {/* Canvas: faint dot grid in the shell's border colour, fading at the edges. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 [background-image:radial-gradient(circle_at_1px_1px,var(--color-border)_1px,transparent_0)] [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_78%)] [background-size:18px_18px]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,var(--color-border)_1px,transparent_0)] mask-[radial-gradient(ellipse_at_center,black_35%,transparent_78%)] bg-size-[18px_18px]"
       />
 
       <div className="absolute inset-0" ref={stage}>
@@ -490,9 +507,10 @@ export function ScreensRuntimeFrame({
               borderRadius: spec.screen.radius,
             }}
           >
-            {/* oxlint-disable-next-line react/iframe-missing-sandbox -- Our own same-origin Wirefront runtime. It needs scripts and its own origin (assets, storage, the bridge's origin check), and a sandbox allowing both isolates nothing, so none is set. */}
+            {/* The runtime needs scripts and its own origin (assets, storage, the bridge's origin check); it may not navigate the page around it. */}
             <iframe
               allow="camera; microphone; geolocation; autoplay; clipboard-write"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
               className="bg-background absolute left-0 block border-0"
               ref={iframeRef}
               src={src}
@@ -574,4 +592,4 @@ export function ScreensRuntimeFrame({
       </div>
     </div>
   );
-}
+};

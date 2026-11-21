@@ -10,7 +10,7 @@ let closeLockTimer: number | ReturnType<typeof setTimeout> | null = null;
 let suppressUntilExplicitOpen = false;
 let lastPathname: string | null = null;
 
-function armCloseLock() {
+const armCloseLock = () => {
   closeLocked = true;
   if (typeof window === "undefined") {
     return;
@@ -22,42 +22,43 @@ function armCloseLock() {
     closeLocked = false;
     closeLockTimer = null;
   }, MOBILE_SIDEBAR_CLOSE_LOCK_MS);
-}
+};
 
 /** Ignore hamburger re-opens from click-through after the drawer starts closing. */
-export function markMobileSidebarClosed() {
+export const markMobileSidebarClosed = () => {
   suppressUntilExplicitOpen = true;
   armCloseLock();
-}
+};
 
-export function allowMobileSidebarOpen() {
+export const allowMobileSidebarOpen = () => {
   suppressUntilExplicitOpen = false;
-}
+};
 
-export function isMobileSidebarCloseLocked() {
-  return closeLocked;
-}
+export const isMobileSidebarCloseLocked = () => closeLocked;
 
 /**
  * Fumadocs `useOnChange(pathname)` still renders children once with `open`
  * true. Keep the panel visually closed across that frame and across layout
  * remounts until the user opens the hamburger again.
  */
-export function isMobileSidebarSuppressed() {
-  return suppressUntilExplicitOpen;
-}
+export const isMobileSidebarSuppressed = () => suppressUntilExplicitOpen;
 
-export function closeMobileSidebar(setOpen: (open: boolean) => void) {
+export const closeMobileSidebar = (setOpen: (open: boolean) => void) => {
   markMobileSidebarClosed();
   setOpen(false);
-}
+};
 
-export function useSyncMobileSidebarPathname() {
-  const pathname = usePathname();
-  if (lastPathname !== pathname) {
-    if (lastPathname !== null) {
-      suppressUntilExplicitOpen = true;
-    }
-    lastPathname = pathname;
+/** Records a navigation in the module's sidebar state: after one, the sidebar stays shut until opened on purpose. */
+const notePathname = (pathname: string) => {
+  if (lastPathname === pathname) {
+    return;
   }
-}
+  if (lastPathname !== null) {
+    suppressUntilExplicitOpen = true;
+  }
+  lastPathname = pathname;
+};
+
+export const useSyncMobileSidebarPathname = () => {
+  notePathname(usePathname());
+};

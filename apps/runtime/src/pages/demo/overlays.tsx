@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-import { type FormEvent, useEffect, useState } from "react";
+import { type SyntheticEvent, useEffect, useState } from "react";
 import {
   AlertCircleIcon,
   ArrowRightIcon,
@@ -52,7 +52,7 @@ export function DemoOverlays() {
 function ToastHost() {
   const { toasts, dismissToast } = useDemo();
   return (
-    <div className="pointer-events-none fixed top-4 right-4 z-[80] flex w-[360px] flex-col gap-2">
+    <div className="pointer-events-none fixed top-4 right-4 z-80 flex w-90 flex-col gap-2">
       {toasts.map((t) => {
         const Icon =
           t.kind === "success"
@@ -65,7 +65,7 @@ function ToastHost() {
             ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/15"
             : t.kind === "error"
               ? "text-rose-600 dark:text-rose-400 bg-rose-500/15"
-              : "text-foreground bg-foreground/[0.08]";
+              : "text-foreground bg-foreground/8";
         return (
           <div
             key={t.id}
@@ -88,7 +88,7 @@ function ToastHost() {
               type="button"
               aria-label="Dismiss"
               onClick={() => dismissToast(t.id)}
-              className="-mr-1 -mt-1 rounded-md p-1 text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+              className="-mr-1 -mt-1 rounded-md p-1 text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
             >
               <XIcon className="size-3.5" />
             </button>
@@ -122,7 +122,7 @@ function Checklist() {
           </p>
         </div>
         <div className="relative size-8">
-          <svg viewBox="0 0 36 36" className="size-8 -rotate-90">
+          <svg aria-hidden="true" viewBox="0 0 36 36" className="size-8 -rotate-90">
             <circle cx="18" cy="18" r="14" fill="none" className="stroke-foreground/10" strokeWidth="3" />
             <circle
               cx="18"
@@ -143,7 +143,7 @@ function Checklist() {
           type="button"
           aria-label="Close"
           onClick={closeChecklist}
-          className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+          className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
         >
           <XIcon className="size-3.5" />
         </button>
@@ -271,10 +271,10 @@ function CommandPalette() {
     <Dialog open={open} onOpenChange={(o) => setOverlay(o ? "palette" : null)}>
       <DialogContent
         showCloseButton={false}
-        className="!max-w-xl !p-0 !rounded-2xl"
+        className="max-w-xl! p-0! rounded-2xl!"
       >
         {/* Hidden title for a11y; Base UI requires the title element exist. */}
-        <DialogHeader className="sr-only !p-0">
+        <DialogHeader className="sr-only p-0!">
           <DialogTitle>Command palette</DialogTitle>
         </DialogHeader>
         <div className="flex items-center gap-3 border-b border-border/60 px-4 py-3">
@@ -295,7 +295,7 @@ function CommandPalette() {
           </kbd>
         </div>
 
-        <div className="max-h-[420px] overflow-y-auto py-1">
+        <div className="max-h-105 overflow-y-auto py-1">
           {filtered.length === 0 ? (
             <div className="px-4 py-12 text-center">
               <p className="text-muted-foreground text-sm">No matches for "{query}".</p>
@@ -317,7 +317,7 @@ function CommandPalette() {
                           onMouseEnter={() => setActive(idx)}
                           onClick={() => c.run()}
                           className={`flex w-full items-center gap-3 px-4 py-2 text-left transition-colors ${
-                            isActive ? "bg-foreground/[0.06]" : "hover:bg-foreground/[0.03]"
+                            isActive ? "bg-foreground/6" : "hover:bg-foreground/3"
                           }`}
                         >
                           <c.Icon className="size-4 shrink-0 opacity-70" />
@@ -329,8 +329,8 @@ function CommandPalette() {
                           ) : null}
                           {c.kbd ? (
                             <span className="flex items-center gap-1">
-                              {c.kbd.map((k, i) => (
-                                <kbd key={i} className="rounded border border-border/60 bg-background/80 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                              {c.kbd.map((k) => (
+                                <kbd key={k} className="rounded border border-border/60 bg-background/80 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
                                   {k}
                                 </kbd>
                               ))}
@@ -349,7 +349,7 @@ function CommandPalette() {
           )}
         </div>
 
-        <div className="flex items-center justify-between gap-3 border-t border-border/60 bg-foreground/[0.02] px-4 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+        <div className="flex items-center justify-between gap-3 border-t border-border/60 bg-foreground/2 px-4 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5">
               <kbd className="rounded border border-border/60 bg-background/80 px-1 py-0.5 normal-case">↑</kbd>
@@ -371,7 +371,7 @@ function CommandPalette() {
 function NewProjectDialog() {
   const { overlay, setOverlay, addProject, pushToast } = useDemo();
   const [name, setName] = useState("");
-  const [color, setColor] = useState(PROJECT_COLORS[0]!);
+  const [color, setColor] = useState<string>(PROJECT_COLORS[0]);
   const [visibility, setVisibility] = useState<"private" | "team" | "public">("team");
   const open = overlay === "new-project";
 
@@ -379,12 +379,12 @@ function NewProjectDialog() {
   useEffect(() => {
     if (!open) {
       setName("");
-      setColor(PROJECT_COLORS[0]!);
+      setColor(PROJECT_COLORS[0]);
       setVisibility("team");
     }
   }, [open]);
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
     addProject({ name: name.trim(), color, visibility });
@@ -485,7 +485,7 @@ function VisibilityCard({
       aria-pressed={active}
       className={`flex flex-col items-start gap-2 rounded-lg border p-3 text-left transition-colors ${
         active
-          ? "border-foreground/60 bg-foreground/[0.04]"
+          ? "border-foreground/60 bg-foreground/4"
           : "border-border/60 bg-background/40 hover:border-border"
       }`}
     >
@@ -523,7 +523,7 @@ function InviteDialog() {
   const change = (id: number, patch: Partial<{ email: string; role: Member["role"] }>) =>
     setRows((rs) => rs.map((r) => (r.id === id ? { ...r, ...patch } : r)));
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     const valid = rows.filter((r) => r.email.trim());
     if (valid.length === 0) return;
@@ -538,7 +538,7 @@ function InviteDialog() {
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOverlay(o ? "invite" : null)}>
-      <DialogContent className="!max-w-lg">
+      <DialogContent className="max-w-lg!">
         <DialogHeader>
           <DialogTitle>Invite teammates</DialogTitle>
         </DialogHeader>
@@ -580,7 +580,7 @@ function InviteDialog() {
                     onClick={() => removeRow(r.id)}
                     disabled={rows.length === 1}
                     aria-label="Remove"
-                    className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+                    className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/4 hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
                   >
                     <XIcon className="size-4" />
                   </button>

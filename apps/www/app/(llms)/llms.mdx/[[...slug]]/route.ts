@@ -8,7 +8,7 @@ import { source } from "@/lib/docs/source";
 /** Static export (Cloudflare Pages): render once at build time. */
 export const dynamic = "force-static";
 
-async function getLLMContentForSlug(slug?: string[]) {
+const getLLMContentForSlug = async (slug?: string[]) => {
   let normalizedSlug = slug;
   if (normalizedSlug && normalizedSlug.at(-1) === "index") {
     const trimmed = normalizedSlug.slice(0, -1);
@@ -19,12 +19,12 @@ async function getLLMContentForSlug(slug?: string[]) {
     return null;
   }
   return await getLLMText(page);
-}
+};
 
-export async function GET(
+export const GET = async (
   _req: NextRequest,
   { params }: { params: Promise<{ slug?: string[] }> }
-) {
+) => {
   const { slug } = await params;
   const content = await getLLMContentForSlug(slug);
   if (!content) {
@@ -36,12 +36,11 @@ export async function GET(
       "Content-Type": "text/markdown; charset=utf-8",
     },
   });
-}
+};
 
-export function generateStaticParams() {
+export const generateStaticParams = () =>
   // The docs index is `/llms.mdx/index`: a bare `/llms.mdx` file would collide
   // with the `/llms.mdx/` folder of its child pages in the static export.
-  return source.generateParams().map(({ slug }) => ({
+  source.generateParams().map(({ slug }) => ({
     slug: slug.length > 0 ? slug : ["index"],
   }));
-}

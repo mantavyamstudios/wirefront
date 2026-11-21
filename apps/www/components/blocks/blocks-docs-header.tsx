@@ -23,11 +23,11 @@ interface ComponentPageDocsHeaderProps {
   title: string;
 }
 
-export function ComponentPageDocsHeader({
+export const ComponentPageDocsHeader = ({
   isExpanded = false,
   title,
   navItems: _navItems,
-}: ComponentPageDocsHeaderProps) {
+}: ComponentPageDocsHeaderProps) => {
   const { open } = useBlocksMenu();
   const { toolbar } = useBlocksMobileChrome();
 
@@ -81,4 +81,4 @@ export function ComponentPageDocsHeader({
       ) : null}
     </header>
   );
-}
+};

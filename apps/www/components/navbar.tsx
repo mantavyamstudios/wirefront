@@ -22,13 +22,13 @@ export interface NavbarProps {
   scrollingDirection?: "up" | "down";
 }
 
-export function Navbar({
+export const Navbar = ({
   isMenuOpen: isMenuOpenProp,
   onToggleMenu: onToggleMenuProp,
   onCloseMenu: onCloseMenuProp,
   isScrollingStarted: isScrollingStartedProp,
   scrollingDirection: scrollingDirectionProp,
-}: NavbarProps = {}) {
+}: NavbarProps = {}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   useButton3DHover(containerRef);
 
@@ -99,14 +99,17 @@ export function Navbar({
   };
 
   // Reset navbar state on route navigation
-  useEffect(() => {
-    if (!pathname) {
-      return;
-    }
+  const [lastPathname, setLastPathname] = useState(pathname);
+  if (pathname && lastPathname !== pathname) {
+    setLastPathname(pathname);
     setInternalMenuOpen(false);
     setInternalScrollingStarted(false);
     setInternalScrollingDirection("up");
-    onCloseMenuProp?.();
+  }
+  useEffect(() => {
+    if (pathname) {
+      onCloseMenuProp?.();
+    }
   }, [pathname, onCloseMenuProp]);
 
   // Close menu on Escape key
@@ -492,4 +495,4 @@ export function Navbar({
       />
     </div>
   );
-}
+};

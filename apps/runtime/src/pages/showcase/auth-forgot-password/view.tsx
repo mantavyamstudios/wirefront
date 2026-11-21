@@ -89,8 +89,8 @@ function ForgotPasswordScreen({ defaultEmail, onSend, resendAfter = 30, expiresI
   ) : null;
 
   return (
-    <div className={cn("flex h-[760px] w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground", className)}>
-      <div className="m-auto flex w-full max-w-[340px] flex-col items-center">
+    <div className={cn("flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground", className)}>
+      <div className="m-auto flex w-full max-w-85 flex-col items-center">
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             animate={{ opacity: 1, y: 0 }}

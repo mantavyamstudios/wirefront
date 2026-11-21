@@ -95,7 +95,7 @@ function ConnectedServicesScreen({ services, onToggle, configureHref, browseHref
                     {s.iconUrl ? (
                       <img alt="" className="size-10 shrink-0 rounded-xl border object-cover sm:size-11" src={s.iconUrl} />
                     ) : (
-                      <div aria-hidden className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl border bg-gradient-to-br font-heading font-semibold text-base sm:size-11", TONES[i % TONES.length])}>
+                      <div aria-hidden className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl border bg-linear-to-br font-heading font-semibold text-base sm:size-11", TONES[i % TONES.length])}>
                         {s.name.charAt(0)}
                       </div>
                     )}

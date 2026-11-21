@@ -213,7 +213,7 @@ function PageviewAnalyticsScreen({ data, range, onRangeChange, status = "ready",
                               <span className="ms-1.5 text-muted-foreground">{percent(s.views / sourceSum)}</span>
                             </span>
                           </div>
-                          <div aria-hidden className="mt-1.5 h-1 overflow-hidden rounded-full bg-foreground/[0.06]">
+                          <div aria-hidden className="mt-1.5 h-1 overflow-hidden rounded-full bg-foreground/6">
                             <div className={cn("h-full", SOURCE_SHADES[Math.min(i, SOURCE_SHADES.length - 1)])} style={{ width: `${(s.views / sourceTotal) * 100}%` }} />
                           </div>
                         </li>

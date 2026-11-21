@@ -1,32 +1,30 @@
 "use client";
 
 import { cn } from "@workspace/ui/lib/utils";
-import { useEffect, useState } from "react";
 
-export default function Iframe({
+import { useIsClient } from "@/lib/use-is-client";
+
+const Iframe = ({
   name,
   bigScreen = false,
 }: {
   name: string;
   bigScreen?: boolean;
-}) {
-  const [iframeUrl, setIframeUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const { origin } = window.location;
-    setIframeUrl(`${origin}/examples/${name}`);
-  }, [name]);
-
-  if (!iframeUrl) {
+}) => {
+  // Rendered after hydration only, as before; the page's own origin serves the example.
+  const isClient = useIsClient();
+  if (!isClient) {
     return null;
   }
 
   return (
     <iframe
-      className={cn("h-[500px] rounded-md", bigScreen && "w-[1600px]")}
+      className={cn("h-125 rounded-md", bigScreen && "w-400")}
       sandbox="allow-scripts allow-forms allow-popups"
-      src={iframeUrl}
+      src={`/examples/${name}`}
       title={name}
     />
   );
-}
+};
+
+export default Iframe;

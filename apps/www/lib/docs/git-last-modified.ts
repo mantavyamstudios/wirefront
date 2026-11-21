@@ -11,7 +11,7 @@ const wwwRoot = process.cwd();
 const cache = new Map<string, Promise<Date | null>>();
 let repoRootPromise: Promise<string> | undefined;
 
-function getRepoRoot(): Promise<string> {
+const getRepoRoot = (): Promise<string> => {
   if (!repoRootPromise) {
     repoRootPromise = (async () => {
       try {
@@ -29,9 +29,9 @@ function getRepoRoot(): Promise<string> {
   }
 
   return repoRootPromise;
-}
+};
 
-function toGitPath(repoRoot: string, filePath: string): string | null {
+const toGitPath = (repoRoot: string, filePath: string): string | null => {
   const relativePath = path
     .relative(repoRoot, path.resolve(filePath))
     .split(path.sep)
@@ -42,13 +42,15 @@ function toGitPath(repoRoot: string, filePath: string): string | null {
   }
 
   return relativePath;
-}
+};
 
 /**
  * Last git commit time for a single file.
  * Uses repo root + `--` so monorepo/Vercel builds resolve the correct object path.
  */
-export function gitLastModifiedForFile(filePath: string): Promise<Date | null> {
+export const gitLastModifiedForFile = (
+  filePath: string
+): Promise<Date | null> => {
   const cached = cache.get(filePath);
   if (cached) {
     return cached;
@@ -110,4 +112,4 @@ export function gitLastModifiedForFile(filePath: string): Promise<Date | null> {
 
   cache.set(filePath, promise);
   return promise;
-}
+};

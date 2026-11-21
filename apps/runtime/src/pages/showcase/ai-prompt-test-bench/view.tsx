@@ -337,7 +337,7 @@ function PassRateChart({ versions, rates, selected, productionId, threshold, onS
       className="@4xl:col-span-2"
       title={t.chartTitle}
     >
-      <div className="relative min-h-[200px] w-full flex-1" ref={ref}>
+      <div className="relative min-h-50 w-full flex-1" ref={ref}>
         {width > 0 ? (
           <svg aria-hidden="true" className="absolute inset-0 overflow-visible" height={H} width={width}>
             {[0, 0.5, 1].map((tick) => (
@@ -488,7 +488,7 @@ function PromptDiff({ prev, next, user, review, onReview, onWithdraw, pending, t
                     <span className="w-8 shrink-0 select-none pe-1 text-end text-muted-foreground tabular-nums">{o.a ?? ""}</span>
                     <span className="w-8 shrink-0 select-none pe-1 text-end text-muted-foreground tabular-nums">{o.b ?? ""}</span>
                     <Sign type={o.type} />
-                    <span className="min-w-0 flex-1 whitespace-pre-wrap break-words pe-3">{o.text || " "}</span>
+                    <span className="min-w-0 flex-1 whitespace-pre-wrap wrap-break-word pe-3">{o.text || " "}</span>
                   </div>
                 ))}
               </div>
@@ -503,7 +503,7 @@ function PromptDiff({ prev, next, user, review, onReview, onWithdraw, pending, t
                         <div className={cn("flex min-h-5 min-w-0", o ? lineTone(o.type) : "bg-muted/60")} key={side}>
                           <span className="w-7 shrink-0 select-none pe-1 text-end text-muted-foreground tabular-nums">{n ?? ""}</span>
                           <Sign type={o?.type} />
-                          <span className="min-w-0 flex-1 whitespace-pre-wrap break-words pe-2">{o?.text ?? ""}</span>
+                          <span className="min-w-0 flex-1 whitespace-pre-wrap wrap-break-word pe-2">{o?.text ?? ""}</span>
                         </div>
                       );
                     })}
@@ -611,7 +611,7 @@ function CaseRow({ c, result, onRerun, t }: { c: BenchCase; result: CaseResult; 
               ].map((x) => (
                 <div className="rounded-xl bg-muted/60 p-2.5" key={x.k}>
                   <div className="mb-1 font-medium text-muted-foreground">{x.k}</div>
-                  <p className="text-pretty leading-relaxed [overflow-wrap:anywhere]">{x.v}</p>
+                  <p className="text-pretty leading-relaxed wrap-anywhere">{x.v}</p>
                 </div>
               ))}
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1 @2xl:col-span-3">

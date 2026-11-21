@@ -108,7 +108,7 @@ function CommentRowScreen({ comment: c, onReact, reactionChoices = DEFAULT_ROW_R
         </div>
         {hasMenu ? (
           <DropdownMenu>
-            <DropdownMenuTrigger aria-label={interpolate(t.more, { name: c.author.name })} className="-me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 outline-none transition-all hover:bg-foreground/[0.05] hover:text-foreground focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-focus-within:opacity-100 group-hover:opacity-100 data-popup-open:opacity-100 pointer-coarse:size-10 pointer-coarse:opacity-100">
+            <DropdownMenuTrigger aria-label={interpolate(t.more, { name: c.author.name })} className="-me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 outline-none transition-all hover:bg-foreground/5 hover:text-foreground focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-focus-within:opacity-100 group-hover:opacity-100 data-popup-open:opacity-100 pointer-coarse:size-10 pointer-coarse:opacity-100">
               <MoreHorizontalIcon aria-hidden className="size-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -123,7 +123,7 @@ function CommentRowScreen({ comment: c, onReact, reactionChoices = DEFAULT_ROW_R
           </DropdownMenu>
         ) : null}
       </div>
-      <p className="mt-2.5 text-foreground/90 text-sm leading-relaxed [&_code]:rounded [&_code]:bg-foreground/[0.06] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[12px]">
+      <p className="mt-2.5 text-foreground/90 text-sm leading-relaxed [&_code]:rounded [&_code]:bg-foreground/6 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[12px]">
         <RichText text={c.body} />
       </p>
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
@@ -131,7 +131,7 @@ function CommentRowScreen({ comment: c, onReact, reactionChoices = DEFAULT_ROW_R
           <button
             aria-label={interpolate(r.count === 1 ? t.reactionOne : t.reaction, { emoji: r.emoji, count: r.count })}
             aria-pressed={Boolean(r.mine)}
-            className={cn("inline-flex min-h-7 items-center gap-1 rounded-full border px-2 text-xs outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default pointer-coarse:min-h-9", r.mine ? "border-foreground/30 bg-foreground/[0.06]" : "border-border/60 bg-background/40 hover:border-border")}
+            className={cn("inline-flex min-h-7 items-center gap-1 rounded-full border px-2 text-xs outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default pointer-coarse:min-h-9", r.mine ? "border-foreground/30 bg-foreground/6" : "border-border/60 bg-background/40 hover:border-border")}
             disabled={!onReact}
             key={r.emoji}
             onClick={() => react.run({ commentId: c.id, emoji: r.emoji, mine: !r.mine }, r.emoji)}

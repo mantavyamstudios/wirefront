@@ -5,13 +5,12 @@ import { screensSource } from "@/lib/screens/source";
 /** Static export (Cloudflare Pages): render once at build time. */
 export const dynamic = "force-static";
 
-async function getLlmsIndexContent() {
-  return await Promise.resolve(
+const getLlmsIndexContent = async () =>
+  await Promise.resolve(
     buildLlmsIndex(source.getPages(), screensSource.getPages())
   );
-}
 
-export async function GET() {
+export const GET = async () => {
   const content = await getLlmsIndexContent();
 
   return new Response(content, {
@@ -19,4 +18,4 @@ export async function GET() {
       "Content-Type": "text/plain; charset=utf-8",
     },
   });
-}
+};

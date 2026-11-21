@@ -63,7 +63,7 @@ function PricingScreen({ plans, onChoosePlan, currentPlanId, className }: Pricin
         </div>
 
         {/* 1 column → 2 at md (featured plan first, the third spans) → 3 at lg. */}
-        <div className="mt-10 grid grid-cols-1 gap-x-3 gap-y-6 sm:mt-12 md:grid-cols-2 md:max-lg:[&>:last-child]:col-span-2 lg:grid-cols-3 lg:items-stretch">
+        <div className="mt-10 grid grid-cols-1 gap-x-3 gap-y-6 sm:mt-12 md:grid-cols-2 md:max-lg:*:last:col-span-2 lg:grid-cols-3 lg:items-stretch">
           {plans.map((p) => {
             const current = p.id === currentPlanId;
             const pending = choose.isPending(p.id);
@@ -71,7 +71,7 @@ function PricingScreen({ plans, onChoosePlan, currentPlanId, className }: Pricin
               <div
                 className={cn(
                   "relative flex flex-col rounded-2xl border p-5 sm:p-6",
-                  p.featured ? "border-foreground bg-foreground/[0.04] shadow-lg max-lg:order-first lg:scale-[1.02]" : "border-border/60 bg-background/40",
+                  p.featured ? "border-foreground bg-foreground/4 shadow-lg max-lg:order-first lg:scale-[1.02]" : "border-border/60 bg-background/40",
                 )}
                 key={p.id}
               >

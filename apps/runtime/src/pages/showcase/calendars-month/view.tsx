@@ -88,7 +88,7 @@ function MonthCalendarScreen({ month, onMonthChange, events, status = "ready", e
   const plural = (n: number) => interpolate(n === 1 ? t.eventsOne : t.eventsOther, { count: n });
   const selectedEvents = eventsOn(selected);
   const spanDays = (e: CalendarEvent) => (e.end ? Math.round((utc(e.end).getTime() - utc(e.start).getTime()) / DAY_MS) + 1 : 1);
-  const navButton = "grid size-8 place-items-center rounded-md border border-border/60 outline-none hover:bg-foreground/[0.04] focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10";
+  const navButton = "grid size-8 place-items-center rounded-md border border-border/60 outline-none hover:bg-foreground/4 focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10";
 
   return (
     <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-8", className)}>
@@ -146,7 +146,7 @@ function MonthCalendarScreen({ month, onMonthChange, events, status = "ready", e
             ) : null}
           </div>
         ) : !events || status === "loading" ? (
-          <Skeleton aria-busy="true" className="mt-6 h-[560px] w-full rounded-xl motion-reduce:animate-none" />
+          <Skeleton aria-busy="true" className="mt-6 h-140 w-full rounded-xl motion-reduce:animate-none" />
         ) : (
           <>
             {/* Month grid with chips from sm up. On phones the cells shrink to a date + dots
@@ -169,14 +169,14 @@ function MonthCalendarScreen({ month, onMonthChange, events, status = "ready", e
                   const isToday = c.date === today;
                   const isSelected = c.date === selected;
                   return (
-                    <div className={cn("min-h-14 border-border/40 border-b sm:min-h-[110px]", c.col < 6 && "border-e", !c.inMonth && "bg-muted/20")} key={c.key}>
+                    <div className={cn("min-h-14 border-border/40 border-b sm:min-h-27.5", c.col < 6 && "border-e", !c.inMonth && "bg-muted/20")} key={c.key}>
                       {c.inMonth ? (
                         <button
                           aria-current={isToday ? "date" : undefined}
                           aria-pressed={isSelected}
                           className={cn(
                             "flex h-full w-full flex-col items-center gap-1 p-1 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:items-stretch sm:p-1.5",
-                            isSelected ? "max-sm:bg-foreground/[0.05] sm:bg-foreground/[0.02]" : "hover:bg-foreground/[0.02]",
+                            isSelected ? "max-sm:bg-foreground/5 sm:bg-foreground/2" : "hover:bg-foreground/2",
                           )}
                           onClick={() => setPicked(c.date)}
                           type="button"
@@ -233,7 +233,7 @@ function MonthCalendarScreen({ month, onMonthChange, events, status = "ready", e
         // New event FAB on phones, clear of the home indicator.
         <button
           aria-label={t.newEventLabel}
-          className="fixed end-4 bottom-[max(1rem,env(safe-area-inset-bottom))] grid size-14 place-items-center rounded-full bg-foreground text-background shadow-lg outline-none focus-visible:ring-2 focus-visible:ring-ring sm:hidden"
+          className="fixed inset-e-4 bottom-[max(1rem,env(safe-area-inset-bottom))] grid size-14 place-items-center rounded-full bg-foreground text-background shadow-lg outline-none focus-visible:ring-2 focus-visible:ring-ring sm:hidden"
           onClick={() => onCreateEvent(selected)}
           type="button"
         >

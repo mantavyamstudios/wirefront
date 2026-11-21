@@ -1,3 +1,11 @@
+/** The theme is applied before the animation runs, so a skipped or interrupted animation only gets logged. */
+const reportUnfinished = async (finished: Promise<void>) => {
+  try {
+    await finished;
+  } catch (error) {
+    console.warn("[theme] the theme transition animation didn't finish", error);
+  }
+};
 export type ThemeMode = "dark" | "light" | "system";
 
 type DocumentWithViewTransition = Document & {
@@ -6,26 +14,26 @@ type DocumentWithViewTransition = Document & {
 
 let themeTransitionTimer: number | undefined;
 
-function resolveTheme(theme: ThemeMode): "dark" | "light" {
+const resolveTheme = (theme: ThemeMode): "dark" | "light" => {
   if (theme === "system") {
     return window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
   }
   return theme;
-}
+};
 
-function applyThemeToDom(theme: ThemeMode): void {
+const applyThemeToDom = (theme: ThemeMode): void => {
   const resolved = resolveTheme(theme);
   document.documentElement.classList.toggle("dark", resolved === "dark");
   document.documentElement.classList.toggle("light", resolved === "light");
   document.documentElement.style.colorScheme = resolved;
-}
+};
 
-export function setThemeWithTransition(
+export const setThemeWithTransition = (
   setTheme: (theme: ThemeMode) => void,
   theme: ThemeMode
-): void {
+): void => {
   if (typeof window === "undefined") {
     setTheme(theme);
     return;
@@ -67,5 +75,5 @@ export function setThemeWithTransition(
     applyThemeToDom(theme);
     setTheme(theme);
   });
-  transition.finished.catch(() => {});
-}
+  reportUnfinished(transition.finished);
+};

@@ -1,14 +1,14 @@
 import { ImageResponse } from "next/og";
 
 import { source } from "@/lib/docs/source";
-import { getScreenGroup, getScreenKind } from "@/lib/screens/data";
-import { screensSource } from "@/lib/screens/source";
 import type { OgPageContent as OgPageData } from "@/lib/og/og-shared";
 import {
   getOgFontData,
   OG_FONT_FAMILY,
   OgImageFrame,
 } from "@/lib/og/og-shared";
+import { getScreenGroup, getScreenKind } from "@/lib/screens/data";
+import { screensSource } from "@/lib/screens/source";
 import {
   SITE_DESCRIPTION,
   SITE_OG_HERO_SUBLINE,
@@ -28,20 +28,17 @@ const SCREENS_INDEX: OgPageData = {
     "Production-grade UI screens, organised by the experience they serve.",
 };
 
-function pageContent(
+const pageContent = (
   page: { data: { title: string; description?: string } } | undefined
-): OgPageData | null {
-  return page
-    ? { title: page.data.title, description: page.data.description }
-    : null;
-}
+): OgPageData | null =>
+  page ? { title: page.data.title, description: page.data.description } : null;
 
 /**
  * `[]` → site; `["screens"]` → the gallery; `["screens", group]`,
  * `["screens", group, kind]` and `["screens", group, kind, screen]` → those
  * pages; anything else → a docs page.
  */
-export function resolveOgPage(slug: string[]): OgPageData | null {
+export const resolveOgPage = (slug: string[]): OgPageData | null => {
   if (slug.length === 0) {
     return SITE_DEFAULT;
   }
@@ -64,12 +61,24 @@ export function resolveOgPage(slug: string[]): OgPageData | null {
     return pageContent(source.getPage([]));
   }
   return pageContent(source.getPage(slug));
-}
+};
 
-export async function createOgImageResponse(
+/**
+ * The OG font has no ⌘ glyph, and next/og's fallback download for it fails,
+ * so the image spells it out: "⌘K" reads "Cmd-K", a lone "⌘" reads "Cmd".
+ */
+const ogText = (text: string): string =>
+  text.replaceAll(/⌘(?=[A-Za-z0-9])/gu, "Cmd-").replaceAll("⌘", "Cmd");
+
+export const createOgImageResponse = async (
   content: OgPageData
-): Promise<ImageResponse> {
-  return new ImageResponse(<OgImageFrame {...content} />, {
+): Promise<ImageResponse> => {
+  const frame = {
+    ...content,
+    title: ogText(content.title),
+    description: content.description && ogText(content.description),
+  };
+  return new ImageResponse(<OgImageFrame {...frame} />, {
     width: 1200,
     height: 630,
     fonts: [
@@ -81,11 +90,11 @@ export async function createOgImageResponse(
       },
     ],
   });
-}
+};
 
-export async function getCachedOgImageBuffer(
+export const getCachedOgImageBuffer = async (
   pageSlug: string[]
-): Promise<ArrayBuffer | null> {
+): Promise<ArrayBuffer | null> => {
   const content = resolveOgPage(pageSlug);
   if (!content) {
     return null;
@@ -93,4 +102,4 @@ export async function getCachedOgImageBuffer(
 
   const response = await createOgImageResponse(content);
   return await response.arrayBuffer();
-}
+};

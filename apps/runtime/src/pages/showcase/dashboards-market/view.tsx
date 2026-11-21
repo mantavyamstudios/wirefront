@@ -166,7 +166,7 @@ function MarketsDashboardScreen({ data, range, onRangeChange, status = "ready", 
                   <RadioGroup aria-label={t.chartRange} className="flex gap-1" onValueChange={(v) => onRangeChange(v as ChartRange)} value={range}>
                     {RANGES.map((r) => (
                       <Radio.Root
-                        className="min-h-7 cursor-pointer rounded-md px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] outline-none hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground data-checked:text-background pointer-coarse:min-h-10 pointer-coarse:px-2.5"
+                        className="min-h-7 cursor-pointer rounded-md px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em] outline-none hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground data-checked:text-background pointer-coarse:min-h-10 pointer-coarse:px-2.5"
                         key={r}
                         value={r}
                       >
@@ -263,7 +263,7 @@ function MarketsDashboardScreen({ data, range, onRangeChange, status = "ready", 
                     <tbody>
                       {ready
                         ? ready.watchlist.map((q) => (
-                            <tr className="border-border/30 border-b hover:bg-foreground/[0.02]" key={q.symbol}>
+                            <tr className="border-border/30 border-b hover:bg-foreground/2" key={q.symbol}>
                               <td className="px-3 py-2.5 sm:px-5">
                                 {onSelectTicker ? (
                                   <button
@@ -277,7 +277,7 @@ function MarketsDashboardScreen({ data, range, onRangeChange, status = "ready", 
                                 ) : (
                                   <div className="font-mono text-sm">{q.symbol}</div>
                                 )}
-                                <div className="max-w-[9rem] truncate font-mono text-[10px] text-muted-foreground">{q.name}</div>
+                                <div className="max-w-36 truncate font-mono text-[10px] text-muted-foreground">{q.name}</div>
                               </td>
                               <td className="px-3 py-2.5 text-end font-mono text-sm tabular-nums sm:px-5">{money(q.price)}</td>
                               <td className={cn("px-3 py-2.5 text-end font-mono text-sm tabular-nums sm:px-5", tone(q.change))}>{pct(q.change, true)}</td>

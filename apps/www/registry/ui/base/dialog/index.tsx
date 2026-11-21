@@ -17,22 +17,20 @@ interface DialogContextValue {
 
 const DialogContext = createContext<DialogContextValue | null>(null);
 
-function useDialogContext() {
-  return useContext(DialogContext);
-}
+const useDialogContext = () => useContext(DialogContext);
 
 type DialogProps = ComponentProps<typeof DialogPrimitive.Root>;
 
 /**
  * Root container for the Dialog component powered by Base UI and Motion.
  */
-function Dialog({
+const Dialog = ({
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
   children,
   ...props
-}: DialogProps) {
+}: DialogProps) => {
   const [open, setOpen] = useControlledState({
     defaultValue: defaultOpen,
     onChange: (nextOpen: boolean) => {
@@ -60,7 +58,7 @@ function Dialog({
       </DialogPrimitive.Root>
     </DialogContext.Provider>
   );
-}
+};
 
 type DialogTriggerProps = ComponentProps<typeof DialogPrimitive.Trigger>;
 
@@ -68,7 +66,7 @@ type DialogTriggerProps = ComponentProps<typeof DialogPrimitive.Trigger>;
  * Button or trigger element that opens the dialog.
  * Features Motion hover and tap scaling.
  */
-function DialogTrigger({ className, render, ...props }: DialogTriggerProps) {
+const DialogTrigger = ({ className, render, ...props }: DialogTriggerProps) => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
@@ -87,23 +85,23 @@ function DialogTrigger({ className, render, ...props }: DialogTriggerProps) {
       {...props}
     />
   );
-}
+};
 
 type DialogPortalProps = ComponentProps<typeof DialogPrimitive.Portal>;
 
 /**
  * Portals dialog overlay and content to the document body.
  */
-function DialogPortal({ ...props }: DialogPortalProps) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
-}
+const DialogPortal = ({ ...props }: DialogPortalProps) => (
+  <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+);
 
 type DialogCloseProps = ComponentProps<typeof DialogPrimitive.Close>;
 
 /**
  * Action button that dismisses the dialog.
  */
-function DialogClose({ className, render, ...props }: DialogCloseProps) {
+const DialogClose = ({ className, render, ...props }: DialogCloseProps) => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
@@ -121,14 +119,14 @@ function DialogClose({ className, render, ...props }: DialogCloseProps) {
       {...props}
     />
   );
-}
+};
 
 type DialogOverlayProps = ComponentProps<typeof DialogPrimitive.Backdrop>;
 
 /**
  * Semi-transparent backdrop overlay behind the dialog with blur and fade transition.
  */
-function DialogOverlay({ className, render, ...props }: DialogOverlayProps) {
+const DialogOverlay = ({ className, render, ...props }: DialogOverlayProps) => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
@@ -155,25 +153,23 @@ function DialogOverlay({ className, render, ...props }: DialogOverlayProps) {
       {...props}
     />
   );
-}
+};
 
 type DialogViewportProps = ComponentProps<typeof DialogPrimitive.Viewport>;
 
 /**
  * Optional scroll viewport wrapper for large or overflowing dialog popups.
  */
-function DialogViewport({ className, ...props }: DialogViewportProps) {
-  return (
-    <DialogPrimitive.Viewport
-      className={cn(
-        "fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4",
-        className
-      )}
-      data-slot="dialog-viewport"
-      {...props}
-    />
-  );
-}
+const DialogViewport = ({ className, ...props }: DialogViewportProps) => (
+  <DialogPrimitive.Viewport
+    className={cn(
+      "fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4",
+      className
+    )}
+    data-slot="dialog-viewport"
+    {...props}
+  />
+);
 
 interface DialogContentProps extends ComponentProps<
   typeof DialogPrimitive.Popup
@@ -196,7 +192,7 @@ interface DialogContentProps extends ComponentProps<
 /**
  * Modal dialog content container with Motion 3D perspective rotation and blur entrance/exit.
  */
-function DialogContent({
+const DialogContent = ({
   className,
   children,
   showCloseButton = true,
@@ -205,7 +201,7 @@ function DialogContent({
   render,
   style,
   ...props
-}: DialogContentProps) {
+}: DialogContentProps) => {
   const context = useDialogContext();
   const prefersReducedMotion = useReducedMotion();
   const isOpen = context ? context.open : true;
@@ -314,23 +310,18 @@ function DialogContent({
       )}
     </AnimatePresence>
   );
-}
+};
 
 /**
  * Header section containing dialog title and description.
  */
-function DialogHeader({ className, ...props }: ComponentProps<"div">) {
-  return (
-    <div
-      className={cn(
-        "flex flex-col gap-1.5 text-center sm:text-left",
-        className
-      )}
-      data-slot="dialog-header"
-      {...props}
-    />
-  );
-}
+const DialogHeader = ({ className, ...props }: ComponentProps<"div">) => (
+  <div
+    className={cn("flex flex-col gap-1.5 text-center sm:text-left", className)}
+    data-slot="dialog-header"
+    {...props}
+  />
+);
 
 interface DialogFooterProps extends ComponentProps<"div"> {
   /**
@@ -343,49 +334,45 @@ interface DialogFooterProps extends ComponentProps<"div"> {
 /**
  * Footer section for dialog action buttons.
  */
-function DialogFooter({
+const DialogFooter = ({
   className,
   showCloseButton = false,
   children,
   ...props
-}: DialogFooterProps) {
-  return (
-    <div
-      className={cn(
-        "border-border bg-muted/40 -mx-6 mt-2 -mb-6 flex flex-col-reverse gap-2 rounded-b-xl border-t p-4 sm:flex-row sm:justify-end",
-        className
-      )}
-      data-slot="dialog-footer"
-      {...props}
-    >
-      {children}
-      {showCloseButton && (
-        <DialogPrimitive.Close
-          data-slot="dialog-footer-close"
-          render={<Button variant="outline">Close</Button>}
-        />
-      )}
-    </div>
-  );
-}
+}: DialogFooterProps) => (
+  <div
+    className={cn(
+      "border-border bg-muted/40 -mx-6 mt-2 -mb-6 flex flex-col-reverse gap-2 rounded-b-xl border-t p-4 sm:flex-row sm:justify-end",
+      className
+    )}
+    data-slot="dialog-footer"
+    {...props}
+  >
+    {children}
+    {showCloseButton && (
+      <DialogPrimitive.Close
+        data-slot="dialog-footer-close"
+        render={<Button variant="outline">Close</Button>}
+      />
+    )}
+  </div>
+);
 
 type DialogTitleProps = ComponentProps<typeof DialogPrimitive.Title>;
 
 /**
  * Accessible title heading for the dialog.
  */
-function DialogTitle({ className, ...props }: DialogTitleProps) {
-  return (
-    <DialogPrimitive.Title
-      className={cn(
-        "text-foreground text-lg leading-none font-semibold tracking-tight",
-        className
-      )}
-      data-slot="dialog-title"
-      {...props}
-    />
-  );
-}
+const DialogTitle = ({ className, ...props }: DialogTitleProps) => (
+  <DialogPrimitive.Title
+    className={cn(
+      "text-foreground text-lg leading-none font-semibold tracking-tight",
+      className
+    )}
+    data-slot="dialog-title"
+    {...props}
+  />
+);
 
 type DialogDescriptionProps = ComponentProps<
   typeof DialogPrimitive.Description
@@ -394,15 +381,13 @@ type DialogDescriptionProps = ComponentProps<
 /**
  * Accessible description explaining the purpose of the dialog.
  */
-function DialogDescription({ className, ...props }: DialogDescriptionProps) {
-  return (
-    <DialogPrimitive.Description
-      className={cn("text-muted-foreground text-sm", className)}
-      data-slot="dialog-description"
-      {...props}
-    />
-  );
-}
+const DialogDescription = ({ className, ...props }: DialogDescriptionProps) => (
+  <DialogPrimitive.Description
+    className={cn("text-muted-foreground text-sm", className)}
+    data-slot="dialog-description"
+    {...props}
+  />
+);
 
 export type {
   DialogCloseProps,

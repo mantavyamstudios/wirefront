@@ -262,16 +262,16 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
           <ScrollRegion aria-label={t.hours} orientation="horizontal">
             <div className="min-w-max" ref={gridRef}>
               <div className="grid grid-cols-[136px_auto] sm:grid-cols-[220px_auto]">
-                <div className="sticky start-0 z-20 flex items-center gap-1 border-border/40 border-e border-b bg-background px-2.5 font-mono text-[10px] text-foreground/80 tracking-[0.1em] sm:px-3">
+                <div className="sticky inset-s-0 z-20 flex items-center gap-1 border-border/40 border-e border-b bg-background px-2.5 font-mono text-[10px] text-foreground/80 tracking-widest sm:px-3">
                   <span aria-live="polite" className="flex-1">
                     {interpolate(t.window, { from: `${two(start)}:00`, to: `${two(start + duration)}:00`, hours: duration })}
                   </span>
-                  <button aria-label={t.shorter} className="grid size-6 place-items-center rounded outline-none hover:bg-foreground/[0.06] focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40" disabled={duration <= MIN_DURATION} onClick={() => setDuration((d) => d - 1)} type="button">
+                  <button aria-label={t.shorter} className="grid size-6 place-items-center rounded outline-none hover:bg-foreground/6 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40" disabled={duration <= MIN_DURATION} onClick={() => setDuration((d) => d - 1)} type="button">
                     <MinusIcon aria-hidden className="size-3" />
                   </button>
                   <button
                     aria-label={t.longer}
-                    className="grid size-6 place-items-center rounded outline-none hover:bg-foreground/[0.06] focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
+                    className="grid size-6 place-items-center rounded outline-none hover:bg-foreground/6 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
                     disabled={duration >= MAX_DURATION || start + duration >= HOURS}
                     onClick={() => setDuration((d) => d + 1)}
                     type="button"
@@ -284,7 +284,7 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                     <button
                       aria-label={interpolate(t.startAt, { hour: two(h) })}
                       aria-pressed={h === start}
-                      className={cn("border-border/40 border-s py-1.5 text-center font-mono text-[10px] outline-none hover:bg-foreground/[0.04] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", h >= start && h < start + duration ? "text-foreground" : "text-muted-foreground")}
+                      className={cn("border-border/40 border-s py-1.5 text-center font-mono text-[10px] outline-none hover:bg-foreground/4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", h >= start && h < start + duration ? "text-foreground" : "text-muted-foreground")}
                       key={h}
                       onClick={() => setStart(clamp(h, 0, HOURS - duration))}
                       type="button"
@@ -300,8 +300,8 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                   const label = { ok: t.working, edge: t.edge, asleep: t.asleep }[v];
                   return (
                     <li className="group grid grid-cols-[136px_auto] border-border/40 border-b last:border-b-0 sm:grid-cols-[220px_auto]" key={r.zone}>
-                      <div className="sticky start-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-2.5 py-2 sm:px-3 sm:py-2.5">
-                        <div aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06] font-mono text-[9px] max-lg:hidden">
+                      <div className="sticky inset-s-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-2.5 py-2 sm:px-3 sm:py-2.5">
+                        <div aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/6 font-mono text-[9px] max-lg:hidden">
                           {short(r.zone)}
                         </div>
                         <div className="min-w-0 flex-1">
@@ -316,7 +316,7 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                         </span>
                         <button
                           aria-label={interpolate(t.remove, { city: city(r.zone) })}
-                          className="inline-flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-all hover:bg-foreground/[0.06] hover:text-destructive focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
+                          className="inline-flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-all hover:bg-foreground/6 hover:text-destructive focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
                           onClick={() => updateZones(zones.filter((z) => z !== r.zone))}
                           type="button"
                         >
@@ -331,12 +331,12 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                             <div
                               className={cn(
                                 "absolute top-0 bottom-0 border-border/40 border-s",
-                                sleeping ? "bg-category-8/[0.18]" : local < 12 ? "bg-category-3/[0.08]" : local >= 18 ? "bg-category-4/[0.06]" : "",
+                                sleeping ? "bg-category-8/18" : local < 12 ? "bg-category-3/8" : local >= 18 ? "bg-category-4/6" : "",
                               )}
                               key={h}
                               style={{ insetInlineStart: h * HOUR_W, width: HOUR_W }}
                             >
-                              <span className={cn("pointer-events-none absolute start-1 top-1/2 -translate-y-1/2 font-mono text-[10px]", sleeping ? "text-muted-foreground" : "text-foreground/85")}>
+                              <span className={cn("pointer-events-none absolute inset-s-1 top-1/2 -translate-y-1/2 font-mono text-[10px]", sleeping ? "text-muted-foreground" : "text-foreground/85")}>
                                 {two(local)}
                                 {local === 0 ? <MoonIcon className="ms-1 inline-block size-2.5 opacity-50" /> : null}
                                 {local === 12 ? <SunIcon className="ms-1 inline-block size-2.5 opacity-50" /> : null}
@@ -348,14 +348,14 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                           className={cn(
                             // touch-none: dragging the window must not scroll the grid.
                             "absolute top-1 bottom-1 cursor-grab touch-none select-none rounded-md border-2 shadow-sm transition-all active:cursor-grabbing",
-                            v === "asleep" ? "border-category-4/70 bg-category-4/[0.08]" : v === "edge" ? "border-category-3/70 bg-category-3/[0.08]" : "border-foreground bg-foreground/[0.06]",
+                            v === "asleep" ? "border-category-4/70 bg-category-4/8" : v === "edge" ? "border-category-3/70 bg-category-3/8" : "border-foreground bg-foreground/6",
                             pulse && "ring-2 ring-category-2/60",
                           )}
                           data-drag="move"
                           style={{ insetInlineStart: start * HOUR_W, width: duration * HOUR_W }}
                         >
-                          <div className="absolute start-0 top-0 bottom-0 w-1.5 cursor-ew-resize rounded-s-md bg-foreground/20 transition-colors hover:bg-foreground/40 pointer-coarse:w-3" data-drag="start" />
-                          <div className="absolute end-0 top-0 bottom-0 w-1.5 cursor-ew-resize rounded-e-md bg-foreground/20 transition-colors hover:bg-foreground/40 pointer-coarse:w-3" data-drag="end" />
+                          <div className="absolute inset-s-0 top-0 bottom-0 w-1.5 cursor-ew-resize rounded-s-md bg-foreground/20 transition-colors hover:bg-foreground/40 pointer-coarse:w-3" data-drag="start" />
+                          <div className="absolute inset-e-0 top-0 bottom-0 w-1.5 cursor-ew-resize rounded-e-md bg-foreground/20 transition-colors hover:bg-foreground/40 pointer-coarse:w-3" data-drag="end" />
                         </div>
                       </div>
                     </li>
@@ -371,7 +371,7 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                 <PlusIcon aria-hidden />
                 {t.add}
               </PopoverTrigger>
-              <PopoverContent align="start" className="!w-80 !p-0 overflow-hidden" side="top">
+              <PopoverContent align="start" className="w-80! p-0! overflow-hidden" side="top">
                 <div className="flex items-center gap-2 border-border/60 border-b px-3 py-2">
                   <SearchIcon aria-hidden className="size-3.5 opacity-50" />
                   <input
@@ -391,14 +391,14 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                     matches.map((z) => (
                       <li key={z}>
                         <button
-                          className="flex w-full items-center gap-3 px-3 py-2 text-start outline-none transition-colors hover:bg-foreground/[0.04] focus-visible:bg-foreground/[0.06]"
+                          className="flex w-full items-center gap-3 px-3 py-2 text-start outline-none transition-colors hover:bg-foreground/4 focus-visible:bg-foreground/6"
                           onClick={() => {
                             updateZones([...zones, z]);
                             setQuery("");
                           }}
                           type="button"
                         >
-                          <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06] font-mono text-[9px]">
+                          <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/6 font-mono text-[9px]">
                             {short(z)}
                           </span>
                           <span className="min-w-0 flex-1">

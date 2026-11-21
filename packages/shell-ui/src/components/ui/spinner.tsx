@@ -1,15 +1,15 @@
 import { cn } from "@workspace/ui/lib/utils";
 import { Loader } from "lucide-react";
 
-function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
-  return (
+/** A spinning loader announced as "Loading" (`<output>` is a status region). */
+const Spinner = ({ className, ...props }: React.ComponentProps<"svg">) => (
+  <output aria-label="Loading" className="inline-flex">
     <Loader
-      aria-label="Loading"
+      aria-hidden
       className={cn("size-4 animate-spin", className)}
-      role="status"
       {...props}
     />
-  );
-}
+  </output>
+);
 
 export { Spinner };

@@ -10,6 +10,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -17,18 +18,21 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 
+import { nextPaint, wait } from "@/lib/wait";
+
 import { PageTransitionShader } from "./page-transition-shader";
 
 /** Shown while moving between sections of the site (see `getSiteSection`). */
+/** Shown exactly as written: the banner keeps each phrase's letter case. */
 export const DOCS_TRANSITION_PHRASES = [
-  "try every screen live",
-  "ready to wire screens",
-  "preview install wire ship",
-  "two hundred screens",
-  "every screen runs live",
-  "full source inside",
-  "loading wirefront",
-  "screens you can touch",
+  "Adaptive - Dynamic - Responsive",
+  "Production Grade Screens",
+  "Data IN - Events OUT",
+  "Backend Agnostic UI",
+  "Ready to Wire",
+  "Loading WireFront Catalogue",
+  "Preview - Install - Wire - Ship",
+  "Source You Own",
 ] as const;
 
 const DOCS_TYPER_VARIATIONS: TyperVariation[] = [
@@ -49,21 +53,18 @@ const DOCS_TYPER_STYLE: React.CSSProperties = {
 export type TransitionMode = "docs";
 
 /** The site's sections: home, flows, docs, pricing and legal. */
-export function getSiteSection(path: string): string {
+export const getSiteSection = (path: string): string => {
   const clean = normalizePathname(path);
   return clean === "/" ? "home" : (clean.split("/")[1] ?? "home");
-}
+};
 
-function isSkippableClick(e: MouseEvent): boolean {
-  return (
-    e.defaultPrevented ||
-    e.button !== 0 ||
-    e.metaKey ||
-    e.ctrlKey ||
-    e.shiftKey ||
-    e.altKey
-  );
-}
+const isSkippableClick = (e: MouseEvent): boolean =>
+  e.defaultPrevented ||
+  e.button !== 0 ||
+  e.metaKey ||
+  e.ctrlKey ||
+  e.shiftKey ||
+  e.altKey;
 
 export interface PageTransitionContextValue {
   isTransitioning: boolean;
@@ -78,15 +79,17 @@ const PageTransitionContext = createContext<PageTransitionContextValue | null>(
 const defaultContext: PageTransitionContextValue = {
   isTransitioning: false,
   transitionMode: null,
-  transitionTo: async () => {},
+  transitionTo: async () => {
+    // Outside the provider there is no transition to run.
+  },
 };
 
-export function usePageTransition() {
+export const usePageTransition = () => {
   const context = useContext(PageTransitionContext);
   return context ?? defaultContext;
-}
+};
 
-export function normalizePathname(url: string): string {
+export const normalizePathname = (url: string): string => {
   let path = url;
   try {
     if (url.startsWith("http://") || url.startsWith("https://")) {
@@ -100,9 +103,13 @@ export function normalizePathname(url: string): string {
     return "/";
   }
   return clean.endsWith("/") ? clean.slice(0, -1) : clean;
-}
+};
 
-export function PageTransitionProvider({ children }: { children: ReactNode }) {
+export const PageTransitionProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
@@ -111,7 +118,9 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const shaderRef = useRef<PageTransitionShader | null>(null);
   const pathnameRef = useRef(pathname);
-  pathnameRef.current = pathname;
+  useLayoutEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
 
   const pendingRouteRef = useRef<{
     fromPath: string;
@@ -165,36 +174,42 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
         return Promise.resolve();
       }
 
-      return new Promise<void>((resolve) => {
-        let timer: ReturnType<typeof setTimeout> | null = null;
+      const { promise, resolve } = Promise.withResolvers<undefined>();
+      let timer: ReturnType<typeof setTimeout> | null = null;
 
-        const onDone = () => {
-          if (timer) {
-            clearTimeout(timer);
-            timer = null;
+      const onDone = () => {
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
+        resolve();
+      };
+
+      timer = setTimeout(() => {
+        if (pendingRouteRef.current?.resolve === onDone) {
+          pendingRouteRef.current = null;
+          // The route never mounted: navigate natively so the user is never stuck.
+          console.warn(
+            `[page transition] ${targetHref} didn't render within ${timeoutMs / 1000} s; loading it with a full page navigation`
+          );
+          try {
+            window.location.assign(targetHref);
+          } catch (error) {
+            console.error(
+              `[page transition] couldn't navigate to ${targetHref}`,
+              error
+            );
           }
-          resolve();
-        };
+        }
+        onDone();
+      }, timeoutMs);
 
-        timer = setTimeout(() => {
-          if (pendingRouteRef.current?.resolve === onDone) {
-            pendingRouteRef.current = null;
-            // Catastrophic network timeout (30s): navigate natively so user is never stuck
-            try {
-              window.location.assign(targetHref);
-            } catch {
-              // fallback
-            }
-          }
-          onDone();
-        }, timeoutMs);
-
-        pendingRouteRef.current = {
-          fromPath,
-          targetPath,
-          resolve: onDone,
-        };
-      });
+      pendingRouteRef.current = {
+        fromPath,
+        targetPath,
+        resolve: onDone,
+      };
+      return promise;
     },
     []
   );
@@ -262,9 +277,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       await shader.show(1.1, "power2.out");
 
       // Allow Typer to settle fully into hold state before initiating route render
-      await new Promise((resolve) => {
-        setTimeout(resolve, 200);
-      });
+      await wait(200);
 
       const routePromise = waitForRouteChange(href, 30_000);
 
@@ -273,27 +286,13 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       });
 
       // Wait for both minimum reading hold and actual route mount
-      const minHoldPromise = new Promise((resolve) => {
-        setTimeout(resolve, 500);
-      });
-      await Promise.all([minHoldPromise, routePromise]);
+      await Promise.all([wait(500), routePromise]);
 
       // Double rAF ensures browser paints the new page under the overlay
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            resolve();
-          });
-        });
-      });
+      await nextPaint();
 
       setTyperTrigger("out");
-      await Promise.all([
-        shader.hide(1.7, "power2.inOut"),
-        new Promise((resolve) => {
-          setTimeout(resolve, 1500);
-        }),
-      ]);
+      await Promise.all([shader.hide(1.7, "power2.inOut"), wait(1500)]);
       setShowTyper(false);
 
       transitioningRef.current = false;
@@ -362,7 +361,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
           {transitionMode === "docs" && showTyper && (
             <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-6">
               <div
-                className="transition-typer-banner flex items-center justify-center font-mono text-base font-bold tracking-normal uppercase select-none sm:text-xl md:text-2xl lg:text-3xl"
+                className="transition-typer-banner flex items-center justify-center font-mono text-base font-bold tracking-normal select-none sm:text-xl md:text-2xl lg:text-3xl"
                 style={DOCS_TYPER_STYLE}
               >
                 <Typer
@@ -383,4 +382,4 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       )}
     </PageTransitionContext.Provider>
   );
-}
+};

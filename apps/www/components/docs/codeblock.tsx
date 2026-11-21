@@ -51,32 +51,28 @@ export const CodeBlock = ({
   const [isCopied, setIsCopied] = useState(false);
   const areaRef = useRef<HTMLDivElement>(null);
 
-  const onCopy = useCallback(() => {
-    if (code) {
-      navigator.clipboard.writeText(code).then(() => {
-        setIsCopied(true);
-        onCopyEvent?.();
-        setTimeout(() => setIsCopied(false), 3000);
-      });
+  const onCopy = useCallback(async () => {
+    let text = code;
+    if (!text) {
+      const pre = areaRef.current?.getElementsByTagName("pre").item(0);
+      if (!pre) {
+        return;
+      }
+      const clone = pre.cloneNode(true) as HTMLElement;
+      for (const node of clone.querySelectorAll(".nd-copy-ignore")) {
+        node.remove();
+      }
+      text = clone.textContent ?? "";
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      console.error("[code block] couldn't copy the code", error);
       return;
     }
-
-    const pre = areaRef.current?.getElementsByTagName("pre").item(0);
-
-    if (!pre) {
-      return;
-    }
-
-    const clone = pre.cloneNode(true) as HTMLElement;
-    for (const node of clone.querySelectorAll(".nd-copy-ignore")) {
-      node.remove();
-    }
-
-    navigator.clipboard.writeText(clone.textContent ?? "").then(() => {
-      setIsCopied(true);
-      onCopyEvent?.();
-      setTimeout(() => setIsCopied(false), 3000);
-    });
+    setIsCopied(true);
+    onCopyEvent?.();
+    setTimeout(() => setIsCopied(false), 3000);
   }, [code, onCopyEvent]);
 
   let iconNode: ReactNode = null;
@@ -121,7 +117,7 @@ export const CodeBlock = ({
         </div>
       ) : (
         allowCopy && (
-          <div className="absolute top-2 right-2 z-[2]">
+          <div className="absolute top-2 right-2 z-2">
             <CopyButton
               className="hover:bg-foreground/5 dark:hover:bg-foreground/10 bg-transparent"
               isCopied={isCopied}
@@ -137,7 +133,7 @@ export const CodeBlock = ({
           <ScrollViewport
             {...viewportProps}
             className={cn(
-              "bg-surface h-auto max-h-[600px] w-full rounded-[calc(var(--radius-xl)-7px)] [&_code]:!text-[13px] [&_code_.line]:!px-0",
+              "bg-surface h-auto max-h-150 w-full rounded-[calc(var(--radius-xl)-7px)] [&_code]:text-[13px]! [&_code_.line]:px-0!",
               viewportProps?.className
             )}
             data-slot="codeblock-viewport"

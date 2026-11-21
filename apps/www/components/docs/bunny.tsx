@@ -16,26 +16,25 @@ export interface BunnyProps extends ComponentProps<"svg"> {
   sleeping?: boolean;
 }
 
-export function Bunny({
+export const Bunny = ({
   size = 32,
   sleeping = false,
   className,
   style,
   ...props
-}: BunnyProps) {
-  return (
-    <svg
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      height={size}
-      style={{ overflow: "visible", ...style }}
-      viewBox="0 0 40 40"
-      width={size}
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <style>{`
+}: BunnyProps) => (
+  <svg
+    aria-hidden="true"
+    className={className}
+    fill="none"
+    height={size}
+    style={{ overflow: "visible", ...style }}
+    viewBox="0 0 40 40"
+    width={size}
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <style>{`
         .bunny-ear-left-sleep, .bunny-ear-right-sleep,
         .bunny-ear-left-awake, .bunny-ear-right-awake {
           transform-origin: bottom center;
@@ -145,107 +144,106 @@ export function Bunny({
           }
         }
       `}</style>
-      <g transform="translate(7.15, 8)">
-        {sleeping ? (
-          <>
-            <g transform="rotate(-15, 7, 10) translate(0, 1)">
-              <path
-                className="bunny-ear-left-sleep"
-                d={EAR_LEFT_PATH}
-                fill="currentColor"
-              />
-            </g>
-            <g transform="rotate(15, 19, 10) translate(0, 1)">
-              <path
-                className="bunny-ear-right-sleep"
-                d={EAR_RIGHT_PATH}
-                fill="currentColor"
-              />
-            </g>
-          </>
-        ) : (
-          <>
+    <g transform="translate(7.15, 8)">
+      {sleeping ? (
+        <>
+          <g transform="rotate(-15, 7, 10) translate(0, 1)">
             <path
-              className="bunny-ear-left-awake"
+              className="bunny-ear-left-sleep"
               d={EAR_LEFT_PATH}
               fill="currentColor"
             />
+          </g>
+          <g transform="rotate(15, 19, 10) translate(0, 1)">
             <path
-              className="bunny-ear-right-awake"
+              className="bunny-ear-right-sleep"
               d={EAR_RIGHT_PATH}
               fill="currentColor"
             />
-          </>
-        )}
-        <path d={FACE_PATH} fill="currentColor" />
-        {sleeping ? (
-          <>
-            <rect
-              fill="currentColor"
-              height="1.4"
-              rx="0.7"
-              ry="0.7"
-              width="5"
-              x="5.777"
-              y="19.766"
-            />
-            <rect
-              fill="currentColor"
-              height="1.4"
-              rx="0.7"
-              ry="0.7"
-              width="5"
-              x="17.378"
-              y="19.766"
-            />
-          </>
-        ) : (
-          <>
-            <g className="bunny-eye-move-left">
-              <rect
-                className="bunny-eye-blink"
-                fill="currentColor"
-                height={3.6}
-                rx={1.8}
-                ry={1.8}
-                width={3.6}
-                x={6.477}
-                y={18.666}
-              />
-            </g>
-            <g className="bunny-eye-move-right">
-              <rect
-                className="bunny-eye-blink"
-                fill="currentColor"
-                height={3.6}
-                rx={1.8}
-                ry={1.8}
-                width={3.6}
-                x={18.078}
-                y={18.666}
-              />
-            </g>
-          </>
-        )}
-      </g>
+          </g>
+        </>
+      ) : (
+        <>
+          <path
+            className="bunny-ear-left-awake"
+            d={EAR_LEFT_PATH}
+            fill="currentColor"
+          />
+          <path
+            className="bunny-ear-right-awake"
+            d={EAR_RIGHT_PATH}
+            fill="currentColor"
+          />
+        </>
+      )}
+      <path d={FACE_PATH} fill="currentColor" />
       {sleeping ? (
-        <g
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <g className="bunny-z1" strokeWidth="1.5">
-            <path d="M32 5 L36 5 L32 9 L36 9" />
+        <>
+          <rect
+            fill="currentColor"
+            height="1.4"
+            rx="0.7"
+            ry="0.7"
+            width="5"
+            x="5.777"
+            y="19.766"
+          />
+          <rect
+            fill="currentColor"
+            height="1.4"
+            rx="0.7"
+            ry="0.7"
+            width="5"
+            x="17.378"
+            y="19.766"
+          />
+        </>
+      ) : (
+        <>
+          <g className="bunny-eye-move-left">
+            <rect
+              className="bunny-eye-blink"
+              fill="currentColor"
+              height={3.6}
+              rx={1.8}
+              ry={1.8}
+              width={3.6}
+              x={6.477}
+              y={18.666}
+            />
           </g>
-          <g className="bunny-z2" strokeWidth="1.3">
-            <path d="M34 3 L37 3 L34 6 L37 6" />
+          <g className="bunny-eye-move-right">
+            <rect
+              className="bunny-eye-blink"
+              fill="currentColor"
+              height={3.6}
+              rx={1.8}
+              ry={1.8}
+              width={3.6}
+              x={18.078}
+              y={18.666}
+            />
           </g>
-          <g className="bunny-z3" strokeWidth="1.1">
-            <path d="M36 1 L38.5 1 L36 3.5 L38.5 3.5" />
-          </g>
+        </>
+      )}
+    </g>
+    {sleeping ? (
+      <g
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <g className="bunny-z1" strokeWidth="1.5">
+          <path d="M32 5 L36 5 L32 9 L36 9" />
         </g>
-      ) : null}
-    </svg>
-  );
-}
+        <g className="bunny-z2" strokeWidth="1.3">
+          <path d="M34 3 L37 3 L34 6 L37 6" />
+        </g>
+        <g className="bunny-z3" strokeWidth="1.1">
+          <path d="M36 1 L38.5 1 L36 3.5 L38.5 3.5" />
+        </g>
+      </g>
+    ) : null}
+  </svg>
+);

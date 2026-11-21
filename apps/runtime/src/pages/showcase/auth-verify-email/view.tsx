@@ -126,8 +126,8 @@ function VerifyEmailScreen({ email, onVerify, onResend, resendAfter = 30, onSucc
   const half = Math.ceil(CODE_LENGTH / 2);
 
   return (
-    <div className={cn("flex h-[760px] w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground", className)}>
-      <div className="m-auto flex w-full max-w-[340px] flex-col items-center">
+    <div className={cn("flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground", className)}>
+      <div className="m-auto flex w-full max-w-85 flex-col items-center">
         <Tile done={done} />
         <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">{done ? t.doneTitle : t.title}</h1>
         <p className="mt-1.5 text-balance text-center text-muted-foreground text-sm">

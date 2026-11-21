@@ -17,6 +17,7 @@ import {
 import type { ComponentType } from "react";
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
 import { useDemo, type View } from "./store";
+import { must } from "@/lib/must";
 
 const NAV: { id: View; label: string; Icon: ComponentType<{ className?: string }> }[] = [
   { id: "home", label: "Home", Icon: HomeIcon },
@@ -40,21 +41,21 @@ export function DemoSidebar() {
     pushToast,
     openProject,
   } = useDemo();
-  const me = members[0]!;
-  const ws = workspaces.find((w) => w.id === currentWorkspaceId)!;
+  const me = must(members[0], "the signed-in member");
+  const ws = must(workspaces.find((w) => w.id === currentWorkspaceId), "the current workspace");
   const unread = threads.filter((t) => t.unread).length;
 
   const stars = projects.filter((p) => p.starred);
   const rest = projects.filter((p) => !p.starred);
 
   return (
-    <aside className="relative flex h-svh flex-col border-r border-border/60 bg-foreground/[0.02]">
+    <aside className="relative flex h-svh flex-col border-r border-border/60 bg-foreground/2">
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
             <button
               type="button"
-              className="flex h-14 w-full shrink-0 items-center justify-between gap-2 border-b border-border/60 px-3.5 text-left transition-colors hover:bg-foreground/[0.03]"
+              className="flex h-14 w-full shrink-0 items-center justify-between gap-2 border-b border-border/60 px-3.5 text-left transition-colors hover:bg-foreground/3"
             />
           }
         >
@@ -128,8 +129,8 @@ export function DemoSidebar() {
                 onClick={() => setView(item.id)}
                 className={`flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
                   view === item.id
-                    ? "bg-foreground/[0.06] text-foreground"
-                    : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"
+                    ? "bg-foreground/6 text-foreground"
+                    : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground"
                 }`}
               >
                 <span className="flex items-center gap-2.5">
@@ -155,7 +156,7 @@ export function DemoSidebar() {
                   <button
                     type="button"
                     onClick={() => openProject(p.id)}
-                    className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.03] hover:text-foreground"
+                    className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-muted-foreground text-sm transition-colors hover:bg-foreground/3 hover:text-foreground"
                   >
                     <span className={`size-2 shrink-0 rounded-sm ${p.color}`} />
                     <span className="truncate">{p.name}</span>
@@ -173,7 +174,7 @@ export function DemoSidebar() {
             type="button"
             onClick={() => setOverlay("new-project")}
             aria-label="New project"
-            className="ml-auto rounded p-0.5 transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+            className="ml-auto rounded p-0.5 transition-colors hover:bg-foreground/5 hover:text-foreground"
           >
             <PlusIcon className="size-3" />
           </button>
@@ -184,7 +185,7 @@ export function DemoSidebar() {
               <button
                 type="button"
                 onClick={() => openProject(p.id)}
-                className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.03] hover:text-foreground"
+                className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-muted-foreground text-sm transition-colors hover:bg-foreground/3 hover:text-foreground"
               >
                 <span className={`size-2 shrink-0 rounded-sm ${p.color}`} />
                 <span className="truncate">{p.name}</span>
@@ -195,7 +196,7 @@ export function DemoSidebar() {
             <button
               type="button"
               onClick={() => setOverlay("new-project")}
-              className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-muted-foreground/70 text-xs transition-colors hover:bg-foreground/[0.03] hover:text-foreground"
+              className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-muted-foreground/70 text-xs transition-colors hover:bg-foreground/3 hover:text-foreground"
             >
               <PlusIcon className="size-3.5" />
               New project
@@ -209,7 +210,7 @@ export function DemoSidebar() {
           render={
             <button
               type="button"
-              className="flex w-full items-center gap-2 border-t border-border/60 px-3 py-2.5 text-left transition-colors hover:bg-foreground/[0.03]"
+              className="flex w-full items-center gap-2 border-t border-border/60 px-3 py-2.5 text-left transition-colors hover:bg-foreground/3"
             />
           }
         >

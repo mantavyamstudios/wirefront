@@ -2,7 +2,7 @@
 
 import { cn } from "@workspace/ui/lib/utils";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 import { CopyButton } from "@/components/docs/copy-button";
 import {
@@ -22,7 +22,7 @@ type PackageManager = (typeof PACKAGE_MANAGERS)[number];
 
 let cachedPackageManager: string | null = null;
 
-function getSavedPackageManager(): string | null {
+const getSavedPackageManager = (): string | null => {
   if (cachedPackageManager) {
     return cachedPackageManager;
   }
@@ -38,38 +38,64 @@ function getSavedPackageManager(): string | null {
     }
   }
   return null;
-}
+};
+
+const PACKAGE_MANAGER_CHANGE_EVENT = "package-manager-change";
+
+/** Notified when this or another browser tab picks a package manager. */
+const subscribePackageManager = (onChange: () => void) => {
+  const handle = (event: Event) => {
+    let next: string | null = null;
+    if (event instanceof StorageEvent) {
+      next = event.key === PACKAGE_MANAGER_STORAGE_KEY ? event.newValue : null;
+    } else {
+      next = (event as CustomEvent<string>).detail;
+    }
+    if (next) {
+      cachedPackageManager = next;
+      onChange();
+    }
+  };
+  window.addEventListener("storage", handle);
+  window.addEventListener(PACKAGE_MANAGER_CHANGE_EVENT, handle);
+  return () => {
+    window.removeEventListener("storage", handle);
+    window.removeEventListener(PACKAGE_MANAGER_CHANGE_EVENT, handle);
+  };
+};
 
 const isPackageManager = (value: string): value is PackageManager =>
   PACKAGE_MANAGERS.includes(value as PackageManager);
 
 const cliHighlightCache = new Map<string, string>();
 
-function highlightBashCommandSync(code: string): string {
+/** Shiki loads on first use, outside the component so the React Compiler can optimise it. */
+const loadShiki = () => import("shiki");
+
+const highlightBashCommandSync = (code: string): string => {
   const escaped = code
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
 
   return `<pre class="font-mono text-[13px] leading-relaxed tracking-tight text-foreground" tabindex="0"><code><span class="line">${escaped}</span></code></pre>`;
-}
+};
 
-function buildFallbackHtml(code: string): string {
-  return highlightBashCommandSync(code);
-}
+const buildFallbackHtml = (code: string): string =>
+  highlightBashCommandSync(code);
 
-function getInitialHighlightedCodes(
+const getInitialHighlightedCodes = (
   codes: Record<string, string>,
   lang: string,
   theme: string
-): Record<string, string> {
+): Record<string, string> => {
   const result: Record<string, string> = {};
   for (const [command, val] of Object.entries(codes)) {
     const key = `${lang}:${theme}:${val}`;
     result[command] = cliHighlightCache.get(key) ?? buildFallbackHtml(val);
   }
   return result;
-}
+};
 
 type CodeTabsProps = {
   codes: Record<string, string>;
@@ -79,13 +105,15 @@ type CodeTabsProps = {
   onCopiedChange?: (copied: boolean, content?: string) => void;
 } & Omit<TabsProps, "children">;
 
-function CodeTabs({
+const CODE_TABS_DEFAULT_THEMES = {
+  light: "github-light",
+  dark: "github-dark",
+} as const;
+
+const CodeTabs = ({
   codes,
   lang = "bash",
-  themes = {
-    light: "github-light",
-    dark: "github-dark",
-  },
+  themes = CODE_TABS_DEFAULT_THEMES,
   className,
   defaultValue,
   value,
@@ -93,79 +121,48 @@ function CodeTabs({
   copyButton = true,
   onCopiedChange,
   ...props
-}: CodeTabsProps) {
+}: CodeTabsProps) => {
   const { resolvedTheme } = useTheme();
 
   const [highlightedCodes, setHighlightedCodes] = useState<
     Record<string, string>
   >(() => getInitialHighlightedCodes(codes, lang, resolvedTheme ?? "dark"));
-  const [selectedCode, setSelectedCode] = useState<string>(() => {
-    if (value !== undefined) {
-      return value;
-    }
-    if (defaultValue !== undefined) {
-      return defaultValue;
-    }
-    return Object.keys(codes)[0] ?? "";
-  });
+  // The package manager last picked in any tab, shared across code tabs.
+  const savedPackageManager = useSyncExternalStore(
+    subscribePackageManager,
+    getSavedPackageManager,
+    () => null
+  );
+  // A tab picked here that isn't a package manager (those go to the store).
+  const [pickedCode, setPickedCode] = useState<string | null>(null);
+  const firstCode = Object.keys(codes)[0] ?? "";
+  const savedCode =
+    savedPackageManager && savedPackageManager in codes
+      ? savedPackageManager
+      : undefined;
+  const selectedCode =
+    value ??
+    (pickedCode !== null && pickedCode in codes ? pickedCode : undefined) ??
+    savedCode ??
+    defaultValue ??
+    firstCode;
 
-  useEffect(() => {
-    if (value !== undefined) {
-      return;
-    }
+  // Same commands, same object: a new object with equal entries doesn't re-highlight.
+  const codesKey = JSON.stringify(codes);
+  const stableCodes = useMemo(
+    () => JSON.parse(codesKey) as Record<string, string>,
+    [codesKey]
+  );
 
-    const saved = getSavedPackageManager();
-    if (saved && saved in codes) {
-      setSelectedCode((prev) => (prev === saved ? prev : saved));
-    }
-  }, [codes, value]);
-
-  useEffect(() => {
-    if (value !== undefined) {
-      return;
-    }
-
-    const handlePackageManagerChange = (event: Event) => {
-      const nextValue =
-        event instanceof StorageEvent
-          ? event.newValue
-          : (event as CustomEvent<string>).detail;
-
-      if (nextValue && nextValue in codes) {
-        cachedPackageManager = nextValue;
-        setSelectedCode((prev) => (prev === nextValue ? prev : nextValue));
-      }
-    };
-
-    window.addEventListener("storage", handlePackageManagerChange);
-    window.addEventListener(
-      "package-manager-change",
-      handlePackageManagerChange
-    );
-
-    return () => {
-      window.removeEventListener("storage", handlePackageManagerChange);
-      window.removeEventListener(
-        "package-manager-change",
-        handlePackageManagerChange
-      );
-    };
-  }, [codes, value]);
-
-  const codesKey = Object.entries(codes)
-    .map(([k, v]) => `${k}:${v}`)
-    .join("|");
-
-  /* oxlint-disable react-hooks/exhaustive-deps -- codesKey tracks code content changes stably */
   useEffect(() => {
     let cancelled = false;
 
-    async function loadHighlightedCode() {
+    const loadHighlightedCode = async () => {
       const currentTheme = resolvedTheme === "dark" ? "dark" : "light";
       const missing: [string, string][] = [];
       const updated: Record<string, string> = {};
 
-      for (const [command, val] of Object.entries(codes)) {
+      for (const [command, val] of Object.entries(stableCodes)) {
         const cacheKey = `${lang}:${currentTheme}:${val}`;
         const cached = cliHighlightCache.get(cacheKey);
         if (cached) {
@@ -191,7 +188,7 @@ function CodeTabs({
       }
 
       try {
-        const { codeToHtml } = await import("shiki");
+        const { codeToHtml } = await loadShiki();
         if (cancelled) {
           return;
         }
@@ -228,15 +225,14 @@ function CodeTabs({
       } catch (error) {
         console.error("Error highlighting codes", error);
       }
-    }
+    };
 
     loadHighlightedCode();
 
     return () => {
       cancelled = true;
     };
-  }, [resolvedTheme, lang, themes.light, themes.dark, codesKey]);
-  /* oxlint-enable react-hooks/exhaustive-deps */
+  }, [resolvedTheme, lang, themes.light, themes.dark, stableCodes]);
 
   return (
     <Tabs
@@ -247,13 +243,13 @@ function CodeTabs({
       data-slot="install-tabs"
       {...props}
       onValueChange={(val) => {
-        setSelectedCode(val);
+        setPickedCode(isPackageManager(val) ? null : val);
         if (isPackageManager(val)) {
           cachedPackageManager = val;
           try {
             window.localStorage.setItem(PACKAGE_MANAGER_STORAGE_KEY, val);
             window.dispatchEvent(
-              new CustomEvent("package-manager-change", {
+              new CustomEvent(PACKAGE_MANAGER_CHANGE_EVENT, {
                 detail: val,
               })
             );
@@ -311,7 +307,7 @@ function CodeTabs({
             >
               <div className="w-full overflow-x-auto p-4 text-sm">
                 <div
-                  className="not-fumadocs-codeblock flex w-full items-start [&_.line]:!px-0 [&_code]:!text-[13px] [&>pre,_&_code]:border-none [&>pre,_&_code]:!bg-transparent [&>pre,_&_code]:[background:transparent_!important]"
+                  className="not-fumadocs-codeblock flex w-full items-start [&_.line]:px-0! [&_code]:text-[13px]! [&>pre,&_code]:border-none [&>pre,&_code]:bg-transparent! [&>pre,&_code]:[background:transparent_!important]"
                   // oxlint-disable-next-line react/no-danger -- highlighted code HTML
                   dangerouslySetInnerHTML={{
                     __html: highlightedCodes[code] ?? buildFallbackHtml(val),
@@ -324,6 +320,6 @@ function CodeTabs({
       </div>
     </Tabs>
   );
-}
+};
 
 export { CodeTabs, type CodeTabsProps };

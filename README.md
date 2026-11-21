@@ -37,7 +37,7 @@ A backend-agnostic catalogue of production-grade UI screens built on [shadcn/ui]
 | Distribution | The shadcn registry: one item per screen at `/r/<kind>-<screen>.json` |
 | Monorepo | Bun 1.4.5 workspaces, Turborepo |
 | Tests | Vitest and Testing Library (unit and wiring tests), Playwright (browser, responsive, visual, site and bridge checks), axe-core |
-| Lint | Biome, behind a ratcheting lint gate (`lint-baseline.json`) |
+| Lint | Biome for the runtime, UI package, bridge and scripts, behind a ratcheting lint gate (`lint-baseline.json`); Ultracite (oxlint and oxfmt, strict preset) for the site and the shell |
 | Hosting | Cloudflare Workers static assets (`wrangler.jsonc`), no Worker script |
 | CI | GitHub Actions (`.github/workflows/ci.yml`), CLA Assistant (`.github/workflows/cla.yml`) |
 
@@ -143,7 +143,8 @@ scripts/                           registry build, screen docs, scaffold, every 
 | Tool | Version | Used for |
 | --- | --- | --- |
 | [Bun](https://bun.sh) | 1.4.5 (`packageManager` in `package.json`) | installing packages and running every script |
-| [Node.js](https://nodejs.org) | 24 or newer | Next.js, Vite, `tsx` scripts and `wrangler` |
+| [Node.js](https://nodejs.org) | 26 LTS (`.node-version`: 26.13.1) | Next.js, Vite, `tsx` scripts and `wrangler`; CI and Cloudflare read the same file |
+| Tailwind CSS | 4.3.5 in this repository; 4.3 or later in a builder's app (the screens use 4.3 utilities such as `scrollbar-none` and `inset-s-*`) | styling |
 | Git | any | hooks; "last updated" dates on docs pages |
 | Playwright Chromium | installed by `npx playwright install chromium` | browser checks, previews, the site and bridge tests |
 
@@ -188,7 +189,7 @@ bun run dev               # site on http://localhost:3000, runtime on http://loc
 
 ```bash
 bun run build
-bunx wrangler@4 dev       # serves apps/www/out
+bunx wrangler dev         # serves apps/www/out
 ```
 
 ## What a screen is
@@ -319,7 +320,9 @@ The same reference is appended to the screen's Markdown at `/llms-screens.mdx/�
 | --- | --- |
 | `bun run typecheck` | every workspace, including the strict template settings (`tsconfig.shipped.json`) and `scripts/` |
 | `bun run test` | unit, wiring, contract and catalogue tests (Vitest) |
-| `bun run lint:gate` | no new lint problems against `lint-baseline.json` |
+| `bun run lint` | Biome on the runtime, the UI package, the bridge and `scripts/`; errors fail, warnings are printed |
+| `bun run --cwd apps/www lint`, `bun run --cwd packages/shell-ui lint` | Ultracite on the site and the shell: oxlint (errors fail, warnings are printed) and an oxfmt format check |
+| `bun run lint:gate` | no new lint errors against `lint-baseline.json` (empty: there is no lint debt); warnings are listed, and annotated in CI, but never fail |
 | `bun run spdx:check` | the MIT licence header on every source file |
 | `bun run --cwd apps/www screens:check` | the manifest, sidebar and MDX pages match the catalogue |
 | `bun run --cwd apps/www screens:docs --check` | every screen's usage example typechecks against the screen |
@@ -340,11 +343,14 @@ The pre-push hook runs the typecheck, the licence check, the lint gate and the t
 | Job | Steps |
 | --- | --- |
 | Typecheck, licence headers, tests, build, bundle budget | `typecheck`, `spdx:check`, `test`, `build`, `test:bundle` |
-| Lint | `lint:gate` (and the full report, informational) |
+| Lint | `lint:gate`, `lint`, then Ultracite on the site and the shell; lint errors or unformatted files fail the run, warnings are reported only |
 | Install | `test:install` |
 | Browser check | `test:browser`, report uploaded |
 | Responsive audit | `audit:responsive -- --strict`, report uploaded |
 | Site | `screens:check`, `test:bridge`, `build`, `screens:docs --check`, `test:site` |
+| Deploy to Cloudflare Workers | runs only when every job above passed: production on a push to `main`, a Preview on a pull request from this repository (see [Production deployment](#production-deployment)) |
+
+Every job reads Node from `.node-version`. Runs on `main` are never cancelled by a newer push, so a deploy never stops halfway; a newer push to a pull request cancels its older run. `.github/workflows/preview-cleanup.yml` deletes a pull request's Preview when it closes.
 
 `.github/workflows/cla.yml` asks first-time contributors to sign the [CLA](CLA.md); signatures live in `signatures/cla.json` on `main`.
 
@@ -352,30 +358,99 @@ The pre-push hook runs the typecheck, the licence check, the lint gate and the t
 
 ### What gets deployed
 
-`bun run build` writes everything to `apps/www/out`: the site's static export, the registry under `/r`, and the runtime's prerendered `/preview` pages, `/demo` and assets. `wrangler.jsonc` serves that folder as Cloudflare Workers static assets, with no Worker script: `html_handling: "auto-trailing-slash"`, and unknown paths get the site's `404.html`. `apps/www/public/_headers` sets security and caching headers and the content types of the extensionless Markdown and API files; `apps/www/public/_redirects` holds the short-path redirects.
+`bun run build` writes everything to `apps/www/out`: the site's static export, the registry under `/r`, and the runtime's prerendered `/preview` pages, `/demo` and assets. `wrangler.jsonc` serves that folder as Cloudflare Workers static assets, with no Worker script: `html_handling: "auto-trailing-slash"`, and unknown paths get the site's `404.html`. `apps/www/public/_headers` sets security and caching headers and the content types of the extensionless Markdown and API files; `apps/www/public/_redirects` holds the short-path redirects. Workers static assets read both files, so nothing here needs Cloudflare Pages.
 
-### Cloudflare Workers Builds
+There are two ways to deploy. Use one of them, never both: each would deploy every push to `main` on its own.
 
-The live site deploys from `main` with Workers Builds (_Workers & Pages → wirefront → Settings → Build_):
+| | Option 1: GitHub Actions (used by the live site) | Option 2: Cloudflare Workers Builds |
+| --- | --- | --- |
+| Who builds | the `deploy` job in `.github/workflows/ci.yml` | Cloudflare, from the connected repository |
+| When production updates | after every CI job has passed on `main` | on every push to `main`, whether or not CI passed |
+| Pull request previews | a Preview per pull request (`pr-<number>`), deleted when it closes | Cloudflare's preview builds for non-production branches |
+| Credentials | a Cloudflare API token in GitHub secrets | none in GitHub; Cloudflare's GitHub app |
+| Build logs | the Actions run | the Worker's _Deployments_ page |
 
-| Setting | Value |
-| --- | --- |
-| Production branch | `main` |
-| Build command | `bun run build` |
-| Deploy command | `npx wrangler deploy` |
-| Root directory | the repository root |
-| Build variable `VITE_SITE_URL` | `https://wirefront.mantavyam.in` (canonical and OG URLs of the runtime's pages) |
+### Option 1: GitHub Actions
 
-The site's own origin is `SITE_URL` in `apps/www/lib/site.ts`.
+One-time setup:
+
+1. **Create the Worker** (first deploy only). From a machine signed in with `bunx wrangler login`:
+
+   ```bash
+   VITE_SITE_URL=https://wirefront.mantavyam.in bun run build
+   bunx wrangler deploy
+   ```
+
+   This creates the `wirefront` Worker (`name` in `wrangler.jsonc`). Skip it if the Worker already exists.
+
+2. **Add the custom domain.** _Workers & Pages → wirefront → Settings → Domains & Routes → Add → Custom domain_: `wirefront.mantavyam.in`. Cloudflare creates the DNS record and the certificate.
+
+3. **Turn on Preview URLs.** _Settings → Domains & Routes_: enable **Preview URLs** for `workers.dev`. `wrangler.jsonc` sets `"preview_urls": true`, so the next deploy turns it on too.
+
+4. **Create an API token.** _My Profile → API Tokens → Create Token → Edit Cloudflare Workers_ template. Scope it to your account (and the zone, if the template asks). Copy the token.
+
+5. **Find the account ID.** _Workers & Pages_ overview, right-hand column, **Account ID**.
+
+6. **Add them to GitHub.** In the repository, _Settings → Secrets and variables → Actions_:
+
+   | Kind | Name | Value |
+   | --- | --- | --- |
+   | Secret | `CLOUDFLARE_API_TOKEN` | the token from step 4 |
+   | Secret | `CLOUDFLARE_ACCOUNT_ID` | the ID from step 5 |
+   | Variable | `VITE_SITE_URL` | `https://wirefront.mantavyam.in` |
+
+   The deploy job checks for all three first and fails with the names of any that are missing.
+
+7. **Disconnect Workers Builds** if it was connected: _Settings → Build → Git repository → Disconnect_. Otherwise both deploy every push.
+
+After that:
+
+- **Production:** push or merge to `main`. When every CI job has passed, the `deploy` job builds with `VITE_SITE_URL` and runs `wrangler deploy --message <commit>`. The run summary names the commit.
+- **Previews:** open a pull request from a branch of this repository. When its checks pass, the job runs `wrangler preview --name pr-<number>` and puts the Preview URL in the run summary; each new push updates it. Pull requests from forks are checked but never deployed, since forks get no secrets. Closing or merging deletes the Preview (`preview-cleanup.yml`). Workers Previews are in open beta.
+- **A failed check** stops the deploy: nothing reaches production or the Preview until the run is green.
+- **Re-deploy without a new commit:** _Actions → CI → the run → Re-run all jobs_.
+
+### Option 2: Cloudflare Workers Builds
+
+Cloudflare builds and deploys from Git; GitHub Actions still runs the checks but deploys nothing.
+
+1. **Remove the Actions deploy.** Delete the `deploy` job from `.github/workflows/ci.yml` and delete `.github/workflows/preview-cleanup.yml`, then the GitHub secrets from option 1.
+
+2. **Connect the repository.** _Workers & Pages → wirefront → Settings → Build → Git repository → Connect_, pick `mantavyamstudios/wirefront`. For a new Worker: _Workers & Pages → Create → Import a repository_.
+
+3. **Build settings** (_Settings → Build_):
+
+   | Setting | Value |
+   | --- | --- |
+   | Production branch | `main` |
+   | Build command | `bun run build` |
+   | Deploy command | `npx wrangler deploy` |
+   | Non-production branch deploy command | `npx wrangler preview` (or turn off preview builds) |
+   | Root directory | the repository root (`/`) |
+   | Build variable `VITE_SITE_URL` | `https://wirefront.mantavyam.in` |
+
+   Cloudflare reads Node's version from `.node-version` and Bun's from `packageManager` in `package.json`.
+
+4. **Custom domain:** as step 2 of option 1.
+
+5. **Push to `main`.** The build log is under _Deployments_. A push deploys even when CI fails, so check the Actions run before merging.
 
 ### Manual deploy
 
+From any machine, with the same token and account ID as option 1:
+
 ```bash
-bun run build
-CLOUDFLARE_ACCOUNT_ID=… CLOUDFLARE_API_TOKEN=… bunx wrangler@4 deploy
+VITE_SITE_URL=https://wirefront.mantavyam.in bun run build
+CLOUDFLARE_ACCOUNT_ID=… CLOUDFLARE_API_TOKEN=… bunx wrangler deploy
 ```
 
-Roll back from _Workers & Pages → wirefront → Deployments_.
+`bunx wrangler deploy --dry-run` checks the config and lists what would upload, without deploying.
+
+### Rollback
+
+_Workers & Pages → wirefront → Deployments_, pick an earlier deployment, **Rollback**. Or from a terminal: `bunx wrangler rollback` (the previous version) or `bunx wrangler rollback <version-id>`; `bunx wrangler deployments list` lists them. A rollback holds until the next deploy, so revert the bad commit on `main` too.
+
+The site's own origin is `SITE_URL` in `apps/www/lib/site.ts`; `VITE_SITE_URL` sets the canonical and OG URLs of the runtime's pages.
 
 ## Configuration reference
 
@@ -390,7 +465,7 @@ Roll back from _Workers & Pages → wirefront → Deployments_.
 | Docs pages and their order | `apps/www/content/docs/*.mdx`, `apps/www/content/docs/meta.json` |
 | Dev origins | `apps/www/.env.development` (`NEXT_PUBLIC_RUNTIME_ORIGIN`), `apps/runtime/.env.development` (`VITE_SHELL_ORIGIN`) |
 | Response headers, redirects | `apps/www/public/_headers`, `apps/www/public/_redirects` |
-| Deployment | `wrangler.jsonc` |
+| Deployment | `wrangler.jsonc`, `.github/workflows/ci.yml` (`deploy` job), `.github/workflows/preview-cleanup.yml` |
 | Registry build (targets, CSS variables, dependencies) | `scripts/build-registry.ts` |
 | Lint, bundle and accessibility baselines | `lint-baseline.json`, `bundle-budget.json`, `a11y-baseline.json` |
 
@@ -406,7 +481,7 @@ Roll back from _Workers & Pages → wirefront → Deployments_.
 | `bun run --cwd apps/www screens:manifest` | sync the manifest, sidebar and MDX pages |
 | `bun run --cwd apps/www screens:docs` | write the screen reference docs (`--check` to typecheck the usage examples) |
 | `bun run snapshot` | capture previews (`-- --design=<kind>/<screen>`; `SNAPSHOT_ONLY_MISSING=1` for missing ones) |
-| `bunx wrangler@4 dev` | serve `apps/www/out` locally |
+| `bunx wrangler dev` | serve `apps/www/out` locally, as Cloudflare does |
 | `bun run lint:baseline` | re-record the lint baseline after fixing lint debt |
 
 ## Contributing

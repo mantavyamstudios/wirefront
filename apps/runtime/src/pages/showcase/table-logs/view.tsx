@@ -106,7 +106,7 @@ const SEVERITY: Record<LogSeverity, { dot: string; label: string }> = {
 };
 const SKELETON_ROWS = ["s1", "s2", "s3", "s4", "s5", "s6"];
 const tag = "h-4.5 rounded-sm px-1 text-[0.625rem]";
-const codeBlock = "rounded-md border border-border/60 bg-foreground/[0.03] p-3 font-mono leading-relaxed text-foreground/90";
+const codeBlock = "rounded-md border border-border/60 bg-foreground/3 p-3 font-mono leading-relaxed text-foreground/90";
 
 /** Copy to the clipboard and say whether it worked. */
 function useCopy() {
@@ -158,7 +158,7 @@ function Details({
 
   const copyButton = (key: string, text: string) => (
     <button
-      className="inline-flex min-h-6 items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:min-h-9"
+      className="inline-flex min-h-6 items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:bg-foreground/5 hover:text-foreground pointer-coarse:min-h-9"
       onClick={() => void clip.copy(key, text)}
       type="button"
     >
@@ -168,15 +168,15 @@ function Details({
   );
 
   const keyVal = (label: string, value: string, copyable?: boolean) => (
-    <div className="group flex items-baseline justify-between gap-3 rounded-md px-2 py-1 transition-colors focus-within:bg-foreground/[0.03] hover:bg-foreground/[0.03]" key={label}>
+    <div className="group flex items-baseline justify-between gap-3 rounded-md px-2 py-1 transition-colors focus-within:bg-foreground/3 hover:bg-foreground/3" key={label}>
       <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{label}</span>
       <span className="flex items-center gap-1.5">
-        <span className="min-w-0 max-w-[55vw] truncate font-mono text-[12px] text-foreground/90 sm:max-w-[260px]">{value}</span>
+        <span className="min-w-0 max-w-[55vw] truncate font-mono text-[12px] text-foreground/90 sm:max-w-65">{value}</span>
         {copyable ? (
           <button
             aria-label={interpolate(clip.copied(label) ? t.copiedLabel : t.copyLabel, { label })}
             // Hover reveal on desktop; always visible on touch and when focused.
-            className="inline-flex size-6 items-center justify-center rounded text-muted-foreground opacity-0 transition-opacity hover:bg-foreground/[0.05] hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-9 pointer-coarse:opacity-100"
+            className="inline-flex size-6 items-center justify-center rounded text-muted-foreground opacity-0 transition-opacity hover:bg-foreground/5 hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:size-9 pointer-coarse:opacity-100"
             onClick={() => void clip.copy(label, value)}
             type="button"
           >
@@ -235,7 +235,7 @@ function Details({
                     <span className="text-muted-foreground">{part.label}</span>
                     <span className="tabular-nums">{interpolate(t.milliseconds, { ms: format.number(part.ms) })}</span>
                   </div>
-                  <div aria-hidden className="mt-1 h-1 overflow-hidden rounded-full bg-foreground/[0.06]">
+                  <div aria-hidden className="mt-1 h-1 overflow-hidden rounded-full bg-foreground/6">
                     <div className="h-full rounded-full bg-foreground/70" style={{ width: `${timingTotal ? (part.ms / timingTotal) * 100 : 0}%` }} />
                   </div>
                 </li>
@@ -356,11 +356,11 @@ function LogsTableScreen({
     body = entries.map((e) => {
       const active = selectedId === e.id;
       return (
-        <TableRow className={cn("group transition-colors", active ? "bg-foreground/[0.06]" : e.severity === "error" ? "bg-destructive/[0.04] hover:bg-destructive/[0.08]" : "hover:bg-foreground/[0.03]")} key={e.id}>
+        <TableRow className={cn("group transition-colors", active ? "bg-foreground/6" : e.severity === "error" ? "bg-destructive/4 hover:bg-destructive/8" : "hover:bg-foreground/3")} key={e.id}>
           {/* Pinned cell is opaque, so it mixes the row tint into the card colour. */}
           <TableCell
             className={cn(
-              "sticky start-0 z-10 ps-4 text-muted-foreground tabular-nums transition-colors",
+              "sticky inset-s-0 z-10 ps-4 text-muted-foreground tabular-nums transition-colors",
               active
                 ? "bg-[color-mix(in_srgb,var(--card),var(--foreground)_6%)]"
                 : e.severity === "error"
@@ -459,10 +459,10 @@ function LogsTableScreen({
           does); Time stays pinned so each row keeps its timestamp.
         */}
         <div className="overflow-hidden rounded-xl border bg-card font-mono shadow-xs/5">
-          <Table aria-busy={status === "loading"} className="min-w-[860px] text-xs">
+          <Table aria-busy={status === "loading"} className="min-w-215 text-xs">
             <TableHeader>
               <TableRow className="border-b bg-background">
-                <TableHead className="sticky start-0 z-10 bg-background ps-4 text-[10px] uppercase tracking-wider">{t.columnTime}</TableHead>
+                <TableHead className="sticky inset-s-0 z-10 bg-background ps-4 text-[10px] uppercase tracking-wider">{t.columnTime}</TableHead>
                 <TableHead className="text-[10px] uppercase tracking-wider">{t.columnLevel}</TableHead>
                 <TableHead className="text-[10px] uppercase tracking-wider">{t.columnService}</TableHead>
                 <TableHead className="text-[10px] uppercase tracking-wider">{t.columnRequest}</TableHead>
@@ -481,7 +481,7 @@ function LogsTableScreen({
       </div>
 
       <Sheet onOpenChange={(open) => !open && setSelectedId(undefined)} open={Boolean(selected)}>
-        <SheetContent className={isPhone ? "max-h-[85svh]" : "!max-w-xl"} side={isPhone ? "bottom" : "right"}>
+        <SheetContent className={isPhone ? "max-h-[85svh]" : "max-w-xl!"} side={isPhone ? "bottom" : "right"}>
           {selected ? <Details entry={selected} key={selected.id} onNotifyOncall={onNotifyOncall} onRetryRequest={onRetryRequest} traceHref={traceHref} /> : null}
         </SheetContent>
       </Sheet>

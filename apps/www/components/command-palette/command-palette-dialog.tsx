@@ -92,7 +92,7 @@ const THEME_GROUP: CommandPaletteGroup = {
 };
 
 /** Section label shown beside a full-text search result. */
-function searchHint(url: string): string | undefined {
+const searchHint = (url: string): string | undefined => {
   if (url.startsWith("/docs")) {
     return "Docs";
   }
@@ -101,15 +101,15 @@ function searchHint(url: string): string | undefined {
     return "Screen";
   }
   return undefined;
-}
+};
 
-function CommandPaletteIconGlyph({
+const CommandPaletteIconGlyph = ({
   icon,
   className,
 }: {
   icon: CommandPaletteIcon;
   className?: string;
-}) {
+}) => {
   const iconClassName = cn("mr-2 size-4 shrink-0", className);
 
   switch (icon) {
@@ -134,9 +134,9 @@ function CommandPaletteIconGlyph({
       return <ArrowRight className={iconClassName} strokeWidth={1.5} />;
     }
   }
-}
+};
 
-function SearchResultIcon({ type }: { type: "heading" | "page" | "text" }) {
+const SearchResultIcon = ({ type }: { type: "heading" | "page" | "text" }) => {
   if (type === "page") {
     return (
       <FileText
@@ -156,7 +156,7 @@ function SearchResultIcon({ type }: { type: "heading" | "page" | "text" }) {
   }
 
   return null;
-}
+};
 
 interface SearchResultItem {
   content: string;
@@ -165,13 +165,13 @@ interface SearchResultItem {
   url: string;
 }
 
-function CommandSearchResultItem({
+const CommandSearchResultItem = ({
   onSelect,
   result,
 }: {
   onSelect: () => void;
   result: SearchResultItem;
-}) {
+}) => {
   const isPage = result.type === "page";
   const isNested = !isPage;
   const hint = searchHint(result.url);
@@ -203,9 +203,9 @@ function CommandSearchResultItem({
       ) : null}
     </CommandHighlightItem>
   );
-}
+};
 
-function ThemeActionIcon({ action }: { action: CommandPaletteActionId }) {
+const ThemeActionIcon = ({ action }: { action: CommandPaletteActionId }) => {
   const className = "mr-2 size-4 shrink-0";
 
   switch (action) {
@@ -222,19 +222,18 @@ function ThemeActionIcon({ action }: { action: CommandPaletteActionId }) {
       return null;
     }
   }
-}
+};
 
-function filterGroupsByQuery(
+const filterGroupsByQuery = (
   groups: CommandPaletteGroup[],
   query: string
-): CommandPaletteGroup[] {
-  return groups.flatMap((group) => {
+): CommandPaletteGroup[] =>
+  groups.flatMap((group) => {
     const items = group.items.filter((item) =>
       matchesCommandQuery(item.searchValue, query)
     );
     return items.length > 0 ? [{ ...group, items }] : [];
   });
-}
 
 interface CommandPaletteDialogProps {
   groups: CommandPaletteGroup[];
@@ -242,25 +241,32 @@ interface CommandPaletteDialogProps {
   open: boolean;
 }
 
-export function CommandPaletteDialog({
+export const CommandPaletteDialog = ({
   open,
   onOpenChange,
   groups,
-}: CommandPaletteDialogProps) {
+}: CommandPaletteDialogProps) => {
   const { transitionTo } = usePageTransition();
   const { setTheme } = useTheme();
   const { search, setSearch, query } = useCommandPaletteSearch();
   const listRef = useRef<HTMLDivElement>(null);
   const [scrollLocked, setScrollLocked] = useState(false);
 
-  useEffect(() => {
+  // Opening locks the list's scroll while it grows; closing clears the search.
+  const [lastOpen, setLastOpen] = useState<boolean | null>(null);
+  if (lastOpen !== open) {
+    setLastOpen(open);
+    setScrollLocked(open);
     if (!open) {
       setSearch("");
-      setScrollLocked(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!open) {
       return;
     }
 
-    setScrollLocked(true);
     listRef.current?.scrollTo({ top: 0 });
 
     const timeout = window.setTimeout(() => {
@@ -269,7 +275,7 @@ export function CommandPaletteDialog({
     }, COMMAND_LIST_HEIGHT_DURATION_MS);
 
     return () => window.clearTimeout(timeout);
-  }, [open, setSearch]);
+  }, [open]);
 
   // Reset list scroll to top whenever query text or async search results change
   useEffect(() => {
@@ -314,11 +320,13 @@ export function CommandPaletteDialog({
   );
 
   const navigate = useCallback(
-    (href: string) => {
+    async (href: string) => {
       onOpenChange(false);
-      transitionTo(href).catch((error) => {
+      try {
+        await transitionTo(href);
+      } catch (error) {
         console.error("Command palette navigation failed", error);
-      });
+      }
     },
     [onOpenChange, transitionTo]
   );
@@ -398,11 +406,11 @@ export function CommandPaletteDialog({
           "bg-popover flex max-h-[85dvh] w-full max-w-xl flex-col gap-0 overflow-hidden rounded-2xl border p-0 shadow-lg outline-none",
           "md:max-h-none"
         )}
-        containerClassName="z-[1001] items-start pt-[max(1rem,10dvh)] md:pt-[max(1rem,calc(50vh-220px))]"
+        containerClassName="z-1001 items-start pt-[max(1rem,10dvh)] md:pt-[max(1rem,calc(50vh-220px))]"
         initialFocus={() =>
           document.querySelector<HTMLElement>('[data-slot="command-input"]')
         }
-        overlayClassName="z-[1000]"
+        overlayClassName="z-1000"
         showCloseButton={false}
       >
         <DialogTitle className="sr-only">
@@ -496,4 +504,4 @@ export function CommandPaletteDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};

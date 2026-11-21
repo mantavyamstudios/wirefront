@@ -16,22 +16,20 @@ interface AlertDialogContextValue {
 
 const AlertDialogContext = createContext<AlertDialogContextValue | null>(null);
 
-function useAlertDialogContext() {
-  return useContext(AlertDialogContext);
-}
+const useAlertDialogContext = () => useContext(AlertDialogContext);
 
 type AlertDialogProps = ComponentProps<typeof AlertDialogPrimitive.Root>;
 
 /**
  * Root container for the Alert Dialog component powered by Base UI and Motion.
  */
-function AlertDialog({
+const AlertDialog = ({
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
   children,
   ...props
-}: AlertDialogProps) {
+}: AlertDialogProps) => {
   const [open, setOpen] = useControlledState({
     defaultValue: defaultOpen,
     onChange: (nextOpen: boolean) => {
@@ -59,7 +57,7 @@ function AlertDialog({
       </AlertDialogPrimitive.Root>
     </AlertDialogContext.Provider>
   );
-}
+};
 
 interface AlertDialogTriggerProps extends ComponentProps<
   typeof AlertDialogPrimitive.Trigger
@@ -71,13 +69,13 @@ interface AlertDialogTriggerProps extends ComponentProps<
  * Trigger element that opens the alert dialog.
  * Features Motion hover and tap scaling.
  */
-function AlertDialogTrigger({
+const AlertDialogTrigger = ({
   className,
   render,
   asChild,
   children,
   ...props
-}: AlertDialogTriggerProps) {
+}: AlertDialogTriggerProps) => {
   const prefersReducedMotion = useReducedMotion();
 
   const renderedElement =
@@ -102,7 +100,7 @@ function AlertDialogTrigger({
       {...props}
     />
   );
-}
+};
 
 type AlertDialogPortalProps = ComponentProps<
   typeof AlertDialogPrimitive.Portal
@@ -111,11 +109,9 @@ type AlertDialogPortalProps = ComponentProps<
 /**
  * Portals alert dialog overlay and content to the document body.
  */
-function AlertDialogPortal({ ...props }: AlertDialogPortalProps) {
-  return (
-    <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />
-  );
-}
+const AlertDialogPortal = ({ ...props }: AlertDialogPortalProps) => (
+  <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />
+);
 
 type AlertDialogOverlayProps = ComponentProps<
   typeof AlertDialogPrimitive.Backdrop
@@ -124,11 +120,11 @@ type AlertDialogOverlayProps = ComponentProps<
 /**
  * Semi-transparent backdrop overlay behind the alert dialog with blur and fade transition.
  */
-function AlertDialogOverlay({
+const AlertDialogOverlay = ({
   className,
   render,
   ...props
-}: AlertDialogOverlayProps) {
+}: AlertDialogOverlayProps) => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
@@ -155,7 +151,7 @@ function AlertDialogOverlay({
       {...props}
     />
   );
-}
+};
 
 type AlertDialogViewportProps = ComponentProps<
   typeof AlertDialogPrimitive.Viewport
@@ -164,21 +160,19 @@ type AlertDialogViewportProps = ComponentProps<
 /**
  * Optional scroll viewport wrapper for overflowing alert dialog content.
  */
-function AlertDialogViewport({
+const AlertDialogViewport = ({
   className,
   ...props
-}: AlertDialogViewportProps) {
-  return (
-    <AlertDialogPrimitive.Viewport
-      className={cn(
-        "fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4",
-        className
-      )}
-      data-slot="alert-dialog-viewport"
-      {...props}
-    />
-  );
-}
+}: AlertDialogViewportProps) => (
+  <AlertDialogPrimitive.Viewport
+    className={cn(
+      "fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4",
+      className
+    )}
+    data-slot="alert-dialog-viewport"
+    {...props}
+  />
+);
 
 interface AlertDialogContentProps extends ComponentProps<
   typeof AlertDialogPrimitive.Popup
@@ -206,7 +200,7 @@ interface AlertDialogContentProps extends ComponentProps<
 /**
  * Modal alert dialog content container with Motion 3D perspective rotation and blur entrance/exit animations.
  */
-function AlertDialogContent({
+const AlertDialogContent = ({
   className,
   children,
   size = "default",
@@ -216,7 +210,7 @@ function AlertDialogContent({
   render,
   style,
   ...props
-}: AlertDialogContentProps) {
+}: AlertDialogContentProps) => {
   const context = useAlertDialogContext();
   const prefersReducedMotion = useReducedMotion();
   const isOpen = context ? context.open : true;
@@ -329,61 +323,55 @@ function AlertDialogContent({
       )}
     </AnimatePresence>
   );
-}
+};
 
 type AlertDialogHeaderProps = ComponentProps<"div">;
 
 /**
  * Header section containing alert dialog title, description, and optional media slot.
  */
-function AlertDialogHeader({ className, ...props }: AlertDialogHeaderProps) {
-  return (
-    <div
-      className={cn(
-        "grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]",
-        className
-      )}
-      data-slot="alert-dialog-header"
-      {...props}
-    />
-  );
-}
+const AlertDialogHeader = ({ className, ...props }: AlertDialogHeaderProps) => (
+  <div
+    className={cn(
+      "grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]",
+      className
+    )}
+    data-slot="alert-dialog-header"
+    {...props}
+  />
+);
 
 type AlertDialogMediaProps = ComponentProps<"div">;
 
 /**
  * Icon or media container positioned nicely within the alert dialog header.
  */
-function AlertDialogMedia({ className, ...props }: AlertDialogMediaProps) {
-  return (
-    <div
-      className={cn(
-        "bg-muted text-foreground mb-2 inline-flex size-10 items-center justify-center rounded-md sm:group-data-[size=default]/alert-dialog-content:row-span-2 *:[svg:not([class*='size-'])]:size-6",
-        className
-      )}
-      data-slot="alert-dialog-media"
-      {...props}
-    />
-  );
-}
+const AlertDialogMedia = ({ className, ...props }: AlertDialogMediaProps) => (
+  <div
+    className={cn(
+      "bg-muted text-foreground mb-2 inline-flex size-10 items-center justify-center rounded-md sm:group-data-[size=default]/alert-dialog-content:row-span-2 *:[svg:not([class*='size-'])]:size-6",
+      className
+    )}
+    data-slot="alert-dialog-media"
+    {...props}
+  />
+);
 
 type AlertDialogTitleProps = ComponentProps<typeof AlertDialogPrimitive.Title>;
 
 /**
  * Accessible title heading for the alert dialog.
  */
-function AlertDialogTitle({ className, ...props }: AlertDialogTitleProps) {
-  return (
-    <AlertDialogPrimitive.Title
-      className={cn(
-        "text-foreground text-base font-semibold tracking-tight sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2",
-        className
-      )}
-      data-slot="alert-dialog-title"
-      {...props}
-    />
-  );
-}
+const AlertDialogTitle = ({ className, ...props }: AlertDialogTitleProps) => (
+  <AlertDialogPrimitive.Title
+    className={cn(
+      "text-foreground text-base font-semibold tracking-tight sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2",
+      className
+    )}
+    data-slot="alert-dialog-title"
+    {...props}
+  />
+);
 
 type AlertDialogDescriptionProps = ComponentProps<
   typeof AlertDialogPrimitive.Description
@@ -392,39 +380,35 @@ type AlertDialogDescriptionProps = ComponentProps<
 /**
  * Accessible description explaining the alert prompt or confirmation warning.
  */
-function AlertDialogDescription({
+const AlertDialogDescription = ({
   className,
   ...props
-}: AlertDialogDescriptionProps) {
-  return (
-    <AlertDialogPrimitive.Description
-      className={cn(
-        "text-muted-foreground *:[a]:hover:text-foreground text-sm text-balance sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2 md:text-pretty *:[a]:underline *:[a]:underline-offset-3",
-        className
-      )}
-      data-slot="alert-dialog-description"
-      {...props}
-    />
-  );
-}
+}: AlertDialogDescriptionProps) => (
+  <AlertDialogPrimitive.Description
+    className={cn(
+      "text-muted-foreground *:[a]:hover:text-foreground text-sm text-balance sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2 md:text-pretty *:[a]:underline *:[a]:underline-offset-3",
+      className
+    )}
+    data-slot="alert-dialog-description"
+    {...props}
+  />
+);
 
 type AlertDialogFooterProps = ComponentProps<"div">;
 
 /**
  * Footer section for alert dialog action buttons with responsive layouts.
  */
-function AlertDialogFooter({ className, ...props }: AlertDialogFooterProps) {
-  return (
-    <div
-      className={cn(
-        "border-border bg-muted/40 mt-2 flex flex-col-reverse gap-2 rounded-b-xl border-t p-4 group-data-[size=default]/alert-dialog-content:-mx-6 group-data-[size=default]/alert-dialog-content:-mb-6 group-data-[size=sm]/alert-dialog-content:-mx-4 group-data-[size=sm]/alert-dialog-content:-mb-4 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end",
-        className
-      )}
-      data-slot="alert-dialog-footer"
-      {...props}
-    />
-  );
-}
+const AlertDialogFooter = ({ className, ...props }: AlertDialogFooterProps) => (
+  <div
+    className={cn(
+      "border-border bg-muted/40 mt-2 flex flex-col-reverse gap-2 rounded-b-xl border-t p-4 group-data-[size=default]/alert-dialog-content:-mx-6 group-data-[size=default]/alert-dialog-content:-mb-6 group-data-[size=sm]/alert-dialog-content:-mx-4 group-data-[size=sm]/alert-dialog-content:-mb-4 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end",
+      className
+    )}
+    data-slot="alert-dialog-footer"
+    {...props}
+  />
+);
 
 interface AlertDialogActionProps extends ComponentProps<typeof Button> {
   asChild?: boolean;
@@ -438,13 +422,13 @@ interface AlertDialogActionProps extends ComponentProps<typeof Button> {
 /**
  * Primary action button for the alert dialog.
  */
-function AlertDialogAction({
+const AlertDialogAction = ({
   className,
   closeOnClick = false,
   variant = "default",
   asChild: _asChild,
   ...props
-}: AlertDialogActionProps) {
+}: AlertDialogActionProps) => {
   if (closeOnClick) {
     return (
       <AlertDialogPrimitive.Close
@@ -462,7 +446,7 @@ function AlertDialogAction({
       {...props}
     />
   );
-}
+};
 
 interface AlertDialogCancelProps extends ComponentProps<typeof Button> {
   asChild?: boolean;
@@ -471,33 +455,31 @@ interface AlertDialogCancelProps extends ComponentProps<typeof Button> {
 /**
  * Cancel or dismiss button that closes the alert dialog without proceeding.
  */
-function AlertDialogCancel({
+const AlertDialogCancel = ({
   className,
   variant = "outline",
   size = "default",
   asChild: _asChild,
   ...props
-}: AlertDialogCancelProps) {
-  return (
-    <AlertDialogPrimitive.Close
-      className={className}
-      data-slot="alert-dialog-cancel"
-      render={<Button size={size} variant={variant} />}
-      {...props}
-    />
-  );
-}
+}: AlertDialogCancelProps) => (
+  <AlertDialogPrimitive.Close
+    className={className}
+    data-slot="alert-dialog-cancel"
+    render={<Button size={size} variant={variant} />}
+    {...props}
+  />
+);
 
 type AlertDialogCloseProps = ComponentProps<typeof AlertDialogPrimitive.Close>;
 
 /**
  * Generic close button wrapper for closing the alert dialog.
  */
-function AlertDialogClose({
+const AlertDialogClose = ({
   className,
   render,
   ...props
-}: AlertDialogCloseProps) {
+}: AlertDialogCloseProps) => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
@@ -516,7 +498,7 @@ function AlertDialogClose({
       {...props}
     />
   );
-}
+};
 
 export type {
   AlertDialogActionProps,

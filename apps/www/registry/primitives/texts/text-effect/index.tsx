@@ -1,10 +1,11 @@
-/* oxlint-disable react/no-array-index-key, react-doctor/no-array-index-as-key -- Segment indices are stable for static text content. */
+/* oxlint-disable react/no-array-index-key -- Segment indices are stable for static text content. */
 "use client";
 
 import { cn } from "@workspace/ui/lib/utils";
 import {
   AnimatePresence,
   motion,
+  stagger,
   useInView,
   useReducedMotion,
 } from "motion/react";
@@ -80,15 +81,15 @@ const defaultContainerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05,
+      delayChildren: stagger(0.05),
     },
   },
   exit: {
-    transition: { staggerChildren: 0.05, staggerDirection: -1 },
+    transition: { delayChildren: stagger(0.05, { from: "last" }) },
   },
 };
 
-const WHITESPACE_SPLIT_RE = /(\s+)/;
+const WHITESPACE_SPLIT_RE = /(?<space>\s+)/u;
 
 const presetVariants: Record<
   TextEffectPreset,
@@ -200,48 +201,41 @@ const AnimationComponent = memo(
 );
 AnimationComponent.displayName = "AnimationComponent";
 
-function splitText(text: string, per: TextEffectPer) {
+const splitText = (text: string, per: TextEffectPer) => {
   if (per === "line") {
     return text.split("\n");
   }
 
   return text.split(WHITESPACE_SPLIT_RE);
-}
+};
 
-function hasTransition(
+const hasTransition = (
   variant?: Variant
-): variant is TargetAndTransition & { transition?: Transition } {
+): variant is TargetAndTransition & { transition?: Transition } => {
   if (!variant) {
     return false;
   }
 
   return typeof variant === "object" && "transition" in variant;
-}
+};
 
-function createVariantsWithTransition(
+const createVariantsWithTransition = (
   baseVariants: Variants,
   transition?: Transition & { exit?: Transition }
-): Variants {
+): Variants => {
   if (!transition) {
     return baseVariants;
   }
 
-  const { exit: _exit, ...mainTransition } = transition;
+  const { exit, ...mainTransition } = transition;
 
   const visibleTransition = hasTransition(baseVariants.visible)
     ? { ...baseVariants.visible.transition, ...mainTransition }
     : { ...mainTransition };
 
   const exitTransition = hasTransition(baseVariants.exit)
-    ? {
-        ...baseVariants.exit.transition,
-        ...mainTransition,
-        staggerDirection: -1 as const,
-      }
-    : {
-        ...mainTransition,
-        staggerDirection: -1 as const,
-      };
+    ? { ...baseVariants.exit.transition, ...mainTransition, ...exit }
+    : { ...mainTransition, ...exit };
 
   return {
     ...baseVariants,
@@ -254,23 +248,21 @@ function createVariantsWithTransition(
       transition: exitTransition,
     },
   };
-}
+};
 
-export function blurRevealItemVariants({
+export const blurRevealItemVariants = ({
   blur = 4,
   yOffset = 0,
 }: {
   blur?: number;
   yOffset?: number;
-} = {}): Variants {
-  return {
-    hidden: { opacity: 0, y: yOffset, filter: `blur(${blur}px)` },
-    visible: { opacity: 1, y: 0, filter: "blur(0px)" },
-    exit: { opacity: 0, y: yOffset, filter: `blur(${blur}px)` },
-  };
-}
+} = {}): Variants => ({
+  hidden: { opacity: 0, y: yOffset, filter: `blur(${blur}px)` },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+  exit: { opacity: 0, y: yOffset, filter: `blur(${blur}px)` },
+});
 
-export function TextEffect({
+export const TextEffect = ({
   children,
   per = "word",
   as = "p",
@@ -290,7 +282,7 @@ export function TextEffect({
   containerTransition,
   segmentTransition,
   style,
-}: TextEffectProps) {
+}: TextEffectProps) => {
   const prefersReducedMotion = useReducedMotion();
   const scrollRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(scrollRef, {
@@ -303,29 +295,25 @@ export function TextEffect({
 
   const computedVariants = useMemo(() => {
     const baseVariants = presetVariants[preset];
-    const stagger = defaultStaggerTimes[per] / speedReveal;
+    const interval = defaultStaggerTimes[per] / speedReveal;
     const baseDuration = 0.3 / speedSegment;
 
     const fallbackContainer = variants?.container ?? baseVariants.container;
     const fallbackItem = variants?.item ?? baseVariants.item;
 
     const visibleVariant = variants?.container?.visible;
-    const customStagger = hasTransition(visibleVariant)
-      ? visibleVariant.transition?.staggerChildren
-      : undefined;
-
     const customDelay = hasTransition(visibleVariant)
       ? visibleVariant.transition?.delayChildren
       : undefined;
+    const startDelay = typeof customDelay === "number" ? customDelay : delay;
 
     return {
       container: createVariantsWithTransition(fallbackContainer, {
-        staggerChildren: customStagger ?? stagger,
-        delayChildren: customDelay ?? delay,
+        delayChildren: stagger(interval, { startDelay }),
         ...containerTransition,
+        // Segments leave in reverse order.
         exit: {
-          staggerChildren: customStagger ?? stagger,
-          staggerDirection: -1,
+          delayChildren: stagger(interval, { startDelay, from: "last" }),
         },
       }),
       item: createVariantsWithTransition(fallbackItem, {
@@ -386,4 +374,4 @@ export function TextEffect({
       </div>
     </AnimatePresence>
   );
-}
+};

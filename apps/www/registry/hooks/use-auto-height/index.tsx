@@ -1,40 +1,41 @@
 "use client";
 
-import type * as React from "react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
+
+/** A computed CSS length ("12px", or "" when unset) as a number of pixels. */
+const px = (value: string): number => Number(value.replace(/px$/u, "")) || 0;
 
 interface AutoHeightOptions {
   includeParentBox?: boolean;
   includeSelfBox?: boolean;
 }
 
-function getBoxExtra(element: HTMLElement): number {
+const getBoxExtra = (element: HTMLElement): number => {
   const style = getComputedStyle(element);
   if (style.boxSizing !== "border-box") {
     return 0;
   }
 
-  const padding =
-    (Number.parseFloat(style.paddingTop || "0") || 0) +
-    (Number.parseFloat(style.paddingBottom || "0") || 0);
-  const border =
-    (Number.parseFloat(style.borderTopWidth || "0") || 0) +
-    (Number.parseFloat(style.borderBottomWidth || "0") || 0);
+  const padding = px(style.paddingTop) + px(style.paddingBottom);
+  const border = px(style.borderTopWidth) + px(style.borderBottomWidth);
 
   return padding + border;
-}
+};
 
 const DEFAULT_OPTIONS: AutoHeightOptions = {
   includeParentBox: true,
   includeSelfBox: false,
 };
 
-export function useAutoHeight<T extends HTMLElement = HTMLDivElement>(
-  deps: React.DependencyList = [],
+/**
+ * Tracks an element's height with a ResizeObserver, which also reports the
+ * first size as soon as it starts observing. New content that changes the
+ * element's size is picked up the same way.
+ */
+export const useAutoHeight = <T extends HTMLElement = HTMLDivElement>(
   options: AutoHeightOptions = DEFAULT_OPTIONS
-) {
+) => {
   const ref = useRef<T | null>(null);
-  const roRef = useRef<ResizeObserver | null>(null);
   const rafRef = useRef<number | null>(null);
   const [height, setHeight] = useState(0);
 
@@ -74,18 +75,10 @@ export function useAutoHeight<T extends HTMLElement = HTMLDivElement>(
     return Math.ceil((base + extra) * dpr) / dpr;
   }, [options.includeParentBox, options.includeSelfBox]);
 
-  /* oxlint-disable react-hooks/exhaustive-deps -- Caller-controlled deps trigger remeasurement for content changes; ResizeObserver tracks size changes. */
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) {
       return;
-    }
-
-    setHeight(measure());
-
-    if (roRef.current) {
-      roRef.current.disconnect();
-      roRef.current = null;
     }
 
     const ro = new ResizeObserver(() => {
@@ -97,27 +90,14 @@ export function useAutoHeight<T extends HTMLElement = HTMLDivElement>(
       ro.observe(el.parentElement);
     }
 
-    roRef.current = ro;
-
     return () => {
       ro.disconnect();
-      roRef.current = null;
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
       }
     };
-  }, deps);
-  /* oxlint-enable react-hooks/exhaustive-deps */
-
-  useLayoutEffect(() => {
-    if (height === 0) {
-      const next = measure();
-      if (next !== 0) {
-        setHeight(next);
-      }
-    }
-  }, [height, measure]);
+  }, [measure, scheduleHeight, options.includeParentBox]);
 
   return { ref, height } as const;
-}
+};

@@ -9,7 +9,7 @@ import { Skeleton } from "@wirefront/ui/skeleton";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { Bar, BarChart, Cell, LabelList } from "recharts";
+import { Bar, BarChart, type BarShapeProps, LabelList, Rectangle } from "recharts";
 import { ChartAxis, ChartContainer, ChartGrid, ChartTooltip } from "@/components/chart";
 import type { Movement } from "./schema";
 
@@ -117,10 +117,13 @@ function ArrWaterfallScreen({ data, status = "ready", error, onRetry, className 
                   <ChartAxis axis="y" tickFormatter={(v) => compact(Number(v))} />
                   <ChartTooltip valueFormatter={(v) => fmt.money(v, undefined, { maximumFractionDigits: 0 })} />
                   <Bar dataKey="base" fill="transparent" stackId="w" tooltipType="none" />
-                  <Bar dataKey="delta" name={t.amount} radius={[3, 3, 0, 0]} stackId="w">
-                    {bars.map((b) => (
-                      <Cell fill={b.color} key={b.key} />
-                    ))}
+                  <Bar
+                    dataKey="delta"
+                    name={t.amount}
+                    radius={[3, 3, 0, 0]}
+                    shape={(props: BarShapeProps) => <Rectangle {...props} fill={bars[props.originalDataIndex]?.color} />}
+                    stackId="w"
+                  >
                     <LabelList className="font-mono" dataKey="display" fill="currentColor" fontSize={10} position="top" />
                   </Bar>
                 </BarChart>

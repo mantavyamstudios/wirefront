@@ -219,7 +219,7 @@ function SearchBox({ articles, categories, onOpen, onSearch, size, initial = "",
   return (
     <div className="relative w-full" ref={boxRef}>
       <div className={cn("relative flex items-center rounded-xl border border-input bg-background text-foreground shadow-xs/5 transition-shadow has-focus-visible:border-ring has-focus-visible:ring-[3px] has-focus-visible:ring-ring/24 dark:bg-input/32", hero ? "h-12 @lg:h-13" : "h-9")}>
-        <SearchIcon aria-hidden className={cn("pointer-events-none absolute text-muted-foreground", hero ? "start-4 size-4.5" : "start-3 size-4")} />
+        <SearchIcon aria-hidden className={cn("pointer-events-none absolute text-muted-foreground", hero ? "inset-s-4 size-4.5" : "inset-s-3 size-4")} />
         <input
           aria-activedescendant={active >= 0 && showList ? `${listId}-${active}` : undefined}
           aria-autocomplete="list"
@@ -256,11 +256,11 @@ function SearchBox({ articles, categories, onOpen, onSearch, size, initial = "",
           value={query}
         />
         {query ? (
-          <button aria-label={t.clearSearch} className={cn("absolute flex size-7 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground", ring, hero ? "end-3" : "end-1")} onClick={() => setQuery("")} type="button">
+          <button aria-label={t.clearSearch} className={cn("absolute flex size-7 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground", ring, hero ? "inset-e-3" : "inset-e-1")} onClick={() => setQuery("")} type="button">
             <XIcon aria-hidden className="size-4" />
           </button>
         ) : hero ? (
-          <Kbd className="absolute end-4 hidden @lg:inline-flex">/</Kbd>
+          <Kbd className="absolute inset-e-4 hidden @lg:inline-flex">/</Kbd>
         ) : null}
       </div>
 
@@ -927,7 +927,7 @@ function HelpCentreScreen({ productName, categories, articles, popularSearches =
                 const on = activeHeading === slug(h);
                 return (
                   <li className="relative" key={h}>
-                    {on ? <motion.span className="absolute inset-y-1 -start-px w-0.5 rounded-full bg-foreground" layoutId="hc-toc" transition={reduce ? { duration: 0 } : spring} /> : null}
+                    {on ? <motion.span className="absolute inset-y-1 -inset-s-px w-0.5 rounded-full bg-foreground" layoutId="hc-toc" transition={reduce ? { duration: 0 } : spring} /> : null}
                     <button aria-current={on ? "location" : undefined} className={cn("w-full cursor-pointer rounded-e-md py-1.5 ps-3 text-start text-xs leading-5 transition-colors", ring, on ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground")} onClick={() => jumpTo(h)} type="button">
                       {h}
                     </button>

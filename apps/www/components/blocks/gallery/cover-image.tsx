@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import type { ImageProps } from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ComponentPropsWithoutRef, SyntheticEvent } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
 import { Skeleton } from "@/registry/primitives/effects/skeleton";
 
@@ -36,28 +36,8 @@ export interface BlogOgImageProps extends ComponentPropsWithoutRef<"div"> {
   zoom?: boolean;
 }
 
-function mergeImageReadyHandler(
-  existing: ImageProps["onLoad"],
-  onReady: () => void
-) {
-  return (event: SyntheticEvent<HTMLImageElement>) => {
-    existing?.(event);
-    onReady();
-  };
-}
-
-function mergeImageErrorHandler(
-  existing: ImageProps["onError"],
-  onError: () => void
-) {
-  return (event: SyntheticEvent<HTMLImageElement>) => {
-    existing?.(event);
-    onError();
-  };
-}
-
 /** Skeleton overlay that crossfades to a loaded blog OG image. */
-export function BlogOgImage({
+export const BlogOgImage = ({
   image,
   className,
   fadeDuration = 0.45,
@@ -66,7 +46,7 @@ export function BlogOgImage({
   skeletonClassName,
   zoom = false,
   ...props
-}: BlogOgImageProps) {
+}: BlogOgImageProps) => {
   const prefersReducedMotion = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const mediaReadyRef = useRef(false);
@@ -139,8 +119,14 @@ export function BlogOgImage({
   const imageElement = (
     <Image
       {...imageProps}
-      onError={mergeImageErrorHandler(onError, handleMediaError)}
-      onLoad={mergeImageReadyHandler(onLoad, beginReveal)}
+      onError={(event) => {
+        onError?.(event);
+        handleMediaError();
+      }}
+      onLoad={(event) => {
+        onLoad?.(event);
+        beginReveal();
+      }}
       src={src}
       unoptimized={imageProps.unoptimized ?? isRemoteCdn}
     />
@@ -206,4 +192,4 @@ export function BlogOgImage({
       </AnimatePresence>
     </div>
   );
-}
+};

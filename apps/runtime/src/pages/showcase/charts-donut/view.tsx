@@ -8,7 +8,7 @@ import { Skeleton } from "@wirefront/ui/skeleton";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { Cell, Pie, PieChart } from "recharts";
+import { Pie, PieChart } from "recharts";
 import { ChartContainer, ChartTooltip, chartColor } from "@/components/chart";
 import type { RevenueMix } from "./schema";
 
@@ -78,11 +78,18 @@ function RevenueMixDonutScreen({ data, status = "ready", error, onRetry, classNa
                 >
                   <PieChart>
                     <ChartTooltip valueFormatter={(v) => fmt.money(v, undefined, { maximumFractionDigits: 0 })} />
-                    <Pie data={slices} dataKey="amount" endAngle={-270} innerRadius={60} nameKey="name" outerRadius={96} paddingAngle={1} startAngle={90} strokeWidth={0}>
-                      {slices.map((s) => (
-                        <Cell fill={s.color} key={s.id} />
-                      ))}
-                    </Pie>
+                    {/* Each sector takes the fill of its data entry. */}
+                    <Pie
+                      data={slices.map((s) => ({ ...s, fill: s.color }))}
+                      dataKey="amount"
+                      endAngle={-270}
+                      innerRadius={60}
+                      nameKey="name"
+                      outerRadius={96}
+                      paddingAngle={1}
+                      startAngle={90}
+                      strokeWidth={0}
+                    />
                   </PieChart>
                 </ChartContainer>
                 <div aria-hidden className="pointer-events-none absolute inset-0 grid place-items-center">

@@ -116,7 +116,7 @@ function ResolvedThreadsScreen({ threads: initial, openCount, onShowOpen, onReop
                         {fmt.relative(x.createdAt)}
                       </time>
                       {x.replyCount > 0 ? (
-                        <span className="ms-1 rounded-full bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                        <span className="ms-1 rounded-full bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
                           <span aria-hidden>+{x.replyCount}</span>
                           <span className="sr-only">{interpolate(t.replies, { count: x.replyCount })}</span>
                         </span>
@@ -144,7 +144,7 @@ function ResolvedThreadsScreen({ threads: initial, openCount, onShowOpen, onReop
                       aria-controls={previewId}
                       aria-expanded={isOpen}
                       aria-label={isOpen ? t.collapse : t.expand}
-                      className="grid size-8 place-items-center rounded-md text-muted-foreground opacity-0 outline-none transition-all hover:bg-foreground/[0.05] hover:text-foreground focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 aria-expanded:opacity-100 pointer-coarse:size-10 pointer-coarse:opacity-100"
+                      className="grid size-8 place-items-center rounded-md text-muted-foreground opacity-0 outline-none transition-all hover:bg-foreground/5 hover:text-foreground focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 aria-expanded:opacity-100 pointer-coarse:size-10 pointer-coarse:opacity-100"
                       onClick={() => setExpanded((ids) => (isOpen ? ids.filter((id) => id !== x.id) : [...ids, x.id]))}
                       type="button"
                     >

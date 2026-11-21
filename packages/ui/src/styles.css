@@ -595,41 +595,6 @@ html[data-palette="violet"].dark {
 }
 
 /*
- * Shiki-rendered code blocks inside messages. We emit Shiki output
- * with `defaultColor: false` so each token carries inline CSS vars
- * for both the light and dark themes (`--shiki`, `--shiki-bg`,
- * `--shiki-dark`, `--shiki-dark-bg`). Light theme reads the default
- * vars; `.dark` swaps to the dark-themed vars via `!important` so
- * they beat Shiki's inline `style` attribute on tokens.
- *
- * We intentionally override the outer `<pre>` background + padding
- * here instead of nuking it upstream, because Shiki's generated
- * markup is the single source of truth for tokenization and we want
- * to leave it untouched.
- */
-.orbit-shiki .shiki,
-.orbit-shiki .shiki code {
-  background-color: transparent !important;
-  color: var(--shiki);
-}
-.orbit-shiki .shiki {
-  margin: 0;
-  padding: 0.5rem 0.75rem;
-  font-family: var(--font-mono);
-  overflow-x: auto;
-}
-.orbit-shiki .shiki span {
-  color: var(--shiki);
-}
-.dark .orbit-shiki .shiki,
-.dark .orbit-shiki .shiki span {
-  color: var(--shiki-dark) !important;
-  font-style: var(--shiki-dark-font-style, inherit) !important;
-  font-weight: var(--shiki-dark-font-weight, inherit) !important;
-  text-decoration: var(--shiki-dark-text-decoration, inherit) !important;
-}
-
-/*
  * Fallback styles for legacy serialized HTML. The composer renders
  * mentions with a React node view (`MentionChip`); read-path uses
  * the same chip. Plain `span.orbit-mention` may still appear in older

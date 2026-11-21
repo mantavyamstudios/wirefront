@@ -166,7 +166,7 @@ function ImageArt({ art = "photo", t }: { art?: FolderFile["art"]; t: Messages }
   }
   return (
     <div className="absolute inset-0 bg-linear-to-b from-category-1/35 to-category-3/12">
-      <span className="absolute end-6 top-4 size-6 rounded-full bg-category-3/7" />
+      <span className="absolute inset-e-6 top-4 size-6 rounded-full bg-category-3/7" />
       <span className="absolute inset-x-0 bottom-0 h-2/5 bg-category-2-strong/80 [clip-path:polygon(0_40%,30%_10%,60%_45%,100%_0,100%_100%,0_100%)]" />
     </div>
   );
@@ -210,7 +210,7 @@ function Preview({ kind, art, t }: { kind: FolderFileKind; art?: FolderFile["art
     case "slides":
       return (
         <div className="absolute inset-x-4 top-1/2 flex aspect-video -translate-y-1/2 flex-col justify-end gap-1.5 overflow-hidden rounded-md bg-card p-3 shadow-xs/5 ring-1 ring-border">
-          <span className="absolute end-3 top-3 size-6 rounded-full bg-category-5/48" />
+          <span className="absolute inset-e-3 top-3 size-6 rounded-full bg-category-5/48" />
           <span className="h-2 w-3/5 rounded-full bg-foreground/64" />
           <span className="h-1 w-2/5 rounded-full bg-muted-foreground/28" />
         </div>
@@ -218,7 +218,7 @@ function Preview({ kind, art, t }: { kind: FolderFileKind; art?: FolderFile["art
     case "pdf":
       return (
         <div className="absolute inset-x-6 top-4 bottom-0 flex flex-col gap-1.5 rounded-t-md bg-card px-3.5 pt-4 shadow-xs/5 ring-1 ring-border">
-          <span className="absolute end-2.5 top-2.5 rounded-[3px] bg-category-4-strong px-1 font-bold text-[8px] text-white">{t.kind_pdf}</span>
+          <span className="absolute inset-e-2.5 top-2.5 rounded-[3px] bg-category-4-strong px-1 font-bold text-[8px] text-white">{t.kind_pdf}</span>
           <span className="font-heading font-semibold text-foreground/80 text-lg leading-none">{t.artType}</span>
           <span className="h-1 w-1/2 rounded-full bg-muted-foreground/24" />
           <span className="mt-1 grid grid-cols-6 gap-1">
@@ -232,8 +232,8 @@ function Preview({ kind, art, t }: { kind: FolderFileKind; art?: FolderFile["art
       return (
         <div className="absolute inset-0 overflow-hidden bg-foreground">
           <span className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,var(--category-8)_0%,transparent_60%)] opacity-50" />
-          <span className="absolute end-4 start-1/2 top-4 aspect-video rounded-sm bg-linear-to-br from-category-7/60 to-category-4 opacity-90" />
-          <svg aria-hidden="true" className="absolute start-[18%] bottom-0 h-3/5 text-muted-foreground" viewBox="0 0 40 60">
+          <span className="absolute inset-e-4 inset-s-1/2 top-4 aspect-video rounded-sm bg-linear-to-br from-category-7/60 to-category-4 opacity-90" />
+          <svg aria-hidden="true" className="absolute inset-s-[18%] bottom-0 h-3/5 text-muted-foreground" viewBox="0 0 40 60">
             <circle cx="20" cy="14" fill="currentColor" r="8" />
             <path d="M4 60c0-18 7-28 16-28s16 10 16 28Z" fill="currentColor" />
           </svg>
@@ -243,7 +243,7 @@ function Preview({ kind, art, t }: { kind: FolderFileKind; art?: FolderFile["art
           <span className="absolute inset-x-2 bottom-1.5 h-0.5 rounded-full bg-white/24">
             <span className="block h-full w-1/3 rounded-full bg-white/80" />
           </span>
-          <span className="absolute end-2 bottom-3 rounded bg-black/60 px-1 font-mono text-[10px] text-white tabular-nums">{t.duration}</span>
+          <span className="absolute inset-e-2 bottom-3 rounded bg-black/60 px-1 font-mono text-[10px] text-white tabular-nums">{t.duration}</span>
         </div>
       );
   }
@@ -427,7 +427,7 @@ function FolderViewScreen({ workspace, path, name, files: rootFiles, folders = [
           <motion.div animate={{ scale: on ? 0.94 : 1 }} aria-hidden className="absolute inset-0" transition={spring}>
             <Preview art={f.art} kind={f.kind} t={t} />
           </motion.div>
-          <span className={cn("absolute start-2 top-2 flex size-6 items-center justify-center rounded-md bg-background/88 shadow-xs/5 backdrop-blur transition-opacity duration-150", on || selecting ? "opacity-100" : "opacity-0 group-hover/file:opacity-100 group-has-focus-visible/file:opacity-100 pointer-coarse:opacity-100")}>
+          <span className={cn("absolute inset-s-2 top-2 flex size-6 items-center justify-center rounded-md bg-background/88 shadow-xs/5 backdrop-blur transition-opacity duration-150", on || selecting ? "opacity-100" : "opacity-0 group-hover/file:opacity-100 group-has-focus-visible/file:opacity-100 pointer-coarse:opacity-100")}>
             <CheckMark on={on} />
           </span>
         </div>
@@ -499,7 +499,7 @@ function FolderViewScreen({ workspace, path, name, files: rootFiles, folders = [
                 <span className="text-muted-foreground tabular-nums">{fmt.number(usedPct / 100, { style: "percent" })}</span>
               </div>
               <span aria-hidden className="relative mt-2 block h-1 overflow-hidden rounded-full bg-foreground/8">
-                <span className="absolute inset-y-0 start-0 rounded-full bg-foreground/72" style={{ width: `${usedPct}%` }} />
+                <span className="absolute inset-y-0 inset-s-0 rounded-full bg-foreground/72" style={{ width: `${usedPct}%` }} />
               </span>
               <p className="mt-2 text-muted-foreground text-xs tabular-nums">{interpolate(t.storageUsed, { used: gb(storage.usedGb), total: gb(storage.totalGb) })}</p>
             </div>
@@ -592,7 +592,7 @@ function FolderViewScreen({ workspace, path, name, files: rootFiles, folders = [
                   {t.noFiles}
                 </motion.span>
               ) : (
-                <motion.fieldset animate={{ opacity: 1, x: 0 }} className="-mx-1 m-0 flex min-w-0 items-center gap-0.5 overflow-x-auto border-0 p-0 px-1 [scrollbar-width:none]" exit={{ opacity: 0, x: -6 }} initial={{ opacity: 0, x: -6 }} key="filters" transition={{ duration: 0.18, ease: easeOut }}>
+                <motion.fieldset animate={{ opacity: 1, x: 0 }} className="-mx-1 m-0 flex min-w-0 items-center gap-0.5 overflow-x-auto border-0 p-0 px-1 scrollbar-none" exit={{ opacity: 0, x: -6 }} initial={{ opacity: 0, x: -6 }} key="filters" transition={{ duration: 0.18, ease: easeOut }}>
                   <legend className="sr-only">{t.fileType}</legend>
                   <LayoutGroup id={`${id}-filter`}>
                     {(["all", ...kinds] as const).map((k) => (
@@ -651,7 +651,7 @@ function FolderViewScreen({ workspace, path, name, files: rootFiles, folders = [
                         })}
                       </ul>
                     ) : null}
-                    <ul className="grid grid-cols-2 gap-3 px-4 pt-3 pb-28 @2xl:grid-cols-3 @5xl:grid-cols-4 @3xl:px-8 [&:first-child]:pt-5">
+                    <ul className="grid grid-cols-2 gap-3 px-4 pt-3 pb-28 @2xl:grid-cols-3 @5xl:grid-cols-4 @3xl:px-8 first:pt-5">
                       <AnimatePresence initial={false} mode="popLayout">
                         {visible.map((f) => (
                           <motion.li animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} initial={{ opacity: 0, scale: 0.95 }} key={f.id} layout transition={spring}>
@@ -736,7 +736,7 @@ function FolderViewScreen({ workspace, path, name, files: rootFiles, folders = [
 
         <AnimatePresence>
           {selecting ? (
-            <motion.div animate={{ y: 0, opacity: 1, scale: 1 }} aria-label={t.bulk} className="absolute inset-x-3 bottom-4 z-20 mx-auto flex max-w-fit origin-bottom items-center gap-1 rounded-xl border bg-popover p-1 shadow-lg/10 @3xl:start-56" exit={{ y: 16, opacity: 0, scale: 0.96, transition: { duration: 0.15, ease: easeOut } }} initial={{ y: 16, opacity: 0, scale: 0.96 }} role="toolbar" transition={spring}>
+            <motion.div animate={{ y: 0, opacity: 1, scale: 1 }} aria-label={t.bulk} className="absolute inset-x-3 bottom-4 z-20 mx-auto flex max-w-fit origin-bottom items-center gap-1 rounded-xl border bg-popover p-1 shadow-lg/10 @3xl:inset-s-56" exit={{ y: 16, opacity: 0, scale: 0.96, transition: { duration: 0.15, ease: easeOut } }} initial={{ y: 16, opacity: 0, scale: 0.96 }} role="toolbar" transition={spring}>
               <span className="flex items-center gap-1 ps-2.5 pe-2 font-medium">
                 <RollingCount value={selected.length} />
                 <span>{t.selected}</span>
@@ -782,7 +782,7 @@ function FolderViewScreen({ workspace, path, name, files: rootFiles, folders = [
 
         <AnimatePresence>
           {toast && !selecting ? (
-            <motion.div animate={{ y: 0, opacity: 1 }} className="absolute inset-x-3 bottom-4 z-20 mx-auto flex max-w-fit items-center gap-3 rounded-xl border bg-popover py-1.5 ps-3.5 pe-1.5 shadow-lg/10 @3xl:start-56" exit={{ y: 12, opacity: 0, transition: { duration: 0.15, ease: easeOut } }} initial={{ y: 12, opacity: 0 }} role="status" transition={spring}>
+            <motion.div animate={{ y: 0, opacity: 1 }} className="absolute inset-x-3 bottom-4 z-20 mx-auto flex max-w-fit items-center gap-3 rounded-xl border bg-popover py-1.5 ps-3.5 pe-1.5 shadow-lg/10 @3xl:inset-s-56" exit={{ y: 12, opacity: 0, transition: { duration: 0.15, ease: easeOut } }} initial={{ y: 12, opacity: 0 }} role="status" transition={spring}>
               <span className="truncate">{toast}</span>
               <Button className={press} onClick={() => setToast(null)} size="xs" variant="ghost">
                 {t.dismiss}

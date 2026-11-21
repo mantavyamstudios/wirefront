@@ -39,7 +39,7 @@ function TipCardScreen({ tip, onTry, onSnooze, onDismiss, allHref, className }: 
   const t = useMessages("tipCard", TIP_CARD_MESSAGES);
   if (!tip) return null;
   return (
-    <aside aria-label={t.region} className={cn("fixed inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 sm:inset-x-auto sm:end-6 sm:bottom-6 sm:w-80", className)}>
+    <aside aria-label={t.region} className={cn("fixed inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 sm:inset-x-auto sm:inset-e-6 sm:bottom-6 sm:w-80", className)}>
       <div className="rounded-xl border border-border/70 bg-background p-4 shadow-xl backdrop-blur">
         <div className="flex items-start gap-3">
           <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-full bg-category-3/15 text-category-3-foreground">
@@ -65,7 +65,7 @@ function TipCardScreen({ tip, onTry, onSnooze, onDismiss, allHref, className }: 
           </div>
           <button
             aria-label={t.dismiss}
-            className="-me-1.5 -mt-1.5 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10"
+            className="-me-1.5 -mt-1.5 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10"
             onClick={() => onDismiss(tip.id)}
             type="button"
           >

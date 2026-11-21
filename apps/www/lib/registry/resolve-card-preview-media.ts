@@ -8,38 +8,18 @@ export interface ResolvedCardPreviewMedia {
 
 let preferredVideoFormat: "webm" | "mp4" | null = null;
 
-const LEGACY_PREVIEW_VIDEO_REGEX = /^(.*)\.(mov|mp4|webm)(\?.*)?$/i;
+export const resolveCardPreviewMedia = (
+  cardPreview?: ComponentGalleryCardPreview
+): ResolvedCardPreviewMedia | null => {
+  const { poster, videoMp4, videoWebm } = cardPreview ?? {};
+  return (poster ?? videoMp4 ?? videoWebm)
+    ? { poster, videoMp4, videoWebm }
+    : null;
+};
 
-export function resolveCardPreviewMedia(
-  cardPreview?: ComponentGalleryCardPreview,
-  legacyVideo?: string
-): ResolvedCardPreviewMedia | null {
-  if (cardPreview) {
-    const { poster, videoMp4, videoWebm } = cardPreview;
-    if (poster ?? videoMp4 ?? videoWebm) {
-      return { poster, videoMp4, videoWebm };
-    }
-  }
-
-  if (!legacyVideo) {
-    return null;
-  }
-
-  const match = legacyVideo.match(LEGACY_PREVIEW_VIDEO_REGEX);
-  if (!match) {
-    return { videoMp4: legacyVideo };
-  }
-
-  const [, base, , query = ""] = match;
-  return {
-    videoMp4: `${base}.mp4${query}`,
-    videoWebm: `${base}.webm${query}`,
-  };
-}
-
-export function getPreferredCardPreviewVideoSrc(
+export const getPreferredCardPreviewVideoSrc = (
   media: ResolvedCardPreviewMedia
-): string | null {
+): string | null => {
   if (!(media.videoWebm ?? media.videoMp4)) {
     return null;
   }
@@ -61,11 +41,11 @@ export function getPreferredCardPreviewVideoSrc(
   }
 
   return media.videoMp4 ?? media.videoWebm ?? null;
-}
+};
 
 const warmedVideoUrls = new Set<string>();
 
-export function warmCardPreviewVideo(url: string) {
+export const warmCardPreviewVideo = (url: string) => {
   if (typeof window === "undefined" || warmedVideoUrls.has(url)) {
     return;
   }
@@ -78,4 +58,4 @@ export function warmCardPreviewVideo(url: string) {
   video.playsInline = true;
   video.src = url;
   video.load();
-}
+};

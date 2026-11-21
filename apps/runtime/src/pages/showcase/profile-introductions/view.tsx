@@ -137,7 +137,7 @@ function SuggestedIntrosScreen({ suggestions, status = "ready", error, onRetry, 
                   {onDismiss ? (
                     <button
                       aria-label={interpolate(t.dismiss, { name: s.name })}
-                      className="-me-1 -mt-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10"
+                      className="-me-1 -mt-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10"
                       onClick={() => void dismiss.run(s.id, s.id)}
                       type="button"
                     >

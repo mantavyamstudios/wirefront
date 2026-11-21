@@ -121,7 +121,7 @@ function SpotlightTourScreen({ steps, open, onClose }: SpotlightTourProps) {
       <div
         aria-describedby={`${uid}-body`}
         aria-labelledby={`${uid}-title`}
-        className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border border-border/70 bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl outline-none sm:start-(--x) sm:top-(--y) sm:inset-x-auto sm:bottom-auto sm:w-80 sm:rounded-xl sm:pb-4 motion-safe:sm:transition-[left,top] motion-safe:sm:duration-300"
+        className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border border-border/70 bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl outline-none sm:inset-s-(--x) sm:top-(--y) sm:inset-x-auto sm:bottom-auto sm:w-80 sm:rounded-xl sm:pb-4 motion-safe:sm:transition-[left,top] motion-safe:sm:duration-300"
         ref={cardRef}
         role="dialog"
         style={{ "--x": `${pos.left}px`, "--y": `${pos.top}px` } as CSSProperties}
@@ -137,7 +137,7 @@ function SpotlightTourScreen({ steps, open, onClose }: SpotlightTourProps) {
           </div>
           <button
             aria-label={t.close}
-            className="-me-1 -mt-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10"
+            className="-me-1 -mt-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10"
             onClick={() => onClose(false)}
             type="button"
           >

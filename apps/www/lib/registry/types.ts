@@ -56,8 +56,6 @@ export interface ComponentGalleryItem {
   collection: ComponentCollection;
   description: string;
   href: string;
-  /** @deprecated Use `cardPreview.videoMp4` instead. */
-  previewVideo?: string;
   releaseDate?: string;
   slug: string;
   title: string;

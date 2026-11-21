@@ -15,7 +15,10 @@ const TITLE = 'Wirefront'
 const TAGLINE = 'Mantavyam Studios'
 const DOMAIN = 'mantavyam.in'
 const SUBTITLE = 'Production-ready UI screens built on shadcn/ui'
-const STATS = ['200 screens', 'shadcn registry', "press 'c' to copy"]
+// The screen count comes from the catalogue, so the image never goes stale.
+const { SOURCE_FILES } = await import('../src/pages/showcase/source-files.ts')
+const screenCount = Object.values(SOURCE_FILES).reduce((n, designs) => n + Object.keys(designs ?? {}).length, 0)
+const STATS = [`${screenCount} screens`, 'shadcn registry', "press 'c' to copy"]
 
 const [geistRegular, geistSemibold, logoBytes] = await Promise.all([
   readFile(resolve(root, 'public/fonts/Geist-Regular.ttf')),

@@ -15,11 +15,14 @@ import {
 /** Every gallery index: all screens, each group and each kind. */
 const SCREENS_GALLERY_PATHS = [
   "/screens",
-  ...getScreenGroups().flatMap((g) => [`/${g.slug}`, ...g.kinds.map((k) => `/${g.slug}/${k.slug}`)]),
+  ...getScreenGroups().flatMap((g) => [
+    `/${g.slug}`,
+    ...g.kinds.map((k) => `/${g.slug}/${k.slug}`),
+  ]),
 ];
 
 /** Same shell as `/blocks`, fed with the Wirefront screens catalogue. */
-export default function ScreensLayout({ children }: { children: ReactNode }) {
+const ScreensLayout = ({ children }: { children: ReactNode }) => {
   const navItems = getScreenGalleryItems();
   const section = {
     allLabel: "All Screens",
@@ -43,4 +46,6 @@ export default function ScreensLayout({ children }: { children: ReactNode }) {
       </ComponentsRouteLayout>
     </BlocksSectionProvider>
   );
-}
+};
+
+export default ScreensLayout;

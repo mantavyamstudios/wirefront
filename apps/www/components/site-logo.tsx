@@ -10,24 +10,22 @@ const sizes = {
  * The site mark: the owner's GitHub avatar, refreshed on every build
  * (scripts/fetch-avatar.mts).
  */
-export function SiteLogo({
+export const SiteLogo = ({
   className,
   size = "sm",
 }: {
   className?: string;
   size?: keyof typeof sizes;
-}) {
-  return (
-    <Image
-      alt="Wirefront"
-      className={cn(
-        "ring-border/60 shrink-0 rounded-lg object-cover ring-1",
-        sizes[size],
-        className
-      )}
-      height={128}
-      src="/brand/avatar-128.jpg"
-      width={128}
-    />
-  );
-}
+}) => (
+  <Image
+    alt="Wirefront"
+    className={cn(
+      "ring-border/60 shrink-0 rounded-lg object-cover ring-1",
+      sizes[size],
+      className
+    )}
+    height={128}
+    src="/brand/avatar-128.jpg"
+    width={128}
+  />
+);

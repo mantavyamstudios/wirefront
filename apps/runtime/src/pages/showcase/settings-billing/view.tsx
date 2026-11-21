@@ -145,7 +145,7 @@ function BillingSettingsScreen({
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <h2 className="font-heading text-2xl">{plan.name}</h2>
-                <span className="rounded bg-foreground/[0.08] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em]">{t[plan.interval]}</span>
+                <span className="rounded bg-foreground/8 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em]">{t[plan.interval]}</span>
               </div>
               <p className="mt-1 text-muted-foreground text-sm">{plan.summary}</p>
               <div
@@ -240,7 +240,7 @@ function BillingSettingsScreen({
                   {billing.paymentMethod.email ? ` · ${billing.paymentMethod.email}` : null}
                 </p>
               </div>
-              <span className="shrink-0 rounded bg-foreground/[0.06] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.25em]">{t.default}</span>
+              <span className="shrink-0 rounded bg-foreground/6 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.25em]">{t.default}</span>
             </div>
           ) : (
             <p className="mt-4 text-muted-foreground text-sm">{t.noPaymentMethod}</p>
@@ -267,7 +267,7 @@ function BillingSettingsScreen({
           {billing.invoices.length ? (
             <ul>
               {billing.invoices.map((inv) => (
-                <li className="flex items-center gap-3 border-border/40 border-b px-4 py-3 text-sm transition-colors last:border-b-0 hover:bg-foreground/[0.02] sm:gap-4 sm:px-5" key={inv.id}>
+                <li className="flex items-center gap-3 border-border/40 border-b px-4 py-3 text-sm transition-colors last:border-b-0 hover:bg-foreground/2 sm:gap-4 sm:px-5" key={inv.id}>
                   <span className="min-w-0 flex-1 sm:flex sm:items-center sm:gap-4">
                     <span className="block font-mono text-[12px] text-muted-foreground">{inv.number}</span>
                     <span className="block truncate text-muted-foreground max-sm:text-xs sm:flex-1">{day(inv.issuedAt, true)}</span>
@@ -285,7 +285,7 @@ function BillingSettingsScreen({
                   {inv.url ? (
                     <a
                       aria-label={interpolate(t.openInvoice, { number: inv.number })}
-                      className="inline-flex shrink-0 items-center gap-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground pointer-coarse:p-3 sm:ms-2"
+                      className="inline-flex shrink-0 items-center gap-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-foreground/4 hover:text-foreground pointer-coarse:p-3 sm:ms-2"
                       href={inv.url}
                       rel="noreferrer"
                       target="_blank"

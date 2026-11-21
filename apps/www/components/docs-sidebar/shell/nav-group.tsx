@@ -18,13 +18,13 @@ export interface DocsShellNavGroupProps {
   label: React.ReactNode;
 }
 
-export function DocsShellNavGroup({
+export const DocsShellNavGroup = ({
   label,
   children,
   defaultOpen = false,
   icon,
   className,
-}: DocsShellNavGroupProps) {
+}: DocsShellNavGroupProps) => {
   const [prevDefaultOpen, setPrevDefaultOpen] = useState(defaultOpen);
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -114,4 +114,4 @@ export function DocsShellNavGroup({
       </AnimatePresence>
     </div>
   );
-}
+};

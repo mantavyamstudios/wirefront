@@ -22,7 +22,13 @@ export const PUBLISHER_JSON_LD = {
   },
   sameAs: [GITHUB_REPO_URL],
   slogan: "Ready-to-wire screens for any backend",
-  knowsAbout: ["React", "shadcn/ui", "Tailwind CSS", "Responsive UI", "UI design"],
+  knowsAbout: [
+    "React",
+    "shadcn/ui",
+    "Tailwind CSS",
+    "Responsive UI",
+    "UI design",
+  ],
   founder: {
     "@type": "Organization",
     name: "Mantavyam Studios",

@@ -30,7 +30,7 @@ const DOCS_LAYOUT_PROPS: DocsLayoutProps = {
   ],
 };
 
-export default function Layout({ children }: { children: ReactNode }) {
+const Layout = ({ children }: { children: ReactNode }) => {
   const releaseDatesByUrl = getReleaseDatesByUrl();
 
   return (
@@ -55,4 +55,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       {children}
     </DocsLayout>
   );
-}
+};
+
+export default Layout;

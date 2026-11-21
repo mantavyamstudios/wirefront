@@ -6,7 +6,7 @@ import Link from "@/components/site-link";
 
 import { PRICING_FAQ_ITEMS } from "./pricing-config";
 
-function FaqAnswer({ content, title }: { content: string; title: string }) {
+const FaqAnswer = ({ content, title }: { content: string; title: string }) => {
   if (title === "Can I use the screens in commercial apps?") {
     return (
       <p className="pricing-faq__answer p-m">
@@ -28,9 +28,9 @@ function FaqAnswer({ content, title }: { content: string; title: string }) {
   }
 
   return <p className="pricing-faq__answer p-m">{content}</p>;
-}
+};
 
-export function PricingFaq() {
+export const PricingFaq = () => {
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);
 
   const toggleAccordion = (index: number) => {
@@ -56,14 +56,14 @@ export function PricingFaq() {
               >
                 {/* oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/no-noninteractive-element-interactions -- Accordion Toggle */}
                 <div
-                  className="flex min-h-[3.5rem] cursor-pointer items-center justify-between py-[var(--gap-m)]"
+                  className="flex min-h-14 cursor-pointer items-center justify-between py-(--gap-m)"
                   data-accordion-toggle=""
                   data-hover=""
                   onClick={() => toggleAccordion(index)}
                 >
                   <h4 className="h-xs">{item.title}</h4>
                   <svg
-                    className="size-[0.625em] shrink-0 rotate-0 items-center justify-center transition-transform duration-[var(--duration-default)] ease-[var(--cubic-default)] group-data-[accordion-status=active]:rotate-[315deg]"
+                    className="size-[0.625em] shrink-0 rotate-0 items-center justify-center transition-transform duration-(--duration-default) ease-(--cubic-default) group-data-[accordion-status=active]:rotate-315"
                     fill="none"
                     viewBox="0 0 13 13"
                     width="100%"
@@ -76,9 +76,9 @@ export function PricingFaq() {
                     />
                   </svg>
                 </div>
-                <div className="relative grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows] duration-[var(--duration-default)] ease-[var(--cubic-default)] group-data-[accordion-status=active]:grid-rows-[1fr]">
+                <div className="relative grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows] duration-(--duration-default) ease-(--cubic-default) group-data-[accordion-status=active]:grid-rows-[1fr]">
                   <div className="relative flex h-[100000%] flex-col overflow-hidden">
-                    <div className="pb-[var(--gap-l)]">
+                    <div className="pb-(--gap-l)">
                       <FaqAnswer content={item.content} title={item.title} />
                     </div>
                   </div>
@@ -90,4 +90,4 @@ export function PricingFaq() {
       </div>
     </section>
   );
-}
+};

@@ -1,33 +1,22 @@
+import { nextPaint } from "@/lib/wait";
+
 export const HOME_SCROLL_READY_EVENT = "site:home-scroll-ready";
 export const DEMO_SCROLL_READY_EVENT = "site:demo-scroll-ready";
 
-export function dispatchHomeScrollReady() {
+export const dispatchHomeScrollReady = () => {
   if (typeof window === "undefined") {
     return;
   }
 
   window.dispatchEvent(new Event(HOME_SCROLL_READY_EVENT));
-}
+};
 
-export function isWindowScroller(scroller: Element | Window): boolean {
-  return (
-    scroller === window ||
-    scroller === document.documentElement ||
-    scroller === document.body
-  );
-}
+export const isWindowScroller = (scroller: Element | Window): boolean =>
+  scroller === window ||
+  scroller === document.documentElement ||
+  scroller === document.body;
 
-function waitForNextFrame(): Promise<void> {
-  return new Promise((resolve) => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        resolve();
-      });
-    });
-  });
-}
-
-function getScrollerReadyEvent(scroller: Element | Window): string | null {
+const getScrollerReadyEvent = (scroller: Element | Window): string | null => {
   if (!(scroller instanceof HTMLElement)) {
     return null;
   }
@@ -41,36 +30,38 @@ function getScrollerReadyEvent(scroller: Element | Window): string | null {
   }
 
   return null;
-}
+};
+
+/** Resolves on `event`, or after `ms` if it never fires (the layout is used as it is then). */
+const readyOrTimeout = (event: string, ms: number): Promise<void> => {
+  const { promise, resolve } = Promise.withResolvers<undefined>();
+  window.addEventListener(event, () => resolve(), { once: true });
+  window.setTimeout(resolve, ms);
+  return promise;
+};
 
 /** Wait for Lenis scrollerProxy (demo/home) or layout before pinning. */
-export async function waitForScrollerReady(
+export const waitForScrollerReady = async (
   scroller: Element | Window
-): Promise<void> {
+): Promise<void> => {
   if (isWindowScroller(scroller)) {
-    await waitForNextFrame();
+    await nextPaint();
     return;
   }
 
   const readyEvent = getScrollerReadyEvent(scroller);
 
   if (!readyEvent) {
-    await waitForNextFrame();
+    await nextPaint();
     return;
   }
 
-  await Promise.all([
-    waitForNextFrame(),
-    new Promise<void>((resolve) => {
-      window.addEventListener(readyEvent, () => resolve(), { once: true });
-      window.setTimeout(resolve, 300);
-    }),
-  ]);
+  await Promise.all([nextPaint(), readyOrTimeout(readyEvent, 300)]);
 
-  await waitForNextFrame();
-}
+  await nextPaint();
+};
 
-export function observeWindowResize(onResize: () => void): () => void {
+export const observeWindowResize = (onResize: () => void): (() => void) => {
   let frameId = 0;
 
   const handleResize = () => {
@@ -84,4 +75,4 @@ export function observeWindowResize(onResize: () => void): () => void {
     cancelAnimationFrame(frameId);
     window.removeEventListener("resize", handleResize);
   };
-}
+};

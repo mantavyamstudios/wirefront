@@ -35,7 +35,7 @@ interface CursorProviderProps {
   global?: boolean;
 }
 
-function CursorProvider({ children, global = false }: CursorProviderProps) {
+const CursorProvider = ({ children, global = false }: CursorProviderProps) => {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [active, setActive] = useState(false);
 
@@ -151,15 +151,15 @@ function CursorProvider({ children, global = false }: CursorProviderProps) {
       {children}
     </LocalCursorProvider>
   );
-}
+};
 
 type CursorContainerProps = WithAsChild<HTMLMotionProps<"div">>;
 
-function CursorContainer({
+const CursorContainer = ({
   ref,
   asChild = false,
   ...props
-}: CursorContainerProps) {
+}: CursorContainerProps) => {
   const { containerRef, global, active } = useCursor();
   useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);
 
@@ -174,7 +174,7 @@ function CursorContainer({
       {...props}
     />
   );
-}
+};
 
 type CursorProps = WithAsChild<
   HTMLMotionProps<"div"> & {
@@ -182,7 +182,7 @@ type CursorProps = WithAsChild<
   }
 >;
 
-function Cursor({ ref, asChild = false, style, ...props }: CursorProps) {
+const Cursor = ({ ref, asChild = false, style, ...props }: CursorProps) => {
   const { cursorPos, active, containerRef, cursorRef, global } = useCursor();
   useImperativeHandle(ref, () => cursorRef.current as HTMLDivElement);
 
@@ -237,7 +237,7 @@ function Cursor({ ref, asChild = false, style, ...props }: CursorProps) {
       )}
     </AnimatePresence>
   );
-}
+};
 
 type CursorFollowSide = "top" | "right" | "bottom" | "left";
 type CursorFollowAlign = "start" | "center" | "end";
@@ -253,7 +253,59 @@ type CursorFollowProps = WithAsChild<
   }
 >;
 
-function CursorFollow({
+const CURSOR_FOLLOW_DEFAULT_TRANSITION = {
+  stiffness: 500,
+  damping: 50,
+  bounce: 0,
+} as const;
+
+/** Where along one edge the follower sits: start, centre or end. */
+const alongEdge = (
+  align: CursorFollowAlign,
+  length: number,
+  alignOffset: number
+): number => {
+  if (align === "start") {
+    return length + alignOffset;
+  }
+  if (align === "center") {
+    return length / 2;
+  }
+  return -alignOffset;
+};
+
+/** The follower's offset from the cursor for the given side and alignment. */
+const followOffset = (
+  side: CursorFollowSide,
+  align: CursorFollowAlign,
+  width: number,
+  height: number,
+  sideOffset: number,
+  alignOffset: number
+): { x: number; y: number } => {
+  switch (side) {
+    case "top": {
+      return {
+        x: alongEdge(align, width, alignOffset),
+        y: height + sideOffset,
+      };
+    }
+    case "bottom": {
+      return { x: alongEdge(align, width, alignOffset), y: -sideOffset };
+    }
+    case "left": {
+      return {
+        x: width + sideOffset,
+        y: alongEdge(align, height, alignOffset),
+      };
+    }
+    default: {
+      return { x: -sideOffset, y: alongEdge(align, height, alignOffset) };
+    }
+  }
+};
+
+const CursorFollow = ({
   ref,
   asChild = false,
   side = "bottom",
@@ -261,9 +313,9 @@ function CursorFollow({
   align = "end",
   alignOffset = 0,
   style,
-  transition = { stiffness: 500, damping: 50, bounce: 0 },
+  transition = CURSOR_FOLLOW_DEFAULT_TRANSITION,
   ...props
-}: CursorFollowProps) {
+}: CursorFollowProps) => {
   const { cursorPos, active, cursorRef, global } = useCursor();
   const cursorFollowRef = useRef<HTMLDivElement>(null);
   useImperativeHandle(ref, () => cursorFollowRef.current as HTMLDivElement);
@@ -279,103 +331,7 @@ function CursorFollow({
     const width = rect?.width ?? 0;
     const height = rect?.height ?? 0;
 
-    let offsetX = 0;
-    let offsetY = 0;
-
-    switch (side) {
-      case "top": {
-        offsetY = height + sideOffset;
-        switch (align) {
-          case "start": {
-            offsetX = width + alignOffset;
-            break;
-          }
-          case "center": {
-            offsetX = width / 2;
-            break;
-          }
-          case "end": {
-            offsetX = -alignOffset;
-            break;
-          }
-          default: {
-            break;
-          }
-        }
-        break;
-      }
-
-      case "bottom": {
-        offsetY = -sideOffset;
-        switch (align) {
-          case "start": {
-            offsetX = width + alignOffset;
-            break;
-          }
-          case "center": {
-            offsetX = width / 2;
-            break;
-          }
-          case "end": {
-            offsetX = -alignOffset;
-            break;
-          }
-          default: {
-            break;
-          }
-        }
-        break;
-      }
-
-      case "left": {
-        offsetX = width + sideOffset;
-        switch (align) {
-          case "start": {
-            offsetY = height + alignOffset;
-            break;
-          }
-          case "center": {
-            offsetY = height / 2;
-            break;
-          }
-          case "end": {
-            offsetY = -alignOffset;
-            break;
-          }
-          default: {
-            break;
-          }
-        }
-        break;
-      }
-
-      case "right": {
-        offsetX = -sideOffset;
-        switch (align) {
-          case "start": {
-            offsetY = height + alignOffset;
-            break;
-          }
-          case "center": {
-            offsetY = height / 2;
-            break;
-          }
-          case "end": {
-            offsetY = -alignOffset;
-            break;
-          }
-          default: {
-            break;
-          }
-        }
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-
-    return { x: offsetX, y: offsetY };
+    return followOffset(side, align, width, height, sideOffset, alignOffset);
   }, [side, align, sideOffset, alignOffset]);
 
   useEffect(() => {
@@ -415,7 +371,7 @@ function CursorFollow({
       )}
     </AnimatePresence>
   );
-}
+};
 
 export {
   Cursor,

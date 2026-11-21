@@ -84,7 +84,7 @@ function ReleasePromotionScreen({ release, status = "ready", error, onRetry, onP
 
             <div className="mt-6 rounded-xl border border-border/60 bg-background/40 px-4 py-5 sm:px-6">
               <ol className="relative">
-                <span aria-hidden className="absolute start-[15px] top-2 bottom-2 w-px bg-border/50" />
+                <span aria-hidden className="absolute inset-s-3.75 top-2 bottom-2 w-px bg-border/50" />
                 {release.steps.map((s) => {
                   const elapsed = s.state === "active" && s.startedAt ? now().getTime() - new Date(s.startedAt).getTime() : undefined;
                   return (
@@ -92,7 +92,7 @@ function ReleasePromotionScreen({ release, status = "ready", error, onRetry, onP
                       <span
                         aria-hidden
                         className={cn(
-                          "z-10 grid size-[32px] place-items-center rounded-full ring-4 ring-background transition-all",
+                          "z-10 grid size-8 place-items-center rounded-full ring-4 ring-background transition-all",
                           s.state === "done" ? "bg-category-2 text-white" : s.state === "active" ? "bg-foreground text-background" : "border border-border/70 bg-background text-muted-foreground",
                         )}
                       >
@@ -111,9 +111,9 @@ function ReleasePromotionScreen({ release, status = "ready", error, onRetry, onP
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-sm">{s.name}</span>
                           <span className="sr-only">{t[s.state]}</span>
-                          {s.region ? <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">{s.region}</span> : null}
+                          {s.region ? <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">{s.region}</span> : null}
                           {s.state === "active" ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-foreground/80">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-foreground/80">
                               <TimerIcon aria-hidden className="size-2.5" />
                               {t.rolling}
                             </span>

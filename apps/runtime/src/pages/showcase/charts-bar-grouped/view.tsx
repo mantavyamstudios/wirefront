@@ -8,7 +8,7 @@ import { Skeleton } from "@wirefront/ui/skeleton";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { Bar, BarChart, Cell } from "recharts";
+import { Bar, BarChart, type BarShapeProps, Rectangle } from "recharts";
 import { ChartAxis, ChartContainer, ChartGrid, ChartTooltip, chartColor } from "@/components/chart";
 import type { PeriodComparison } from "./schema";
 
@@ -100,20 +100,26 @@ function QuarterlyComparisonChartScreen({ data, status = "ready", error, onRetry
                   <ChartAxis axis="y" tickFormatter={(v) => compact(Number(v))} />
                   <ChartTooltip valueFormatter={(v) => fmt.money(v, undefined, { maximumFractionDigits: 0 })} />
                   {series.map((s, i) => (
-                    <Bar dataKey={s.id} fill={colorFor(i)} key={s.id} name={s.label} radius={[3, 3, 0, 0]}>
-                      {rows.map((r) => {
-                        const missing = r.values[s.id] == null;
+                    <Bar
+                      dataKey={s.id}
+                      fill={colorFor(i)}
+                      key={s.id}
+                      name={s.label}
+                      radius={[3, 3, 0, 0]}
+                      shape={(props: BarShapeProps) => {
+                        // A period this series hasn't reached yet: a dashed outline, no fill.
+                        const missing = rows[props.originalDataIndex]?.values[s.id] == null;
                         return (
-                          <Cell
+                          <Rectangle
+                            {...props}
                             fillOpacity={missing ? 0 : 1}
-                            key={r.label}
                             stroke={missing ? colorFor(i) : undefined}
                             strokeDasharray={missing ? "3 3" : undefined}
                             strokeOpacity={missing ? 0.5 : 0}
                           />
                         );
-                      })}
-                    </Bar>
+                      }}
+                    />
                   ))}
                 </BarChart>
               </ChartContainer>

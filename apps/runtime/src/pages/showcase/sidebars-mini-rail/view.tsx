@@ -82,7 +82,7 @@ const initialsOf = (name: string) =>
 
 function Tile({ workspace, size = "size-9" }: { workspace: RailWorkspace; size?: string }) {
   return (
-    <span aria-hidden className={cn("flex items-center justify-center rounded-lg bg-gradient-to-br font-medium text-[12px] text-foreground/85", size, TINT[workspace.color])}>
+    <span aria-hidden className={cn("flex items-center justify-center rounded-lg bg-linear-to-br font-medium text-[12px] text-foreground/85", size, TINT[workspace.color])}>
       {workspace.name.charAt(0).toUpperCase()}
     </span>
   );
@@ -134,7 +134,7 @@ export function MiniRailShell({
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-2 border-border/60 border-b bg-background/90 px-3 backdrop-blur md:hidden">
         {current ? (
           <Sheet onOpenChange={setSheetOpen} open={sheetOpen}>
-            <SheetTrigger className="flex min-h-11 items-center gap-2 rounded-md px-1.5 text-start transition-colors hover:bg-foreground/[0.04]">
+            <SheetTrigger className="flex min-h-11 items-center gap-2 rounded-md px-1.5 text-start transition-colors hover:bg-foreground/4">
               <Tile size="size-8" workspace={current} />
               <span className="sr-only">{t.switchWorkspacePrefix} </span>
               <span className="font-medium text-sm">{current.name}</span>
@@ -149,7 +149,7 @@ export function MiniRailShell({
                   <li key={w.id}>
                     <button
                       aria-current={w.id === current.id ? "true" : undefined}
-                      className="flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-start text-sm transition-colors hover:bg-foreground/[0.04]"
+                      className="flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-start text-sm transition-colors hover:bg-foreground/4"
                       onClick={() => {
                         setSheetOpen(false);
                         if (w.id !== current.id) onSwitchWorkspace(w.id);
@@ -165,7 +165,7 @@ export function MiniRailShell({
                 {onAddWorkspace ? (
                   <li>
                     <button
-                      className="flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-start text-muted-foreground text-sm transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+                      className="flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-start text-muted-foreground text-sm transition-colors hover:bg-foreground/4 hover:text-foreground"
                       onClick={() => {
                         setSheetOpen(false);
                         onAddWorkspace();
@@ -187,7 +187,7 @@ export function MiniRailShell({
       </header>
 
       {/* md+: a 60px icon rail with tooltips. */}
-      <aside className="sticky top-0 hidden h-svh flex-col items-center overflow-x-clip border-border/60 border-e bg-foreground/[0.02] py-3 md:flex">
+      <aside className="sticky top-0 hidden h-svh flex-col items-center overflow-x-clip border-border/60 border-e bg-foreground/2 py-3 md:flex">
         <ul aria-label={t.workspaces} className="flex flex-col items-center gap-1.5">
           {workspaces.map((w) => (
             <li className="relative" key={w.id}>
@@ -202,7 +202,7 @@ export function MiniRailShell({
                 </TooltipTrigger>
                 <TooltipContent side="right">{w.name}</TooltipContent>
               </Tooltip>
-              {w.id === current?.id ? <span aria-hidden className="absolute top-1/2 -start-3 h-5 w-1 -translate-y-1/2 rounded-e-full bg-foreground" /> : null}
+              {w.id === current?.id ? <span aria-hidden className="absolute top-1/2 -inset-s-3 h-5 w-1 -translate-y-1/2 rounded-e-full bg-foreground" /> : null}
             </li>
           ))}
           {onAddWorkspace ? (
@@ -210,7 +210,7 @@ export function MiniRailShell({
               <Tooltip>
                 <TooltipTrigger
                   aria-label={t.addWorkspace}
-                  className={cn(railButton, "border border-border/70 border-dashed text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground")}
+                  className={cn(railButton, "border border-border/70 border-dashed text-muted-foreground hover:bg-foreground/4 hover:text-foreground")}
                   onClick={onAddWorkspace}
                 >
                   <PlusIcon className="size-4" />
@@ -233,15 +233,15 @@ export function MiniRailShell({
                     <TooltipTrigger
                       aria-current={active ? "page" : undefined}
                       aria-label={itemLabel(item)}
-                      className={cn(railButton, "[&_svg]:size-4", active ? "bg-foreground/[0.08] text-foreground" : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground")}
+                      className={cn(railButton, "[&_svg]:size-4", active ? "bg-foreground/8 text-foreground" : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground")}
                       render={<WirefrontLink href={item.href} />}
                     >
                       {item.icon}
                     </TooltipTrigger>
                     <TooltipContent side="right">{item.label}</TooltipContent>
                   </Tooltip>
-                  {active ? <span aria-hidden className="absolute top-1/2 -start-3 h-5 w-1 -translate-y-1/2 rounded-e-full bg-foreground" /> : null}
-                  {item.count ? <Badge className="end-0.5 top-0.5" count={item.count} /> : null}
+                  {active ? <span aria-hidden className="absolute top-1/2 -inset-s-3 h-5 w-1 -translate-y-1/2 rounded-e-full bg-foreground" /> : null}
+                  {item.count ? <Badge className="inset-e-0.5 top-0.5" count={item.count} /> : null}
                 </li>
               );
             })}
@@ -253,7 +253,7 @@ export function MiniRailShell({
             <Tooltip>
               <TooltipTrigger
                 aria-label={t.settings}
-                className={cn(railButton, "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground")}
+                className={cn(railButton, "text-muted-foreground hover:bg-foreground/4 hover:text-foreground")}
                 render={<WirefrontLink href={settingsHref} />}
               >
                 <SettingsIcon className="size-4" />
@@ -281,7 +281,7 @@ export function MiniRailShell({
                 >
                   <span aria-hidden className="relative">
                     {item.icon}
-                    {item.count ? <Badge className="-end-2.5 -top-1.5" count={item.count} /> : null}
+                    {item.count ? <Badge className="-inset-e-2.5 -top-1.5" count={item.count} /> : null}
                   </span>
                   {item.label}
                   {item.count ? <span className="sr-only">{interpolate(t.unreadCount, { count: item.count })}</span> : null}

@@ -121,35 +121,35 @@ function BlobBackground() {
     <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       <style>{styles}</style>
       <div
-        className="glass-bg-blob-1 absolute -top-[20vmax] -start-[15vmax] h-[60vmax] w-[60vmax] rounded-full"
+        className="glass-bg-blob-1 absolute top-[-20vmax] inset-s-[-15vmax] h-[60vmax] w-[60vmax] rounded-full"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, rgba(236,72,153,0.55), rgba(236,72,153,0) 70%)",
         }}
       />
       <div
-        className="glass-bg-blob-2 absolute top-[10vmax] -end-[20vmax] h-[60vmax] w-[60vmax] rounded-full"
+        className="glass-bg-blob-2 absolute top-[10vmax] inset-e-[-20vmax] h-[60vmax] w-[60vmax] rounded-full"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, rgba(139,92,246,0.5), rgba(139,92,246,0) 70%)",
         }}
       />
       <div
-        className="glass-bg-blob-3 absolute -bottom-[25vmax] start-[10vmax] h-[60vmax] w-[60vmax] rounded-full"
+        className="glass-bg-blob-3 absolute bottom-[-25vmax] inset-s-[10vmax] h-[60vmax] w-[60vmax] rounded-full"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, rgba(20,184,166,0.45), rgba(20,184,166,0) 70%)",
         }}
       />
       <div
-        className="glass-bg-blob-4 absolute top-[30vmax] start-[20vmax] h-[60vmax] w-[60vmax] rounded-full"
+        className="glass-bg-blob-4 absolute top-[30vmax] inset-s-[20vmax] h-[60vmax] w-[60vmax] rounded-full"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, rgba(245,158,11,0.4), rgba(245,158,11,0) 70%)",
         }}
       />
       <div
-        className="glass-bg-blob-5 absolute -bottom-[20vmax] -end-[10vmax] h-[60vmax] w-[60vmax] rounded-full"
+        className="glass-bg-blob-5 absolute bottom-[-20vmax] inset-e-[-10vmax] h-[60vmax] w-[60vmax] rounded-full"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, rgba(56,189,248,0.45), rgba(56,189,248,0) 70%)",
@@ -169,7 +169,7 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
   return (
     <div className="dark relative flex min-h-svh items-center-safe justify-center overflow-hidden bg-[#0a0a0c] px-4 py-10 text-white">
       <BlobBackground />
-      <div className="relative z-10 w-full max-w-md rounded-2xl border border-white/15 bg-white/[0.06] p-5 shadow-2xl backdrop-blur-lg backdrop-saturate-150 sm:p-8 sm:backdrop-blur-xl">
+      <div className="relative z-10 w-full max-w-md rounded-2xl border border-white/15 bg-white/6 p-5 shadow-2xl backdrop-blur-lg backdrop-saturate-150 sm:p-8 sm:backdrop-blur-xl">
         {logo ? <div className="flex justify-center">{logo}</div> : null}
         <div className={cn("flex flex-col items-center text-center", logo && "mt-7")}>
           <h1 className="font-heading text-3xl tracking-tight">{t.title}</h1>
@@ -182,7 +182,7 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
               {shown.map((p) => (
                 <button
                   aria-busy={provider.isPending(p.id)}
-                  className="inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-white/15 bg-white/[0.08] px-3 text-sm text-white transition-colors hover:bg-white/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 disabled:cursor-default disabled:opacity-60"
+                  className="inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-white/15 bg-white/8 px-3 text-sm text-white transition-colors hover:bg-white/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 disabled:cursor-default disabled:opacity-60"
                   disabled={provider.isPending()}
                   key={p.id}
                   onClick={() => void provider.run(p.id, p.id)}
@@ -216,7 +216,7 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
             </Field.Label>
             <Input
               autoComplete="email"
-              className="border-white/15 bg-white/[0.06] text-white placeholder:text-white/50 hover:bg-white/[0.08] focus-visible:border-white/30"
+              className="border-white/15 bg-white/6 text-white placeholder:text-white/50 hover:bg-white/8 focus-visible:border-white/30"
               inputMode="email"
               placeholder={t.emailPlaceholder}
               type="email"
@@ -228,7 +228,7 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
               {t.password}
               <Required t={t} />
             </Field.Label>
-            <InputGroup className="border-white/15 bg-white/[0.06] text-white focus-within:border-white/30 hover:bg-white/[0.08]">
+            <InputGroup className="border-white/15 bg-white/6 text-white focus-within:border-white/30 hover:bg-white/8">
               <InputGroupInput autoComplete="new-password" className="text-white placeholder:text-white/50" placeholder="••••••••" type={reveal ? "text" : "password"} />
               <InputGroupAddon align="inline-end">
                 <button
@@ -251,7 +251,7 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
           ) : null}
           <Button
             aria-busy={form.pending}
-            className="mt-2 border-transparent bg-white text-[#0a0a0c] hover:bg-white/90 [&_[data-slot=button-loading-indicator]]:text-[#0a0a0c]"
+            className="mt-2 border-transparent bg-white text-[#0a0a0c] hover:bg-white/90 **:data-[slot=button-loading-indicator]:text-[#0a0a0c]"
             disabled={form.pending}
             size="lg"
             type="submit"

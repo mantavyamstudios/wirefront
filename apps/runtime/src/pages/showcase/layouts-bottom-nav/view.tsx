@@ -69,7 +69,7 @@ export function BottomTabShell({ children, title, tabs, activeId, onBack, onSear
       <main className="flex-1 px-4 pt-4 pb-4 sm:px-5">{children}</main>
 
       <nav aria-label={t.main} className="sticky bottom-0 z-30 border-border/60 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
-        <ul className="flex h-[72px] items-stretch justify-around">
+        <ul className="flex h-18 items-stretch justify-around">
           {tabs.map((tab) => {
             const active = tab.id === activeId;
             return (
@@ -94,7 +94,7 @@ export function BottomTabShell({ children, title, tabs, activeId, onBack, onSear
                     <span aria-hidden className="relative">
                       {tab.icon}
                       {tab.badge ? (
-                        <span className="absolute -end-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-foreground px-1 font-medium text-[10px] text-background">{tab.badge}</span>
+                        <span className="absolute -inset-e-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-foreground px-1 font-medium text-[10px] text-background">{tab.badge}</span>
                       ) : null}
                     </span>
                     <span className="text-[11px]">{tab.label}</span>

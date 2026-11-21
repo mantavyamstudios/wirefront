@@ -3,9 +3,9 @@ export interface PageReleaseDateFields {
   releaseDate?: Date | string;
 }
 
-export function toReleaseDateString(
+export const toReleaseDateString = (
   value: Date | string | number | undefined
-): string | undefined {
+): string | undefined => {
   if (value === undefined) {
     return;
   }
@@ -16,17 +16,16 @@ export function toReleaseDateString(
   }
 
   return date.toISOString().slice(0, 10);
-}
+};
 
-export function getPageReleaseDateString(
+export const getPageReleaseDateString = (
   data: PageReleaseDateFields
-): string | undefined {
-  return toReleaseDateString(data.releaseDate ?? data.lastModified);
-}
+): string | undefined =>
+  toReleaseDateString(data.releaseDate ?? data.lastModified);
 
-export function getPageReleaseTimestamp(
+export const getPageReleaseTimestamp = (
   data: PageReleaseDateFields
-): number | undefined {
+): number | undefined => {
   const value = data.releaseDate ?? data.lastModified;
   if (value === undefined) {
     return;
@@ -35,4 +34,4 @@ export function getPageReleaseTimestamp(
   const date = value instanceof Date ? value : new Date(value);
   const time = date.getTime();
   return Number.isNaN(time) ? undefined : time;
-}
+};

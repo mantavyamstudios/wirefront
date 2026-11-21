@@ -102,7 +102,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 function NativeSelect({ className, icon, ...props }: SelectHTMLAttributes<HTMLSelectElement> & { icon?: ReactNode }) {
   return (
     <div className="relative">
-      {icon ? <span className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2">{icon}</span> : null}
+      {icon ? <span className="pointer-events-none absolute inset-s-3 top-1/2 -translate-y-1/2">{icon}</span> : null}
       <select
         className={cn(
           "h-9 w-full appearance-none rounded-lg border border-input bg-background pe-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24",
@@ -113,7 +113,7 @@ function NativeSelect({ className, icon, ...props }: SelectHTMLAttributes<HTMLSe
       />
       <svg
         aria-hidden
-        className="pointer-events-none absolute end-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
+        className="pointer-events-none absolute inset-e-3 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
         fill="none"
         stroke="currentColor"
         strokeLinecap="round"
@@ -129,8 +129,8 @@ function NativeSelect({ className, icon, ...props }: SelectHTMLAttributes<HTMLSe
 
 function SecurityLink({ icon, title, description, cta, href, destructive }: { icon: ReactNode; title: string; description: string; cta: string; href: string; destructive?: boolean }) {
   return (
-    <div className={cn("flex items-center gap-4 rounded-lg border p-3.5", destructive ? "border-destructive/40 bg-destructive/[0.03]" : "border-border/60 bg-background/40")}>
-      <div aria-hidden className={cn("flex size-8 shrink-0 items-center justify-center rounded-md", destructive ? "bg-destructive/10 text-destructive-foreground" : "bg-foreground/[0.06]")}>
+    <div className={cn("flex items-center gap-4 rounded-lg border p-3.5", destructive ? "border-destructive/40 bg-destructive/3" : "border-border/60 bg-background/40")}>
+      <div aria-hidden className={cn("flex size-8 shrink-0 items-center justify-center rounded-md", destructive ? "bg-destructive/10 text-destructive-foreground" : "bg-foreground/6")}>
         {icon}
       </div>
       <div className="min-w-0 flex-1">
@@ -222,7 +222,7 @@ function AccountProfileScreen({
                 {profile.avatarUrl ? (
                   <img alt="" className="size-16 shrink-0 rounded-full object-cover ring-1 ring-border/60 sm:size-20" height={80} src={profile.avatarUrl} width={80} />
                 ) : (
-                  <div aria-hidden className="size-16 shrink-0 rounded-full bg-gradient-to-br from-primary/40 to-primary/10 ring-1 ring-border/60 sm:size-20" />
+                  <div aria-hidden className="size-16 shrink-0 rounded-full bg-linear-to-br from-primary/40 to-primary/10 ring-1 ring-border/60 sm:size-20" />
                 )}
                 <div className="flex min-w-0 flex-1 flex-col gap-2">
                   {onUploadPhoto || (onRemovePhoto && profile.avatarUrl) ? (

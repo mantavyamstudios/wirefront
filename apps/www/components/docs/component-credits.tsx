@@ -13,7 +13,7 @@ interface ComponentCreditsProps {
   name: string;
 }
 
-function InspirationSource({ label, url }: { label: string; url?: string }) {
+const InspirationSource = ({ label, url }: { label: string; url?: string }) => {
   if (!url) {
     return <span className="text-foreground font-medium">{label}</span>;
   }
@@ -28,9 +28,9 @@ function InspirationSource({ label, url }: { label: string; url?: string }) {
       {label}
     </a>
   );
-}
+};
 
-function getInspirationText(inspiration: RegistryInspiration) {
+const getInspirationText = (inspiration: RegistryInspiration) => {
   const source = (
     <InspirationSource label={inspiration.label} url={inspiration.url} />
   );
@@ -47,16 +47,16 @@ function getInspirationText(inspiration: RegistryInspiration) {
   if (inspiration.type === "adapted") {
     return (
       <>
-        Ported from {source} and reworked for Wirefront. The code from{" "}
-        {source} keeps its MIT notice.
+        Ported from {source} and reworked for Wirefront. The code from {source}{" "}
+        keeps its MIT notice.
       </>
     );
   }
 
   return <>Inspired by {source}.</>;
-}
+};
 
-export function ComponentCredits({ name }: ComponentCreditsProps) {
+export const ComponentCredits = ({ name }: ComponentCreditsProps) => {
   const inspiration = (
     index as Record<string, { inspiration?: RegistryInspiration | null }>
   )[name]?.inspiration;
@@ -70,4 +70,4 @@ export function ComponentCredits({ name }: ComponentCreditsProps) {
       {getInspirationText(inspiration)}
     </p>
   );
-}
+};

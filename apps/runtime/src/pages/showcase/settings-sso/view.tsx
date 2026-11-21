@@ -134,7 +134,7 @@ function CopyRow({ label, value, t }: { label: string; value: string; t: typeof 
         <code className="min-w-0 flex-1 break-all font-mono text-xs sm:truncate sm:break-normal">{value}</code>
         <button
           aria-label={interpolate(copied ? t.copied : t.copy, { label })}
-          className="grid size-6 shrink-0 place-items-center rounded text-muted-foreground outline-none hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-9"
+          className="grid size-6 shrink-0 place-items-center rounded text-muted-foreground outline-none hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-9"
           onClick={() => void copy.run()}
           type="button"
         >
@@ -286,7 +286,7 @@ function SsoSetupScreen({ providers = [], config, status = "ready", error, onRet
                           aria-current={isCurrent ? "step" : undefined}
                           className={cn(
                             "flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-start outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default disabled:opacity-60 pointer-coarse:min-h-11",
-                            isCurrent ? "bg-foreground/[0.06]" : "hover:bg-foreground/[0.04]",
+                            isCurrent ? "bg-foreground/6" : "hover:bg-foreground/4",
                           )}
                           disabled={!reachable}
                           onClick={() => setStep(n)}
@@ -404,7 +404,7 @@ function SsoSetupScreen({ providers = [], config, status = "ready", error, onRet
 
                   {key === "test" ? (
                     result ? (
-                      <div className="mt-6 rounded-md border border-category-2/30 bg-category-2/[0.06] p-4" role="status">
+                      <div className="mt-6 rounded-md border border-category-2/30 bg-category-2/6 p-4" role="status">
                         <div className="flex items-start gap-3">
                           <div aria-hidden className="grid size-7 shrink-0 place-items-center rounded-full bg-category-2/20 text-category-2-foreground">
                             <CheckIcon className="size-3.5" />
@@ -452,7 +452,7 @@ function SsoSetupScreen({ providers = [], config, status = "ready", error, onRet
                         {t.enforced}
                       </p>
                     ) : (
-                      <div className="mt-6 rounded-md border border-destructive/30 bg-destructive/[0.06] p-4">
+                      <div className="mt-6 rounded-md border border-destructive/30 bg-destructive/6 p-4">
                         <div className="flex items-start gap-3">
                           <div aria-hidden className="grid size-7 shrink-0 place-items-center rounded-full bg-destructive/15 text-destructive-foreground">
                             <AlertTriangleIcon className="size-3.5" />

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-import { type FormEvent, useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 import {
   ArchiveIcon,
   AtSignIcon,
@@ -35,7 +35,7 @@ export function InboxView() {
 
   return (
     <div className="grid h-full grid-cols-[340px_1fr]">
-      <aside className="flex flex-col border-r border-border/60 bg-foreground/[0.015]">
+      <aside className="flex flex-col border-r border-border/60 bg-foreground/1.5">
         <div className="border-b border-border/60 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -109,12 +109,15 @@ function ThreadRow({
   const author = participants[0];
 
   return (
-    <li
-      className={`relative cursor-pointer border-b border-border/40 px-4 py-3 transition-colors ${
-        active ? "bg-foreground/[0.06]" : "hover:bg-foreground/[0.03]"
-      }`}
-      onClick={onClick}
-    >
+    <li>
+      <button
+        type="button"
+        aria-current={active ? "true" : undefined}
+        className={`relative block w-full cursor-pointer border-b border-border/40 px-4 py-3 text-start transition-colors ${
+          active ? "bg-foreground/6" : "hover:bg-foreground/3"
+        }`}
+        onClick={onClick}
+      >
       {thread.unread ? (
         <span className="-translate-y-1/2 absolute top-1/2 left-1.5 size-1.5 rounded-full bg-primary" />
       ) : null}
@@ -148,6 +151,7 @@ function ThreadRow({
           </p>
         </div>
       </div>
+      </button>
     </li>
   );
 }
@@ -160,7 +164,7 @@ function ThreadDetail({ thread }: { thread: Thread }) {
     .map((id) => members.find((m) => m.id === id))
     .filter((m): m is NonNullable<typeof m> => !!m);
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     if (!draft.trim()) return;
     sendReply(thread.id, draft.trim());
@@ -228,7 +232,7 @@ function ThreadDetail({ thread }: { thread: Thread }) {
                       onClick={() => toggleReaction(thread.id, m.id, r.emoji)}
                       className={`inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-xs transition-colors ${
                         r.mine
-                          ? "border-foreground/30 bg-foreground/[0.06]"
+                          ? "border-foreground/30 bg-foreground/6"
                           : "border-border/60 bg-background/40 hover:border-border"
                       }`}
                     >
@@ -265,19 +269,19 @@ function ThreadDetail({ thread }: { thread: Thread }) {
             onKeyDown={(e) => {
               if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
                 e.preventDefault();
-                onSubmit(e as unknown as FormEvent);
+                onSubmit(e);
               }
             }}
           />
           <div className="flex items-center justify-between border-t border-border/40 pt-2">
             <div className="flex items-center gap-0.5">
-              <button type="button" className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground">
+              <button type="button" className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground">
                 <PaperclipIcon className="size-3.5" />
               </button>
-              <button type="button" className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground">
+              <button type="button" className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground">
                 <AtSignIcon className="size-3.5" />
               </button>
-              <button type="button" className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground">
+              <button type="button" className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground">
                 <SmileIcon className="size-3.5" />
               </button>
             </div>
@@ -312,8 +316,8 @@ function Tab({
       onClick={onClick}
       className={`rounded px-2 py-1 transition-colors ${
         active
-          ? "bg-foreground/[0.08] text-foreground"
-          : "text-muted-foreground/70 hover:bg-foreground/[0.03] hover:text-foreground"
+          ? "bg-foreground/8 text-foreground"
+          : "text-muted-foreground/70 hover:bg-foreground/3 hover:text-foreground"
       }`}
     >
       {children}

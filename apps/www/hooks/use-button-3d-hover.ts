@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import type { RefObject } from "react";
 
-const WHITESPACE_REGEX = /\s+/;
+const WHITESPACE_REGEX = /\s+/u;
 
-function ensureCustomEase() {
+const ensureCustomEase = () => {
   gsap.registerPlugin(CustomEase);
   if (!CustomEase.get("site-cubic")) {
     try {
@@ -17,26 +17,25 @@ function ensureCustomEase() {
       // CustomEase exists
     }
   }
-}
+};
 
 // Helper to completely kill animations and remove inline transform overrides
-function resetTargets(animTargets: HTMLElement[]) {
+const resetTargets = (animTargets: HTMLElement[]) => {
   gsap.killTweensOf(animTargets);
   for (const el of animTargets) {
     el.style.removeProperty("transform");
   }
   gsap.set(animTargets, { clearProps: "all" });
-}
+};
 
-function hasAttrVal(el: HTMLElement, attr: string, val: string) {
-  return (el.getAttribute(attr) || "")
+const hasAttrVal = (el: HTMLElement, attr: string, val: string) =>
+  (el.getAttribute(attr) || "")
     .toLowerCase()
     .split(WHITESPACE_REGEX)
     .includes(val);
-}
 
 // 1. Calculate pivot depth --y based on text length (initRotateButtonsCalc)
-function calcButtonY(t: HTMLElement) {
+const calcButtonY = (t: HTMLElement) => {
   const labels = [...t.querySelectorAll<HTMLElement>(".button-label")];
   if (labels.length === 0) {
     return;
@@ -59,9 +58,9 @@ function calcButtonY(t: HTMLElement) {
   }
   n = Math.max(100, Math.min(n, 10_000));
   t.style.setProperty("--y", `${n}%`);
-}
+};
 
-function bindHoverRotation(t: HTMLElement): (() => void) | null {
+const bindHoverRotation = (t: HTMLElement): (() => void) | null => {
   const elementWithFlag = t as HTMLElement & {
     _rotBound?: boolean;
     _rotTl?: gsap.core.Tween | null;
@@ -106,7 +105,9 @@ function bindHoverRotation(t: HTMLElement): (() => void) | null {
     }
 
     const n =
-      Number.parseFloat(getComputedStyle(e).getPropertyValue("--r")) || 20;
+      Number(
+        getComputedStyle(e).getPropertyValue("--r").trim().replace(/deg$/u, "")
+      ) || 20;
     const dur = e.dataset.size === "full" ? 0.75 : 0.5;
 
     elementWithFlag._rotTl = gsap.to(animTargets, {
@@ -139,9 +140,11 @@ function bindHoverRotation(t: HTMLElement): (() => void) | null {
     resetTargets(animTargets);
     elementWithFlag._rotBound = false;
   };
-}
+};
 
-export function useButton3DHover(containerRef?: RefObject<HTMLElement | null>) {
+export const useButton3DHover = (
+  containerRef?: RefObject<HTMLElement | null>
+) => {
   const pathname = usePathname();
 
   useEffect(() => {
@@ -214,4 +217,4 @@ export function useButton3DHover(containerRef?: RefObject<HTMLElement | null>) {
       }
     };
   }, [containerRef, pathname]);
-}
+};

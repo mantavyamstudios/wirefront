@@ -155,7 +155,7 @@ function TwoFactorSetupScreen({ enrollment, onVerify, onVerified, account, step,
                     <code className="min-w-0 flex-1 break-all font-mono text-sm">{grouped}</code>
                     <button
                       aria-label={copy === "copied" ? t.keyCopied : t.copyKey}
-                      className="grid size-8 shrink-0 place-items-center rounded text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground pointer-coarse:size-10"
+                      className="grid size-8 shrink-0 place-items-center rounded text-muted-foreground hover:bg-foreground/5 hover:text-foreground pointer-coarse:size-10"
                       onClick={() => void copyKey()}
                       type="button"
                     >

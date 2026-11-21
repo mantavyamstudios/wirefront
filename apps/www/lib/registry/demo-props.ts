@@ -1,6 +1,6 @@
-export function unwrapValues(
+export const unwrapValues = (
   value: Record<string, unknown>
-): Record<string, unknown> {
+): Record<string, unknown> => {
   if (value !== null && typeof value === "object" && !Array.isArray(value)) {
     if ("value" in value) {
       return value.value as Record<string, unknown>;
@@ -17,9 +17,9 @@ export function unwrapValues(
   }
 
   return value;
-}
+};
 
-export function flattenFirstLevel<T>(input: Record<string, unknown>): T {
+export const flattenFirstLevel = <T>(input: Record<string, unknown>): T => {
   const result: Record<string, unknown> = {};
   for (const current of Object.values(input)) {
     if (typeof current === "object" && current !== null) {
@@ -27,4 +27,4 @@ export function flattenFirstLevel<T>(input: Record<string, unknown>): T {
     }
   }
   return result as T;
-}
+};

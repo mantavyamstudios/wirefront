@@ -124,11 +124,11 @@ function StatusIcon({ status, t }: { status: CiCheck["status"]; t: Messages }) {
   const icon =
     status === "failed" ? (
       <span className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-category-4 text-white">
-        <XIcon className="size-3 stroke-[3]" />
+        <XIcon className="size-3 stroke-3" />
       </span>
     ) : status === "passed" ? (
       <span className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-category-2 text-white">
-        <CheckIcon className="size-3 stroke-[3]" />
+        <CheckIcon className="size-3 stroke-3" />
       </span>
     ) : (
       <span className="inline-flex size-4 shrink-0 items-center justify-center rounded-full border border-muted-foreground/50 text-muted-foreground">
@@ -267,13 +267,13 @@ function ChecksConsoleScreen({ pr, status = "ready", error, onRetry, onUpdateBra
               <span>
                 <strong className="text-foreground">{pr.author}</strong> {t.wantsToMerge} <strong className="text-foreground">{interpolate(t.commits, { count: pr.commits })}</strong> {t.into}
               </span>
-              <span className="inline-flex items-center gap-1 rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[11px] text-foreground">
+              <span className="inline-flex items-center gap-1 rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[11px] text-foreground">
                 <GitBranchIcon aria-hidden className="size-2.5 opacity-60" />
                 {pr.base}
               </span>
               <ArrowRightIcon aria-hidden className="size-3 rtl:rotate-180" />
               <span>{t.from}</span>
-              <span className="inline-flex items-center gap-1 rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[11px] text-foreground">
+              <span className="inline-flex items-center gap-1 rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[11px] text-foreground">
                 <GitBranchIcon aria-hidden className="size-2.5 opacity-60" />
                 {pr.head}
               </span>

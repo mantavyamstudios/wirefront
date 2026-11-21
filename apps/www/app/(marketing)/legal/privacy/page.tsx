@@ -11,12 +11,12 @@ export const metadata: Metadata = {
   alternates: getPageAlternates("/legal/privacy"),
 };
 
-export default function LegalPrivacyPage() {
-  return (
-    <LegalScrollView
-      lastUpdated="November 20, 2026"
-      terms={PRIVACY_POLICY_ITEMS}
-      title="Privacy Policy"
-    />
-  );
-}
+const LegalPrivacyPage = () => (
+  <LegalScrollView
+    lastUpdated="November 20, 2026"
+    terms={PRIVACY_POLICY_ITEMS}
+    title="Privacy Policy"
+  />
+);
+
+export default LegalPrivacyPage;

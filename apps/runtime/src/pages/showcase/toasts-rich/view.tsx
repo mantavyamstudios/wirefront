@@ -45,7 +45,7 @@ const KIND: Record<ActivityToast["kind"], { icon: ReactNode; tone: string }> = {
   reply: { icon: <MessageCircleIcon className="size-3" />, tone: "bg-category-1/15 text-category-1-foreground" },
   review: { icon: <GitPullRequestIcon className="size-3" />, tone: "bg-category-5/15 text-category-5-foreground" },
   join: { icon: <UserPlusIcon className="size-3" />, tone: "bg-category-2/15 text-category-2-foreground" },
-  other: { icon: <BellIcon className="size-3" />, tone: "bg-foreground/[0.08] text-foreground" },
+  other: { icon: <BellIcon className="size-3" />, tone: "bg-foreground/8 text-foreground" },
 };
 const AVATAR_TONES = ["bg-category-5-strong", "bg-category-3-strong", "bg-category-2-strong", "bg-category-1-strong"];
 
@@ -77,7 +77,7 @@ function Viewport({ manager, className }: { manager: ActivityToastManager; class
   const hidden = toasts.length - 1;
   return (
     <Toast.Portal>
-      <Toast.Viewport className={cn("fixed inset-x-0 top-0 z-50 flex max-h-svh flex-col gap-2 overflow-y-auto px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-4 outline-none sm:inset-x-auto sm:end-6 sm:top-6 sm:w-[380px] sm:overflow-visible sm:px-0 sm:pt-0", className)}>
+      <Toast.Viewport className={cn("fixed inset-x-0 top-0 z-50 flex max-h-svh flex-col gap-2 overflow-y-auto px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-4 outline-none sm:inset-x-auto sm:inset-e-6 sm:top-6 sm:w-95 sm:overflow-visible sm:px-0 sm:pt-0", className)}>
         {toasts.map((toast, i) => {
           const d = toast.data;
           const kind = KIND[d?.kind ?? "other"];
@@ -131,7 +131,7 @@ function Viewport({ manager, className }: { manager: ActivityToastManager; class
                     ) : null}
                   </div>
                 </div>
-                <Toast.Close aria-label={t.dismiss} className="-me-1.5 -mt-1.5 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10">
+                <Toast.Close aria-label={t.dismiss} className="-me-1.5 -mt-1.5 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:size-10">
                   <XIcon aria-hidden className="size-3.5" />
                 </Toast.Close>
               </div>

@@ -181,7 +181,7 @@ function Odometer({ value, format }: { value: number; format: (n: number) => str
 function Digit({ digit }: { digit: number }) {
   const reduce = useReducedMotion();
   return (
-    <span aria-hidden className="relative inline-flex h-[1.15em] items-center overflow-hidden [mask-image:linear-gradient(transparent,black_18%,black_82%,transparent)]">
+    <span aria-hidden className="relative inline-flex h-[1.15em] items-center overflow-hidden mask-[linear-gradient(transparent,black_18%,black_82%,transparent)]">
       <span className="invisible">{DIGITS[0]}</span>
       <motion.span animate={{ y: `${-digit * 1.15}em` }} className="absolute inset-x-0 top-0 flex flex-col items-center" initial={false} transition={reduce ? { duration: 0 } : roll}>
         {DIGITS.map((d) => (
@@ -215,7 +215,7 @@ function MerchantTile({ merchant, category }: { merchant: string; category: Mone
   return (
     <span aria-hidden className="relative shrink-0">
       <span className={cn("flex size-9 items-center justify-center rounded-xl font-semibold text-[11px] tracking-wide", c.tile)}>{initials(merchant)}</span>
-      <span className="absolute -end-1 -bottom-1 flex size-4 items-center justify-center rounded-full bg-card text-muted-foreground ring-2 ring-card">
+      <span className="absolute -inset-e-1 -bottom-1 flex size-4 items-center justify-center rounded-full bg-card text-muted-foreground ring-2 ring-card">
         <Icon className="size-2.5" />
       </span>
     </span>
@@ -557,7 +557,7 @@ function MoneyScreen({ productName, user, accounts: initialAccounts, transaction
   const balanceSection = (
     <section aria-label={t.balance} className={cn(card, "order-1 overflow-hidden")}>
       <div className="flex flex-col gap-4 p-4 pb-0 @lg:p-5 @lg:pb-0">
-        <fieldset className="-mx-4 isolate m-0 flex min-w-0 gap-1 overflow-x-auto border-0 p-0 px-4 [scrollbar-width:none] @lg:-mx-5 @lg:px-5">
+        <fieldset className="-mx-4 isolate m-0 flex min-w-0 gap-1 overflow-x-auto border-0 p-0 px-4 scrollbar-none @lg:-mx-5 @lg:px-5">
           <legend className="sr-only">{t.account}</legend>
           {pills.map((p) => {
             const active = p.id === accountId;
@@ -605,7 +605,7 @@ function MoneyScreen({ productName, user, accounts: initialAccounts, transaction
                   <span aria-hidden className={cn("size-2 shrink-0 rounded-full", categoryStyle[s.cat].dot)} />
                   <span className="flex-1 truncate">{t[`cat_${s.cat}`]}</span>
                   <span className="text-muted-foreground text-xs tabular-nums">{fmt.number(spent ? s.value / spent : 0, { style: "percent" })}</span>
-                  <span className="w-[4.75rem] text-end font-medium tabular-nums">
+                  <span className="w-19 text-end font-medium tabular-nums">
                     <Tween format={mf.money} value={s.value} />
                   </span>
                 </button>
@@ -783,7 +783,7 @@ function MoneyScreen({ productName, user, accounts: initialAccounts, transaction
       <Sheet onOpenChange={setDrawer} open={drawer}>
         <SheetContent className="w-72 max-w-[85%] gap-0 p-0" showCloseButton={false} side="left">
           <SheetTitle className="sr-only">{t.navigation}</SheetTitle>
-          <Button aria-label={t.closeNavigation} className="absolute end-3 top-3" onClick={() => setDrawer(false)} size="icon-sm" variant="ghost">
+          <Button aria-label={t.closeNavigation} className="absolute inset-e-3 top-3" onClick={() => setDrawer(false)} size="icon-sm" variant="ghost">
             <XIcon />
           </Button>
           {sidebar("drawer")}

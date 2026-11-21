@@ -41,23 +41,22 @@ const CATEGORY_BY_SLUG: Partial<Record<string, ComponentGalleryCategory>> = {
   "text-roll": "texts",
 };
 
-export function resolveGalleryCategory(
+export const resolveGalleryCategory = (
   item: ComponentGalleryItem
-): ComponentGalleryCategory {
+): ComponentGalleryCategory => {
   if (item.category) {
     return item.category;
   }
 
   return CATEGORY_BY_SLUG[item.slug] ?? "components";
-}
+};
 
-export function isGalleryBlocksItem(item: ComponentGalleryItem): boolean {
-  return !item.slug.startsWith("mock-scroll-");
-}
+export const isGalleryBlocksItem = (item: ComponentGalleryItem): boolean =>
+  !item.slug.startsWith("mock-scroll-");
 
-export function groupGalleryItemsByCategory(
+export const groupGalleryItemsByCategory = (
   items: ComponentGalleryItem[]
-): Map<ComponentGalleryCategory, ComponentGalleryItem[]> {
+): Map<ComponentGalleryCategory, ComponentGalleryItem[]> => {
   const grouped = new Map<ComponentGalleryCategory, ComponentGalleryItem[]>();
 
   for (const item of items) {
@@ -72,4 +71,4 @@ export function groupGalleryItemsByCategory(
   }
 
   return grouped;
-}
+};

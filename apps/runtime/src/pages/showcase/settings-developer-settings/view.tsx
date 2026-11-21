@@ -251,7 +251,7 @@ function StatusCode({ status, busy, reduce, t }: { status: Delivery["status"]; b
   return (
     <span
       className={cn(
-        "relative inline-flex h-5 w-[3.75rem] items-center justify-center overflow-hidden rounded-md px-1.5 font-medium font-mono text-[11px] tabular-nums transition-colors duration-200",
+        "relative inline-flex h-5 w-15 items-center justify-center overflow-hidden rounded-md px-1.5 font-medium font-mono text-[11px] tabular-nums transition-colors duration-200",
         busy ? "bg-muted text-muted-foreground" : ok ? "bg-success/10 text-success-foreground dark:bg-success/16" : "bg-destructive/8 text-destructive-foreground dark:bg-destructive/16",
       )}
     >

@@ -11,7 +11,7 @@
     "typecheck": "bun run check-types",
     "predev": "bun ./scripts/screens-manifest.mts && bun ../../scripts/screen-docs.ts && bun ./scripts/docs-registry.mts",
     "dev": "bun ./scripts/dev.mts",
-    "preview": "WRANGLER_SEND_METRICS=false bunx wrangler@4 pages dev out --port 3000 --ip 127.0.0.1",
+    "preview": "WRANGLER_SEND_METRICS=false wrangler dev --config ../../wrangler.jsonc --port 3000 --ip 127.0.0.1",
     "postinstall": "fumadocs-mdx",
     "screens:manifest": "bun ./scripts/screens-manifest.mts",
     "screens:check": "bun ./scripts/screens-manifest.mts --check",

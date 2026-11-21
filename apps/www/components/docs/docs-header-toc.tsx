@@ -12,7 +12,13 @@ import {
 import { PageTOCPopoverItems } from "fumadocs-ui/layouts/docs/page";
 import { useReducedMotion } from "motion/react";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import type { ComponentProps } from "react";
 
 import {
@@ -25,10 +31,10 @@ const RING_SIZE = 20;
 const RING_STROKE = 1.75;
 const RING_RADIUS = (RING_SIZE - RING_STROKE) / 2;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
-const HASH_PREFIX_REGEX = /^#/;
+const HASH_PREFIX_REGEX = /^#/u;
 const CLICK_OVERRIDE_MS = 800;
 
-function clamp(value: number, min: number, max: number) {
+const clamp = (value: number, min: number, max: number) => {
   if (value < min) {
     return min;
   }
@@ -36,16 +42,16 @@ function clamp(value: number, min: number, max: number) {
     return max;
   }
   return value;
-}
+};
 
-function TocProgressRing({
+const TocProgressRing = ({
   progress,
   className,
   ...props
 }: ComponentProps<"svg"> & {
   /** 0–1 fill amount of the ring. */
   progress: number;
-}) {
+}) => {
   const prefersReducedMotion = useReducedMotion();
   const normalized = clamp(progress, 0, 1);
   const offset = RING_CIRCUMFERENCE * (1 - normalized);
@@ -80,13 +86,13 @@ function TocProgressRing({
       />
     </svg>
   );
-}
+};
 
-function scrollChildIntoView(
+const scrollChildIntoView = (
   scroller: HTMLElement,
   target: HTMLElement,
   behavior: ScrollBehavior = "auto"
-) {
+) => {
   if (scroller.clientHeight === 0) {
     return false;
   }
@@ -111,30 +117,38 @@ function scrollChildIntoView(
   );
   scroller.scrollTo({ top: nextScrollTop, behavior });
   return true;
-}
+};
 
-function findActiveHeadingId(tocItems: HeaderTocItem[]): string | undefined {
-  if (tocItems.length === 0 || typeof document === "undefined") {
-    return;
-  }
-
+/** The page's scroll position and sizes, with fallbacks for older engines. */
+const readPageScroll = () => {
   const scrollElement = document.scrollingElement || document.documentElement;
-  const scrollTop = scrollElement.scrollTop || window.scrollY || 0;
-  const viewportHeight = window.innerHeight || scrollElement.clientHeight || 0;
-  const scrollHeight =
-    scrollElement.scrollHeight || document.body.scrollHeight || 0;
+  return {
+    scrollTop: scrollElement.scrollTop || window.scrollY || 0,
+    viewportHeight: window.innerHeight || scrollElement.clientHeight || 0,
+    scrollHeight: scrollElement.scrollHeight || document.body.scrollHeight || 0,
+  };
+};
 
+/** The headings on the page that the table of contents links to, in order. */
+const findHeadings = (tocItems: HeaderTocItem[]) => {
   const headings: { id: string; element: HTMLElement }[] = [];
   for (const item of tocItems) {
     const id = item.url.slice(1);
-    if (!id) {
-      continue;
-    }
-    const el = document.querySelector<HTMLElement>(`#${id}`);
+    const el = id ? document.querySelector<HTMLElement>(`#${id}`) : null;
     if (el) {
       headings.push({ id, element: el });
     }
   }
+  return headings;
+};
+
+const findActiveHeadingId = (tocItems: HeaderTocItem[]): string | undefined => {
+  if (tocItems.length === 0 || typeof document === "undefined") {
+    return;
+  }
+
+  const { scrollTop, viewportHeight, scrollHeight } = readPageScroll();
+  const headings = findHeadings(tocItems);
 
   if (headings.length === 0) {
     return;
@@ -167,14 +181,14 @@ function findActiveHeadingId(tocItems: HeaderTocItem[]): string | undefined {
   }
 
   return activeId;
-}
+};
 
-function scrollActiveDocsItem(
+const scrollActiveDocsItem = (
   scroller: HTMLElement,
   href: string | null,
   id: string | undefined,
   behavior: ScrollBehavior
-): boolean {
+): boolean => {
   const links = scroller.querySelectorAll<HTMLAnchorElement>("a");
   let target: HTMLAnchorElement | null = null;
 
@@ -194,15 +208,13 @@ function scrollActiveDocsItem(
   }
 
   return target ? scrollChildIntoView(scroller, target, behavior) : false;
-}
+};
 
-function HeaderTocPopover() {
+const HeaderTocPopover = () => {
   const items = useTOCItems();
   const active = useActiveAnchor();
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
-  const prefersReducedMotionRef = useRef(prefersReducedMotion);
-  prefersReducedMotionRef.current = prefersReducedMotion;
   const [fallbackActiveId, setFallbackActiveId] = useState<string>();
   const [clickedId, setClickedId] = useState<string>();
   const [open, setOpen] = useState(false);
@@ -242,12 +254,15 @@ function HeaderTocPopover() {
     };
   }, [enabled, items]);
 
+  // A clicked heading overrides the scroll position until it's reached, or for a moment.
+  const reachedClickedId =
+    Boolean(clickedId) &&
+    (active === clickedId || fallbackActiveId === clickedId);
+  if (reachedClickedId) {
+    setClickedId(undefined);
+  }
   useEffect(() => {
     if (!clickedId) {
-      return;
-    }
-    if (active === clickedId || fallbackActiveId === clickedId) {
-      setClickedId(undefined);
       return;
     }
     const timer = setTimeout(() => {
@@ -256,24 +271,12 @@ function HeaderTocPopover() {
     return () => {
       clearTimeout(timer);
     };
-  }, [active, clickedId, fallbackActiveId]);
+  }, [clickedId]);
 
-  const hasClickedId =
-    Boolean(clickedId) && items.some((item) => clickedId === item.url.slice(1));
-  const hasObserverId =
-    Boolean(active) && items.some((item) => active === item.url.slice(1));
-  const hasFallbackId =
-    Boolean(fallbackActiveId) &&
-    items.some((item) => fallbackActiveId === item.url.slice(1));
-
-  let currentActiveId: string | undefined;
-  if (hasClickedId) {
-    currentActiveId = clickedId;
-  } else if (hasFallbackId) {
-    currentActiveId = fallbackActiveId;
-  } else if (hasObserverId) {
-    currentActiveId = active;
-  }
+  // A clicked heading wins, then the scroll position, then the observer's pick.
+  const currentActiveId = [clickedId, fallbackActiveId, active].find(
+    (id) => Boolean(id) && items.some((item) => id === item.url.slice(1))
+  );
 
   const selectedIndex =
     enabled && currentActiveId
@@ -286,10 +289,15 @@ function HeaderTocPopover() {
   const activeHref =
     enabled && selectedIndex >= 0 ? items[selectedIndex]?.url : null;
 
-  const activeHrefRef = useRef(activeHref);
-  activeHrefRef.current = activeHref;
-  const activeIdRef = useRef(currentActiveId);
-  activeIdRef.current = currentActiveId;
+  // Scrolls the list to the current heading, read fresh on each attempt.
+  const scrollToActive = useEffectEvent((scroller: HTMLElement) =>
+    scrollActiveDocsItem(
+      scroller,
+      activeHref,
+      currentActiveId,
+      prefersReducedMotion ? "auto" : "smooth"
+    )
+  );
 
   // Scroll ONCE when popover opens without re-triggering during background scrolls
   useEffect(() => {
@@ -300,24 +308,13 @@ function HeaderTocPopover() {
     let frameId: number;
     let attempts = 0;
     const maxAttempts = 12;
-    const behavior: ScrollBehavior = prefersReducedMotionRef.current
-      ? "auto"
-      : "smooth";
-
     const tryScroll = () => {
       attempts += 1;
       const content = contentRef.current;
       const scroller = content?.querySelector<HTMLElement>(
         "[data-docs-toc-scroller]"
       );
-      const done = scroller
-        ? scrollActiveDocsItem(
-            scroller,
-            activeHrefRef.current,
-            activeIdRef.current,
-            behavior
-          )
-        : false;
+      const done = scroller ? scrollToActive(scroller) : false;
 
       if (!done && attempts < maxAttempts) {
         frameId = requestAnimationFrame(tryScroll);
@@ -385,7 +382,7 @@ function HeaderTocPopover() {
           sideOffset={8}
         >
           <PageTOCPopoverItems
-            className="min-h-0 flex-1 [scrollbar-width:thin]! overflow-y-auto overscroll-contain"
+            className="min-h-0 flex-1 scrollbar-thin! overflow-y-auto overscroll-contain"
             data-docs-toc-scroller=""
             variant="clerk"
           />
@@ -393,10 +390,10 @@ function HeaderTocPopover() {
       ) : null}
     </Popover>
   );
-}
+};
 
 /** Always-visible navbar TOC. Empty pages keep a disabled ring instead of unmounting. */
-export function NavHeaderToc() {
+export const NavHeaderToc = () => {
   const items = useHeaderTocItems();
 
   return (
@@ -406,11 +403,11 @@ export function NavHeaderToc() {
       </div>
     </TOCProvider>
   );
-}
+};
 
 /** Publishes this page's TOC into the navbar chrome. Renders nothing itself. */
-export function DocsHeaderToc() {
+export const DocsHeaderToc = () => {
   const items = useTOCItems();
   usePublishHeaderToc(items);
   return null;
-}
+};

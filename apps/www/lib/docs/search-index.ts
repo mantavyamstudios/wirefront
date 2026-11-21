@@ -9,11 +9,10 @@ type SearchablePage =
   | InferPageType<typeof source>
   | InferPageType<typeof screensSource>;
 
-function getSearchTag(page: SearchablePage): string {
-  return page.url === "/docs" || page.url.startsWith("/docs/") ? "docs" : "screens";
-}
+const getSearchTag = (page: SearchablePage): string =>
+  page.url === "/docs" || page.url.startsWith("/docs/") ? "docs" : "screens";
 
-function pageToAdvancedIndex(page: SearchablePage): AdvancedIndex {
+const pageToAdvancedIndex = (page: SearchablePage): AdvancedIndex => {
   if (!("structuredData" in page.data)) {
     throw new Error(
       `Cannot index page ${page.url}: structuredData is missing.`
@@ -31,30 +30,27 @@ function pageToAdvancedIndex(page: SearchablePage): AdvancedIndex {
     structuredData,
     tag: getSearchTag(page),
   };
-}
+};
 
-export function getSearchablePages(): SearchablePage[] {
-  return [...source.getPages(), ...screensSource.getPages()];
-}
+export const getSearchablePages = (): SearchablePage[] => [
+  ...source.getPages(),
+  ...screensSource.getPages(),
+];
 
-export function getSearchIndexes(): AdvancedIndex[] {
-  return getSearchablePages().map(pageToAdvancedIndex);
-}
+export const getSearchIndexes = (): AdvancedIndex[] =>
+  getSearchablePages().map(pageToAdvancedIndex);
 
-export function getStaticPageDocuments(): Omit<OramaDocument, "structured">[] {
-  return getSearchablePages().map((page) => ({
+export const getStaticPageDocuments = (): Omit<OramaDocument, "structured">[] =>
+  getSearchablePages().map((page) => ({
     id: page.url,
     tag: getSearchTag(page),
     url: page.url,
     title: page.data.title,
     description: page.data.description,
   }));
-}
 
-export async function getCachedSearchIndexes() {
-  return await Promise.resolve(getSearchIndexes());
-}
+export const getCachedSearchIndexes = async () =>
+  await Promise.resolve(getSearchIndexes());
 
-export async function getCachedStaticPageDocuments() {
-  return await Promise.resolve(getStaticPageDocuments());
-}
+export const getCachedStaticPageDocuments = async () =>
+  await Promise.resolve(getStaticPageDocuments());

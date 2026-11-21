@@ -25,19 +25,16 @@ interface ComponentPageBlocksNavProps {
   onNavigate?: () => void;
 }
 
-function isBlocksItemActive(pathname: string, item: ComponentGalleryItem) {
-  return (
-    pathname === item.href ||
-    pathname === `/blocks/${item.slug}` ||
-    pathname === `/components/${item.slug}`
-  );
-}
+const isBlocksItemActive = (pathname: string, item: ComponentGalleryItem) =>
+  pathname === item.href ||
+  pathname === `/blocks/${item.slug}` ||
+  pathname === `/components/${item.slug}`;
 
-export function ComponentPageBlocksNav({
+export const ComponentPageBlocksNav = ({
   className,
   items,
   onNavigate,
-}: ComponentPageBlocksNavProps) {
+}: ComponentPageBlocksNavProps) => {
   const pathname = usePathname();
   const section = useBlocksSection();
   const sortedItems = useMemo(
@@ -158,4 +155,4 @@ export function ComponentPageBlocksNav({
       <BlocksNavHoverPreview position={hoverPosition} preview={hoverPreview} />
     </>
   );
-}
+};

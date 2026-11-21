@@ -49,7 +49,7 @@ export function LayoutsFocusModeShowcasePage() {
 
           <h2
             id="loop"
-            className="!mt-12 !text-2xl pt-4 font-heading tracking-tight"
+            className="mt-12! text-2xl! pt-4 font-heading tracking-tight"
           >
             The iteration loop
           </h2>
@@ -69,7 +69,7 @@ export function LayoutsFocusModeShowcasePage() {
 
           <h2
             id="scaffolds"
-            className="!mt-12 !text-2xl pt-4 font-heading tracking-tight"
+            className="mt-12! text-2xl! pt-4 font-heading tracking-tight"
           >
             Scaffolds vs. polish
           </h2>
@@ -88,7 +88,7 @@ export function LayoutsFocusModeShowcasePage() {
 
           <blockquote
             id="quote"
-            className="!my-10 border-border border-s-4 ps-6 text-foreground/85 italic"
+            className="my-10! border-border border-s-4 ps-6 text-foreground/85 italic"
           >
             The fastest way to taste is volume. Build a hundred bad layouts and
             the next ten will be quietly excellent — not because you tried
@@ -103,7 +103,7 @@ export function LayoutsFocusModeShowcasePage() {
             the idea out to where real apps live.
           </p>
 
-          <ul className="!my-6 list-disc space-y-2 ps-6 text-foreground/90">
+          <ul className="my-6! list-disc space-y-2 ps-6 text-foreground/90">
             <li>One idea per file. If two ideas want to merge, fork instead.</li>
             <li>No data layer. Hard-code everything. Real data is later.</li>
             <li>Steal shamelessly from your own past sketches.</li>
@@ -112,7 +112,7 @@ export function LayoutsFocusModeShowcasePage() {
 
           <h2
             id="closing"
-            className="!mt-12 !text-2xl pt-4 font-heading tracking-tight"
+            className="mt-12! text-2xl! pt-4 font-heading tracking-tight"
           >
             Closing thoughts
           </h2>

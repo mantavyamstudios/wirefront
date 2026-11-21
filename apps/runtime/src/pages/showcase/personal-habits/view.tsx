@@ -213,7 +213,7 @@ function TickButton({ done, value, goal, tone, label, burst, onTick, onUndo, t }
             <>
               <motion.span animate={{ y: `${(1 - level) * 100}%` }} aria-hidden className={cn("absolute inset-x-0 bottom-0 h-full", done ? c.fill : c.soft)} initial={false} transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 160, damping: 20 }}>
                 {!done && level > 0 ? (
-                  <motion.svg animate={reduce ? undefined : { x: ["0%", "-50%"] }} aria-hidden className="absolute -top-[5px] start-0 h-1.5 w-[200%]" key={`w${value}`} preserveAspectRatio="none" transition={{ duration: 0.9, ease: "easeOut" }} viewBox="0 0 80 6">
+                  <motion.svg animate={reduce ? undefined : { x: ["0%", "-50%"] }} aria-hidden className="absolute -top-1.25 inset-s-0 h-1.5 w-[200%]" key={`w${value}`} preserveAspectRatio="none" transition={{ duration: 0.9, ease: "easeOut" }} viewBox="0 0 80 6">
                     <path className={c.wave} d="M0 3 Q10 0 20 3 T40 3 T60 3 T80 3 V6 H0 Z" />
                   </motion.svg>
                 ) : null}
@@ -230,7 +230,7 @@ function TickButton({ done, value, goal, tone, label, burst, onTick, onUndo, t }
         {burst > 0 ? (
           <span aria-hidden className="pointer-events-none absolute inset-0" key={burst}>
             {BURST.map((a) => (
-              <motion.span animate={{ x: Math.cos(a) * 29, y: Math.sin(a) * 29, opacity: 0, scale: 0.5 }} className={cn("absolute top-1/2 left-1/2 -mt-[3px] -ms-[3px] size-1.5 rounded-full", c.fill)} initial={{ x: Math.cos(a) * 19, y: Math.sin(a) * 19, opacity: 1, scale: 1 }} key={a} transition={{ duration: 0.4, ease: easeOut }} />
+              <motion.span animate={{ x: Math.cos(a) * 29, y: Math.sin(a) * 29, opacity: 0, scale: 0.5 }} className={cn("absolute top-1/2 left-1/2 -mt-0.75 -ms-0.75 size-1.5 rounded-full", c.fill)} initial={{ x: Math.cos(a) * 19, y: Math.sin(a) * 19, opacity: 1, scale: 1 }} key={a} transition={{ duration: 0.4, ease: easeOut }} />
             ))}
           </span>
         ) : null}
@@ -588,7 +588,7 @@ function HabitsScreen({ productName, weekStart, habits: initialHabits, suggestio
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto flex max-w-[1100px] flex-col gap-5 px-4 pt-5 pb-10 @3xl:px-6 @3xl:pt-6 @4xl:grid @4xl:grid-cols-[minmax(0,1fr)_--spacing(95)] @4xl:items-start @4xl:gap-6">
+        <div className="mx-auto flex max-w-275 flex-col gap-5 px-4 pt-5 pb-10 @3xl:px-6 @3xl:pt-6 @4xl:grid @4xl:grid-cols-[minmax(0,1fr)_--spacing(95)] @4xl:items-start @4xl:gap-6">
           <section aria-labelledby={`${uid}-day`} className="flex min-w-0 flex-col gap-4">
             <div className="flex items-center gap-4">
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -802,7 +802,7 @@ function HabitsScreen({ productName, weekStart, habits: initialHabits, suggestio
           }}
           open={sheet}
         >
-          <SheetContent className={cn("gap-0 p-0", wide ? "w-[400px] sm:max-w-[400px]" : "max-h-[92svh] rounded-t-2xl")} showCloseButton={false} side={wide ? "right" : "bottom"}>
+          <SheetContent className={cn("gap-0 p-0", wide ? "w-100 sm:max-w-100" : "max-h-[92svh] rounded-t-2xl")} showCloseButton={false} side={wide ? "right" : "bottom"}>
             {sheet ? (
               <AddHabitForm
                 error={create.error}

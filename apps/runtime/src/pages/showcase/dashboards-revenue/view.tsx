@@ -152,7 +152,7 @@ function RevenueDashboardScreen({ data, range, onRangeChange, status = "ready", 
             <RadioGroup aria-label={t.range} className="flex items-center gap-1" onValueChange={(v) => onRangeChange(v as RevenueRange)} value={range}>
               {RANGES.map((r) => (
                 <Radio.Root
-                  className="cursor-pointer rounded-md px-2.5 py-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground data-checked:text-background pointer-coarse:min-h-10"
+                  className="cursor-pointer rounded-md px-2.5 py-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground data-checked:text-background pointer-coarse:min-h-10"
                   key={r}
                   value={r}
                 >
@@ -248,7 +248,7 @@ function RevenueDashboardScreen({ data, range, onRangeChange, status = "ready", 
                         {nrr.change ? <Delta label={pct(nrr.change)} value={nrr.change} /> : null}
                       </div>
                       <meter aria-label={t.nrrMeter} aria-valuetext={pct(nrr.value, 0)} className="sr-only" max={NRR_MAX} min={0} value={nrr.value} />
-                      <div aria-hidden className="mt-3 h-2 overflow-hidden rounded-full bg-foreground/[0.06]">
+                      <div aria-hidden className="mt-3 h-2 overflow-hidden rounded-full bg-foreground/6">
                         <div className="h-full bg-category-2" style={{ width: `${Math.min(1, nrr.value / NRR_MAX) * 100}%` }} />
                       </div>
                       <div aria-hidden className="mt-1.5 flex justify-between font-mono text-[10px] text-muted-foreground tabular-nums">
@@ -278,7 +278,7 @@ function RevenueDashboardScreen({ data, range, onRangeChange, status = "ready", 
                               {compact(p.mrr)} · <span className="text-muted-foreground">{interpolate(t.planAccounts, { accounts: format.number(p.accounts) })}</span>
                             </span>
                           </div>
-                          <div aria-hidden className="mt-1.5 h-2 overflow-hidden rounded-full bg-foreground/[0.04]">
+                          <div aria-hidden className="mt-1.5 h-2 overflow-hidden rounded-full bg-foreground/4">
                             <div className={cn("h-full", PLAN_COLOURS[i % PLAN_COLOURS.length])} style={{ width: `${(p.mrr / planTotal) * 100}%` }} />
                           </div>
                         </li>

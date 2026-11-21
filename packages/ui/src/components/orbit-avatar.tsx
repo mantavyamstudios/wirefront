@@ -190,9 +190,8 @@ export function OrbitAvatar({
 
   return (
     <span
-      aria-hidden={title ? undefined : true}
-      role={title ? "img" : undefined}
-      aria-label={title}
+      // Labelled image when titled, decorative otherwise.
+      {...(title ? { role: "img", "aria-label": title } : { "aria-hidden": true })}
       className={cn(
         "inline-block shrink-0 align-middle leading-none",
         toneClass,
@@ -201,6 +200,7 @@ export function OrbitAvatar({
       style={{ width: size, height: size, ...style }}
     >
       <svg
+        aria-hidden="true"
         viewBox="0 0 100 100"
         width={size}
         height={size}
@@ -210,9 +210,9 @@ export function OrbitAvatar({
           <circle cx="50" cy="50" r="48" fill="currentColor" opacity={0.12} />
         ) : null}
 
-        {spec.stars.map((s, i) => (
+        {spec.stars.map((s) => (
           <circle
-            key={`s${i}`}
+            key={`s${s.x},${s.y}`}
             cx={s.x}
             cy={s.y}
             r={s.size}
@@ -221,16 +221,16 @@ export function OrbitAvatar({
           />
         ))}
 
-        {spec.rings.map((ring, ringIndex) => {
+        {spec.rings.map((ring) => {
           const dots: Array<{ x: number; y: number; k: number }> = [];
           forEachRingDot(ring, 0, (x, y, angle) => {
             dots.push({ x, y, k: angle });
           });
           return (
-            <g key={`r${ringIndex}`}>
-              {dots.map((d, j) => (
+            <g key={`r${ring.radius}`}>
+              {dots.map((d) => (
                 <circle
-                  key={j}
+                  key={d.k}
                   cx={d.x}
                   cy={d.y}
                   r={ring.dotSize}
@@ -242,14 +242,14 @@ export function OrbitAvatar({
           );
         })}
 
-        {spec.planets.map((p, i) => {
+        {spec.planets.map((p) => {
           const ring = spec.rings[p.ringIndex];
           if (!ring) return null;
           const x = 50 + Math.cos(p.angle + ring.rotation) * ring.radius;
           const y = 50 + Math.sin(p.angle + ring.rotation) * ring.radius;
           return (
             <circle
-              key={`p${i}`}
+              key={`p${p.ringIndex},${p.angle}`}
               cx={x}
               cy={y}
               r={p.size}

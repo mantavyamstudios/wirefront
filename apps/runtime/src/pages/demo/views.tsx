@@ -25,6 +25,7 @@ import { useDemo, type Member, type Project } from "./store";
 import { InboxView } from "./views-inbox";
 import { SettingsView } from "./views-settings";
 import { ProjectDetailView } from "./views-project-detail";
+import { must } from "@/lib/must";
 
 export function DemoView() {
   const { view, selectedProjectId } = useDemo();
@@ -49,7 +50,7 @@ export function DemoView() {
 
 function HomeView() {
   const { projects, members, setView, setOverlay, pushToast } = useDemo();
-  const me = members[0]!;
+  const me = must(members[0], "the signed-in member");
   const greeting = greetForHour();
   return (
     <div className="mx-auto max-w-5xl">
@@ -113,11 +114,11 @@ function HomeView() {
             ].map((t, i) => (
               <li
                 key={t}
-                className="group flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.03]"
+                className="group flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/3"
               >
                 <button
                   type="button"
-                  className="flex size-5 shrink-0 items-center justify-center rounded-full border border-foreground/30 text-transparent transition-colors hover:bg-foreground/[0.06]"
+                  className="flex size-5 shrink-0 items-center justify-center rounded-full border border-foreground/30 text-transparent transition-colors hover:bg-foreground/6"
                   aria-label="Toggle"
                 >
                   <CircleIcon className="size-3" />
@@ -125,7 +126,7 @@ function HomeView() {
                 <span className={`flex-1 truncate text-sm ${i === 4 ? "text-muted-foreground line-through" : ""}`}>
                   {t}
                 </span>
-                <span className="rounded bg-foreground/[0.05] px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground uppercase tracking-[0.2em]">
+                <span className="rounded bg-foreground/5 px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground uppercase tracking-[0.2em]">
                   {["API", "Onboarding", "Inbox", "Ops", "Marketing"][i]}
                 </span>
                 <span className="w-16 text-right font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
@@ -144,9 +145,9 @@ function HomeView() {
               { who: "Riya", what: "invited", target: "5 new members", time: "21m" },
               { who: "Dani", what: "archived", target: "marketing-v1 project", time: "1h" },
               { who: "Alex", what: "rolled back", target: "release 0.4.1", time: "2h" },
-            ].map((a, i) => (
-              <li key={i} className="flex items-start gap-3 text-sm">
-                <span className="mt-0.5 flex size-6 items-center justify-center rounded-full bg-foreground/[0.06] font-medium text-[10px]">
+            ].map((a) => (
+              <li key={a.target} className="flex items-start gap-3 text-sm">
+                <span className="mt-0.5 flex size-6 items-center justify-center rounded-full bg-foreground/6 font-medium text-[10px]">
                   {a.who[0]}
                 </span>
                 <div className="min-w-0 flex-1 leading-snug">
@@ -214,7 +215,7 @@ function ProjectsView() {
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
-        <div className="flex h-9 flex-1 min-w-[220px] items-center gap-2 rounded-md border border-border/70 bg-background/40 px-3">
+        <div className="flex h-9 flex-1 min-w-55 items-center gap-2 rounded-md border border-border/70 bg-background/40 px-3">
           <SearchIcon className="size-3.5 opacity-50" />
           <input
             value={query}
@@ -252,7 +253,7 @@ function ProjectsView() {
         <div className="mt-6 overflow-hidden rounded-xl border border-border/60">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-foreground/[0.02]">
+              <tr className="bg-foreground/2">
                 <th className="w-10 px-3 py-2.5" />
                 <th className="px-3 py-2.5 text-left font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                   Project
@@ -273,7 +274,7 @@ function ProjectsView() {
               {visible.map((p) => (
                 <tr
                   key={p.id}
-                  className="group border-b border-border/40 last:border-b-0 cursor-pointer transition-colors hover:bg-foreground/[0.02]"
+                  className="group border-b border-border/40 last:border-b-0 cursor-pointer transition-colors hover:bg-foreground/2"
                   onClick={() => openProject(p.id)}
                 >
                   <td className="px-3 py-3">
@@ -309,14 +310,14 @@ function ProjectsView() {
                   <td className="px-3 py-3 text-muted-foreground text-xs">
                     {p.updatedAt}
                   </td>
-                  <td className="px-3 py-3 text-right" onClick={(e) => e.stopPropagation()}>
+                  <td className="px-3 py-3 text-right" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                     <DropdownMenu>
                       <DropdownMenuTrigger
                         render={
                           <button
                             type="button"
                             aria-label="More"
-                            className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-all group-hover:opacity-100 hover:bg-foreground/[0.05] hover:text-foreground data-[popup-open]:opacity-100"
+                            className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-all group-hover:opacity-100 hover:bg-foreground/5 hover:text-foreground data-popup-open:opacity-100"
                           />
                         }
                       >
@@ -403,7 +404,7 @@ function MembersView() {
       <div className="mt-6 overflow-hidden rounded-xl border border-border/60">
         <ul className="divide-y divide-border/40">
           {visible.map((m, i) => (
-            <li key={m.id} className="group flex items-center gap-4 px-4 py-3 transition-colors hover:bg-foreground/[0.02]">
+            <li key={m.id} className="group flex items-center gap-4 px-4 py-3 transition-colors hover:bg-foreground/2">
               <div className="relative">
                 <div className={`flex size-9 items-center justify-center rounded-full font-medium text-xs ${m.tone}`}>
                   {m.initials}
@@ -418,7 +419,7 @@ function MembersView() {
                 <div className="flex items-center gap-2">
                   <span className="truncate font-medium text-sm">{m.name}</span>
                   {i === 0 ? (
-                    <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">
+                    <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">
                       You
                     </span>
                   ) : null}
@@ -449,7 +450,7 @@ function MembersView() {
                     removeMember(m.id);
                     pushToast({ kind: "info", title: "Removed", body: `${m.name} no longer has access.` });
                   }}
-                  className="rounded-md p-1.5 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 hover:bg-foreground/[0.05] hover:text-destructive"
+                  className="rounded-md p-1.5 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 hover:bg-foreground/5 hover:text-destructive"
                 >
                   <TrashIcon className="size-3.5" />
                 </button>
@@ -503,8 +504,8 @@ function VisibilityPill({ v }: { v: Project["visibility"] }) {
     v === "public"
       ? { Icon: GlobeIcon, label: "Public", className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400" }
       : v === "team"
-        ? { Icon: UsersIcon, label: "Team", className: "bg-foreground/[0.06] text-foreground" }
-        : { Icon: LockIcon, label: "Private", className: "bg-foreground/[0.04] text-muted-foreground" };
+        ? { Icon: UsersIcon, label: "Team", className: "bg-foreground/6 text-foreground" }
+        : { Icon: LockIcon, label: "Private", className: "bg-foreground/4 text-muted-foreground" };
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] ${cfg.className}`}
@@ -577,11 +578,12 @@ function Sparkline({ values }: { values: number[] }) {
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     })
     .join(" ");
-  const last = values[values.length - 1]!;
+  const last = must(values.at(-1), "a sparkline value");
   const lastX = (values.length - 1) * stepX;
   const lastY = (1 - (last - min) / range) * H;
   return (
     <svg
+      aria-hidden="true"
       viewBox={`0 0 ${W} ${H}`}
       preserveAspectRatio="none"
       className="-bottom-1 -right-1 absolute h-9 w-32 text-primary opacity-60"

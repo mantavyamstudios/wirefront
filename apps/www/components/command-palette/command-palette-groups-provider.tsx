@@ -7,20 +7,17 @@ import type { CommandPaletteGroup } from "@/lib/command-palette/types";
 
 const CommandPaletteGroupsContext = createContext<CommandPaletteGroup[]>([]);
 
-export function CommandPaletteGroupsProvider({
+export const CommandPaletteGroupsProvider = ({
   children,
   groups,
 }: {
   children: ReactNode;
   groups: CommandPaletteGroup[];
-}) {
-  return (
-    <CommandPaletteGroupsContext.Provider value={groups}>
-      {children}
-    </CommandPaletteGroupsContext.Provider>
-  );
-}
+}) => (
+  <CommandPaletteGroupsContext.Provider value={groups}>
+    {children}
+  </CommandPaletteGroupsContext.Provider>
+);
 
-export function useCommandPaletteGroups(): CommandPaletteGroup[] {
-  return useContext(CommandPaletteGroupsContext);
-}
+export const useCommandPaletteGroups = (): CommandPaletteGroup[] =>
+  useContext(CommandPaletteGroupsContext);

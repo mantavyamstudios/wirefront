@@ -77,13 +77,13 @@ function Card({ node, highlight, fluid = false }: { node: OrgPerson; highlight: 
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm">{node.name}</div>
         <div className="truncate text-muted-foreground text-xs">{node.title}</div>
-        {node.reportsCount ? <div className="mt-1 inline-flex items-center gap-1 rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{interpolate(t.reports, { count: node.reportsCount })}</div> : null}
+        {node.reportsCount ? <div className="mt-1 inline-flex items-center gap-1 rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{interpolate(t.reports, { count: node.reportsCount })}</div> : null}
       </div>
       {node.reportsCount ? (
         <button
           aria-expanded={open}
           aria-label={interpolate(open ? t.hide : t.show, { count: node.reportsCount, name: node.name })}
-          className="-my-1 -me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40 pointer-coarse:size-10"
+          className="-my-1 -me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40 pointer-coarse:size-10"
           disabled={!canExpand || loading(node.id)}
           onClick={() => (loaded.length ? toggle(node.id) : load?.(node.id))}
           type="button"
@@ -109,7 +109,7 @@ function Tree({ node, highlight = false }: { node: OrgPerson; highlight?: boolea
           <div className="flex items-start">
             {reports.map((r, i) => (
               <div className="relative flex flex-col items-center px-3" key={r.id}>
-                {reports.length > 1 ? <span aria-hidden className={cn("absolute top-0 h-px bg-border/70", i === 0 ? "start-1/2 end-0" : i === reports.length - 1 ? "start-0 end-1/2" : "inset-x-0")} /> : null}
+                {reports.length > 1 ? <span aria-hidden className={cn("absolute top-0 h-px bg-border/70", i === 0 ? "inset-s-1/2 inset-e-0" : i === reports.length - 1 ? "inset-s-0 inset-e-1/2" : "inset-x-0")} /> : null}
                 <div aria-hidden className="h-3 w-px bg-border/70" />
                 <Tree node={r} />
               </div>

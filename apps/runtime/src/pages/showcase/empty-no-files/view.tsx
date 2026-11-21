@@ -63,7 +63,7 @@ function NoFilesScreen({ onUpload, accept, typesLabel = "PNG, JPG, PDF", maxSize
       aria-label={t.pickFiles}
       className={cn(
         "relative rounded-2xl border-2 border-dashed bg-background px-6 py-16 transition-colors",
-        over ? "border-primary/60 bg-primary/[0.04]" : "border-border/70 hover:border-border",
+        over ? "border-primary/60 bg-primary/4" : "border-border/70 hover:border-border",
         className,
       )}
       onDragLeave={() => setOver(false)}

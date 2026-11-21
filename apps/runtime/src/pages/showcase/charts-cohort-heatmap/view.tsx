@@ -102,7 +102,7 @@ function CohortRetentionScreen({ cohorts, averageMonth = 3, status = "ready", er
                 <table className="w-full border-separate border-spacing-1 text-xs">
                   <thead>
                     <tr>
-                      <th className="sticky start-0 z-10 bg-background px-2 py-1 text-start font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{t.cohort}</th>
+                      <th className="sticky inset-s-0 z-10 bg-background px-2 py-1 text-start font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{t.cohort}</th>
                       <th className="px-2 py-1 text-end font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{t.size}</th>
                       {columns.map((n) => (
                         <th className="w-12 min-w-10 px-1 py-1 text-center font-mono text-[10px] text-muted-foreground" key={n}>
@@ -114,7 +114,7 @@ function CohortRetentionScreen({ cohorts, averageMonth = 3, status = "ready", er
                   <tbody>
                     {list.map((c) => (
                       <tr key={c.month}>
-                        <th className="sticky start-0 z-10 whitespace-nowrap bg-background px-2 py-1 text-start font-normal text-muted-foreground" scope="row">
+                        <th className="sticky inset-s-0 z-10 whitespace-nowrap bg-background px-2 py-1 text-start font-normal text-muted-foreground" scope="row">
                           {label(c.month)}
                         </th>
                         <td className="px-2 py-1 text-end font-mono text-muted-foreground">{fmt.number(c.size)}</td>

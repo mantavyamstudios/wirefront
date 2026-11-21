@@ -134,7 +134,7 @@ function MailTwoPaneScreen({
           <RadioGroup aria-label={t.show} className="mt-2 flex items-center gap-1" onValueChange={(v) => onFilterChange(v as MailFilter)} value={filter}>
             {FILTERS.map((f) => (
               <Radio.Root
-                className="min-h-7 cursor-pointer rounded-md px-2.5 py-1 text-muted-foreground text-xs outline-none transition-colors hover:bg-foreground/[0.03] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground/[0.08] data-checked:font-medium data-checked:text-foreground pointer-coarse:min-h-10"
+                className="min-h-7 cursor-pointer rounded-md px-2.5 py-1 text-muted-foreground text-xs outline-none transition-colors hover:bg-foreground/3 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground/8 data-checked:font-medium data-checked:text-foreground pointer-coarse:min-h-10"
                 key={f}
                 value={f}
               >
@@ -160,7 +160,7 @@ function MailTwoPaneScreen({
                   aria-current={active ? "true" : undefined}
                   className={cn(
                     "flex w-full cursor-pointer items-start gap-3 border-border/40 border-b px-4 py-3 text-start outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-                    active ? "md:bg-foreground/[0.06]" : "hover:bg-foreground/[0.03]",
+                    active ? "md:bg-foreground/6" : "hover:bg-foreground/3",
                   )}
                   onClick={() => onSelect(m.id)}
                   type="button"

@@ -4,8 +4,13 @@ import { notFound } from "next/navigation";
 import { BlocksScrollArea } from "@/components/blocks/blocks-scroll-area";
 import { ComponentsGalleryHero } from "@/components/blocks/gallery/components-gallery-hero";
 import { ScreensGalleryExplorer } from "@/components/screens/screens-gallery-explorer";
-import { getScreenGalleryItems, getScreenGallerySections, getScreenGroups, getScreenKind } from "@/lib/screens/data";
 import { screenSocialMetadata } from "@/lib/og/screen-social-metadata";
+import {
+  getScreenGalleryItems,
+  getScreenGallerySections,
+  getScreenGroups,
+  getScreenKind,
+} from "@/lib/screens/data";
 import { getPageAlternates } from "@/lib/site";
 
 interface PageProps {
@@ -14,11 +19,12 @@ interface PageProps {
 
 export const dynamicParams = false;
 
-export function generateStaticParams() {
-  return getScreenGroups().flatMap((g) => g.kinds.map((k) => ({ group: g.slug, kind: k.slug })));
-}
+export const generateStaticParams = () =>
+  getScreenGroups().flatMap((g) =>
+    g.kinds.map((k) => ({ group: g.slug, kind: k.slug }))
+  );
 
-export async function generateMetadata(props: PageProps): Promise<Metadata> {
+export const generateMetadata = async (props: PageProps): Promise<Metadata> => {
   const { group, kind } = await props.params;
   const found = getScreenKind(group, kind);
   if (!found) {
@@ -29,12 +35,17 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     title: found.title,
     description: found.blurb,
     alternates: getPageAlternates(href),
-    ...screenSocialMetadata(["screens", group, kind], found.title, found.blurb, href),
+    ...screenSocialMetadata(
+      ["screens", group, kind],
+      found.title,
+      found.blurb,
+      href
+    ),
   };
-}
+};
 
 /** One kind's screens, e.g. /accounts/pricing. */
-export default async function KindPage(props: PageProps) {
+const KindPage = async (props: PageProps) => {
   const { group, kind } = await props.params;
   const found = getScreenKind(group, kind);
   if (!found) {
@@ -54,10 +65,16 @@ export default async function KindPage(props: PageProps) {
         </div>
 
         <ScreensGalleryExplorer
-          items={getScreenGalleryItems().filter((item) => item.category === kind)}
-          sections={getScreenGallerySections(group).filter((s) => s.id === kind)}
+          items={getScreenGalleryItems().filter(
+            (item) => item.category === kind
+          )}
+          sections={getScreenGallerySections(group).filter(
+            (s) => s.id === kind
+          )}
         />
       </div>
     </BlocksScrollArea>
   );
-}
+};
+
+export default KindPage;

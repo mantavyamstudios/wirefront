@@ -60,7 +60,7 @@ const CalendarWeekNumber: NonNullable<CalendarComponents["WeekNumber"]> = ({
   </td>
 );
 
-function Calendar({
+const Calendar = ({
   className,
   classNames,
   showOutsideDays = true,
@@ -72,7 +72,7 @@ function Calendar({
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
-}) {
+}) => {
   const defaultClassNames = getDefaultClassNames();
 
   return (
@@ -189,15 +189,15 @@ function Calendar({
       />
     </CalendarLocaleContext.Provider>
   );
-}
+};
 
-function CalendarDayButton({
+const CalendarDayButton = ({
   className,
   day,
   modifiers,
   locale: localeProp,
   ...props
-}: React.ComponentProps<typeof DayButton> & { locale?: Partial<Locale> }) {
+}: React.ComponentProps<typeof DayButton> & { locale?: Partial<Locale> }) => {
   const contextLocale = useContext(CalendarLocaleContext);
   const locale = localeProp ?? contextLocale;
   const defaultClassNames = getDefaultClassNames();
@@ -232,7 +232,7 @@ function CalendarDayButton({
       {...props}
     />
   );
-}
+};
 
 const defaultCalendarComponents = {
   Root: CalendarRoot,

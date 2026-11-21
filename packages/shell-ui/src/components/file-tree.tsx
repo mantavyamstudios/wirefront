@@ -1,5 +1,6 @@
 "use client";
 
+import { useIsClient } from "@workspace/ui/hooks/use-is-client";
 import { cn } from "@workspace/ui/lib/utils";
 import {
   File,
@@ -18,7 +19,6 @@ import {
   createElement,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -63,13 +63,13 @@ interface HighlightBounds {
 
 const FileTreeContext = createContext<FileTreeCtx | null>(null);
 
-function useFileTree() {
+const useFileTree = () => {
   const context = useContext(FileTreeContext);
   if (!context) {
     throw new Error("File tree components must be used within <FileTree />");
   }
   return context;
-}
+};
 
 interface FolderCtx {
   isOpen: boolean;
@@ -78,13 +78,13 @@ interface FolderCtx {
 
 const FolderContext = createContext<FolderCtx | null>(null);
 
-function useFolder() {
+const useFolder = () => {
   const context = useContext(FolderContext);
   if (!context) {
     throw new Error("Folder components must be used within a folder item");
   }
   return context;
-}
+};
 
 // ─── Icon resolution ───────────────────────────────────────────────────────────
 
@@ -108,20 +108,20 @@ const EXT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   env: FileCog,
 };
 
-function resolveFileIcon(
+const resolveFileIcon = (
   name: string,
   custom?: React.ComponentType<{ className?: string }>
-): React.ComponentType<{ className?: string }> {
+): React.ComponentType<{ className?: string }> => {
   if (custom) {
     return custom;
   }
   const ext = name.split(".").pop()?.toLowerCase() ?? "";
   return EXT_ICONS[ext] ?? File;
-}
+};
 
 // ─── Shared highlight/collapse pieces ──────────────────────────────────────────
 
-function FileTreeHoverHighlight({ className }: { className?: string }) {
+const FileTreeHoverHighlight = ({ className }: { className?: string }) => {
   const { highlightBounds } = useFileTree();
 
   return (
@@ -150,9 +150,9 @@ function FileTreeHoverHighlight({ className }: { className?: string }) {
       )}
     </AnimatePresence>
   );
-}
+};
 
-function useHighlightTarget<T extends HTMLElement = HTMLDivElement>() {
+const useHighlightTarget = <T extends HTMLElement = HTMLDivElement>() => {
   const { containerRef, setHighlightBounds } = useFileTree();
   const ref = useRef<T>(null);
 
@@ -175,19 +175,19 @@ function useHighlightTarget<T extends HTMLElement = HTMLDivElement>() {
   }, [containerRef, setHighlightBounds]);
 
   return { ref, handleMouseEnter };
-}
+};
 
-function FolderIcon({
+const FolderIcon = ({
   closeIcon,
   openIcon,
 }: {
   closeIcon: React.ReactNode;
   openIcon: React.ReactNode;
-}) {
+}) => {
   const { isOpen } = useFolder();
 
   return (
-    <span className="relative inline-flex size-[1.125rem] shrink-0">
+    <span className="relative inline-flex size-4.5 shrink-0">
       <AnimatePresence initial={false} mode="popLayout">
         <motion.span
           animate={{ opacity: 1 }}
@@ -202,15 +202,11 @@ function FolderIcon({
       </AnimatePresence>
     </span>
   );
-}
+};
 
-function FolderContent({ children }: { children: React.ReactNode }) {
+const FolderContent = ({ children }: { children: React.ReactNode }) => {
   const { isOpen } = useFolder();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   if (!mounted) {
     return isOpen ? <div style={{ overflow: "hidden" }}>{children}</div> : null;
@@ -231,22 +227,22 @@ function FolderContent({ children }: { children: React.ReactNode }) {
       )}
     </AnimatePresence>
   );
-}
+};
 
 // ─── Node renderers ────────────────────────────────────────────────────────────
 
-function FileTreeFile({ node }: { node: FileTreeElement }) {
+const FileTreeFile = ({ node }: { node: FileTreeElement }) => {
   const { highlightColor, showIcons } = useFileTree();
   const Icon = resolveFileIcon(node.name, node.icon);
-  const highlightTarget = useHighlightTarget();
+  const { ref: targetRef, handleMouseEnter } = useHighlightTarget();
 
   return (
     // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Hover only positions the decorative highlight behind this file row.
     // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- Hover only positions the decorative highlight behind this file row.
     <div
       className="relative z-10"
-      onMouseEnter={highlightTarget.handleMouseEnter}
-      ref={highlightTarget.ref}
+      onMouseEnter={handleMouseEnter}
+      ref={targetRef}
     >
       <div
         className="pointer-events-none flex items-center gap-2 p-2"
@@ -261,12 +257,13 @@ function FileTreeFile({ node }: { node: FileTreeElement }) {
       </div>
     </div>
   );
-}
+};
 
-function FileTreeFolder({ node }: { node: FileTreeElement }) {
+const FileTreeFolder = ({ node }: { node: FileTreeElement }) => {
   const { defaultOpenIds, highlightColor, indentSize, showIcons } =
     useFileTree();
-  const highlightTarget = useHighlightTarget<HTMLButtonElement>();
+  const { ref: targetRef, handleMouseEnter } =
+    useHighlightTarget<HTMLButtonElement>();
   const [isOpen, setIsOpen] = useState(
     node.defaultOpen ?? defaultOpenIds.has(node.id)
   );
@@ -283,8 +280,8 @@ function FileTreeFolder({ node }: { node: FileTreeElement }) {
           aria-label={node.name}
           className="w-full text-start"
           onClick={toggle}
-          onMouseEnter={highlightTarget.handleMouseEnter}
-          ref={highlightTarget.ref}
+          onMouseEnter={handleMouseEnter}
+          ref={targetRef}
           type="button"
         >
           <div>
@@ -317,14 +314,14 @@ function FileTreeFolder({ node }: { node: FileTreeElement }) {
       </div>
     </FolderContext.Provider>
   );
-}
+};
 
-function FileTreeNode({ node }: { node: FileTreeElement }) {
+const FileTreeNode = ({ node }: { node: FileTreeElement }) => {
   if (node.type === "folder") {
     return <FileTreeFolder node={node} />;
   }
   return <FileTreeFile node={node} />;
-}
+};
 
 // ─── Public API ────────────────────────────────────────────────────────────────
 
@@ -341,14 +338,16 @@ export interface FileTreeProps {
   showIcons?: boolean;
 }
 
-export function FileTree({
+const FILE_TREE_DEFAULT_OPEN_IDS: string[] = [];
+
+export const FileTree = ({
   elements,
   className,
   highlightColor = "#f472b6",
   indentSize = 24,
   showIcons = true,
-  defaultOpenIds = [],
-}: FileTreeProps) {
+  defaultOpenIds = FILE_TREE_DEFAULT_OPEN_IDS,
+}: FileTreeProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [highlightBounds, setHighlightBounds] =
     useState<HighlightBounds | null>(null);
@@ -393,4 +392,4 @@ export function FileTree({
       </div>
     </FileTreeContext.Provider>
   );
-}
+};

@@ -6,7 +6,7 @@ import { getScreenGalleryItems, getScreenGroups } from "@/lib/screens/data";
 
 import type { CommandPaletteGroup, CommandPaletteItem } from "./types";
 
-function docHint(url: string): string {
+const docHint = (url: string): string => {
   if (url === "/docs") {
     return "Docs";
   }
@@ -16,11 +16,11 @@ function docHint(url: string): string {
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
-}
+};
 
-function item(
+const item = (
   partial: Omit<CommandPaletteItem, "searchValue"> & { path?: string }
-): CommandPaletteItem {
+): CommandPaletteItem => {
   const hint = partial.hint ?? "";
   const pathPrefix = partial.path ? `~ ${partial.path} ` : "";
   const keywords = partial.keywords?.join(" ") ?? "";
@@ -29,7 +29,7 @@ function item(
     ...partial,
     searchValue: `${pathPrefix}${partial.label} ${hint} ${keywords}`.trim(),
   };
-}
+};
 
 const GUIDE_DOC_URLS = new Set(
   (baseOptions.links ?? [])
@@ -44,8 +44,8 @@ const GUIDE_DOC_URLS = new Set(
     .map((link) => link.url)
 );
 
-function getDocumentationItems(): CommandPaletteItem[] {
-  return source
+const getDocumentationItems = (): CommandPaletteItem[] =>
+  source
     .getPages()
     .filter((page) => page.url === "/docs" || GUIDE_DOC_URLS.has(page.url))
     .map((page) =>
@@ -59,10 +59,9 @@ function getDocumentationItems(): CommandPaletteItem[] {
         keywords: page.data.description ? [page.data.description] : undefined,
       })
     );
-}
 
-function getScreenItems(): CommandPaletteItem[] {
-  return getScreenGalleryItems().map((entry) =>
+const getScreenItems = (): CommandPaletteItem[] =>
+  getScreenGalleryItems().map((entry) =>
     item({
       id: `screen-${entry.slug}`,
       label: entry.title,
@@ -73,7 +72,6 @@ function getScreenItems(): CommandPaletteItem[] {
       keywords: entry.description ? [entry.description] : undefined,
     })
   );
-}
 
 export const getCommandPaletteGroups = cache((): CommandPaletteGroup[] => {
   const navigation: CommandPaletteItem[] = [

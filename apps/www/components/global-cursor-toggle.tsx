@@ -3,15 +3,12 @@
 import { Cursor, CursorProvider } from "@workspace/ui/components/cursor";
 import { useEffect, useState } from "react";
 
-function isCursorToggleShortcut(event: KeyboardEvent) {
-  return (
-    event.key.toLowerCase() === "c" &&
-    event.shiftKey &&
-    (event.metaKey || event.ctrlKey)
-  );
-}
+const isCursorToggleShortcut = (event: KeyboardEvent) =>
+  event.key.toLowerCase() === "c" &&
+  event.shiftKey &&
+  (event.metaKey || event.ctrlKey);
 
-export function GlobalCursorToggle() {
+export const GlobalCursorToggle = () => {
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
@@ -37,4 +34,4 @@ export function GlobalCursorToggle() {
       <Cursor />
     </CursorProvider>
   );
-}
+};
