@@ -1,0 +1,116 @@
+---
+title: Wiring a screen
+description: Connect an installed screen to your backend. Set up the provider once, pass data in as props and return promises from its actions.
+---
+
+After `npx shadcn add`, a screen lives in `components/wirefront/<screen>/` with the helpers it uses beside it. A screen never fetches, routes or stores anything by itself: you pass its data in as props and connect its actions to your backend. This page covers what every screen shares; each screen's own page lists its props, its backend contract and its data types.
+
+## App-wide setup
+
+Wrap your app once in `WirefrontProvider`. Every setting is optional:
+
+```tsx
+import { WirefrontProvider } from "@/components/wirefront/provider";
+
+<WirefrontProvider
+  link={Link}                 // Next.js, TanStack Router or React Router Link; defaults to <a>
+  toast={(t) => toast(t.title, { description: t.description })}
+  locale="en-IN"              // dates and numbers; defaults to "en-US"
+  timeZone="Asia/Kolkata"     // defaults to "UTC", so server and browser render the same text
+  currency="INR"              // money; defaults to "USD"
+  messages={messages}         // copy overrides, keyed "<screen>.<key>"
+  can={(action, resource) => ability.can(action, resource)}
+  onError={(error, { screen }) => Sentry.captureException(error, { tags: { screen } })}
+>
+  {children}
+</WirefrontProvider>
+```
+
+| Setting | What it does |
+| --- | --- |
+| `link` | The link component screens render for every `href`, so navigation goes through your router. |
+| `toast` | Your toast function. Screens call it with `{ title, description?, variant? }`. |
+| `locale`, `timeZone`, `currency` | How screens format dates, times, relative times and money. APIs return raw values; screens format them. |
+| `messages` | Overrides for any string a screen shows. Each screen's page lists its keys and their defaults. |
+| `can` | A permission check. Screens hide or disable what it doesn't allow. Defaults to allowing everything. |
+| `now` | The current time, for relative dates. Pin it in tests and server renders. |
+| `colorScheme` | Light or dark. When unset, screens follow the `dark` class on `<html>`. |
+| `onError` | Called when a screen throws while rendering. The screen shows a retry fallback instead of taking the page down. |
+
+Nested providers inherit their parent's settings and override the ones they set.
+
+### Right-to-left languages
+
+Screens use logical properties (`ms-`, `pe-`, `start-`, `text-start`), so they mirror when the page is right-to-left. Set `dir` on `<html>` and give Base UI the same direction, so menus, sliders and keyboard navigation follow it:
+
+```tsx
+import { DirectionProvider } from "@base-ui/react/direction-provider";
+
+<html dir={dir}>
+  <body>
+    <DirectionProvider direction={dir}>
+      <WirefrontProvider locale={locale}>{children}</WirefrontProvider>
+    </DirectionProvider>
+  </body>
+</html>
+```
+
+## Data in
+
+Every list, user, number and label a backend would supply arrives through props. Validate what your API returns with the zod schemas in the screen's `schema.ts`; they carry no `"use client"`, so the same schemas validate requests on your server.
+
+Screens that load data take a `status` (`"loading" | "ready" | "error"`), an `error` message and an `onRetry` callback, and render their own skeleton, empty and error states.
+
+Lists are controlled. The screen renders the page you pass and reports what the user wants next as a `ListQuery` (`page`, `pageSize`, `sort`, `filters`, `search`) through `onQueryChange`. Search, filter and sort changes go back to page 1 and fire on every change; debounce where you fetch, if you want fewer requests.
+
+## Events out
+
+Every action has one shape:
+
+```ts
+type Action<Input, Output> = (input: Input) => Promise<ActionResult<Output> | void>;
+```
+
+Resolve with nothing or `ok(data)` on success. Resolve with `fail(message, fieldErrors)` to show what went wrong, or throw: the screen shows the error's message either way. Field errors (field name to message) appear under the matching inputs and clear as the user edits them.
+
+The screen tracks pending state from the promise, applies reversible updates at once and rolls them back if the action fails, and asks for confirmation before destructive ones. An optional action you don't pass hides its control, so nothing on the screen does nothing when clicked.
+
+```tsx
+"use client";
+import { SignIn } from "@/components/wirefront/auth-sign-in/view";
+import { fail, ok } from "@/components/wirefront/types";
+import type { Session, SignInInput } from "@/components/wirefront/auth-sign-in/schema";
+
+async function signIn(input: SignInInput) {
+  const res = await fetch("/api/auth/sign-in", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  if (res.status === 401) return fail(undefined, { password: "That password doesn’t match this account." });
+  if (!res.ok) return fail("Couldn’t sign you in. Try again in a moment.");
+  return ok((await res.json()) as Session);
+}
+
+export function SignInPage() {
+  return (
+    <SignIn
+      product="Acme"
+      onSignIn={signIn}
+      onSuccess={(session) => window.location.assign(session?.redirectTo ?? "/")}
+      forgotPasswordHref="/forgot-password"
+      signUpHref="/sign-up"
+    />
+  );
+}
+```
+
+`ok` and `fail` are server-safe, so a Next.js server action can return them and be passed straight to the screen as a prop. With TanStack Query, pass `mutation.mutateAsync` as the action; the screen tracks pending and error state itself.
+
+## The backend contract
+
+`schema.ts` exports `api`, built with `defineApi`: every operation the screen calls, with its method, path, request and response schemas and error codes. Treat it as the spec for your endpoints and `fixtures.ts` as sample responses. Each screen's page lists its operations under **Backend contract**.
+
+## Make it yours
+
+The installed files are yours to change. Restyle with your theme tokens, reword through `messages` or edit `view.tsx` directly, and keep `schema.ts` as the contract between the screen and your backend. More recipes, with TanStack Query and Next.js server actions, are in [WIRING.md](https://github.com/mantavyamstudios/wirefront/blob/main/WIRING.md).
