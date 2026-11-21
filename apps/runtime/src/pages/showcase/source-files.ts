@@ -3,7 +3,7 @@
 import type { CategorySlug } from "../../lib/designs";
 
 // Single source of truth: maps (category, design) -> the showcase source
-// filename (without extension) under apps/www/src/pages/showcase/.
+// filename (without extension) under apps/runtime/src/pages/showcase/.
 // `registry.tsx` derives the React component map from this; `scripts/
 // build-registry.ts` reads it as a Node script. Keep this file React-free.
 export const SOURCE_FILES: Partial<

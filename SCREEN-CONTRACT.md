@@ -6,7 +6,7 @@ Every screen that is **ready to wire** follows this contract: a builder installs
 
 ## Folder layout
 
-A ready-to-wire screen is a folder in `apps/www/src/pages/showcase/`:
+A ready-to-wire screen is a folder in `apps/runtime/src/pages/showcase/`:
 
 ```
 tables-members/
@@ -116,7 +116,7 @@ A screen gets the **Ready to wire** badge when all of these hold:
 - [ ] `view.tsx` passes the contract checker (no hard-coded data, `setTimeout`, router or framework imports, `href="#"`, or email/password/tel inputs without `autoComplete`)
 - [ ] All states reachable from the interaction panel's state switcher
 - [ ] Every action is a Promise callback with pending, success and error handling
-- [ ] Wiring tests (`apps/www/tests/<screen>.test.tsx`) cover what each action receives and what the screen shows for success, returned failures and thrown errors
+- [ ] Wiring tests (`apps/runtime/tests/<screen>.test.tsx`) cover what each action receives and what the screen shows for success, returned failures and thrown errors
 - [ ] Semantic tokens only; logical properties; strings through messages
 - [ ] axe clean in every declared state (zero violations, nothing baselined); icon buttons labelled; tap targets meet WCAG 2.2 SC 2.5.8 (24px, or spaced so a 24px circle touches nothing; the responsive audit gates it); keyboard path works; reduced motion respected
 - [ ] Responsive audit passes at 375 / 768 / 1024 / 1440px

@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const NOTICE_URL = "https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md";
 
-const ROOTS = ["apps/www/src", "apps/www/scripts", "apps/www/tests", "apps/www/vite.config.ts", "apps/www/vitest.config.ts", "packages/ui/src", "scripts"];
+const ROOTS = ["apps/runtime/src", "apps/runtime/scripts", "apps/runtime/tests", "apps/runtime/vite.config.ts", "apps/runtime/vitest.config.ts", "packages/ui/src", "packages/bridge/src", "scripts"];
 const EXTENSIONS = /\.(ts|tsx|mjs|css)$/;
 const IGNORED = /(^|\/)routeTree\.gen\.ts$/;
 

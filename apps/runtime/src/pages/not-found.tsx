@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-import { Link } from "@tanstack/react-router";
-
 export function NotFoundPage() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-3 bg-background px-6 text-center font-mono text-foreground">
@@ -12,12 +10,13 @@ export function NotFoundPage() {
       <p className="max-w-md text-muted-foreground text-sm">
         The page you're looking for doesn't exist in this scratch pad.
       </p>
-      <Link
-        to="/"
+      <a
+        href="/"
+        target="_top"
         className="mt-3 text-[11px] text-foreground uppercase tracking-[0.2em] underline-offset-4 hover:underline"
       >
-        ← Back to folders
-      </Link>
+        ← Back to Wirefront
+      </a>
     </div>
   );
 }

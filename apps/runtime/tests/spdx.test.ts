@@ -14,8 +14,8 @@ describe("SPDX headers", () => {
 
   it("credit devl.dev and Wirefront correctly", () => {
     expect(headerLines("packages/ui/src/components/ui/segmented-control.tsx", "")[1]).toContain("Mantavyam Studios");
-    expect(headerLines("apps/www/src/x.tsx", "// Ported from devl.dev (…)")[2]).toContain("Sean Brydon");
-    expect(headerLines("apps/www/src/x.tsx", "")).toHaveLength(2);
+    expect(headerLines("apps/runtime/src/x.tsx", "// Ported from devl.dev (…)")[2]).toContain("Sean Brydon");
+    expect(headerLines("apps/runtime/src/x.tsx", "")).toHaveLength(2);
   });
 
   it("mark every UI kit component as shadcn/ui (MIT) or Wirefront (AGPL), with no coss ui left", () => {

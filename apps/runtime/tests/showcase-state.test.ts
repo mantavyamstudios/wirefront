@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-/** The state switcher's URL handling (apps/www/src/lib/showcase-state.tsx). */
+/** The state switcher's URL handling (apps/runtime/src/lib/showcase-state.tsx). */
 import { describe, expect, it } from "vitest";
 import { CATEGORIES } from "@/lib/designs";
 import { nextScreenState, parseScreenState, SCREEN_STATES } from "@/lib/showcase-state";

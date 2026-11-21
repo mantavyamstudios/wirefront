@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import type { ScreenState } from "@wirefront/bridge";
 import { createContext, useContext } from "react";
 
 /**
  * The states a ready-to-wire screen renders (SCREEN-CONTRACT.md, rule 3).
  * A design lists the ones it supports in designs.ts (`states`); the
- * interaction panel switches between them through the `?state=` search
+ * site switches between them through the `?state=` search
  * param, and the screen's showcase companion reads the current one with
  * useShowcaseState() and passes the matching props (a loading status, empty
  * data, an error…). Showcase-only: never shipped by the registry.
  */
-export const SCREEN_STATES = ["ready", "loading", "empty", "error", "forbidden"] as const;
-export type ScreenState = (typeof SCREEN_STATES)[number];
+export { SCREEN_STATES, type ScreenState } from "@wirefront/bridge";
 
 const StateContext = createContext<ScreenState>("ready");
 

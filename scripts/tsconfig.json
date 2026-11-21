@@ -7,7 +7,7 @@
     "noEmit": true,
     "paths": {
       "@/*": [
-        "../apps/www/src/*"
+        "../apps/runtime/src/*"
       ]
     }
   },

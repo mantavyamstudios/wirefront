@@ -7,11 +7,12 @@
   },
   "files": {
     "includes": [
-      "apps/www/src/**",
-      "apps/www/tests/**",
-      "apps/www/scripts/**",
-      "apps/www/*.ts",
+      "apps/runtime/src/**",
+      "apps/runtime/tests/**",
+      "apps/runtime/scripts/**",
+      "apps/runtime/*.ts",
       "packages/ui/src/**",
+      "packages/bridge/src/**",
       "scripts/**",
       "!**/routeTree.gen.ts",
       "!packages/ui/src/components/ui/alert-dialog.tsx",

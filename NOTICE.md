@@ -4,7 +4,7 @@ Wirefront is Copyright (c) 2026 Mantavyam Studios and licensed under AGPL-3.0 (s
 
 ## devl.dev: MIT
 
-- **Files:** the screens in `apps/www/src/pages/showcase/` that begin with a `Ported from devl.dev` comment, and code derived from the original devl.dev scratchpad that Wirefront started from.
+- **Files:** the screens in `apps/runtime/src/pages/showcase/` that begin with a `Ported from devl.dev` comment, and code derived from the original devl.dev scratchpad that Wirefront started from.
 - **Source:** https://github.com/sean-brydon/devl.dev
 - **License:** MIT, reproduced below. The author confirmed that all earlier devl.dev work, including the scratchpad Wirefront started from, is MIT.
 

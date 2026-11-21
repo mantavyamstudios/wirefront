@@ -2,7 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Contract checker (SCREEN-CONTRACT.md): every ready-to-wire screen is a
- * folder apps/www/src/pages/showcase/<screen>/ with view.tsx, schema.ts,
+ * folder apps/runtime/src/pages/showcase/<screen>/ with view.tsx, schema.ts,
  * fixtures.ts and demo.tsx, and its view follows the contract's rules. Run by
  * tests/contract.test.ts on every push.
  */
@@ -11,7 +11,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 
-export const SHOWCASE_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "../../apps/www/src/pages/showcase");
+export const SHOWCASE_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "../../apps/runtime/src/pages/showcase");
 
 export interface Violation {
   rule: string;
