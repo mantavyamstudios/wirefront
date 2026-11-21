@@ -1,11 +1,11 @@
 #!/usr/bin/env tsx
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Per-screen bundle budget: what a builder's app ships for each screen.
  *
- *   npm run test:bundle               # fail if a screen outgrew its budget
- *   npm run test:bundle -- --update   # record current sizes in bundle-budget.json
+ *   bun run test:bundle               # fail if a screen outgrew its budget
+ *   bun run test:bundle -- --update   # record current sizes in bundle-budget.json
  *
  * Each screen's shipped file (`<file>/view.tsx`, or the flat `<file>.tsx`) is
  * bundled the way an app would bundle it: minified ESM for the browser, with
@@ -21,10 +21,10 @@ import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 import { build } from "esbuild";
 
-import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
+import { SOURCE_FILES } from "../apps/runtime/src/pages/showcase/source-files";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const SHOWCASE = resolve(ROOT, "apps/www/src/pages/showcase");
+const SHOWCASE = resolve(ROOT, "apps/runtime/src/pages/showcase");
 const BUDGET_FILE = resolve(ROOT, "bundle-budget.json");
 const GROWTH = 0.1;
 const SLACK_BYTES = 2048;
@@ -53,7 +53,7 @@ async function gzippedSize(entry: string): Promise<number> {
     external: ["react", "react-dom", "react/jsx-runtime", "react-dom/client"],
     define: { "process.env.NODE_ENV": '"production"' },
     // Showcase-only aliases never appear in shipped files; resolve them anyway so a stray one fails loudly.
-    alias: { "@": resolve(ROOT, "apps/www/src") },
+    alias: { "@": resolve(ROOT, "apps/runtime/src") },
   });
   const js = result.outputFiles.find((f) => f.path.endsWith(".js"));
   if (!js) throw new Error(`no JavaScript output for ${entry}`);

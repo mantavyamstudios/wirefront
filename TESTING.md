@@ -11,20 +11,20 @@ A check that fails is fixed at the cause. Nothing is skipped, silenced or retrie
 
 | # | What can go wrong | Check | Tier |
 |---|---|---|---|
-| 1 | Type errors in the app, tests or tooling | `npm run typecheck` (app, tests, `scripts/`) | Fast |
+| 1 | Type errors in the app, tests or tooling | `bun run typecheck` (app, tests, `scripts/`) | Fast |
 | 2 | Shipped code that compiles here but fails in a builder's stricter project (unused code, newer JS APIs, type-only imports) | `tsconfig.shipped.json`: every shipped file under the strictest settings of the shadcn Next.js, Vite and TanStack Start templates | Fast |
-| 3 | A file without its licence header | `npm run spdx:check` and `tests/spdx.test.ts` | Fast |
-| 4 | New lint or accessibility-lint problems | `npm run lint:gate` (per-file baseline that may only shrink) | Fast |
+| 3 | A file without its licence header | `bun run spdx:check` and `tests/spdx.test.ts` | Fast |
+| 4 | New lint or accessibility-lint problems | `bun run lint:gate` (per-file baseline that may only shrink) | Fast |
 | 5 | The catalogue's lists disagree (designs, source files, previews) | `tests/catalogue.test.ts` | Fast |
 | 6 | Panel navigation breaks (previous/next, group, random) | `tests/navigation.test.ts` | Fast |
 | 7 | A screen throws while rendering on the server | `tests/render.test.tsx` (all 200, inside the app's providers) | Fast |
 | 8 | A registry item wouldn't install: bad shape, unresolved import, undeclared dependency, missing tokens, missing `"use client"`, showcase-only code, files outside `wirefront/` | `tests/registry.test.ts` (validated with shadcn's own schemas) | Fast |
-| 9 | Items install but fail to typecheck or build in a real project, or overwrite a builder's files | `npm run test:install`: every item into fresh shadcn Next.js, Vite and TanStack Start projects | Phase |
-| 10 | A screen crashes, logs errors or mismatches between server and client in the browser | `npm run test:browser`: loads every screen from a fresh production build and fails on page errors, console errors, hydration warnings and route errors, reporting the message | Phase |
-| 11 | Layout breaks at some width: overflow, clipping, squeezed text, small tap targets | `npm run audit:responsive -- --strict` at 375 / 768 / 1024 / 1440px | Phase |
-| 12 | A change accidentally alters how a screen looks | `npm run test:visual`: compares every screen against its committed preview and fails on unintended pixel changes | On request (not in `test:phase` since 2026-11-17) |
-| 13 | Accessibility regressions a linter can't see (contrast, names, roles, landmarks) | axe in `npm run test:browser`, with a per-screen baseline that may only shrink | Phase |
-| 14 | A screen quietly grows what it costs a builder's bundle | `npm run test:bundle`: bundles each shipped screen like an app would (minified, React external) and fails when its gzipped size grows past `bundle-budget.json` by more than 10% + 2 KB; `--update` records new sizes | Fast (CI) |
+| 9 | Items install but fail to typecheck or build in a real project, or overwrite a builder's files | `bun run test:install`: every item into fresh shadcn Next.js, Vite and TanStack Start projects | Phase |
+| 10 | A screen crashes, logs errors or mismatches between server and client in the browser | `bun run test:browser`: loads every screen from a fresh production build and fails on page errors, console errors, hydration warnings and route errors, reporting the message | Phase |
+| 11 | Layout breaks at some width: overflow, clipping, squeezed text, small tap targets | `bun run audit:responsive -- --strict` at 375 / 768 / 1024 / 1440px | Phase |
+| 12 | A change accidentally alters how a screen looks | `bun run test:visual`: compares every screen against its committed preview and fails on unintended pixel changes | On request (not in `test:phase` since 2026-11-17) |
+| 13 | Accessibility regressions a linter can't see (contrast, names, roles, landmarks) | axe in `bun run test:browser`, with a per-screen baseline that may only shrink | Phase |
+| 14 | A screen quietly grows what it costs a builder's bundle | `bun run test:bundle`: bundles each shipped screen like an app would (minified, React external) and fails when its gzipped size grows past `bundle-budget.json` by more than 10% + 2 KB; `--update` records new sizes | Fast (CI) |
 | 15 | Screens read the wall clock, animate under reduced motion, crash the page or miss tap-target size | `tests/catalogue.test.ts` (clock and motion rules), the contract checker (`ScreenBoundary`, placeholder links, autofill) and WCAG 2.5.8 in the responsive audit | Fast / Phase |
 | 14 | A browser check measures a screen before it's ready, or waits forever on one that crashed | The settle trigger (`scripts/lib/settle.ts`) measures only settled layouts and fails immediately when the design reports an error | Phase |
 | 15 | A browser check runs against stale code, or leaves servers behind | Browser checks start their own fresh dev server (dependencies re-optimised), warm it up, and retire it when they finish (`scripts/lib/app-server.ts`) | Phase |
@@ -41,11 +41,11 @@ A check that fails is fixed at the cause. Nothing is skipped, silenced or retrie
 | Command | What it runs |
 |---|---|
 | `git push` (pre-push hook) | The fast tier: typecheck, licence headers, lint gate, unit tests |
-| `npm run test:phase` | The phase tier, one check after another: bundle budget, install, browser, responsive, with a summary |
-| `npm run test:install` | Failure mode 9 (`--templates=`, `--items=` for a sample) |
-| `npm run test:browser` | Failure modes 10 and 13 (`--design=` for a sample; `--update-a11y-baseline` after fixing accessibility problems) |
-| `npm run audit:responsive -- --strict` | Failure mode 11 (`--design=`, `--viewports=`; `--rtl` lays every screen out right-to-left into `report-rtl.json`) |
-| `npm run test:visual` | Failure mode 12 (`--design=`). When a visual change is intended: `npm run snapshot`, review and commit the previews |
+| `bun run test:phase` | The phase tier, one check after another: bundle budget, install, browser, responsive, with a summary |
+| `bun run test:install` | Failure mode 9 (`--templates=`, `--items=` for a sample) |
+| `bun run test:browser` | Failure modes 10 and 13 (`--design=` for a sample; `--update-a11y-baseline` after fixing accessibility problems) |
+| `bun run audit:responsive -- --strict` | Failure mode 11 (`--design=`, `--viewports=`; `--rtl` lays every screen out RTL into `report-rtl.json`) |
+| `bun run test:visual` | Failure mode 12 (`--design=`). When a visual change is intended: `bun run snapshot`, review and commit the previews |
 
 ## Servers
 
@@ -74,4 +74,4 @@ Real-time checks (browser, responsive audit) don't use any of this: they test be
 
 ## Known limits
 
-- **Visual comparisons are platform-specific.** Font rendering differs between macOS and Linux, so `npm run test:visual` compares against previews captured on the same platform and runs locally on request, not in Linux CI. Every other check runs in CI.
+- **Visual comparisons are platform-specific.** Font rendering differs between macOS and Linux, so `bun run test:visual` compares against previews captured on the same platform and runs locally on request, not in Linux CI. Every other check runs in CI.

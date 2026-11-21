@@ -17,19 +17,22 @@
         "^build"
       ],
       "env": [
-        "VITE_*"
+        "VITE_*",
+        "NEXT_PUBLIC_*"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
         "../../scripts/build-registry.ts",
-        "../../packages/ui/src/**"
+        "../../packages/ui/src/**",
+        "../runtime/src/**"
       ],
       "outputs": [
         "dist/**",
         ".output/**",
         ".vercel/**",
         "build/**",
-        "public/r/**"
+        "public/r/**",
+        "out/**"
       ]
     },
     "typecheck": {

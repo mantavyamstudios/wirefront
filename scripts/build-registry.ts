@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Generate the shadcn registry into apps/www/public/r:
@@ -24,15 +24,15 @@ import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
+import { SOURCE_FILES } from "../apps/runtime/src/pages/showcase/source-files";
 import { cssVarsFor, readDesignMeta, tokensUsed } from "./lib/registry-meta";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const SHOWCASE_DIR = resolve(ROOT, "apps/www/src/pages/showcase");
+const SHOWCASE_DIR = resolve(ROOT, "apps/runtime/src/pages/showcase");
 // App-level components a showcase may import as `@/components/<name>`
 // (e.g. the shared chart wrapper). Shipped alongside the screen.
-const APP_COMPONENTS_DIR = resolve(ROOT, "apps/www/src/components");
+const APP_COMPONENTS_DIR = resolve(ROOT, "apps/runtime/src/components");
 const APP_PREFIX = "app:";
 const UI_PKG_DIR = resolve(ROOT, "packages/ui/src");
 const OUT_DIR = resolve(ROOT, "apps/www/public/r");

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Metadata the registry builder needs from the app without importing React
@@ -26,7 +26,7 @@ export interface DesignMeta {
  * `@/` alias; tests/registry-meta.test.ts checks this matches the real
  * CATEGORIES so the parser can't drift.
  */
-export function readDesignMeta(source = readFileSync(resolve(ROOT, "apps/www/src/lib/designs.ts"), "utf8")): DesignMeta[] {
+export function readDesignMeta(source = readFileSync(resolve(ROOT, "apps/runtime/src/lib/designs.ts"), "utf8")): DesignMeta[] {
   const body = source.slice(source.indexOf("export const CATEGORIES"));
   const out: DesignMeta[] = [];
   // Each category: `slug: "x", title: "…", … designs: [ … ]`.

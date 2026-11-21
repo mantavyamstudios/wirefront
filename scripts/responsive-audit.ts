@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Responsive audit: load every showcase design at several viewports and
@@ -7,11 +7,11 @@
  * clipped containers, squeezed text, small tap targets, tiny text,
  * console errors). Findings are documented per screen in `docs/`.
  *
- *   npm run dev:www                            # in another terminal
- *   npm run audit:responsive                   # all designs, all viewports
- *   npm run audit:responsive -- --category=layouts,forms
- *   npm run audit:responsive -- --design=layouts/app-shell --screenshots
- *   npm run audit:responsive -- --viewports=mobile,tablet --strict
+ *   bun run dev:runtime                            # in another terminal
+ *   bun run audit:responsive                   # all designs, all viewports
+ *   bun run audit:responsive -- --category=layouts,forms
+ *   bun run audit:responsive -- --design=layouts/app-shell --screenshots
+ *   bun run audit:responsive -- --viewports=mobile,tablet --strict
  *
  * Flags:
  *   --category=a,b      only these categories
@@ -19,7 +19,7 @@
  *   --viewports=a,b     subset of mobile,tablet,laptop,desktop
  *   --screenshots       save viewport screenshots
  *   --strict            exit 1 if any design fails a gate (see GATES)
- *   --rtl               lay every screen out right-to-left (preview `dir=rtl`: dir and
+ *   --rtl               lay every screen out RTL (preview `dir=rtl`: dir and
  *                       Base UI's DirectionProvider, as a builder's RTL app would);
  *                       the report goes to report-rtl.json
  *
@@ -38,14 +38,14 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium, type Browser, type BrowserContext } from "playwright";
 
-import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
+import { SOURCE_FILES } from "../apps/runtime/src/pages/showcase/source-files";
 import { withAppServer } from "./lib/app-server";
 import { type Progress, trackProgress } from "./lib/progress";
 import { waitForSettledLayout } from "./lib/settle";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const SHOWCASE_DIR = resolve(ROOT, "apps/www/src/pages/showcase");
+const SHOWCASE_DIR = resolve(ROOT, "apps/runtime/src/pages/showcase");
 const OUT_DIR = resolve(ROOT, ".audit/responsive");
 const CONCURRENCY = Math.max(
   1,
@@ -327,11 +327,8 @@ async function runWorker(
       const errors: string[] = [];
       page.on("pageerror", (e) => errors.push(String(e).split("\n")[0]!.slice(0, 200)));
       try {
-        // The viewer's validateSearch only accepts a string, and TanStack
-        // JSON-parses search params, so `preview=1` arrives as a number.
-        // Pass a JSON string to hide the viewer chrome.
         await page.goto(
-          `${base}/c/${task.category}/${task.design}?preview=%221%22${rtl ? "&dir=%22rtl%22" : ""}`,
+          `${base}/preview/${task.category}/${task.design}${rtl ? "?dir=%22rtl%22" : ""}`,
           { waitUntil: "networkidle", timeout: 45_000 },
         );
         // Only a settled layout is measured (scripts/lib/settle.ts).

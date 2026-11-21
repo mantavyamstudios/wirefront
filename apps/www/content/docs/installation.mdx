@@ -1,0 +1,51 @@
+---
+title: Installing a screen
+description: Preview a screen, read its source and install it in your own app with the shadcn CLI.
+---
+
+<Steps>
+<Step>
+
+### Preview it
+
+Open any screen from the [Screens](/screens) page. The preview is the real component: click, type and scroll through it. Use the device switcher to try it on a phone, tablet or laptop, switch its state, palette or direction from the toolbar, and replay it to start again.
+
+</Step>
+<Step>
+
+### Read the source
+
+Open the **Code** tab on the screen page. It lists the files the screen installs: `view.tsx`, `schema.ts` and `fixtures.ts`. The full source is also in the [GitHub repository](https://github.com/mantavyamstudios/wirefront).
+
+</Step>
+<Step>
+
+### Add it to your app
+
+In a project set up for [shadcn/ui](https://ui.shadcn.com/docs/installation), install the screen from its registry item. The screen page shows the exact command; for example:
+
+```bash
+npx shadcn@latest add https://wirefront.mantavyam.in/r/tables-members.json
+```
+
+The CLI writes the screen to `components/wirefront/<screen>/` with the helpers it uses beside it, and installs the shadcn/ui components and packages it needs.
+
+</Step>
+<Step>
+
+### Wire it
+
+Render the view with your own data. Every list, user, number and label arrives through props, and every action leaves as a promise-returning callback, so the view never fetches by itself. Validate your API's responses with the zod schemas in `schema.ts`, and use `fixtures.ts` for tests and mocks. [Wiring a screen](/docs/wiring) covers the provider, actions and the backend contract.
+
+</Step>
+</Steps>
+
+## Example
+
+The team members table, running live, with its install commands and the files it adds to your project. Its page, [Team members](/data/tables/members), documents its props, backend contract and data types:
+
+<ComponentPreview name="tables-members" />
+
+<ComponentInstallation name="tables-members" />
+
+<ComponentCredits name="tables-members" />

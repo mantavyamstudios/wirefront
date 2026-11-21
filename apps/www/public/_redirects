@@ -1,0 +1,18 @@
+# Cloudflare Pages redirects (static export has no `redirects()`).
+# Each rule is listed with and without a trailing slash: Pages matches exactly.
+# https://developers.cloudflare.com/pages/configuration/redirects/
+
+# Short paths for the contact and legal pages.
+/contact /docs/contact 301
+/contact/ /docs/contact 301
+/support /docs/contact 301
+/support/ /docs/contact 301
+/docs/community /docs/contact 301
+/docs/community/ /docs/contact 301
+/privacy /legal/privacy 301
+/privacy/ /legal/privacy 301
+/terms /legal/terms 301
+/terms/ /legal/terms 301
+
+# Browsers ask for /favicon.ico on their own; the icon is the GitHub avatar.
+/favicon.ico /brand/avatar-32.jpg 302

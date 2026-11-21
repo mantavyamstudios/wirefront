@@ -1,18 +1,18 @@
 #!/usr/bin/env tsx
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Visual regression check: capture every design (light and dark) exactly as
- * `npm run snapshot` does and compare it with the committed preview.
+ * `bun run snapshot` does and compare it with the committed preview.
  *
- *   npm run test:visual
- *   npm run test:visual -- --design=tables/members,charts/donut
+ *   bun run test:visual
+ *   bun run test:visual -- --design=tables/members,charts/donut
  *
  * A screen fails when more than MAX_DIFF_RATIO of its pixels differ
  * (pixelmatch, anti-aliasing ignored), or when the sizes differ. Canvas
  * areas (endless particle animations) are left out of the comparison. For
  * every failure a diff image is written to .visual-diff/. When a change is
- * intended, update the previews with `npm run snapshot` and commit them.
+ * intended, update the previews with `bun run snapshot` and commit them.
  */
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -44,7 +44,7 @@ async function main(): Promise<void> {
     const key = taskKey(task);
     const file = previewFile(task);
     if (!existsSync(file)) {
-      process.stdout.write(`[visual] ✗ ${key}: no committed preview (run npm run snapshot)\n`);
+      process.stdout.write(`[visual] ✗ ${key}: no committed preview (run bun run snapshot)\n`);
       return false;
     }
     const expected = PNG.sync.read(readFileSync(file));

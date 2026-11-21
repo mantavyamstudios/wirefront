@@ -1,13 +1,13 @@
 #!/usr/bin/env tsx
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Browser check: load every screen in a real browser and fail on anything
  * that breaks at runtime.
  *
- *   npm run test:browser
- *   npm run test:browser -- --design=tables/members,auth/login
- *   npm run test:browser -- --update-a11y-baseline
+ *   bun run test:browser
+ *   bun run test:browser -- --design=tables/members,auth/login
+ *   bun run test:browser -- --update-a11y-baseline
  *
  * Starts its own fresh app server (scripts/lib/app-server.ts) and retires it
  * when done. Each screen is opened at desktop (1440x900) and mobile (375x812)
@@ -30,7 +30,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { type Browser, chromium } from "playwright";
 
-import { SOURCE_FILES } from "../apps/www/src/pages/showcase/source-files";
+import { SOURCE_FILES } from "../apps/runtime/src/pages/showcase/source-files";
 import { withAppServer } from "./lib/app-server";
 import { readyScreens } from "./lib/contract";
 import { readDesignMeta } from "./lib/registry-meta";
@@ -100,8 +100,8 @@ async function checkScreen(
   try {
     // Real clock on purpose: this check is about runtime behaviour, and a frozen
     // browser clock would cause hydration mismatches the app doesn't have.
-    const stateParam = state === "ready" ? "" : `&state=${state}`;
-    await page.goto(`${base}/c/${design}?preview=%221%22${stateParam}`, { waitUntil: "networkidle", timeout: 60_000 });
+    const stateParam = state === "ready" ? "" : `?state=${state}`;
+    await page.goto(`${base}/preview/${design}${stateParam}`, { waitUntil: "networkidle", timeout: 60_000 });
     result.settleMs = await waitForSettledLayout(page);
     await page.addScriptTag({ content: AXE_SOURCE });
     const runAxe = async (only: { type: "tag" | "rule"; values: string[] }) =>
@@ -201,7 +201,7 @@ async function main(): Promise<void> {
     writeFileSync(BASELINE, `${JSON.stringify({ ...kept, ...current }, null, 2)}\n`);
     process.stdout.write(`[browser] a11y baseline recorded: ${Object.keys(current).length} screen/viewports with violations.\n`);
   } else if (!existsSync(BASELINE)) {
-    a11yProblems = ["a11y-baseline.json is missing; run `npm run test:browser -- --update-a11y-baseline`."];
+    a11yProblems = ["a11y-baseline.json is missing; run `bun run test:browser -- --update-a11y-baseline`."];
   } else {
     const baseline = JSON.parse(readFileSync(BASELINE, "utf8")) as Counts;
     // When only some designs ran, compare only those.

@@ -5,7 +5,10 @@
       "path": "./packages/ui"
     },
     {
-      "path": "./apps/www"
+      "path": "./packages/bridge"
+    },
+    {
+      "path": "./apps/runtime"
     }
   ]
 }

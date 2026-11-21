@@ -1,0 +1,70 @@
+// SPDX-License-Identifier: MIT
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import { readFile } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import tailwindcss from '@tailwindcss/vite'
+import { tanstackStart } from '@tanstack/react-start/plugin/vite'
+import viteReact from '@vitejs/plugin-react'
+import { nitro } from 'nitro/vite'
+import { defineConfig, type Plugin } from 'vite'
+import { SOURCE_FILES } from './src/pages/showcase/source-files.ts'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// In dev, source-map requests for pre-bundled deps
+// (/node_modules/.vite/deps/*.js.map) fall through to the TanStack Start SSR
+// handler and come back as an HTML 404, so browser devtools log
+// "Source map error". Serve them straight from Vite's deps cache instead.
+function serveDepSourcemaps(): Plugin {
+  return {
+    name: 'wirefront:serve-dep-sourcemaps',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const url = req.url?.split('?')[0] ?? ''
+        if (!url.endsWith('.map') || !url.includes('/.vite/deps/')) return next()
+        // basename() keeps the lookup inside the deps folder.
+        const file = path.join(server.config.cacheDir, 'deps', path.basename(url))
+        readFile(file, (err, data) => {
+          if (err) return next()
+          res.setHeader('Content-Type', 'application/json')
+          res.end(data)
+        })
+      })
+    },
+  }
+}
+
+// Every page is prerendered to static HTML so the site can be served from
+// static hosting (Cloudflare Workers static assets) with no server code.
+// Design pages have path parameters, so they are listed here rather than
+// discovered. Pages are written as /preview/<category>/<design>.html (not
+// .../index.html) so Cloudflare serves the slash-less URLs the app links to
+// without a redirect.
+const designPaths = Object.entries(SOURCE_FILES).flatMap(([category, designs]) =>
+  Object.keys(designs ?? {}).map((design) => `/preview/${category}/${design}`),
+)
+
+export default defineConfig({
+  server: { port: 4000 },
+  // The code-review screen shows a diff containing `import … from "vitest"`
+  // as text; Vite's dependency scanner mistakes it for a real import and
+  // re-optimises (reloading the page) when it finds it. Nothing in the app
+  // uses vitest, so keep it out of browser dependency optimisation.
+  optimizeDeps: { exclude: ['vitest'] },
+  resolve: {
+    alias: { '@': path.resolve(__dirname, './src') },
+  },
+  plugins: [
+    serveDepSourcemaps(),
+    tailwindcss(),
+    tanstackStart({
+      // The runtime has no page at "/" (the site owns it); route discovery would add it.
+      prerender: { enabled: true, crawlLinks: false, failOnError: true, autoSubfolderIndex: false, filter: (page) => page.path !== "/" },
+      pages: [...designPaths, "/demo"].map((path) => ({ path, prerender: { enabled: true } })),
+    }),
+    nitro(),
+    viteReact(),
+  ],
+})

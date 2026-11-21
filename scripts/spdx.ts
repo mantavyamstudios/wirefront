@@ -1,11 +1,11 @@
 #!/usr/bin/env tsx
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Licence headers for every source file.
  *
- *   npm run spdx          # add missing headers
- *   npm run spdx:check    # exit 1 if any file is missing one (used by tests)
+ *   bun run spdx          # add missing headers
+ *   bun run spdx:check    # exit 1 if any file is missing one (used by tests)
  *
  * Headers travel with the code: the registry copies source files verbatim,
  * so every screen a builder installs carries its licence.
@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const NOTICE_URL = "https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md";
 
-const ROOTS = ["apps/www/src", "apps/www/scripts", "apps/www/tests", "apps/www/vite.config.ts", "apps/www/vitest.config.ts", "packages/ui/src", "scripts"];
+const ROOTS = ["apps/runtime/src", "apps/runtime/scripts", "apps/runtime/tests", "apps/runtime/vite.config.ts", "apps/runtime/vitest.config.ts", "packages/ui/src", "packages/bridge/src", "scripts"];
 const EXTENSIONS = /\.(ts|tsx|mjs|css)$/;
 const IGNORED = /(^|\/)routeTree\.gen\.ts$/;
 
@@ -27,7 +27,7 @@ const WIREFRONT = "Wirefront © 2026 Mantavyam Studios — https://github.com/ma
 export function headerLines(_path: string, source: string): string[] {
   // shadcn/ui components are vendored with their own MIT header (see
   // packages/ui/src/components/ui); everything else is Wirefront's.
-  const lines = ["SPDX-License-Identifier: AGPL-3.0-only"];
+  const lines = ["SPDX-License-Identifier: MIT"];
   lines.push(WIREFRONT);
   if (source.includes("Ported from devl.dev")) {
     lines.push(`Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see ${NOTICE_URL}`);
@@ -78,7 +78,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   if (process.argv.includes("--check")) {
     const missing = missingHeaders();
     if (missing.length) {
-      console.error(`${missing.length} file(s) have no SPDX header. Run \`npm run spdx\`:\n  ${missing.join("\n  ")}`);
+      console.error(`${missing.length} file(s) have no SPDX header. Run \`bun run spdx\`:\n  ${missing.join("\n  ")}`);
       process.exit(1);
     }
     console.log(`All ${sourceFiles().length} source files have an SPDX header.`);

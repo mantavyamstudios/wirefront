@@ -1,0 +1,276 @@
+/* ------------------------- LOADING -------------------------------------------------- */
+@keyframes loadingRotate {
+  0% {
+    transform: rotate(0.001deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ------------------------- BUTTONS & TAGS ------------------------------------------- */
+.home-layout .tag[data-shape="round"] {
+  border-radius: 100em;
+}
+
+.home-layout div.tag .button-label__wrap {
+  display: none;
+}
+
+.home-layout button.tag .button-label__wrap {
+  display: grid;
+}
+
+.home-layout .button[data-shape="round"],
+.home-layout .square-button[data-shape="round"] {
+  border-radius: 3em;
+}
+
+.home-layout .button[data-size="full"] {
+  width: 100%;
+}
+
+.home-layout div.button {
+  pointer-events: none;
+}
+
+.home-layout .button-bg,
+.home-layout .button,
+.home-layout button.tag {
+  transition: all var(--animation-ease);
+}
+
+@media screen and (max-width: 991px) {
+  .home-layout .button[data-responsive="tablet"] {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .home-layout .button[data-responsive="landscape"] {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .home-layout .button[data-responsive="mobile"] {
+    width: 100%;
+  }
+}
+
+.home-layout .square-button {
+  cursor: pointer;
+}
+
+.home-layout .square-button[data-size="m"] {
+  width: 3em;
+  height: 3em;
+}
+
+.home-layout .square-button[data-size="l"] {
+  width: 3.875em;
+  height: 3.875em;
+  padding: 1.375em;
+}
+
+.home-layout .button,
+.home-layout button.tag {
+  --r: 20deg;
+}
+
+.home-layout .square-button {
+  --r: 10deg;
+}
+
+.home-layout .square-button[data-size="l"] {
+  --r: 15deg;
+}
+
+.home-layout .button-label,
+.home-layout .button-icon {
+  transform-origin: 50% var(--y, 1100%);
+}
+
+.home-layout .button-label:not(:nth-of-type(1)),
+.home-layout .square-button .button-icon:not(:nth-of-type(1)) {
+  position: absolute;
+}
+
+.home-layout .button-label:nth-of-type(1),
+.home-layout .square-button .button-icon:nth-of-type(1) {
+  transform: rotate(calc(var(--r) * 0));
+}
+
+.home-layout .button-label:nth-of-type(2),
+.home-layout .square-button .button-icon:nth-of-type(2) {
+  transform: rotate(calc(var(--r) * -1));
+}
+
+.home-layout .button-label:nth-of-type(3),
+.home-layout .square-button .button-icon:nth-of-type(3) {
+  transform: rotate(calc(var(--r) * -2));
+}
+
+.home-layout [data-disabled] {
+  cursor: not-allowed;
+}
+
+.home-layout [data-hover] {
+  cursor: pointer;
+}
+
+.home-layout [data-underline-link] {
+  position: relative;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.home-layout [data-underline-link]::before,
+.home-layout [data-underline-link="alt"]::before,
+.home-layout [data-underline-link="alt"]::after {
+  position: absolute;
+  bottom: -0.0625em;
+  left: 0;
+  width: 100%;
+  height: 0.0625em;
+  content: "";
+  background-color: currentColor;
+  transform: scaleX(0) rotate(0.001deg);
+  transform-origin: right;
+  transition: transform var(--duration-default) var(--cubic-default);
+}
+
+.home-layout [data-underline-link].nav-bar__big-span::before {
+  bottom: -0.175em;
+  height: calc(0.0625 / 3);
+}
+
+.home-layout [data-underline-link="alt"]::before {
+  transform: scaleX(1) rotate(0.001deg);
+  transform-origin: left;
+  transition-delay: 0.3s;
+}
+
+.home-layout [data-underline-link="alt"]::after {
+  transform: scaleX(0) rotate(0.001deg);
+  transform-origin: right;
+  transition-delay: 0s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-layout [data-hover]:hover [data-underline-link]::before,
+  .home-layout [data-underline-link]:hover::before {
+    transform: scaleX(1) rotate(0.001deg);
+    transform-origin: left;
+  }
+
+  .home-layout [data-hover]:hover [data-underline-link="alt"]::before,
+  .home-layout [data-underline-link="alt"]:hover::before {
+    transform: scaleX(0) rotate(0.001deg);
+    transform-origin: right;
+    transition-delay: 0s;
+  }
+
+  .home-layout [data-hover]:hover [data-underline-link="alt"]::after,
+  .home-layout [data-underline-link="alt"]:hover::after {
+    transform: scaleX(1) rotate(0.001deg);
+    transform-origin: left;
+    transition-delay: 0.3s;
+  }
+}
+
+/* ------------------------- CARDS -------------------------  */
+.home-layout [data-wf--cta-card--variant="electric"] {
+  color: #ffffff !important;
+  background-color: var(--color-electric);
+}
+
+/* ------------------------- PRICING CARDS -------------------------  */
+.home-layout .pricing-card {
+  padding: 2.25em 2em;
+  background-color: var(--color-neutral-300);
+  border: var(--stroke-weight) solid var(--color-neutral-400);
+  border-radius: 1.5em;
+}
+
+@media screen and (max-width: 479px) {
+  .home-layout .pricing-card {
+    padding: 1.75em 1.5em;
+  }
+}
+
+.home-layout .pricing-card.is--free {
+  box-shadow: 0 0.75em 2.5em -0.75em rgba(0, 0, 0, 0.08);
+}
+
+.home-layout .pricing-card.is--sponsor {
+  box-shadow: 0 0.5em 2em -0.75em rgba(0, 0, 0, 0.05);
+}
+
+.dark .home-layout .pricing-card,
+[data-theme="dark"] .home-layout .pricing-card {
+  box-shadow: none;
+}
+
+/* ------------------------- PRICING FAQ -------------------------  */
+.home-layout .pricing-faq {
+  position: relative;
+  z-index: 10;
+  padding-top: var(--padding-m);
+  padding-bottom: var(--padding-m);
+  border-top: 1px solid var(--color-neutral-400);
+}
+
+@media screen and (max-width: 767px) {
+  .home-layout .pricing-faq {
+    padding-top: var(--padding-m);
+    padding-bottom: 0;
+  }
+}
+
+.home-layout .pricing-faq__header {
+  max-width: 36em;
+  margin: 0 auto 2.25em;
+  text-align: center;
+}
+
+.home-layout .pricing-faq__header .eyebrow {
+  margin-bottom: 0.75em;
+  color: var(--color-neutral-500);
+}
+
+.home-layout .pricing-faq__header .h-s {
+  margin: 0;
+  color: var(--color-neutral-800);
+}
+
+.home-layout .pricing-faq__list {
+  max-width: 46em;
+  margin: 0 auto;
+}
+
+.home-layout .pricing-faq__answer {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--color-neutral-600);
+}
+
+.home-layout .pricing-faq__answer a {
+  color: var(--color-neutral-800);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity var(--animation-ease);
+}
+
+.home-layout .pricing-faq__answer a:hover {
+  opacity: 0.7;
+}
+
+.home-layout .pricing-faq__answer code {
+  padding: 0.15em 0.35em;
+  font-family: var(--font-haffer-mono), Arial, sans-serif;
+  font-size: 0.875em;
+  color: var(--color-neutral-800);
+  background-color: var(--color-neutral-200);
+  border-radius: 0.2em;
+}

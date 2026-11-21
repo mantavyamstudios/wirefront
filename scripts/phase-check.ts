@@ -1,10 +1,10 @@
 #!/usr/bin/env tsx
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * The phase-tier checks (TESTING.md), one after another:
  *
- *   npm run test:phase
+ *   bun run test:phase
  *
  * bundle budget → install → browser → responsive audit. Every check starts and
  * retires its own server, so only one runs at a time. All checks run even if
@@ -23,12 +23,12 @@ const CHECKS: [name: string, args: string[]][] = [
   ["install", ["run", "test:install"]],
   ["browser", ["run", "test:browser"]],
   ["responsive", ["run", "audit:responsive", "--", "--strict"]],
-  // test:visual is left out of the phase run by decision (2026-11-17); run it on request with `npm run test:visual`.
+  // test:visual is left out of the phase run by decision (2026-11-17); run it on request with `bun run test:visual`.
 ];
 
 function runCheck(args: string[]): Promise<number> {
   return new Promise((ok) => {
-    const child = spawn("npm", args, { cwd: ROOT, stdio: ["ignore", "inherit", "inherit"] });
+    const child = spawn("bun", args, { cwd: ROOT, stdio: ["ignore", "inherit", "inherit"] });
     child.on("close", (code) => ok(code ?? 1));
     child.on("error", () => ok(1));
   });

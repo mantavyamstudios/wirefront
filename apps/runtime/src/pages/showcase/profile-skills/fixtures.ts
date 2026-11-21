@@ -1,0 +1,21 @@
+// SPDX-License-Identifier: MIT
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+import type { Skill } from "./schema";
+
+/** Demo data for the showcase, the generated mocks and tests. */
+export const person = "Maya Okafor";
+
+export const listSkills: Skill[] = [
+  { id: "distributed-systems", name: "Distributed systems", level: 5, category: "Engineering", endorsements: 28, endorsers: ["James Lin", "Riya Patel", "Olive Berg"], endorsedByMe: false },
+  { id: "postgres", name: "Postgres", level: 5, category: "Engineering", endorsements: 22, endorsers: ["James Lin", "Riya Patel"], endorsedByMe: false },
+  { id: "kubernetes", name: "Kubernetes", level: 4, category: "Engineering", endorsements: 14, endorsers: ["Carlos Mendes"], endorsedByMe: false },
+  { id: "typescript", name: "TypeScript", level: 4, category: "Engineering", endorsements: 19, endorsers: ["Alex Tran", "James Lin", "Dani Kim"], endorsedByMe: false },
+  { id: "rust", name: "Rust", level: 3, category: "Engineering", endorsements: 8, endorsers: ["Carlos Mendes"], endorsedByMe: false },
+  { id: "mentorship", name: "Mentorship", level: 5, category: "Leadership", endorsements: 36, endorsers: ["James Lin", "Riya Patel", "Alex Tran", "Dani Kim"], endorsedByMe: false },
+  { id: "public-speaking", name: "Public speaking", level: 4, category: "Leadership", endorsements: 12, endorsers: ["Olive Berg"], endorsedByMe: false },
+  { id: "hiring", name: "Hiring", level: 4, category: "Leadership", endorsements: 9, endorsers: ["Avery Hughes"], endorsedByMe: false },
+  { id: "product-strategy", name: "Product strategy", level: 3, category: "Product", endorsements: 6, endorsers: ["Nadia Costa"], endorsedByMe: false },
+  { id: "technical-writing", name: "Technical writing", level: 4, category: "Communication", endorsements: 17, endorsers: ["Dani Kim"], endorsedByMe: false },
+  { id: "compliance-soc-2", name: "Compliance · SOC 2", level: 4, category: "Security", endorsements: 11, endorsers: ["Camille Roy"], endorsedByMe: false },
+  { id: "threat-modeling", name: "Threat modeling", level: 3, category: "Security", endorsements: 4, endorsers: ["Maya Okafor"], endorsedByMe: false },
+];

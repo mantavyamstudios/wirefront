@@ -1,0 +1,53 @@
+// SPDX-License-Identifier: MIT
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+// Showcase only: the screen with Wirefront's demo illustration, brand, caption
+// and providers. Not shipped by the registry; builders pass their own.
+import welcomeSrc from "@/assets/figures/welcome.png";
+import { ThemeToggle } from "@wirefront/ui/theme-toggle";
+import { ParticleSignIn } from "./view";
+
+const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+export function LoginShowcasePage() {
+  return (
+    <ParticleSignIn
+      actions={<ThemeToggle />}
+      brand={
+        <div className="flex items-center gap-2 font-mono text-sm">
+          <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-foreground" />
+          <span className="truncate uppercase tracking-[0.12em] sm:tracking-[0.2em]">Wirefront</span>
+        </div>
+      }
+      caption={{ eyebrow: "Sign-in design", text: "Split layout with a particle field on the left and a single centered form on the right." }}
+      illustration={welcomeSrc}
+      onMagicLink={() => wait(600)}
+      onProvider={() => wait(600)}
+      providers={[
+        { id: "google", name: "Google", icon: <GoogleIcon /> },
+        { id: "apple", name: "Apple", icon: <AppleIcon /> },
+      ]}
+    />
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
+      <path
+        fill="currentColor"
+        d="M21.35 11.1H12v2.98h5.35c-.23 1.4-1.64 4.1-5.35 4.1-3.22 0-5.85-2.67-5.85-5.95s2.63-5.95 5.85-5.95c1.84 0 3.07.78 3.77 1.45l2.57-2.5C16.71 3.8 14.59 2.9 12 2.9 6.97 2.9 2.9 6.97 2.9 12s4.07 9.1 9.1 9.1c5.26 0 8.74-3.69 8.74-8.89 0-.6-.06-1.05-.14-1.51Z"
+      />
+    </svg>
+  );
+}
+
+function AppleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
+      <path
+        fill="currentColor"
+        d="M16.37 1.43c.06 1.2-.39 2.37-1.17 3.2-.8.85-2.08 1.5-3.28 1.41-.09-1.19.5-2.37 1.21-3.13.8-.88 2.16-1.52 3.24-1.48ZM20.5 17.33c-.55 1.27-.82 1.84-1.53 2.96-.99 1.57-2.39 3.53-4.12 3.54-1.54.02-1.94-1-4.03-.99-2.1.01-2.54 1-4.08.98-1.73-.02-3.06-1.78-4.05-3.35-2.77-4.4-3.06-9.56-1.35-12.31 1.21-1.95 3.12-3.1 4.91-3.1 1.82 0 2.97.99 4.47.99 1.46 0 2.35-1 4.45-1 1.59 0 3.27.86 4.47 2.36-3.93 2.15-3.29 7.76 1.06 9.92Z"
+      />
+    </svg>
+  );
+}

@@ -1,0 +1,39 @@
+"use client";
+
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useCallback, useEffect, useState } from "react";
+
+import { setThemeWithTransition } from "@/lib/theme-transition";
+import { Switch } from "@/registry/ui/base/switch";
+
+export const ThemeSwitcher = ({ className }: { className?: string }) => {
+  const { resolvedTheme: theme, setTheme } = useTheme();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const handleThemeChange = useCallback(
+    (checked: boolean) => {
+      setThemeWithTransition(setTheme, checked ? "dark" : "light");
+    },
+    [setTheme]
+  );
+
+  return (
+    isClient && (
+      <Switch
+        aria-label={
+          theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+        }
+        checked={theme === "dark"}
+        checkedIcon={<Moon className="text-primary-foreground size-3" />}
+        className={className}
+        onCheckedChange={handleThemeChange}
+        uncheckedIcon={<Sun className="text-muted-foreground size-3" />}
+      />
+    )
+  );
+};

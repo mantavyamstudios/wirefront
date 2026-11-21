@@ -1,0 +1,315 @@
+// SPDX-License-Identifier: MIT
+// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+"use client";
+
+/**
+ * Thin Wirefront wrappers around Recharts, styled with the theme tokens.
+ *
+ * Goal: every chart in the scratchpad shares the same visual language —
+ * mono uppercase axis labels, hairline grid lines, themed palette pulled
+ * from `--chart-1`..`--chart-5`, frosted tooltip card. Author each
+ * showcase with the underlying Recharts components (LineChart, BarChart,
+ * etc.) and drop in `<ChartContainer>` + `<ChartTooltip>` + `<ChartLegend>`
+ * to inherit the styling.
+ *
+ * Pattern (mirrors shadcn's chart recipe):
+ *
+ *   <ChartContainer className="h-64">
+ *     <LineChart data={data}>
+ *       <ChartGrid />
+ *       <ChartAxis dataKey="month" />
+ *       <ChartAxis tickFormatter={fmt} orientation="left" axis="y" />
+ *       <ChartTooltip />
+ *       <Line dataKey="revenue" stroke="var(--chart-1)" />
+ *     </LineChart>
+ *   </ChartContainer>
+ */
+
+import { createContext, type ReactNode, useContext, useLayoutEffect, useRef, useState } from "react";
+import {
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  type TooltipContentProps,
+  type TooltipProps,
+  type TooltipValueType,
+} from "recharts";
+
+type NameType = number | string;
+
+/** Themed series palette. Drive Lines, Bars, etc. with these. */
+export const CHART_COLORS = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+] as const;
+
+/** Pick a palette colour by index, wrapping if needed. */
+export function chartColor(i: number): string {
+  return CHART_COLORS[i % CHART_COLORS.length]!;
+}
+
+/**
+ * Outer wrapper. Sets the font family + colour context, makes Recharts
+ * inherit the muted token for axis text, and wraps in a
+ * <ResponsiveContainer> so showcases just need to provide a height.
+ */
+/** Narrowest Y axis, so short labels ("$0") still leave room for the tick margin. */
+const Y_AXIS_MIN = 44;
+/** Space between a Y label and the plot (the axis tickMargin) plus a pixel of slack. */
+const Y_AXIS_GAP = 12;
+
+/**
+ * The Y axis width ChartContainer measured from its rendered labels. Recharts'
+ * own width="auto" never renders the axis in Recharts 3.8 here (it waits for a
+ * size it only computes after rendering), so the container sizes it instead.
+ */
+const YAxisWidth = createContext<number | undefined>(undefined);
+
+export function ChartContainer({
+  children,
+  className = "h-72",
+  label,
+}: {
+  children: ReactNode;
+  className?: string;
+  /** What the chart shows, for screen readers. When given, the chart is one image with this name. */
+  label?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [yWidth, setYWidth] = useState(Y_AXIS_MIN);
+  // After every render, fit the Y axis to its widest label (labels change with
+  // data, locale and the container's size).
+  useLayoutEffect(() => {
+    const labels = ref.current?.querySelectorAll(".recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value");
+    if (!labels?.length) return;
+    let widest = 0;
+    for (const l of labels) widest = Math.max(widest, l.getBoundingClientRect().width);
+    const next = Math.max(Y_AXIS_MIN, Math.ceil(widest) + Y_AXIS_GAP);
+    if (Math.abs(next - yWidth) > 1) setYWidth(next);
+  });
+  return (
+    <div
+      ref={ref}
+      {...(label ? { role: "img", "aria-label": label } : {})}
+      className={`${className} text-foreground [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:font-mono [&_.recharts-cartesian-axis-tick_text]:text-[10px] [&_.recharts-cartesian-axis-tick_text]:uppercase [&_.recharts-xAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.2em] [&_.recharts-yAxis_.recharts-cartesian-axis-tick_text]:tracking-[0.05em] [&_.recharts-cartesian-grid-bg]:fill-transparent [&_.recharts-cartesian-grid_line]:stroke-border [&_.recharts-polar-grid_line]:stroke-border [&_.recharts-polar-angle-axis-tick_text]:fill-muted-foreground [&_.recharts-polar-angle-axis-tick_text]:font-mono [&_.recharts-polar-angle-axis-tick_text]:text-[10px]`}
+    >
+      {/* Start at a valid size: the default -1x-1 makes Recharts warn on the
+          render before the container has been measured. */}
+      <YAxisWidth.Provider value={yWidth}>
+        <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
+          {children as React.ReactElement}
+        </ResponsiveContainer>
+      </YAxisWidth.Provider>
+    </div>
+  );
+}
+
+/** Hairline cartesian grid in the design's `--border` token. */
+export function ChartGrid({
+  vertical = false,
+  horizontal = true,
+}: {
+  vertical?: boolean;
+  horizontal?: boolean;
+}) {
+  return (
+    <CartesianGrid
+      vertical={vertical}
+      horizontal={horizontal}
+      strokeDasharray="2 4"
+      stroke="currentColor"
+      strokeOpacity={0.25}
+    />
+  );
+}
+
+/**
+ * Themed XAxis or YAxis. Pass `axis="y"` for the Y axis. By default
+ * tickLine + axisLine are hidden so the chart reads as data-first.
+ */
+export function ChartAxis({
+  axis = "x",
+  dataKey,
+  tickFormatter,
+  ticks,
+  tickCount,
+  domain,
+  hide,
+  width,
+  type,
+  orientation,
+  interval,
+  padding,
+  angle,
+  height,
+}: {
+  axis?: "x" | "y";
+  dataKey?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: recharts' axis tickFormatter is loosely typed
+  tickFormatter?: (value: any, index: number) => string;
+  ticks?: ReadonlyArray<string | number>;
+  tickCount?: number;
+  domain?: [number | string, number | string];
+  hide?: boolean;
+  width?: number;
+  type?: "number" | "category";
+  orientation?: "top" | "bottom" | "left" | "right";
+  interval?: number | "preserveStart" | "preserveEnd" | "preserveStartEnd";
+  padding?: { left?: number; right?: number; top?: number; bottom?: number };
+  /** X axis only: rotate tick labels (e.g. -40 on narrow charts) and reserve `height` for them. */
+  angle?: number;
+  height?: number;
+}) {
+  // Tick metrics are passed explicitly so Recharts measures labels the way
+  // they are styled (10px mono, tracked). Without this, CSS letter-spacing
+  // was applied after layout: Y labels overflowed a fixed 36px axis and got
+  // clipped ("100%" rendered as "0%"), and X labels collided on narrow charts.
+  const isY = axis === "y";
+  const measuredY = useContext(YAxisWidth);
+  const common = {
+    dataKey,
+    tickFormatter,
+    ticks,
+    tickCount,
+    domain,
+    hide,
+    type,
+    padding,
+    tickLine: false,
+    axisLine: false,
+    tickMargin: 10,
+    minTickGap: 16,
+    fontSize: 10,
+    letterSpacing: isY ? 0.5 : 2,
+    stroke: "currentColor",
+  } as const;
+  if (isY) {
+    const o =
+      orientation === "left" || orientation === "right" ? orientation : undefined;
+    // `width` acts as a floor over the measured width of the longest label.
+    return (
+      <YAxis
+        {...common}
+        interval={interval}
+        width={Math.max(width ?? 0, measuredY ?? Y_AXIS_MIN, Y_AXIS_MIN)}
+        orientation={o}
+      />
+    );
+  }
+  const o =
+    orientation === "top" || orientation === "bottom" ? orientation : undefined;
+  // Default: keep first/last labels and drop any that would collide.
+  return (
+    <XAxis
+      {...common}
+      width={width}
+      angle={angle}
+      height={height}
+      textAnchor={angle ? "end" : undefined}
+      interval={interval ?? "preserveStartEnd"}
+      orientation={o}
+    />
+  );
+}
+
+/**
+ * Default Recharts tooltip swapped for a frosted card matching the
+ * scratchpad's design language (mono labels, themed border/background).
+ */
+export function ChartTooltip({
+  valueFormatter,
+  ...props
+}: Partial<TooltipProps> & {
+  /** Formats each numeric value, e.g. with the provider's money formatter. Defaults to toLocaleString(). */
+  valueFormatter?: (value: number) => string;
+}) {
+  return (
+    <Tooltip
+      cursor={{
+        stroke: "currentColor",
+        strokeOpacity: 0.25,
+        strokeDasharray: "2 4",
+      }}
+      content={(content) => <ChartTooltipContent {...content} valueFormatter={valueFormatter} />}
+      {...props}
+    />
+  );
+}
+
+function ChartTooltipContent({
+  valueFormatter,
+  ...props
+}: TooltipContentProps<TooltipValueType, NameType> & { valueFormatter?: (value: number) => string }) {
+  const { active, label, payload } = props;
+  if (!active || !payload || payload.length === 0) return null;
+  return (
+    <div className="rounded-lg border border-border/70 bg-background/95 px-3 py-2 text-foreground text-xs shadow-lg backdrop-blur">
+      {label !== undefined ? (
+        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+          {String(label)}
+        </div>
+      ) : null}
+      <ul className="mt-1 flex flex-col gap-1">
+        {payload.map((p, i) => (
+          <li key={`${p.dataKey ?? p.name}-${i}`} className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="size-2 rounded-full"
+              style={{ background: (p.color as string) ?? chartColor(i) }}
+            />
+            <span className="text-muted-foreground">{String(p.name ?? p.dataKey)}</span>
+            <span className="ml-auto font-mono tabular-nums text-foreground">
+              {typeof p.value === "number"
+                ? (valueFormatter?.(p.value) ?? p.value.toLocaleString())
+                : String(p.value)}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** Themed legend. Use `keys` to provide names + colors directly when not relying on Recharts' auto-generated entries. */
+export function ChartLegend({
+  keys,
+}: {
+  keys?: { name: string; color: string }[];
+}) {
+  if (keys && keys.length > 0) {
+    return (
+      <ul className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+        {keys.map((k) => (
+          <li key={k.name} className="flex items-center gap-1.5">
+            <span
+              aria-hidden
+              className="size-2 rounded-full"
+              style={{ background: k.color }}
+            />
+            {k.name}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  return (
+    <Legend
+      iconType="circle"
+      iconSize={8}
+      wrapperStyle={{
+        fontFamily: "var(--font-mono, ui-monospace, monospace)",
+        fontSize: "10px",
+        textTransform: "uppercase",
+        letterSpacing: "0.2em",
+        color: "var(--muted-foreground)",
+        paddingTop: "12px",
+      }}
+    />
+  );
+}

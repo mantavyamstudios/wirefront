@@ -1,8 +1,8 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
- * Shared runner for preview captures: `npm run snapshot` writes the committed
- * previews and `npm run test:visual` compares fresh captures against them, so
+ * Shared runner for preview captures: `bun run snapshot` writes the committed
+ * previews and `bun run test:visual` compares fresh captures against them, so
  * both must capture in exactly the same way (viewport, scale, colour scheme,
  * determinism, settle trigger). Each run gets its own fresh app server, which
  * is retired afterwards, and reports progress with slow-screen alerts.
@@ -12,7 +12,7 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
-import { SOURCE_FILES } from "../../apps/www/src/pages/showcase/source-files";
+import { SOURCE_FILES } from "../../apps/runtime/src/pages/showcase/source-files";
 import { withAppServer } from "./app-server";
 import { captureDesign, makeDeterministic, type Rect } from "./capture";
 import { trackProgress } from "./progress";
@@ -73,7 +73,7 @@ export async function runCaptures(check: string, tasks: PreviewTask[], handle: C
             let ok = false;
             try {
               await makeDeterministic(page);
-              ok = await handle(t, await captureDesign(page, `${base}/c/${t.category}/${t.design}?preview=1`));
+              ok = await handle(t, await captureDesign(page, `${base}/preview/${t.category}/${t.design}`));
               if (!ok) failures.push(key);
             } catch (err) {
               const msg = err instanceof Error ? (err.message.split("\n")[0] ?? "") : String(err);

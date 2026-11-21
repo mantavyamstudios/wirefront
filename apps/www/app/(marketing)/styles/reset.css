@@ -1,0 +1,57 @@
+/* --------------------------------------------------------------------------
+   Scoped Marketing Layout Reset & Component Guards
+   -------------------------------------------------------------------------- */
+
+.home-layout,
+.home-layout * {
+  box-sizing: border-box;
+}
+
+.home-layout a {
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.home-layout a:active,
+.home-layout a:hover {
+  outline: 0;
+}
+
+.home-layout button,
+.home-layout input,
+.home-layout select,
+.home-layout textarea {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.home-layout button {
+  cursor: pointer;
+}
+
+.home-layout img {
+  max-width: 100%;
+  border: 0;
+}
+
+.home-layout svg:not(:root) {
+  overflow: hidden;
+}
+
+/* Scoped component overrides: Prevent full-height stretching and unwanted background when used as Navbar/Footer */
+.site-navbar-root.home-layout,
+.site-footer-root.home-layout {
+  height: auto;
+  min-height: 0;
+  background-color: transparent;
+}
+
+.dark .site-navbar-root.home-layout,
+[data-theme="dark"] .site-navbar-root.home-layout,
+.site-navbar-root.home-layout[data-theme="dark"],
+.dark .site-footer-root.home-layout,
+[data-theme="dark"] .site-footer-root.home-layout,
+.site-footer-root.home-layout[data-theme="dark"] {
+  background-color: transparent;
+}

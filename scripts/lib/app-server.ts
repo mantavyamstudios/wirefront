@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Every browser check starts its own app server and retires it as soon as
@@ -31,7 +31,7 @@ import { createServer } from "node:net";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const WWW = resolve(dirname(fileURLToPath(import.meta.url)), "../../apps/www");
+const WWW = resolve(dirname(fileURLToPath(import.meta.url)), "../../apps/runtime");
 const STATUS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "../../.test-status");
 const START_LIMIT_MS = 120_000;
 const WARMUP_LIMIT_MS = 180_000;
@@ -119,7 +119,7 @@ async function warmUp(url: string, serverLog: () => string): Promise<void> {
     while (Date.now() - started < WARMUP_LIMIT_MS) {
       loads = 0;
       const before = optimisations();
-      await page.goto(`${url}/c/tables/members?preview=1`, { waitUntil: "networkidle", timeout: 120_000 });
+      await page.goto(`${url}/preview/tables/members`, { waitUntil: "networkidle", timeout: 120_000 });
       await page.waitForTimeout(WARMUP_QUIET_MS);
       if (loads <= 1 && optimisations() === before) return;
     }
