@@ -12,7 +12,9 @@ import {
 import type { Ref } from "react";
 
 import { parseRuntimeMessage } from "@wirefront/bridge";
-import type { HostMessage } from "@wirefront/bridge";
+import type { Direction, HostMessage, ScreenState } from "@wirefront/bridge";
+import { DEFAULT_PALETTE } from "@wirefront/ui/themes";
+import type { OrbitThemePalette } from "@wirefront/ui/themes/types";
 
 import { BlocksPreviewLoadingOverlay } from "@/components/blocks/blocks-preview-loading";
 import { playTapOnControl } from "@/lib/sound";
@@ -31,6 +33,7 @@ import {
   orientDevice,
 } from "./screens-device";
 import type { FlowDevice } from "./screens-device";
+import { ScreensPreviewControls } from "./screens-preview-controls";
 
 const PADDING = 32;
 /** Minimum room for the panel's own preview toolbar (top, desktop). */
@@ -179,6 +182,8 @@ interface ScreensRuntimeFrameProps {
   kindSlug: string;
   ref?: Ref<ScreensRuntimeHandle>;
   screenSlug: string;
+  /** The states the screen declares (designs.ts `states`), ready first. */
+  states: string[];
 }
 
 /**
@@ -200,6 +205,7 @@ export function ScreensRuntimeFrame({
   kindSlug,
   ref,
   screenSlug,
+  states,
 }: ScreensRuntimeFrameProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -211,6 +217,14 @@ export function ScreensRuntimeFrame({
   const firstSrc = useRef(initialSrc);
   const [ready, setReady] = useState(false);
   const [device, setDevice] = useState<FlowDevice>("desktop");
+  const [palette, setPalette] = useState<OrbitThemePalette>(DEFAULT_PALETTE);
+  const [dir, setDir] = useState<Direction>("ltr");
+  // The runtime opens every new screen in its default state.
+  const [stateFor, setStateFor] = useState<{ screen: string; state: ScreenState }>({
+    screen: "",
+    state: "ready",
+  });
+  const screenState = stateFor.screen === `${kindSlug}/${screenSlug}` ? stateFor.state : "ready";
   const [stage, animateStage] = useAnimate();
   const prefersReducedMotion = useReducedMotion();
   const [box, setBox] = useState({ width: 0, height: 0 });
@@ -324,9 +338,24 @@ export function ScreensRuntimeFrame({
 
   useEffect(() => {
     if (ready && resolvedTheme) {
-      post({ type: "wf:theme", mode: resolvedTheme === "dark" ? "dark" : "light" });
+      post({ type: "wf:theme", mode: resolvedTheme === "dark" ? "dark" : "light", palette });
     }
-  }, [ready, resolvedTheme, post]);
+  }, [ready, resolvedTheme, palette, post]);
+
+  const changeState = useCallback(
+    (state: ScreenState) => {
+      setStateFor({ screen: `${kindSlug}/${screenSlug}`, state });
+      restartDemo({ type: "wf:state", state });
+    },
+    [kindSlug, screenSlug, restartDemo]
+  );
+  const changeDir = useCallback(
+    (next: Direction) => {
+      setDir(next);
+      restartDemo({ type: "wf:dir", dir: next });
+    },
+    [restartDemo]
+  );
 
   // Crossfade the device swap; the iframe itself stays mounted.
   const switchDevice = useCallback(
@@ -520,6 +549,15 @@ export function ScreensRuntimeFrame({
             </TabsList>
           </TabsHighlight>
         </Tabs>
+        <ScreensPreviewControls
+          dir={dir}
+          onDirChange={changeDir}
+          onPaletteChange={setPalette}
+          onStateChange={changeState}
+          palette={palette}
+          state={screenState}
+          states={states}
+        />
         <p
           className={
             switcherInHeader

@@ -77,6 +77,7 @@ export function ScreensDetailFrame({
           kindSlug={detail.kindSlug}
           ref={runtimeRef}
           screenSlug={detail.screenSlug}
+          states={detail.states}
         />
       }
       previewName="screens-runtime"
