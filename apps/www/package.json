@@ -8,6 +8,7 @@
     "build": "next build",
     "postbuild": "bun ./scripts/copy-runtime.mts",
     "check-types": "bun ./scripts/docs-registry.mts && tsc --noEmit",
+    "typecheck": "bun run check-types",
     "predev": "bun ./scripts/screens-manifest.mts && bun ./scripts/docs-registry.mts",
     "dev": "next dev -p 3000",
     "preview": "WRANGLER_SEND_METRICS=false bunx wrangler@4 pages dev out --port 3000 --ip 127.0.0.1",

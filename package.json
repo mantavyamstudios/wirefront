@@ -16,6 +16,7 @@
     "build": "turbo run build",
     "prebuild": "bun run registry",
     "lint": "biome lint",
+    "pretypecheck": "bun run registry",
     "typecheck": "turbo run typecheck && tsc -p scripts",
     "registry": "tsx scripts/build-registry.ts",
     "snapshot": "tsx scripts/snapshot.ts",
