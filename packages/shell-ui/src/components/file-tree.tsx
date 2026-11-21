@@ -1,0 +1,396 @@
+"use client";
+
+import { cn } from "@workspace/ui/lib/utils";
+import {
+  File,
+  FileCode,
+  FileCog,
+  FileImage,
+  FileJson,
+  FileText,
+  Folder,
+  FolderOpen,
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import type * as React from "react";
+import {
+  createContext,
+  createElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+
+// ─── Types ─────────────────────────────────────────────────────────────────────
+
+export interface FileTreeElement {
+  children?: FileTreeElement[];
+  /** Whether this folder starts expanded. */
+  defaultOpen?: boolean;
+  /** Pink-tints the item to mark it as newly added / relevant. */
+  highlight?: boolean;
+  /** Custom icon component (receives a `className` prop). */
+  icon?: React.ComponentType<{ className?: string }>;
+  id: string;
+  name: string;
+  /** Omit or set to "file" for a leaf node; "folder" renders a collapsible branch. */
+  type?: "folder" | "file";
+}
+
+// ─── Context ───────────────────────────────────────────────────────────────────
+
+interface FileTreeCtx {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  defaultOpenIds: Set<string>;
+  highlightBounds: HighlightBounds | null;
+  highlightColor: string;
+  indentSize: number;
+  setHighlightBounds: React.Dispatch<
+    React.SetStateAction<HighlightBounds | null>
+  >;
+  showIcons: boolean;
+}
+
+interface HighlightBounds {
+  height: number;
+  left: number;
+  top: number;
+  width: number;
+}
+
+const FileTreeContext = createContext<FileTreeCtx | null>(null);
+
+function useFileTree() {
+  const context = useContext(FileTreeContext);
+  if (!context) {
+    throw new Error("File tree components must be used within <FileTree />");
+  }
+  return context;
+}
+
+interface FolderCtx {
+  isOpen: boolean;
+  toggle: () => void;
+}
+
+const FolderContext = createContext<FolderCtx | null>(null);
+
+function useFolder() {
+  const context = useContext(FolderContext);
+  if (!context) {
+    throw new Error("Folder components must be used within a folder item");
+  }
+  return context;
+}
+
+// ─── Icon resolution ───────────────────────────────────────────────────────────
+
+const EXT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  tsx: FileCode,
+  ts: FileCode,
+  jsx: FileCode,
+  js: FileCode,
+  json: FileJson,
+  md: FileText,
+  mdx: FileText,
+  png: FileImage,
+  jpg: FileImage,
+  jpeg: FileImage,
+  svg: FileImage,
+  webp: FileImage,
+  config: FileCog,
+  toml: FileCog,
+  yaml: FileCog,
+  yml: FileCog,
+  env: FileCog,
+};
+
+function resolveFileIcon(
+  name: string,
+  custom?: React.ComponentType<{ className?: string }>
+): React.ComponentType<{ className?: string }> {
+  if (custom) {
+    return custom;
+  }
+  const ext = name.split(".").pop()?.toLowerCase() ?? "";
+  return EXT_ICONS[ext] ?? File;
+}
+
+// ─── Shared highlight/collapse pieces ──────────────────────────────────────────
+
+function FileTreeHoverHighlight({ className }: { className?: string }) {
+  const { highlightBounds } = useFileTree();
+
+  return (
+    <AnimatePresence>
+      {highlightBounds && (
+        <motion.div
+          animate={{
+            opacity: 1,
+            top: highlightBounds.top,
+            left: highlightBounds.left,
+            width: highlightBounds.width,
+            height: highlightBounds.height,
+          }}
+          className={className}
+          exit={{ opacity: 0 }}
+          initial={{
+            opacity: 0,
+            top: highlightBounds.top,
+            left: highlightBounds.left,
+            width: highlightBounds.width,
+            height: highlightBounds.height,
+          }}
+          style={{ position: "absolute", pointerEvents: "none", zIndex: 0 }}
+          transition={{ type: "spring", stiffness: 500, damping: 40 }}
+        />
+      )}
+    </AnimatePresence>
+  );
+}
+
+function useHighlightTarget<T extends HTMLElement = HTMLDivElement>() {
+  const { containerRef, setHighlightBounds } = useFileTree();
+  const ref = useRef<T>(null);
+
+  const handleMouseEnter = useCallback(() => {
+    const element = ref.current;
+    const container = containerRef.current;
+    if (!(element && container)) {
+      return;
+    }
+
+    const containerRect = container.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+
+    setHighlightBounds({
+      top: elementRect.top - containerRect.top,
+      left: elementRect.left - containerRect.left,
+      width: elementRect.width,
+      height: elementRect.height,
+    });
+  }, [containerRef, setHighlightBounds]);
+
+  return { ref, handleMouseEnter };
+}
+
+function FolderIcon({
+  closeIcon,
+  openIcon,
+}: {
+  closeIcon: React.ReactNode;
+  openIcon: React.ReactNode;
+}) {
+  const { isOpen } = useFolder();
+
+  return (
+    <span className="relative inline-flex size-[1.125rem] shrink-0">
+      <AnimatePresence initial={false} mode="popLayout">
+        <motion.span
+          animate={{ opacity: 1 }}
+          className="inline-flex"
+          exit={{ opacity: 0 }}
+          initial={{ opacity: 0 }}
+          key={isOpen ? "open" : "close"}
+          transition={{ duration: 0.15, ease: "easeOut" }}
+        >
+          {isOpen ? openIcon : closeIcon}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
+
+function FolderContent({ children }: { children: React.ReactNode }) {
+  const { isOpen } = useFolder();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return isOpen ? <div style={{ overflow: "hidden" }}>{children}</div> : null;
+  }
+
+  return (
+    <AnimatePresence initial={false}>
+      {isOpen && (
+        <motion.div
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          initial={{ height: 0, opacity: 0 }}
+          style={{ overflow: "hidden" }}
+          transition={{ type: "spring", stiffness: 500, damping: 40 }}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// ─── Node renderers ────────────────────────────────────────────────────────────
+
+function FileTreeFile({ node }: { node: FileTreeElement }) {
+  const { highlightColor, showIcons } = useFileTree();
+  const Icon = resolveFileIcon(node.name, node.icon);
+  const highlightTarget = useHighlightTarget();
+
+  return (
+    // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Hover only positions the decorative highlight behind this file row.
+    // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- Hover only positions the decorative highlight behind this file row.
+    <div
+      className="relative z-10"
+      onMouseEnter={highlightTarget.handleMouseEnter}
+      ref={highlightTarget.ref}
+    >
+      <div
+        className="pointer-events-none flex items-center gap-2 p-2"
+        style={node.highlight ? { color: highlightColor } : undefined}
+      >
+        {showIcons && (
+          <span className="inline-flex shrink-0">
+            {createElement(Icon, { className: "size-4.5" })}
+          </span>
+        )}
+        <span className="text-sm">{node.name}</span>
+      </div>
+    </div>
+  );
+}
+
+function FileTreeFolder({ node }: { node: FileTreeElement }) {
+  const { defaultOpenIds, highlightColor, indentSize, showIcons } =
+    useFileTree();
+  const highlightTarget = useHighlightTarget<HTMLButtonElement>();
+  const [isOpen, setIsOpen] = useState(
+    node.defaultOpen ?? defaultOpenIds.has(node.id)
+  );
+  const toggle = useCallback(() => setIsOpen((open) => !open), []);
+  const folderContextValue = useMemo(
+    () => ({ isOpen, toggle }),
+    [isOpen, toggle]
+  );
+
+  return (
+    <FolderContext.Provider value={folderContextValue}>
+      <div className="relative z-10" data-value={node.id}>
+        <button
+          aria-label={node.name}
+          className="w-full text-start"
+          onClick={toggle}
+          onMouseEnter={highlightTarget.handleMouseEnter}
+          ref={highlightTarget.ref}
+          type="button"
+        >
+          <div>
+            <div className="pointer-events-none flex items-center gap-2 p-2">
+              {showIcons && (
+                <FolderIcon
+                  closeIcon={<Folder className="size-4.5" />}
+                  openIcon={<FolderOpen className="size-4.5" />}
+                />
+              )}
+              <span
+                className="text-sm"
+                style={node.highlight ? { color: highlightColor } : undefined}
+              >
+                {node.name}
+              </span>
+            </div>
+          </div>
+        </button>
+        <div
+          className="before:bg-border relative ml-6 before:absolute before:inset-y-0 before:-left-2 before:h-full before:w-px"
+          style={indentSize === 24 ? undefined : { marginLeft: indentSize }}
+        >
+          <FolderContent>
+            {(node.children ?? []).map((child) => (
+              <FileTreeNode key={child.id} node={child} />
+            ))}
+          </FolderContent>
+        </div>
+      </div>
+    </FolderContext.Provider>
+  );
+}
+
+function FileTreeNode({ node }: { node: FileTreeElement }) {
+  if (node.type === "folder") {
+    return <FileTreeFolder node={node} />;
+  }
+  return <FileTreeFile node={node} />;
+}
+
+// ─── Public API ────────────────────────────────────────────────────────────────
+
+export interface FileTreeProps {
+  className?: string;
+  /** Folder ids that should be open on first render. */
+  defaultOpenIds?: string[];
+  elements: FileTreeElement[];
+  /** Highlight color for items with `highlight: true`. Defaults to pink (#f472b6). */
+  highlightColor?: string;
+  /** Horizontal indent per nesting level in px. Defaults to 24. */
+  indentSize?: number;
+  /** Whether to show file/folder icons. Defaults to true. */
+  showIcons?: boolean;
+}
+
+export function FileTree({
+  elements,
+  className,
+  highlightColor = "#f472b6",
+  indentSize = 24,
+  showIcons = true,
+  defaultOpenIds = [],
+}: FileTreeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [highlightBounds, setHighlightBounds] =
+    useState<HighlightBounds | null>(null);
+  const defaultOpenIdSet = useMemo(
+    () => new Set(defaultOpenIds),
+    [defaultOpenIds]
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      highlightColor,
+      indentSize,
+      showIcons,
+      defaultOpenIds: defaultOpenIdSet,
+      containerRef,
+      highlightBounds,
+      setHighlightBounds,
+    }),
+    [highlightColor, indentSize, showIcons, defaultOpenIdSet, highlightBounds]
+  );
+
+  return (
+    <FileTreeContext.Provider value={contextValue}>
+      <div
+        className={cn(
+          "border-border/60 overflow-hidden rounded-xl border",
+          className
+        )}
+      >
+        {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Leaving the container only clears the decorative highlight. */}
+        {/* oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- Leaving the container only clears the decorative highlight. */}
+        <div
+          className="relative isolate w-full p-2"
+          onMouseLeave={() => setHighlightBounds(null)}
+          ref={containerRef}
+        >
+          <FileTreeHoverHighlight className="border-accent/45 bg-accent/55 z-0 rounded-lg border" />
+          {elements.map((node) => (
+            <FileTreeNode key={node.id} node={node} />
+          ))}
+        </div>
+      </div>
+    </FileTreeContext.Provider>
+  );
+}

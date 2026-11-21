@@ -1,0 +1,156 @@
+"use client";
+
+import { cn } from "@workspace/ui/lib/utils";
+import { motion, useInView } from "motion/react";
+import { usePathname } from "next/navigation";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
+
+import Link from "@/components/site-link";
+
+export interface TermItem {
+  content: React.ReactNode;
+  id: string;
+  title: string;
+}
+
+export interface LegalScrollViewProps {
+  className?: string;
+  lastUpdated?: string;
+  terms: TermItem[];
+  title: string;
+}
+
+const TermSection = ({
+  term,
+  index,
+  children,
+  setActiveTerm,
+}: {
+  children: React.ReactNode;
+  index: number;
+  setActiveTerm: (index: number) => void;
+  term: TermItem;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, {
+    amount: 0.3,
+    margin: "-100px 0px -50% 0px",
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      setActiveTerm(index);
+    }
+  }, [isInView, index, setActiveTerm]);
+
+  return (
+    <div className="scroll-mt-32 space-y-4 md:space-y-6" id={term.id} ref={ref}>
+      {children}
+    </div>
+  );
+};
+
+export function LegalScrollView({
+  title,
+  terms,
+  lastUpdated = "June 24, 2026",
+  className,
+}: LegalScrollViewProps) {
+  const [activeTerm, setActiveTerm] = useState(0);
+  const pathname = usePathname();
+
+  return (
+    <div
+      className={cn(
+        "mx-auto max-w-7xl px-4 pt-28 pb-12 sm:px-6 lg:px-12 lg:pt-36 lg:pb-16",
+        className
+      )}
+    >
+      <div className="flex flex-col">
+        <div className="border-foreground/10 flex flex-col gap-2.5 border-b pb-4 font-mono text-xs tracking-widest uppercase sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex scrollbar-none items-center gap-4 overflow-x-auto sm:gap-6">
+            <Link
+              className={cn(
+                "shrink-0 whitespace-nowrap transition-colors",
+                pathname === "/legal/terms"
+                  ? "text-foreground font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+              href="/legal/terms"
+            >
+              Terms of Service
+            </Link>
+            <Link
+              className={cn(
+                "shrink-0 whitespace-nowrap transition-colors",
+                pathname === "/legal/privacy"
+                  ? "text-foreground font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+              href="/legal/privacy"
+            >
+              Privacy Policy
+            </Link>
+          </div>
+          <span className="text-muted-foreground shrink-0 font-normal whitespace-nowrap lowercase sm:text-right">
+            updated: {lastUpdated}
+          </span>
+        </div>
+
+        <h1 className="font-cal-sans mt-4 text-3xl md:mt-5 md:text-5xl">
+          {title}
+        </h1>
+      </div>
+
+      <div className="relative mb-0 flex gap-12 pt-[40px] pb-0 md:pt-[60px]">
+        <ul className="border-foreground/10 sticky top-28 hidden h-fit w-full max-w-[300px] space-y-4 border-l md:block">
+          {terms.map((term, index) => (
+            <li className="relative cursor-pointer pl-3" key={term.id}>
+              <a href={`#${term.id}`}>
+                {activeTerm === index && (
+                  <motion.span
+                    className="bg-foreground absolute top-1/2 -left-[1.5px] inline-block h-5 w-[2px] -translate-y-1/2 rounded-2xl"
+                    layoutId="active-term"
+                    transition={{
+                      damping: 30,
+                      stiffness: 400,
+                      type: "spring" as const,
+                    }}
+                  />
+                )}
+
+                <p
+                  className={cn(
+                    "opacity-50 transition-opacity duration-200",
+                    activeTerm === index && "opacity-100"
+                  )}
+                >
+                  {term.title}
+                </p>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div className="flex flex-1 flex-col gap-[40px] md:gap-[60px]">
+          {terms.map((term, index) => (
+            <TermSection
+              index={index}
+              key={term.id}
+              setActiveTerm={setActiveTerm}
+              term={term}
+            >
+              <h3 className="font-cal-sans text-xl lg:text-3xl">
+                {term.title}
+              </h3>
+              <div className="text-foreground/80 space-y-4 leading-relaxed">
+                {term.content}
+              </div>
+            </TermSection>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
