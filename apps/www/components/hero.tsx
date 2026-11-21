@@ -1,5 +1,3 @@
-import manifest from "@/lib/screens/screens.manifest.json";
-
 export function Hero() {
   return (
     <section className="home-hero" data-theme-section="light">
@@ -20,9 +18,9 @@ export function Hero() {
           </div>
           <div className="home-hero__description-row">
             <p className="home-hero__description-p">
-              {manifest.totals.screens} responsive, ready-to-wire UI screens,
-              from sign-in to checkout, that you can try live, then install
-              with the shadcn CLI and wire to your own data.
+              A backend-agnostic catalogue of production-grade UI screens,
+              organised by the experience they serve. Install any screen with
+              the shadcn CLI, wire it to your backend and make it your own.
             </p>
           </div>
         </div>

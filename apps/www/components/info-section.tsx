@@ -12,7 +12,7 @@ export function InfoSection() {
           </div>
           <div className="info__large-col">
             <div className="info__scribble">
-              <p className="scribble">Why try it?</p>
+              <p className="scribble">Why Wirefront?</p>
               <svg
                 aria-hidden="true"
                 className="scribble-arrow is--info-col"
@@ -30,42 +30,40 @@ export function InfoSection() {
             </div>
             <div className="info__title">
               <h3 className="is--long h-ml">
-                See exactly how a screen behaves before you wire it: every
-                screen runs live, and every line of it is yours to install.
+                Skip building screens from scratch. Install one as source you
+                own, wire it to your backend and ship it.
               </h3>
             </div>
             <ul className="info__list">
               <li className="info__li">
                 <div className="info__li-title">
-                  <h4 className="u--fw-medium p-l">
-                    Real React, not screenshots
-                  </h4>
+                  <h4 className="u--fw-medium p-l">Adaptive</h4>
                 </div>
                 <p className="p-m">
-                  Each screen is the real React component, running in your
-                  browser. Click, type and scroll through it on a phone, tablet
-                  or laptop frame, in light or dark mode.
+                  Screens fit your stack, not ours. One provider hands them your
+                  router, toasts, locale, currency, copy and permissions, and
+                  they follow your theme tokens in light or dark, left to right
+                  or right to left.
                 </p>
               </li>
               <li className="info__li">
                 <div className="info__li-title">
-                  <h4 className="u--fw-medium p-l">Every screen, every file</h4>
+                  <h4 className="u--fw-medium p-l">Dynamic</h4>
                 </div>
                 <p className="p-m">
-                  The Code tab shows each screen's view, schema and fixtures.
-                  One shadcn CLI command installs them in your app, ready to
-                  wire to your own data.
+                  Data in, events out. Every screen takes its data as props and
+                  hands each action to you as a promise, with zod schemas and an
+                  API contract for your backend to meet.
                 </p>
               </li>
               <li className="info__li">
                 <div className="info__li-title">
-                  <h4 className="u--fw-medium p-l">
-                    Six groups, one place
-                  </h4>
+                  <h4 className="u--fw-medium p-l">Responsive</h4>
                 </div>
                 <p className="p-m">
-                  Shells, accounts, data, activity, interaction and whole
-                  products: the screens real apps are made of, side by side.
+                  From phone to wide desktop. Each screen is audited at 375,
+                  768, 1024 and 1440 pixels wide, with accessibility, tap
+                  targets and keyboard paths checked before it ships.
                 </p>
               </li>
             </ul>

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
- * The six higher-level groups the 23 kinds (catalogue categories) sit in.
+ * The six higher-level groups the kinds (catalogue categories) sit in.
  * A screen's address is /{group}/{kind}/{screen}. Every kind belongs to
  * exactly one group; scripts/screens-manifest.mts --check holds that.
  */

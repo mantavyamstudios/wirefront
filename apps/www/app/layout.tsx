@@ -79,6 +79,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
+    creator: "@mantavyam_",
     images: defaultTwitterImages,
   },
 };

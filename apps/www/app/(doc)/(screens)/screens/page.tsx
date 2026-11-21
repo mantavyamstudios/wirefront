@@ -8,7 +8,8 @@ import { screenSocialMetadata } from "@/lib/og/screen-social-metadata";
 import { getPageAlternates } from "@/lib/site";
 
 const title = "Screens";
-const description = "Responsive, ready-to-wire UI screens you can try in the browser, then install with the shadcn CLI.";
+const description =
+  "Production-grade UI screens, organised by the experience they serve. Install any screen with the shadcn CLI and wire it to your backend.";
 
 export const metadata: Metadata = {
   title,
@@ -28,7 +29,7 @@ export default function ScreensPage() {
             description={description}
             showStackIcons={false}
             stackLabel={`shadcn/ui · ${totals.groups} groups · ${totals.kinds} kinds · ${totals.screens} screens`}
-            title="Ready-to-wire screens. Live in your browser."
+            title="Ready-to-wire screens for any backend."
           />
         </div>
 

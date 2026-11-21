@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 
-import manifest from "@/lib/screens/screens.manifest.json";
-
 /** Production site origin — used for sitemap, robots, metadata, and JSON-LD. */
 export const SITE_URL = "https://wirefront.mantavyam.in" as const;
 
@@ -47,8 +45,7 @@ export const STUDIO_URL = "https://github.com/mantavyamstudios" as const;
 export const GITHUB_REPO_URL =
   "https://github.com/mantavyamstudios/wirefront" as const;
 export const GITHUB_PROFILE_URL = "https://github.com/mantavyamstudios" as const;
-/** No X account is published yet; the X links point at the studio's GitHub until one is. */
-export const X_PROFILE_URL = STUDIO_URL;
+export const X_PROFILE_URL = "https://x.com/mantavyam_" as const;
 
 /** Public community hub — bug reports, discussions, and feature requests. */
 export const COMMUNITY_REPO_URL = GITHUB_REPO_URL;
@@ -57,14 +54,14 @@ export const COMMUNITY_DISCUSSIONS_URL = `${GITHUB_REPO_URL}/issues` as const;
 
 export const SITE_NAME = "Wirefront" as const;
 
-/** Counts come from the screens manifest, which is synced from the catalogue on every build. */
-export const SITE_DESCRIPTION = `${manifest.totals.screens} responsive, ready-to-wire UI screens you can try live in the browser — sign-in to checkout, across ${manifest.totals.kinds} kinds — then install with the shadcn CLI.`;
+export const SITE_DESCRIPTION =
+  "A backend-agnostic catalogue of production-grade UI screens: adaptive, dynamic and responsive. Install any screen with the shadcn CLI and wire it to your backend.";
 
 /** Default OG image headline. */
 export const SITE_OG_HERO_TITLE = "Ready-to-wire screens";
 
 /** OG image subline. */
-export const SITE_OG_HERO_SUBLINE = "Live in your browser";
+export const SITE_OG_HERO_SUBLINE = "Wire them to any backend";
 
 /**
  * Origin for resolving metadata and OG image URLs.

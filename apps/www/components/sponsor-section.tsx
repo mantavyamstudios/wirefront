@@ -18,7 +18,7 @@ export function SponsorSection() {
           {/* Title */}
           <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center">
             <h2 className="!m-0 text-center !text-3xl !leading-[1.15] !font-normal tracking-[-0.04em] sm:!text-4xl sm:!leading-[1.12] md:!text-5xl md:!leading-[1.08] lg:!text-[56px] lg:!leading-[1.06]">
-              {manifest.totals.screens} screens across {KINDS.length} kinds
+              A screen for every part of your product
             </h2>
           </div>
 
@@ -106,7 +106,7 @@ export function SponsorSection() {
           {/* Bottom CTA */}
           <div className="group mt-8 flex cursor-pointer flex-col items-center justify-center gap-1.5 text-center text-sm transition-all ease-in-out sm:flex-row md:mt-10 md:text-base">
             <p className="!m-0 opacity-40">
-              Every screen runs live in your browser
+              New screens land as the catalogue grows
             </p>
             <Link
               className="flex cursor-pointer items-center gap-1 pl-1 !font-medium !no-underline opacity-70 transition-opacity hover:opacity-100"

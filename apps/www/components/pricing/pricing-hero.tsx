@@ -58,7 +58,7 @@ export function PricingHero() {
                 />
               </svg>
               <span className="scribble mb-3 ml-1 -rotate-3 text-xl font-normal whitespace-nowrap text-[#fe624c] sm:text-2xl">
-                Live in your browser
+                Free, forever
               </span>
             </div>
 

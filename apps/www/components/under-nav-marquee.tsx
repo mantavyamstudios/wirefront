@@ -11,7 +11,7 @@ export interface UnderNavMarqueeProps {
 export function UnderNavMarquee({
   isMenuOpen = false,
   isScrollingStarted: isScrollingStartedProp,
-  text = "Ready-to-wire screens, live in your browser",
+  text = "Production-grade screens, ready to wire to any backend",
 }: UnderNavMarqueeProps = {}) {
   const [internalScrollingStarted, setInternalScrollingStarted] =
     useState(false);

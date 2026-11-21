@@ -1,13 +1,13 @@
 import { SITE_NAME } from "@/lib/site";
 
-/** Mantavyam Studios' booking page (published in the README). */
-export const BOOK_A_CALL_URL = "https://cal.com/mantavyam/business";
+/** Mantavyam Studios' GitHub Sponsors page. */
+export const SPONSORS_URL = "https://github.com/sponsors/mantavyamstudios";
 
 export const PRICING_CORE_MESSAGE =
-  "Try every screen live in your browser and install its full source, free and open source under MIT. Need help wiring screens to your product? Book a call with Mantavyam Studios.";
+  "Every screen, with its full source, free and open source under MIT. Install it with the shadcn CLI, wire it to your backend and make it your own.";
 
 export const PRICING_DISCLAIMER =
-  "Custom work is scoped per project. Book a call to talk it through.";
+  "Sponsoring is optional. Every screen stays free and MIT licensed for everyone, sponsor or not.";
 
 export interface PricingFaqItem {
   content: string;
@@ -18,7 +18,7 @@ export const PRICING_FAQ_ITEMS: PricingFaqItem[] = [
   {
     title: `What is ${SITE_NAME}?`,
     content:
-      "A library of 200 responsive, ready-to-wire UI screens built on shadcn/ui and Base UI. Preview each one live in the browser, then install it with the shadcn CLI.",
+      "A backend-agnostic catalogue of production-grade UI screens, organised by the experience they serve and built to be adaptive, dynamic and responsive. Install any screen with the shadcn CLI and wire it to your own backend.",
   },
   {
     title: "Is it really free?",
@@ -31,14 +31,14 @@ export const PRICING_FAQ_ITEMS: PricingFaqItem[] = [
       "Yes. The MIT License allows personal and commercial use; keep the copyright and license notice with the code.",
   },
   {
-    title: "Can you build or wire screens for us?",
+    title: "How can I support Wirefront?",
     content:
-      "Mantavyam Studios takes on custom work. Book a call to talk about your project.",
+      "Sponsor it on GitHub. Sponsors help prioritise upcoming screens and talk directly with the maintainer, and every sponsorship keeps Wirefront free for everyone.",
   },
   {
     title: "How do I install a screen?",
     content:
-      "Run the shadcn CLI command on the screen's page, then pass your own data in as props.",
+      "Run the shadcn CLI command on the screen's page. The screen lands in your project as source you own: pass your data in as props, connect its actions to your backend and tweak anything you like.",
   },
 ];
 
