@@ -1,0 +1,55 @@
+---
+title: Using a flow
+description: Preview a flow, read its Dart source and bring it into your own Flutter app.
+---
+
+<Steps>
+<Step>
+
+### Preview it
+
+Open any flow from the [Flows](/flows) page. The preview runs the real Flutter code — tap, type and scroll through it. Use the device switcher to try it on a phone, tablet or laptop, and the restart button to begin again from the first screen.
+
+</Step>
+<Step>
+
+### Read the source
+
+Open the **Code** tab on the flow page. It lists every Dart file the flow needs:
+
+- **Flow files** live in the flow's own folder, for example `lib/flows/01_account_management/login/`.
+- **Shared files** are imported from elsewhere in the app (theme, constants or common widgets) and are shown with their `lib/…` path.
+
+The full source is also in the [GitHub repository](https://github.com/deveshmishra09/enterprise_ui_playground).
+
+</Step>
+<Step>
+
+### Add it to your app
+
+1. Copy the flow's folder (and any shared files it lists) into your Flutter project's `lib/` directory.
+2. Update the `package:enterprise_ui_playground/…` imports to your own package name.
+3. Add any packages the flow imports to your `pubspec.yaml`, then run `flutter pub get`.
+4. Push the flow's entry screen from your own navigation, for example:
+
+```dart
+Navigator.of(context).push(
+  MaterialPageRoute(builder: (_) => const LoginScreen()),
+);
+```
+
+</Step>
+<Step>
+
+### Make it yours
+
+Restyle the screens to match your design system, and replace the sample data and placeholder actions with calls to your own services.
+
+</Step>
+</Steps>
+
+<Callout>
+  Some flows use the camera, microphone or location. On the web these ask for
+  permission in your browser; in a mobile app you also need the platform
+  permission entries (`Info.plist` on iOS, `AndroidManifest.xml` on Android).
+</Callout>
