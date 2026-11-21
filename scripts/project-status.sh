@@ -2,20 +2,18 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 #
-# Moves an issue on an org project board (mantavyamstudios).
+# Moves an issue on the Wirefront Shell Overhaul board (mantavyamstudios project #3).
+# This is the only board this script touches.
 #
 #   scripts/project-status.sh <issue> <todo|progress|done>
 #   scripts/project-status.sh --list [milestone title]
-#
-# PROJECT picks the board: 1 = Wirefront Roadmap, 3 = Wirefront Shell Overhaul
-# (the default, for the Phase 9 work), e.g. PROJECT=1 scripts/project-status.sh 12 done
 #
 # Field and option ids are looked up by name on every run, so renaming or
 # re-creating an option on the board never leaves a stale id here.
 set -euo pipefail
 
 OWNER=mantavyamstudios
-PROJECT="${PROJECT:-3}"
+PROJECT=3
 REPO=mantavyamstudios/wirefront
 
 usage() {
