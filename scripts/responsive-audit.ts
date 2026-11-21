@@ -7,11 +7,11 @@
  * clipped containers, squeezed text, small tap targets, tiny text,
  * console errors). Findings are documented per screen in `docs/`.
  *
- *   npm run dev:www                            # in another terminal
- *   npm run audit:responsive                   # all designs, all viewports
- *   npm run audit:responsive -- --category=layouts,forms
- *   npm run audit:responsive -- --design=layouts/app-shell --screenshots
- *   npm run audit:responsive -- --viewports=mobile,tablet --strict
+ *   bun run dev:runtime                            # in another terminal
+ *   bun run audit:responsive                   # all designs, all viewports
+ *   bun run audit:responsive -- --category=layouts,forms
+ *   bun run audit:responsive -- --design=layouts/app-shell --screenshots
+ *   bun run audit:responsive -- --viewports=mobile,tablet --strict
  *
  * Flags:
  *   --category=a,b      only these categories

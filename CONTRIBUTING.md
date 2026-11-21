@@ -14,8 +14,8 @@ Thanks for helping. Wirefront's goal is UI screens that are **ready to wire**: a
 ## Set up
 
 ```bash
-npm install        # also installs the pre-push hook
-npm run dev        # http://localhost:4000
+bun install        # also installs the pre-push hook
+bun run dev        # http://localhost:4000
 ```
 
 Requires Node 24 and npm 10 or later.
@@ -24,18 +24,18 @@ Requires Node 24 and npm 10 or later.
 
 | Command | What it checks |
 |---|---|
-| `npm run typecheck` | TypeScript across all workspaces and the tests |
-| `npm test` | Catalogue integrity, panel navigation, server render of every screen, registry installability, licence headers |
-| `npm run spdx:check` | Every source file has its licence header (`npm run spdx` adds missing ones) |
-| `npm run lint` | Biome lint rules, including accessibility (full report) |
-| `npm run lint:gate` | No new lint problems: existing ones are recorded per file in `lint-baseline.json` and may only go down. After fixing some, run `npm run lint:baseline` and commit the file |
-| `npm run test:install` | Installs every registry item into fresh shadcn Next.js, Vite and TanStack Start projects, then typechecks and builds them (first run scaffolds the projects, a few minutes) |
-| `npm run test:browser` | Every screen in a real browser at desktop and mobile width: fails on page errors, console errors, hydration mismatches, crashed routes and new accessibility violations (axe, per-screen baseline) |
-| `npm run test:visual` | Compares every screen with its committed preview; run `npm run snapshot` to update previews when a change is intended |
-| `npm run test:phase` | All of the phase checks in sequence (see [TESTING.md](TESTING.md)) |
-| `npm run audit:responsive` | Every screen at 375 / 768 / 1024 / 1440px |
+| `bun run typecheck` | TypeScript across all workspaces and the tests |
+| `bun run test` | Catalogue integrity, panel navigation, server render of every screen, registry installability, licence headers |
+| `bun run spdx:check` | Every source file has its licence header (`bun run spdx` adds missing ones) |
+| `bun run lint` | Biome lint rules, including accessibility (full report) |
+| `bun run lint:gate` | No new lint problems: existing ones are recorded per file in `lint-baseline.json` and may only go down. After fixing some, run `bun run lint:baseline` and commit the file |
+| `bun run test:install` | Installs every registry item into fresh shadcn Next.js, Vite and TanStack Start projects, then typechecks and builds them (first run scaffolds the projects, a few minutes) |
+| `bun run test:browser` | Every screen in a real browser at desktop and mobile width: fails on page errors, console errors, hydration mismatches, crashed routes and new accessibility violations (axe, per-screen baseline) |
+| `bun run test:visual` | Compares every screen with its committed preview; run `bun run snapshot` to update previews when a change is intended |
+| `bun run test:phase` | All of the phase checks in sequence (see [TESTING.md](TESTING.md)) |
+| `bun run audit:responsive` | Every screen at 375 / 768 / 1024 / 1440px |
 
-Browser checks start and stop their own server; you don't need `npm run dev` running. [TESTING.md](TESTING.md) maps every failure mode to its check.
+Browser checks start and stop their own server; you don't need `bun run dev` running. [TESTING.md](TESTING.md) maps every failure mode to its check.
 
 `git push` runs the pre-push hook: typecheck, licence headers, the lint gate and tests. If it fails, fix the cause rather than skipping the hook; CI runs the same checks on every pull request.
 
@@ -43,8 +43,8 @@ Browser checks start and stop their own server; you don't need `npm run dev` run
 
 1. Follow [SCREEN-CONTRACT.md](SCREEN-CONTRACT.md).
 2. Map the screen in `apps/runtime/src/pages/showcase/source-files.ts` and list it in `apps/runtime/src/lib/designs.ts`.
-3. Add its previews: `SNAPSHOT_ONLY_MISSING=1 npm run snapshot` with the dev server running.
-4. Run `npm run spdx` so the new file gets its licence header.
+3. Add its previews: `SNAPSHOT_ONLY_MISSING=1 bun run snapshot` with the dev server running.
+4. Run `bun run spdx` so the new file gets its licence header.
 
 ## Pull requests
 

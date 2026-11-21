@@ -21,14 +21,16 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run spdx:check
-      - run: npm test
-      - run: npm run build
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.5
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun run spdx:check
+      - run: bun run test
+      - run: bun run build
       - name: Per-screen bundle budget (gzipped size vs bundle-budget.json)
-        run: npm run test:bundle
+        run: bun run test:bundle
 
   lint:
     name: Lint
@@ -38,14 +40,16 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.5
+      - run: bun install --frozen-lockfile
       - name: Lint gate (fails on any new lint problem)
-        run: npm run lint:gate
+        run: bun run lint:gate
       - name: Full lint report (existing debt, tracked in lint-baseline.json)
         if: always()
         continue-on-error: true
-        run: npm run lint
+        run: bun run lint
 
   install:
     name: Install into fresh Next.js, Vite and TanStack Start apps
@@ -56,9 +60,11 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm run test:install
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.5
+      - run: bun install --frozen-lockfile
+      - run: bun run test:install
 
   browser:
     name: Browser check (runtime errors, hydration, accessibility)
@@ -70,10 +76,12 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.5
+      - run: bun install --frozen-lockfile
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:browser
+      - run: bun run test:browser
       - if: always()
         uses: actions/upload-artifact@v7
         with:
@@ -91,10 +99,12 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.5
+      - run: bun install --frozen-lockfile
       - run: npx playwright install --with-deps chromium
-      - run: npm run audit:responsive -- --strict
+      - run: bun run audit:responsive -- --strict
       - if: always()
         uses: actions/upload-artifact@v7
         with:

@@ -4,8 +4,8 @@
 /**
  * Licence headers for every source file.
  *
- *   npm run spdx          # add missing headers
- *   npm run spdx:check    # exit 1 if any file is missing one (used by tests)
+ *   bun run spdx          # add missing headers
+ *   bun run spdx:check    # exit 1 if any file is missing one (used by tests)
  *
  * Headers travel with the code: the registry copies source files verbatim,
  * so every screen a builder installs carries its licence.
@@ -78,7 +78,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   if (process.argv.includes("--check")) {
     const missing = missingHeaders();
     if (missing.length) {
-      console.error(`${missing.length} file(s) have no SPDX header. Run \`npm run spdx\`:\n  ${missing.join("\n  ")}`);
+      console.error(`${missing.length} file(s) have no SPDX header. Run \`bun run spdx\`:\n  ${missing.join("\n  ")}`);
       process.exit(1);
     }
     console.log(`All ${sourceFiles().length} source files have an SPDX header.`);

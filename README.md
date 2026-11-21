@@ -19,15 +19,15 @@ No backend, no auth, no database. Just the showcase.
 ## Scripts
 
 ```bash
-npm run dev               # start Wirefront on :4000
-npm run typecheck         # tsc -b across workspaces
-npm run build             # build all workspaces
-npm run registry          # rebuild the shadcn registry files (public/r)
-npm run snapshot          # capture homepage previews (needs the dev server)
-npm run audit:responsive  # responsive checks at 375/768/1024/1440px
+bun run dev               # start Wirefront on :4000
+bun run typecheck         # tsc -b across workspaces
+bun run build             # build all workspaces
+bun run registry          # rebuild the shadcn registry files (public/r)
+bun run snapshot          # capture homepage previews (needs the dev server)
+bun run audit:responsive  # responsive checks at 375/768/1024/1440px
 ```
 
-`SNAPSHOT_ONLY_MISSING=1 npm run snapshot` captures previews only for designs that don't have one yet.
+`SNAPSHOT_ONLY_MISSING=1 bun run snapshot` captures previews only for designs that don't have one yet.
 
 Set `VITE_SITE_URL` (for example `https://wirefront.example`) when building for production so canonical and social-card URLs are absolute.
 
@@ -49,7 +49,7 @@ A design lives at `/c/<category>/<design-slug>`.
 1. Add the screen as a folder `apps/runtime/src/pages/showcase/<category>-<my-design>/` with `view.tsx`, `schema.ts`, `fixtures.ts` and a `demo.tsx` exporting `<Name>ShowcasePage` (see `SCREEN-CONTRACT.md`).
 2. Map it in `source-files.ts` under the right category.
 3. Add a `{ slug, title, blurb }` entry to that category in `designs.ts`.
-4. Run `SNAPSHOT_ONLY_MISSING=1 npm run snapshot` with the dev server running to add its preview.
+4. Run `SNAPSHOT_ONLY_MISSING=1 bun run snapshot` with the dev server running to add its preview.
 
 ### Adding a new category
 

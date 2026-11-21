@@ -4,13 +4,13 @@
 /**
  * Lint ratchet: existing lint debt may only shrink.
  *
- *   npm run lint:gate        # fail if any file has more errors/warnings of a rule than the baseline
- *   npm run lint:baseline    # record the current counts (run after fixing lint debt)
+ *   bun run lint:gate        # fail if any file has more errors/warnings of a rule than the baseline
+ *   bun run lint:baseline    # record the current counts (run after fixing lint debt)
  *
  * lint-baseline.json holds, per file and rule, how many Biome errors and
  * warnings existed. New problems fail the gate; fixed ones must be locked
- * in with `npm run lint:baseline` so they can't come back. The full report
- * is always available with `npm run lint`.
+ * in with `bun run lint:baseline` so they can't come back. The full report
+ * is always available with `bun run lint`.
  */
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
@@ -71,7 +71,7 @@ export function compare(baseline: Counts, current: Counts): Comparison {
 }
 
 function runBiome(): Counts {
-  const result = spawnSync("npx", ["biome", "lint", "--reporter=json", "--max-diagnostics=none"], {
+  const result = spawnSync("bunx", ["biome", "lint", "--reporter=json", "--max-diagnostics=none"], {
     cwd: ROOT,
     encoding: "utf8",
     maxBuffer: 64 * 1024 * 1024,
@@ -93,18 +93,18 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     console.log(`lint baseline: ${total(current)} errors and warnings in ${Object.keys(current).length} files recorded.`);
   } else {
     if (!existsSync(BASELINE)) {
-      console.error("lint-baseline.json is missing. Run `npm run lint:baseline`.");
+      console.error("lint-baseline.json is missing. Run `bun run lint:baseline`.");
       process.exit(1);
     }
     const baseline = JSON.parse(readFileSync(BASELINE, "utf8")) as Counts;
     const { regressions, improvements } = compare(baseline, current);
     if (regressions.length) {
-      console.error(`Lint gate: ${regressions.length} new lint problem(s). Run \`npm run lint\` for details:\n  ${regressions.join("\n  ")}`);
+      console.error(`Lint gate: ${regressions.length} new lint problem(s). Run \`bun run lint\` for details:\n  ${regressions.join("\n  ")}`);
       process.exit(1);
     }
     if (improvements.length) {
       console.error(
-        `Lint gate: ${improvements.length} lint problem(s) fixed. Lock the progress in with \`npm run lint:baseline\` and commit lint-baseline.json:\n  ${improvements.join("\n  ")}`,
+        `Lint gate: ${improvements.length} lint problem(s) fixed. Lock the progress in with \`bun run lint:baseline\` and commit lint-baseline.json:\n  ${improvements.join("\n  ")}`,
       );
       process.exit(1);
     }
