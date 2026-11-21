@@ -55,4 +55,4 @@ Browser checks start and stop their own server; you don't need `npm run dev` run
 
 ## Licence
 
-Wirefront is [AGPL-3.0](LICENSE). By contributing you agree to the [CLA](CLA.md). Code from devl.dev and shadcn/ui keeps its original notice, listed in [NOTICE.md](NOTICE.md).
+Wirefront is [MIT](LICENSE). By contributing you agree to the [CLA](CLA.md). Code from devl.dev and shadcn/ui keeps its original notice, listed in [NOTICE.md](NOTICE.md).
