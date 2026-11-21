@@ -29,6 +29,11 @@ export const baseOptions: BaseLayoutProps = {
       secondary: false,
     },
     {
+      text: "Wiring a Screen",
+      url: "/docs/wiring",
+      secondary: false,
+    },
+    {
       text: "License",
       url: "/docs/license",
       secondary: false,

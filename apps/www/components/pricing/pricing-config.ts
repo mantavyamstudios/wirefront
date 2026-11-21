@@ -1,7 +1,7 @@
 import { SITE_NAME } from "@/lib/site";
 
-/** Mantavyam Studios' GitHub Sponsors page. */
-export const SPONSORS_URL = "https://github.com/sponsors/mantavyamstudios";
+/** Where sponsors support Wirefront (Razorpay). */
+export const SPONSORS_URL = "https://razorpay.me/@mantavyam";
 
 export const PRICING_CORE_MESSAGE =
   "Every screen, with its full source, free and open source under MIT. Install it with the shadcn CLI, wire it to your backend and make it your own.";
@@ -33,7 +33,7 @@ export const PRICING_FAQ_ITEMS: PricingFaqItem[] = [
   {
     title: "How can I support Wirefront?",
     content:
-      "Sponsor it on GitHub. Sponsors help prioritise upcoming screens and talk directly with the maintainer, and every sponsorship keeps Wirefront free for everyone.",
+      "Become a sponsor through Razorpay. Sponsors help prioritise upcoming screens and talk directly with the maintainer, and every sponsorship keeps Wirefront free for everyone.",
   },
   {
     title: "How do I install a screen?",
