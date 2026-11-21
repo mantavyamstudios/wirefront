@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import { registryItemSchema, registrySchema } from "shadcn/schema";
 import { beforeAll, describe, expect, it } from "vitest";
 import { tokensUsed } from "../../../scripts/lib/registry-meta";
+import { CATEGORIES } from "../src/lib/designs";
 import { must } from "./must";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -90,7 +91,8 @@ beforeAll(() => {
 
 describe("registry", () => {
   it("builds one flat item per design plus Wirefront's components", () => {
-    expect(items.length).toBe(200 + COMPONENTS.length);
+    const designs = CATEGORIES.reduce((n, c) => n + c.designs.length, 0);
+    expect(items.length).toBe(designs + COMPONENTS.length);
     for (const c of COMPONENTS) expect(items.some((i) => i.name === c && i.type === "registry:ui"), c).toBe(true);
   });
 

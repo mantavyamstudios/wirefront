@@ -1,0 +1,21 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
+#
+# Runs before every `git commit`. When the commit touches a screen, the
+# catalogue or the groups, it re-syncs the files the site generates from them
+# (screens manifest, sidebar meta.json, MDX pages for new screens) and adds
+# them to the commit, so what is committed never drifts from the catalogue.
+# Installed by `bun install` (the root `prepare` script sets core.hooksPath).
+set -e
+
+if ! git diff --cached --name-only | grep -qE '^(apps/runtime/src/pages/showcase/|apps/runtime/src/lib/designs\.ts$|apps/www/lib/screens/groups\.ts$|apps/www/content/screens/)'; then
+  exit 0
+fi
+
+echo "▸ pre-commit: syncing the site with the catalogue"
+bun run --silent --cwd apps/www screens:manifest
+git add apps/www/lib/screens/screens.manifest.json apps/www/content/screens/meta.json
+# MDX pages the sync just created for new screens.
+git ls-files --others --exclude-standard -z apps/www/content/screens | xargs -0 -r git add --
+bun run --silent --cwd apps/www screens:check
