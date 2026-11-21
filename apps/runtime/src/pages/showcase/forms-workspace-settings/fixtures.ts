@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { CreditCardIcon, KeyIcon, PuzzleIcon, ScrollTextIcon, SettingsIcon, ShieldAlertIcon, UsersIcon } from "lucide-react";
 import type { GeneralSettings, UploadedAvatar } from "./schema";

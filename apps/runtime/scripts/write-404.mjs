@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Writes .output/public/404.html after `vite build`, for static hosting.
 // Prerendering skips pages that answer 404, so the site's not-found page is

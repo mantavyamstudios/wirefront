@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
  * Licence headers for every source file.
@@ -27,7 +27,7 @@ const WIREFRONT = "Wirefront © 2026 Mantavyam Studios — https://github.com/ma
 export function headerLines(_path: string, source: string): string[] {
   // shadcn/ui components are vendored with their own MIT header (see
   // packages/ui/src/components/ui); everything else is Wirefront's.
-  const lines = ["SPDX-License-Identifier: AGPL-3.0-only"];
+  const lines = ["SPDX-License-Identifier: MIT"];
   lines.push(WIREFRONT);
   if (source.includes("Ported from devl.dev")) {
     lines.push(`Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see ${NOTICE_URL}`);

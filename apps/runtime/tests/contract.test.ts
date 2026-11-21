@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /** The contract checker (scripts/lib/contract.ts) and every ready-to-wire screen. */
 import { join } from "node:path";
@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import type { ApiContract } from "@wirefront/ui/wirefront/api";
 import { checkScreenFolder, checkView, readyScreens, SHOWCASE_DIR } from "../../../scripts/lib/contract";
 
-const HEADER = "// SPDX-License-Identifier: AGPL-3.0-only\n// Wirefront © 2026 Mantavyam Studios\n";
+const HEADER = "// SPDX-License-Identifier: MIT\n// Wirefront © 2026 Mantavyam Studios\n";
 
 const GOOD = `${HEADER}"use client";
 

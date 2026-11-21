@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: two beacons inside a placeholder inbox; the first opens on load.
 // Not shipped by the registry; builders place FeatureBeacon inside the element it explains.

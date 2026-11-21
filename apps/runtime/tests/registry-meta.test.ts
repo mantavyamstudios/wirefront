@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /** The registry builder reads designs.ts as text; it must see exactly the real catalogue. */
 import { describe, expect, it } from "vitest";

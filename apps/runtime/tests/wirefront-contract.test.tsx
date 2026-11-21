@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // @vitest-environment jsdom
 /** The contract helpers every ready-to-wire screen builds on (packages/ui/src/wirefront). */

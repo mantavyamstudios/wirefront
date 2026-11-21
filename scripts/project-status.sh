@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-License-Identifier: MIT
 # Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 #
 # Moves an issue on the Wirefront Shell Overhaul board (mantavyamstudios project #3).

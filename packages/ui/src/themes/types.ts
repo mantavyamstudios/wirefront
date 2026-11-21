@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 export const ORBIT_THEME_MODES = ["light", "dark", "system"] as const;
 export type OrbitThemeMode = (typeof ORBIT_THEME_MODES)[number];

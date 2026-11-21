@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Showcase only: three rows in a list; reactions save after a short wait and Delete removes the
 // row. Not shipped by the registry; builders render CommentRow for each comment they load.
