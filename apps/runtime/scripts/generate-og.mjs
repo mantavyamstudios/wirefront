@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Generates apps/runtime/public/og.png using @vercel/og.
-// Run with: npm run generate:og  (from apps/runtime)
+// Run with: bun run generate:og  (from apps/runtime)
 import { ImageResponse } from '@vercel/og'
 import { createElement as h } from 'react'
 import { readFile, writeFile, mkdir } from 'node:fs/promises'

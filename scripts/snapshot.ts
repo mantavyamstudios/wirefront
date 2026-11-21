@@ -4,11 +4,11 @@
 /**
  * Capture the homepage previews of every design, light and dark, into
  * apps/www/public/previews/<category>__<design>--<mode>.png. These committed
- * previews are also the baseline `npm run test:visual` compares against.
+ * previews are also the baseline `bun run test:visual` compares against.
  *
- *   npm run snapshot                              # all designs
- *   npm run snapshot -- --design=tables/members   # some designs
- *   SNAPSHOT_ONLY_MISSING=1 npm run snapshot      # only designs without previews
+ *   bun run snapshot                              # all designs
+ *   bun run snapshot -- --design=tables/members   # some designs
+ *   SNAPSHOT_ONLY_MISSING=1 bun run snapshot      # only designs without previews
  *
  * Starts its own fresh app server and retires it afterwards; captures are
  * deterministic and taken only once each screen has settled

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 /**
- * Shared runner for preview captures: `npm run snapshot` writes the committed
- * previews and `npm run test:visual` compares fresh captures against them, so
+ * Shared runner for preview captures: `bun run snapshot` writes the committed
+ * previews and `bun run test:visual` compares fresh captures against them, so
  * both must capture in exactly the same way (viewport, scale, colour scheme,
  * determinism, settle trigger). Each run gets its own fresh app server, which
  * is retired afterwards, and reports progress with slow-screen alerts.

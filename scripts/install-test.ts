@@ -5,10 +5,10 @@
  * Install test: install every Wirefront registry item into fresh shadcn
  * projects, the way a builder would, then typecheck and build them.
  *
- *   npm run test:install                        # next, vite and start
- *   npm run test:install -- --templates=next    # a subset
- *   npm run test:install -- --fresh             # re-scaffold the projects
- *   npm run test:install -- --items=tables-invoices,charts-donut   # a sample
+ *   bun run test:install                        # next, vite and start
+ *   bun run test:install -- --templates=next    # a subset
+ *   bun run test:install -- --fresh             # re-scaffold the projects
+ *   bun run test:install -- --items=tables-invoices,charts-donut   # a sample
  *
  * Every command runs with stdin closed, so a prompt fails immediately
  * instead of waiting, and has a step limit (STEP_LIMIT_MS) after which it is

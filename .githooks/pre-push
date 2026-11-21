@@ -3,19 +3,19 @@
 # Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 #
 # Runs before every `git push`. A failing check stops the push.
-# Installed by `npm install` (the root `prepare` script sets core.hooksPath).
+# Installed by `bun install` (the root `prepare` script sets core.hooksPath).
 set -e
 
 echo "▸ pre-push: typecheck"
-npm run -s typecheck
+bun run --silent typecheck
 
 echo "▸ pre-push: licence headers"
-npm run -s spdx:check
+bun run --silent spdx:check
 
 echo "▸ pre-push: lint (no new problems)"
-npm run -s lint:gate
+bun run --silent lint:gate
 
 echo "▸ pre-push: tests"
-npm run -s test
+bun run --silent test
 
 echo "✓ pre-push checks passed"

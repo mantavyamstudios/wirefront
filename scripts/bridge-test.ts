@@ -4,7 +4,7 @@
 /**
  * The site ⇄ runtime message bridge (@wirefront/bridge), in a real browser.
  *
- *   npm run test:bridge
+ *   bun run test:bridge
  *
  * A same-origin host page embeds one runtime iframe and drives it the way the
  * site does. Each failure mode the site depends on is checked:

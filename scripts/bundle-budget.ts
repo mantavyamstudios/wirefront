@@ -4,8 +4,8 @@
 /**
  * Per-screen bundle budget: what a builder's app ships for each screen.
  *
- *   npm run test:bundle               # fail if a screen outgrew its budget
- *   npm run test:bundle -- --update   # record current sizes in bundle-budget.json
+ *   bun run test:bundle               # fail if a screen outgrew its budget
+ *   bun run test:bundle -- --update   # record current sizes in bundle-budget.json
  *
  * Each screen's shipped file (`<file>/view.tsx`, or the flat `<file>.tsx`) is
  * bundled the way an app would bundle it: minified ESM for the browser, with

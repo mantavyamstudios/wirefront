@@ -5,9 +5,9 @@
  * Browser check: load every screen in a real browser and fail on anything
  * that breaks at runtime.
  *
- *   npm run test:browser
- *   npm run test:browser -- --design=tables/members,auth/login
- *   npm run test:browser -- --update-a11y-baseline
+ *   bun run test:browser
+ *   bun run test:browser -- --design=tables/members,auth/login
+ *   bun run test:browser -- --update-a11y-baseline
  *
  * Starts its own fresh app server (scripts/lib/app-server.ts) and retires it
  * when done. Each screen is opened at desktop (1440x900) and mobile (375x812)
@@ -201,7 +201,7 @@ async function main(): Promise<void> {
     writeFileSync(BASELINE, `${JSON.stringify({ ...kept, ...current }, null, 2)}\n`);
     process.stdout.write(`[browser] a11y baseline recorded: ${Object.keys(current).length} screen/viewports with violations.\n`);
   } else if (!existsSync(BASELINE)) {
-    a11yProblems = ["a11y-baseline.json is missing; run `npm run test:browser -- --update-a11y-baseline`."];
+    a11yProblems = ["a11y-baseline.json is missing; run `bun run test:browser -- --update-a11y-baseline`."];
   } else {
     const baseline = JSON.parse(readFileSync(BASELINE, "utf8")) as Counts;
     // When only some designs ran, compare only those.
