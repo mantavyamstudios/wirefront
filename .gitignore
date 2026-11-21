@@ -51,7 +51,7 @@ apps/www/public/r/
 .audit/
 
 # Responsive audit notes (kept local, not contributed upstream)
-docs/
+/docs/
 
 # Fresh shadcn projects used by `npm run test:install`
 .install-test/
@@ -64,3 +64,6 @@ docs/
 
 # Wrangler local state (wrangler dev)
 .wrangler/
+
+# Turborepo cache
+.turbo/
