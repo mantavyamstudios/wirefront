@@ -7,7 +7,11 @@ import { RadioGroup } from "@base-ui/react/radio-group";
 import { Button } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
 import { CheckIcon } from "lucide-react";
 import { useId, useState } from "react";
 
@@ -42,24 +46,44 @@ export interface SeatPricingProps {
   className?: string;
 }
 
-function SeatPricingScreen({ plan, onContinue, defaultSeats = 8, defaultBilling = "yearly", className }: SeatPricingProps) {
+function SeatPricingScreen({
+  plan,
+  onContinue,
+  defaultSeats = 8,
+  defaultBilling = "yearly",
+  className,
+}: SeatPricingProps) {
   const t = useMessages("seatPricing", SEAT_PRICING_MESSAGES);
   const format = useFormat();
   const id = useId();
-  const [seats, setSeats] = useState(Math.min(Math.max(defaultSeats, plan.minSeats), plan.maxSeats));
+  const [seats, setSeats] = useState(
+    Math.min(Math.max(defaultSeats, plan.minSeats), plan.maxSeats)
+  );
   const [billing, setBilling] = useState(defaultBilling);
-  const money = (n: number) => format.money(n, plan.currency, { maximumFractionDigits: 0 });
+  const money = (n: number) =>
+    format.money(n, plan.currency, { maximumFractionDigits: 0 });
   const monthly = seats * plan.perSeat;
   const yearlyTotal = monthly * 12 * (1 - plan.annualDiscountPct / 100);
   const shown = billing === "yearly" ? Math.round(yearlyTotal / 12) : monthly;
   const span = plan.maxSeats - plan.minSeats;
-  const ticks = [plan.minSeats, ...[0.2, 0.4, 0.6, 0.8].map((f) => Math.round(plan.minSeats + f * span)), plan.maxSeats];
+  const ticks = [
+    plan.minSeats,
+    ...[0.2, 0.4, 0.6, 0.8].map((f) => Math.round(plan.minSeats + f * span)),
+    plan.maxSeats,
+  ];
 
   return (
-    <div className={cn("flex min-h-svh items-center justify-center bg-background px-4 py-10 text-foreground sm:px-6", className)}>
+    <div
+      className={cn(
+        "flex min-h-svh items-center justify-center bg-background px-4 py-10 text-foreground sm:px-6",
+        className
+      )}
+    >
       <div className="w-full max-w-2xl">
         <div className="text-center">
-          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{interpolate(t.eyebrow, { plan: plan.name })}</div>
+          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+            {interpolate(t.eyebrow, { plan: plan.name })}
+          </div>
           <h1 className="mt-1 font-heading text-3xl">{t.title}</h1>
         </div>
 
@@ -68,11 +92,27 @@ function SeatPricingScreen({ plan, onContinue, defaultSeats = 8, defaultBilling 
           <div className="flex flex-col-reverse gap-4 sm:flex-row sm:items-baseline sm:justify-between">
             <div>
               <div aria-live="polite" className="flex items-baseline gap-1">
-                <span className="font-heading text-4xl tracking-tight sm:text-5xl">{money(shown)}</span>
-                <span className="text-muted-foreground text-sm">{t.perMonth}</span>
+                <span className="font-heading text-4xl tracking-tight sm:text-5xl">
+                  {money(shown)}
+                </span>
+                <span className="text-muted-foreground text-sm">
+                  {t.perMonth}
+                </span>
               </div>
-              <p className={cn("mt-1 font-mono text-[10px] uppercase tracking-[0.25em]", billing === "yearly" ? "text-category-2-foreground" : "text-muted-foreground")}>
-                {billing === "yearly" ? interpolate(t.billedYearly, { total: money(Math.round(yearlyTotal)), discount: plan.annualDiscountPct }) : t.billedMonthly}
+              <p
+                className={cn(
+                  "mt-1 font-mono text-[10px] uppercase tracking-[0.25em]",
+                  billing === "yearly"
+                    ? "text-category-2-foreground"
+                    : "text-muted-foreground"
+                )}
+              >
+                {billing === "yearly"
+                  ? interpolate(t.billedYearly, {
+                      total: money(Math.round(yearlyTotal)),
+                      discount: plan.annualDiscountPct,
+                    })
+                  : t.billedMonthly}
               </p>
             </div>
             <RadioGroup
@@ -95,16 +135,29 @@ function SeatPricingScreen({ plan, onContinue, defaultSeats = 8, defaultBilling 
 
           <div className="mt-10">
             <div className="flex items-baseline justify-between">
-              <label className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]" htmlFor={`${id}-seats`}>
+              <label
+                className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]"
+                htmlFor={`${id}-seats`}
+              >
                 {t.seats}
               </label>
               <div aria-hidden className="font-mono text-sm">
-                <span className="font-heading text-2xl">{seats === plan.maxSeats ? interpolate(t.orMore, { count: seats }) : seats}</span>
-                <span className="text-muted-foreground"> {interpolate(t.perSeat, { price: money(plan.perSeat) })}</span>
+                <span className="font-heading text-2xl">
+                  {seats === plan.maxSeats
+                    ? interpolate(t.orMore, { count: seats })
+                    : seats}
+                </span>
+                <span className="text-muted-foreground">
+                  {" "}
+                  {interpolate(t.perSeat, { price: money(plan.perSeat) })}
+                </span>
               </div>
             </div>
             <input
-              aria-valuetext={interpolate(seats === 1 ? t.seatsValueOne : t.seatsValue, { count: seats, price: money(shown) })}
+              aria-valuetext={interpolate(
+                seats === 1 ? t.seatsValueOne : t.seatsValue,
+                { count: seats, price: money(shown) }
+              )}
               // Taller input = bigger touch target for the native thumb.
               className="mt-3 h-6 w-full cursor-pointer accent-foreground pointer-coarse:h-10"
               id={`${id}-seats`}
@@ -115,14 +168,32 @@ function SeatPricingScreen({ plan, onContinue, defaultSeats = 8, defaultBilling 
               value={seats}
             />
             {/* Ticks sit at their real slider positions. */}
-            <div aria-hidden className="relative mt-1 h-4 font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
+            <div
+              aria-hidden
+              className="relative mt-1 h-4 font-mono text-[10px] text-muted-foreground uppercase tracking-widest"
+            >
               {ticks.map((v, i) => (
                 <span
-                  className={cn("absolute", i === 0 ? "inset-s-0" : i === ticks.length - 1 ? "inset-e-0" : "-translate-x-1/2 rtl:translate-x-1/2")}
+                  className={cn(
+                    "absolute",
+                    i === 0
+                      ? "inset-s-0"
+                      : i === ticks.length - 1
+                        ? "inset-e-0"
+                        : "-translate-x-1/2 rtl:translate-x-1/2"
+                  )}
                   key={v}
-                  style={i > 0 && i < ticks.length - 1 ? { insetInlineStart: `${((v - plan.minSeats) / span) * 100}%` } : undefined}
+                  style={
+                    i > 0 && i < ticks.length - 1
+                      ? {
+                          insetInlineStart: `${((v - plan.minSeats) / span) * 100}%`,
+                        }
+                      : undefined
+                  }
                 >
-                  {v === plan.maxSeats ? interpolate(t.orMore, { count: v }) : v}
+                  {v === plan.maxSeats
+                    ? interpolate(t.orMore, { count: v })
+                    : v}
                 </span>
               ))}
             </div>
@@ -131,16 +202,30 @@ function SeatPricingScreen({ plan, onContinue, defaultSeats = 8, defaultBilling 
           <ul className="mt-8 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
             {plan.features.map((f) => (
               <li className="flex items-start gap-2 text-sm" key={f}>
-                <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-category-2-foreground" />
+                <CheckIcon
+                  aria-hidden
+                  className="mt-0.5 size-4 shrink-0 text-category-2-foreground"
+                />
                 {f}
               </li>
             ))}
           </ul>
 
-          <Button className="mt-8 w-full" onClick={() => onContinue({ seats, billing })} size="lg" type="button">
-            {seats === 1 ? t.continueOne : interpolate(t.continue, { count: seats })}
+          <Button
+            className="mt-8 w-full"
+            onClick={() => onContinue({ seats, billing })}
+            size="lg"
+            type="button"
+          >
+            {seats === 1
+              ? t.continueOne
+              : interpolate(t.continue, { count: seats })}
           </Button>
-          {plan.trialDays ? <p className="mt-2 text-center text-muted-foreground text-xs">{interpolate(t.trial, { days: plan.trialDays })}</p> : null}
+          {plan.trialDays ? (
+            <p className="mt-2 text-center text-muted-foreground text-xs">
+              {interpolate(t.trial, { days: plan.trialDays })}
+            </p>
+          ) : null}
         </div>
       </div>
     </div>

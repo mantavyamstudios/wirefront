@@ -4,11 +4,19 @@
 import { describe, expect, it } from "vitest";
 import { CATEGORIES } from "@/lib/designs";
 import { must } from "./must";
-import { type DesignTarget, pickRandomDesign, siblingCategory, siblingDesign } from "@/lib/navigation";
+import {
+  type DesignTarget,
+  pickRandomDesign,
+  siblingCategory,
+  siblingDesign,
+} from "@/lib/navigation";
 
 const first = must(CATEGORIES[0], "a category");
 const last = must(CATEGORIES.at(-1), "a category");
-const at = (c: (typeof CATEGORIES)[number], i: number): DesignTarget => ({ category: c.slug, design: must(c.designs.at(i), `design ${i} in ${c.slug}`).slug });
+const at = (c: (typeof CATEGORIES)[number], i: number): DesignTarget => ({
+  category: c.slug,
+  design: must(c.designs.at(i), `design ${i} in ${c.slug}`).slug,
+});
 
 describe("siblingDesign (← →)", () => {
   it("moves to the next and previous design in the category", () => {
@@ -36,7 +44,9 @@ describe("siblingDesign (← →)", () => {
 
   it("returns null for an unknown category or design", () => {
     expect(siblingDesign({ category: "nope", design: "x" }, 1)).toBeNull();
-    expect(siblingDesign({ category: first.slug, design: "nope" }, 1)).toBeNull();
+    expect(
+      siblingDesign({ category: first.slug, design: "nope" }, 1)
+    ).toBeNull();
   });
 });
 
@@ -70,7 +80,10 @@ describe("pickRandomDesign (R)", () => {
     const current = at(first, 0);
     const seen = new Set<string>();
     for (let i = 0; i < total - 1; i++) {
-      const pick = must(pickRandomDesign(current, () => (i + 0.5) / (total - 1)), "a random design");
+      const pick = must(
+        pickRandomDesign(current, () => (i + 0.5) / (total - 1)),
+        "a random design"
+      );
       seen.add(`${pick.category}/${pick.design}`);
     }
     expect(seen.size).toBe(total - 1);

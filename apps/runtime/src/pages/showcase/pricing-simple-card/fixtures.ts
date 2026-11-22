@@ -8,5 +8,12 @@ export const getPlan: SinglePlan = {
   price: 19,
   currency: "USD",
   trialDays: 14,
-  features: ["Unlimited projects", "Unlimited team members", "All integrations", "Audit log", "Priority support", "Cancel any time"],
+  features: [
+    "Unlimited projects",
+    "Unlimited team members",
+    "All integrations",
+    "Audit log",
+    "Priority support",
+    "Cancel any time",
+  ],
 };

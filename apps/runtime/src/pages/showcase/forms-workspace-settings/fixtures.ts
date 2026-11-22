@@ -1,6 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-import { CreditCardIcon, KeyIcon, PuzzleIcon, ScrollTextIcon, SettingsIcon, ShieldAlertIcon, UsersIcon } from "lucide-react";
+import {
+  CreditCardIcon,
+  KeyIcon,
+  PuzzleIcon,
+  ScrollTextIcon,
+  SettingsIcon,
+  ShieldAlertIcon,
+  UsersIcon,
+} from "lucide-react";
 import type { GeneralSettings, UploadedAvatar } from "./schema";
 import type { SettingsNavItem, TimeZoneOption } from "./view";
 
@@ -10,9 +18,25 @@ export const nav: SettingsNavItem[] = [
   { id: "members", label: "Members", href: "#members", icon: UsersIcon },
   { id: "billing", label: "Billing", href: "#billing", icon: CreditCardIcon },
   { id: "api-keys", label: "API keys", href: "#api-keys", icon: KeyIcon },
-  { id: "integrations", label: "Integrations", href: "#integrations", icon: PuzzleIcon },
-  { id: "audit-log", label: "Audit log", href: "#audit-log", icon: ScrollTextIcon },
-  { id: "danger", label: "Danger zone", href: "#danger", icon: ShieldAlertIcon, danger: true },
+  {
+    id: "integrations",
+    label: "Integrations",
+    href: "#integrations",
+    icon: PuzzleIcon,
+  },
+  {
+    id: "audit-log",
+    label: "Audit log",
+    href: "#audit-log",
+    icon: ScrollTextIcon,
+  },
+  {
+    id: "danger",
+    label: "Danger zone",
+    href: "#danger",
+    icon: ShieldAlertIcon,
+    danger: true,
+  },
 ];
 
 export const timeZones: TimeZoneOption[] = [
@@ -37,4 +61,6 @@ export const getGeneralSettings: GeneralSettings = {
 };
 
 /** What the mocks return for `uploadAvatar`. */
-export const uploadAvatar: UploadedAvatar = { avatarUrl: "https://example.com/avatars/acme.png" };
+export const uploadAvatar: UploadedAvatar = {
+  avatarUrl: "https://example.com/avatars/acme.png",
+};

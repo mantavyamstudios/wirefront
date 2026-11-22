@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const InvoiceStatus = z.enum(["paid", "open", "overdue", "void"]).meta({ id: "InvoiceStatus" });
+export const InvoiceStatus = z
+  .enum(["paid", "open", "overdue", "void"])
+  .meta({ id: "InvoiceStatus" });
 export type InvoiceStatus = z.infer<typeof InvoiceStatus>;
 
 export const Invoice = z
@@ -41,7 +43,10 @@ export const InvoicesPage = z
     items: z.array(Invoice),
     total: z.int().min(0),
     /** Unpaid, non-void amount across every matching invoice, not just this page. */
-    outstanding: z.object({ amount: z.number(), currency: z.string().length(3) }),
+    outstanding: z.object({
+      amount: z.number(),
+      currency: z.string().length(3),
+    }),
   })
   .meta({ id: "InvoicesPage" });
 export type InvoicesPage = z.infer<typeof InvoicesPage>;
@@ -51,14 +56,16 @@ export const api = defineApi({
   listInvoices: {
     method: "GET",
     path: "/invoices",
-    summary: "List invoices, filtered, sorted and paginated, with the outstanding total",
+    summary:
+      "List invoices, filtered, sorted and paginated, with the outstanding total",
     query: InvoicesQuery,
     response: InvoicesPage,
   },
   exportInvoices: {
     method: "POST",
     path: "/invoices/export",
-    summary: "Start a CSV export of the invoices matching the query; the file is emailed or downloaded",
+    summary:
+      "Start a CSV export of the invoices matching the query; the file is emailed or downloaded",
     body: InvoicesQuery,
   },
 });

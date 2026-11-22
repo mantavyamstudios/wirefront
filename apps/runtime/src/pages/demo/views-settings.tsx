@@ -19,7 +19,11 @@ import { useTheme } from "@wirefront/ui/theme-provider";
 import { useDemo, type SettingsTab } from "./store";
 import { must } from "@/lib/must";
 
-const TABS: { id: SettingsTab; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
+const TABS: {
+  id: SettingsTab;
+  label: string;
+  Icon: React.ComponentType<{ className?: string }>;
+}[] = [
   { id: "general", label: "General", Icon: SettingsIcon },
   { id: "appearance", label: "Appearance", Icon: PaintbrushIcon },
   { id: "members", label: "Members", Icon: UsersIcon },
@@ -45,7 +49,9 @@ export function SettingsView() {
                     ? "bg-foreground/6 text-foreground"
                     : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground"
                 } ${t.id === "danger" ? "text-destructive hover:bg-destructive/10 hover:text-destructive" : ""} ${
-                  settingsTab === "danger" && t.id === "danger" ? "bg-destructive/8" : ""
+                  settingsTab === "danger" && t.id === "danger"
+                    ? "bg-destructive/8"
+                    : ""
                 }`}
               >
                 <t.Icon className="size-4 opacity-70" />
@@ -68,7 +74,10 @@ export function SettingsView() {
 
 function GeneralPane() {
   const { workspaces, currentWorkspaceId, pushToast } = useDemo();
-  const ws = must(workspaces.find((w) => w.id === currentWorkspaceId), "the current workspace");
+  const ws = must(
+    workspaces.find((w) => w.id === currentWorkspaceId),
+    "the current workspace"
+  );
   const [name, setName] = useState(ws.name);
   const [slug, setSlug] = useState("acme");
   const [dirty, setDirty] = useState(false);
@@ -105,8 +114,7 @@ function GeneralPane() {
               setName(e.target.value);
               setDirty(true);
             }}
-           
-            />
+          />
         </Field>
 
         <Field label="URL" htmlFor="ws-slug" hint="orbit.so/<slug>">
@@ -168,7 +176,11 @@ function GeneralPane() {
             disabled={!dirty}
             onClick={() => {
               setDirty(false);
-              pushToast({ kind: "success", title: "Saved", body: "Workspace settings updated." });
+              pushToast({
+                kind: "success",
+                title: "Saved",
+                body: "Workspace settings updated.",
+              });
             }}
           >
             Save changes
@@ -191,9 +203,14 @@ const PALETTES: { id: string; name: string; swatch: [string, string] }[] = [
 function AppearancePane() {
   const { resolved, preference, setPreference } = useTheme();
   const [palette, setPalette] = useState("graphite");
-  const [density, setDensity] = useState<"comfortable" | "cozy" | "compact">("cozy");
+  const [density, setDensity] = useState<"comfortable" | "cozy" | "compact">(
+    "cozy"
+  );
 
-  const accent = must(PALETTES.find((p) => p.id === palette), `the ${palette} palette`).swatch[0];
+  const accent = must(
+    PALETTES.find((p) => p.id === palette),
+    `the ${palette} palette`
+  ).swatch[0];
 
   return (
     <>
@@ -228,7 +245,10 @@ function AppearancePane() {
 
       <Separator className="my-8" />
 
-      <Section title="Palette" hint="Accent for buttons, links, and highlights.">
+      <Section
+        title="Palette"
+        hint="Accent for buttons, links, and highlights."
+      >
         <div className="grid max-w-md grid-cols-3 gap-2 sm:grid-cols-6">
           {PALETTES.map((p) => (
             <button
@@ -291,7 +311,12 @@ function AppearancePane() {
           style={{
             background: resolved === "dark" ? "#0a0a0a" : "#fafafa",
             color: resolved === "dark" ? "#fafafa" : "#0a0a0a",
-            fontSize: density === "compact" ? "12.5px" : density === "cozy" ? "13.5px" : "14px",
+            fontSize:
+              density === "compact"
+                ? "12.5px"
+                : density === "cozy"
+                  ? "13.5px"
+                  : "14px",
           }}
         >
           <div
@@ -302,14 +327,24 @@ function AppearancePane() {
             }}
           >
             <span className="flex items-center gap-1.5">
-              <span className="size-1.5 rounded-full" style={{ background: accent }} />
+              <span
+                className="size-1.5 rounded-full"
+                style={{ background: accent }}
+              />
               Acme · Workspace
             </span>
             <span>{resolved}</span>
           </div>
           <div
             className="flex flex-col gap-3"
-            style={{ padding: density === "compact" ? "12px" : density === "cozy" ? "16px" : "20px" }}
+            style={{
+              padding:
+                density === "compact"
+                  ? "12px"
+                  : density === "cozy"
+                    ? "16px"
+                    : "20px",
+            }}
           >
             <div className="flex items-center justify-between">
               <span className="font-medium">Roadmap notes</span>
@@ -338,7 +373,8 @@ function AppearancePane() {
                 className="mt-2 leading-relaxed"
                 style={{ color: resolved === "dark" ? "#a1a1aa" : "#71717a" }}
               >
-                Three things shipped this week — the audit log API, scoped invites, and a simpler pricing page.
+                Three things shipped this week — the audit log API, scoped
+                invites, and a simpler pricing page.
               </p>
             </div>
           </div>
@@ -360,7 +396,9 @@ function MembersPane() {
       <ul className="rounded-xl border border-border/60 bg-background/40 divide-y divide-border/40">
         {members.map((m, i) => (
           <li key={m.id} className="flex items-center gap-4 px-4 py-3">
-            <div className={`flex size-8 items-center justify-center rounded-full font-medium text-[12px] ${m.tone}`}>
+            <div
+              className={`flex size-8 items-center justify-center rounded-full font-medium text-[12px] ${m.tone}`}
+            >
               {m.initials}
             </div>
             <div className="min-w-0 flex-1">
@@ -372,13 +410,17 @@ function MembersPane() {
                   </span>
                 ) : null}
               </div>
-              <div className="truncate text-muted-foreground text-xs">{m.email}</div>
+              <div className="truncate text-muted-foreground text-xs">
+                {m.email}
+              </div>
             </div>
             <div className="relative">
               <select
                 value={m.role}
                 disabled={i === 0}
-                onChange={(e) => setMemberRole(m.id, e.target.value as typeof m.role)}
+                onChange={(e) =>
+                  setMemberRole(m.id, e.target.value as typeof m.role)
+                }
                 className="h-8 appearance-none rounded-md border border-input bg-background pl-2.5 pr-7 font-mono text-[11px] uppercase tracking-[0.2em] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24 disabled:opacity-40"
               >
                 <option value="owner">Owner</option>
@@ -386,7 +428,14 @@ function MembersPane() {
                 <option value="member">Member</option>
                 <option value="viewer">Viewer</option>
               </select>
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden className="pointer-events-none absolute right-2 top-1/2 size-3 -translate-y-1/2 opacity-60">
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                aria-hidden
+                className="pointer-events-none absolute right-2 top-1/2 size-3 -translate-y-1/2 opacity-60"
+              >
                 <polyline points="4 6 8 10 12 6" />
               </svg>
             </div>
@@ -399,7 +448,10 @@ function MembersPane() {
 
 function DangerPane() {
   const { workspaces, currentWorkspaceId, pushToast } = useDemo();
-  const ws = must(workspaces.find((w) => w.id === currentWorkspaceId), "the current workspace");
+  const ws = must(
+    workspaces.find((w) => w.id === currentWorkspaceId),
+    "the current workspace"
+  );
   const [phrase, setPhrase] = useState("");
   const matches = phrase === ws.name;
 
@@ -426,7 +478,10 @@ function DangerPane() {
         </div>
 
         <div className="mt-4">
-          <Label htmlFor="confirm-ws" className="font-mono text-[10px] uppercase tracking-[0.25em]">
+          <Label
+            htmlFor="confirm-ws"
+            className="font-mono text-[10px] uppercase tracking-[0.25em]"
+          >
             Type the workspace name to confirm
           </Label>
           <Input
@@ -435,7 +490,7 @@ function DangerPane() {
             value={phrase}
             onChange={(e) => setPhrase(e.target.value)}
             className="mt-2 font-mono"
-            />
+          />
         </div>
 
         <div className="mt-4 flex items-center justify-end gap-2">
@@ -495,7 +550,11 @@ function Section({
     <section className="mt-8 grid grid-cols-[180px_minmax(0,1fr)] gap-x-10 gap-y-6">
       <div>
         <h2 className="font-medium text-sm">{title}</h2>
-        {hint ? <p className="mt-1 text-muted-foreground text-xs leading-relaxed">{hint}</p> : null}
+        {hint ? (
+          <p className="mt-1 text-muted-foreground text-xs leading-relaxed">
+            {hint}
+          </p>
+        ) : null}
       </div>
       <div className="flex flex-col gap-5">{children}</div>
     </section>
@@ -537,7 +596,9 @@ function SwitchRow({
     <div className="flex items-start justify-between gap-6 rounded-lg border border-border/60 bg-background/40 px-4 py-3">
       <div>
         <div className="font-medium text-sm">{title}</div>
-        <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">{description}</p>
+        <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">
+          {description}
+        </p>
       </div>
       <Switch checked={checked} onCheckedChange={onChange} />
     </div>

@@ -5,7 +5,12 @@
 
 import { Radio } from "@base-ui/react/radio";
 import { RadioGroup } from "@base-ui/react/radio-group";
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@wirefront/ui/alert";
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@wirefront/ui/alert";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -26,14 +31,31 @@ import {
   DropdownMenuTrigger,
 } from "@wirefront/ui/dropdown-menu";
 import { Input } from "@wirefront/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@wirefront/ui/input-group";
 import { Label } from "@wirefront/ui/label";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Spinner } from "@wirefront/ui/spinner";
 import { Switch } from "@wirefront/ui/switch";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useFormat, useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
@@ -48,7 +70,14 @@ import {
   PlusIcon,
   Trash2Icon,
 } from "lucide-react";
-import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from "motion/react";
+import {
+  AnimatePresence,
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+} from "motion/react";
 import { type ReactNode, useEffect, useId, useState } from "react";
 
 import {
@@ -68,15 +97,18 @@ import {
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("settingsAndPlans.<key>"). */
 export const SETTINGS_AND_PLANS_MESSAGES = {
   workspaceTitle: "General",
-  workspaceDescription: "Your workspace’s name, address and where its data lives.",
+  workspaceDescription:
+    "Your workspace’s name, address and where its data lives.",
   membersTitle: "Members",
   membersDescription: "Who can get in, and what they can touch.",
   keysTitle: "API keys",
   keysDescription: "Secret keys for scripts, CI and server-side calls.",
   billingTitle: "Billing",
-  billingDescription: "Your plan, this cycle’s usage, how you pay and past invoices.",
+  billingDescription:
+    "Your plan, this cycle’s usage, how you pay and past invoices.",
   workspaceSection: "Workspace",
-  workspaceSectionDescription: "Shown in the switcher, in emails and on shared links.",
+  workspaceSectionDescription:
+    "Shown in the switcher, in emails and on shared links.",
   logo: "Logo",
   logoHelp: "The workspace’s initials.",
   name: "Name",
@@ -99,7 +131,8 @@ export const SETTINGS_AND_PLANS_MESSAGES = {
   cancelDeletion: "Cancel deletion",
   deleteEllipsis: "Delete…",
   deleteTitle: "Delete {name}?",
-  deleteDescription: "Projects, runs and API keys are removed after 7 days. You can cancel any time before then.",
+  deleteDescription:
+    "Projects, runs and API keys are removed after 7 days. You can cancel any time before then.",
   typeToConfirm: "Type {slug} to confirm",
   cancel: "Cancel",
   unsavedShort: "Unsaved changes",
@@ -116,7 +149,8 @@ export const SETTINGS_AND_PLANS_MESSAGES = {
   inviteHint: "Invites expire after 7 days. Resend them from the list.",
   inviteInvalid: "That doesn’t look like a full email address.",
   inviteDuplicate: "{email} is already in this workspace.",
-  inviteFull: "All {limit} seats are in use. Remove someone or upgrade to add more.",
+  inviteFull:
+    "All {limit} seats are in use. Remove someone or upgrade to add more.",
   inviteSent: "Invite sent to {email}.",
   inviteResent: "Invite resent to {email}.",
   copiedEmail: "Copied {email}.",
@@ -137,8 +171,10 @@ export const SETTINGS_AND_PLANS_MESSAGES = {
   removeFromWorkspace: "Remove from workspace",
   revokeInviteTitle: "Revoke the invite for {email}?",
   removeTitle: "Remove {name}?",
-  revokeInviteDescription: "The link in their email stops working straight away.",
-  removeDescription: "They lose access straight away and their seat frees up. Projects they made stay put.",
+  revokeInviteDescription:
+    "The link in their email stops working straight away.",
+  removeDescription:
+    "They lose access straight away and their seat frees up. Projects they made stay put.",
   remove: "Remove",
   removed: "{name} removed.",
   inviteRevoked: "Invite for {email} revoked.",
@@ -151,7 +187,8 @@ export const SETTINGS_AND_PLANS_MESSAGES = {
   viewer: "Viewer",
   viewerHint: "Read-only access",
   secretKeys: "Secret keys",
-  secretKeysDescription: "Keys act as the workspace. Keep them out of client-side code.",
+  secretKeysDescription:
+    "Keys act as the workspace. Keep them out of client-side code.",
   createKey: "Create key",
   keyName: "Name",
   keyNamePlaceholder: "e.g. Staging worker",
@@ -172,13 +209,15 @@ export const SETTINGS_AND_PLANS_MESSAGES = {
   noKeys: "No keys yet",
   noKeysHint: "Create one for your server or CI.",
   revokeKeyTitle: "Revoke {name}?",
-  revokeKeyDescription: "Anything still using this key starts getting 401s immediately. This can’t be undone.",
+  revokeKeyDescription:
+    "Anything still using this key starts getting 401s immediately. This can’t be undone.",
   keepKey: "Keep key",
   revokeKey: "Revoke key",
   paymentFailed: "The {date} payment didn’t go through",
   paymentFailedDetail: "{amount} on the card ending {last4} was declined.",
   paymentReceived: "Payment received",
-  paymentReceivedDetail: "{number} is paid. A receipt is on its way to {email}.",
+  paymentReceivedDetail:
+    "{number} is paid. A receipt is on its way to {email}.",
   yourBillingEmail: "your billing email",
   retryPayment: "Retry payment",
   plan: "Plan",
@@ -247,9 +286,17 @@ export interface SettingsAndPlansProps {
 
 const spring = { type: "spring", stiffness: 420, damping: 40 } as const;
 const easeOut = [0.23, 1, 0.32, 1] as const;
-const press = "transition-[scale,background-color,box-shadow] duration-150 ease-out motion-safe:active:scale-[0.97]";
+const press =
+  "transition-[scale,background-color,box-shadow] duration-150 ease-out motion-safe:active:scale-[0.97]";
 const DAY = 86_400_000;
-const AVATAR_HUES = ["from-category-5/60 to-category-8", "from-category-1/35 to-category-1", "from-category-6/35 to-category-2", "from-category-3/35 to-category-7", "from-category-4/35 to-category-4", "from-category-8/60 to-category-5-strong"];
+const AVATAR_HUES = [
+  "from-category-5/60 to-category-8",
+  "from-category-1/35 to-category-1",
+  "from-category-6/35 to-category-2",
+  "from-category-3/35 to-category-7",
+  "from-category-4/35 to-category-4",
+  "from-category-8/60 to-category-5-strong",
+];
 const ASSIGNABLE: MemberRole[] = ["admin", "member", "viewer"];
 const PREFS = ["agents", "sso", "digest"] as const;
 const INVOICE_TONE = {
@@ -280,7 +327,13 @@ function useCalm() {
   return Boolean(useReducedMotion());
 }
 
-function RollingNumber({ value, format }: { value: number; format: (n: number) => string }) {
+function RollingNumber({
+  value,
+  format,
+}: {
+  value: number;
+  format: (n: number) => string;
+}) {
   const reduce = useCalm();
   const mv = useMotionValue(value);
   const text = useTransform(mv, format);
@@ -314,7 +367,15 @@ function Collapse({ show, children }: { show: boolean; children: ReactNode }) {
   );
 }
 
-function Swap({ id, children, className }: { id: string; children: ReactNode; className?: string }) {
+function Swap({
+  id,
+  children,
+  className,
+}: {
+  id: string;
+  children: ReactNode;
+  className?: string;
+}) {
   const reduce = useCalm();
   return (
     <AnimatePresence initial={false} mode="popLayout">
@@ -332,13 +393,27 @@ function Swap({ id, children, className }: { id: string; children: ReactNode; cl
   );
 }
 
-function Section({ title, description, action, children }: { title: ReactNode; description?: ReactNode; action?: ReactNode; children: ReactNode }) {
+function Section({
+  title,
+  description,
+  action,
+  children,
+}: {
+  title: ReactNode;
+  description?: ReactNode;
+  action?: ReactNode;
+  children: ReactNode;
+}) {
   return (
     <section className="mt-10">
       <div className="flex items-end justify-between gap-4">
         <div className="min-w-0">
           <h2 className="font-medium text-sm">{title}</h2>
-          {description ? <p className="mt-0.5 text-pretty text-muted-foreground text-sm">{description}</p> : null}
+          {description ? (
+            <p className="mt-0.5 text-pretty text-muted-foreground text-sm">
+              {description}
+            </p>
+          ) : null}
         </div>
         {action}
       </div>
@@ -347,11 +422,38 @@ function Section({ title, description, action, children }: { title: ReactNode; d
   );
 }
 
-function Rows({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("mt-3 divide-y overflow-hidden rounded-xl border bg-card", className)}>{children}</div>;
+function Rows({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "mt-3 divide-y overflow-hidden rounded-xl border bg-card",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 
-function Row({ label, help, htmlFor, children, wide }: { label: ReactNode; help?: ReactNode; htmlFor?: string; children?: ReactNode; wide?: boolean }) {
+function Row({
+  label,
+  help,
+  htmlFor,
+  children,
+  wide,
+}: {
+  label: ReactNode;
+  help?: ReactNode;
+  htmlFor?: string;
+  children?: ReactNode;
+  wide?: boolean;
+}) {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5 px-4 py-3.5">
       <div className="min-w-0 flex-1 basis-44">
@@ -362,15 +464,43 @@ function Row({ label, help, htmlFor, children, wide }: { label: ReactNode; help?
         ) : (
           <p className="font-medium text-sm">{label}</p>
         )}
-        {help ? <div className="mt-0.5 text-pretty text-muted-foreground text-xs">{help}</div> : null}
+        {help ? (
+          <div className="mt-0.5 text-pretty text-muted-foreground text-xs">
+            {help}
+          </div>
+        ) : null}
       </div>
-      {children ? <div className={cn("flex shrink-0 items-center gap-2", wide && "w-full sm:w-64")}>{children}</div> : null}
+      {children ? (
+        <div
+          className={cn(
+            "flex shrink-0 items-center gap-2",
+            wide && "w-full sm:w-64"
+          )}
+        >
+          {children}
+        </div>
+      ) : null}
     </div>
   );
 }
 
-function TableHeadRow({ className, children }: { className: string; children: ReactNode }) {
-  return <div className={cn("hidden items-center gap-4 bg-muted/30 px-4 py-2 font-medium text-muted-foreground text-xs sm:grid", className)}>{children}</div>;
+function TableHeadRow({
+  className,
+  children,
+}: {
+  className: string;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={cn(
+        "hidden items-center gap-4 bg-muted/30 px-4 py-2 font-medium text-muted-foreground text-xs sm:grid",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 
 function FieldError({ id, children }: { id: string; children: string | null }) {
@@ -391,9 +521,20 @@ function CopyButton({ text, t }: { text: string; t: Messages }) {
     return () => clearTimeout(timer);
   }, [copied]);
   return (
-    <Button className={cn(press, "min-w-21")} onClick={() => void navigator.clipboard?.writeText(text).then(() => setCopied(true))} size="sm" variant="outline">
+    <Button
+      className={cn(press, "min-w-21")}
+      onClick={() =>
+        void navigator.clipboard?.writeText(text).then(() => setCopied(true))
+      }
+      size="sm"
+      variant="outline"
+    >
       <Swap className="inline-flex" id={copied ? "y" : "n"}>
-        {copied ? <CheckIcon className="size-3.5 text-success-foreground" /> : <CopyIcon className="size-3.5" />}
+        {copied ? (
+          <CheckIcon className="size-3.5 text-success-foreground" />
+        ) : (
+          <CopyIcon className="size-3.5" />
+        )}
       </Swap>
       {copied ? t.copied : t.copy}
     </Button>
@@ -401,16 +542,28 @@ function CopyButton({ text, t }: { text: string; t: Messages }) {
 }
 
 /** A Base UI radio card: a picker option with a label and a hint. */
-function OptionCard({ value, label, hint, extra }: { value: string; label: ReactNode; hint: string; extra?: ReactNode }) {
+function OptionCard({
+  value,
+  label,
+  hint,
+  extra,
+}: {
+  value: string;
+  label: ReactNode;
+  hint: string;
+  extra?: ReactNode;
+}) {
   return (
     <Radio.Root
       className={cn(
         "relative flex cursor-pointer flex-col items-start gap-0.5 rounded-lg border bg-background px-3 py-2.5 text-start outline-none hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground data-checked:ring-1 data-checked:ring-foreground data-checked:hover:bg-background",
-        press,
+        press
       )}
       value={value}
     >
-      <span className="flex w-full items-center justify-between gap-2 font-medium text-sm">{label}</span>
+      <span className="flex w-full items-center justify-between gap-2 font-medium text-sm">
+        {label}
+      </span>
       {extra}
       <span className="text-pretty text-muted-foreground text-xs">{hint}</span>
     </Radio.Root>
@@ -443,7 +596,10 @@ function WorkspacePanel({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [typed, setTyped] = useState("");
   const parsed = WorkspaceSettings.safeParse(draft);
-  const errorFor = (field: "name" | "slug") => (parsed.success ? null : (parsed.error.issues.find((i) => i.path[0] === field)?.message ?? null));
+  const errorFor = (field: "name" | "slug") =>
+    parsed.success
+      ? null
+      : (parsed.error.issues.find((i) => i.path[0] === field)?.message ?? null);
 
   const savePrefs = useAction(onSavePreferences ?? (async () => {}), {
     optimistic: (next) => {
@@ -458,9 +614,15 @@ function WorkspacePanel({
       if (result) setScheduledFor(result.scheduledFor);
     },
   });
-  const cancelDeletion = useAction(onCancelDeletion ?? (async () => {}), { onSuccess: () => setScheduledFor(null) });
+  const cancelDeletion = useAction(onCancelDeletion ?? (async () => {}), {
+    onSuccess: () => setScheduledFor(null),
+  });
   const actionError = savePrefs.error ?? schedule.error ?? cancelDeletion.error;
-  const prefLabel = { agents: [t.prefAgents, t.prefAgentsHint], sso: [t.prefSso, t.prefSsoHint], digest: [t.prefDigest, t.prefDigestHint] } as const;
+  const prefLabel = {
+    agents: [t.prefAgents, t.prefAgentsHint],
+    sso: [t.prefSso, t.prefSsoHint],
+    digest: [t.prefDigest, t.prefDigestHint],
+  } as const;
 
   return (
     <>
@@ -469,7 +631,10 @@ function WorkspacePanel({
           {actionError}
         </p>
       ) : null}
-      <Section description={t.workspaceSectionDescription} title={t.workspaceSection}>
+      <Section
+        description={t.workspaceSectionDescription}
+        title={t.workspaceSection}
+      >
         <Rows>
           <Row help={t.logoHelp} label={t.logo}>
             <span className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-foreground font-semibold text-background text-xs">
@@ -479,13 +644,19 @@ function WorkspacePanel({
           <Row htmlFor={`${ids}-name`} label={t.name} wide>
             <div className="w-full">
               <Input
-                aria-describedby={errorFor("name") ? `${ids}-name-error` : undefined}
+                aria-describedby={
+                  errorFor("name") ? `${ids}-name-error` : undefined
+                }
                 aria-invalid={Boolean(errorFor("name")) || undefined}
                 id={`${ids}-name`}
-                onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
+                onChange={(e) =>
+                  setDraft((d) => ({ ...d, name: e.target.value }))
+                }
                 value={draft.name}
               />
-              <FieldError id={`${ids}-name-error`}>{errorFor("name")}</FieldError>
+              <FieldError id={`${ids}-name-error`}>
+                {errorFor("name")}
+              </FieldError>
             </div>
           </Row>
           <Row help={t.urlHelp} htmlFor={`${ids}-slug`} label={t.url} wide>
@@ -495,18 +666,35 @@ function WorkspacePanel({
                   <InputGroupText>{domain}/</InputGroupText>
                 </InputGroupAddon>
                 <InputGroupInput
-                  aria-describedby={errorFor("slug") ? `${ids}-slug-error` : undefined}
+                  aria-describedby={
+                    errorFor("slug") ? `${ids}-slug-error` : undefined
+                  }
                   aria-invalid={Boolean(errorFor("slug")) || undefined}
                   id={`${ids}-slug`}
-                  onChange={(e) => setDraft((d) => ({ ...d, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-") }))}
+                  onChange={(e) =>
+                    setDraft((d) => ({
+                      ...d,
+                      slug: e.target.value
+                        .toLowerCase()
+                        .replace(/[^a-z0-9-]/g, "-"),
+                    }))
+                  }
                   value={draft.slug}
                 />
               </InputGroup>
-              <FieldError id={`${ids}-slug-error`}>{errorFor("slug")}</FieldError>
+              <FieldError id={`${ids}-slug-error`}>
+                {errorFor("slug")}
+              </FieldError>
             </div>
           </Row>
           <Row help={t.regionHelp} label={t.region} wide>
-            <Select items={data.regions} onValueChange={(v) => v && setDraft((d) => ({ ...d, region: v as string }))} value={draft.region}>
+            <Select
+              items={data.regions}
+              onValueChange={(v) =>
+                v && setDraft((d) => ({ ...d, region: v as string }))
+              }
+              value={draft.region}
+            >
               <SelectTrigger aria-label={t.region} className="w-full">
                 <SelectValue />
               </SelectTrigger>
@@ -527,16 +715,23 @@ function WorkspacePanel({
           {PREFS.map((key) => (
             <div className="flex items-center gap-4 px-4 py-3.5" key={key}>
               <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <Label className="cursor-pointer font-medium text-sm" htmlFor={`${ids}-${key}`}>
+                <Label
+                  className="cursor-pointer font-medium text-sm"
+                  htmlFor={`${ids}-${key}`}
+                >
                   {prefLabel[key][0]}
                 </Label>
-                <span className="text-pretty text-muted-foreground text-xs">{prefLabel[key][1]}</span>
+                <span className="text-pretty text-muted-foreground text-xs">
+                  {prefLabel[key][1]}
+                </span>
               </span>
               <Switch
                 checked={prefs[key]}
                 disabled={!onSavePreferences}
                 id={`${ids}-${key}`}
-                onCheckedChange={(v) => void savePrefs.run({ ...prefs, [key]: v })}
+                onCheckedChange={(v) =>
+                  void savePrefs.run({ ...prefs, [key]: v })
+                }
               />
             </div>
           ))}
@@ -550,7 +745,14 @@ function WorkspacePanel({
               help={
                 <Swap id={scheduledFor ? "scheduled" : "idle"}>
                   {scheduledFor ? (
-                    <span className="text-destructive-foreground">{interpolate(t.deleteScheduled, { date: format.date(scheduledFor, { month: "short", day: "numeric" }) })}</span>
+                    <span className="text-destructive-foreground">
+                      {interpolate(t.deleteScheduled, {
+                        date: format.date(scheduledFor, {
+                          month: "short",
+                          day: "numeric",
+                        }),
+                      })}
+                    </span>
                   ) : (
                     t.deleteHelp
                   )}
@@ -560,7 +762,14 @@ function WorkspacePanel({
             >
               {scheduledFor ? (
                 onCancelDeletion ? (
-                  <Button aria-busy={cancelDeletion.isPending()} className={press} disabled={cancelDeletion.isPending()} onClick={() => void cancelDeletion.run()} size="sm" variant="outline">
+                  <Button
+                    aria-busy={cancelDeletion.isPending()}
+                    className={press}
+                    disabled={cancelDeletion.isPending()}
+                    onClick={() => void cancelDeletion.run()}
+                    size="sm"
+                    variant="outline"
+                  >
                     {t.cancelDeletion}
                   </Button>
                 ) : null
@@ -582,18 +791,36 @@ function WorkspacePanel({
         </Section>
       ) : null}
 
-      <AlertDialog onOpenChange={(open) => !schedule.isPending() && setConfirmOpen(open)} open={confirmOpen}>
+      <AlertDialog
+        onOpenChange={(open) => !schedule.isPending() && setConfirmOpen(open)}
+        open={confirmOpen}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{interpolate(t.deleteTitle, { name: data.workspace.name })}</AlertDialogTitle>
-            <AlertDialogDescription>{t.deleteDescription}</AlertDialogDescription>
+            <AlertDialogTitle>
+              {interpolate(t.deleteTitle, { name: data.workspace.name })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t.deleteDescription}
+            </AlertDialogDescription>
             <div className="mt-2 flex flex-col gap-2">
-              <Label htmlFor={`${ids}-confirm`}>{interpolate(t.typeToConfirm, { slug: data.workspace.slug })}</Label>
-              <Input autoComplete="off" className="font-mono" id={`${ids}-confirm`} onChange={(e) => setTyped(e.target.value)} value={typed} />
+              <Label htmlFor={`${ids}-confirm`}>
+                {interpolate(t.typeToConfirm, { slug: data.workspace.slug })}
+              </Label>
+              <Input
+                autoComplete="off"
+                className="font-mono"
+                id={`${ids}-confirm`}
+                onChange={(e) => setTyped(e.target.value)}
+                value={typed}
+              />
             </div>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={schedule.isPending()} render={<Button variant="ghost" />}>
+            <AlertDialogCancel
+              disabled={schedule.isPending()}
+              render={<Button variant="ghost" />}
+            >
               {t.cancel}
             </AlertDialogCancel>
             <Button
@@ -603,7 +830,9 @@ function WorkspacePanel({
               onClick={() => void schedule.run()}
               variant="destructive"
             >
-              {schedule.isPending() ? <Spinner data-icon="inline-start" /> : null}
+              {schedule.isPending() ? (
+                <Spinner data-icon="inline-start" />
+              ) : null}
               {t.deleteWorkspace}
             </Button>
           </AlertDialogFooter>
@@ -613,20 +842,51 @@ function WorkspacePanel({
   );
 }
 
-function RoleSelect({ member, onRole, t }: { member: PlansMember; onRole?: (role: MemberRole) => void; t: Messages }) {
+function RoleSelect({
+  member,
+  onRole,
+  t,
+}: {
+  member: PlansMember;
+  onRole?: (role: MemberRole) => void;
+  t: Messages;
+}) {
   const label = (r: MemberRole) => (r === "member" ? t.memberRole : t[r]);
-  if (member.role === "owner" || !onRole) return <span className="inline-flex h-7 items-center px-2.5 text-muted-foreground text-sm">{label(member.role)}</span>;
+  if (member.role === "owner" || !onRole)
+    return (
+      <span className="inline-flex h-7 items-center px-2.5 text-muted-foreground text-sm">
+        {label(member.role)}
+      </span>
+    );
   return (
-    <Select items={ASSIGNABLE.map((r) => ({ value: r, label: label(r) }))} onValueChange={(v) => v && onRole(v as MemberRole)} value={member.role}>
-      <SelectTrigger aria-label={interpolate(t.roleFor, { name: member.name })} className="w-32 min-w-0" size="sm">
+    <Select
+      items={ASSIGNABLE.map((r) => ({ value: r, label: label(r) }))}
+      onValueChange={(v) => v && onRole(v as MemberRole)}
+      value={member.role}
+    >
+      <SelectTrigger
+        aria-label={interpolate(t.roleFor, { name: member.name })}
+        className="w-32 min-w-0"
+        size="sm"
+      >
         <SelectValue />
       </SelectTrigger>
-      <SelectContent align="start" alignItemWithTrigger={false} className="w-60">
+      <SelectContent
+        align="start"
+        alignItemWithTrigger={false}
+        className="w-60"
+      >
         {ASSIGNABLE.map((r) => (
-          <SelectItem className="items-start py-1.5 [&>span:first-child]:mt-0.5" key={r} value={r}>
+          <SelectItem
+            className="items-start py-1.5 [&>span:first-child]:mt-0.5"
+            key={r}
+            value={r}
+          >
             <span className="flex flex-col">
               <span className="font-medium">{label(r)}</span>
-              <span className="text-muted-foreground text-xs">{t[`${r}Hint`]}</span>
+              <span className="text-muted-foreground text-xs">
+                {t[`${r}Hint`]}
+              </span>
             </span>
           </SelectItem>
         ))}
@@ -684,8 +944,15 @@ function MembersPanel({
   const changeRole = useAction(onChangeRole ?? (async () => {}), {
     optimistic: ({ memberId, role: next }) => {
       const before = members.find((m) => m.id === memberId)?.role;
-      setMembers((all) => all.map((m) => (m.id === memberId ? { ...m, role: next } : m)));
-      return () => setMembers((all) => all.map((m) => (m.id === memberId && before ? { ...m, role: before } : m)));
+      setMembers((all) =>
+        all.map((m) => (m.id === memberId ? { ...m, role: next } : m))
+      );
+      return () =>
+        setMembers((all) =>
+          all.map((m) =>
+            m.id === memberId && before ? { ...m, role: before } : m
+          )
+        );
     },
   });
   const remove = useAction(onRemoveMember ?? (async () => {}), {
@@ -693,18 +960,26 @@ function MembersPanel({
       const target = members.find((m) => m.id === id);
       setRemoving(null);
       setMembers((all) => all.filter((m) => m.id !== id));
-      if (target) setNotice(target.invited ? interpolate(t.inviteRevoked, { email: target.email }) : interpolate(t.removed, { name: target.name }));
+      if (target)
+        setNotice(
+          target.invited
+            ? interpolate(t.inviteRevoked, { email: target.email })
+            : interpolate(t.removed, { name: target.name })
+        );
     },
   });
-  const actionError = invite.error ?? resend.error ?? changeRole.error ?? remove.error;
+  const actionError =
+    invite.error ?? resend.error ?? changeRole.error ?? remove.error;
 
   const submit = (e: { preventDefault(): void }) => {
     e.preventDefault();
     const address = email.trim().toLowerCase();
     const parsed = InviteInput.safeParse({ email: address, role });
     if (!parsed.success) return setError(t.inviteInvalid);
-    if (members.some((m) => m.email.toLowerCase() === address)) return setError(interpolate(t.inviteDuplicate, { email: address }));
-    if (full) return setError(interpolate(t.inviteFull, { limit: data.seatLimit }));
+    if (members.some((m) => m.email.toLowerCase() === address))
+      return setError(interpolate(t.inviteDuplicate, { email: address }));
+    if (full)
+      return setError(interpolate(t.inviteFull, { limit: data.seatLimit }));
     setError(null);
     setNotice(null);
     void invite.run(parsed.data);
@@ -717,18 +992,31 @@ function MembersPanel({
       ? { key: `n-${notice}`, tone: "text-success-foreground", text: notice }
       : { key: "idle", tone: "text-muted-foreground", text: t.inviteHint };
   const lastActive = (m: PlansMember) =>
-    m.invited ? t.inviteSentShort : !m.lastActiveAt ? t.never : now().getTime() - Date.parse(m.lastActiveAt) < 5 * 60_000 ? t.now : format.relative(m.lastActiveAt);
+    m.invited
+      ? t.inviteSentShort
+      : !m.lastActiveAt
+        ? t.never
+        : now().getTime() - Date.parse(m.lastActiveAt) < 5 * 60_000
+          ? t.now
+          : format.relative(m.lastActiveAt);
   const roleLabel = (r: MemberRole) => (r === "member" ? t.memberRole : t[r]);
 
   return (
     <>
       {onInvite ? (
         <Section
-          description={interpolate(t.seatsUsed, { used: members.length, limit: data.seatLimit })}
+          description={interpolate(t.seatsUsed, {
+            used: members.length,
+            limit: data.seatLimit,
+          })}
           title={t.invitePeople}
         >
           <Rows>
-            <form className="flex flex-col gap-2 p-3 sm:flex-row" noValidate onSubmit={submit}>
+            <form
+              className="flex flex-col gap-2 p-3 sm:flex-row"
+              noValidate
+              onSubmit={submit}
+            >
               <Input
                 aria-describedby={hintId}
                 aria-invalid={Boolean(error) || undefined}
@@ -744,8 +1032,18 @@ function MembersPanel({
                 value={email}
               />
               <div className="flex gap-2">
-                <Select items={ASSIGNABLE.map((r) => ({ value: r, label: roleLabel(r) }))} onValueChange={(v) => v && setRole(v as InviteInput["role"])} value={role}>
-                  <SelectTrigger aria-label={t.roleForInvite} className="w-28 min-w-0">
+                <Select
+                  items={ASSIGNABLE.map((r) => ({
+                    value: r,
+                    label: roleLabel(r),
+                  }))}
+                  onValueChange={(v) => v && setRole(v as InviteInput["role"])}
+                  value={role}
+                >
+                  <SelectTrigger
+                    aria-label={t.roleForInvite}
+                    className="w-28 min-w-0"
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent align="start">
@@ -756,14 +1054,27 @@ function MembersPanel({
                     ))}
                   </SelectContent>
                 </Select>
-                <Button aria-busy={invite.isPending()} className={cn(press, "flex-1 sm:flex-none")} disabled={invite.isPending()} type="submit">
-                  {invite.isPending() ? <Spinner data-icon="inline-start" /> : <MailIcon />}
+                <Button
+                  aria-busy={invite.isPending()}
+                  className={cn(press, "flex-1 sm:flex-none")}
+                  disabled={invite.isPending()}
+                  type="submit"
+                >
+                  {invite.isPending() ? (
+                    <Spinner data-icon="inline-start" />
+                  ) : (
+                    <MailIcon />
+                  )}
                   {t.invite}
                 </Button>
               </div>
             </form>
           </Rows>
-          <div aria-live="polite" className="mt-2 min-h-4 px-1 text-xs" id={hintId}>
+          <div
+            aria-live="polite"
+            className="mt-2 min-h-4 px-1 text-xs"
+            id={hintId}
+          >
             <Swap className={cn("text-pretty", hint.tone)} id={hint.key}>
               {hint.text}
             </Swap>
@@ -771,7 +1082,10 @@ function MembersPanel({
         </Section>
       ) : null}
 
-      <Section description={interpolate(t.peopleCount, { count: members.length })} title={t.membersTitle}>
+      <Section
+        description={interpolate(t.peopleCount, { count: members.length })}
+        title={t.membersTitle}
+      >
         <Rows>
           <TableHeadRow className={memberGrid}>
             <span>{t.member}</span>
@@ -789,25 +1103,54 @@ function MembersPanel({
                 key={m.id}
                 transition={reduce ? { duration: 0 } : spring}
               >
-                <div className={cn("grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 px-4 py-3 sm:gap-x-4", memberGrid)}>
+                <div
+                  className={cn(
+                    "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 px-4 py-3 sm:gap-x-4",
+                    memberGrid
+                  )}
+                >
                   <div className="col-start-1 row-start-1 flex min-w-0 items-center gap-3">
                     <Avatar className="size-8">
-                      <AvatarFallback className={cn("bg-linear-to-br font-medium text-white text-xs", hueFor(m.id))}>{initials(m.name)}</AvatarFallback>
+                      <AvatarFallback
+                        className={cn(
+                          "bg-linear-to-br font-medium text-white text-xs",
+                          hueFor(m.id)
+                        )}
+                      >
+                        {initials(m.name)}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="min-w-0">
                       <p className="flex min-w-0 items-center gap-2 font-medium text-sm">
                         <span className="truncate">{m.name}</span>
                         {m.invited ? (
-                          <Badge className="h-4.5 rounded-sm bg-info/8 px-1 text-[0.625rem] text-info-foreground dark:bg-info/16" variant="secondary">
+                          <Badge
+                            className="h-4.5 rounded-sm bg-info/8 px-1 text-[0.625rem] text-info-foreground dark:bg-info/16"
+                            variant="secondary"
+                          >
                             {t.invited}
                           </Badge>
                         ) : null}
                       </p>
-                      <p className="truncate text-muted-foreground text-xs">{m.email}</p>
+                      <p className="truncate text-muted-foreground text-xs">
+                        {m.email}
+                      </p>
                     </div>
                   </div>
                   <div className="col-start-1 row-start-2 ps-11 sm:col-start-2 sm:row-start-1 sm:ps-0">
-                    <RoleSelect member={m} onRole={onChangeRole ? (next) => void changeRole.run({ memberId: m.id, role: next }, m.id) : undefined} t={t} />
+                    <RoleSelect
+                      member={m}
+                      onRole={
+                        onChangeRole
+                          ? (next) =>
+                              void changeRole.run(
+                                { memberId: m.id, role: next },
+                                m.id
+                              )
+                          : undefined
+                      }
+                      t={t}
+                    />
                   </div>
                   <span className="col-start-2 row-start-2 truncate text-end text-muted-foreground text-xs sm:col-start-3 sm:row-start-1 sm:text-start sm:text-sm">
                     {lastActive(m)}
@@ -817,14 +1160,43 @@ function MembersPanel({
                       <span aria-hidden className="size-8 sm:size-7" />
                     ) : (
                       <DropdownMenu>
-                        <DropdownMenuTrigger render={<Button aria-label={interpolate(t.actionsFor, { name: m.name })} size="icon-sm" variant="ghost" />}>
-                          {changeRole.isPending(m.id) || remove.isPending(m.id) ? <Spinner /> : <EllipsisIcon />}
+                        <DropdownMenuTrigger
+                          render={
+                            <Button
+                              aria-label={interpolate(t.actionsFor, {
+                                name: m.name,
+                              })}
+                              size="icon-sm"
+                              variant="ghost"
+                            />
+                          }
+                        >
+                          {changeRole.isPending(m.id) ||
+                          remove.isPending(m.id) ? (
+                            <Spinner />
+                          ) : (
+                            <EllipsisIcon />
+                          )}
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          {m.invited && onResendInvite ? <DropdownMenuItem onClick={() => void resend.run(m.id, m.id)}>{t.resendInvite}</DropdownMenuItem> : null}
+                          {m.invited && onResendInvite ? (
+                            <DropdownMenuItem
+                              onClick={() => void resend.run(m.id, m.id)}
+                            >
+                              {t.resendInvite}
+                            </DropdownMenuItem>
+                          ) : null}
                           <DropdownMenuItem
                             onClick={() =>
-                              void navigator.clipboard?.writeText(m.email).then(() => setNotice(interpolate(t.copiedEmail, { email: m.email })))
+                              void navigator.clipboard
+                                ?.writeText(m.email)
+                                .then(() =>
+                                  setNotice(
+                                    interpolate(t.copiedEmail, {
+                                      email: m.email,
+                                    })
+                                  )
+                                )
                             }
                           >
                             <CopyIcon />
@@ -833,9 +1205,14 @@ function MembersPanel({
                           {onRemoveMember ? (
                             <>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => setRemoving(m)} variant="destructive">
+                              <DropdownMenuItem
+                                onClick={() => setRemoving(m)}
+                                variant="destructive"
+                              >
                                 <Trash2Icon />
-                                {m.invited ? t.revokeInvite : t.removeFromWorkspace}
+                                {m.invited
+                                  ? t.revokeInvite
+                                  : t.removeFromWorkspace}
                               </DropdownMenuItem>
                             </>
                           ) : null}
@@ -850,23 +1227,39 @@ function MembersPanel({
         </Rows>
       </Section>
 
-      <AlertDialog onOpenChange={(open) => !open && !remove.isPending() && setRemoving(null)} open={Boolean(removing)}>
+      <AlertDialog
+        onOpenChange={(open) =>
+          !open && !remove.isPending() && setRemoving(null)
+        }
+        open={Boolean(removing)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {removing?.invited ? interpolate(t.revokeInviteTitle, { email: removing.email }) : interpolate(t.removeTitle, { name: removing?.name ?? "" })}
+              {removing?.invited
+                ? interpolate(t.revokeInviteTitle, { email: removing.email })
+                : interpolate(t.removeTitle, { name: removing?.name ?? "" })}
             </AlertDialogTitle>
-            <AlertDialogDescription>{removing?.invited ? t.revokeInviteDescription : t.removeDescription}</AlertDialogDescription>
+            <AlertDialogDescription>
+              {removing?.invited
+                ? t.revokeInviteDescription
+                : t.removeDescription}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={remove.isPending()} render={<Button variant="ghost" />}>
+            <AlertDialogCancel
+              disabled={remove.isPending()}
+              render={<Button variant="ghost" />}
+            >
               {t.cancel}
             </AlertDialogCancel>
             <Button
               aria-busy={remove.isPending()}
               className="text-destructive-foreground"
               disabled={remove.isPending()}
-              onClick={() => removing && void remove.run(removing.id, removing.id)}
+              onClick={() =>
+                removing && void remove.run(removing.id, removing.id)
+              }
               variant="destructive"
             >
               {remove.isPending() ? <Spinner data-icon="inline-start" /> : null}
@@ -917,10 +1310,16 @@ function KeysPanel({
       if (fresh?.key.id === id) setFresh(null);
     },
   });
-  const scopeLabel = (s: KeyScope) => (s === "read" ? t.read : s === "write" ? t.write : t.adminScope);
-  const scopeHint = (s: KeyScope) => (s === "read" ? t.readHint : s === "write" ? t.writeHint : t.adminScopeHint);
+  const scopeLabel = (s: KeyScope) =>
+    s === "read" ? t.read : s === "write" ? t.write : t.adminScope;
+  const scopeHint = (s: KeyScope) =>
+    s === "read" ? t.readHint : s === "write" ? t.writeHint : t.adminScopeHint;
   const scopeTone = (s: KeyScope) =>
-    s === "admin" ? "bg-warning/8 text-warning-foreground dark:bg-warning/16" : s === "write" ? "bg-info/8 text-info-foreground dark:bg-info/16" : undefined;
+    s === "admin"
+      ? "bg-warning/8 text-warning-foreground dark:bg-warning/16"
+      : s === "write"
+        ? "bg-info/8 text-info-foreground dark:bg-info/16"
+        : undefined;
   const actionError = create.error ?? revoke.error;
 
   return (
@@ -928,7 +1327,12 @@ function KeysPanel({
       <Section
         action={
           onCreateKey ? (
-            <Button className={press} disabled={creating || Boolean(fresh)} onClick={() => setCreating(true)} size="sm">
+            <Button
+              className={press}
+              disabled={creating || Boolean(fresh)}
+              onClick={() => setCreating(true)}
+              size="sm"
+            >
               <PlusIcon />
               {t.createKey}
             </Button>
@@ -954,24 +1358,53 @@ function KeysPanel({
             >
               <div className="flex flex-col gap-2">
                 <Label htmlFor={`${ids}-name`}>{t.keyName}</Label>
-                <Input id={`${ids}-name`} onChange={(e) => setName(e.target.value)} placeholder={t.keyNamePlaceholder} value={name} />
+                <Input
+                  id={`${ids}-name`}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder={t.keyNamePlaceholder}
+                  value={name}
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-medium text-sm" id={`${ids}-scope`}>
                   {t.scope}
                 </span>
-                <RadioGroup aria-labelledby={`${ids}-scope`} className="grid gap-2 sm:grid-cols-3" onValueChange={(v) => setScope(v as KeyScope)} value={scope}>
+                <RadioGroup
+                  aria-labelledby={`${ids}-scope`}
+                  className="grid gap-2 sm:grid-cols-3"
+                  onValueChange={(v) => setScope(v as KeyScope)}
+                  value={scope}
+                >
                   {KeyScope.options.map((s) => (
-                    <OptionCard hint={scopeHint(s)} key={s} label={scopeLabel(s)} value={s} />
+                    <OptionCard
+                      hint={scopeHint(s)}
+                      key={s}
+                      label={scopeLabel(s)}
+                      value={s}
+                    />
                   ))}
                 </RadioGroup>
               </div>
               <div className="flex justify-end gap-2">
-                <Button className={press} disabled={create.isPending()} onClick={() => setCreating(false)} size="sm" variant="ghost">
+                <Button
+                  className={press}
+                  disabled={create.isPending()}
+                  onClick={() => setCreating(false)}
+                  size="sm"
+                  variant="ghost"
+                >
                   {t.cancel}
                 </Button>
-                <Button aria-busy={create.isPending()} className={press} disabled={!name.trim() || create.isPending()} size="sm" type="submit">
-                  {create.isPending() ? <Spinner data-icon="inline-start" /> : null}
+                <Button
+                  aria-busy={create.isPending()}
+                  className={press}
+                  disabled={!name.trim() || create.isPending()}
+                  size="sm"
+                  type="submit"
+                >
+                  {create.isPending() ? (
+                    <Spinner data-icon="inline-start" />
+                  ) : null}
                   {t.createKey}
                 </Button>
               </div>
@@ -982,13 +1415,21 @@ function KeysPanel({
               <div className="flex flex-col gap-3 bg-success/6 p-4">
                 <p className="flex items-start gap-2 text-sm">
                   <CheckIcon className="mt-0.5 size-4 shrink-0 text-success-foreground" />
-                  <span className="text-pretty">{interpolate(t.keyReady, { name: fresh.key.name })}</span>
+                  <span className="text-pretty">
+                    {interpolate(t.keyReady, { name: fresh.key.name })}
+                  </span>
                 </p>
                 <div className="flex items-center gap-2 rounded-lg border bg-background p-1 ps-3">
-                  <code className="min-w-0 flex-1 truncate font-mono text-xs">{fresh.secret}</code>
+                  <code className="min-w-0 flex-1 truncate font-mono text-xs">
+                    {fresh.secret}
+                  </code>
                   <CopyButton t={t} text={fresh.secret} />
                 </div>
-                <Button className={cn(press, "self-end")} onClick={() => setFresh(null)} size="sm">
+                <Button
+                  className={cn(press, "self-end")}
+                  onClick={() => setFresh(null)}
+                  size="sm"
+                >
                   {t.savedIt}
                 </Button>
               </div>
@@ -1012,7 +1453,12 @@ function KeysPanel({
                   key={k.id}
                   transition={reduce ? { duration: 0 } : spring}
                 >
-                  <div className={cn("grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1.5 px-4 py-3 sm:gap-x-4", keyGrid)}>
+                  <div
+                    className={cn(
+                      "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1.5 px-4 py-3 sm:gap-x-4",
+                      keyGrid
+                    )}
+                  >
                     <div className="col-start-1 row-start-1 min-w-0">
                       <p className="truncate font-medium text-sm">{k.name}</p>
                       <code className="block truncate font-mono text-muted-foreground text-xs">
@@ -1020,20 +1466,49 @@ function KeysPanel({
                       </code>
                     </div>
                     <div className="col-start-1 row-start-2 flex items-center gap-2 sm:col-start-2 sm:row-start-1">
-                      <Badge className={cn(scopeTone(k.scope), "h-4.5 rounded-sm px-1 text-[0.625rem]")} variant="secondary">
+                      <Badge
+                        className={cn(
+                          scopeTone(k.scope),
+                          "h-4.5 rounded-sm px-1 text-[0.625rem]"
+                        )}
+                        variant="secondary"
+                      >
                         {scopeLabel(k.scope)}
                       </Badge>
-                      <span className="text-muted-foreground text-xs sm:hidden">{used ? interpolate(t.usedWhen, { when: used }) : t.neverUsed}</span>
+                      <span className="text-muted-foreground text-xs sm:hidden">
+                        {used
+                          ? interpolate(t.usedWhen, { when: used })
+                          : t.neverUsed}
+                      </span>
                     </div>
-                    <span className="hidden truncate text-muted-foreground text-sm sm:col-start-3 sm:row-start-1 sm:block">{used ?? t.never}</span>
+                    <span className="hidden truncate text-muted-foreground text-sm sm:col-start-3 sm:row-start-1 sm:block">
+                      {used ?? t.never}
+                    </span>
                     <div className="col-start-2 row-start-1 flex justify-end sm:col-start-4">
                       {onRevokeKey ? (
                         <DropdownMenu>
-                          <DropdownMenuTrigger render={<Button aria-label={interpolate(t.actionsFor, { name: k.name })} size="icon-sm" variant="ghost" />}>
-                            {revoke.isPending(k.id) ? <Spinner /> : <EllipsisIcon />}
+                          <DropdownMenuTrigger
+                            render={
+                              <Button
+                                aria-label={interpolate(t.actionsFor, {
+                                  name: k.name,
+                                })}
+                                size="icon-sm"
+                                variant="ghost"
+                              />
+                            }
+                          >
+                            {revoke.isPending(k.id) ? (
+                              <Spinner />
+                            ) : (
+                              <EllipsisIcon />
+                            )}
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setRevoking(k)} variant="destructive">
+                            <DropdownMenuItem
+                              onClick={() => setRevoking(k)}
+                              variant="destructive"
+                            >
                               <Trash2Icon />
                               {t.revoke}
                             </DropdownMenuItem>
@@ -1056,21 +1531,35 @@ function KeysPanel({
         </Rows>
       </Section>
 
-      <AlertDialog onOpenChange={(open) => !open && !revoke.isPending() && setRevoking(null)} open={Boolean(revoking)}>
+      <AlertDialog
+        onOpenChange={(open) =>
+          !open && !revoke.isPending() && setRevoking(null)
+        }
+        open={Boolean(revoking)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{interpolate(t.revokeKeyTitle, { name: revoking?.name ?? "" })}</AlertDialogTitle>
-            <AlertDialogDescription>{t.revokeKeyDescription}</AlertDialogDescription>
+            <AlertDialogTitle>
+              {interpolate(t.revokeKeyTitle, { name: revoking?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t.revokeKeyDescription}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={revoke.isPending()} render={<Button variant="ghost" />}>
+            <AlertDialogCancel
+              disabled={revoke.isPending()}
+              render={<Button variant="ghost" />}
+            >
               {t.keepKey}
             </AlertDialogCancel>
             <Button
               aria-busy={revoke.isPending()}
               className="text-destructive-foreground"
               disabled={revoke.isPending()}
-              onClick={() => revoking && void revoke.run(revoking.id, revoking.id)}
+              onClick={() =>
+                revoking && void revoke.run(revoking.id, revoking.id)
+              }
               variant="destructive"
             >
               {revoke.isPending() ? <Spinner data-icon="inline-start" /> : null}
@@ -1087,9 +1576,17 @@ function UsageRow({ item }: { item: PlansUsage }) {
   const reduce = useCalm();
   const format = useFormat();
   const pct = Math.min(100, (item.used / item.limit) * 100);
-  const projPct = item.projected ? Math.min(100, (item.projected / item.limit) * 100) : 0;
+  const projPct = item.projected
+    ? Math.min(100, (item.projected / item.limit) * 100)
+    : 0;
   const over = (item.projected ?? 0) > item.limit;
-  const fmt = (n: number) => format.number(n, item.unit ? { minimumFractionDigits: 1, maximumFractionDigits: 1 } : { maximumFractionDigits: 0 });
+  const fmt = (n: number) =>
+    format.number(
+      n,
+      item.unit
+        ? { minimumFractionDigits: 1, maximumFractionDigits: 1 }
+        : { maximumFractionDigits: 0 }
+    );
   const fill = { duration: reduce ? 0 : 0.6, ease: easeOut };
   return (
     <div className="flex flex-col gap-2.5 px-4 py-3.5">
@@ -1107,11 +1604,17 @@ function UsageRow({ item }: { item: PlansUsage }) {
       <meter className="sr-only" max={item.limit} min={0} value={item.used}>
         {item.label}
       </meter>
-      <div aria-hidden className="relative h-1.5 overflow-hidden rounded-full bg-muted">
+      <div
+        aria-hidden
+        className="relative h-1.5 overflow-hidden rounded-full bg-muted"
+      >
         {projPct > pct ? (
           <motion.div
             animate={{ scaleX: 1 }}
-            className={cn("absolute inset-y-0 inset-s-0 origin-left rounded-full", over ? "bg-warning/32" : "bg-foreground/12")}
+            className={cn(
+              "absolute inset-y-0 inset-s-0 origin-left rounded-full",
+              over ? "bg-warning/32" : "bg-foreground/12"
+            )}
             initial={false}
             style={{ width: `${projPct}%` }}
             transition={{ ...fill, delay: reduce ? 0 : 0.15 }}
@@ -1119,7 +1622,10 @@ function UsageRow({ item }: { item: PlansUsage }) {
         ) : null}
         <motion.div
           animate={{ scaleX: 1 }}
-          className={cn("absolute inset-y-0 inset-s-0 origin-left rounded-full", pct >= 85 ? "bg-warning" : "bg-primary")}
+          className={cn(
+            "absolute inset-y-0 inset-s-0 origin-left rounded-full",
+            pct >= 85 ? "bg-warning" : "bg-primary"
+          )}
           initial={false}
           style={{ width: `${pct}%` }}
           transition={fill}
@@ -1149,14 +1655,31 @@ function BillingPanel({
   const [picking, setPicking] = useState(false);
   const [choice, setChoice] = useState(data.currentPlanId);
   const [invoices, setInvoices] = useState(data.invoices);
-  const [recovered, setRecovered] = useState<(typeof invoices)[number] | null>(null);
+  const [recovered, setRecovered] = useState<(typeof invoices)[number] | null>(
+    null
+  );
   const plan = data.plans.find((p) => p.id === planId) ?? data.plans[0];
   const failed = invoices.find((i) => i.status === "failed");
   const runs = data.usage.find((u) => u.projected !== undefined);
-  const overRuns = runs?.projected ? Math.max(0, runs.projected - runs.limit) : 0;
-  const money = (n: number, digits = 2) => format.money(n, data.currency, { minimumFractionDigits: digits, maximumFractionDigits: digits });
-  const day = (iso: string, withYear = false) => format.date(iso, { month: "short", day: "numeric", ...(withYear ? { year: "numeric" } : {}), timeZone: "UTC" });
-  const daysLeft = Math.max(0, Math.ceil((Date.parse(data.renewsAt) - now().getTime()) / DAY));
+  const overRuns = runs?.projected
+    ? Math.max(0, runs.projected - runs.limit)
+    : 0;
+  const money = (n: number, digits = 2) =>
+    format.money(n, data.currency, {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
+  const day = (iso: string, withYear = false) =>
+    format.date(iso, {
+      month: "short",
+      day: "numeric",
+      ...(withYear ? { year: "numeric" } : {}),
+      timeZone: "UTC",
+    });
+  const daysLeft = Math.max(
+    0,
+    Math.ceil((Date.parse(data.renewsAt) - now().getTime()) / DAY)
+  );
   const seats = data.members.length;
 
   const switchPlan = useAction(onChangePlan ?? (async () => {}), {
@@ -1168,7 +1691,9 @@ function BillingPanel({
   const retry = useAction(onRetryPayment ?? (async () => {}), {
     onSuccess: (_, id) => {
       const inv = invoices.find((i) => i.id === id);
-      setInvoices((all) => all.map((i) => (i.id === id ? { ...i, status: "paid" } : i)));
+      setInvoices((all) =>
+        all.map((i) => (i.id === id ? { ...i, status: "paid" } : i))
+      );
       if (inv) setRecovered(inv);
     },
   });
@@ -1178,7 +1703,11 @@ function BillingPanel({
     return () => clearTimeout(timer);
   }, [recovered]);
 
-  const banner = failed ? { key: "failed" as const, invoice: failed } : recovered ? { key: "recovered" as const, invoice: recovered } : null;
+  const banner = failed
+    ? { key: "failed" as const, invoice: failed }
+    : recovered
+      ? { key: "recovered" as const, invoice: recovered }
+      : null;
   const actionError = switchPlan.error ?? retry.error;
   if (!plan) return null;
 
@@ -1193,22 +1722,47 @@ function BillingPanel({
         {banner ? (
           <div className="pt-8">
             <Alert
-              className={banner.key === "failed" ? undefined : "border-success/30 bg-success/8 text-success-foreground [&>svg]:text-success"}
+              className={
+                banner.key === "failed"
+                  ? undefined
+                  : "border-success/30 bg-success/8 text-success-foreground [&>svg]:text-success"
+              }
               variant={banner.key === "failed" ? "destructive" : "default"}
             >
               {banner.key === "failed" ? <AlertTriangleIcon /> : <CheckIcon />}
-              <AlertTitle>{banner.key === "failed" ? interpolate(t.paymentFailed, { date: day(banner.invoice.issuedAt) }) : t.paymentReceived}</AlertTitle>
+              <AlertTitle>
+                {banner.key === "failed"
+                  ? interpolate(t.paymentFailed, {
+                      date: day(banner.invoice.issuedAt),
+                    })
+                  : t.paymentReceived}
+              </AlertTitle>
               <AlertDescription>
                 <p className="text-pretty">
                   {banner.key === "failed"
-                    ? interpolate(t.paymentFailedDetail, { amount: money(banner.invoice.amount), last4: data.card?.last4 ?? "" })
-                    : interpolate(t.paymentReceivedDetail, { number: banner.invoice.number, email: data.billingEmail ?? t.yourBillingEmail })}
+                    ? interpolate(t.paymentFailedDetail, {
+                        amount: money(banner.invoice.amount),
+                        last4: data.card?.last4 ?? "",
+                      })
+                    : interpolate(t.paymentReceivedDetail, {
+                        number: banner.invoice.number,
+                        email: data.billingEmail ?? t.yourBillingEmail,
+                      })}
                 </p>
               </AlertDescription>
               {banner.key === "failed" && onRetryPayment ? (
                 <AlertAction>
-                  <Button aria-busy={retry.isPending()} className={press} disabled={retry.isPending()} onClick={() => void retry.run(banner.invoice.id)} size="sm" variant="outline">
-                    {retry.isPending() ? <Spinner data-icon="inline-start" /> : null}
+                  <Button
+                    aria-busy={retry.isPending()}
+                    className={press}
+                    disabled={retry.isPending()}
+                    onClick={() => void retry.run(banner.invoice.id)}
+                    size="sm"
+                    variant="outline"
+                  >
+                    {retry.isPending() ? (
+                      <Spinner data-icon="inline-start" />
+                    ) : null}
                     {t.retryPayment}
                   </Button>
                 </AlertAction>
@@ -1223,18 +1777,34 @@ function BillingPanel({
           <div className="flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-4">
             <div className="min-w-0 flex-1 basis-44">
               <p className="flex items-center gap-2">
-                <span className="font-semibold text-base tracking-tight">{plan.name}</span>
-                <Badge className="h-4.5 rounded-sm px-1 text-[0.625rem]" variant="secondary">
+                <span className="font-semibold text-base tracking-tight">
+                  {plan.name}
+                </span>
+                <Badge
+                  className="h-4.5 rounded-sm px-1 text-[0.625rem]"
+                  variant="secondary"
+                >
                   {t.current}
                 </Badge>
               </p>
-              <p className="mt-0.5 text-muted-foreground text-xs">{interpolate(t.perSeat, { price: money(plan.pricePerSeat, 0), blurb: plan.blurb })}</p>
+              <p className="mt-0.5 text-muted-foreground text-xs">
+                {interpolate(t.perSeat, {
+                  price: money(plan.pricePerSeat, 0),
+                  blurb: plan.blurb,
+                })}
+              </p>
             </div>
             {onChangePlan && !picking ? (
               <Button
                 className={press}
                 onClick={() => {
-                  const next = data.plans[Math.min(data.plans.length - 1, data.plans.findIndex((p) => p.id === planId) + 1)];
+                  const next =
+                    data.plans[
+                      Math.min(
+                        data.plans.length - 1,
+                        data.plans.findIndex((p) => p.id === planId) + 1
+                      )
+                    ];
                   setChoice(next?.id ?? planId);
                   setPicking(true);
                 }}
@@ -1247,13 +1817,21 @@ function BillingPanel({
           </div>
           <Collapse show={picking}>
             <div className="flex flex-col gap-3 bg-muted/30 p-4">
-              <RadioGroup aria-label={t.choosePlan} className="grid gap-2 sm:grid-cols-3" id={pickerId} onValueChange={(v) => setChoice(v as string)} value={choice}>
+              <RadioGroup
+                aria-label={t.choosePlan}
+                className="grid gap-2 sm:grid-cols-3"
+                id={pickerId}
+                onValueChange={(v) => setChoice(v as string)}
+                value={choice}
+              >
                 {data.plans.map((p) => (
                   <OptionCard
                     extra={
                       <span className="font-medium text-sm tabular-nums">
                         {money(p.pricePerSeat, 0)}
-                        <span className="font-normal text-muted-foreground text-xs">{t.seatSuffix}</span>
+                        <span className="font-normal text-muted-foreground text-xs">
+                          {t.seatSuffix}
+                        </span>
                       </span>
                     }
                     hint={p.blurb}
@@ -1261,7 +1839,11 @@ function BillingPanel({
                     label={
                       <>
                         {p.name}
-                        {p.id === planId ? <span className="font-normal text-muted-foreground text-xs">{t.current}</span> : null}
+                        {p.id === planId ? (
+                          <span className="font-normal text-muted-foreground text-xs">
+                            {t.current}
+                          </span>
+                        ) : null}
                       </>
                     }
                     value={p.id}
@@ -1269,7 +1851,13 @@ function BillingPanel({
                 ))}
               </RadioGroup>
               <div className="flex justify-end gap-2">
-                <Button className={press} disabled={switchPlan.isPending()} onClick={() => setPicking(false)} size="sm" variant="ghost">
+                <Button
+                  className={press}
+                  disabled={switchPlan.isPending()}
+                  onClick={() => setPicking(false)}
+                  size="sm"
+                  variant="ghost"
+                >
                   {t.cancel}
                 </Button>
                 <Button
@@ -1279,21 +1867,41 @@ function BillingPanel({
                   onClick={() => void switchPlan.run(choice)}
                   size="sm"
                 >
-                  {switchPlan.isPending() ? <Spinner data-icon="inline-start" /> : null}
-                  {interpolate(t.switchTo, { plan: data.plans.find((p) => p.id === choice)?.name ?? "" })}
+                  {switchPlan.isPending() ? (
+                    <Spinner data-icon="inline-start" />
+                  ) : null}
+                  {interpolate(t.switchTo, {
+                    plan: data.plans.find((p) => p.id === choice)?.name ?? "",
+                  })}
                 </Button>
               </div>
             </div>
           </Collapse>
-          <Row help={interpolate(t.nextInvoiceHelp, { seats, price: money(plan.pricePerSeat, 0), date: day(data.renewsAt) })} label={t.nextInvoice}>
+          <Row
+            help={interpolate(t.nextInvoiceHelp, {
+              seats,
+              price: money(plan.pricePerSeat, 0),
+              date: day(data.renewsAt),
+            })}
+            label={t.nextInvoice}
+          >
             <span className="font-medium text-sm">
-              <RollingNumber format={(n) => money(n)} value={plan.pricePerSeat * seats} />
+              <RollingNumber
+                format={(n) => money(n)}
+                value={plan.pricePerSeat * seats}
+              />
             </span>
           </Row>
         </Rows>
       </Section>
 
-      <Section description={interpolate(t.usageDescription, { date: day(data.renewsAt), days: daysLeft })} title={t.usageTitle}>
+      <Section
+        description={interpolate(t.usageDescription, {
+          date: day(data.renewsAt),
+          days: daysLeft,
+        })}
+        title={t.usageTitle}
+      >
         <Rows>
           {data.usage.map((u) => (
             <UsageRow item={u} key={u.id} />
@@ -1301,16 +1909,32 @@ function BillingPanel({
           {runs?.projected !== undefined ? (
             <div className="grid grid-cols-2 divide-x bg-muted/30">
               <div className="px-4 py-3">
-                <p className="text-muted-foreground text-xs">{interpolate(t.projectedBy, { date: day(data.renewsAt) })}</p>
+                <p className="text-muted-foreground text-xs">
+                  {interpolate(t.projectedBy, { date: day(data.renewsAt) })}
+                </p>
                 <p className="mt-0.5 font-medium text-sm tabular-nums">
-                  {format.number(runs.projected)} <span className="font-normal text-muted-foreground text-xs">{t.runs}</span>
+                  {format.number(runs.projected)}{" "}
+                  <span className="font-normal text-muted-foreground text-xs">
+                    {t.runs}
+                  </span>
                 </p>
               </div>
               <div className="px-4 py-3">
-                <p className="text-muted-foreground text-xs">{t.estimatedOverage}</p>
-                <p className={cn("mt-0.5 font-medium text-sm tabular-nums", overRuns > 0 && "text-warning-foreground")}>
+                <p className="text-muted-foreground text-xs">
+                  {t.estimatedOverage}
+                </p>
+                <p
+                  className={cn(
+                    "mt-0.5 font-medium text-sm tabular-nums",
+                    overRuns > 0 && "text-warning-foreground"
+                  )}
+                >
                   {money((overRuns / 1000) * data.overagePer1k)}
-                  <span className="font-normal text-muted-foreground text-xs">{interpolate(t.overageRate, { rate: money(data.overagePer1k, 0) })}</span>
+                  <span className="font-normal text-muted-foreground text-xs">
+                    {interpolate(t.overageRate, {
+                      rate: money(data.overagePer1k, 0),
+                    })}
+                  </span>
                 </p>
               </div>
             </div>
@@ -1326,24 +1950,47 @@ function BillingPanel({
                 <CreditCardIcon className="size-4 text-muted-foreground" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-medium text-sm">{interpolate(t.cardEnding, { brand: data.card.brand, last4: data.card.last4 })}</p>
+                <p className="truncate font-medium text-sm">
+                  {interpolate(t.cardEnding, {
+                    brand: data.card.brand,
+                    last4: data.card.last4,
+                  })}
+                </p>
                 <p className="truncate text-muted-foreground text-xs">
-                  {interpolate(t.cardExpires, { month: String(data.card.expMonth).padStart(2, "0"), year: String(data.card.expYear).slice(-2), holder: data.card.holder })}
+                  {interpolate(t.cardExpires, {
+                    month: String(data.card.expMonth).padStart(2, "0"),
+                    year: String(data.card.expYear).slice(-2),
+                    holder: data.card.holder,
+                  })}
                 </p>
               </div>
               {portalHref ? (
-                <WirefrontLink className={cn(buttonVariants({ variant: "outline", size: "sm" }), press)} href={portalHref}>
+                <WirefrontLink
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "sm" }),
+                    press
+                  )}
+                  href={portalHref}
+                >
                   {t.replace}
                 </WirefrontLink>
               ) : null}
             </div>
           ) : (
-            <p className="px-4 py-3.5 text-muted-foreground text-sm">{t.noCard}</p>
+            <p className="px-4 py-3.5 text-muted-foreground text-sm">
+              {t.noCard}
+            </p>
           )}
           {data.billingEmail ? (
             <Row help={data.billingEmail} label={t.billingEmail}>
               {portalHref ? (
-                <WirefrontLink className={cn(buttonVariants({ variant: "outline", size: "sm" }), press)} href={portalHref}>
+                <WirefrontLink
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "sm" }),
+                    press
+                  )}
+                  href={portalHref}
+                >
                   {t.edit}
                 </WirefrontLink>
               ) : null}
@@ -1352,7 +1999,14 @@ function BillingPanel({
         </Rows>
       </Section>
 
-      <Section description={data.billingEmail ? interpolate(t.invoicesSentTo, { email: data.billingEmail }) : undefined} title={t.invoices}>
+      <Section
+        description={
+          data.billingEmail
+            ? interpolate(t.invoicesSentTo, { email: data.billingEmail })
+            : undefined
+        }
+        title={t.invoices}
+      >
         <Rows>
           <TableHeadRow className="sm:grid-cols-[minmax(0,1fr)_7rem_4.5rem_5rem_2rem]">
             <span>{t.invoice}</span>
@@ -1361,26 +2015,47 @@ function BillingPanel({
             <span className="text-end">{t.amount}</span>
             <span className="sr-only">{t.download}</span>
           </TableHeadRow>
-          {invoices.length === 0 ? <p className="px-4 py-10 text-center text-muted-foreground text-xs">{interpolate(t.noInvoices, { date: day(data.renewsAt) })}</p> : null}
+          {invoices.length === 0 ? (
+            <p className="px-4 py-10 text-center text-muted-foreground text-xs">
+              {interpolate(t.noInvoices, { date: day(data.renewsAt) })}
+            </p>
+          ) : null}
           {invoices.map((inv) => (
-            <div className="grid grid-cols-[minmax(0,1fr)_auto_auto_2rem] items-center gap-3 px-4 py-2.5 sm:grid-cols-[minmax(0,1fr)_7rem_4.5rem_5rem_2rem] sm:gap-4" key={inv.id}>
+            <div
+              className="grid grid-cols-[minmax(0,1fr)_auto_auto_2rem] items-center gap-3 px-4 py-2.5 sm:grid-cols-[minmax(0,1fr)_7rem_4.5rem_5rem_2rem] sm:gap-4"
+              key={inv.id}
+            >
               <div className="min-w-0">
                 <p className="truncate font-mono text-xs">{inv.number}</p>
-                <p className="truncate text-muted-foreground text-xs sm:hidden">{day(inv.issuedAt, true)}</p>
+                <p className="truncate text-muted-foreground text-xs sm:hidden">
+                  {day(inv.issuedAt, true)}
+                </p>
               </div>
-              <span className="hidden text-muted-foreground text-sm sm:block">{day(inv.issuedAt, true)}</span>
+              <span className="hidden text-muted-foreground text-sm sm:block">
+                {day(inv.issuedAt, true)}
+              </span>
               <span>
                 <Swap id={inv.status}>
-                  <Badge className={INVOICE_TONE[inv.status]} variant="secondary">
+                  <Badge
+                    className={INVOICE_TONE[inv.status]}
+                    variant="secondary"
+                  >
                     {t[inv.status]}
                   </Badge>
                 </Swap>
               </span>
-              <span className="text-end text-sm tabular-nums">{money(inv.amount)}</span>
+              <span className="text-end text-sm tabular-nums">
+                {money(inv.amount)}
+              </span>
               {inv.url ? (
                 <a
-                  aria-label={interpolate(t.downloadInvoice, { number: inv.number })}
-                  className={buttonVariants({ variant: "ghost", size: "icon-sm" })}
+                  aria-label={interpolate(t.downloadInvoice, {
+                    number: inv.number,
+                  })}
+                  className={buttonVariants({
+                    variant: "ghost",
+                    size: "icon-sm",
+                  })}
                   href={inv.url}
                   rel="noreferrer"
                   target="_blank"
@@ -1441,17 +2116,27 @@ function SettingsAndPlansScreen({
   }, [justSaved]);
 
   const parsed = WorkspaceSettings.safeParse(draft);
-  const blocker = parsed.success ? null : (parsed.error.issues[0]?.message ?? null);
-  const dirty = draft.name !== saved.name || draft.slug !== saved.slug || draft.region !== saved.region;
-  const barVisible = tab === "workspace" && Boolean(onSaveWorkspace) && (dirty || justSaved);
+  const blocker = parsed.success
+    ? null
+    : (parsed.error.issues[0]?.message ?? null);
+  const dirty =
+    draft.name !== saved.name ||
+    draft.slug !== saved.slug ||
+    draft.region !== saved.region;
+  const barVisible =
+    tab === "workspace" && Boolean(onSaveWorkspace) && (dirty || justSaved);
   const saving = save.isPending();
 
   return (
     <div className={cn("relative flex min-h-full flex-col", className)}>
       <div className="mx-auto w-full max-w-2xl flex-1 px-6 pt-10 pb-24 md:px-10">
         <Swap id={tab}>
-          <h1 className="text-balance font-semibold text-2xl tracking-tight">{t[`${tab}Title`]}</h1>
-          <p className="mt-1 text-pretty text-muted-foreground text-sm">{t[`${tab}Description`]}</p>
+          <h1 className="text-balance font-semibold text-2xl tracking-tight">
+            {t[`${tab}Title`]}
+          </h1>
+          <p className="mt-1 text-pretty text-muted-foreground text-sm">
+            {t[`${tab}Description`]}
+          </p>
         </Swap>
         {tab === "workspace" ? (
           <WorkspacePanel
@@ -1466,10 +2151,32 @@ function SettingsAndPlansScreen({
           />
         ) : null}
         {tab === "members" ? (
-          <MembersPanel data={data} onChangeRole={onChangeRole} onInvite={onInvite} onRemoveMember={onRemoveMember} onResendInvite={onResendInvite} t={t} />
+          <MembersPanel
+            data={data}
+            onChangeRole={onChangeRole}
+            onInvite={onInvite}
+            onRemoveMember={onRemoveMember}
+            onResendInvite={onResendInvite}
+            t={t}
+          />
         ) : null}
-        {tab === "keys" ? <KeysPanel data={data} onCreateKey={onCreateKey} onRevokeKey={onRevokeKey} t={t} /> : null}
-        {tab === "billing" ? <BillingPanel data={data} onChangePlan={onChangePlan} onRetryPayment={onRetryPayment} portalHref={portalHref} t={t} /> : null}
+        {tab === "keys" ? (
+          <KeysPanel
+            data={data}
+            onCreateKey={onCreateKey}
+            onRevokeKey={onRevokeKey}
+            t={t}
+          />
+        ) : null}
+        {tab === "billing" ? (
+          <BillingPanel
+            data={data}
+            onChangePlan={onChangePlan}
+            onRetryPayment={onRetryPayment}
+            portalHref={portalHref}
+            t={t}
+          />
+        ) : null}
         {save.error ? (
           <p className="mt-6 text-destructive-foreground text-sm" role="alert">
             {save.error}
@@ -1483,27 +2190,53 @@ function SettingsAndPlansScreen({
             className="-mt-16 pointer-events-none sticky bottom-4 z-20 flex justify-center px-4 md:px-6"
             exit={{ opacity: 0, y: reduce ? 0 : 16 }}
             initial={{ opacity: 0, y: reduce ? 0 : 24 }}
-            transition={reduce ? { duration: 0.15 } : { type: "spring", stiffness: 480, damping: 34 }}
+            transition={
+              reduce
+                ? { duration: 0.15 }
+                : { type: "spring", stiffness: 480, damping: 34 }
+            }
           >
             <div className="pointer-events-auto flex min-h-12 w-full max-w-xl items-center gap-2 rounded-xl border bg-popover py-2 ps-4 pe-2 shadow-lg/5">
               {justSaved && !dirty ? (
-                <span aria-live="polite" className="flex min-h-8 flex-1 items-center gap-2 font-medium text-sm">
+                <span
+                  aria-live="polite"
+                  className="flex min-h-8 flex-1 items-center gap-2 font-medium text-sm"
+                >
                   <CheckIcon className="size-4 text-success-foreground" />
                   {t.workspaceSaved}
                 </span>
               ) : (
                 <div className="flex min-w-0 flex-1 items-center gap-2">
-                  <span aria-live="polite" className="flex min-w-0 flex-1 flex-col">
+                  <span
+                    aria-live="polite"
+                    className="flex min-w-0 flex-1 flex-col"
+                  >
                     <span className="truncate font-medium text-sm">
                       <span className="sm:hidden">{t.unsavedShort}</span>
                       <span className="hidden sm:inline">{t.unsavedLong}</span>
                     </span>
-                    {blocker && !saving ? <span className="truncate text-warning-foreground text-xs">{blocker}</span> : null}
+                    {blocker && !saving ? (
+                      <span className="truncate text-warning-foreground text-xs">
+                        {blocker}
+                      </span>
+                    ) : null}
                   </span>
-                  <Button className={press} disabled={saving} onClick={() => setDraft(saved)} size="sm" variant="ghost">
+                  <Button
+                    className={press}
+                    disabled={saving}
+                    onClick={() => setDraft(saved)}
+                    size="sm"
+                    variant="ghost"
+                  >
                     {t.discard}
                   </Button>
-                  <Button aria-busy={saving} className={cn(press, "min-w-14")} disabled={Boolean(blocker) || saving} onClick={() => void save.run(draft)} size="sm">
+                  <Button
+                    aria-busy={saving}
+                    className={cn(press, "min-w-14")}
+                    disabled={Boolean(blocker) || saving}
+                    onClick={() => void save.run(draft)}
+                    size="sm"
+                  >
                     {saving ? <Spinner data-icon="inline-start" /> : null}
                     {t.save}
                   </Button>

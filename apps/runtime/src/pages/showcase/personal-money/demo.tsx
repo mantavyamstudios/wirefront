@@ -10,11 +10,17 @@ import * as fixtures from "./fixtures";
 import { Money } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function PersonalMoneyShowcasePage() {
   return (
-    <WirefrontProvider currency="USD" locale="en-US" now={demoNow} timeZone="UTC">
+    <WirefrontProvider
+      currency="USD"
+      locale="en-US"
+      now={demoNow}
+      timeZone="UTC"
+    >
       <DevlFrame>
         <Money
           accounts={fixtures.listAccounts}
@@ -23,7 +29,14 @@ export function PersonalMoneyShowcasePage() {
           onPayBill={async ({ billId }) => {
             await wait(700);
             const bill = fixtures.listBills.find((b) => b.id === billId);
-            return ok({ id: `pay-${billId}`, merchant: bill?.name ?? "", category: bill?.category ?? "home", amount: -(bill?.amount ?? 0), accountId: "everyday", postedAt: fixtures.now });
+            return ok({
+              id: `pay-${billId}`,
+              merchant: bill?.name ?? "",
+              category: bill?.category ?? "home",
+              amount: -(bill?.amount ?? 0),
+              accountId: "everyday",
+              postedAt: fixtures.now,
+            });
           }}
           productName={fixtures.productName}
           transactions={fixtures.listTransactions}

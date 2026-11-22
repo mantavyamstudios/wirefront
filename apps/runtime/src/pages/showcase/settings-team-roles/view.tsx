@@ -24,17 +24,45 @@ import {
 } from "@wirefront/ui/dropdown-menu";
 import { Input } from "@wirefront/ui/input";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { CheckIcon, CopyIcon, EllipsisIcon, LockIcon, MailIcon, UserMinusIcon, XIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CopyIcon,
+  EllipsisIcon,
+  LockIcon,
+  MailIcon,
+  UserMinusIcon,
+  XIcon,
+} from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useId, useState } from "react";
 
-import { InviteInput, type PermissionArea, type SaveRolesInput, type TeamData, type TeamHue, type TeamInvite, type TeamMember, type TeamRole } from "./schema";
+import {
+  InviteInput,
+  type PermissionArea,
+  type SaveRolesInput,
+  type TeamData,
+  type TeamHue,
+  type TeamInvite,
+  type TeamMember,
+  type TeamRole,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("teamRoles.<key>"). */
 export const TEAM_ROLES_MESSAGES = {
@@ -77,7 +105,8 @@ export const TEAM_ROLES_MESSAGES = {
   duplicate: "Duplicate {role}",
   customFrom: "Custom, based on {role}",
   newRoleName: "Contractor",
-  customHint: "marks where {role} differs from {from}. Click its name to rename it.",
+  customHint:
+    "marks where {role} differs from {from}. Click its name to rename it.",
   noCustomHint: "Need something in between? Duplicate {role} and adjust it.",
   unsavedShort: "Unsaved changes",
   unsavedLong: "You have unsaved changes",
@@ -87,7 +116,8 @@ export const TEAM_ROLES_MESSAGES = {
   save: "Save",
   rolesSaved: "Roles saved",
   removeTitle: "Remove {name}?",
-  removeDescription: "They lose access to {product} straight away. Projects they created stay where they are.",
+  removeDescription:
+    "They lose access to {product} straight away. Projects they created stay where they are.",
   cancel: "Cancel",
   remove: "Remove",
   removed: "{name} removed",
@@ -123,7 +153,8 @@ export interface TeamRolesProps {
 type Messages = typeof TEAM_ROLES_MESSAGES;
 const easeOut = [0.23, 1, 0.32, 1] as const;
 const spring = { type: "spring", stiffness: 500, damping: 40 } as const;
-const press = "transition-[color,background-color,box-shadow,scale] duration-150 ease-out active:scale-[0.97]";
+const press =
+  "transition-[color,background-color,box-shadow,scale] duration-150 ease-out active:scale-[0.97]";
 
 const avatarHues: Record<TeamHue, string> = {
   amber: "from-category-3/35 to-category-7",
@@ -149,11 +180,17 @@ function sameGrants(a: string[], b: string[]) {
   return a.length === b.length && a.every((g) => b.includes(g));
 }
 
-
 function PersonAvatar({ name, hue }: { name: string; hue: TeamHue }) {
   return (
     <Avatar className="size-8">
-      <AvatarFallback className={cn("bg-linear-to-br font-medium text-white text-xs", avatarHues[hue])}>{initials(name)}</AvatarFallback>
+      <AvatarFallback
+        className={cn(
+          "bg-linear-to-br font-medium text-white text-xs",
+          avatarHues[hue]
+        )}
+      >
+        {initials(name)}
+      </AvatarFallback>
     </Avatar>
   );
 }
@@ -174,16 +211,34 @@ function RoleSelect({
   const options = roles.filter((r) => !r.locked);
   const items = options.map((r) => ({ value: r.id, label: r.name }));
   return (
-    <Select items={items} onValueChange={(v) => v && onChange(v as string)} value={value}>
-      <SelectTrigger aria-label={label} className={cn("w-32 min-w-0", className)} size="sm">
+    <Select
+      items={items}
+      onValueChange={(v) => v && onChange(v as string)}
+      value={value}
+    >
+      <SelectTrigger
+        aria-label={label}
+        className={cn("w-32 min-w-0", className)}
+        size="sm"
+      >
         <SelectValue />
       </SelectTrigger>
-      <SelectContent alignItemWithTrigger={false} className="w-64" align="start">
+      <SelectContent
+        alignItemWithTrigger={false}
+        className="w-64"
+        align="start"
+      >
         {options.map((r) => (
-          <SelectItem className="items-start py-1.5 [&>span:first-child]:mt-0.5" key={r.id} value={r.id}>
+          <SelectItem
+            className="items-start py-1.5 [&>span:first-child]:mt-0.5"
+            key={r.id}
+            value={r.id}
+          >
             <span className="flex flex-col">
               <span className="font-medium">{r.name}</span>
-              <span className="text-muted-foreground text-xs">{r.description}</span>
+              <span className="text-muted-foreground text-xs">
+                {r.description}
+              </span>
             </span>
           </SelectItem>
         ))}
@@ -207,8 +262,19 @@ function CheckCell({
 }) {
   return (
     <span className="relative inline-flex">
-      <Checkbox aria-label={label} checked={checked} className="size-4.5" disabled={locked} onCheckedChange={onToggle} />
-      {changed ? <span aria-hidden className="-top-1 -inset-e-1 absolute size-1.5 rounded-full bg-warning ring-2 ring-card" /> : null}
+      <Checkbox
+        aria-label={label}
+        checked={checked}
+        className="size-4.5"
+        disabled={locked}
+        onCheckedChange={onToggle}
+      />
+      {changed ? (
+        <span
+          aria-hidden
+          className="-top-1 -inset-e-1 absolute size-1.5 rounded-full bg-warning ring-2 ring-card"
+        />
+      ) : null}
     </span>
   );
 }
@@ -262,32 +328,62 @@ function PermissionMatrix({
         <table className="w-full min-w-fit border-collapse text-start">
           <thead>
             <tr className="border-b">
-              <th className={cn(sticky, "min-w-30 px-4 pb-2.5 align-bottom font-medium text-muted-foreground text-xs sm:min-w-44")} scope="col">
+              <th
+                className={cn(
+                  sticky,
+                  "min-w-30 px-4 pb-2.5 align-bottom font-medium text-muted-foreground text-xs sm:min-w-44"
+                )}
+                scope="col"
+              >
                 {t.permission}
               </th>
               {roles.map((r) => {
-                const changed = !sameGrants(draft[r.id] ?? [], saved[r.id] ?? []);
+                const changed = !sameGrants(
+                  draft[r.id] ?? [],
+                  saved[r.id] ?? []
+                );
                 const count = counts[r.id] ?? 0;
                 return (
-                  <th className={cn(roleCol, "pt-3 pb-2.5 align-bottom font-normal")} key={r.id} scope="col">
+                  <th
+                    className={cn(
+                      roleCol,
+                      "pt-3 pb-2.5 align-bottom font-normal"
+                    )}
+                    key={r.id}
+                    scope="col"
+                  >
                     <span className="flex flex-col items-center justify-end gap-0.5">
                       {r.from ? (
                         <input
                           aria-label={t.customRoleName}
                           className="w-full min-w-0 rounded-sm bg-transparent text-center font-medium text-xs underline decoration-dotted decoration-muted-foreground/60 underline-offset-4 outline-none focus-visible:no-underline focus-visible:ring-2 focus-visible:ring-ring"
-                          onBlur={(e) => !e.target.value.trim() && onRename(r.id, t.custom)}
+                          onBlur={(e) =>
+                            !e.target.value.trim() && onRename(r.id, t.custom)
+                          }
                           onChange={(e) => onRename(r.id, e.target.value)}
                           value={r.name}
                         />
                       ) : (
                         <span className="flex items-center gap-1 font-medium text-xs">
-                          {r.locked ? <LockIcon aria-label={t.locked} className="size-3 text-muted-foreground" /> : null}
+                          {r.locked ? (
+                            <LockIcon
+                              aria-label={t.locked}
+                              className="size-3 text-muted-foreground"
+                            />
+                          ) : null}
                           {r.name}
                         </span>
                       )}
                       <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                        {changed ? <span aria-label={t.unsaved} className="size-1.5 rounded-full bg-warning" role="img" /> : null}
-                        <RollingCount reduce={reduce} value={count} /> {count === 1 ? t.person : t.people}
+                        {changed ? (
+                          <span
+                            aria-label={t.unsaved}
+                            className="size-1.5 rounded-full bg-warning"
+                            role="img"
+                          />
+                        ) : null}
+                        <RollingCount reduce={reduce} value={count} />{" "}
+                        {count === 1 ? t.person : t.people}
                       </span>
                     </span>
                   </th>
@@ -298,21 +394,42 @@ function PermissionMatrix({
           {areas.map((area) => (
             <tbody className="border-b last:border-b-0" key={area.id}>
               <tr>
-                <th className={cn(sticky, "px-4 pt-3.5 pb-1 font-medium text-muted-foreground text-xs")} colSpan={roles.length + 1} scope="colgroup">
+                <th
+                  className={cn(
+                    sticky,
+                    "px-4 pt-3.5 pb-1 font-medium text-muted-foreground text-xs"
+                  )}
+                  colSpan={roles.length + 1}
+                  scope="colgroup"
+                >
                   {area.name}
                 </th>
               </tr>
               {area.permissions.map((p) => (
                 <tr className="border-t first:border-t-0" key={p.id}>
-                  <th className={cn(sticky, "py-1.5 ps-4 pe-2 font-normal text-sm leading-snug")} scope="row">
+                  <th
+                    className={cn(
+                      sticky,
+                      "py-1.5 ps-4 pe-2 font-normal text-sm leading-snug"
+                    )}
+                    scope="row"
+                  >
                     {p.label}
                   </th>
                   {roles.map((r) => {
                     const on = (draft[r.id] ?? []).includes(p.id);
-                    const diverges = r.from ? on !== (draft[r.from] ?? []).includes(p.id) : false;
+                    const diverges = r.from
+                      ? on !== (draft[r.from] ?? []).includes(p.id)
+                      : false;
                     return (
                       <td className={cn(roleCol, "py-1.5")} key={r.id}>
-                        <CheckCell changed={diverges} checked={on} label={`${r.name}: ${p.label}`} locked={r.locked} onToggle={() => onToggle(r.id, p.id)} />
+                        <CheckCell
+                          changed={diverges}
+                          checked={on}
+                          label={`${r.name}: ${p.label}`}
+                          locked={r.locked}
+                          onToggle={() => onToggle(r.id, p.id)}
+                        />
                       </td>
                     );
                   })}
@@ -327,7 +444,13 @@ function PermissionMatrix({
                 {roles.map((r) => (
                   <td className={cn(roleCol, "py-1.5")} key={r.id}>
                     {r.from ? (
-                      <Button aria-label={interpolate(t.removeRole, { name: r.name })} className={press} onClick={() => onRemove(r.id)} size="icon-xs" variant="ghost">
+                      <Button
+                        aria-label={interpolate(t.removeRole, { name: r.name })}
+                        className={press}
+                        onClick={() => onRemove(r.id)}
+                        size="icon-xs"
+                        variant="ghost"
+                      >
                         <XIcon />
                       </Button>
                     ) : null}
@@ -378,7 +501,9 @@ function TeamRolesScreen({
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [resent, setResent] = useState<string[]>([]);
   const [removing, setRemoving] = useState<TeamMember | null>(null);
-  const [notice, setNotice] = useState<{ key: number; text: string } | null>(null);
+  const [notice, setNotice] = useState<{ key: number; text: string } | null>(
+    null
+  );
   const [justSaved, setJustSaved] = useState(false);
   const [newCount, setNewCount] = useState(0);
 
@@ -393,7 +518,8 @@ function TeamRolesScreen({
     return () => clearTimeout(timer);
   }, [justSaved]);
 
-  const say = (text: string) => setNotice((n) => ({ key: (n?.key ?? 0) + 1, text }));
+  const say = (text: string) =>
+    setNotice((n) => ({ key: (n?.key ?? 0) + 1, text }));
 
   const invite = useAction(onInvite ?? (async () => {}), {
     onSuccess: (created, input) => {
@@ -402,7 +528,9 @@ function TeamRolesScreen({
       say(interpolate(t.inviteSent, { email: input.email }));
     },
   });
-  const resend = useAction(onResendInvite ?? (async () => {}), { onSuccess: (_, inviteId) => setResent((r) => [...r, inviteId]) });
+  const resend = useAction(onResendInvite ?? (async () => {}), {
+    onSuccess: (_, inviteId) => setResent((r) => [...r, inviteId]),
+  });
   const revoke = useAction(onRevokeInvite ?? (async () => {}), {
     onSuccess: (_, inviteId) => {
       const gone = invites.find((i) => i.id === inviteId);
@@ -413,8 +541,15 @@ function TeamRolesScreen({
   const changeRole = useAction(onChangeRole ?? (async () => {}), {
     optimistic: ({ memberId, roleId }) => {
       const before = members.find((m) => m.id === memberId)?.roleId;
-      setMembers((all) => all.map((m) => (m.id === memberId ? { ...m, roleId } : m)));
-      return () => setMembers((all) => all.map((m) => (m.id === memberId && before ? { ...m, roleId: before } : m)));
+      setMembers((all) =>
+        all.map((m) => (m.id === memberId ? { ...m, roleId } : m))
+      );
+      return () =>
+        setMembers((all) =>
+          all.map((m) =>
+            m.id === memberId && before ? { ...m, roleId: before } : m
+          )
+        );
     },
   });
   const removeMember = useAction(onRemoveMember ?? (async () => {}), {
@@ -429,37 +564,79 @@ function TeamRolesScreen({
     onSuccess: (_, saved) => {
       // Members of a deleted custom role move to the role it came from.
       const kept = new Set(saved.map((r) => r.id));
-      const fallback = Object.fromEntries(savedRoles.filter((r) => !kept.has(r.id) && !r.locked).map((r) => [r.id, r.from ?? duplicateFrom]));
-      setMembers((all) => all.map((m) => (fallback[m.roleId] ? { ...m, roleId: fallback[m.roleId] as string } : m)));
-      setInvites((all) => all.map((i) => (fallback[i.roleId] ? { ...i, roleId: fallback[i.roleId] as string } : i)));
+      const fallback = Object.fromEntries(
+        savedRoles
+          .filter((r) => !kept.has(r.id) && !r.locked)
+          .map((r) => [r.id, r.from ?? duplicateFrom])
+      );
+      setMembers((all) =>
+        all.map((m) =>
+          fallback[m.roleId]
+            ? { ...m, roleId: fallback[m.roleId] as string }
+            : m
+        )
+      );
+      setInvites((all) =>
+        all.map((i) =>
+          fallback[i.roleId]
+            ? { ...i, roleId: fallback[i.roleId] as string }
+            : i
+        )
+      );
       setSavedRoles(roles);
       setJustSaved(true);
     },
   });
-  const actionError = invite.error ?? resend.error ?? revoke.error ?? changeRole.error ?? removeMember.error ?? saveRoles.error;
+  const actionError =
+    invite.error ??
+    resend.error ??
+    revoke.error ??
+    changeRole.error ??
+    removeMember.error ??
+    saveRoles.error;
 
   const draft = Object.fromEntries(roles.map((r) => [r.id, r.grants]));
   const saved = Object.fromEntries(savedRoles.map((r) => [r.id, r.grants]));
-  const counts = Object.fromEntries(roles.map((r) => [r.id, members.filter((m) => m.roleId === r.id).length]));
+  const counts = Object.fromEntries(
+    roles.map((r) => [r.id, members.filter((m) => m.roleId === r.id).length])
+  );
   const dirty = JSON.stringify(roles) !== JSON.stringify(savedRoles);
-  const changedRoles = roles.filter((r) => !sameGrants(draft[r.id] ?? [], saved[r.id] ?? []) || !savedRoles.some((s) => s.id === r.id));
+  const changedRoles = roles.filter(
+    (r) =>
+      !sameGrants(draft[r.id] ?? [], saved[r.id] ?? []) ||
+      !savedRoles.some((s) => s.id === r.id)
+  );
   const affected = changedRoles.reduce((n, r) => n + (counts[r.id] ?? 0), 0);
   const customRole = roles.find((r) => r.from);
   const baseRole = roles.find((r) => r.id === duplicateFrom);
-  const roleName = (rid: string) => roles.find((r) => r.id === rid)?.name ?? savedRoles.find((r) => r.id === rid)?.name ?? rid;
-  const people = (n: number) => (n === 1 ? t.personOne : interpolate(t.peopleOther, { count: n }));
+  const roleName = (rid: string) =>
+    roles.find((r) => r.id === rid)?.name ??
+    savedRoles.find((r) => r.id === rid)?.name ??
+    rid;
+  const people = (n: number) =>
+    n === 1 ? t.personOne : interpolate(t.peopleOther, { count: n });
   const lastActive = (m: TeamMember) =>
-    m.lastActiveAt === null ? t.never : now().getTime() - Date.parse(m.lastActiveAt) < 5 * 60_000 ? null : format.relative(m.lastActiveAt);
+    m.lastActiveAt === null
+      ? t.never
+      : now().getTime() - Date.parse(m.lastActiveAt) < 5 * 60_000
+        ? null
+        : format.relative(m.lastActiveAt);
 
   const sendInvite = (e: { preventDefault(): void }) => {
     e.preventDefault();
-    const parsed = InviteInput.safeParse({ email: email.trim(), roleId: inviteRole });
+    const parsed = InviteInput.safeParse({
+      email: email.trim(),
+      roleId: inviteRole,
+    });
     if (!parsed.success) {
       setInviteError(parsed.error.issues[0]?.message ?? null);
       return;
     }
     const value = parsed.data.email.toLowerCase();
-    if (invites.some((i) => i.email.toLowerCase() === value) || members.some((m) => m.email.toLowerCase() === value)) {
+    if (
+      invites.some((i) => i.email.toLowerCase() === value) ||
+      members.some((m) => m.email.toLowerCase() === value)
+    ) {
       setInviteError(t.alreadyHere);
       return;
     }
@@ -469,8 +646,15 @@ function TeamRolesScreen({
   const toggle = (roleId: string, permissionId: string) =>
     setRoles((all) =>
       all.map((r) =>
-        r.id === roleId ? { ...r, grants: r.grants.includes(permissionId) ? r.grants.filter((p) => p !== permissionId) : [...r.grants, permissionId] } : r,
-      ),
+        r.id === roleId
+          ? {
+              ...r,
+              grants: r.grants.includes(permissionId)
+                ? r.grants.filter((p) => p !== permissionId)
+                : [...r.grants, permissionId],
+            }
+          : r
+      )
     );
 
   const addCustom = () => {
@@ -495,9 +679,13 @@ function TeamRolesScreen({
   const bar = dirty ? "dirty" : justSaved ? "saved" : null;
 
   return (
-    <div className={cn("mx-auto w-full max-w-2xl px-6 py-10 md:px-10", className)}>
+    <div
+      className={cn("mx-auto w-full max-w-2xl px-6 py-10 md:px-10", className)}
+    >
       <h1 className="font-semibold text-2xl tracking-tight">{t.title}</h1>
-      <p className="mt-1 text-muted-foreground text-sm">{interpolate(t.subtitle, { product })}</p>
+      <p className="mt-1 text-muted-foreground text-sm">
+        {interpolate(t.subtitle, { product })}
+      </p>
 
       {actionError ? (
         <p className="mt-4 text-destructive-foreground text-sm" role="alert">
@@ -509,10 +697,16 @@ function TeamRolesScreen({
         <section className="mt-10">
           <h2 className="font-medium text-sm">{t.inviteTitle}</h2>
           <p className="text-muted-foreground text-sm">{t.inviteDescription}</p>
-          <form className="mt-3 flex flex-col gap-2 rounded-xl border bg-card p-3 sm:flex-row sm:items-start" noValidate onSubmit={sendInvite}>
+          <form
+            className="mt-3 flex flex-col gap-2 rounded-xl border bg-card p-3 sm:flex-row sm:items-start"
+            noValidate
+            onSubmit={sendInvite}
+          >
             <div className="flex min-w-0 flex-1 flex-col gap-1.5">
               <Input
-                aria-describedby={inviteError ? `${id}-invite-error` : undefined}
+                aria-describedby={
+                  inviteError ? `${id}-invite-error` : undefined
+                }
                 aria-invalid={inviteError ? true : undefined}
                 aria-label={t.email}
                 onChange={(e) => {
@@ -524,15 +718,31 @@ function TeamRolesScreen({
                 value={email}
               />
               {inviteError ? (
-                <p className="px-0.5 text-destructive-foreground text-xs" id={`${id}-invite-error`}>
+                <p
+                  className="px-0.5 text-destructive-foreground text-xs"
+                  id={`${id}-invite-error`}
+                >
                   {inviteError}
                 </p>
               ) : null}
             </div>
             <div className="flex gap-2">
-              <RoleSelect className="flex-1 sm:w-32 sm:flex-none" label={t.roleForInvite} onChange={setInviteRole} roles={savedRoles} value={inviteRole} />
-              <Button aria-busy={invite.isPending()} className={press} disabled={!email.trim() || invite.isPending()} type="submit">
-                {invite.isPending() ? <Spinner data-icon="inline-start" /> : null}
+              <RoleSelect
+                className="flex-1 sm:w-32 sm:flex-none"
+                label={t.roleForInvite}
+                onChange={setInviteRole}
+                roles={savedRoles}
+                value={inviteRole}
+              />
+              <Button
+                aria-busy={invite.isPending()}
+                className={press}
+                disabled={!email.trim() || invite.isPending()}
+                type="submit"
+              >
+                {invite.isPending() ? (
+                  <Spinner data-icon="inline-start" />
+                ) : null}
                 {t.invite}
               </Button>
             </div>
@@ -542,7 +752,9 @@ function TeamRolesScreen({
 
       <section className="mt-10">
         <h2 className="font-medium text-sm">{t.membersTitle}</h2>
-        <p className="text-muted-foreground text-sm">{interpolate(t.peopleIn, { count: people(members.length), product })}</p>
+        <p className="text-muted-foreground text-sm">
+          {interpolate(t.peopleIn, { count: people(members.length), product })}
+        </p>
         <div className="mt-3 overflow-hidden rounded-xl border bg-card">
           <div className="hidden grid-cols-[minmax(0,1fr)_8rem_6.5rem_2rem] items-center gap-4 border-b px-4 py-2.5 font-medium text-muted-foreground text-xs sm:grid">
             <span>{t.columnName}</span>
@@ -571,27 +783,43 @@ function TeamRolesScreen({
                         <div className="min-w-0">
                           <p className="truncate font-medium text-sm">
                             {m.name}
-                            {you ? <span className="font-normal text-muted-foreground"> {t.you}</span> : null}
+                            {you ? (
+                              <span className="font-normal text-muted-foreground">
+                                {" "}
+                                {t.you}
+                              </span>
+                            ) : null}
                           </p>
-                          <p className="truncate text-muted-foreground text-xs">{m.email}</p>
+                          <p className="truncate text-muted-foreground text-xs">
+                            {m.email}
+                          </p>
                         </div>
                       </div>
                       <div className="col-start-1 row-start-2 flex items-center gap-3 ps-11 sm:col-start-auto sm:row-start-auto sm:ps-0">
                         {role?.locked || !onChangeRole ? (
                           <span className="flex h-8 items-center gap-1.5 px-0.5 text-sm sm:h-7">
                             {roleName(m.roleId)}
-                            {role?.locked ? <LockIcon className="size-3 text-muted-foreground" /> : null}
+                            {role?.locked ? (
+                              <LockIcon className="size-3 text-muted-foreground" />
+                            ) : null}
                           </span>
                         ) : (
                           <RoleSelect
                             className="w-32"
                             label={interpolate(t.roleFor, { name: m.name })}
-                            onChange={(rid) => void changeRole.run({ memberId: m.id, roleId: rid }, m.id)}
+                            onChange={(rid) =>
+                              void changeRole.run(
+                                { memberId: m.id, roleId: rid },
+                                m.id
+                              )
+                            }
                             roles={savedRoles}
                             value={m.roleId}
                           />
                         )}
-                        <span className="text-muted-foreground text-xs sm:hidden">{active ?? t.now}</span>
+                        <span className="text-muted-foreground text-xs sm:hidden">
+                          {active ?? t.now}
+                        </span>
                       </div>
                       <span className="hidden text-muted-foreground text-sm sm:block">
                         {active ?? (
@@ -605,26 +833,46 @@ function TeamRolesScreen({
                         <DropdownMenuTrigger
                           render={
                             <Button
-                              aria-label={interpolate(t.actionsFor, { name: m.name })}
-                              className={cn("col-start-2 row-start-1 justify-self-end sm:col-start-auto sm:row-start-auto", press)}
+                              aria-label={interpolate(t.actionsFor, {
+                                name: m.name,
+                              })}
+                              className={cn(
+                                "col-start-2 row-start-1 justify-self-end sm:col-start-auto sm:row-start-auto",
+                                press
+                              )}
                               size="icon-sm"
                               variant="ghost"
                             />
                           }
                         >
-                          {changeRole.isPending(m.id) || removeMember.isPending(m.id) ? <Spinner /> : <EllipsisIcon />}
+                          {changeRole.isPending(m.id) ||
+                          removeMember.isPending(m.id) ? (
+                            <Spinner />
+                          ) : (
+                            <EllipsisIcon />
+                          )}
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-52">
-                          <DropdownMenuItem onClick={() => void navigator.clipboard?.writeText(m.email)}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              void navigator.clipboard?.writeText(m.email)
+                            }
+                          >
                             <CopyIcon />
                             {t.copyEmail}
                           </DropdownMenuItem>
                           {onRemoveMember ? (
                             <>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem disabled={role?.locked || you} onClick={() => setRemoving(m)} variant="destructive">
+                              <DropdownMenuItem
+                                disabled={role?.locked || you}
+                                onClick={() => setRemoving(m)}
+                                variant="destructive"
+                              >
                                 <UserMinusIcon />
-                                {role?.locked ? t.ownerCantBeRemoved : t.removeFromWorkspace}
+                                {role?.locked
+                                  ? t.ownerCantBeRemoved
+                                  : t.removeFromWorkspace}
                               </DropdownMenuItem>
                             </>
                           ) : null}
@@ -662,11 +910,19 @@ function TeamRolesScreen({
                           <MailIcon className="size-3.5" />
                         </span>
                         <div className="min-w-0">
-                          <p className="truncate font-medium text-sm">{inv.email}</p>
+                          <p className="truncate font-medium text-sm">
+                            {inv.email}
+                          </p>
                           <p className="truncate text-muted-foreground text-xs">
                             {wasResent
-                              ? interpolate(t.resentNow, { role: roleName(inv.roleId) })
-                              : interpolate(t.invitedBy, { role: roleName(inv.roleId), by: inv.invitedBy, when: format.relative(inv.sentAt) })}
+                              ? interpolate(t.resentNow, {
+                                  role: roleName(inv.roleId),
+                                })
+                              : interpolate(t.invitedBy, {
+                                  role: roleName(inv.roleId),
+                                  by: inv.invitedBy,
+                                  when: format.relative(inv.sentAt),
+                                })}
                           </p>
                         </div>
                       </div>
@@ -680,7 +936,9 @@ function TeamRolesScreen({
                             size="sm"
                             variant="outline"
                           >
-                            {wasResent ? <CheckIcon className="size-3.5" /> : null}
+                            {wasResent ? (
+                              <CheckIcon className="size-3.5" />
+                            ) : null}
                             {wasResent ? t.resent : t.resend}
                           </Button>
                         ) : null}
@@ -703,7 +961,11 @@ function TeamRolesScreen({
               })}
             </AnimatePresence>
           </ul>
-          {invites.length === 0 ? <p className="px-4 py-6 text-center text-muted-foreground text-sm">{t.noInvites}</p> : null}
+          {invites.length === 0 ? (
+            <p className="px-4 py-6 text-center text-muted-foreground text-sm">
+              {t.noInvites}
+            </p>
+          ) : null}
         </div>
       </section>
 
@@ -711,10 +973,18 @@ function TeamRolesScreen({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div className="min-w-0">
             <h2 className="font-medium text-sm">{t.rolesTitle}</h2>
-            <p className="text-pretty text-muted-foreground text-sm">{t.rolesDescription}</p>
+            <p className="text-pretty text-muted-foreground text-sm">
+              {t.rolesDescription}
+            </p>
           </div>
           {onSaveRoles && baseRole ? (
-            <Button className={cn("shrink-0 self-start sm:self-auto", press)} disabled={Boolean(customRole)} onClick={addCustom} size="sm" variant="outline">
+            <Button
+              className={cn("shrink-0 self-start sm:self-auto", press)}
+              disabled={Boolean(customRole)}
+              onClick={addCustom}
+              size="sm"
+              variant="outline"
+            >
               <CopyIcon />
               {interpolate(t.duplicate, { role: baseRole.name })}
             </Button>
@@ -725,10 +995,16 @@ function TeamRolesScreen({
           counts={counts}
           draft={draft}
           onRemove={(rid) => setRoles((all) => all.filter((r) => r.id !== rid))}
-          onRename={(rid, name) => setRoles((all) => all.map((r) => (r.id === rid ? { ...r, name } : r)))}
+          onRename={(rid, name) =>
+            setRoles((all) =>
+              all.map((r) => (r.id === rid ? { ...r, name } : r))
+            )
+          }
           onToggle={onSaveRoles ? toggle : () => {}}
           reduce={reduce}
-          roles={onSaveRoles ? roles : roles.map((r) => ({ ...r, locked: true }))}
+          roles={
+            onSaveRoles ? roles : roles.map((r) => ({ ...r, locked: true }))
+          }
           saved={saved}
           t={t}
         />
@@ -737,7 +1013,10 @@ function TeamRolesScreen({
             {customRole ? (
               <>
                 <span className="-translate-y-px me-1 inline-block size-1.5 rounded-full bg-warning align-middle" />
-                {interpolate(t.customHint, { role: customRole.name, from: roleName(customRole.from ?? duplicateFrom) })}
+                {interpolate(t.customHint, {
+                  role: customRole.name,
+                  from: roleName(customRole.from ?? duplicateFrom),
+                })}
               </>
             ) : (
               interpolate(t.noCustomHint, { role: baseRole.name })
@@ -764,20 +1043,37 @@ function TeamRolesScreen({
                     <span className="hidden sm:inline">{t.unsavedLong}</span>
                     <span className="hidden text-muted-foreground sm:inline">
                       {" "}
-                      · {affected === 0 ? t.affectsNone : interpolate(t.affects, { people: people(affected) })}
+                      ·{" "}
+                      {affected === 0
+                        ? t.affectsNone
+                        : interpolate(t.affects, { people: people(affected) })}
                     </span>
                   </p>
-                  <Button className={press} disabled={saveRoles.isPending()} onClick={() => setRoles(savedRoles)} size="sm" variant="ghost">
+                  <Button
+                    className={press}
+                    disabled={saveRoles.isPending()}
+                    onClick={() => setRoles(savedRoles)}
+                    size="sm"
+                    variant="ghost"
+                  >
                     {t.discard}
                   </Button>
                   <Button
                     aria-busy={saveRoles.isPending()}
                     className={press}
                     disabled={saveRoles.isPending()}
-                    onClick={() => void saveRoles.run(roles.filter((r) => !r.locked).map(({ locked: _locked, ...role }) => role))}
+                    onClick={() =>
+                      void saveRoles.run(
+                        roles
+                          .filter((r) => !r.locked)
+                          .map(({ locked: _locked, ...role }) => role)
+                      )
+                    }
                     size="sm"
                   >
-                    {saveRoles.isPending() ? <Spinner data-icon="inline-start" /> : null}
+                    {saveRoles.isPending() ? (
+                      <Spinner data-icon="inline-start" />
+                    ) : null}
                     {t.save}
                   </Button>
                 </>
@@ -805,24 +1101,40 @@ function TeamRolesScreen({
         </AnimatePresence>
       </div>
 
-      <AlertDialog onOpenChange={(open) => !open && !removeMember.isPending() && setRemoving(null)} open={removing !== null}>
+      <AlertDialog
+        onOpenChange={(open) =>
+          !open && !removeMember.isPending() && setRemoving(null)
+        }
+        open={removing !== null}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{interpolate(t.removeTitle, { name: removing?.name ?? "" })}</AlertDialogTitle>
-            <AlertDialogDescription>{interpolate(t.removeDescription, { product })}</AlertDialogDescription>
+            <AlertDialogTitle>
+              {interpolate(t.removeTitle, { name: removing?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {interpolate(t.removeDescription, { product })}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={removeMember.isPending()} render={<Button variant="ghost" />}>
+            <AlertDialogCancel
+              disabled={removeMember.isPending()}
+              render={<Button variant="ghost" />}
+            >
               {t.cancel}
             </AlertDialogCancel>
             <Button
               aria-busy={removeMember.isPending()}
               className="text-destructive-foreground"
               disabled={removeMember.isPending()}
-              onClick={() => removing && void removeMember.run(removing.id, removing.id)}
+              onClick={() =>
+                removing && void removeMember.run(removing.id, removing.id)
+              }
               variant="destructive"
             >
-              {removeMember.isPending() ? <Spinner data-icon="inline-start" /> : null}
+              {removeMember.isPending() ? (
+                <Spinner data-icon="inline-start" />
+              ) : null}
               {t.remove}
             </Button>
           </AlertDialogFooter>

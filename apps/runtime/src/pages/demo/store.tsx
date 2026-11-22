@@ -273,12 +273,66 @@ const SEED_PROJECTS: Project[] = [
 ];
 
 const SEED_MEMBERS: Member[] = [
-  { id: "m0", name: "Mantavyam", email: "hello@mantavyam.in", role: "owner", status: "online", initials: "MS", tone: "bg-foreground text-background", lastActive: "now" },
-  { id: "m1", name: "Maya Okafor", email: "maya@acme.com", role: "admin", status: "online", initials: "MO", tone: TONES[0], lastActive: "2m ago" },
-  { id: "m2", name: "James Lin", email: "james@acme.com", role: "member", status: "online", initials: "JL", tone: TONES[1], lastActive: "12m ago" },
-  { id: "m3", name: "Riya Patel", email: "riya@acme.com", role: "member", status: "away", initials: "RP", tone: TONES[2], lastActive: "1h ago" },
-  { id: "m4", name: "Dani Kim", email: "dani@acme.com", role: "member", status: "offline", initials: "DK", tone: TONES[3], lastActive: "yesterday" },
-  { id: "m5", name: "Alex Tran", email: "alex@acme.com", role: "viewer", status: "offline", initials: "AT", tone: TONES[4], lastActive: "Apr 22" },
+  {
+    id: "m0",
+    name: "Mantavyam",
+    email: "hello@mantavyam.in",
+    role: "owner",
+    status: "online",
+    initials: "MS",
+    tone: "bg-foreground text-background",
+    lastActive: "now",
+  },
+  {
+    id: "m1",
+    name: "Maya Okafor",
+    email: "maya@acme.com",
+    role: "admin",
+    status: "online",
+    initials: "MO",
+    tone: TONES[0],
+    lastActive: "2m ago",
+  },
+  {
+    id: "m2",
+    name: "James Lin",
+    email: "james@acme.com",
+    role: "member",
+    status: "online",
+    initials: "JL",
+    tone: TONES[1],
+    lastActive: "12m ago",
+  },
+  {
+    id: "m3",
+    name: "Riya Patel",
+    email: "riya@acme.com",
+    role: "member",
+    status: "away",
+    initials: "RP",
+    tone: TONES[2],
+    lastActive: "1h ago",
+  },
+  {
+    id: "m4",
+    name: "Dani Kim",
+    email: "dani@acme.com",
+    role: "member",
+    status: "offline",
+    initials: "DK",
+    tone: TONES[3],
+    lastActive: "yesterday",
+  },
+  {
+    id: "m5",
+    name: "Alex Tran",
+    email: "alex@acme.com",
+    role: "viewer",
+    status: "offline",
+    initials: "AT",
+    tone: TONES[4],
+    lastActive: "Apr 22",
+  },
 ];
 
 const SEED_THREADS: Thread[] = [
@@ -291,10 +345,35 @@ const SEED_THREADS: Thread[] = [
     preview: "Pushed the new query — the 30d aggregate runs in ~120ms now.",
     time: "2m",
     messages: [
-      { id: 1, authorId: "m1", time: "2h", body: "Pushed the new audit log query. The aggregate over the last 30 days comes back in ~120ms on the prod replica — I think we can ship.", reactions: [{ emoji: "🚀", count: 3, mine: true }, { emoji: "👀", count: 1 }] },
-      { id: 2, authorId: "m2", time: "1h", body: "Nice. Can you paste the query plan? Want to make sure it's still using the (workspace_id, created_at) index.", reactions: [{ emoji: "👍", count: 1 }] },
-      { id: 3, authorId: "m1", time: "44m", body: "Plan attached — index in use. Idempotent re-runs too, tested against staging this morning." },
-      { id: 4, authorId: "m0", time: "2m", body: "+1 from me. Land it tonight after CI passes." },
+      {
+        id: 1,
+        authorId: "m1",
+        time: "2h",
+        body: "Pushed the new audit log query. The aggregate over the last 30 days comes back in ~120ms on the prod replica — I think we can ship.",
+        reactions: [
+          { emoji: "🚀", count: 3, mine: true },
+          { emoji: "👀", count: 1 },
+        ],
+      },
+      {
+        id: 2,
+        authorId: "m2",
+        time: "1h",
+        body: "Nice. Can you paste the query plan? Want to make sure it's still using the (workspace_id, created_at) index.",
+        reactions: [{ emoji: "👍", count: 1 }],
+      },
+      {
+        id: 3,
+        authorId: "m1",
+        time: "44m",
+        body: "Plan attached — index in use. Idempotent re-runs too, tested against staging this morning.",
+      },
+      {
+        id: 4,
+        authorId: "m0",
+        time: "2m",
+        body: "+1 from me. Land it tonight after CI passes.",
+      },
     ],
   },
   {
@@ -305,8 +384,18 @@ const SEED_THREADS: Thread[] = [
     preview: "Sender domain mismatch — needs SPF realignment.",
     time: "1h",
     messages: [
-      { id: 1, authorId: "m3", time: "1h", body: "Heads up — invite emails are bouncing for big-corp.com. Looks like SPF realignment on our end." },
-      { id: 2, authorId: "m1", time: "55m", body: "On it — opening a ticket with Resend." },
+      {
+        id: 1,
+        authorId: "m3",
+        time: "1h",
+        body: "Heads up — invite emails are bouncing for big-corp.com. Looks like SPF realignment on our end.",
+      },
+      {
+        id: 2,
+        authorId: "m1",
+        time: "55m",
+        body: "On it — opening a ticket with Resend.",
+      },
     ],
   },
   {
@@ -317,7 +406,12 @@ const SEED_THREADS: Thread[] = [
     preview: "Tightened the hero — your eyes welcome.",
     time: "yesterday",
     messages: [
-      { id: 1, authorId: "m4", time: "yesterday", body: "Pricing page copy is ready for your eyes — tightened the hero, simpler comparison table." },
+      {
+        id: 1,
+        authorId: "m4",
+        time: "yesterday",
+        body: "Pricing page copy is ready for your eyes — tightened the hero, simpler comparison table.",
+      },
     ],
   },
   {
@@ -328,38 +422,173 @@ const SEED_THREADS: Thread[] = [
     preview: "Submitted — needs approval before Friday.",
     time: "Mon",
     messages: [
-      { id: 1, authorId: "m5", time: "Mon", body: "Submitted the Q3 budget — needs approval before Friday for procurement timing." },
+      {
+        id: 1,
+        authorId: "m5",
+        time: "Mon",
+        body: "Submitted the Q3 budget — needs approval before Friday for procurement timing.",
+      },
     ],
   },
 ];
 
 const SEED_NOTIFICATIONS: Notification[] = [
-  { id: "n1", Icon: "mention", title: "Maya mentioned you", body: "Audit log thread · 2m ago", time: "2m", read: false, bucket: "Today" },
-  { id: "n2", Icon: "deploy", title: "Deploy succeeded", body: "main → production · 8m ago", time: "8m", read: false, bucket: "Today" },
-  { id: "n3", Icon: "invite", title: "Riya invited 5 people", body: "21m ago", time: "21m", read: false, bucket: "Today" },
-  { id: "n4", Icon: "comment", title: "James replied to a thread", body: "Bouncing invite emails · 55m ago", time: "55m", read: true, bucket: "Today" },
-  { id: "n5", Icon: "deploy", title: "Deploy rolled back", body: "release 0.4.1 · 2h ago", time: "2h", read: true, bucket: "Today" },
-  { id: "n6", Icon: "billing", title: "Invoice paid", body: "INV-2026-04 · yesterday", time: "1d", read: true, bucket: "Earlier" },
-  { id: "n7", Icon: "mention", title: "Dani mentioned you", body: "Pricing page copy · yesterday", time: "1d", read: true, bucket: "Earlier" },
+  {
+    id: "n1",
+    Icon: "mention",
+    title: "Maya mentioned you",
+    body: "Audit log thread · 2m ago",
+    time: "2m",
+    read: false,
+    bucket: "Today",
+  },
+  {
+    id: "n2",
+    Icon: "deploy",
+    title: "Deploy succeeded",
+    body: "main → production · 8m ago",
+    time: "8m",
+    read: false,
+    bucket: "Today",
+  },
+  {
+    id: "n3",
+    Icon: "invite",
+    title: "Riya invited 5 people",
+    body: "21m ago",
+    time: "21m",
+    read: false,
+    bucket: "Today",
+  },
+  {
+    id: "n4",
+    Icon: "comment",
+    title: "James replied to a thread",
+    body: "Bouncing invite emails · 55m ago",
+    time: "55m",
+    read: true,
+    bucket: "Today",
+  },
+  {
+    id: "n5",
+    Icon: "deploy",
+    title: "Deploy rolled back",
+    body: "release 0.4.1 · 2h ago",
+    time: "2h",
+    read: true,
+    bucket: "Today",
+  },
+  {
+    id: "n6",
+    Icon: "billing",
+    title: "Invoice paid",
+    body: "INV-2026-04 · yesterday",
+    time: "1d",
+    read: true,
+    bucket: "Earlier",
+  },
+  {
+    id: "n7",
+    Icon: "mention",
+    title: "Dani mentioned you",
+    body: "Pricing page copy · yesterday",
+    time: "1d",
+    read: true,
+    bucket: "Earlier",
+  },
 ];
 
 const SEED_ISSUES: Issue[] = [
-  { id: "i1", title: "Validate the rollback path with a dry run", status: "in-progress", priority: "high", assigneeId: "m1", projectId: "p4", updatedAt: "2h ago" },
-  { id: "i2", title: "Move audit log retention into env", status: "todo", priority: "med", assigneeId: "m2", projectId: "p4", updatedAt: "yesterday" },
-  { id: "i3", title: "Add E2E for invite redemption", status: "review", priority: "med", assigneeId: "m3", projectId: "p4", updatedAt: "Apr 22" },
-  { id: "i4", title: "Refactor scope-set parser", status: "done", priority: "low", assigneeId: "m1", projectId: "p4", updatedAt: "Apr 21" },
-  { id: "i5", title: "Welcome carousel — copy pass 2", status: "in-progress", priority: "med", assigneeId: "m4", projectId: "p2", updatedAt: "12m ago" },
-  { id: "i6", title: "Empty inbox illustration", status: "review", priority: "low", assigneeId: "m4", projectId: "p2", updatedAt: "1h ago" },
-  { id: "i7", title: "Q3 budget review meeting", status: "todo", priority: "high", assigneeId: "m0", projectId: "p1", updatedAt: "yesterday" },
-  { id: "i8", title: "Hire designer (sourcing)", status: "in-progress", priority: "med", assigneeId: "m0", projectId: "p1", updatedAt: "Mon" },
-  { id: "i9", title: "Particle field perf on Safari", status: "todo", priority: "high", assigneeId: "m1", projectId: "p5", updatedAt: "Apr 18" },
+  {
+    id: "i1",
+    title: "Validate the rollback path with a dry run",
+    status: "in-progress",
+    priority: "high",
+    assigneeId: "m1",
+    projectId: "p4",
+    updatedAt: "2h ago",
+  },
+  {
+    id: "i2",
+    title: "Move audit log retention into env",
+    status: "todo",
+    priority: "med",
+    assigneeId: "m2",
+    projectId: "p4",
+    updatedAt: "yesterday",
+  },
+  {
+    id: "i3",
+    title: "Add E2E for invite redemption",
+    status: "review",
+    priority: "med",
+    assigneeId: "m3",
+    projectId: "p4",
+    updatedAt: "Apr 22",
+  },
+  {
+    id: "i4",
+    title: "Refactor scope-set parser",
+    status: "done",
+    priority: "low",
+    assigneeId: "m1",
+    projectId: "p4",
+    updatedAt: "Apr 21",
+  },
+  {
+    id: "i5",
+    title: "Welcome carousel — copy pass 2",
+    status: "in-progress",
+    priority: "med",
+    assigneeId: "m4",
+    projectId: "p2",
+    updatedAt: "12m ago",
+  },
+  {
+    id: "i6",
+    title: "Empty inbox illustration",
+    status: "review",
+    priority: "low",
+    assigneeId: "m4",
+    projectId: "p2",
+    updatedAt: "1h ago",
+  },
+  {
+    id: "i7",
+    title: "Q3 budget review meeting",
+    status: "todo",
+    priority: "high",
+    assigneeId: "m0",
+    projectId: "p1",
+    updatedAt: "yesterday",
+  },
+  {
+    id: "i8",
+    title: "Hire designer (sourcing)",
+    status: "in-progress",
+    priority: "med",
+    assigneeId: "m0",
+    projectId: "p1",
+    updatedAt: "Mon",
+  },
+  {
+    id: "i9",
+    title: "Particle field perf on Safari",
+    status: "todo",
+    priority: "high",
+    assigneeId: "m1",
+    projectId: "p5",
+    updatedAt: "Apr 18",
+  },
 ];
 
 const Ctx = createContext<DemoStore | null>(null);
 
 export function DemoProvider({ children }: { children: ReactNode }) {
   const [view, setView] = useState<View>("home");
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null
+  );
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>("t1");
   const [settingsTab, setSettingsTab] = useState<SettingsTab>("general");
   const [currentWorkspaceId, setCurrentWorkspaceId] = useState("ws_acme");
@@ -368,12 +597,15 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   const [members, setMembers] = useState<Member[]>(SEED_MEMBERS);
   const [threads, setThreads] = useState<Thread[]>(SEED_THREADS);
   const [issues] = useState<Issue[]>(SEED_ISSUES);
-  const [notifications, setNotifications] = useState<Notification[]>(SEED_NOTIFICATIONS);
+  const [notifications, setNotifications] =
+    useState<Notification[]>(SEED_NOTIFICATIONS);
 
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [overlay, setOverlay] = useState<Overlay>(null);
   const [checklistOpen, setChecklistOpen] = useState(true);
-  const [pendingArchive, setPendingArchive] = useState<PendingArchive | null>(null);
+  const [pendingArchive, setPendingArchive] = useState<PendingArchive | null>(
+    null
+  );
 
   const pushToast: DemoStore["pushToast"] = useCallback((t) => {
     const id = `t_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
@@ -397,7 +629,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
 
   const toggleStar: DemoStore["toggleStar"] = useCallback((id) => {
     setProjects((ps) =>
-      ps.map((p) => (p.id === id ? { ...p, starred: !p.starred } : p)),
+      ps.map((p) => (p.id === id ? { ...p, starred: !p.starred } : p))
     );
   }, []);
 
@@ -412,7 +644,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       setPendingArchive({ projectId: id, name: p.name });
       setOverlay("confirm-archive");
     },
-    [projects],
+    [projects]
   );
 
   const cancelArchive: DemoStore["cancelArchive"] = useCallback(() => {
@@ -470,8 +702,8 @@ export function DemoProvider({ children }: { children: ReactNode }) {
               time: "now",
               unread: false,
             }
-          : t,
-      ),
+          : t
+      )
     );
   }, []);
 
@@ -504,15 +736,15 @@ export function DemoProvider({ children }: { children: ReactNode }) {
               return { ...m, reactions: updated };
             }),
           };
-        }),
+        })
       );
     },
-    [],
+    []
   );
 
   const markThreadRead: DemoStore["markThreadRead"] = useCallback((id) => {
     setThreads((ts) =>
-      ts.map((t) => (t.id === id ? { ...t, unread: false } : t)),
+      ts.map((t) => (t.id === id ? { ...t, unread: false } : t))
     );
   }, []);
 
@@ -522,7 +754,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
 
   const toggleNotificationRead = useCallback((id: string) => {
     setNotifications((ns) =>
-      ns.map((n) => (n.id === id ? { ...n, read: !n.read } : n)),
+      ns.map((n) => (n.id === id ? { ...n, read: !n.read } : n))
     );
   }, []);
 
@@ -535,7 +767,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         body: SEED_WORKSPACES.find((w) => w.id === id)?.name ?? "",
       });
     },
-    [pushToast],
+    [pushToast]
   );
 
   const openProject: DemoStore["openProject"] = useCallback((id) => {
@@ -545,13 +777,12 @@ export function DemoProvider({ children }: { children: ReactNode }) {
 
   const closeProject = useCallback(() => setSelectedProjectId(null), []);
 
-  const selectThread: DemoStore["selectThread"] = useCallback(
-    (id) => {
-      setSelectedThreadId(id);
-      setThreads((ts) => ts.map((t) => (t.id === id ? { ...t, unread: false } : t)));
-    },
-    [],
-  );
+  const selectThread: DemoStore["selectThread"] = useCallback((id) => {
+    setSelectedThreadId(id);
+    setThreads((ts) =>
+      ts.map((t) => (t.id === id ? { ...t, unread: false } : t))
+    );
+  }, []);
 
   const value = useMemo<DemoStore>(
     () => ({
@@ -632,7 +863,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       dismissToast,
       overlay,
       checklistOpen,
-    ],
+    ]
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

@@ -53,7 +53,7 @@ export function OrbitAvatarField({
     canvas.style.height = `${size}px`;
 
     const prefersReduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+      "(prefers-reduced-motion: reduce)"
     ).matches;
 
     let rafId = 0;
@@ -146,11 +146,13 @@ export function OrbitAvatarField({
   return (
     <span
       // Labelled image when titled, decorative otherwise.
-      {...(title ? { role: "img", "aria-label": title } : { "aria-hidden": true })}
+      {...(title
+        ? { role: "img", "aria-label": title }
+        : { "aria-hidden": true })}
       className={cn(
         "inline-block shrink-0 align-middle leading-none",
         toneClass,
-        className,
+        className
       )}
       style={{ width: size, height: size, ...style }}
     >

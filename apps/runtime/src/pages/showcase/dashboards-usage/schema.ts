@@ -19,10 +19,15 @@ export const Usage = z
   .object({
     plan: z.object({ name: z.string(), interval: z.enum(["month", "year"]) }),
     /** What the workspace pays per month, in the currency's major unit. */
-    monthlyPrice: z.object({ amount: z.number().min(0), currency: z.string().length(3) }),
+    monthlyPrice: z.object({
+      amount: z.number().min(0),
+      currency: z.string().length(3),
+    }),
     /** The current billing cycle, ISO dates. Limits reset at the end. */
     cycle: z.object({ start: z.iso.date(), end: z.iso.date() }),
-    card: z.object({ brand: z.string(), last4: z.string().length(4) }).nullable(),
+    card: z
+      .object({ brand: z.string(), last4: z.string().length(4) })
+      .nullable(),
     limits: z.array(UsageLimit),
   })
   .meta({ id: "Usage" });
@@ -30,5 +35,10 @@ export type Usage = z.infer<typeof Usage>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getUsage: { method: "GET", path: "/billing/usage", summary: "The plan, billing cycle and usage against each limit", response: Usage },
+  getUsage: {
+    method: "GET",
+    path: "/billing/usage",
+    summary: "The plan, billing cycle and usage against each limit",
+    response: Usage,
+  },
 });

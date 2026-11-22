@@ -5,7 +5,16 @@ import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** Picks the entry's icon. */
 export const CommandKind = z
-  .enum(["action", "invite", "switch", "document", "project", "channel", "branch", "settings"])
+  .enum([
+    "action",
+    "invite",
+    "switch",
+    "document",
+    "project",
+    "channel",
+    "branch",
+    "settings",
+  ])
   .meta({ id: "CommandKind" });
 export type CommandKind = z.infer<typeof CommandKind>;
 
@@ -33,7 +42,8 @@ export const api = defineApi({
   searchCommands: {
     method: "GET",
     path: "/search",
-    summary: "Documents, projects, channels and other places that match what the user typed",
+    summary:
+      "Documents, projects, channels and other places that match what the user typed",
     query: z.object({ q: z.string() }),
     response: z.array(CommandGroup),
   },

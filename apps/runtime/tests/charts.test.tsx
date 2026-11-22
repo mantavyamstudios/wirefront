@@ -30,9 +30,13 @@ beforeAll(() => {
       observe() {}
       unobserve() {}
       disconnect() {}
-    },
+    }
   );
-  vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+  vi.stubGlobal("matchMedia", () => ({
+    matches: false,
+    addEventListener() {},
+    removeEventListener() {},
+  }));
 });
 afterEach(cleanup);
 
@@ -41,7 +45,11 @@ describe("charts are computed from their data", () => {
     render(<RevenueBreakdownChart data={revenue.getRevenueBreakdown} />);
     expect(screen.getByText("$760K")).toBeTruthy();
     expect(screen.getByText("+18.4% vs prev. 12mo")).toBeTruthy();
-    expect(screen.getByRole("img", { name: /monthly revenue by stream, May to Apr\. Total \$760K/ })).toBeTruthy();
+    expect(
+      screen.getByRole("img", {
+        name: /monthly revenue by stream, May to Apr\. Total \$760K/,
+      })
+    ).toBeTruthy();
   });
 
   it("QuarterlyComparisonChart compares the newest series over the quarters it has reached", () => {
@@ -60,57 +68,121 @@ describe("charts are computed from their data", () => {
 
   it("ConversionFunnel derives conversion, drops and highlight tones", () => {
     render(<ConversionFunnel data={funnel.getFunnel} />);
-    expect(screen.getByText("End-to-end conversion: 3.87% of visitors reach the last stage.")).toBeTruthy();
+    expect(
+      screen.getByText(
+        "End-to-end conversion: 3.87% of visitors reach the last stage."
+      )
+    ).toBeTruthy();
     expect(screen.getByText("-74.1% drop (35,734)")).toBeTruthy();
-    const cards = screen.getAllByRole("listitem").filter((li) => li.textContent?.includes("→"));
-    expect(cards.map((c) => c.textContent)).toEqual(["Visit → Signup25.9%good", "Signup → Activate33.7%watch", "Activate → Invite44.3%good"]);
+    const cards = screen
+      .getAllByRole("listitem")
+      .filter((li) => li.textContent?.includes("→"));
+    expect(cards.map((c) => c.textContent)).toEqual([
+      "Visit → Signup25.9%good",
+      "Signup → Activate33.7%watch",
+      "Activate → Invite44.3%good",
+    ]);
   });
 
   it("SloGauges judges each objective by its direction", () => {
-    render(<SloGauges objectives={[...gauges.listObjectives, { id: "slow", name: "P99 latency", value: 900, target: 800, unit: "ms", direction: "lower", max: 1200 }]} />);
-    expect(screen.getByRole("img", { name: "P95 latency: 248ms, target 300ms, on track." })).toBeTruthy();
-    expect(screen.getByRole("img", { name: "P99 latency: 900ms, target 800ms, breached." })).toBeTruthy();
+    render(
+      <SloGauges
+        objectives={[
+          ...gauges.listObjectives,
+          {
+            id: "slow",
+            name: "P99 latency",
+            value: 900,
+            target: 800,
+            unit: "ms",
+            direction: "lower",
+            max: 1200,
+          },
+        ]}
+      />
+    );
+    expect(
+      screen.getByRole("img", {
+        name: "P95 latency: 248ms, target 300ms, on track.",
+      })
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("img", {
+        name: "P99 latency: 900ms, target 800ms, breached.",
+      })
+    ).toBeTruthy();
   });
 
   it("CohortRetention averages the chosen month over cohorts that reached it", () => {
     render(<CohortRetention cohorts={cohorts.listCohorts} />);
-    const m3 = cohorts.listCohorts.flatMap((c) => (c.retention[3] === undefined ? [] : [c.retention[3]]));
+    const m3 = cohorts.listCohorts.flatMap((c) =>
+      c.retention[3] === undefined ? [] : [c.retention[3]]
+    );
     const avg = m3.reduce((a, b) => a + b, 0) / m3.length;
-    expect(screen.getByText(`Average M3: ${new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 1 }).format(avg / 100)}`)).toBeTruthy();
-    expect(screen.getByRole("img", { name: "Apr 2025, month 0: 96% retained" })).toBeTruthy();
+    expect(
+      screen.getByText(
+        `Average M3: ${new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 1 }).format(avg / 100)}`
+      )
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("img", { name: "Apr 2025, month 0: 96% retained" })
+    ).toBeTruthy();
   });
 
   it("AccountHealthScatter counts accounts in the risk quadrant", () => {
     render(<AccountHealthScatter accounts={scatter.listAccountHealth} />);
     expect(screen.getByText("4 at risk")).toBeTruthy();
-    expect(screen.getByRole("img", { name: /At risk: Pied Piper, Globex, Soylent, Rekall\./ })).toBeTruthy();
+    expect(
+      screen.getByRole("img", {
+        name: /At risk: Pied Piper, Globex, Soylent, Rekall\./,
+      })
+    ).toBeTruthy();
   });
 
   it("ArrWaterfall ends at the start plus every step", () => {
     render(<ArrWaterfall data={waterfall.getArrMovement} />);
     expect(screen.getByText("Net growth +25.2%")).toBeTruthy();
-    expect(screen.getByRole("img", { name: /to Q1 ARR \$2\.05M/ })).toBeTruthy();
+    expect(
+      screen.getByRole("img", { name: /to Q1 ARR \$2\.05M/ })
+    ).toBeTruthy();
   });
 });
 
 describe("PlatformUsageChart", () => {
   it("toggles series but keeps one, and asks for another range", () => {
     const onRangeChange = vi.fn();
-    render(<PlatformUsageChart data={usage.getDailyActiveUsers} onRangeChange={onRangeChange} range="30d" ranges={[{ id: "7d", label: "7d" }, { id: "30d", label: "30d" }]} />);
+    render(
+      <PlatformUsageChart
+        data={usage.getDailyActiveUsers}
+        onRangeChange={onRangeChange}
+        range="30d"
+        ranges={[
+          { id: "7d", label: "7d" },
+          { id: "30d", label: "30d" },
+        ]}
+      />
+    );
     const web = screen.getByRole("button", { name: /Web/ });
     const ios = screen.getByRole("button", { name: /iOS/ });
     const android = screen.getByRole("button", { name: /Android/ });
     fireEvent.click(web);
     fireEvent.click(ios);
     fireEvent.click(android);
-    expect([web, ios, android].map((b) => b.getAttribute("aria-pressed"))).toEqual(["false", "false", "true"]);
+    expect(
+      [web, ios, android].map((b) => b.getAttribute("aria-pressed"))
+    ).toEqual(["false", "false", "true"]);
     expect(screen.getByRole("img", { name: /: Android 158\.$/ })).toBeTruthy();
     fireEvent.click(screen.getByRole("radio", { name: "7d" }));
     expect(onRangeChange).toHaveBeenCalledWith("7d");
   });
 
   it("hides the range picker without onRangeChange", () => {
-    render(<PlatformUsageChart data={usage.getDailyActiveUsers} ranges={[{ id: "7d", label: "7d" }]} />);
+    render(
+      <PlatformUsageChart
+        data={usage.getDailyActiveUsers}
+        ranges={[{ id: "7d", label: "7d" }]}
+      />
+    );
     expect(screen.queryByRole("radiogroup")).toBeNull();
   });
 });
@@ -118,7 +190,9 @@ describe("PlatformUsageChart", () => {
 describe("chart states", () => {
   it("shows the error with a retry, and an empty message", () => {
     const onRetry = vi.fn();
-    const { unmount } = render(<SloGauges error="Timed out." onRetry={onRetry} status="error" />);
+    const { unmount } = render(
+      <SloGauges error="Timed out." onRetry={onRetry} status="error" />
+    );
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
     expect(onRetry).toHaveBeenCalled();
     unmount();

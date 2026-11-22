@@ -5,8 +5,15 @@
 import * as fixtures from "./fixtures";
 import { SendFeedback } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ModalsFeedbackShowcasePage() {
-  return <SendFeedback defaultOpen onSend={() => wait(800)} product={fixtures.product} />;
+  return (
+    <SendFeedback
+      defaultOpen
+      onSend={() => wait(800)}
+      product={fixtures.product}
+    />
+  );
 }

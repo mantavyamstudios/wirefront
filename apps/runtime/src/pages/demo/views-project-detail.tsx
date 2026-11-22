@@ -59,7 +59,9 @@ export function ProjectDetailView() {
           <div className={`mt-1 size-8 rounded-md ${project.color}`} />
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-heading text-3xl tracking-tight">{project.name}</h1>
+              <h1 className="font-heading text-3xl tracking-tight">
+                {project.name}
+              </h1>
               <button
                 type="button"
                 onClick={() => toggleStar(project.id)}
@@ -127,7 +129,9 @@ export function ProjectDetailView() {
       </div>
 
       <div className="py-8">
-        {tab === "overview" ? <Overview project={project} issues={projectIssues} /> : null}
+        {tab === "overview" ? (
+          <Overview project={project} issues={projectIssues} />
+        ) : null}
         {tab === "issues" ? <Issues issues={projectIssues} /> : null}
         {tab === "activity" ? <Activity /> : null}
       </div>
@@ -148,9 +152,17 @@ function Overview({
   return (
     <>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <Stat label="Open issues" value={String(open)} hint={`${done} closed this week`} />
+        <Stat
+          label="Open issues"
+          value={String(open)}
+          hint={`${done} closed this week`}
+        />
         <Stat label="Members" value={String(project.members)} hint="3 online" />
-        <Stat label="Visibility" value={project.visibility} hint="Workspace-wide" />
+        <Stat
+          label="Visibility"
+          value={project.visibility}
+          hint="Workspace-wide"
+        />
         <Stat label="Last update" value={project.updatedAt} hint="auto" />
       </div>
 
@@ -183,9 +195,21 @@ function Overview({
 function Issues({ issues }: { issues: Issue[] }) {
   const groups: { id: Issue["status"]; label: string; tone: string }[] = [
     { id: "todo", label: "Todo", tone: "text-muted-foreground" },
-    { id: "in-progress", label: "In progress", tone: "text-amber-600 dark:text-amber-400" },
-    { id: "review", label: "In review", tone: "text-violet-600 dark:text-violet-400" },
-    { id: "done", label: "Done", tone: "text-emerald-600 dark:text-emerald-400" },
+    {
+      id: "in-progress",
+      label: "In progress",
+      tone: "text-amber-600 dark:text-amber-400",
+    },
+    {
+      id: "review",
+      label: "In review",
+      tone: "text-violet-600 dark:text-violet-400",
+    },
+    {
+      id: "done",
+      label: "Done",
+      tone: "text-emerald-600 dark:text-emerald-400",
+    },
   ];
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-4">
@@ -197,7 +221,9 @@ function Issues({ issues }: { issues: Issue[] }) {
             className="flex flex-col rounded-xl border border-border/60 bg-background/40"
           >
             <div className="flex items-center justify-between border-b border-border/40 px-3 py-2.5">
-              <div className={`font-mono text-[10px] uppercase tracking-[0.25em] ${g.tone}`}>
+              <div
+                className={`font-mono text-[10px] uppercase tracking-[0.25em] ${g.tone}`}
+              >
                 {g.label}
               </div>
               <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground">
@@ -240,12 +266,48 @@ function Issues({ issues }: { issues: Issue[] }) {
 
 function Activity() {
   const events = [
-    { Icon: RocketIcon, who: "Maya", what: "deployed", target: "main → production", time: "2m" },
-    { Icon: GitPullRequestIcon, who: "James", what: "opened", target: "PR #128 — audit log", time: "8m" },
-    { Icon: MessageCircleIcon, who: "Riya", what: "commented", target: "audit log thread", time: "21m" },
-    { Icon: CheckCircle2Icon, who: "Dani", what: "closed", target: "ENG-114 — empty inbox icon", time: "1h" },
-    { Icon: EyeIcon, who: "Alex", what: "approved", target: "release 0.4.2", time: "2h" },
-    { Icon: CalendarIcon, who: "Mantavyam", what: "scheduled", target: "Q3 budget review · Friday", time: "yesterday" },
+    {
+      Icon: RocketIcon,
+      who: "Maya",
+      what: "deployed",
+      target: "main → production",
+      time: "2m",
+    },
+    {
+      Icon: GitPullRequestIcon,
+      who: "James",
+      what: "opened",
+      target: "PR #128 — audit log",
+      time: "8m",
+    },
+    {
+      Icon: MessageCircleIcon,
+      who: "Riya",
+      what: "commented",
+      target: "audit log thread",
+      time: "21m",
+    },
+    {
+      Icon: CheckCircle2Icon,
+      who: "Dani",
+      what: "closed",
+      target: "ENG-114 — empty inbox icon",
+      time: "1h",
+    },
+    {
+      Icon: EyeIcon,
+      who: "Alex",
+      what: "approved",
+      target: "release 0.4.2",
+      time: "2h",
+    },
+    {
+      Icon: CalendarIcon,
+      who: "Mantavyam",
+      what: "scheduled",
+      target: "Q3 budget review · Friday",
+      time: "yesterday",
+    },
   ];
   return (
     <div className="rounded-xl border border-border/60 bg-background/40 p-5">
@@ -272,21 +334,41 @@ function Activity() {
 
 function IssueRow({ issue }: { issue: Issue }) {
   const status = {
-    todo: { Icon: CircleIcon, label: "Todo", className: "text-muted-foreground" },
-    "in-progress": { Icon: ClockIcon, label: "In progress", className: "text-amber-600 dark:text-amber-400" },
-    review: { Icon: EyeIcon, label: "In review", className: "text-violet-600 dark:text-violet-400" },
-    done: { Icon: CheckCircle2Icon, label: "Done", className: "text-emerald-600 dark:text-emerald-400" },
+    todo: {
+      Icon: CircleIcon,
+      label: "Todo",
+      className: "text-muted-foreground",
+    },
+    "in-progress": {
+      Icon: ClockIcon,
+      label: "In progress",
+      className: "text-amber-600 dark:text-amber-400",
+    },
+    review: {
+      Icon: EyeIcon,
+      label: "In review",
+      className: "text-violet-600 dark:text-violet-400",
+    },
+    done: {
+      Icon: CheckCircle2Icon,
+      label: "Done",
+      className: "text-emerald-600 dark:text-emerald-400",
+    },
   }[issue.status];
 
   return (
     <li className="group flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-foreground/3">
-      <span className={`flex size-5 items-center justify-center ${status.className}`}>
+      <span
+        className={`flex size-5 items-center justify-center ${status.className}`}
+      >
         <status.Icon className="size-3.5" />
       </span>
       <span className="truncate font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.2em]">
         {issue.id}
       </span>
-      <span className={`flex-1 truncate text-sm ${issue.status === "done" ? "text-muted-foreground line-through" : ""}`}>
+      <span
+        className={`flex-1 truncate text-sm ${issue.status === "done" ? "text-muted-foreground line-through" : ""}`}
+      >
         {issue.title}
       </span>
       <PriorityDot priority={issue.priority} />
@@ -304,7 +386,9 @@ function MemberRowMini({ index }: { index: number }) {
   if (!m) return null;
   return (
     <li className="flex items-center gap-2.5">
-      <div className={`flex size-7 items-center justify-center rounded-full font-medium text-[11px] ${m.tone}`}>
+      <div
+        className={`flex size-7 items-center justify-center rounded-full font-medium text-[11px] ${m.tone}`}
+      >
         {m.initials}
       </div>
       <div className="min-w-0 flex-1">
@@ -315,7 +399,11 @@ function MemberRowMini({ index }: { index: number }) {
       </div>
       <span
         className={`size-1.5 rounded-full ${
-          m.status === "online" ? "bg-emerald-500" : m.status === "away" ? "bg-amber-500" : "bg-muted-foreground/40"
+          m.status === "online"
+            ? "bg-emerald-500"
+            : m.status === "away"
+              ? "bg-amber-500"
+              : "bg-muted-foreground/40"
         }`}
       />
     </li>
@@ -341,7 +429,9 @@ function Avatar({ id }: { id: string }) {
   const m = members.find((x) => x.id === id);
   if (!m) return null;
   return (
-    <div className={`flex size-5 items-center justify-center rounded-full font-medium text-[9px] ${m.tone}`}>
+    <div
+      className={`flex size-5 items-center justify-center rounded-full font-medium text-[9px] ${m.tone}`}
+    >
       {m.initials}
     </div>
   );

@@ -39,8 +39,29 @@ export type PrChecks = z.infer<typeof PrChecks>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getPrChecks: { method: "GET", path: "/repos/{repo}/pulls/{number}/checks", summary: "A pull request's checks and merge state", params: z.object({ repo: z.string(), number: z.string() }), response: PrChecks },
-  updateBranch: { method: "POST", path: "/repos/{repo}/pulls/{number}/update-branch", summary: "Merge the base branch into the pull request", params: z.object({ repo: z.string(), number: z.string() }) },
-  markReadyForReview: { method: "POST", path: "/repos/{repo}/pulls/{number}/ready", summary: "Take the pull request out of draft", params: z.object({ repo: z.string(), number: z.string() }) },
-  mergePr: { method: "POST", path: "/repos/{repo}/pulls/{number}/merge", summary: "Squash and merge", params: z.object({ repo: z.string(), number: z.string() }) },
+  getPrChecks: {
+    method: "GET",
+    path: "/repos/{repo}/pulls/{number}/checks",
+    summary: "A pull request's checks and merge state",
+    params: z.object({ repo: z.string(), number: z.string() }),
+    response: PrChecks,
+  },
+  updateBranch: {
+    method: "POST",
+    path: "/repos/{repo}/pulls/{number}/update-branch",
+    summary: "Merge the base branch into the pull request",
+    params: z.object({ repo: z.string(), number: z.string() }),
+  },
+  markReadyForReview: {
+    method: "POST",
+    path: "/repos/{repo}/pulls/{number}/ready",
+    summary: "Take the pull request out of draft",
+    params: z.object({ repo: z.string(), number: z.string() }),
+  },
+  mergePr: {
+    method: "POST",
+    path: "/repos/{repo}/pulls/{number}/merge",
+    summary: "Squash and merge",
+    params: z.object({ repo: z.string(), number: z.string() }),
+  },
 });

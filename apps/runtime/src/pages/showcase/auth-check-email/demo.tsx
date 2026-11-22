@@ -7,7 +7,8 @@ import { ThemeToggle } from "@wirefront/ui/theme-toggle";
 import * as fixtures from "./fixtures";
 import { CheckEmail } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function AuthCheckEmailShowcasePage() {
   return (
@@ -19,7 +20,10 @@ export function AuthCheckEmailShowcasePage() {
           <span className="uppercase tracking-[0.2em]">Wirefront</span>
         </div>
       }
-      caption={{ eyebrow: "Sign-in design", text: "Split layout with a particle field on the left and a single centered form on the right." }}
+      caption={{
+        eyebrow: "Sign-in design",
+        text: "Split layout with a particle field on the left and a single centered form on the right.",
+      }}
       changeEmailHref="#sign-in"
       email={fixtures.email}
       expiresInMinutes={10}

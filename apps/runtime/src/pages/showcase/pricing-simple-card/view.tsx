@@ -5,7 +5,12 @@
 import { Button } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import { ArrowRightIcon, CheckIcon } from "lucide-react";
 
 import type { SinglePlan } from "./schema";
@@ -33,44 +38,81 @@ export interface SinglePlanPricingProps {
   className?: string;
 }
 
-function SinglePlanPricingScreen({ plan, onStart, contactHref, className }: SinglePlanPricingProps) {
+function SinglePlanPricingScreen({
+  plan,
+  onStart,
+  contactHref,
+  className,
+}: SinglePlanPricingProps) {
   const t = useMessages("singlePlan", SINGLE_PLAN_MESSAGES);
   const format = useFormat();
 
   return (
-    <div className={cn("relative min-h-svh overflow-hidden bg-background text-foreground", className)}>
+    <div
+      className={cn(
+        "relative min-h-svh overflow-hidden bg-background text-foreground",
+        className
+      )}
+    >
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
-        style={{ background: "radial-gradient(60% 70% at 50% 0%, color-mix(in srgb, var(--primary) 14%, transparent) 0%, transparent 70%)" }}
+        style={{
+          background:
+            "radial-gradient(60% 70% at 50% 0%, color-mix(in srgb, var(--primary) 14%, transparent) 0%, transparent 70%)",
+        }}
       />
       <div className="relative mx-auto flex min-h-svh max-w-md flex-col items-center justify-center px-4 py-10 sm:px-6 sm:py-16">
-        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
+        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+          {t.eyebrow}
+        </div>
         <h1 className="mt-2 font-heading text-4xl tracking-tight">{t.title}</h1>
-        <p className="mt-2 text-balance text-center text-muted-foreground text-sm">{t.description}</p>
+        <p className="mt-2 text-balance text-center text-muted-foreground text-sm">
+          {t.description}
+        </p>
 
         <div className="mt-10 w-full overflow-hidden rounded-2xl border border-border/60 bg-background shadow-xl">
           <div className="relative px-5 py-6 sm:px-7 sm:py-7">
-            <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{plan.name}</h2>
+            <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+              {plan.name}
+            </h2>
             <div className="mt-2 flex items-baseline gap-1">
-              <span className="font-heading text-5xl tracking-tight">{format.money(plan.price, plan.currency, { maximumFractionDigits: 0 })}</span>
-              <span className="text-muted-foreground text-sm">{t.perUserMonth}</span>
+              <span className="font-heading text-5xl tracking-tight">
+                {format.money(plan.price, plan.currency, {
+                  maximumFractionDigits: 0,
+                })}
+              </span>
+              <span className="text-muted-foreground text-sm">
+                {t.perUserMonth}
+              </span>
             </div>
             <p className="mt-2 text-muted-foreground text-sm">{t.billing}</p>
-            <Button className="mt-6 w-full" onClick={onStart} size="lg" type="button">
+            <Button
+              className="mt-6 w-full"
+              onClick={onStart}
+              size="lg"
+              type="button"
+            >
               {t.start}
               <ArrowRightIcon className="rtl:rotate-180" />
             </Button>
             {plan.trialDays ? (
-              <p className="mt-2 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{interpolate(t.trial, { days: plan.trialDays })}</p>
+              <p className="mt-2 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+                {interpolate(t.trial, { days: plan.trialDays })}
+              </p>
             ) : null}
           </div>
           <div className="border-border/60 border-t bg-foreground/2 px-5 py-5 sm:px-7 sm:py-6">
-            <h3 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.includes}</h3>
+            <h3 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+              {t.includes}
+            </h3>
             <ul className="mt-3 grid grid-cols-1 gap-2.5">
               {plan.features.map((f) => (
                 <li className="flex items-start gap-2 text-sm" key={f}>
-                  <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-foreground" />
+                  <CheckIcon
+                    aria-hidden
+                    className="mt-0.5 size-4 shrink-0 text-foreground"
+                  />
                   {f}
                 </li>
               ))}
@@ -81,7 +123,10 @@ function SinglePlanPricingScreen({ plan, onStart, contactHref, className }: Sing
         {contactHref ? (
           <p className="mt-6 text-balance text-center text-muted-foreground text-xs">
             {t.contactBefore}{" "}
-            <WirefrontLink className="text-foreground underline-offset-4 hover:underline" href={contactHref}>
+            <WirefrontLink
+              className="text-foreground underline-offset-4 hover:underline"
+              href={contactHref}
+            >
               {t.contact}
             </WirefrontLink>
           </p>

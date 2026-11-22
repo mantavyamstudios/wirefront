@@ -17,5 +17,10 @@ export type SinglePlan = z.infer<typeof SinglePlan>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getPlan: { method: "GET", path: "/plan", summary: "The one plan and its price", response: SinglePlan },
+  getPlan: {
+    method: "GET",
+    path: "/plan",
+    summary: "The one plan and its price",
+    response: SinglePlan,
+  },
 });

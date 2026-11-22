@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-"use client"
+"use client";
 
-import { CheckboxGroup as CheckboxGroupPrimitive } from "@base-ui/react/checkbox-group"
+import { CheckboxGroup as CheckboxGroupPrimitive } from "@base-ui/react/checkbox-group";
 
-import { cn } from "../../lib/utils"
+import { cn } from "../../lib/utils";
 
 /** A group of checkboxes sharing one value array (Base UI CheckboxGroup). */
 function CheckboxGroup({ className, ...props }: CheckboxGroupPrimitive.Props) {
@@ -14,7 +14,7 @@ function CheckboxGroup({ className, ...props }: CheckboxGroupPrimitive.Props) {
       className={cn("flex flex-col items-start gap-3", className)}
       {...props}
     />
-  )
+  );
 }
 
-export { CheckboxGroup }
+export { CheckboxGroup };

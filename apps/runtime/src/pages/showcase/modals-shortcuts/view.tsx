@@ -3,7 +3,14 @@
 "use client";
 
 import { Button } from "@wirefront/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@wirefront/ui/dialog";
 import { Kbd, KbdGroup } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
@@ -41,17 +48,39 @@ export interface ShortcutsDialogProps {
 function matches(event: KeyboardEvent, keys: string[]) {
   const wantsMod = keys.includes("⌘");
   const wantsShift = keys.includes("⇧");
-  const key = keys.filter((k) => k !== "⌘" && k !== "⇧").at(-1)?.toLowerCase();
-  return Boolean(key) && event.key.toLowerCase() === key && (event.metaKey || event.ctrlKey) === wantsMod && event.shiftKey === wantsShift;
+  const key = keys
+    .filter((k) => k !== "⌘" && k !== "⇧")
+    .at(-1)
+    ?.toLowerCase();
+  return (
+    Boolean(key) &&
+    event.key.toLowerCase() === key &&
+    (event.metaKey || event.ctrlKey) === wantsMod &&
+    event.shiftKey === wantsShift
+  );
 }
 
-function ShortcutsDialogScreen({ groups, openKeys = ["⌘", "/"], footerNote, defaultOpen, className }: ShortcutsDialogProps) {
+function ShortcutsDialogScreen({
+  groups,
+  openKeys = ["⌘", "/"],
+  footerNote,
+  defaultOpen,
+  className,
+}: ShortcutsDialogProps) {
   const t = useMessages("shortcutsDialog", SHORTCUTS_DIALOG_MESSAGES);
   const [open, setOpen] = useState(Boolean(defaultOpen));
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
   const shown = groups
-    .map((g) => ({ ...g, shortcuts: g.shortcuts.filter((s) => !q || s.label.toLowerCase().includes(q) || s.keys.join(" ").toLowerCase().includes(q)) }))
+    .map((g) => ({
+      ...g,
+      shortcuts: g.shortcuts.filter(
+        (s) =>
+          !q ||
+          s.label.toLowerCase().includes(q) ||
+          s.keys.join(" ").toLowerCase().includes(q)
+      ),
+    }))
     .filter((g) => g.shortcuts.length);
   const total = groups.reduce((sum, g) => sum + g.shortcuts.length, 0);
 
@@ -78,7 +107,11 @@ function ShortcutsDialogScreen({ groups, openKeys = ["⌘", "/"], footerNote, de
           }}
           open={open}
         >
-          <DialogTrigger render={<Button className="pointer-coarse:hidden" variant="outline" />}>
+          <DialogTrigger
+            render={
+              <Button className="pointer-coarse:hidden" variant="outline" />
+            }
+          >
             <KeyboardIcon />
             {t.trigger}
           </DialogTrigger>
@@ -98,17 +131,27 @@ function ShortcutsDialogScreen({ groups, openKeys = ["⌘", "/"], footerNote, de
                   type="search"
                   value={query}
                 />
-                <span className="shrink-0 font-mono text-[10px] text-muted-foreground">{interpolate(t.total, { count: total })}</span>
+                <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
+                  {interpolate(t.total, { count: total })}
+                </span>
               </div>
             </div>
 
-            <div aria-live="polite" className="-mx-4 grid min-h-0 min-w-0 grid-cols-1 gap-x-8 overflow-y-auto px-4 sm:grid-cols-2">
+            <div
+              aria-live="polite"
+              className="-mx-4 grid min-h-0 min-w-0 grid-cols-1 gap-x-8 overflow-y-auto px-4 sm:grid-cols-2"
+            >
               {shown.map((g) => (
                 <section className="mb-6" key={g.name}>
-                  <h2 className="mb-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{g.name}</h2>
+                  <h2 className="mb-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+                    {g.name}
+                  </h2>
                   <ul className="flex flex-col">
                     {g.shortcuts.map((s) => (
-                      <li className="flex items-center justify-between gap-3 rounded-md px-2 py-1.5 hover:bg-foreground/3" key={s.label}>
+                      <li
+                        className="flex items-center justify-between gap-3 rounded-md px-2 py-1.5 hover:bg-foreground/3"
+                        key={s.label}
+                      >
                         <span className="min-w-0 text-sm">{s.label}</span>
                         <KbdGroup>
                           {s.keys.map((k) => (
@@ -120,7 +163,11 @@ function ShortcutsDialogScreen({ groups, openKeys = ["⌘", "/"], footerNote, de
                   </ul>
                 </section>
               ))}
-              {shown.length === 0 ? <p className="py-8 text-center text-muted-foreground text-sm sm:col-span-2">{interpolate(t.noMatch, { query })}</p> : null}
+              {shown.length === 0 ? (
+                <p className="py-8 text-center text-muted-foreground text-sm sm:col-span-2">
+                  {interpolate(t.noMatch, { query })}
+                </p>
+              ) : null}
             </div>
 
             <DialogFooter className="text-muted-foreground text-xs sm:items-center sm:justify-between">

@@ -6,7 +6,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { SkillEndorsements } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ProfileSkillsShowcasePage() {
   const state = useShowcaseState();
@@ -17,8 +18,16 @@ export function ProfileSkillsShowcasePage() {
       onEndorse={() => wait(300)}
       onRetry={() => {}}
       person={fixtures.person}
-      skills={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listSkills}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      skills={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : fixtures.listSkills
+      }
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

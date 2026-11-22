@@ -6,7 +6,11 @@ import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
-import { bumpParticleTypingImpulse, ParticleField, pulseParticleSubmitImpulse } from "@wirefront/ui/particle-field";
+import {
+  bumpParticleTypingImpulse,
+  ParticleField,
+  pulseParticleSubmitImpulse,
+} from "@wirefront/ui/particle-field";
 import { Spinner } from "@wirefront/ui/spinner";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
@@ -53,12 +57,23 @@ function WaitlistScreen({ onJoin, illustration }: WaitlistProps) {
     // instead of clipping. `w-full` avoids the scrollbar overflow of 100dvw.
     <div className="relative flex min-h-dvh w-full flex-col justify-end overflow-hidden bg-background">
       <div className="absolute inset-0">
-        <ParticleField align="center" dotSize={0.95} renderScale={1} sampleStep={3} src={illustration} threshold={38} typingImpulseRef={impulse} />
+        <ParticleField
+          align="center"
+          dotSize={0.95}
+          renderScale={1}
+          sampleStep={3}
+          src={illustration}
+          threshold={38}
+          typingImpulseRef={impulse}
+        />
       </div>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
-        style={{ background: "radial-gradient(1200px 800px at 50% 55%, transparent 40%, color-mix(in srgb, var(--background) 85%, transparent) 95%)" }}
+        style={{
+          background:
+            "radial-gradient(1200px 800px at 50% 55%, transparent 40%, color-mix(in srgb, var(--background) 85%, transparent) 95%)",
+        }}
       />
       <div
         aria-hidden
@@ -71,16 +86,28 @@ function WaitlistScreen({ onJoin, illustration }: WaitlistProps) {
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[32%]"
-        style={{ background: "radial-gradient(420px 220px at 50% 78%, color-mix(in srgb, var(--background) 85%, transparent) 0%, transparent 70%)" }}
+        style={{
+          background:
+            "radial-gradient(420px 220px at 50% 78%, color-mix(in srgb, var(--background) 85%, transparent) 0%, transparent 70%)",
+        }}
       />
       <div className="relative z-10 flex flex-col items-center gap-4 px-6 pt-[45svh] pb-[max(4rem,env(safe-area-inset-bottom))] text-center">
-        <div className="pointer-events-none font-mono text-[11px] text-foreground/55 uppercase tracking-[0.3em]" style={shadow}>
+        <div
+          className="pointer-events-none font-mono text-[11px] text-foreground/55 uppercase tracking-[0.3em]"
+          style={shadow}
+        >
           {t.eyebrow}
         </div>
-        <h1 className="pointer-events-none max-w-xl font-heading text-3xl leading-tight md:text-4xl" style={{ textShadow: "0 1px 24px rgba(0,0,0,0.65)" }}>
+        <h1
+          className="pointer-events-none max-w-xl font-heading text-3xl leading-tight md:text-4xl"
+          style={{ textShadow: "0 1px 24px rgba(0,0,0,0.65)" }}
+        >
           {t.title}
         </h1>
-        <p className="pointer-events-none max-w-md text-foreground/70 text-sm leading-relaxed" style={shadow}>
+        <p
+          className="pointer-events-none max-w-md text-foreground/70 text-sm leading-relaxed"
+          style={shadow}
+        >
           {t.subtitle}
         </p>
         {joined ? (
@@ -88,12 +115,31 @@ function WaitlistScreen({ onJoin, illustration }: WaitlistProps) {
             {interpolate(t.joined, { email: joined })}
           </p>
         ) : (
-          <Form className="mt-2 flex w-full max-w-sm flex-col gap-2" noValidate onKeyDown={(e) => bumpParticleTypingImpulse(impulse, e)} {...form.formProps}>
-            <Field.Root className="flex flex-col gap-1.5 text-start" name="email">
+          <Form
+            className="mt-2 flex w-full max-w-sm flex-col gap-2"
+            noValidate
+            onKeyDown={(e) => bumpParticleTypingImpulse(impulse, e)}
+            {...form.formProps}
+          >
+            <Field.Root
+              className="flex flex-col gap-1.5 text-start"
+              name="email"
+            >
               <Field.Label className="sr-only">{t.email}</Field.Label>
               <div className="flex gap-2">
-                <Input autoComplete="email" className="bg-background/70" inputMode="email" placeholder={t.emailPlaceholder} type="email" />
-                <Button aria-busy={form.pending} className="shrink-0" disabled={form.pending} type="submit">
+                <Input
+                  autoComplete="email"
+                  className="bg-background/70"
+                  inputMode="email"
+                  placeholder={t.emailPlaceholder}
+                  type="email"
+                />
+                <Button
+                  aria-busy={form.pending}
+                  className="shrink-0"
+                  disabled={form.pending}
+                  type="submit"
+                >
                   {form.pending ? <Spinner data-icon="inline-start" /> : null}
                   {t.join}
                 </Button>
@@ -101,7 +147,10 @@ function WaitlistScreen({ onJoin, illustration }: WaitlistProps) {
               <Field.Error className="text-destructive-foreground text-xs" />
             </Field.Root>
             {form.formError ? (
-              <p className="text-start text-destructive-foreground text-xs" role="alert">
+              <p
+                className="text-start text-destructive-foreground text-xs"
+                role="alert"
+              >
                 {form.formError}
               </p>
             ) : null}

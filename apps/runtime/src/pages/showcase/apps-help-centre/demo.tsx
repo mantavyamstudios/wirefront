@@ -9,7 +9,8 @@ import { DevlFrame } from "../_devl-frame";
 import * as fixtures from "./fixtures";
 import { HelpCentre } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function AppsHelpCentreShowcasePage() {
   return (

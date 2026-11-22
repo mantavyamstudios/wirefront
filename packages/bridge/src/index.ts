@@ -7,7 +7,13 @@
  * the runtime answers `wf:ready` once the requested screen has mounted.
  */
 
-export const SCREEN_STATES = ["ready", "loading", "empty", "error", "forbidden"] as const;
+export const SCREEN_STATES = [
+  "ready",
+  "loading",
+  "empty",
+  "error",
+  "forbidden",
+] as const;
 export type ScreenState = (typeof SCREEN_STATES)[number];
 
 export type ThemeMode = "light" | "dark";
@@ -31,16 +37,25 @@ export function previewPath(category: string, design: string): string {
   return `/preview/${category}/${design}`;
 }
 
-const HOST_TYPES = new Set(["wf:navigate", "wf:reset", "wf:theme", "wf:state", "wf:dir"]);
+const HOST_TYPES = new Set([
+  "wf:navigate",
+  "wf:reset",
+  "wf:theme",
+  "wf:state",
+  "wf:dir",
+]);
 const RUNTIME_TYPES = new Set(["wf:ready", "wf:error"]);
 
 function typeOf(data: unknown): string | undefined {
-  return typeof data === "object" && data !== null && typeof (data as { type?: unknown }).type === "string"
+  return typeof data === "object" &&
+    data !== null &&
+    typeof (data as { type?: unknown }).type === "string"
     ? (data as { type: string }).type
     : undefined;
 }
 
-const isString = (v: unknown): v is string => typeof v === "string" && v.length > 0;
+const isString = (v: unknown): v is string =>
+  typeof v === "string" && v.length > 0;
 
 /** Narrows an incoming message to a well-formed host message, or null. */
 export function parseHostMessage(data: unknown): HostMessage | null {
@@ -57,9 +72,13 @@ export function parseHostMessage(data: unknown): HostMessage | null {
     case "wf:theme":
       if (!(m.mode === "light" || m.mode === "dark")) return null;
       if (m.palette === undefined) return { type, mode: m.mode };
-      return isString(m.palette) ? { type, mode: m.mode, palette: m.palette } : null;
+      return isString(m.palette)
+        ? { type, mode: m.mode, palette: m.palette }
+        : null;
     case "wf:state":
-      return (SCREEN_STATES as readonly unknown[]).includes(m.state) ? { type, state: m.state as ScreenState } : null;
+      return (SCREEN_STATES as readonly unknown[]).includes(m.state)
+        ? { type, state: m.state as ScreenState }
+        : null;
     case "wf:dir":
       return m.dir === "ltr" || m.dir === "rtl" ? { type, dir: m.dir } : null;
     default:
@@ -73,7 +92,11 @@ export function parseRuntimeMessage(data: unknown): RuntimeMessage | null {
   if (!type || !RUNTIME_TYPES.has(type)) return null;
   const m = data as Record<string, unknown>;
   if (type === "wf:ready") {
-    return isString(m.category) && isString(m.design) ? { type, category: m.category, design: m.design } : null;
+    return isString(m.category) && isString(m.design)
+      ? { type, category: m.category, design: m.design }
+      : null;
   }
-  return typeof m.message === "string" ? { type: "wf:error", message: m.message } : null;
+  return typeof m.message === "string"
+    ? { type: "wf:error", message: m.message }
+    : null;
 }

@@ -11,7 +11,10 @@ const demoNow = () => new Date(fixtures.now);
 export function CalendarsDateRangeShowcasePage() {
   return (
     <WirefrontProvider locale="en-US" now={demoNow} timeZone="UTC">
-      <DateRangePicker defaultValue={fixtures.defaultRange} onApply={() => {}} />
+      <DateRangePicker
+        defaultValue={fixtures.defaultRange}
+        onApply={() => {}}
+      />
     </WirefrontProvider>
   );
 }

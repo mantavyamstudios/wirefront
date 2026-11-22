@@ -5,17 +5,70 @@
 "use client";
 
 import { Button } from "@wirefront/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@wirefront/ui/dropdown-menu";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import { type Action, fail } from "@wirefront/ui/wirefront/types";
-import { ChevronDownIcon, ChevronLeftIcon, FolderIcon, Heading1Icon, Heading2Icon, ListChecksIcon, ListIcon, NotebookPenIcon, PilcrowIcon, PinIcon, RotateCcwIcon, SearchIcon, SquarePenIcon, Trash2Icon, Undo2Icon, XIcon } from "lucide-react";
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { type KeyboardEvent, type ReactNode, type TextareaHTMLAttributes, useEffect, useLayoutEffect, useRef, useState } from "react";
-import type { Note, NoteBlock, NoteBlockType, NoteFolder, NoteFolderTone } from "./schema";
+import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  FolderIcon,
+  Heading1Icon,
+  Heading2Icon,
+  ListChecksIcon,
+  ListIcon,
+  NotebookPenIcon,
+  PilcrowIcon,
+  PinIcon,
+  RotateCcwIcon,
+  SearchIcon,
+  SquarePenIcon,
+  Trash2Icon,
+  Undo2Icon,
+  XIcon,
+} from "lucide-react";
+import {
+  AnimatePresence,
+  LayoutGroup,
+  motion,
+  useReducedMotion,
+} from "motion/react";
+import {
+  type KeyboardEvent,
+  type ReactNode,
+  type TextareaHTMLAttributes,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import type {
+  Note,
+  NoteBlock,
+  NoteBlockType,
+  NoteFolder,
+  NoteFolderTone,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("notes.<key>"). */
 export const NOTES_MESSAGES = {
@@ -85,11 +138,24 @@ export interface NotesProps {
 }
 
 const easeOut = [0.23, 1, 0.32, 1] as const;
-const spring = { type: "spring", stiffness: 520, damping: 46, mass: 1 } as const;
-const press = "transition-[color,background-color,box-shadow,scale] duration-150 ease-out active:scale-[0.97]";
+const spring = {
+  type: "spring",
+  stiffness: 520,
+  damping: 46,
+  mass: 1,
+} as const;
+const press =
+  "transition-[color,background-color,box-shadow,scale] duration-150 ease-out active:scale-[0.97]";
 const ring = "outline-none focus-visible:ring-2 focus-visible:ring-ring";
-const menuPop = "transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 data-ending-style:duration-100";
-const tones: Record<NoteFolderTone, string> = { amber: "bg-category-3", sky: "bg-category-1", rose: "bg-category-4", emerald: "bg-category-2", violet: "bg-category-5" };
+const menuPop =
+  "transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 data-ending-style:duration-100";
+const tones: Record<NoteFolderTone, string> = {
+  amber: "bg-category-3",
+  sky: "bg-category-1",
+  rose: "bg-category-4",
+  emerald: "bg-category-2",
+  violet: "bg-category-5",
+};
 const blockStyles: Record<NoteBlockType, string> = {
   h1: "font-heading font-semibold text-xl leading-8 tracking-tight",
   h2: "font-heading font-semibold text-base leading-7 tracking-tight",
@@ -97,7 +163,13 @@ const blockStyles: Record<NoteBlockType, string> = {
   todo: "text-[15px] leading-7",
   bullet: "text-[15px] leading-7",
 };
-const blockIcon: Record<NoteBlockType, ReactNode> = { h1: <Heading1Icon />, h2: <Heading2Icon />, p: <PilcrowIcon />, todo: <ListChecksIcon />, bullet: <ListIcon /> };
+const blockIcon: Record<NoteBlockType, ReactNode> = {
+  h1: <Heading1Icon />,
+  h2: <Heading2Icon />,
+  p: <PilcrowIcon />,
+  todo: <ListChecksIcon />,
+  bullet: <ListIcon />,
+};
 const BLOCK_ORDER: NoteBlockType[] = ["h1", "h2", "p", "todo", "bullet"];
 const SHORTCUTS: [string, NoteBlockType][] = [
   ["## ", "h2"],
@@ -133,7 +205,9 @@ function Highlight({ text, query }: { text: string; query: string }) {
   return (
     <>
       {text.slice(0, i)}
-      <mark className="rounded-[calc(var(--radius)*0.3)] bg-warning/30 text-foreground">{text.slice(i, i + q.length)}</mark>
+      <mark className="rounded-[calc(var(--radius)*0.3)] bg-warning/30 text-foreground">
+        {text.slice(i, i + q.length)}
+      </mark>
       {text.slice(i + q.length)}
     </>
   );
@@ -154,25 +228,62 @@ function ProgressRing({ done, total }: { done: number; total: number }) {
   const reduce = useReducedMotionSafe();
   return (
     <svg aria-hidden="true" className="size-3.5 -rotate-90" viewBox="0 0 14 14">
-      <circle className="fill-none stroke-border" cx="7" cy="7" r={r} strokeWidth="2" />
-      <motion.circle animate={{ strokeDashoffset: c * (1 - done / Math.max(1, total)) }} className={cn("fill-none", done === total ? "stroke-success" : "stroke-foreground/70")} cx="7" cy="7" initial={false} r={r} strokeDasharray={c} strokeLinecap="round" strokeWidth="2" transition={reduce ? { duration: 0 } : { duration: 0.35, ease: easeOut }} />
+      <circle
+        className="fill-none stroke-border"
+        cx="7"
+        cy="7"
+        r={r}
+        strokeWidth="2"
+      />
+      <motion.circle
+        animate={{ strokeDashoffset: c * (1 - done / Math.max(1, total)) }}
+        className={cn(
+          "fill-none",
+          done === total ? "stroke-success" : "stroke-foreground/70"
+        )}
+        cx="7"
+        cy="7"
+        initial={false}
+        r={r}
+        strokeDasharray={c}
+        strokeLinecap="round"
+        strokeWidth="2"
+        transition={
+          reduce ? { duration: 0 } : { duration: 0.35, ease: easeOut }
+        }
+      />
     </svg>
   );
 }
 
 /** A textarea that grows with its text (field-sizing where supported, measured otherwise). */
-function AutoText({ value, className, inputRef, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & { value: string; inputRef?: (el: HTMLTextAreaElement | null) => void }) {
+function AutoText({
+  value,
+  className,
+  inputRef,
+  ...props
+}: TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  value: string;
+  inputRef?: (el: HTMLTextAreaElement | null) => void;
+}) {
   const local = useRef<HTMLTextAreaElement | null>(null);
   // Re-measure after every render; cheap, and only where field-sizing is unsupported.
   useLayoutEffect(() => {
     const el = local.current;
-    if (!el || (typeof CSS !== "undefined" && CSS.supports("field-sizing", "content"))) return;
+    if (
+      !el ||
+      (typeof CSS !== "undefined" && CSS.supports("field-sizing", "content"))
+    )
+      return;
     el.style.height = "auto";
     el.style.height = `${el.scrollHeight}px`;
   });
   return (
     <textarea
-      className={cn("block w-full resize-none overflow-hidden bg-transparent outline-none field-sizing-content placeholder:text-muted-foreground/60", className)}
+      className={cn(
+        "block w-full resize-none overflow-hidden bg-transparent outline-none field-sizing-content placeholder:text-muted-foreground/60",
+        className
+      )}
       ref={(el) => {
         local.current = el;
         inputRef?.(el);
@@ -184,13 +295,53 @@ function AutoText({ value, className, inputRef, ...props }: TextareaHTMLAttribut
   );
 }
 
-function CheckBox({ checked, onToggle, label, disabled }: { checked: boolean; onToggle: () => void; label: string; disabled?: boolean }) {
+function CheckBox({
+  checked,
+  onToggle,
+  label,
+  disabled,
+}: {
+  checked: boolean;
+  onToggle: () => void;
+  label: string;
+  disabled?: boolean;
+}) {
   const reduce = useReducedMotionSafe();
   return (
-    <label className={cn("relative mt-1.25 flex size-4.5 shrink-0 cursor-pointer items-center justify-center rounded-[calc(var(--radius)*0.5)] border transition-[background-color,border-color,scale] duration-150 ease-out after:absolute after:-inset-2.5 after:content-[''] active:scale-[0.92] has-focus-visible:ring-2 has-focus-visible:ring-ring has-focus-visible:ring-offset-1 has-focus-visible:ring-offset-background", checked ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background hover:border-foreground/40 dark:bg-input/32")}>
-      <input aria-label={label} checked={checked} className="sr-only" disabled={disabled} onChange={onToggle} type="checkbox" />
-      <svg aria-hidden="true" className="size-3" fill="none" viewBox="0 0 12 12">
-        <motion.path animate={{ pathLength: checked ? 1 : 0, opacity: checked ? 1 : 0 }} d="M2.5 6.2 5 8.6l4.5-5" initial={false} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" transition={reduce ? { duration: 0 } : { duration: 0.18, ease: easeOut }} />
+    <label
+      className={cn(
+        "relative mt-1.25 flex size-4.5 shrink-0 cursor-pointer items-center justify-center rounded-[calc(var(--radius)*0.5)] border transition-[background-color,border-color,scale] duration-150 ease-out after:absolute after:-inset-2.5 after:content-[''] active:scale-[0.92] has-focus-visible:ring-2 has-focus-visible:ring-ring has-focus-visible:ring-offset-1 has-focus-visible:ring-offset-background",
+        checked
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-input bg-background hover:border-foreground/40 dark:bg-input/32"
+      )}
+    >
+      <input
+        aria-label={label}
+        checked={checked}
+        className="sr-only"
+        disabled={disabled}
+        onChange={onToggle}
+        type="checkbox"
+      />
+      <svg
+        aria-hidden="true"
+        className="size-3"
+        fill="none"
+        viewBox="0 0 12 12"
+      >
+        <motion.path
+          animate={{ pathLength: checked ? 1 : 0, opacity: checked ? 1 : 0 }}
+          d="M2.5 6.2 5 8.6l4.5-5"
+          initial={false}
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+          transition={
+            reduce ? { duration: 0 } : { duration: 0.18, ease: easeOut }
+          }
+        />
       </svg>
     </label>
   );
@@ -198,7 +349,14 @@ function CheckBox({ checked, onToggle, label, disabled }: { checked: boolean; on
 
 type Pending = { id: string; at: "start" | "end" } | null;
 
-function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, onCreate, className }: NotesProps) {
+function NotesScreen({
+  folders,
+  notes: initialNotes,
+  initialNoteId,
+  onChange,
+  onCreate,
+  className,
+}: NotesProps) {
   const t = useMessages("notes", NOTES_MESSAGES);
   const fmt = useFormat();
   const { now, timeZone } = useWirefront();
@@ -206,7 +364,9 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
   const [notes, setNotes] = useState(initialNotes);
   useEffect(() => setNotes(initialNotes), [initialNotes]);
   const [folder, setFolder] = useState<string>("all");
-  const [selectedId, setSelectedId] = useState<string | null>(initialNoteId ?? initialNotes[0]?.id ?? null);
+  const [selectedId, setSelectedId] = useState<string | null>(
+    initialNoteId ?? initialNotes[0]?.id ?? null
+  );
   const [query, setQuery] = useState("");
   const [focusedBlock, setFocusedBlock] = useState<string | null>(null);
   const [view, setView] = useState<"list" | "editor">("list");
@@ -219,7 +379,10 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
 
   useEffect(() => {
     if (!pending) return;
-    const el = pending.id === "title" ? titleRef.current : blockRefs.current.get(pending.id);
+    const el =
+      pending.id === "title"
+        ? titleRef.current
+        : blockRefs.current.get(pending.id);
     if (el) {
       el.focus();
       const pos = pending.at === "end" ? el.value.length : 0;
@@ -235,13 +398,23 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
   }, [undo]);
 
   // Dates read as times today, "Yesterday", a weekday this week, or a short date.
-  const dayKey = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+  const dayKey = (d: Date) =>
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(d);
   const relDate = (iso: string) => {
     const d = new Date(iso);
-    const diff = Math.round((Date.parse(dayKey(now())) - Date.parse(dayKey(d))) / 86_400_000);
+    const diff = Math.round(
+      (Date.parse(dayKey(now())) - Date.parse(dayKey(d))) / 86_400_000
+    );
     const time = fmt.time(d);
-    if (diff <= 0) return { short: time, long: interpolate(t.todayAt, { time }) };
-    if (diff === 1) return { short: t.yesterday, long: interpolate(t.yesterdayAt, { time }) };
+    if (diff <= 0)
+      return { short: time, long: interpolate(t.todayAt, { time }) };
+    if (diff === 1)
+      return { short: t.yesterday, long: interpolate(t.yesterdayAt, { time }) };
     if (diff < 7) {
       const day = fmt.date(d, { weekday: "long" });
       return { short: day, long: interpolate(t.weekdayAt, { day, time }) };
@@ -251,27 +424,45 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
   };
 
   const live = notes.filter((n) => !n.deleted);
-  const inFolder = (n: Note) => (folder === "trash" ? n.deleted : !n.deleted && (folder === "all" || n.folderId === folder));
+  const inFolder = (n: Note) =>
+    folder === "trash"
+      ? n.deleted
+      : !n.deleted && (folder === "all" || n.folderId === folder);
   const q = query.trim().toLowerCase();
-  const matches = (n: Note) => !q || n.title.toLowerCase().includes(q) || preview(n).toLowerCase().includes(q);
-  const visible = notes.filter((n) => inFolder(n) && matches(n)).sort((a, z) => z.updatedAt.localeCompare(a.updatedAt));
+  const matches = (n: Note) =>
+    !q ||
+    n.title.toLowerCase().includes(q) ||
+    preview(n).toLowerCase().includes(q);
+  const visible = notes
+    .filter((n) => inFolder(n) && matches(n))
+    .sort((a, z) => z.updatedAt.localeCompare(a.updatedAt));
   const pinned = folder === "trash" ? [] : visible.filter((n) => n.pinned);
   const rest = folder === "trash" ? visible : visible.filter((n) => !n.pinned);
   const note = notes.find((n) => n.id === selectedId) ?? null;
-  const folderName = (id: string) => (id === "all" ? t.allNotes : id === "trash" ? t.trash : (folders.find((f) => f.id === id)?.name ?? t.notes));
+  const folderName = (id: string) =>
+    id === "all"
+      ? t.allNotes
+      : id === "trash"
+        ? t.trash
+        : (folders.find((f) => f.id === id)?.name ?? t.notes);
 
   /** Applies a change to a note, stamps it and reports the result. */
   const touch = (id: string, patch: (n: Note) => Partial<Note>) => {
     const current = notes.find((n) => n.id === id);
     if (!current) return;
-    const next = { ...current, ...patch(current), updatedAt: now().toISOString() };
+    const next = {
+      ...current,
+      ...patch(current),
+      updatedAt: now().toISOString(),
+    };
     setNotes((all) => all.map((n) => (n.id === id ? next : n)));
     onChange?.(next);
   };
   const setBlocks = (fn: (blocks: NoteBlock[]) => NoteBlock[]) => {
     if (note) touch(note.id, (n) => ({ blocks: fn(n.blocks) }));
   };
-  const patchBlock = (id: string, patch: Partial<NoteBlock>) => setBlocks((bs) => bs.map((x) => (x.id === id ? { ...x, ...patch } : x)));
+  const patchBlock = (id: string, patch: Partial<NoteBlock>) =>
+    setBlocks((bs) => bs.map((x) => (x.id === id ? { ...x, ...patch } : x)));
   const open = (id: string) => {
     setSelectedId(id);
     setView("editor");
@@ -287,7 +478,15 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
       setPending({ id: "title", at: "end" });
     },
   });
-  const newNote = onCreate ? () => create.run({ folderId: folder === "all" || folder === "trash" ? (folders[0]?.id ?? "") : folder }) : undefined;
+  const newNote = onCreate
+    ? () =>
+        create.run({
+          folderId:
+            folder === "all" || folder === "trash"
+              ? (folders[0]?.id ?? "")
+              : folder,
+        })
+    : undefined;
   const removeNote = (id: string) => {
     touch(id, () => ({ deleted: true, pinned: false }));
     setUndo({ id });
@@ -303,7 +502,11 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
     setPending({ id, at: "end" });
   };
 
-  const onBlockKey = (e: KeyboardEvent<HTMLTextAreaElement>, block: NoteBlock, index: number) => {
+  const onBlockKey = (
+    e: KeyboardEvent<HTMLTextAreaElement>,
+    block: NoteBlock,
+    index: number
+  ) => {
     if (!note) return;
     const el = e.currentTarget;
     if (e.key === "Enter" && !e.shiftKey) {
@@ -318,12 +521,23 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
       const id = uid("b");
       const type: NoteBlockType = listy ? block.type : "p";
       setBlocks((bs) => {
-        const copy = bs.map((x) => (x.id === block.id ? { ...x, text: before } : x));
-        copy.splice(index + 1, 0, { id, type, text: after, done: type === "todo" ? false : undefined });
+        const copy = bs.map((x) =>
+          x.id === block.id ? { ...x, text: before } : x
+        );
+        copy.splice(index + 1, 0, {
+          id,
+          type,
+          text: after,
+          done: type === "todo" ? false : undefined,
+        });
         return copy;
       });
       setPending({ id, at: "start" });
-    } else if (e.key === "Backspace" && el.selectionStart === 0 && el.selectionEnd === 0) {
+    } else if (
+      e.key === "Backspace" &&
+      el.selectionStart === 0 &&
+      el.selectionEnd === 0
+    ) {
       if (block.type !== "p") {
         e.preventDefault();
         convert(block.id, "p");
@@ -339,7 +553,13 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
       }
       e.preventDefault();
       const caret = prev.text.length;
-      setBlocks((bs) => bs.filter((x) => x.id !== block.id).map((x) => (x.id === prev.id ? { ...x, text: x.text + block.text } : x)));
+      setBlocks((bs) =>
+        bs
+          .filter((x) => x.id !== block.id)
+          .map((x) =>
+            x.id === prev.id ? { ...x, text: x.text + block.text } : x
+          )
+      );
       requestAnimationFrame(() => {
         const p = blockRefs.current.get(prev.id);
         if (p) {
@@ -367,7 +587,11 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
     if (block.type === "p") {
       const hit = SHORTCUTS.find(([s]) => text.startsWith(s));
       if (hit) {
-        patchBlock(block.id, { type: hit[1], text: text.slice(hit[0].length), done: hit[1] === "todo" ? false : undefined });
+        patchBlock(block.id, {
+          type: hit[1],
+          text: text.slice(hit[0].length),
+          done: hit[1] === "todo" ? false : undefined,
+        });
         return;
       }
     }
@@ -376,11 +600,29 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
 
   const focusedType = note?.blocks.find((x) => x.id === focusedBlock)?.type;
   const stats = note ? todoStats(note) : { done: 0, total: 0 };
-  const words = note ? `${note.title} ${preview(note)}`.split(/\s+/).filter((w) => /\w/.test(w)).length : 0;
+  const words = note
+    ? `${note.title} ${preview(note)}`.split(/\s+/).filter((w) => /\w/.test(w))
+        .length
+    : 0;
   const folderEntries = [
-    { id: "all", name: t.allNotes, icon: <NotebookPenIcon />, count: live.length },
-    ...folders.map((f) => ({ id: f.id, name: f.name, icon: <span className={cn("size-2 rounded-full", tones[f.tone])} />, count: live.filter((n) => n.folderId === f.id).length })),
-    { id: "trash", name: t.trash, icon: <Trash2Icon />, count: notes.length - live.length },
+    {
+      id: "all",
+      name: t.allNotes,
+      icon: <NotebookPenIcon />,
+      count: live.length,
+    },
+    ...folders.map((f) => ({
+      id: f.id,
+      name: f.name,
+      icon: <span className={cn("size-2 rounded-full", tones[f.tone])} />,
+      count: live.filter((n) => n.folderId === f.id).length,
+    })),
+    {
+      id: "trash",
+      name: t.trash,
+      icon: <Trash2Icon />,
+      count: notes.length - live.length,
+    },
   ];
 
   const folderList = (
@@ -390,7 +632,15 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
         return (
           <button
             aria-current={active ? "page" : undefined}
-            className={cn("relative flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-start [&_svg]:size-4 [&_svg]:opacity-80", ring, press, active ? "font-medium text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground", f.id === "trash" && "mt-3")}
+            className={cn(
+              "relative flex h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-start [&_svg]:size-4 [&_svg]:opacity-80",
+              ring,
+              press,
+              active
+                ? "font-medium text-foreground"
+                : "text-muted-foreground hover:bg-accent hover:text-foreground",
+              f.id === "trash" && "mt-3"
+            )}
             key={f.id}
             onClick={() => {
               setFolder(f.id);
@@ -398,12 +648,23 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
             }}
             type="button"
           >
-            {active ? <motion.span className="absolute inset-0 -z-10 rounded-lg bg-accent" layoutId="notes-folder" transition={reduce ? { duration: 0 } : spring} /> : null}
-            <span aria-hidden className="flex size-4 items-center justify-center">
+            {active ? (
+              <motion.span
+                className="absolute inset-0 -z-10 rounded-lg bg-accent"
+                layoutId="notes-folder"
+                transition={reduce ? { duration: 0 } : spring}
+              />
+            ) : null}
+            <span
+              aria-hidden
+              className="flex size-4 items-center justify-center"
+            >
               {f.icon}
             </span>
             <span className="flex-1 truncate">{f.name}</span>
-            <span className="text-muted-foreground text-xs tabular-nums">{f.count}</span>
+            <span className="text-muted-foreground text-xs tabular-nums">
+              {f.count}
+            </span>
           </button>
         );
       })}
@@ -415,10 +676,31 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
     const active = n.id === selectedId;
     const f = folders.find((x) => x.id === n.folderId);
     return (
-      <motion.li exit={{ opacity: 0, transition: { duration: 0.12 } }} initial={false} key={n.id} layout={reduce ? false : "position"} layoutId={`note-${n.id}`} transition={spring}>
-        <button aria-current={active || undefined} className={cn("group/note relative flex w-full cursor-pointer flex-col gap-1 rounded-xl px-3 py-2.5 text-start transition-colors", ring, active ? "bg-accent" : "hover:bg-accent/50")} onClick={() => open(n.id)} type="button">
+      <motion.li
+        exit={{ opacity: 0, transition: { duration: 0.12 } }}
+        initial={false}
+        key={n.id}
+        layout={reduce ? false : "position"}
+        layoutId={`note-${n.id}`}
+        transition={spring}
+      >
+        <button
+          aria-current={active || undefined}
+          className={cn(
+            "group/note relative flex w-full cursor-pointer flex-col gap-1 rounded-xl px-3 py-2.5 text-start transition-colors",
+            ring,
+            active ? "bg-accent" : "hover:bg-accent/50"
+          )}
+          onClick={() => open(n.id)}
+          type="button"
+        >
           <span className="flex items-center gap-2">
-            <span className={cn("min-w-0 flex-1 truncate font-medium", !n.title && "text-muted-foreground")}>
+            <span
+              className={cn(
+                "min-w-0 flex-1 truncate font-medium",
+                !n.title && "text-muted-foreground"
+              )}
+            >
               <Highlight query={query} text={n.title || t.untitled} />
             </span>
             {s.total > 0 ? (
@@ -429,12 +711,20 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
             ) : null}
           </span>
           <span className="line-clamp-2 text-muted-foreground text-xs leading-5">
-            <span className="me-1.5 font-medium text-foreground/80 tabular-nums">{relDate(n.updatedAt).short}</span>
-            <Highlight query={query} text={excerpt(preview(n), query) || t.noText} />
+            <span className="me-1.5 font-medium text-foreground/80 tabular-nums">
+              {relDate(n.updatedAt).short}
+            </span>
+            <Highlight
+              query={query}
+              text={excerpt(preview(n), query) || t.noText}
+            />
           </span>
           {folder === "all" && f ? (
             <span className="flex items-center gap-1.5 text-muted-foreground text-xs">
-              <span aria-hidden className={cn("size-1.5 rounded-full", tones[f.tone])} />
+              <span
+                aria-hidden
+                className={cn("size-1.5 rounded-full", tones[f.tone])}
+              />
               {f.name}
             </span>
           ) : null}
@@ -445,27 +735,52 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
 
   const emptyList = q ? (
     <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
-      <span aria-hidden className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+      <span
+        aria-hidden
+        className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground"
+      >
         <SearchIcon className="size-4.5" />
       </span>
       <div className="flex flex-col gap-1">
-        <span className="text-balance font-medium">{interpolate(t.noMatch, { query: query.trim() })}</span>
-        <span className="text-muted-foreground text-xs">{interpolate(t.searching, { folder: folderName(folder).toLowerCase() })}</span>
+        <span className="text-balance font-medium">
+          {interpolate(t.noMatch, { query: query.trim() })}
+        </span>
+        <span className="text-muted-foreground text-xs">
+          {interpolate(t.searching, {
+            folder: folderName(folder).toLowerCase(),
+          })}
+        </span>
       </div>
       {folder !== "all" ? (
-        <Button className={press} onClick={() => setFolder("all")} size="sm" variant="outline">
+        <Button
+          className={press}
+          onClick={() => setFolder("all")}
+          size="sm"
+          variant="outline"
+        >
           {t.searchAll}
         </Button>
       ) : null}
     </div>
   ) : (
     <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
-      <span aria-hidden className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-        {folder === "trash" ? <Trash2Icon className="size-4.5" /> : <FolderIcon className="size-4.5" />}
+      <span
+        aria-hidden
+        className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground"
+      >
+        {folder === "trash" ? (
+          <Trash2Icon className="size-4.5" />
+        ) : (
+          <FolderIcon className="size-4.5" />
+        )}
       </span>
       <div className="flex flex-col gap-1">
-        <span className="font-medium">{folder === "trash" ? t.nothingDeleted : t.nothingHere}</span>
-        <span className="text-pretty text-muted-foreground text-xs">{folder === "trash" ? t.deletedHint : t.emptyHint}</span>
+        <span className="font-medium">
+          {folder === "trash" ? t.nothingDeleted : t.nothingHere}
+        </span>
+        <span className="text-pretty text-muted-foreground text-xs">
+          {folder === "trash" ? t.deletedHint : t.emptyHint}
+        </span>
       </div>
       {folder !== "trash" && newNote ? (
         <Button className={press} onClick={newNote} size="sm" variant="outline">
@@ -476,10 +791,18 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
   );
 
   return (
-    <div className={cn("@container relative isolate flex h-svh w-full overflow-hidden bg-background text-foreground text-sm", className)}>
+    <div
+      className={cn(
+        "@container relative isolate flex h-svh w-full overflow-hidden bg-background text-foreground text-sm",
+        className
+      )}
+    >
       <aside className="hidden w-56 shrink-0 flex-col gap-5 border-e bg-muted/40 p-3 @5xl:flex">
         <div className="flex items-center gap-2.5 px-1.5 pt-1">
-          <span aria-hidden className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <span
+            aria-hidden
+            className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+          >
             <NotebookPenIcon className="size-4" />
           </span>
           <span className="font-heading font-semibold">{t.app}</span>
@@ -487,31 +810,64 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
         {folderList}
       </aside>
 
-      <section aria-label={t.notes} className={cn("min-w-0 flex-1 flex-col border-e @3xl:flex @3xl:w-80 @3xl:flex-none", view === "list" ? "flex" : "hidden")}>
+      <section
+        aria-label={t.notes}
+        className={cn(
+          "min-w-0 flex-1 flex-col border-e @3xl:flex @3xl:w-80 @3xl:flex-none",
+          view === "list" ? "flex" : "hidden"
+        )}
+      >
         <div className="flex h-14 shrink-0 items-center gap-2 px-3">
           <DropdownMenu>
-            <DropdownMenuTrigger className={cn("flex h-8 min-w-0 cursor-pointer items-center gap-1.5 rounded-lg px-2 font-heading font-semibold text-base hover:bg-accent data-popup-open:bg-accent @5xl:pointer-events-none @5xl:px-1", ring)}>
+            <DropdownMenuTrigger
+              className={cn(
+                "flex h-8 min-w-0 cursor-pointer items-center gap-1.5 rounded-lg px-2 font-heading font-semibold text-base hover:bg-accent data-popup-open:bg-accent @5xl:pointer-events-none @5xl:px-1",
+                ring
+              )}
+            >
               <span className="truncate">{folderName(folder)}</span>
-              <ChevronDownIcon aria-hidden className="size-4 shrink-0 text-muted-foreground @5xl:hidden" />
+              <ChevronDownIcon
+                aria-hidden
+                className="size-4 shrink-0 text-muted-foreground @5xl:hidden"
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className={cn("w-56", menuPop)}>
-              <DropdownMenuRadioGroup onValueChange={(v) => setFolder(v as string)} value={folder}>
-                <DropdownMenuRadioItem value="all">{t.allNotes}</DropdownMenuRadioItem>
+              <DropdownMenuRadioGroup
+                onValueChange={(v) => setFolder(v as string)}
+                value={folder}
+              >
+                <DropdownMenuRadioItem value="all">
+                  {t.allNotes}
+                </DropdownMenuRadioItem>
                 {folders.map((f) => (
                   <DropdownMenuRadioItem key={f.id} value={f.id}>
                     <span className="flex items-center gap-2">
-                      <span aria-hidden className={cn("size-2 rounded-full", tones[f.tone])} />
+                      <span
+                        aria-hidden
+                        className={cn("size-2 rounded-full", tones[f.tone])}
+                      />
                       {f.name}
                     </span>
                   </DropdownMenuRadioItem>
                 ))}
-                <DropdownMenuRadioItem value="trash">{t.trash}</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="trash">
+                  {t.trash}
+                </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <span className="text-muted-foreground text-xs tabular-nums">{visible.length}</span>
+          <span className="text-muted-foreground text-xs tabular-nums">
+            {visible.length}
+          </span>
           {newNote ? (
-            <Button aria-label={t.newNote} className={cn("ms-auto", press)} disabled={create.isPending()} onClick={newNote} size="icon-sm" variant="ghost">
+            <Button
+              aria-label={t.newNote}
+              className={cn("ms-auto", press)}
+              disabled={create.isPending()}
+              onClick={newNote}
+              size="icon-sm"
+              variant="ghost"
+            >
               <SquarePenIcon />
             </Button>
           ) : null}
@@ -532,7 +888,12 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
             />
             {query ? (
               <InputGroupAddon align="inline-end">
-                <Button aria-label={t.clearSearch} onClick={() => setQuery("")} size="icon-xs" variant="ghost">
+                <Button
+                  aria-label={t.clearSearch}
+                  onClick={() => setQuery("")}
+                  size="icon-xs"
+                  variant="ghost"
+                >
                   <XIcon />
                 </Button>
               </InputGroupAddon>
@@ -555,15 +916,23 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
                     <PinIcon aria-hidden className="size-3" /> {t.pinned}
                   </h3>
                   <ul className="flex flex-col gap-0.5">
-                    <AnimatePresence initial={false}>{pinned.map(noteRow)}</AnimatePresence>
+                    <AnimatePresence initial={false}>
+                      {pinned.map(noteRow)}
+                    </AnimatePresence>
                   </ul>
                 </>
               ) : null}
               {rest.length > 0 ? (
                 <>
-                  {pinned.length > 0 ? <h3 className="px-3 pt-4 pb-1 font-medium text-muted-foreground text-xs">{t.notes}</h3> : null}
+                  {pinned.length > 0 ? (
+                    <h3 className="px-3 pt-4 pb-1 font-medium text-muted-foreground text-xs">
+                      {t.notes}
+                    </h3>
+                  ) : null}
                   <ul className="flex flex-col gap-0.5">
-                    <AnimatePresence initial={false}>{rest.map(noteRow)}</AnimatePresence>
+                    <AnimatePresence initial={false}>
+                      {rest.map(noteRow)}
+                    </AnimatePresence>
                   </ul>
                 </>
               ) : null}
@@ -572,31 +941,71 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
         </div>
       </section>
 
-      <section aria-label={t.editor} className={cn("min-w-0 flex-1 flex-col @3xl:flex", view === "editor" ? "flex" : "hidden")}>
+      <section
+        aria-label={t.editor}
+        className={cn(
+          "min-w-0 flex-1 flex-col @3xl:flex",
+          view === "editor" ? "flex" : "hidden"
+        )}
+      >
         {note ? (
           <>
             <div className="flex h-14 shrink-0 items-center gap-1 px-3">
-              <Button className="-ms-1 @3xl:hidden" onClick={() => setView("list")} size="sm" variant="ghost">
-                <ChevronLeftIcon className="rtl:-scale-x-100" /> {folderName(folder)}
+              <Button
+                className="-ms-1 @3xl:hidden"
+                onClick={() => setView("list")}
+                size="sm"
+                variant="ghost"
+              >
+                <ChevronLeftIcon className="rtl:-scale-x-100" />{" "}
+                {folderName(folder)}
               </Button>
               <div className="hidden min-w-0 items-center gap-1.5 text-muted-foreground text-xs @3xl:flex">
                 {note.deleted ? (
                   <span>{t.inTrash}</span>
                 ) : (
                   <DropdownMenu>
-                    <DropdownMenuTrigger className={cn("flex h-7 cursor-pointer items-center gap-1.5 rounded-md px-1.5 hover:bg-accent hover:text-foreground data-popup-open:bg-accent", ring)}>
-                      <span aria-hidden className={cn("size-1.5 rounded-full", tones[folders.find((f) => f.id === note.folderId)?.tone ?? "amber"])} />
+                    <DropdownMenuTrigger
+                      className={cn(
+                        "flex h-7 cursor-pointer items-center gap-1.5 rounded-md px-1.5 hover:bg-accent hover:text-foreground data-popup-open:bg-accent",
+                        ring
+                      )}
+                    >
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "size-1.5 rounded-full",
+                          tones[
+                            folders.find((f) => f.id === note.folderId)?.tone ??
+                              "amber"
+                          ]
+                        )}
+                      />
                       {folderName(note.folderId)}
                       <ChevronDownIcon aria-hidden className="size-3.5" />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className={cn("w-48", menuPop)}>
+                    <DropdownMenuContent
+                      align="start"
+                      className={cn("w-48", menuPop)}
+                    >
                       <DropdownMenuGroup>
                         <DropdownMenuLabel>{t.moveTo}</DropdownMenuLabel>
-                        <DropdownMenuRadioGroup onValueChange={(v) => touch(note.id, () => ({ folderId: v as string }))} value={note.folderId}>
+                        <DropdownMenuRadioGroup
+                          onValueChange={(v) =>
+                            touch(note.id, () => ({ folderId: v as string }))
+                          }
+                          value={note.folderId}
+                        >
                           {folders.map((f) => (
                             <DropdownMenuRadioItem key={f.id} value={f.id}>
                               <span className="flex items-center gap-2">
-                                <span aria-hidden className={cn("size-2 rounded-full", tones[f.tone])} />
+                                <span
+                                  aria-hidden
+                                  className={cn(
+                                    "size-2 rounded-full",
+                                    tones[f.tone]
+                                  )}
+                                />
                                 {f.name}
                               </span>
                             </DropdownMenuRadioItem>
@@ -607,32 +1016,63 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
                   </DropdownMenu>
                 )}
                 <span aria-hidden>·</span>
-                <span className="truncate tabular-nums">{interpolate(t.edited, { when: relDate(note.updatedAt).long })}</span>
+                <span className="truncate tabular-nums">
+                  {interpolate(t.edited, {
+                    when: relDate(note.updatedAt).long,
+                  })}
+                </span>
               </div>
               <div className="ms-auto flex items-center gap-0.5">
                 {note.deleted ? (
-                  <Button className={press} onClick={() => restore(note.id)} size="sm" variant="outline">
+                  <Button
+                    className={press}
+                    onClick={() => restore(note.id)}
+                    size="sm"
+                    variant="outline"
+                  >
                     <RotateCcwIcon /> {t.restore}
                   </Button>
                 ) : (
                   <>
-                    <div aria-label={t.formatting} className="flex items-center gap-0.5" role="toolbar">
+                    <div
+                      aria-label={t.formatting}
+                      className="flex items-center gap-0.5"
+                      role="toolbar"
+                    >
                       {BLOCK_ORDER.map((type) => {
                         const active = focusedType === type;
                         const label = t[`block_${type}`];
                         return (
                           <button
-                            aria-label={interpolate(t.turnInto, { type: label.toLowerCase() })}
+                            aria-label={interpolate(t.turnInto, {
+                              type: label.toLowerCase(),
+                            })}
                             aria-pressed={active}
-                            className={cn("relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg sm:size-7 [&_svg]:size-4", ring, press, active ? "text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground", "disabled:pointer-events-none disabled:opacity-40")}
+                            className={cn(
+                              "relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg sm:size-7 [&_svg]:size-4",
+                              ring,
+                              press,
+                              active
+                                ? "text-foreground"
+                                : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                              "disabled:pointer-events-none disabled:opacity-40"
+                            )}
                             disabled={!focusedBlock}
                             key={type}
-                            onClick={() => focusedBlock && convert(focusedBlock, type)}
+                            onClick={() =>
+                              focusedBlock && convert(focusedBlock, type)
+                            }
                             onMouseDown={(e) => e.preventDefault()}
                             title={label}
                             type="button"
                           >
-                            {active ? <motion.span className="absolute inset-0 rounded-lg bg-accent" layoutId="notes-blocktype" transition={reduce ? { duration: 0 } : spring} /> : null}
+                            {active ? (
+                              <motion.span
+                                className="absolute inset-0 rounded-lg bg-accent"
+                                layoutId="notes-blocktype"
+                                transition={reduce ? { duration: 0 } : spring}
+                              />
+                            ) : null}
                             <span aria-hidden className="relative flex">
                               {blockIcon[type]}
                             </span>
@@ -641,12 +1081,35 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
                       })}
                     </div>
                     <span aria-hidden className="mx-1.5 h-4 w-px bg-border" />
-                    <Button aria-label={note.pinned ? t.unpin : t.pin} aria-pressed={Boolean(note.pinned)} className={cn(press, note.pinned && "text-foreground")} onClick={() => touch(note.id, (n) => ({ pinned: !n.pinned }))} size="icon-sm" variant="ghost">
-                      <motion.span animate={{ scale: 1 }} className="flex" initial={reduce ? false : { scale: 0.8 }} key={String(note.pinned)} transition={{ duration: 0.18, ease: easeOut }}>
-                        <PinIcon className={cn(note.pinned && "fill-current")} />
+                    <Button
+                      aria-label={note.pinned ? t.unpin : t.pin}
+                      aria-pressed={Boolean(note.pinned)}
+                      className={cn(press, note.pinned && "text-foreground")}
+                      onClick={() =>
+                        touch(note.id, (n) => ({ pinned: !n.pinned }))
+                      }
+                      size="icon-sm"
+                      variant="ghost"
+                    >
+                      <motion.span
+                        animate={{ scale: 1 }}
+                        className="flex"
+                        initial={reduce ? false : { scale: 0.8 }}
+                        key={String(note.pinned)}
+                        transition={{ duration: 0.18, ease: easeOut }}
+                      >
+                        <PinIcon
+                          className={cn(note.pinned && "fill-current")}
+                        />
                       </motion.span>
                     </Button>
-                    <Button aria-label={t.delete} className={press} onClick={() => removeNote(note.id)} size="icon-sm" variant="ghost">
+                    <Button
+                      aria-label={t.delete}
+                      className={press}
+                      onClick={() => removeNote(note.id)}
+                      size="icon-sm"
+                      variant="ghost"
+                    >
                       <Trash2Icon />
                     </Button>
                   </>
@@ -655,19 +1118,35 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
             </div>
 
             <div className="min-h-0 flex-1 overflow-y-auto">
-              <motion.article animate={{ opacity: 1 }} className="mx-auto flex max-w-2xl flex-col px-5 pt-6 pb-24 @3xl:px-12 @3xl:pt-10" initial={reduce ? false : { opacity: 0 }} key={note.id} transition={{ duration: 0.12, ease: "easeOut" }}>
+              <motion.article
+                animate={{ opacity: 1 }}
+                className="mx-auto flex max-w-2xl flex-col px-5 pt-6 pb-24 @3xl:px-12 @3xl:pt-10"
+                initial={reduce ? false : { opacity: 0 }}
+                key={note.id}
+                transition={{ duration: 0.12, ease: "easeOut" }}
+              >
                 <AutoText
                   aria-label={t.title}
                   className="font-heading font-semibold text-2xl tracking-tight @3xl:text-3xl"
                   inputRef={(el) => {
                     titleRef.current = el;
                   }}
-                  onChange={(e) => touch(note.id, () => ({ title: e.target.value.replace(/\n/g, "") }))}
+                  onChange={(e) =>
+                    touch(note.id, () => ({
+                      title: e.target.value.replace(/\n/g, ""),
+                    }))
+                  }
                   onFocus={() => setFocusedBlock(null)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || (e.key === "ArrowDown" && e.currentTarget.selectionStart === e.currentTarget.value.length)) {
+                    if (
+                      e.key === "Enter" ||
+                      (e.key === "ArrowDown" &&
+                        e.currentTarget.selectionStart ===
+                          e.currentTarget.value.length)
+                    ) {
                       e.preventDefault();
-                      if (note.blocks[0]) setPending({ id: note.blocks[0].id, at: "start" });
+                      if (note.blocks[0])
+                        setPending({ id: note.blocks[0].id, at: "start" });
                     }
                   }}
                   placeholder={t.title}
@@ -675,37 +1154,96 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
                   value={note.title}
                 />
                 <div className="mt-2 mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 border-b pb-5 text-muted-foreground text-xs">
-                  <span className="tabular-nums">{interpolate(t.words, { count: words })}</span>
+                  <span className="tabular-nums">
+                    {interpolate(t.words, { count: words })}
+                  </span>
                   {stats.total > 0 ? (
                     <span className="flex items-center gap-1.5 tabular-nums">
                       <ProgressRing done={stats.done} total={stats.total} />
-                      {interpolate(t.todosDone, { done: stats.done, total: stats.total })}
+                      {interpolate(t.todosDone, {
+                        done: stats.done,
+                        total: stats.total,
+                      })}
                     </span>
                   ) : null}
-                  <span className="tabular-nums @3xl:hidden">{interpolate(t.edited, { when: relDate(note.updatedAt).long })}</span>
+                  <span className="tabular-nums @3xl:hidden">
+                    {interpolate(t.edited, {
+                      when: relDate(note.updatedAt).long,
+                    })}
+                  </span>
                 </div>
                 {note.blocks.map((block, i) => {
                   const prevType = note.blocks[i - 1]?.type;
-                  const spacing = block.type === "h1" ? "mt-5" : block.type === "h2" ? (i === 0 ? "" : "mt-5 mb-0.5") : (block.type === "todo" || block.type === "bullet") && prevType === block.type ? "mt-0.5" : i === 0 ? "" : "mt-2";
-                  const placeholder = note.blocks.length === 1 && block.type === "p" ? t.startHint : block.type === "todo" ? t.todo : block.type === "bullet" ? t.listItem : block.type === "p" ? "" : t.heading;
+                  const spacing =
+                    block.type === "h1"
+                      ? "mt-5"
+                      : block.type === "h2"
+                        ? i === 0
+                          ? ""
+                          : "mt-5 mb-0.5"
+                        : (block.type === "todo" || block.type === "bullet") &&
+                            prevType === block.type
+                          ? "mt-0.5"
+                          : i === 0
+                            ? ""
+                            : "mt-2";
+                  const placeholder =
+                    note.blocks.length === 1 && block.type === "p"
+                      ? t.startHint
+                      : block.type === "todo"
+                        ? t.todo
+                        : block.type === "bullet"
+                          ? t.listItem
+                          : block.type === "p"
+                            ? ""
+                            : t.heading;
                   return (
-                    <div className={cn("flex items-start gap-2.5", spacing)} key={block.id}>
+                    <div
+                      className={cn("flex items-start gap-2.5", spacing)}
+                      key={block.id}
+                    >
                       {block.type === "todo" ? (
-                        <CheckBox checked={Boolean(block.done)} disabled={note.deleted} label={block.text || t.todo} onToggle={() => patchBlock(block.id, { done: !block.done })} />
+                        <CheckBox
+                          checked={Boolean(block.done)}
+                          disabled={note.deleted}
+                          label={block.text || t.todo}
+                          onToggle={() =>
+                            patchBlock(block.id, { done: !block.done })
+                          }
+                        />
                       ) : block.type === "bullet" ? (
-                        <span aria-hidden className="flex h-7 w-4.5 shrink-0 items-center justify-center">
+                        <span
+                          aria-hidden
+                          className="flex h-7 w-4.5 shrink-0 items-center justify-center"
+                        >
                           <span className="size-1.5 rounded-full bg-foreground/60" />
                         </span>
                       ) : null}
                       <div className="min-w-0 flex-1">
                         <AutoText
-                          aria-label={block.type === "todo" ? t.checklistItem : block.type === "bullet" ? t.bullet : block.type === "p" ? t.text : t.heading}
-                          className={cn(blockStyles[block.type], block.type === "todo" && block.done && "text-muted-foreground line-through decoration-muted-foreground/50", "transition-colors duration-200")}
+                          aria-label={
+                            block.type === "todo"
+                              ? t.checklistItem
+                              : block.type === "bullet"
+                                ? t.bullet
+                                : block.type === "p"
+                                  ? t.text
+                                  : t.heading
+                          }
+                          className={cn(
+                            blockStyles[block.type],
+                            block.type === "todo" &&
+                              block.done &&
+                              "text-muted-foreground line-through decoration-muted-foreground/50",
+                            "transition-colors duration-200"
+                          )}
                           inputRef={(el) => {
                             if (el) blockRefs.current.set(block.id, el);
                             else blockRefs.current.delete(block.id);
                           }}
-                          onBlur={() => setFocusedBlock((f) => (f === block.id ? null : f))}
+                          onBlur={() =>
+                            setFocusedBlock((f) => (f === block.id ? null : f))
+                          }
                           onChange={(e) => onBlockChange(block, e.target.value)}
                           onFocus={() => setFocusedBlock(block.id)}
                           onKeyDown={(e) => onBlockKey(e, block, i)}
@@ -740,12 +1278,20 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
           </>
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
-            <span aria-hidden className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+            <span
+              aria-hidden
+              className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground"
+            >
               <NotebookPenIcon className="size-4.5" />
             </span>
             <span className="font-medium">{t.noneSelected}</span>
             {newNote ? (
-              <Button className={press} onClick={newNote} size="sm" variant="outline">
+              <Button
+                className={press}
+                onClick={newNote}
+                size="sm"
+                variant="outline"
+              >
                 <SquarePenIcon /> {t.newNote}
               </Button>
             ) : null}
@@ -756,17 +1302,35 @@ function NotesScreen({ folders, notes: initialNotes, initialNoteId, onChange, on
       <div className="pointer-events-none absolute inset-x-0 bottom-4 z-30 flex justify-center px-3">
         <AnimatePresence>
           {undo ? (
-            <motion.div animate={{ y: 0, opacity: 1, scale: 1 }} className="pointer-events-auto flex items-center gap-1 rounded-full bg-primary p-1 ps-4 text-primary-foreground shadow-lg/15 dark:border dark:bg-popover dark:text-popover-foreground" exit={{ y: 8, opacity: 0, scale: 0.97, transition: { duration: 0.12, ease: easeOut } }} initial={reduce ? { opacity: 0 } : { y: 16, opacity: 0, scale: 0.96 }} role="status" transition={reduce ? { duration: 0.15 } : spring}>
+            <motion.div
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              className="pointer-events-auto flex items-center gap-1 rounded-full bg-primary p-1 ps-4 text-primary-foreground shadow-lg/15 dark:border dark:bg-popover dark:text-popover-foreground"
+              exit={{
+                y: 8,
+                opacity: 0,
+                scale: 0.97,
+                transition: { duration: 0.12, ease: easeOut },
+              }}
+              initial={
+                reduce ? { opacity: 0 } : { y: 16, opacity: 0, scale: 0.96 }
+              }
+              role="status"
+              transition={reduce ? { duration: 0.15 } : spring}
+            >
               <span className="pe-2">{t.movedToTrash}</span>
               <button
-                className={cn("flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-3 outline-none hover:bg-primary-foreground/12 focus-visible:ring-2 focus-visible:ring-primary-foreground/40 dark:focus-visible:ring-ring dark:hover:bg-accent", press)}
+                className={cn(
+                  "flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-3 outline-none hover:bg-primary-foreground/12 focus-visible:ring-2 focus-visible:ring-primary-foreground/40 dark:focus-visible:ring-ring dark:hover:bg-accent",
+                  press
+                )}
                 onClick={() => {
                   restore(undo.id);
                   setSelectedId(undo.id);
                 }}
                 type="button"
               >
-                <Undo2Icon aria-hidden className="size-3.5 opacity-80" /> {t.undo}
+                <Undo2Icon aria-hidden className="size-3.5 opacity-80" />{" "}
+                {t.undo}
               </button>
             </motion.div>
           ) : null}

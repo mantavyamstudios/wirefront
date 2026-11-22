@@ -5,7 +5,10 @@ import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** One period (e.g. a quarter) with a value per series; null where it hasn't happened yet. */
 export const ComparisonRow = z
-  .object({ label: z.string(), values: z.record(z.string(), z.number().nullable()) })
+  .object({
+    label: z.string(),
+    values: z.record(z.string(), z.number().nullable()),
+  })
   .meta({ id: "ComparisonRow" });
 export type ComparisonRow = z.infer<typeof ComparisonRow>;
 
@@ -20,5 +23,10 @@ export type PeriodComparison = z.infer<typeof PeriodComparison>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getPeriodComparison: { method: "GET", path: "/reports/bookings-by-quarter", summary: "Bookings per quarter for the last three years", response: PeriodComparison },
+  getPeriodComparison: {
+    method: "GET",
+    path: "/reports/bookings-by-quarter",
+    summary: "Bookings per quarter for the last three years",
+    response: PeriodComparison,
+  },
 });

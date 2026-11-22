@@ -18,7 +18,9 @@ export const PersonSummary = z
     following: z.number().int(),
     followers: z.number().int(),
     /** People the viewer follows who follow them. */
-    mutuals: z.object({ names: z.array(z.string()), more: z.number().int() }).optional(),
+    mutuals: z
+      .object({ names: z.array(z.string()), more: z.number().int() })
+      .optional(),
     /** Whether the viewer follows them. */
     isFollowing: z.boolean(),
   })
@@ -27,6 +29,18 @@ export type PersonSummary = z.infer<typeof PersonSummary>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getPersonSummary: { method: "GET", path: "/people/{id}/summary", summary: "What a profile hover card shows", params: z.object({ id: z.string() }), response: PersonSummary },
-  followPerson: { method: "PUT", path: "/people/{id}/follow", summary: "Follow or unfollow", params: z.object({ id: z.string() }), body: z.object({ following: z.boolean() }) },
+  getPersonSummary: {
+    method: "GET",
+    path: "/people/{id}/summary",
+    summary: "What a profile hover card shows",
+    params: z.object({ id: z.string() }),
+    response: PersonSummary,
+  },
+  followPerson: {
+    method: "PUT",
+    path: "/people/{id}/follow",
+    summary: "Follow or unfollow",
+    params: z.object({ id: z.string() }),
+    body: z.object({ following: z.boolean() }),
+  },
 });

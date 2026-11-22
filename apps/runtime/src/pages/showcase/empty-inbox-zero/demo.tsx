@@ -7,7 +7,8 @@ import * as fixtures from "./fixtures";
 import { InboxZero } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function EmptyInboxZeroShowcasePage() {
   return (

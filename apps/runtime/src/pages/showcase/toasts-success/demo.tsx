@@ -16,7 +16,10 @@ export function ToastsSuccessShowcasePage() {
   return (
     <SuccessToaster toastManager={toasts}>
       <div className="relative min-h-svh bg-background text-foreground">
-        <ToastBackdrop action="Save settings" onAction={() => notifySuccess(toasts, fixtures.saved)} />
+        <ToastBackdrop
+          action="Save settings"
+          onAction={() => notifySuccess(toasts, fixtures.saved)}
+        />
       </div>
     </SuccessToaster>
   );

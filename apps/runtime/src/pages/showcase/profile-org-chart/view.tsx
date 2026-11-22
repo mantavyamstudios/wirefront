@@ -46,7 +46,14 @@ export interface OrgChartProps {
 }
 
 type Messages = typeof ORG_CHART_MESSAGES;
-type Ctx = { closed: Set<string>; toggle: (id: string) => void; childrenOf: (id: string) => OrgPerson[]; t: Messages; load?: (id: string) => void; loading: (id: string) => boolean };
+type Ctx = {
+  closed: Set<string>;
+  toggle: (id: string) => void;
+  childrenOf: (id: string) => OrgPerson[];
+  t: Messages;
+  load?: (id: string) => void;
+  loading: (id: string) => boolean;
+};
 const Chart = createContext<Ctx | null>(null);
 const useChart = () => {
   const ctx = useContext(Chart);
@@ -63,39 +70,79 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-function Card({ node, highlight, fluid = false }: { node: OrgPerson; highlight: boolean; fluid?: boolean }) {
+function Card({
+  node,
+  highlight,
+  fluid = false,
+}: {
+  node: OrgPerson;
+  highlight: boolean;
+  fluid?: boolean;
+}) {
   const { closed, toggle, childrenOf, t, load, loading } = useChart();
   const loaded = childrenOf(node.id);
   const open = loaded.length > 0 && !closed.has(node.id);
-  const canExpand = loaded.length > 0 || (node.reportsCount > 0 && Boolean(load));
+  const canExpand =
+    loaded.length > 0 || (node.reportsCount > 0 && Boolean(load));
   return (
-    <div className={cn("flex items-start gap-3 rounded-xl border bg-background px-3 py-2.5 shadow-sm", fluid ? "w-full" : "w-56", highlight ? "border-foreground/40 ring-2 ring-foreground/15" : "border-border/60")}>
+    <div
+      className={cn(
+        "flex items-start gap-3 rounded-xl border bg-background px-3 py-2.5 shadow-sm",
+        fluid ? "w-full" : "w-56",
+        highlight
+          ? "border-foreground/40 ring-2 ring-foreground/15"
+          : "border-border/60"
+      )}
+    >
       <Avatar aria-hidden className="size-9 shrink-0">
         {node.avatarUrl ? <AvatarImage alt="" src={node.avatarUrl} /> : null}
-        <AvatarFallback className="text-xs">{initials(node.name)}</AvatarFallback>
+        <AvatarFallback className="text-xs">
+          {initials(node.name)}
+        </AvatarFallback>
       </Avatar>
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm">{node.name}</div>
-        <div className="truncate text-muted-foreground text-xs">{node.title}</div>
-        {node.reportsCount ? <div className="mt-1 inline-flex items-center gap-1 rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{interpolate(t.reports, { count: node.reportsCount })}</div> : null}
+        <div className="truncate text-muted-foreground text-xs">
+          {node.title}
+        </div>
+        {node.reportsCount ? (
+          <div className="mt-1 inline-flex items-center gap-1 rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+            {interpolate(t.reports, { count: node.reportsCount })}
+          </div>
+        ) : null}
       </div>
       {node.reportsCount ? (
         <button
           aria-expanded={open}
-          aria-label={interpolate(open ? t.hide : t.show, { count: node.reportsCount, name: node.name })}
+          aria-label={interpolate(open ? t.hide : t.show, {
+            count: node.reportsCount,
+            name: node.name,
+          })}
           className="-my-1 -me-1 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none hover:bg-foreground/5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40 pointer-coarse:size-10"
           disabled={!canExpand || loading(node.id)}
           onClick={() => (loaded.length ? toggle(node.id) : load?.(node.id))}
           type="button"
         >
-          {loading(node.id) ? <Spinner className="size-3.5" /> : open ? <ChevronDownIcon aria-hidden className="size-3.5" /> : <ChevronRightIcon aria-hidden className="size-3.5 rtl:rotate-180" />}
+          {loading(node.id) ? (
+            <Spinner className="size-3.5" />
+          ) : open ? (
+            <ChevronDownIcon aria-hidden className="size-3.5" />
+          ) : (
+            <ChevronRightIcon aria-hidden className="size-3.5 rtl:rotate-180" />
+          )}
         </button>
       ) : null}
     </div>
   );
 }
 
-function Tree({ node, highlight = false }: { node: OrgPerson; highlight?: boolean }) {
+function Tree({
+  node,
+  highlight = false,
+}: {
+  node: OrgPerson;
+  highlight?: boolean;
+}) {
   const { closed, childrenOf } = useChart();
   const reports = childrenOf(node.id);
   const open = reports.length > 0 && !closed.has(node.id);
@@ -108,8 +155,23 @@ function Tree({ node, highlight = false }: { node: OrgPerson; highlight?: boolea
           {/* Each child draws its own slice of the horizontal connector. */}
           <div className="flex items-start">
             {reports.map((r, i) => (
-              <div className="relative flex flex-col items-center px-3" key={r.id}>
-                {reports.length > 1 ? <span aria-hidden className={cn("absolute top-0 h-px bg-border/70", i === 0 ? "inset-s-1/2 inset-e-0" : i === reports.length - 1 ? "inset-s-0 inset-e-1/2" : "inset-x-0")} /> : null}
+              <div
+                className="relative flex flex-col items-center px-3"
+                key={r.id}
+              >
+                {reports.length > 1 ? (
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "absolute top-0 h-px bg-border/70",
+                      i === 0
+                        ? "inset-s-1/2 inset-e-0"
+                        : i === reports.length - 1
+                          ? "inset-s-0 inset-e-1/2"
+                          : "inset-x-0"
+                    )}
+                  />
+                ) : null}
                 <div aria-hidden className="h-3 w-px bg-border/70" />
                 <Tree node={r} />
               </div>
@@ -121,7 +183,13 @@ function Tree({ node, highlight = false }: { node: OrgPerson; highlight?: boolea
   );
 }
 
-function OutlineNode({ node, highlight = false }: { node: OrgPerson; highlight?: boolean }) {
+function OutlineNode({
+  node,
+  highlight = false,
+}: {
+  node: OrgPerson;
+  highlight?: boolean;
+}) {
   const { closed, childrenOf } = useChart();
   const reports = childrenOf(node.id);
   const open = reports.length > 0 && !closed.has(node.id);
@@ -141,14 +209,26 @@ function OutlineNode({ node, highlight = false }: { node: OrgPerson; highlight?:
 
 // md+: the classic top-down tree in a horizontal scroller. Phones: an indented,
 // collapsible outline (no sideways panning to find siblings).
-function OrgChartScreen({ people, total, company, status = "ready", error, onRetry, onLoadReports, className }: OrgChartProps) {
+function OrgChartScreen({
+  people,
+  total,
+  company,
+  status = "ready",
+  error,
+  onRetry,
+  onLoadReports,
+  className,
+}: OrgChartProps) {
   const t = useMessages("orgChart", ORG_CHART_MESSAGES);
   const [closed, setClosed] = useState<Set<string>>(() => new Set());
   const loader = useAction(onLoadReports ?? (async () => {}));
   const list = people ?? [];
-  const root = list.find((p) => !p.managerId || !list.some((m) => m.id === p.managerId));
+  const root = list.find(
+    (p) => !p.managerId || !list.some((m) => m.id === p.managerId)
+  );
   const childrenOf = (id: string) => list.filter((p) => p.managerId === id);
-  const depth = (id: string): number => 1 + Math.max(0, ...childrenOf(id).map((c) => depth(c.id)));
+  const depth = (id: string): number =>
+    1 + Math.max(0, ...childrenOf(id).map((c) => depth(c.id)));
   const toggle = (id: string) =>
     setClosed((prev) => {
       const next = new Set(prev);
@@ -156,22 +236,46 @@ function OrgChartScreen({ people, total, company, status = "ready", error, onRet
       else next.add(id);
       return next;
     });
-  const ctx: Ctx = { closed, toggle, childrenOf, t, load: onLoadReports ? (id) => void loader.run(id, id) : undefined, loading: (id) => loader.isPending(id) };
+  const ctx: Ctx = {
+    closed,
+    toggle,
+    childrenOf,
+    t,
+    load: onLoadReports ? (id) => void loader.run(id, id) : undefined,
+    loading: (id) => loader.isPending(id),
+  };
   // Start the wide tree centred on the root instead of its start edge.
   const treeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const viewport = treeRef.current?.parentElement;
-    if (viewport && list.length) viewport.scrollLeft = (viewport.scrollWidth - viewport.clientWidth) / 2;
+    if (viewport && list.length)
+      viewport.scrollLeft = (viewport.scrollWidth - viewport.clientWidth) / 2;
   }, [list.length]);
 
   return (
     <Chart.Provider value={ctx}>
-      <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10", className)}>
+      <div
+        className={cn(
+          "min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10",
+          className
+        )}
+      >
         <div className="mx-auto max-w-5xl">
-          {root ? <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{interpolate(t.eyebrow, { company, total: total ?? list.length, levels: depth(root.id) })}</div> : null}
+          {root ? (
+            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+              {interpolate(t.eyebrow, {
+                company,
+                total: total ?? list.length,
+                levels: depth(root.id),
+              })}
+            </div>
+          ) : null}
           <h1 className="mt-1 font-heading text-2xl">{t.title}</h1>
           {loader.error ? (
-            <p className="mt-3 text-destructive-foreground text-sm" role="alert">
+            <p
+              className="mt-3 text-destructive-foreground text-sm"
+              role="alert"
+            >
               {loader.error}
             </p>
           ) : null}
@@ -179,20 +283,36 @@ function OrgChartScreen({ people, total, company, status = "ready", error, onRet
           {status === "error" ? (
             <div className="mt-8 rounded-xl border border-border/60 py-12 text-center">
               <p className="font-medium">{t.errorTitle}</p>
-              {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+              {error ? (
+                <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+              ) : null}
               {onRetry ? (
-                <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+                <Button
+                  className="mt-4"
+                  onClick={onRetry}
+                  size="sm"
+                  variant="outline"
+                >
                   {t.retry}
                 </Button>
               ) : null}
             </div>
           ) : !people || status === "loading" ? (
-            <Skeleton aria-busy="true" className="mt-8 h-80 w-full rounded-xl motion-reduce:animate-none" />
+            <Skeleton
+              aria-busy="true"
+              className="mt-8 h-80 w-full rounded-xl motion-reduce:animate-none"
+            />
           ) : !root ? (
-            <p className="mt-8 rounded-xl border border-border/60 py-12 text-center text-muted-foreground text-sm">{t.empty}</p>
+            <p className="mt-8 rounded-xl border border-border/60 py-12 text-center text-muted-foreground text-sm">
+              {t.empty}
+            </p>
           ) : (
             <>
-              <ScrollRegion aria-label={t.chart} className="mt-8 rounded-xl border border-border/60 bg-background/40 max-md:hidden" orientation="horizontal">
+              <ScrollRegion
+                aria-label={t.chart}
+                className="mt-8 rounded-xl border border-border/60 bg-background/40 max-md:hidden"
+                orientation="horizontal"
+              >
                 <div className="mx-auto w-max p-8" ref={treeRef}>
                   <Tree highlight node={root} />
                 </div>

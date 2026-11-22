@@ -51,11 +51,46 @@ export const RecoveryCodes = z.array(z.string()).meta({ id: "RecoveryCodes" });
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getSecurity: { method: "GET", path: "/me/security", summary: "Two-factor status, passkeys, sessions and recovery code count", response: SecurityOverview },
-  addPasskey: { method: "POST", path: "/me/passkeys", summary: "Register a passkey (WebAuthn attestation verified by the backend)", response: Passkey },
-  removePasskey: { method: "DELETE", path: "/me/passkeys/{id}", summary: "Remove a passkey", params: z.object({ id: z.string() }) },
-  revokeSession: { method: "DELETE", path: "/me/sessions/{id}", summary: "Sign a session out", params: z.object({ id: z.string() }) },
-  revokeOtherSessions: { method: "DELETE", path: "/me/sessions", summary: "Sign out every session except this one" },
-  getRecoveryCodes: { method: "GET", path: "/me/recovery-codes", summary: "The unused recovery codes (ask for re-authentication first)", response: RecoveryCodes },
-  regenerateRecoveryCodes: { method: "POST", path: "/me/recovery-codes", summary: "Replace every recovery code with a new set", response: RecoveryCodes },
+  getSecurity: {
+    method: "GET",
+    path: "/me/security",
+    summary: "Two-factor status, passkeys, sessions and recovery code count",
+    response: SecurityOverview,
+  },
+  addPasskey: {
+    method: "POST",
+    path: "/me/passkeys",
+    summary:
+      "Register a passkey (WebAuthn attestation verified by the backend)",
+    response: Passkey,
+  },
+  removePasskey: {
+    method: "DELETE",
+    path: "/me/passkeys/{id}",
+    summary: "Remove a passkey",
+    params: z.object({ id: z.string() }),
+  },
+  revokeSession: {
+    method: "DELETE",
+    path: "/me/sessions/{id}",
+    summary: "Sign a session out",
+    params: z.object({ id: z.string() }),
+  },
+  revokeOtherSessions: {
+    method: "DELETE",
+    path: "/me/sessions",
+    summary: "Sign out every session except this one",
+  },
+  getRecoveryCodes: {
+    method: "GET",
+    path: "/me/recovery-codes",
+    summary: "The unused recovery codes (ask for re-authentication first)",
+    response: RecoveryCodes,
+  },
+  regenerateRecoveryCodes: {
+    method: "POST",
+    path: "/me/recovery-codes",
+    summary: "Replace every recovery code with a new set",
+    response: RecoveryCodes,
+  },
 });

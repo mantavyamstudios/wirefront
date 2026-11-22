@@ -19,7 +19,15 @@ export function TableApiKeysShowcasePage() {
 
   const onCreate = async (input: CreateKeyInput) => {
     await wait(700);
-    const created = { ...fixtures.createKey, key: { ...fixtures.createKey.key, ...input, id: `key_${keys.length + 1}`, prefix: `sk_${input.env}_9b1e` } };
+    const created = {
+      ...fixtures.createKey,
+      key: {
+        ...fixtures.createKey.key,
+        ...input,
+        id: `key_${keys.length + 1}`,
+        prefix: `sk_${input.env}_9b1e`,
+      },
+    };
     setKeys((all) => [created.key, ...all]);
     return ok(created);
   };
@@ -42,7 +50,13 @@ export function TableApiKeysShowcasePage() {
         onRetry={() => {}}
         onRevoke={onRevoke}
         onRotate={onRotate}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

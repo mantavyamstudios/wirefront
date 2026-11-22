@@ -15,13 +15,24 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const NOTICE_URL = "https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md";
+const NOTICE_URL =
+  "https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md";
 
-const ROOTS = ["apps/runtime/src", "apps/runtime/scripts", "apps/runtime/tests", "apps/runtime/vite.config.ts", "apps/runtime/vitest.config.ts", "packages/ui/src", "packages/bridge/src", "scripts"];
+const ROOTS = [
+  "apps/runtime/src",
+  "apps/runtime/scripts",
+  "apps/runtime/tests",
+  "apps/runtime/vite.config.ts",
+  "apps/runtime/vitest.config.ts",
+  "packages/ui/src",
+  "packages/bridge/src",
+  "scripts",
+];
 const EXTENSIONS = /\.(ts|tsx|mjs|css)$/;
 const IGNORED = /(^|\/)routeTree\.gen\.ts$/;
 
-const WIREFRONT = "Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront";
+const WIREFRONT =
+  "Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront";
 
 /** Licence lines for a file, based on where its code came from. */
 export function headerLines(_path: string, source: string): string[] {
@@ -30,17 +41,22 @@ export function headerLines(_path: string, source: string): string[] {
   const lines = ["SPDX-License-Identifier: MIT"];
   lines.push(WIREFRONT);
   if (source.includes("Ported from devl.dev")) {
-    lines.push(`Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see ${NOTICE_URL}`);
+    lines.push(
+      `Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see ${NOTICE_URL}`
+    );
   }
   return lines;
 }
 
 export function hasHeader(source: string): boolean {
-  return source.split("\n", 6).some((line) => line.includes("SPDX-License-Identifier:"));
+  return source
+    .split("\n", 6)
+    .some((line) => line.includes("SPDX-License-Identifier:"));
 }
 
 function comment(path: string, lines: string[]): string {
-  if (path.endsWith(".css")) return `/*\n${lines.map((l) => ` * ${l}`).join("\n")}\n */\n`;
+  if (path.endsWith(".css"))
+    return `/*\n${lines.map((l) => ` * ${l}`).join("\n")}\n */\n`;
   return `${lines.map((l) => `// ${l}`).join("\n")}\n`;
 }
 
@@ -60,7 +76,8 @@ export function sourceFiles(): string[] {
   const walk = (abs: string) => {
     const stat = statSync(abs);
     if (stat.isDirectory()) {
-      for (const name of readdirSync(abs)) if (name !== "node_modules") walk(join(abs, name));
+      for (const name of readdirSync(abs))
+        if (name !== "node_modules") walk(join(abs, name));
       return;
     }
     const rel = relative(ROOT, abs);
@@ -71,17 +88,26 @@ export function sourceFiles(): string[] {
 }
 
 export function missingHeaders(): string[] {
-  return sourceFiles().filter((rel) => !hasHeader(readFileSync(resolve(ROOT, rel), "utf8")));
+  return sourceFiles().filter(
+    (rel) => !hasHeader(readFileSync(resolve(ROOT, rel), "utf8"))
+  );
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (
+  process.argv[1] &&
+  resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
   if (process.argv.includes("--check")) {
     const missing = missingHeaders();
     if (missing.length) {
-      console.error(`${missing.length} file(s) have no SPDX header. Run \`bun run spdx\`:\n  ${missing.join("\n  ")}`);
+      console.error(
+        `${missing.length} file(s) have no SPDX header. Run \`bun run spdx\`:\n  ${missing.join("\n  ")}`
+      );
       process.exit(1);
     }
-    console.log(`All ${sourceFiles().length} source files have an SPDX header.`);
+    console.log(
+      `All ${sourceFiles().length} source files have an SPDX header.`
+    );
   } else {
     let added = 0;
     for (const rel of sourceFiles()) {

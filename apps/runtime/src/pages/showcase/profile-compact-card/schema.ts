@@ -23,12 +23,30 @@ export const RosterMember = z
   .meta({ id: "RosterMember" });
 export type RosterMember = z.infer<typeof RosterMember>;
 
-export const Roster = z.object({ members: z.array(RosterMember), total: z.number().int() }).meta({ id: "Roster" });
+export const Roster = z
+  .object({ members: z.array(RosterMember), total: z.number().int() })
+  .meta({ id: "Roster" });
 export type Roster = z.infer<typeof Roster>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listRoster: { method: "GET", path: "/workspace/members", summary: "Workspace members with presence", response: Roster },
-  setPermission: { method: "PUT", path: "/workspace/members/{id}/permission", summary: "Change a member's permission", params: z.object({ id: z.string() }), body: z.object({ permission: Permission }) },
-  removeRosterMember: { method: "DELETE", path: "/workspace/members/{id}", summary: "Remove someone from the workspace", params: z.object({ id: z.string() }) },
+  listRoster: {
+    method: "GET",
+    path: "/workspace/members",
+    summary: "Workspace members with presence",
+    response: Roster,
+  },
+  setPermission: {
+    method: "PUT",
+    path: "/workspace/members/{id}/permission",
+    summary: "Change a member's permission",
+    params: z.object({ id: z.string() }),
+    body: z.object({ permission: Permission }),
+  },
+  removeRosterMember: {
+    method: "DELETE",
+    path: "/workspace/members/{id}",
+    summary: "Remove someone from the workspace",
+    params: z.object({ id: z.string() }),
+  },
 });

@@ -3,7 +3,11 @@
 /** The state switcher's URL handling (apps/runtime/src/lib/showcase-state.tsx). */
 import { describe, expect, it } from "vitest";
 import { CATEGORIES } from "@/lib/designs";
-import { nextScreenState, parseScreenState, SCREEN_STATES } from "@/lib/showcase-state";
+import {
+  nextScreenState,
+  parseScreenState,
+  SCREEN_STATES,
+} from "@/lib/showcase-state";
 
 describe("screen states", () => {
   it("accepts only states the design supports, otherwise ready", () => {
@@ -25,7 +29,12 @@ describe("screen states", () => {
     for (const c of CATEGORIES)
       for (const d of c.designs) {
         if (!d.states) continue;
-        expect(d.states.every((s) => (SCREEN_STATES as readonly string[]).includes(s)), `${c.slug}/${d.slug}`).toBe(true);
+        expect(
+          d.states.every((s) =>
+            (SCREEN_STATES as readonly string[]).includes(s)
+          ),
+          `${c.slug}/${d.slug}`
+        ).toBe(true);
         expect(d.states[0], `${c.slug}/${d.slug}`).toBe("ready");
       }
   });

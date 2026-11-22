@@ -17,7 +17,11 @@ export function AuthResetPasswordShowcasePage() {
   return (
     <ResetPassword
       forgotPasswordHref="#forgot-password"
-      linkError={state === "error" ? "Reset links work once and expire after 30 minutes. Ask for a new one and use it straight away." : undefined}
+      linkError={
+        state === "error"
+          ? "Reset links work once and expire after 30 minutes. Ask for a new one and use it straight away."
+          : undefined
+      }
       onReset={demoReset}
       signInHref="#sign-in"
       token={fixtures.token}

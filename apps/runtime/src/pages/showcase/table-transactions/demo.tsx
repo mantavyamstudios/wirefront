@@ -8,22 +8,31 @@ import * as fixtures from "./fixtures";
 import { TransactionsTable, type TransactionsListQuery } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 /** What a backend's listTransactions would do with the query. */
 function runQuery(query: TransactionsListQuery) {
   const search = query.search?.trim().toLowerCase();
   const f = query.filters ?? {};
-  const since = f.withinDays ? Date.parse(fixtures.now) - f.withinDays * 86_400_000 : 0;
+  const since = f.withinDays
+    ? Date.parse(fixtures.now) - f.withinDays * 86_400_000
+    : 0;
   const all = fixtures.transactions.filter(
     (tx) =>
-      (!search || [tx.id, tx.description, tx.counterparty].some((v) => v.toLowerCase().includes(search))) &&
+      (!search ||
+        [tx.id, tx.description, tx.counterparty].some((v) =>
+          v.toLowerCase().includes(search)
+        )) &&
       (!f.account || tx.account === f.account) &&
       (!f.direction || tx.direction === f.direction) &&
-      Date.parse(tx.occurredAt) >= since,
+      Date.parse(tx.occurredAt) >= since
   );
   const settled = all.filter((tx) => tx.status === "succeeded");
-  const sum = (dir: "in" | "out") => settled.filter((tx) => tx.direction === dir).reduce((n, tx) => n + tx.amount, 0);
+  const sum = (dir: "in" | "out") =>
+    settled
+      .filter((tx) => tx.direction === dir)
+      .reduce((n, tx) => n + tx.amount, 0);
   const start = (query.page - 1) * query.pageSize;
   return {
     items: all.slice(start, start + query.pageSize),

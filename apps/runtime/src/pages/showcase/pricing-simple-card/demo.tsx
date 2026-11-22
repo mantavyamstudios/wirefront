@@ -5,5 +5,11 @@ import * as fixtures from "./fixtures";
 import { SinglePlanPricing } from "./view";
 
 export function PricingSimpleCardShowcasePage() {
-  return <SinglePlanPricing contactHref="#contact" onStart={() => {}} plan={fixtures.getPlan} />;
+  return (
+    <SinglePlanPricing
+      contactHref="#contact"
+      onStart={() => {}}
+      plan={fixtures.getPlan}
+    />
+  );
 }

@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const TicketPriority = z.enum(["p0", "p1", "p2"]).meta({ id: "TicketPriority" });
+export const TicketPriority = z
+  .enum(["p0", "p1", "p2"])
+  .meta({ id: "TicketPriority" });
 export type TicketPriority = z.infer<typeof TicketPriority>;
 
 export const SlaBreach = z
@@ -54,7 +56,9 @@ export const QueueOverview = z
     /** Ranked, best first. */
     agents: z.array(SupportAgent),
     /** Most used first. */
-    tags: z.array(z.object({ name: z.string(), count: z.number().int().nonnegative() })),
+    tags: z.array(
+      z.object({ name: z.string(), count: z.number().int().nonnegative() })
+    ),
   })
   .meta({ id: "QueueOverview" });
 export type QueueOverview = z.infer<typeof QueueOverview>;
@@ -64,7 +68,8 @@ export const api = defineApi({
   getQueueOverview: {
     method: "GET",
     path: "/support/overview",
-    summary: "Ticket counts, SLA breaches, first-response time, agents and tags for today",
+    summary:
+      "Ticket counts, SLA breaches, first-response time, agents and tags for today",
     response: QueueOverview,
   },
 });

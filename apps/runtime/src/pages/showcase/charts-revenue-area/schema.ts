@@ -27,5 +27,10 @@ export type RevenueBreakdown = z.infer<typeof RevenueBreakdown>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getRevenueBreakdown: { method: "GET", path: "/reports/revenue-breakdown", summary: "Monthly revenue by stream for the last 12 months", response: RevenueBreakdown },
+  getRevenueBreakdown: {
+    method: "GET",
+    path: "/reports/revenue-breakdown",
+    summary: "Monthly revenue by stream for the last 12 months",
+    response: RevenueBreakdown,
+  },
 });

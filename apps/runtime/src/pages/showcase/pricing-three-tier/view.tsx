@@ -6,7 +6,11 @@ import { Button } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, SparklesIcon } from "lucide-react";
@@ -17,7 +21,8 @@ import type { Plan } from "./schema";
 export const PRICING_MESSAGES = {
   eyebrow: "Pricing",
   title: "Pay for what your team needs.",
-  subtitle: "Three plans, no surprises. Switch up or down at any time — we pro-rate the difference.",
+  subtitle:
+    "Three plans, no surprises. Switch up or down at any time — we pro-rate the difference.",
   custom: "Custom",
   forever: "forever",
   month: "/month",
@@ -38,13 +43,22 @@ export interface PricingProps {
   className?: string;
 }
 
-function PricingScreen({ plans, onChoosePlan, currentPlanId, className }: PricingProps) {
+function PricingScreen({
+  plans,
+  onChoosePlan,
+  currentPlanId,
+  className,
+}: PricingProps) {
   const t = useMessages("pricing", PRICING_MESSAGES);
   const format = useFormat();
   const choose = useAction(onChoosePlan);
 
   const price = (p: Plan) =>
-    p.price ? format.money(p.price.amount, p.price.currency, { maximumFractionDigits: p.price.amount % 1 ? 2 : 0 }) : t.custom;
+    p.price
+      ? format.money(p.price.amount, p.price.currency, {
+          maximumFractionDigits: p.price.amount % 1 ? 2 : 0,
+        })
+      : t.custom;
   const cadence = (p: Plan) => {
     if (!p.price) return t.annual;
     if (p.interval === "forever") return t.forever;
@@ -57,9 +71,15 @@ function PricingScreen({ plans, onChoosePlan, currentPlanId, className }: Pricin
     <div className={cn("min-h-svh bg-background text-foreground", className)}>
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
         <div className="text-center">
-          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
-          <h1 className="mt-2 text-balance font-heading text-3xl tracking-tight sm:text-4xl md:text-5xl">{t.title}</h1>
-          <p className="mx-auto mt-3 max-w-xl text-balance text-muted-foreground text-sm">{t.subtitle}</p>
+          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+            {t.eyebrow}
+          </div>
+          <h1 className="mt-2 text-balance font-heading text-3xl tracking-tight sm:text-4xl md:text-5xl">
+            {t.title}
+          </h1>
+          <p className="mx-auto mt-3 max-w-xl text-balance text-muted-foreground text-sm">
+            {t.subtitle}
+          </p>
         </div>
 
         {/* 1 column → 2 at md (featured plan first, the third spans) → 3 at lg. */}
@@ -71,7 +91,9 @@ function PricingScreen({ plans, onChoosePlan, currentPlanId, className }: Pricin
               <div
                 className={cn(
                   "relative flex flex-col rounded-2xl border p-5 sm:p-6",
-                  p.featured ? "border-foreground bg-foreground/4 shadow-lg max-lg:order-first lg:scale-[1.02]" : "border-border/60 bg-background/40",
+                  p.featured
+                    ? "border-foreground bg-foreground/4 shadow-lg max-lg:order-first lg:scale-[1.02]"
+                    : "border-border/60 bg-background/40"
                 )}
                 key={p.id}
               >
@@ -81,17 +103,29 @@ function PricingScreen({ plans, onChoosePlan, currentPlanId, className }: Pricin
                     {p.badge}
                   </div>
                 ) : null}
-                <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{p.name}</h2>
+                <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+                  {p.name}
+                </h2>
                 <div className="mt-2 flex items-baseline gap-1">
                   <span className="font-heading text-4xl">{price(p)}</span>
-                  <span className="text-muted-foreground text-xs">{cadence(p)}</span>
+                  <span className="text-muted-foreground text-xs">
+                    {cadence(p)}
+                  </span>
                 </div>
                 <p className="mt-2 text-muted-foreground text-sm">{p.blurb}</p>
 
                 <ul className="mt-6 flex flex-1 flex-col gap-2.5">
                   {p.features.map((f) => (
                     <li className="flex items-start gap-2 text-sm" key={f}>
-                      <CheckIcon aria-hidden className={cn("mt-0.5 size-4 shrink-0", p.featured ? "text-foreground" : "text-category-2-foreground")} />
+                      <CheckIcon
+                        aria-hidden
+                        className={cn(
+                          "mt-0.5 size-4 shrink-0",
+                          p.featured
+                            ? "text-foreground"
+                            : "text-category-2-foreground"
+                        )}
+                      />
                       {f}
                     </li>
                   ))}
@@ -115,7 +149,10 @@ function PricingScreen({ plans, onChoosePlan, currentPlanId, className }: Pricin
         </div>
 
         {choose.error ? (
-          <p className="mt-6 text-center text-destructive-foreground text-sm" role="alert">
+          <p
+            className="mt-6 text-center text-destructive-foreground text-sm"
+            role="alert"
+          >
             {choose.error}
           </p>
         ) : null}

@@ -20,16 +20,22 @@ function runQuery(query: ProductsListQuery) {
       (!f.inStock || p.inStock) &&
       (!f.onSale || p.onSale) &&
       (!f.freeShipping || p.freeShipping) &&
-      (!f.isNew || p.isNew),
+      (!f.isNew || p.isNew)
   );
   const start = (query.page - 1) * query.pageSize;
-  return { items: items.slice(start, start + query.pageSize), total: items.length };
+  return {
+    items: items.slice(start, start + query.pageSize),
+    total: items.length,
+  };
 }
 
 const counts = fixtures.countFacets(fixtures.products);
 
 export function FilterSidebarShowcasePage() {
-  const [query, setQuery] = useState<ProductsListQuery>({ page: 1, pageSize: 24 });
+  const [query, setQuery] = useState<ProductsListQuery>({
+    page: 1,
+    pageSize: 24,
+  });
   const page = useMemo(() => runQuery(query), [query]);
   return (
     <WirefrontProvider currency="USD">

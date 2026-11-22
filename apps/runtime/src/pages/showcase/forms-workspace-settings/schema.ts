@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const DateFormat = z.enum(["ymd", "dmy", "mdy"]).meta({ id: "DateFormat" });
+export const DateFormat = z
+  .enum(["ymd", "dmy", "mdy"])
+  .meta({ id: "DateFormat" });
 export type DateFormat = z.infer<typeof DateFormat>;
 
 /** The General settings, as loaded and as "Save changes" sends them. */
@@ -14,7 +16,10 @@ export const GeneralSettings = z
       .string()
       .min(2, "Use at least two characters.")
       .max(32)
-      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Lowercase letters, numbers and dashes."),
+      .regex(
+        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+        "Lowercase letters, numbers and dashes."
+      ),
     /** An IANA time zone, e.g. "America/New_York". */
     timeZone: z.string(),
     dateFormat: DateFormat,
@@ -25,12 +30,19 @@ export const GeneralSettings = z
   .meta({ id: "GeneralSettings" });
 export type GeneralSettings = z.infer<typeof GeneralSettings>;
 
-export const UploadedAvatar = z.object({ avatarUrl: z.url() }).meta({ id: "UploadedAvatar" });
+export const UploadedAvatar = z
+  .object({ avatarUrl: z.url() })
+  .meta({ id: "UploadedAvatar" });
 export type UploadedAvatar = z.infer<typeof UploadedAvatar>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getGeneralSettings: { method: "GET", path: "/workspace/settings", summary: "The workspace's general settings", response: GeneralSettings },
+  getGeneralSettings: {
+    method: "GET",
+    path: "/workspace/settings",
+    summary: "The workspace's general settings",
+    response: GeneralSettings,
+  },
   saveGeneralSettings: {
     method: "PUT",
     path: "/workspace/settings",
@@ -41,7 +53,7 @@ export const api = defineApi({
   uploadAvatar: {
     method: "POST",
     path: "/workspace/avatar",
-    summary: "Upload the workspace avatar (multipart, field \"file\")",
+    summary: 'Upload the workspace avatar (multipart, field "file")',
     response: UploadedAvatar,
   },
 });

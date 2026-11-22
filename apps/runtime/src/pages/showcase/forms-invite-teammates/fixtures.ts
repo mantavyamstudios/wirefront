@@ -5,7 +5,8 @@ import type { Invitation, SendInvitesResult } from "./schema";
 /** Demo data for the showcase, the generated mocks and tests. */
 export const autoJoinDomain = "acme.com";
 export const inviteLink = "https://orbit.so/invite/8f3a2c";
-export const defaultMessage = "Hey — joining us in Acme's workspace. Click the link to set up your account.";
+export const defaultMessage =
+  "Hey — joining us in Acme's workspace. Click the link to set up your account.";
 export const defaultInvitees: Invitation[] = [
   { email: "alex@globex.com", role: "member" },
   { email: "priya@acme.com", role: "member" },

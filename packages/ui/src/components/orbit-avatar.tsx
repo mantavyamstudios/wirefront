@@ -69,7 +69,7 @@ export function orbitGeometry(seed: string): OrbitSpec {
     const spacing = 3.8 + rand() * 2.4;
     const dotCount = Math.max(
       6,
-      Math.min(24, Math.round(circumference / spacing)),
+      Math.min(24, Math.round(circumference / spacing))
     );
     const rotation = rand() * Math.PI * 2;
     const dotSize = 0.95 + rand() * 0.75;
@@ -140,7 +140,7 @@ export function orbitGeometry(seed: string): OrbitSpec {
 export function forEachRingDot(
   ring: OrbitRing,
   rotationDelta: number,
-  visit: (x: number, y: number, angle: number) => void,
+  visit: (x: number, y: number, angle: number) => void
 ): void {
   const step = (Math.PI * 2) / ring.dotCount;
   for (let i = 0; i < ring.dotCount; i++) {
@@ -152,12 +152,14 @@ export function forEachRingDot(
       const gsN = ((gs % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
       const geN = ((ge % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
       const inGap =
-        gsN <= geN
-          ? norm >= gsN && norm <= geN
-          : norm >= gsN || norm <= geN;
+        gsN <= geN ? norm >= gsN && norm <= geN : norm >= gsN || norm <= geN;
       if (inGap) continue;
     }
-    visit(50 + Math.cos(angle) * ring.radius, 50 + Math.sin(angle) * ring.radius, angle);
+    visit(
+      50 + Math.cos(angle) * ring.radius,
+      50 + Math.sin(angle) * ring.radius,
+      angle
+    );
   }
 }
 
@@ -191,11 +193,13 @@ export function OrbitAvatar({
   return (
     <span
       // Labelled image when titled, decorative otherwise.
-      {...(title ? { role: "img", "aria-label": title } : { "aria-hidden": true })}
+      {...(title
+        ? { role: "img", "aria-label": title }
+        : { "aria-hidden": true })}
       className={cn(
         "inline-block shrink-0 align-middle leading-none",
         toneClass,
-        className,
+        className
       )}
       style={{ width: size, height: size, ...style }}
     >

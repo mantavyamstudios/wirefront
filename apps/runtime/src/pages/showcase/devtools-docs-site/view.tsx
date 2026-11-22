@@ -10,11 +10,48 @@ import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Sheet, SheetContent, SheetTitle } from "@wirefront/ui/sheet";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import { ScrollRegion } from "@wirefront/ui/wirefront/scroll-region";
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronDownIcon, ChevronRightIcon, CopyIcon, CornerDownLeftIcon, FileTextIcon, HashIcon, InfoIcon, MenuIcon, PencilIcon, SearchIcon, ThumbsDownIcon, ThumbsUpIcon, TriangleAlertIcon, XIcon } from "lucide-react";
-import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
-import { Fragment, type ReactNode, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  CopyIcon,
+  CornerDownLeftIcon,
+  FileTextIcon,
+  HashIcon,
+  InfoIcon,
+  MenuIcon,
+  PencilIcon,
+  SearchIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+  TriangleAlertIcon,
+  XIcon,
+} from "lucide-react";
+import {
+  AnimatePresence,
+  LayoutGroup,
+  MotionConfig,
+  motion,
+} from "motion/react";
+import {
+  Fragment,
+  type ReactNode,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { DocsBlock, DocsLang, DocsPage, DocsSection } from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("docsSite.<key>"). */
@@ -75,8 +112,10 @@ export interface DocsSiteProps {
 
 const ease = [0.23, 1, 0.32, 1] as const;
 const spring = { type: "spring", stiffness: 520, damping: 42 } as const;
-const KEYWORDS = /^(const|let|var|await|async|for|of|in|new|return|import|from|if|else|func|err|nil|range|def|print|True|False|None|curl)$/;
-const TOKENS = /((?:\/\/|#).*$)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(\s-[A-Za-z]\b|\s--?[a-z-]+)|(\b\d[\d_.]*\b)|([A-Za-z_$][\w$]*)/gm;
+const KEYWORDS =
+  /^(const|let|var|await|async|for|of|in|new|return|import|from|if|else|func|err|nil|range|def|print|True|False|None|curl)$/;
+const TOKENS =
+  /((?:\/\/|#).*$)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(\s-[A-Za-z]\b|\s--?[a-z-]+)|(\b\d[\d_.]*\b)|([A-Za-z_$][\w$]*)/gm;
 
 /** Light syntax colouring for samples in several languages. */
 function highlight(code: string): ReactNode[] {
@@ -88,7 +127,9 @@ function highlight(code: string): ReactNode[] {
     const tok = m[0];
     const after = at + tok.length;
     const tone =
-      m[1] && (m[1].startsWith("//") || /(^|\s)#/.test(code.slice(Math.max(0, at - 1), at + 1)))
+      m[1] &&
+      (m[1].startsWith("//") ||
+        /(^|\s)#/.test(code.slice(Math.max(0, at - 1), at + 1)))
         ? "text-muted-foreground italic"
         : m[2]
           ? "text-category-2-foreground"
@@ -108,7 +149,7 @@ function highlight(code: string): ReactNode[] {
         </span>
       ) : (
         tok
-      ),
+      )
     );
     last = after;
   }
@@ -121,22 +162,42 @@ function Inline({ text }: { text: string }) {
   let at = 0;
   return (
     <>
-      {text.split(/(`[^`]+`)/g).filter(Boolean).map((part) => {
-        const key = at;
-        at += part.length;
-        return part.length > 1 && part.startsWith("`") ? (
-          <code className="rounded-md border bg-muted px-1 py-px font-mono text-[0.8125rem]" key={key}>
-            {part.slice(1, -1)}
-          </code>
-        ) : (
-          <Fragment key={key}>{part}</Fragment>
-        );
-      })}
+      {text
+        .split(/(`[^`]+`)/g)
+        .filter(Boolean)
+        .map((part) => {
+          const key = at;
+          at += part.length;
+          return part.length > 1 && part.startsWith("`") ? (
+            <code
+              className="rounded-md border bg-muted px-1 py-px font-mono text-[0.8125rem]"
+              key={key}
+            >
+              {part.slice(1, -1)}
+            </code>
+          ) : (
+            <Fragment key={key}>{part}</Fragment>
+          );
+        })}
     </>
   );
 }
 
-function CodeTabs({ samples, title, lang, onLang, languages, t }: { samples: Partial<Record<DocsLang, string>>; title?: string; lang: DocsLang; onLang: (l: DocsLang) => void; languages: { id: DocsLang; label: string }[]; t: Messages }) {
+function CodeTabs({
+  samples,
+  title,
+  lang,
+  onLang,
+  languages,
+  t,
+}: {
+  samples: Partial<Record<DocsLang, string>>;
+  title?: string;
+  lang: DocsLang;
+  onLang: (l: DocsLang) => void;
+  languages: { id: DocsLang; label: string }[];
+  t: Messages;
+}) {
   const available = languages.filter((l) => samples[l.id]);
   const current = samples[lang] ? lang : (available[0]?.id ?? lang);
   const [copy, setCopy] = useState<"idle" | "copied" | "failed">("idle");
@@ -149,23 +210,51 @@ function CodeTabs({ samples, title, lang, onLang, languages, t }: { samples: Par
   return (
     <div className="overflow-hidden rounded-xl border bg-card shadow-xs/5">
       <div className="flex h-10 items-center gap-1 border-b bg-muted/40 ps-1.5 pe-1.5">
-        {title ? <span className="hidden min-w-0 flex-1 truncate ps-1.5 pe-2 font-medium text-muted-foreground text-xs @2xl:block">{title}</span> : null}
+        {title ? (
+          <span className="hidden min-w-0 flex-1 truncate ps-1.5 pe-2 font-medium text-muted-foreground text-xs @2xl:block">
+            {title}
+          </span>
+        ) : null}
         {single ? (
-          <span className="px-1.5 font-mono text-muted-foreground text-xs">{t.terminal}</span>
+          <span className="px-1.5 font-mono text-muted-foreground text-xs">
+            {t.terminal}
+          </span>
         ) : (
           <fieldset className="m-0 flex min-w-0 gap-0.5 overflow-x-auto border-0 p-0 scrollbar-none">
             <legend className="sr-only">{t.languages}</legend>
             {available.map((l) => (
-              <button aria-pressed={current === l.id} className={cn("relative h-7 shrink-0 cursor-pointer rounded-md px-2 font-medium text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring", current === l.id ? "text-foreground" : "text-muted-foreground hover:text-foreground")} key={l.id} onClick={() => onLang(l.id)} type="button">
-                {current === l.id ? <span className="absolute inset-0 rounded-md bg-background shadow-xs/5 ring-1 ring-border dark:bg-accent dark:ring-0" /> : null}
+              <button
+                aria-pressed={current === l.id}
+                className={cn(
+                  "relative h-7 shrink-0 cursor-pointer rounded-md px-2 font-medium text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  current === l.id
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+                key={l.id}
+                onClick={() => onLang(l.id)}
+                type="button"
+              >
+                {current === l.id ? (
+                  <span className="absolute inset-0 rounded-md bg-background shadow-xs/5 ring-1 ring-border dark:bg-accent dark:ring-0" />
+                ) : null}
                 <span className="relative">{l.label}</span>
               </button>
             ))}
           </fieldset>
         )}
         <button
-          aria-label={copy === "copied" ? t.copied : copy === "failed" ? t.copyFailed : t.copy}
-          className={cn("ms-auto flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground outline-none transition-[color,background-color,scale] duration-150 ease-out hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:scale-90", title && "@2xl:ms-1")}
+          aria-label={
+            copy === "copied"
+              ? t.copied
+              : copy === "failed"
+                ? t.copyFailed
+                : t.copy
+          }
+          className={cn(
+            "ms-auto flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground outline-none transition-[color,background-color,scale] duration-150 ease-out hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
+            title && "@2xl:ms-1"
+          )}
           onClick={() => {
             if (!navigator.clipboard) {
               setCopy("failed");
@@ -173,14 +262,26 @@ function CodeTabs({ samples, title, lang, onLang, languages, t }: { samples: Par
             }
             navigator.clipboard.writeText(samples[current] ?? "").then(
               () => setCopy("copied"),
-              () => setCopy("failed"),
+              () => setCopy("failed")
             );
           }}
           type="button"
         >
           <AnimatePresence initial={false} mode="popLayout">
-            <motion.span animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} initial={{ opacity: 0, scale: 0.8 }} key={copy} transition={{ duration: 0.12 }}>
-              {copy === "copied" ? <CheckIcon className="size-3.5 text-success" /> : copy === "failed" ? <XIcon className="size-3.5 text-destructive" /> : <CopyIcon className="size-3.5" />}
+            <motion.span
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              key={copy}
+              transition={{ duration: 0.12 }}
+            >
+              {copy === "copied" ? (
+                <CheckIcon className="size-3.5 text-success" />
+              ) : copy === "failed" ? (
+                <XIcon className="size-3.5 text-destructive" />
+              ) : (
+                <CopyIcon className="size-3.5" />
+              )}
             </motion.span>
           </AnimatePresence>
         </button>
@@ -194,7 +295,19 @@ function CodeTabs({ samples, title, lang, onLang, languages, t }: { samples: Par
   );
 }
 
-function Block({ block, lang, onLang, languages, t }: { block: DocsBlock; lang: DocsLang; onLang: (l: DocsLang) => void; languages: { id: DocsLang; label: string }[]; t: Messages }) {
+function Block({
+  block,
+  lang,
+  onLang,
+  languages,
+  t,
+}: {
+  block: DocsBlock;
+  lang: DocsLang;
+  onLang: (l: DocsLang) => void;
+  languages: { id: DocsLang; label: string }[];
+  t: Messages;
+}) {
   switch (block.type) {
     case "p":
       return (
@@ -207,7 +320,10 @@ function Block({ block, lang, onLang, languages, t }: { block: DocsBlock; lang: 
         <ul className="flex flex-col gap-1 ps-1">
           {block.items.map((it) => (
             <li className="flex gap-3 text-[15px] leading-7" key={it}>
-              <span aria-hidden className="mt-3.25 size-1 shrink-0 rounded-full bg-muted-foreground/70" />
+              <span
+                aria-hidden
+                className="mt-3.25 size-1 shrink-0 rounded-full bg-muted-foreground/70"
+              />
               <span className="text-foreground/85">
                 <Inline text={it} />
               </span>
@@ -220,7 +336,10 @@ function Block({ block, lang, onLang, languages, t }: { block: DocsBlock; lang: 
         <ol className="relative flex flex-col gap-3 before:absolute before:inset-s-3 before:top-3 before:bottom-3 before:w-px before:bg-border">
           {block.items.map((it, i) => (
             <li className="relative flex gap-3" key={it}>
-              <span aria-hidden className="z-10 flex size-6 shrink-0 items-center justify-center rounded-full border bg-background font-medium text-xs tabular-nums">
+              <span
+                aria-hidden
+                className="z-10 flex size-6 shrink-0 items-center justify-center rounded-full border bg-background font-medium text-xs tabular-nums"
+              >
                 {i + 1}
               </span>
               <span className="text-pretty text-[15px] text-foreground/85 leading-6">
@@ -233,8 +352,24 @@ function Block({ block, lang, onLang, languages, t }: { block: DocsBlock; lang: 
     case "callout": {
       const Icon = block.tone === "info" ? InfoIcon : TriangleAlertIcon;
       return (
-        <div className={cn("flex gap-3 rounded-xl border px-4 py-3.5", block.tone === "info" ? "border-info/16 bg-info/4 dark:border-info/14 dark:bg-info/6" : "border-warning/20 bg-warning/5 dark:border-warning/14 dark:bg-warning/6")} role="note">
-          <Icon aria-hidden className={cn("mt-0.75 size-4 shrink-0", block.tone === "info" ? "text-info-foreground" : "text-warning-foreground")} />
+        <div
+          className={cn(
+            "flex gap-3 rounded-xl border px-4 py-3.5",
+            block.tone === "info"
+              ? "border-info/16 bg-info/4 dark:border-info/14 dark:bg-info/6"
+              : "border-warning/20 bg-warning/5 dark:border-warning/14 dark:bg-warning/6"
+          )}
+          role="note"
+        >
+          <Icon
+            aria-hidden
+            className={cn(
+              "mt-0.75 size-4 shrink-0",
+              block.tone === "info"
+                ? "text-info-foreground"
+                : "text-warning-foreground"
+            )}
+          />
           <div className="min-w-0">
             <div className="font-medium">{block.title}</div>
             <p className="mt-1 text-pretty text-muted-foreground leading-6">
@@ -245,15 +380,31 @@ function Block({ block, lang, onLang, languages, t }: { block: DocsBlock; lang: 
       );
     }
     case "code":
-      return <CodeTabs lang={lang} languages={languages} onLang={onLang} samples={block.samples} t={t} title={block.title} />;
+      return (
+        <CodeTabs
+          lang={lang}
+          languages={languages}
+          onLang={onLang}
+          samples={block.samples}
+          t={t}
+          title={block.title}
+        />
+      );
     case "table":
       return (
-        <ScrollRegion aria-label={block.head.join(", ")} className="rounded-xl border" orientation="horizontal">
+        <ScrollRegion
+          aria-label={block.head.join(", ")}
+          className="rounded-xl border"
+          orientation="horizontal"
+        >
           <table className="w-full min-w-105 text-start text-sm">
             <thead className="bg-muted/30">
               <tr>
                 {block.head.map((h) => (
-                  <th className="border-b px-3.5 py-2 text-start font-medium text-muted-foreground text-xs" key={h}>
+                  <th
+                    className="border-b px-3.5 py-2 text-start font-medium text-muted-foreground text-xs"
+                    key={h}
+                  >
                     {h}
                   </th>
                 ))}
@@ -263,7 +414,15 @@ function Block({ block, lang, onLang, languages, t }: { block: DocsBlock; lang: 
               {block.rows.map((r) => (
                 <tr className="border-b last:border-b-0" key={r.join("|")}>
                   {r.map((c, col) => (
-                    <td className={cn("px-3.5 py-2 align-baseline leading-6", col === 0 ? "font-mono text-[0.8125rem] text-foreground" : "text-foreground/85")} key={`${block.head[col] ?? ""}:${c}`}>
+                    <td
+                      className={cn(
+                        "px-3.5 py-2 align-baseline leading-6",
+                        col === 0
+                          ? "font-mono text-[0.8125rem] text-foreground"
+                          : "text-foreground/85"
+                      )}
+                      key={`${block.head[col] ?? ""}:${c}`}
+                    >
                       {c}
                     </td>
                   ))}
@@ -282,20 +441,41 @@ interface SearchHit {
   section?: DocsSection;
 }
 
-function SearchDialog({ open, onOpenChange, pages, onPick, t }: { open: boolean; onOpenChange: (open: boolean) => void; pages: DocsPage[]; onPick: (page: string, section?: string) => void; t: Messages }) {
+function SearchDialog({
+  open,
+  onOpenChange,
+  pages,
+  onPick,
+  t,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  pages: DocsPage[];
+  onPick: (page: string, section?: string) => void;
+  t: Messages;
+}) {
   const uid = useId();
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const hits = useMemo<SearchHit[]>(() => {
     const q = query.trim().toLowerCase();
-    const all: SearchHit[] = pages.flatMap((p) => [{ id: p.id, page: p }, ...p.sections.map((s) => ({ id: `${p.id}#${s.id}`, page: p, section: s }))]);
+    const all: SearchHit[] = pages.flatMap((p) => [
+      { id: p.id, page: p },
+      ...p.sections.map((s) => ({
+        id: `${p.id}#${s.id}`,
+        page: p,
+        section: s,
+      })),
+    ]);
     if (!q) return all.filter((h) => !h.section).slice(0, 8);
     const score = (h: SearchHit) => {
       const title = (h.section ? h.section.title : h.page.title).toLowerCase();
       if (title.startsWith(q)) return 0;
       if (title.includes(q)) return 1;
       if (h.page.title.toLowerCase().includes(q)) return 2;
-      const body = h.section ? h.section.blocks.map((b) => ("text" in b ? b.text : "")).join(" ") : h.page.lead;
+      const body = h.section
+        ? h.section.blocks.map((b) => ("text" in b ? b.text : "")).join(" ")
+        : h.page.lead;
       return body.toLowerCase().includes(q) ? 3 : 9;
     };
     return all
@@ -315,7 +495,9 @@ function SearchDialog({ open, onOpenChange, pages, onPick, t }: { open: boolean;
     return (
       <>
         {text.slice(0, i)}
-        <mark className="rounded-sm bg-warning/24 text-foreground">{text.slice(i, i + q.length)}</mark>
+        <mark className="rounded-sm bg-warning/24 text-foreground">
+          {text.slice(i, i + q.length)}
+        </mark>
         {text.slice(i + q.length)}
       </>
     );
@@ -332,10 +514,16 @@ function SearchDialog({ open, onOpenChange, pages, onPick, t }: { open: boolean;
       }}
       open={open}
     >
-      <DialogContent className="top-16 flex max-h-110 translate-y-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-xl" showCloseButton={false}>
+      <DialogContent
+        className="top-16 flex max-h-110 translate-y-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-xl"
+        showCloseButton={false}
+      >
         <DialogTitle className="sr-only">{t.searchDialog}</DialogTitle>
         <div className="flex items-center gap-2 border-b px-3">
-          <SearchIcon aria-hidden className="size-4 shrink-0 text-muted-foreground" />
+          <SearchIcon
+            aria-hidden
+            className="size-4 shrink-0 text-muted-foreground"
+          />
           <input
             aria-activedescendant={current ? optionId(current) : undefined}
             aria-autocomplete="list"
@@ -364,22 +552,36 @@ function SearchDialog({ open, onOpenChange, pages, onPick, t }: { open: boolean;
           />
           <Kbd>{t.escape}</Kbd>
         </div>
-        <div aria-label={t.results} className="min-h-0 flex-1 overflow-y-auto p-1.5" id={`${uid}-list`} role="listbox">
+        <div
+          aria-label={t.results}
+          className="min-h-0 flex-1 overflow-y-auto p-1.5"
+          id={`${uid}-list`}
+          role="listbox"
+        >
           {hits.length === 0 ? (
-            <div className="px-4 py-10 text-center text-muted-foreground text-sm" role="presentation">
+            <div
+              className="px-4 py-10 text-center text-muted-foreground text-sm"
+              role="presentation"
+            >
               {interpolate(t.noResults, { query })}
             </div>
           ) : (
             <>
               {query ? null : (
-                <div className="px-2.5 pt-1.5 pb-1 font-medium text-muted-foreground text-xs" role="presentation">
+                <div
+                  className="px-2.5 pt-1.5 pb-1 font-medium text-muted-foreground text-xs"
+                  role="presentation"
+                >
                   {t.pagesHeading}
                 </div>
               )}
               {hits.map((h, i) => (
                 <div
                   aria-selected={i === active}
-                  className={cn("flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2", i === active && "bg-accent")}
+                  className={cn(
+                    "flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2",
+                    i === active && "bg-accent"
+                  )}
                   id={optionId(h)}
                   key={h.id}
                   onClick={() => onPick(h.page.id, h.section?.id)}
@@ -393,17 +595,31 @@ function SearchDialog({ open, onOpenChange, pages, onPick, t }: { open: boolean;
                   role="option"
                   tabIndex={-1}
                 >
-                  <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-card text-muted-foreground">
-                    {h.section ? <HashIcon className="size-3.5" /> : <FileTextIcon className="size-3.5" />}
+                  <span
+                    aria-hidden
+                    className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-card text-muted-foreground"
+                  >
+                    {h.section ? (
+                      <HashIcon className="size-3.5" />
+                    ) : (
+                      <FileTextIcon className="size-3.5" />
+                    )}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate font-medium">{mark(h.section ? h.section.title : h.page.title)}</span>
+                    <span className="block truncate font-medium">
+                      {mark(h.section ? h.section.title : h.page.title)}
+                    </span>
                     <span className="block truncate text-muted-foreground text-xs">
                       {h.page.group}
                       {h.section ? ` › ${h.page.title}` : ""}
                     </span>
                   </span>
-                  {i === active ? <CornerDownLeftIcon aria-hidden className="size-3.5 shrink-0 text-muted-foreground" /> : null}
+                  {i === active ? (
+                    <CornerDownLeftIcon
+                      aria-hidden
+                      className="size-3.5 shrink-0 text-muted-foreground"
+                    />
+                  ) : null}
                 </div>
               ))}
             </>
@@ -416,10 +632,25 @@ function SearchDialog({ open, onOpenChange, pages, onPick, t }: { open: boolean;
 
 function scrollToSection(box: HTMLElement | null, id: string, smooth = true) {
   const el = box?.querySelector<HTMLElement>(`[data-section="${id}"]`);
-  if (box && el) box.scrollTo({ top: el.offsetTop - 16, behavior: smooth ? "smooth" : "auto" });
+  if (box && el)
+    box.scrollTo({
+      top: el.offsetTop - 16,
+      behavior: smooth ? "smooth" : "auto",
+    });
 }
 
-function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], languages, dashboardHref, editHref, onFeedback, className }: DocsSiteProps) {
+function DocsSiteScreen({
+  product,
+  version,
+  pages,
+  initialPage,
+  topNav = [],
+  languages,
+  dashboardHref,
+  editHref,
+  onFeedback,
+  className,
+}: DocsSiteProps) {
   const t = useMessages("docsSite", DOCS_SITE_MESSAGES);
   const fmt = useFormat();
   const [pageId, setPageId] = useState(initialPage ?? pages[0]?.id ?? "");
@@ -429,7 +660,9 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
   const [drawer, setDrawer] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
   const [feedback, setFeedback] = useState<Record<string, boolean>>({});
-  const [closedGroups, setClosedGroups] = useState<Set<string>>(() => new Set());
+  const [closedGroups, setClosedGroups] = useState<Set<string>>(
+    () => new Set()
+  );
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const pendingSection = useRef<string | null>(null);
@@ -472,7 +705,8 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
       const el = box.querySelector<HTMLElement>(`[data-section="${s.id}"]`);
       if (el && el.offsetTop - 120 <= box.scrollTop) current = s.id;
     }
-    if (box.scrollTop + box.clientHeight >= box.scrollHeight - 4) current = page.sections.at(-1)?.id ?? current;
+    if (box.scrollTop + box.clientHeight >= box.scrollHeight - 4)
+      current = page.sections.at(-1)?.id ?? current;
     if (current !== activeSection) setActiveSection(current);
   };
 
@@ -486,7 +720,14 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
       return;
     }
     const target = e.target as HTMLElement;
-    if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (
+      target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      e.metaKey ||
+      e.ctrlKey ||
+      e.altKey
+    )
+      return;
     if (e.key === "/") {
       e.preventDefault();
       setSearch(true);
@@ -523,21 +764,53 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
               type="button"
             >
               {g}
-              <ChevronDownIcon aria-hidden className={cn("size-3.5 text-muted-foreground transition-[rotate,color] duration-200 group-hover/g:text-foreground", closed && "-rotate-90 rtl:rotate-90")} />
+              <ChevronDownIcon
+                aria-hidden
+                className={cn(
+                  "size-3.5 text-muted-foreground transition-[rotate,color] duration-200 group-hover/g:text-foreground",
+                  closed && "-rotate-90 rtl:rotate-90"
+                )}
+              />
             </button>
             <AnimatePresence initial={false}>
               {closed ? null : (
-                <motion.ul animate={{ height: "auto", opacity: 1 }} className="flex flex-col overflow-hidden" exit={{ height: 0, opacity: 0 }} initial={{ height: 0, opacity: 0 }} transition={{ duration: 0.2, ease }}>
+                <motion.ul
+                  animate={{ height: "auto", opacity: 1 }}
+                  className="flex flex-col overflow-hidden"
+                  exit={{ height: 0, opacity: 0 }}
+                  initial={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2, ease }}
+                >
                   {pages
                     .filter((p) => p.group === g)
                     .map((p) => {
                       const on = p.id === page.id;
                       return (
                         <li key={p.id}>
-                          <button aria-current={on ? "page" : undefined} className={cn("relative flex h-8 w-full cursor-pointer items-center rounded-lg px-2.5 text-start text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", on ? "font-medium text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground")} onClick={() => go(p.id)} type="button">
-                            {on ? <motion.span className="absolute inset-0 rounded-lg bg-accent" layoutId="docs-nav-pill" transition={spring} /> : null}
+                          <button
+                            aria-current={on ? "page" : undefined}
+                            className={cn(
+                              "relative flex h-8 w-full cursor-pointer items-center rounded-lg px-2.5 text-start text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+                              on
+                                ? "font-medium text-foreground"
+                                : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+                            )}
+                            onClick={() => go(p.id)}
+                            type="button"
+                          >
+                            {on ? (
+                              <motion.span
+                                className="absolute inset-0 rounded-lg bg-accent"
+                                layoutId="docs-nav-pill"
+                                transition={spring}
+                              />
+                            ) : null}
                             <span className="relative truncate">{p.title}</span>
-                            {p.badge ? <span className="relative ms-auto rounded-full bg-info/12 px-1.5 font-medium text-[10px] text-info-foreground">{p.badge}</span> : null}
+                            {p.badge ? (
+                              <span className="relative ms-auto rounded-full bg-info/12 px-1.5 font-medium text-[10px] text-info-foreground">
+                                {p.badge}
+                              </span>
+                            ) : null}
                           </button>
                         </li>
                       );
@@ -558,8 +831,24 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
           const on = s.id === activeSection;
           return (
             <li className="relative" key={s.id}>
-              {on ? <motion.span className="absolute inset-y-1 -inset-s-px w-0.5 rounded-full bg-foreground" layoutId="toc-rail" transition={spring} /> : null}
-              <button aria-current={on ? "location" : undefined} className={cn("w-full cursor-pointer rounded-e-md py-1.5 ps-3.5 pe-2 text-start text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", on ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground")} onClick={() => go(page.id, s.id)} type="button">
+              {on ? (
+                <motion.span
+                  className="absolute inset-y-1 -inset-s-px w-0.5 rounded-full bg-foreground"
+                  layoutId="toc-rail"
+                  transition={spring}
+                />
+              ) : null}
+              <button
+                aria-current={on ? "location" : undefined}
+                className={cn(
+                  "w-full cursor-pointer rounded-e-md py-1.5 ps-3.5 pe-2 text-start text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+                  on
+                    ? "font-medium text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+                onClick={() => go(page.id, s.id)}
+                type="button"
+              >
                 {s.title}
               </button>
             </li>
@@ -573,30 +862,82 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className={cn("@container relative isolate flex h-svh w-full flex-col overflow-hidden bg-background text-foreground text-sm outline-none", className)} ref={rootRef}>
+      <div
+        className={cn(
+          "@container relative isolate flex h-svh w-full flex-col overflow-hidden bg-background text-foreground text-sm outline-none",
+          className
+        )}
+        ref={rootRef}
+      >
         <header className="flex h-14 shrink-0 items-center gap-3 border-b px-3 @3xl:px-5">
-          <Button aria-label={t.openNav} className="@4xl:hidden" onClick={() => setDrawer(true)} size="icon-sm" variant="ghost">
+          <Button
+            aria-label={t.openNav}
+            className="@4xl:hidden"
+            onClick={() => setDrawer(true)}
+            size="icon-sm"
+            variant="ghost"
+          >
             <MenuIcon />
           </Button>
-          <button className="flex shrink-0 cursor-pointer items-center gap-2 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring" onClick={() => pages[0] && go(pages[0].id)} type="button">
+          <button
+            className="flex shrink-0 cursor-pointer items-center gap-2 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onClick={() => pages[0] && go(pages[0].id)}
+            type="button"
+          >
             <svg aria-hidden="true" className="size-6" viewBox="0 0 24 24">
               <rect className="fill-foreground" height="24" rx="7" width="24" />
-              <path className="stroke-background" d="M7 17 12 7l5 10M9.2 13h5.6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+              <path
+                className="stroke-background"
+                d="M7 17 12 7l5 10M9.2 13h5.6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+              />
             </svg>
-            <span className="font-heading font-semibold tracking-tight">{product}</span>
-            <span className="hidden text-muted-foreground @md:inline">{t.docs}</span>
+            <span className="font-heading font-semibold tracking-tight">
+              {product}
+            </span>
+            <span className="hidden text-muted-foreground @md:inline">
+              {t.docs}
+            </span>
           </button>
-          {version ? <span className="hidden rounded-md border px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground @xl:inline">{version}</span> : null}
+          {version ? (
+            <span className="hidden rounded-md border px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground @xl:inline">
+              {version}
+            </span>
+          ) : null}
           {topNav.length ? (
             <LayoutGroup id="docs-top">
-              <nav aria-label={t.sections} className="ms-2 hidden items-center gap-1 @4xl:flex">
+              <nav
+                aria-label={t.sections}
+                className="ms-2 hidden items-center gap-1 @4xl:flex"
+              >
                 {topNav.map((l) => {
                   const on = l.groups.includes(page.group);
                   const target = pages.find((p) => l.groups.includes(p.group));
                   return (
-                    <button aria-current={on ? "page" : undefined} className={cn("relative flex h-14 cursor-pointer items-center px-2.5 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", on ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground")} disabled={!target} key={l.label} onClick={() => target && go(target.id)} type="button">
+                    <button
+                      aria-current={on ? "page" : undefined}
+                      className={cn(
+                        "relative flex h-14 cursor-pointer items-center px-2.5 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+                        on
+                          ? "font-medium text-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                      disabled={!target}
+                      key={l.label}
+                      onClick={() => target && go(target.id)}
+                      type="button"
+                    >
                       {l.label}
-                      {on ? <motion.span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-foreground" layoutId="docs-top-line" transition={spring} /> : null}
+                      {on ? (
+                        <motion.span
+                          className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-foreground"
+                          layoutId="docs-top-line"
+                          transition={spring}
+                        />
+                      ) : null}
                     </button>
                   );
                 })}
@@ -604,13 +945,24 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
             </LayoutGroup>
           ) : null}
           <div className="ms-auto flex items-center gap-2">
-            <button className="flex h-8 cursor-pointer items-center gap-2 rounded-lg border bg-background px-2.5 text-muted-foreground shadow-xs/5 outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring @xl:w-56 dark:bg-input/32" onClick={() => setSearch(true)} type="button">
+            <button
+              className="flex h-8 cursor-pointer items-center gap-2 rounded-lg border bg-background px-2.5 text-muted-foreground shadow-xs/5 outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring @xl:w-56 dark:bg-input/32"
+              onClick={() => setSearch(true)}
+              type="button"
+            >
               <SearchIcon aria-hidden className="size-4" />
-              <span className="sr-only flex-1 text-start @xl:not-sr-only">{t.search}</span>
+              <span className="sr-only flex-1 text-start @xl:not-sr-only">
+                {t.search}
+              </span>
               <Kbd className="hidden @xl:inline-flex">⌘K</Kbd>
             </button>
             {dashboardHref ? (
-              <WirefrontLink className="hidden h-8 items-center rounded-lg border px-3 font-medium text-sm outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring @2xl:inline-flex" href={dashboardHref} rel="noreferrer" target="_blank">
+              <WirefrontLink
+                className="hidden h-8 items-center rounded-lg border px-3 font-medium text-sm outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring @2xl:inline-flex"
+                href={dashboardHref}
+                rel="noreferrer"
+                target="_blank"
+              >
                 {t.dashboard}
               </WirefrontLink>
             ) : null}
@@ -618,35 +970,85 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
         </header>
 
         <div className="flex min-h-0 flex-1">
-          <aside aria-label={t.pages} className="hidden w-60 shrink-0 overflow-y-auto border-e scrollbar-thin @4xl:block">
+          <aside
+            aria-label={t.pages}
+            className="hidden w-60 shrink-0 overflow-y-auto border-e scrollbar-thin @4xl:block"
+          >
             {sidebar}
           </aside>
 
-          <div className="min-w-0 flex-1 overflow-y-auto scroll-pt-4 scrollbar-thin" onScroll={onScroll} ref={scrollRef}>
+          <div
+            className="min-w-0 flex-1 overflow-y-auto scroll-pt-4 scrollbar-thin"
+            onScroll={onScroll}
+            ref={scrollRef}
+          >
             <div className="mx-auto flex max-w-260 gap-10 px-4 pt-8 pb-16 @3xl:px-10">
-              <motion.article animate={{ opacity: 1, y: 0 }} className="min-w-0 max-w-170 flex-1" initial={{ opacity: 0, y: 6 }} key={page.id} transition={{ duration: 0.2, ease }}>
+              <motion.article
+                animate={{ opacity: 1, y: 0 }}
+                className="min-w-0 max-w-170 flex-1"
+                initial={{ opacity: 0, y: 6 }}
+                key={page.id}
+                transition={{ duration: 0.2, ease }}
+              >
                 <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
                   <span>{page.group}</span>
-                  <ChevronRightIcon aria-hidden className="size-3 rtl:-scale-x-100" />
+                  <ChevronRightIcon
+                    aria-hidden
+                    className="size-3 rtl:-scale-x-100"
+                  />
                   <span className="text-foreground">{page.title}</span>
                 </div>
-                <h1 className="mt-3 text-balance font-heading font-semibold text-3xl tracking-tight">{page.title}</h1>
-                <p className="mt-3 text-pretty text-[17px] text-muted-foreground leading-7">{page.lead}</p>
+                <h1 className="mt-3 text-balance font-heading font-semibold text-3xl tracking-tight">
+                  {page.title}
+                </h1>
+                <p className="mt-3 text-pretty text-[17px] text-muted-foreground leading-7">
+                  {page.lead}
+                </p>
                 <div className="mt-4 flex items-center gap-3 text-muted-foreground text-xs">
-                  <span>{interpolate(t.updated, { date: fmt.date(`${page.updatedAt}T00:00:00Z`, { month: "short", day: "numeric", timeZone: "UTC" }) })}</span>
-                  <span aria-hidden className="size-0.5 rounded-full bg-muted-foreground" />
-                  <span>{interpolate(t.readTime, { minutes: page.minutes })}</span>
+                  <span>
+                    {interpolate(t.updated, {
+                      date: fmt.date(`${page.updatedAt}T00:00:00Z`, {
+                        month: "short",
+                        day: "numeric",
+                        timeZone: "UTC",
+                      }),
+                    })}
+                  </span>
+                  <span
+                    aria-hidden
+                    className="size-0.5 rounded-full bg-muted-foreground"
+                  />
+                  <span>
+                    {interpolate(t.readTime, { minutes: page.minutes })}
+                  </span>
                 </div>
 
                 {page.sections.length > 1 ? (
                   <div className="mt-6 rounded-xl border @6xl:hidden">
-                    <button aria-expanded={tocOpen} className="flex h-10 w-full cursor-pointer items-center justify-between rounded-xl px-3.5 font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring" onClick={() => setTocOpen((o) => !o)} type="button">
+                    <button
+                      aria-expanded={tocOpen}
+                      className="flex h-10 w-full cursor-pointer items-center justify-between rounded-xl px-3.5 font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      onClick={() => setTocOpen((o) => !o)}
+                      type="button"
+                    >
                       {t.onThisPage}
-                      <ChevronDownIcon aria-hidden className={cn("size-4 text-muted-foreground transition-transform duration-200", tocOpen && "rotate-180")} />
+                      <ChevronDownIcon
+                        aria-hidden
+                        className={cn(
+                          "size-4 text-muted-foreground transition-transform duration-200",
+                          tocOpen && "rotate-180"
+                        )}
+                      />
                     </button>
                     <AnimatePresence initial={false}>
                       {tocOpen ? (
-                        <motion.div animate={{ height: "auto", opacity: 1 }} className="overflow-hidden" exit={{ height: 0, opacity: 0 }} initial={{ height: 0, opacity: 0 }} transition={{ duration: 0.2, ease }}>
+                        <motion.div
+                          animate={{ height: "auto", opacity: 1 }}
+                          className="overflow-hidden"
+                          exit={{ height: 0, opacity: 0 }}
+                          initial={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2, ease }}
+                        >
                           <div className="px-3.5 pb-3">{toc}</div>
                         </motion.div>
                       ) : null}
@@ -655,15 +1057,31 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
                 ) : null}
 
                 {page.sections.map((s) => (
-                  <section className="mt-10 flex flex-col gap-4" data-section={s.id} key={s.id}>
+                  <section
+                    className="mt-10 flex flex-col gap-4"
+                    data-section={s.id}
+                    key={s.id}
+                  >
                     <h2 className="group/h flex items-center gap-2 font-heading font-semibold text-xl tracking-tight">
                       {s.title}
-                      <button aria-label={interpolate(t.linkTo, { title: s.title })} className="cursor-pointer rounded text-muted-foreground opacity-0 outline-none transition-opacity focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover/h:opacity-100" onClick={() => go(page.id, s.id)} type="button">
+                      <button
+                        aria-label={interpolate(t.linkTo, { title: s.title })}
+                        className="cursor-pointer rounded text-muted-foreground opacity-0 outline-none transition-opacity focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover/h:opacity-100"
+                        onClick={() => go(page.id, s.id)}
+                        type="button"
+                      >
                         <HashIcon aria-hidden className="size-4" />
                       </button>
                     </h2>
                     {s.blocks.map((b) => (
-                      <Block block={b} key={JSON.stringify(b)} lang={lang} languages={languages} onLang={setLang} t={t} />
+                      <Block
+                        block={b}
+                        key={JSON.stringify(b)}
+                        lang={lang}
+                        languages={languages}
+                        onLang={setLang}
+                        t={t}
+                      />
                     ))}
                   </section>
                 ))}
@@ -672,17 +1090,37 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
                   {onFeedback ? (
                     <AnimatePresence initial={false} mode="wait">
                       {answered !== undefined ? (
-                        <motion.p animate={{ opacity: 1 }} className="text-muted-foreground" exit={{ opacity: 0 }} initial={{ opacity: 0 }} key="thanks" role="status" transition={{ duration: 0.15 }}>
+                        <motion.p
+                          animate={{ opacity: 1 }}
+                          className="text-muted-foreground"
+                          exit={{ opacity: 0 }}
+                          initial={{ opacity: 0 }}
+                          key="thanks"
+                          role="status"
+                          transition={{ duration: 0.15 }}
+                        >
                           {answered ? t.thanksYes : t.thanksNo}
                         </motion.p>
                       ) : (
-                        <motion.div animate={{ opacity: 1 }} className="flex items-center gap-3" exit={{ opacity: 0 }} initial={{ opacity: 0 }} key="ask" transition={{ duration: 0.15 }}>
-                          <span className="text-muted-foreground">{t.helpful}</span>
+                        <motion.div
+                          animate={{ opacity: 1 }}
+                          className="flex items-center gap-3"
+                          exit={{ opacity: 0 }}
+                          initial={{ opacity: 0 }}
+                          key="ask"
+                          transition={{ duration: 0.15 }}
+                        >
+                          <span className="text-muted-foreground">
+                            {t.helpful}
+                          </span>
                           {[true, false].map((helpful) => (
                             <Button
                               key={String(helpful)}
                               onClick={() => {
-                                setFeedback((f) => ({ ...f, [page.id]: helpful }));
+                                setFeedback((f) => ({
+                                  ...f,
+                                  [page.id]: helpful,
+                                }));
                                 onFeedback(page.id, helpful);
                               }}
                               size="sm"
@@ -697,7 +1135,12 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
                     </AnimatePresence>
                   ) : null}
                   {editHref ? (
-                    <WirefrontLink className="ms-auto flex items-center gap-1.5 rounded text-muted-foreground text-xs outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring @6xl:hidden" href={editHref(page.id)} rel="noreferrer" target="_blank">
+                    <WirefrontLink
+                      className="ms-auto flex items-center gap-1.5 rounded text-muted-foreground text-xs outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring @6xl:hidden"
+                      href={editHref(page.id)}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
                       <PencilIcon aria-hidden className="size-3.5" />
                       {t.edit}
                     </WirefrontLink>
@@ -706,9 +1149,16 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
 
                 <div className="mt-6 grid grid-cols-1 gap-3 @xl:grid-cols-2">
                   {prev ? (
-                    <button className="group/pn flex cursor-pointer flex-col items-start gap-1 rounded-xl border p-4 text-start outline-none transition-[border-color,scale] duration-150 ease-out hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]" onClick={() => go(prev.id)} type="button">
+                    <button
+                      className="group/pn flex cursor-pointer flex-col items-start gap-1 rounded-xl border p-4 text-start outline-none transition-[border-color,scale] duration-150 ease-out hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
+                      onClick={() => go(prev.id)}
+                      type="button"
+                    >
                       <span className="flex items-center gap-1.5 text-muted-foreground text-xs">
-                        <ArrowLeftIcon aria-hidden className="size-3.5 transition-transform duration-150 group-hover/pn:-translate-x-0.5 rtl:-scale-x-100" />
+                        <ArrowLeftIcon
+                          aria-hidden
+                          className="size-3.5 transition-transform duration-150 group-hover/pn:-translate-x-0.5 rtl:-scale-x-100"
+                        />
                         {t.previous} <Kbd className="h-4 text-[10px]">[</Kbd>
                       </span>
                       <span className="font-medium">{prev.title}</span>
@@ -717,10 +1167,17 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
                     <span className="hidden @xl:block" />
                   )}
                   {next ? (
-                    <button className="group/pn flex cursor-pointer flex-col items-end gap-1 rounded-xl border p-4 text-end outline-none transition-[border-color,scale] duration-150 ease-out hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]" onClick={() => go(next.id)} type="button">
+                    <button
+                      className="group/pn flex cursor-pointer flex-col items-end gap-1 rounded-xl border p-4 text-end outline-none transition-[border-color,scale] duration-150 ease-out hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
+                      onClick={() => go(next.id)}
+                      type="button"
+                    >
                       <span className="flex items-center gap-1.5 text-muted-foreground text-xs">
                         <Kbd className="h-4 text-[10px]">]</Kbd> {t.next}
-                        <ArrowRightIcon aria-hidden className="size-3.5 transition-transform duration-150 group-hover/pn:translate-x-0.5 rtl:-scale-x-100" />
+                        <ArrowRightIcon
+                          aria-hidden
+                          className="size-3.5 transition-transform duration-150 group-hover/pn:translate-x-0.5 rtl:-scale-x-100"
+                        />
                       </span>
                       <span className="font-medium">{next.title}</span>
                     </button>
@@ -728,17 +1185,34 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
                 </div>
               </motion.article>
 
-              <aside aria-label={t.onThisPage} className="sticky top-8 hidden h-fit w-52 shrink-0 @6xl:block">
+              <aside
+                aria-label={t.onThisPage}
+                className="sticky top-8 hidden h-fit w-52 shrink-0 @6xl:block"
+              >
                 <div className="mb-2 font-medium text-xs">{t.onThisPage}</div>
                 {toc}
                 <div className="mt-6 flex flex-col gap-2 border-t pt-4 text-muted-foreground text-xs">
                   {editHref ? (
-                    <WirefrontLink className="flex items-center gap-1.5 rounded outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring" href={editHref(page.id)} rel="noreferrer" target="_blank">
+                    <WirefrontLink
+                      className="flex items-center gap-1.5 rounded outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                      href={editHref(page.id)}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
                       <PencilIcon aria-hidden className="size-3.5" />
                       {t.edit}
                     </WirefrontLink>
                   ) : null}
-                  <button className="flex cursor-pointer items-center gap-1.5 rounded text-start outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring" onClick={() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" })} type="button">
+                  <button
+                    className="flex cursor-pointer items-center gap-1.5 rounded text-start outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                    onClick={() =>
+                      scrollRef.current?.scrollTo({
+                        top: 0,
+                        behavior: "smooth",
+                      })
+                    }
+                    type="button"
+                  >
                     <ArrowLeftIcon aria-hidden className="size-3.5 rotate-90" />
                     {t.backToTop}
                   </button>
@@ -749,12 +1223,26 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
         </div>
 
         <Sheet onOpenChange={setDrawer} open={drawer}>
-          <SheetContent className="w-68 max-w-[calc(100%-3rem)] gap-0 p-0" showCloseButton={false} side="left">
+          <SheetContent
+            className="w-68 max-w-[calc(100%-3rem)] gap-0 p-0"
+            showCloseButton={false}
+            side="left"
+          >
             <div className="flex h-12 items-center justify-between border-b ps-4 pe-2">
               <SheetTitle className="font-medium text-sm">
-                {product} {t.docs} {version ? <span className="font-mono text-muted-foreground text-xs">{version}</span> : null}
+                {product} {t.docs}{" "}
+                {version ? (
+                  <span className="font-mono text-muted-foreground text-xs">
+                    {version}
+                  </span>
+                ) : null}
               </SheetTitle>
-              <Button aria-label={t.closeNav} onClick={() => setDrawer(false)} size="icon-sm" variant="ghost">
+              <Button
+                aria-label={t.closeNav}
+                onClick={() => setDrawer(false)}
+                size="icon-sm"
+                variant="ghost"
+              >
                 <XIcon />
               </Button>
             </div>
@@ -762,7 +1250,13 @@ function DocsSiteScreen({ product, version, pages, initialPage, topNav = [], lan
           </SheetContent>
         </Sheet>
 
-        <SearchDialog onOpenChange={setSearch} onPick={go} open={search} pages={pages} t={t} />
+        <SearchDialog
+          onOpenChange={setSearch}
+          onPick={go}
+          open={search}
+          pages={pages}
+          t={t}
+        />
       </div>
     </MotionConfig>
   );

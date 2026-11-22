@@ -15,12 +15,17 @@ import { componentName, getShowcase } from "@/pages/showcase/registry";
 import { SOURCE_FILES } from "@/pages/showcase/source-files";
 import { must } from "./must";
 
-const RUNTIME = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const RUNTIME = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  ".."
+);
 const SHOWCASE_DIR = path.join(RUNTIME, "src/pages/showcase");
 // Previews are the site's gallery images, so they live with the site.
 const PREVIEWS_DIR = path.join(RUNTIME, "../www/public/previews");
 
-const designs = CATEGORIES.flatMap((c) => c.designs.map((d) => ({ category: c.slug, ...d })));
+const designs = CATEGORIES.flatMap((c) =>
+  c.designs.map((d) => ({ category: c.slug, ...d }))
+);
 
 describe("catalogue", () => {
   it("has unique category slugs", () => {
@@ -28,15 +33,20 @@ describe("catalogue", () => {
     expect(slugs).toEqual([...new Set(slugs)]);
   });
 
-  it.each(CATEGORIES.map((c) => [c.slug, c] as const))("%s: has unique design slugs, an icon and designs", (_, c) => {
-    const slugs = c.designs.map((d) => d.slug);
-    expect(slugs).toEqual([...new Set(slugs)]);
-    expect(c.designs.length).toBeGreaterThan(0);
-    expect(typeof c.Icon).toBe("function");
-  });
+  it.each(CATEGORIES.map((c) => [c.slug, c] as const))(
+    "%s: has unique design slugs, an icon and designs",
+    (_, c) => {
+      const slugs = c.designs.map((d) => d.slug);
+      expect(slugs).toEqual([...new Set(slugs)]);
+      expect(c.designs.length).toBeGreaterThan(0);
+      expect(typeof c.Icon).toBe("function");
+    }
+  );
 
   it("gives every design a title and a blurb", () => {
-    const incomplete = designs.filter((d) => !d.title.trim() || !d.blurb.trim());
+    const incomplete = designs.filter(
+      (d) => !d.title.trim() || !d.blurb.trim()
+    );
     expect(incomplete.map((d) => `${d.category}/${d.slug}`)).toEqual([]);
   });
 
@@ -44,10 +54,16 @@ describe("catalogue", () => {
     const problems: string[] = [];
     for (const d of designs) {
       const file = SOURCE_FILES[d.category]?.[d.slug];
-      if (!file) problems.push(`${d.category}/${d.slug}: not in source-files.ts`);
+      if (!file)
+        problems.push(`${d.category}/${d.slug}: not in source-files.ts`);
       // A flat screen is <file>.tsx; a ready-to-wire screen is a <file>/ folder.
-      else if (!existsSync(path.join(SHOWCASE_DIR, `${file}.tsx`)) && !existsSync(path.join(SHOWCASE_DIR, file, "view.tsx")))
-        problems.push(`${d.category}/${d.slug}: neither ${file}.tsx nor ${file}/view.tsx exists`);
+      else if (
+        !existsSync(path.join(SHOWCASE_DIR, `${file}.tsx`)) &&
+        !existsSync(path.join(SHOWCASE_DIR, file, "view.tsx"))
+      )
+        problems.push(
+          `${d.category}/${d.slug}: neither ${file}.tsx nor ${file}/view.tsx exists`
+        );
     }
     expect(problems).toEqual([]);
   });
@@ -59,9 +75,17 @@ describe("catalogue", () => {
         const flat = path.join(SHOWCASE_DIR, `${file}.tsx`);
         if (!existsSync(flat)) continue;
         const source = readFileSync(flat, "utf8");
-        if (/\bexport\s+function\s+\w+ShowcasePage\b/.test(source)) problems.push(`${file}.tsx exports a *ShowcasePage`);
-        const hasCompanion = existsSync(path.join(SHOWCASE_DIR, `${file}.showcase.tsx`));
-        if (!hasCompanion && !new RegExp(`\\bexport\\s+function\\s+${componentName(file)}\\b`).test(source))
+        if (/\bexport\s+function\s+\w+ShowcasePage\b/.test(source))
+          problems.push(`${file}.tsx exports a *ShowcasePage`);
+        const hasCompanion = existsSync(
+          path.join(SHOWCASE_DIR, `${file}.showcase.tsx`)
+        );
+        if (
+          !hasCompanion &&
+          !new RegExp(
+            `\\bexport\\s+function\\s+${componentName(file)}\\b`
+          ).test(source)
+        )
           problems.push(`${file}.tsx doesn't export ${componentName(file)}`);
       }
     }
@@ -70,21 +94,37 @@ describe("catalogue", () => {
 
   it("respects prefers-reduced-motion: Motion screens check it, decorative CSS animations stop", () => {
     // animate-spin is allowed: a spinner conveys that something is loading (WCAG's "essential" case).
-    const decorative = /(?<![\w:/-])animate-(?!spin\b|none\b|in\b|out\b)[\w[\]-]+/;
+    const decorative =
+      /(?<![\w:/-])animate-(?!spin\b|none\b|in\b|out\b)[\w[\]-]+/;
     const problems: string[] = [];
     for (const map of Object.values(SOURCE_FILES)) {
       for (const file of Object.values(map ?? {})) {
-        for (const source of [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f))) {
+        for (const source of [
+          path.join(SHOWCASE_DIR, `${file}.tsx`),
+          path.join(SHOWCASE_DIR, file, "view.tsx"),
+        ].filter((f) => existsSync(f))) {
           const code = readFileSync(source, "utf8");
           const where = path.relative(SHOWCASE_DIR, source);
           // shadcn's Skeleton pulses with no reduced-motion variant; screens pass one.
           for (const tag of code.matchAll(/<Skeleton\b[^>]*>/g))
-            if (!tag[0].includes("motion-reduce:animate-none")) problems.push(`${where}: <Skeleton> without motion-reduce:animate-none`);
-          if (/from\s+["']motion\/react["']/.test(code) && !/useReducedMotion|MotionConfig/.test(code))
-            problems.push(`${where}: uses motion without useReducedMotion or MotionConfig`);
+            if (!tag[0].includes("motion-reduce:animate-none"))
+              problems.push(
+                `${where}: <Skeleton> without motion-reduce:animate-none`
+              );
+          if (
+            /from\s+["']motion\/react["']/.test(code) &&
+            !/useReducedMotion|MotionConfig/.test(code)
+          )
+            problems.push(
+              `${where}: uses motion without useReducedMotion or MotionConfig`
+            );
           for (const m of code.matchAll(/(["'`])((?:(?!\1)[^\\\n]|\\.)*)\1/g)) {
             const classes = m[2] ?? "";
-            if (decorative.test(classes) && !/motion-(?:reduce|safe):/.test(classes)) problems.push(`${where}: "${classes.slice(0, 80)}"`);
+            if (
+              decorative.test(classes) &&
+              !/motion-(?:reduce|safe):/.test(classes)
+            )
+              problems.push(`${where}: "${classes.slice(0, 80)}"`);
           }
         }
       }
@@ -102,11 +142,21 @@ describe("catalogue", () => {
     const problems: string[] = [];
     for (const map of Object.values(SOURCE_FILES)) {
       for (const file of Object.values(map ?? {})) {
-        for (const source of [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f))) {
-          for (const m of withoutCodeSamples(readFileSync(source, "utf8")).matchAll(/(["`])((?:(?!\1)[^\\\n])*)\1/g)) {
+        for (const source of [
+          path.join(SHOWCASE_DIR, `${file}.tsx`),
+          path.join(SHOWCASE_DIR, file, "view.tsx"),
+        ].filter((f) => existsSync(f))) {
+          for (const m of withoutCodeSamples(
+            readFileSync(source, "utf8")
+          ).matchAll(/(["`])((?:(?!\1)[^\\\n])*)\1/g)) {
             const classes = m[2] ?? "";
-            const hit = classes.match(physical)?.[0] ?? (/translate-x/.test(classes) ? undefined : classes.match(side)?.[0]);
-            if (hit) problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${hit}`);
+            const hit =
+              classes.match(physical)?.[0] ??
+              (/translate-x/.test(classes)
+                ? undefined
+                : classes.match(side)?.[0]);
+            if (hit)
+              problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${hit}`);
           }
         }
       }
@@ -121,9 +171,15 @@ describe("catalogue", () => {
     const problems: string[] = [];
     for (const map of Object.values(SOURCE_FILES)) {
       for (const file of Object.values(map ?? {})) {
-        for (const source of [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f))) {
+        for (const source of [
+          path.join(SHOWCASE_DIR, `${file}.tsx`),
+          path.join(SHOWCASE_DIR, file, "view.tsx"),
+        ].filter((f) => existsSync(f))) {
           for (const name of broken)
-            if (readFileSync(source, "utf8").includes(`"@wirefront/ui/${name}"`)) problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${name}`);
+            if (
+              readFileSync(source, "utf8").includes(`"@wirefront/ui/${name}"`)
+            )
+              problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${name}`);
         }
       }
     }
@@ -134,19 +190,27 @@ describe("catalogue", () => {
     // Status: success / warning / info / destructive. Categories (labels, avatars, calendars, series):
     // category-1..8 with -strong (fills under white text) and -foreground (text on tints). Builders theme
     // both through CSS variables the registry ships; white and black stay allowed.
-    const hues = "slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose";
+    const hues =
+      "slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose";
     const raw = new RegExp(
       `(?<![\\w-])(?:bg|text|border|ring|fill|stroke|from|via|to|outline|divide|decoration|caret|accent|shadow|placeholder)(?:-[xytrblse])?-(?:${hues})-\\d{2,3}\\b|var\\(--color-(?:${hues})-\\d{2,3}\\)`,
-      "g",
+      "g"
     );
     const problems: string[] = [];
     for (const map of Object.values(SOURCE_FILES)) {
       for (const file of Object.values(map ?? {})) {
-        for (const source of [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f))) {
+        for (const source of [
+          path.join(SHOWCASE_DIR, `${file}.tsx`),
+          path.join(SHOWCASE_DIR, file, "view.tsx"),
+        ].filter((f) => existsSync(f))) {
           // Lines that define a token ("--foreground": "var(--color-neutral-800)", a theme preview) may use the palette.
           // `\s*` after the colon also takes a value the formatter wrapped onto the next line.
-          const code = withoutCodeSamples(readFileSync(source, "utf8")).replace(/^\s*["']--[\w-]+["']\s*:\s*.*$/gm, "");
-          for (const m of code.matchAll(raw)) problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${m[0]}`);
+          const code = withoutCodeSamples(readFileSync(source, "utf8")).replace(
+            /^\s*["']--[\w-]+["']\s*:\s*.*$/gm,
+            ""
+          );
+          for (const m of code.matchAll(raw))
+            problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${m[0]}`);
         }
       }
     }
@@ -158,9 +222,13 @@ describe("catalogue", () => {
     let ready = 0;
     for (const d of designs) {
       const file = SOURCE_FILES[d.category]?.[d.slug];
-      const expected = file && existsSync(path.join(SHOWCASE_DIR, file, "view.tsx")) ? "ready" : "preview";
+      const expected =
+        file && existsSync(path.join(SHOWCASE_DIR, file, "view.tsx"))
+          ? "ready"
+          : "preview";
       if (expected === "ready") ready++;
-      if (readinessOf(d.category, d.slug) !== expected) wrong.push(`${d.category}/${d.slug}`);
+      if (readinessOf(d.category, d.slug) !== expected)
+        wrong.push(`${d.category}/${d.slug}`);
     }
     expect(wrong).toEqual([]);
     expect(ready).toBeGreaterThan(0);
@@ -170,9 +238,15 @@ describe("catalogue", () => {
     const sample = "const code = `line one\nparkedAt: new Date(),`;";
     expect(withoutCodeSamples(sample)).not.toContain("new Date()");
     const open = "$" + "{"; // a template expression opener, spelt out so it reads as test input
-    expect(withoutCodeSamples(`const id = \`m${open}Date.now()}\`;`)).toContain("Date.now()");
-    expect(withoutCodeSamples(`const s = \`a\n${open}String(Date.now())}\nb\`;`)).toContain("Date.now()");
-    expect(withoutCodeSamples("// `note`\nconst d = new Date();")).toContain("new Date()");
+    expect(withoutCodeSamples(`const id = \`m${open}Date.now()}\`;`)).toContain(
+      "Date.now()"
+    );
+    expect(
+      withoutCodeSamples(`const s = \`a\n${open}String(Date.now())}\nb\`;`)
+    ).toContain("Date.now()");
+    expect(withoutCodeSamples("// `note`\nconst d = new Date();")).toContain(
+      "new Date()"
+    );
   });
 
   it("reads the clock only through the provider, never Date.now() or new Date() in a shipped screen", () => {
@@ -181,10 +255,14 @@ describe("catalogue", () => {
     const problems: string[] = [];
     for (const map of Object.values(SOURCE_FILES)) {
       for (const file of Object.values(map ?? {})) {
-        const shipped = [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f));
+        const shipped = [
+          path.join(SHOWCASE_DIR, `${file}.tsx`),
+          path.join(SHOWCASE_DIR, file, "view.tsx"),
+        ].filter((f) => existsSync(f));
         for (const source of shipped) {
           const code = withoutCodeSamples(readFileSync(source, "utf8"));
-          for (const m of code.matchAll(/Date\.now\(\)|new Date\(\)/g)) problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${m[0]}`);
+          for (const m of code.matchAll(/Date\.now\(\)|new Date\(\)/g))
+            problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${m[0]}`);
         }
       }
     }
@@ -201,23 +279,32 @@ describe("catalogue", () => {
     const unlisted = Object.entries(SOURCE_FILES).flatMap(([category, map]) =>
       Object.keys(map ?? {})
         .map((slug) => `${category}/${slug}`)
-        .filter((key) => !listed.has(key)),
+        .filter((key) => !listed.has(key))
     );
     expect(unlisted).toEqual([]);
   });
 
   it("has no showcase file that nothing maps to or imports", () => {
-    const mapped = new Set(Object.values(SOURCE_FILES).flatMap((map) => Object.values(map ?? {})));
+    const mapped = new Set(
+      Object.values(SOURCE_FILES).flatMap((map) => Object.values(map ?? {}))
+    );
     // Shared helpers (e.g. auth-shell) are imported by screens rather than mapped.
     const imported = new Set(
       [...mapped]
         .filter((f) => existsSync(path.join(SHOWCASE_DIR, `${f}.tsx`)))
         .flatMap((f) =>
-        [...readFileSync(path.join(SHOWCASE_DIR, `${f}.tsx`), "utf8").matchAll(/from\s+["']\.\/([\w-]+)["']/g)].map((m) => must(m[1], "an import name")),
-      ),
+          [
+            ...readFileSync(
+              path.join(SHOWCASE_DIR, `${f}.tsx`),
+              "utf8"
+            ).matchAll(/from\s+["']\.\/([\w-]+)["']/g),
+          ].map((m) => must(m[1], "an import name"))
+        )
     );
     const orphans = readdirSync(SHOWCASE_DIR)
-      .filter((f) => f.endsWith(".tsx") && !f.startsWith("_") && f !== "registry.tsx")
+      .filter(
+        (f) => f.endsWith(".tsx") && !f.startsWith("_") && f !== "registry.tsx"
+      )
       // <file>.showcase.tsx is the showcase companion of a mapped <file>.tsx.
       .map((f) => f.replace(/(\.showcase)?\.tsx$/, ""))
       .filter((f) => !mapped.has(f) && !imported.has(f));
@@ -228,14 +315,21 @@ describe("catalogue", () => {
     const missing = designs.flatMap((d) =>
       (["light", "dark"] as const)
         .map((mode) => `${d.category}__${d.slug}--${mode}.png`)
-        .filter((file) => !existsSync(path.join(PREVIEWS_DIR, file))),
+        .filter((file) => !existsSync(path.join(PREVIEWS_DIR, file)))
     );
     expect(missing).toEqual([]);
   });
 
   it("has no preview for a design that no longer exists", () => {
-    const expected = new Set(designs.flatMap((d) => [`${d.category}__${d.slug}--light.png`, `${d.category}__${d.slug}--dark.png`]));
-    const stale = readdirSync(PREVIEWS_DIR).filter((f) => f.endsWith(".png") && !expected.has(f));
+    const expected = new Set(
+      designs.flatMap((d) => [
+        `${d.category}__${d.slug}--light.png`,
+        `${d.category}__${d.slug}--dark.png`,
+      ])
+    );
+    const stale = readdirSync(PREVIEWS_DIR).filter(
+      (f) => f.endsWith(".png") && !expected.has(f)
+    );
     expect(stale).toEqual([]);
   });
 });
@@ -290,7 +384,9 @@ function withoutCodeSamples(source: string): string {
     parts.push(literal);
     i++;
     text = source.slice(start, i);
-    out += text.includes("\n") ? `\`${parts.filter((_, n) => n % 2 === 1).join("")}\`` : text;
+    out += text.includes("\n")
+      ? `\`${parts.filter((_, n) => n % 2 === 1).join("")}\``
+      : text;
   };
   while (i < source.length) {
     const c = source[i];

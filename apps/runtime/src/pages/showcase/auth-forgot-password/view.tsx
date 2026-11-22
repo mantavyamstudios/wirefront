@@ -10,7 +10,11 @@ import { Input } from "@wirefront/ui/input";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ArrowLeftIcon, KeyRoundIcon, MailCheckIcon } from "lucide-react";
@@ -61,7 +65,14 @@ export interface ForgotPasswordProps {
 const linkClass =
   "cursor-pointer rounded-sm font-medium text-foreground underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring";
 
-function ForgotPasswordScreen({ defaultEmail, onSend, resendAfter = 30, expiresInMinutes, signInHref, className }: ForgotPasswordProps) {
+function ForgotPasswordScreen({
+  defaultEmail,
+  onSend,
+  resendAfter = 30,
+  expiresInMinutes,
+  signInHref,
+  className,
+}: ForgotPasswordProps) {
   const t = useMessages("forgotPassword", FORGOT_PASSWORD_MESSAGES);
   const reduce = useReducedMotion();
   const [sentTo, setSentTo] = useState<string>();
@@ -89,7 +100,12 @@ function ForgotPasswordScreen({ defaultEmail, onSend, resendAfter = 30, expiresI
   ) : null;
 
   return (
-    <div className={cn("flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground", className)}>
+    <div
+      className={cn(
+        "flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground",
+        className
+      )}
+    >
       <div className="m-auto flex w-full max-w-85 flex-col items-center">
         <AnimatePresence initial={false} mode="wait">
           <motion.div
@@ -98,17 +114,29 @@ function ForgotPasswordScreen({ defaultEmail, onSend, resendAfter = 30, expiresI
             exit={{ opacity: 0, y: -8 }}
             initial={{ opacity: 0, y: 8 }}
             key={sentTo ? "sent" : "ask"}
-            transition={reduce ? { duration: 0 } : { duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+            transition={
+              reduce
+                ? { duration: 0 }
+                : { duration: 0.22, ease: [0.23, 1, 0.32, 1] }
+            }
           >
             <span className="flex size-10 items-center justify-center rounded-xl border bg-card shadow-xs/5">
-              {sentTo ? <MailCheckIcon className="size-5" /> : <KeyRoundIcon className="size-5" />}
+              {sentTo ? (
+                <MailCheckIcon className="size-5" />
+              ) : (
+                <KeyRoundIcon className="size-5" />
+              )}
             </span>
-            <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">{sentTo ? t.sentTitle : t.title}</h1>
+            <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">
+              {sentTo ? t.sentTitle : t.title}
+            </h1>
             <p className="mt-1.5 text-balance text-center text-muted-foreground text-sm">
               {sentTo ? (
                 <>
                   {interpolate(t.sentTo, { email: sentTo })}
-                  {expiresInMinutes ? ` ${interpolate(t.expires, { minutes: expiresInMinutes })}` : null}
+                  {expiresInMinutes
+                    ? ` ${interpolate(t.expires, { minutes: expiresInMinutes })}`
+                    : null}
                 </>
               ) : (
                 t.subtitle
@@ -118,7 +146,13 @@ function ForgotPasswordScreen({ defaultEmail, onSend, resendAfter = 30, expiresI
             {sentTo ? (
               <div className="mt-8 flex w-full flex-col gap-4">
                 {signInHref ? (
-                  <WirefrontLink className={cn(buttonVariants({ variant: "outline" }), "w-full")} href={signInHref}>
+                  <WirefrontLink
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "w-full"
+                    )}
+                    href={signInHref}
+                  >
                     <ArrowLeftIcon />
                     {t.backToSignIn}
                   </WirefrontLink>
@@ -126,15 +160,28 @@ function ForgotPasswordScreen({ defaultEmail, onSend, resendAfter = 30, expiresI
                 {failure}
                 <p className="text-center text-muted-foreground text-sm">
                   {left > 0 ? (
-                    <span className="tabular-nums">{interpolate(t.resendIn, { time: `0:${String(left).padStart(2, "0")}` })}</span>
+                    <span className="tabular-nums">
+                      {interpolate(t.resendIn, {
+                        time: `0:${String(left).padStart(2, "0")}`,
+                      })}
+                    </span>
                   ) : (
                     <>
                       {t.didntGetIt}{" "}
-                      <button className={linkClass} disabled={form.pending} onClick={() => void form.submit({ email: sentTo })} type="button">
+                      <button
+                        className={linkClass}
+                        disabled={form.pending}
+                        onClick={() => void form.submit({ email: sentTo })}
+                        type="button"
+                      >
                         {form.pending ? t.sending : t.resend}
                       </button>{" "}
                       {t.or}{" "}
-                      <button className={linkClass} onClick={() => setSentTo(undefined)} type="button">
+                      <button
+                        className={linkClass}
+                        onClick={() => setSentTo(undefined)}
+                        type="button"
+                      >
                         {t.anotherEmail}
                       </button>
                     </>
@@ -142,14 +189,31 @@ function ForgotPasswordScreen({ defaultEmail, onSend, resendAfter = 30, expiresI
                 </p>
               </div>
             ) : (
-              <Form className="mt-8 flex w-full flex-col gap-4" noValidate {...form.formProps}>
+              <Form
+                className="mt-8 flex w-full flex-col gap-4"
+                noValidate
+                {...form.formProps}
+              >
                 <Field.Root className="flex flex-col gap-2" name="email">
-                  <Field.Label className="font-medium text-sm">{t.email}</Field.Label>
-                  <Input autoComplete="email" defaultValue={defaultEmail} inputMode="email" placeholder={t.emailPlaceholder} type="text" />
+                  <Field.Label className="font-medium text-sm">
+                    {t.email}
+                  </Field.Label>
+                  <Input
+                    autoComplete="email"
+                    defaultValue={defaultEmail}
+                    inputMode="email"
+                    placeholder={t.emailPlaceholder}
+                    type="text"
+                  />
                   <Field.Error className={fieldError} />
                 </Field.Root>
                 {failure}
-                <Button aria-busy={form.pending} className="mt-2 w-full" disabled={form.pending} type="submit">
+                <Button
+                  aria-busy={form.pending}
+                  className="mt-2 w-full"
+                  disabled={form.pending}
+                  type="submit"
+                >
                   {form.pending ? <Spinner data-icon="inline-start" /> : null}
                   {t.submit}
                 </Button>

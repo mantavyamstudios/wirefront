@@ -8,7 +8,8 @@ import * as fixtures from "./fixtures";
 import { MemberRoster } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ProfileCompactCardShowcasePage() {
   const state = useShowcaseState();
@@ -19,8 +20,20 @@ export function ProfileCompactCardShowcasePage() {
         onChangePermission={() => wait(400)}
         onRemove={() => wait(400)}
         onRetry={() => {}}
-        roster={state === "loading" || state === "error" ? undefined : state === "empty" ? { members: [], total: 0 } : fixtures.listRoster}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        roster={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? { members: [], total: 0 }
+              : fixtures.listRoster
+        }
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

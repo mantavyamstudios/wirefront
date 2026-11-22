@@ -10,10 +10,18 @@ export function ChartsCohortHeatmapShowcasePage() {
   const state = useShowcaseState();
   return (
     <CohortRetention
-      cohorts={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listCohorts}
+      cohorts={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : fixtures.listCohorts
+      }
       error="Retention didn’t load. Check your connection and try again."
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

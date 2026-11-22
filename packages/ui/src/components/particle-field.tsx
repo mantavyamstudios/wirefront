@@ -2,12 +2,7 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 "use client";
 
-import {
-  type RefObject,
-  useEffect,
-  useRef,
-  useSyncExternalStore,
-} from "react";
+import { type RefObject, useEffect, useRef, useSyncExternalStore } from "react";
 
 type Particle = {
   ox: number;
@@ -106,11 +101,11 @@ const SUBMIT_IMPULSE_SECONDARY = 0.2;
 /** Add energy to `typingImpulseRef` (keyboard, preset chips, etc.). */
 export function pulseParticleTypingImpulse(
   impulseRef: RefObject<number>,
-  amount = TYPING_IMPULSE_ADD,
+  amount = TYPING_IMPULSE_ADD
 ) {
   impulseRef.current = Math.min(
     impulseRef.current + amount,
-    TYPING_IMPULSE_CAP,
+    TYPING_IMPULSE_CAP
   );
 }
 
@@ -118,9 +113,7 @@ export function pulseParticleTypingImpulse(
  * Stronger two-beat pulse when a form is sent — primary hit plus a quick
  * follow-up while the first is still decaying (reads like a soft “launch”).
  */
-export function pulseParticleSubmitImpulse(
-  impulseRef: RefObject<number>,
-) {
+export function pulseParticleSubmitImpulse(impulseRef: RefObject<number>) {
   pulseParticleTypingImpulse(impulseRef, SUBMIT_IMPULSE_PRIMARY);
   window.setTimeout(() => {
     pulseParticleTypingImpulse(impulseRef, SUBMIT_IMPULSE_SECONDARY);
@@ -130,7 +123,7 @@ export function pulseParticleSubmitImpulse(
 /** Bump `typingImpulseRef` from a `keydown` handler (used with `ParticleField` typing POC). */
 export function bumpParticleTypingImpulse(
   impulseRef: RefObject<number>,
-  e: Pick<KeyboardEvent, "repeat" | "metaKey" | "ctrlKey" | "altKey" | "key">,
+  e: Pick<KeyboardEvent, "repeat" | "metaKey" | "ctrlKey" | "altKey" | "key">
 ) {
   if (e.repeat) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -142,7 +135,7 @@ function useDocumentDark() {
   return useSyncExternalStore(
     subscribeDocumentDark,
     getDocumentDarkSnapshot,
-    getServerDarkSnapshot,
+    getServerDarkSnapshot
   );
 }
 
@@ -235,10 +228,13 @@ export function ParticleField({
     // a `display: none` parent (e.g. `hidden lg:block`) or a background tab
     // shouldn't burn battery. With reduced motion, ambient drift is disabled
     // and the loop stops as soon as particles settle.
-    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const reducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
     let inView = true;
     let running = false;
-    const shouldRun = () => !destroyed && inView && document.visibilityState === "visible";
+    const shouldRun = () =>
+      !destroyed && inView && document.visibilityState === "visible";
     const startLoop = () => {
       if (running || !shouldRun()) return;
       running = true;
@@ -518,7 +514,11 @@ export function ParticleField({
         p.vy *= dampingV;
         p.x += p.vx;
         p.y += p.vy;
-        maxMotion = Math.max(maxMotion, Math.abs(p.vx) + Math.abs(p.vy), Math.abs(p.ox - p.x) + Math.abs(p.oy - p.y) > 0.5 ? 1 : 0);
+        maxMotion = Math.max(
+          maxMotion,
+          Math.abs(p.vx) + Math.abs(p.vy),
+          Math.abs(p.ox - p.x) + Math.abs(p.oy - p.y) > 0.5 ? 1 : 0
+        );
 
         const appearTarget = p.fading ? 0 : 1;
         p.appear += (appearTarget - p.appear) * 0.08;

@@ -14,10 +14,28 @@ import { Textarea } from "@wirefront/ui/textarea";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
-import { useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  useMessages,
+  useWirefront,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { AtSignIcon, GlobeIcon, KeyRoundIcon, ShieldCheckIcon, TrashIcon, UploadIcon } from "lucide-react";
-import { type ReactNode, type SelectHTMLAttributes, useId, useRef, useState, useSyncExternalStore } from "react";
+import {
+  AtSignIcon,
+  GlobeIcon,
+  KeyRoundIcon,
+  ShieldCheckIcon,
+  TrashIcon,
+  UploadIcon,
+} from "lucide-react";
+import {
+  type ReactNode,
+  type SelectHTMLAttributes,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { type AccountProfile, AccountProfileInput } from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("accountProfile.<key>"). */
@@ -99,15 +117,23 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-function NativeSelect({ className, icon, ...props }: SelectHTMLAttributes<HTMLSelectElement> & { icon?: ReactNode }) {
+function NativeSelect({
+  className,
+  icon,
+  ...props
+}: SelectHTMLAttributes<HTMLSelectElement> & { icon?: ReactNode }) {
   return (
     <div className="relative">
-      {icon ? <span className="pointer-events-none absolute inset-s-3 top-1/2 -translate-y-1/2">{icon}</span> : null}
+      {icon ? (
+        <span className="pointer-events-none absolute inset-s-3 top-1/2 -translate-y-1/2">
+          {icon}
+        </span>
+      ) : null}
       <select
         className={cn(
           "h-9 w-full appearance-none rounded-lg border border-input bg-background pe-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24",
           icon ? "ps-8" : "ps-3",
-          className,
+          className
         )}
         {...props}
       />
@@ -127,10 +153,39 @@ function NativeSelect({ className, icon, ...props }: SelectHTMLAttributes<HTMLSe
   );
 }
 
-function SecurityLink({ icon, title, description, cta, href, destructive }: { icon: ReactNode; title: string; description: string; cta: string; href: string; destructive?: boolean }) {
+function SecurityLink({
+  icon,
+  title,
+  description,
+  cta,
+  href,
+  destructive,
+}: {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  cta: string;
+  href: string;
+  destructive?: boolean;
+}) {
   return (
-    <div className={cn("flex items-center gap-4 rounded-lg border p-3.5", destructive ? "border-destructive/40 bg-destructive/3" : "border-border/60 bg-background/40")}>
-      <div aria-hidden className={cn("flex size-8 shrink-0 items-center justify-center rounded-md", destructive ? "bg-destructive/10 text-destructive-foreground" : "bg-foreground/6")}>
+    <div
+      className={cn(
+        "flex items-center gap-4 rounded-lg border p-3.5",
+        destructive
+          ? "border-destructive/40 bg-destructive/3"
+          : "border-border/60 bg-background/40"
+      )}
+    >
+      <div
+        aria-hidden
+        className={cn(
+          "flex size-8 shrink-0 items-center justify-center rounded-md",
+          destructive
+            ? "bg-destructive/10 text-destructive-foreground"
+            : "bg-foreground/6"
+        )}
+      >
         {icon}
       </div>
       <div className="min-w-0 flex-1">
@@ -138,7 +193,14 @@ function SecurityLink({ icon, title, description, cta, href, destructive }: { ic
         <p className="mt-0.5 text-muted-foreground text-xs">{description}</p>
       </div>
       <WirefrontLink
-        className={cn(buttonVariants({ size: "sm", variant: destructive ? "outline" : "ghost" }), destructive && "border-destructive/40 text-destructive-foreground hover:bg-destructive/10")}
+        className={cn(
+          buttonVariants({
+            size: "sm",
+            variant: destructive ? "outline" : "ghost",
+          }),
+          destructive &&
+            "border-destructive/40 text-destructive-foreground hover:bg-destructive/10"
+        )}
         href={href}
       >
         {cta}
@@ -169,18 +231,31 @@ function AccountProfileScreen({
   const fileRef = useRef<HTMLInputElement>(null);
   const [dirty, setDirty] = useState(false);
   const [formKey, setFormKey] = useState(0);
-  const form = useActionForm({ schema: AccountProfileInput, action: onSave, onSuccess: () => setDirty(false) });
+  const form = useActionForm({
+    schema: AccountProfileInput,
+    action: onSave,
+    onSuccess: () => setDirty(false),
+  });
   const upload = useAction(onUploadPhoto ?? (async () => {}));
   const remove = useAction(onRemovePhoto ?? (async () => {}));
   const photoError = upload.error ?? remove.error;
 
   // Time-zone names come from the runtime's ICU data, which differs between the server and the
   // browser, so the server and the first client render show the IANA id and the name follows.
-  const hydrated = useSyncExternalStore(noSubscribe, () => true, () => false);
+  const hydrated = useSyncExternalStore(
+    noSubscribe,
+    () => true,
+    () => false
+  );
   const zoneName = (zone: string) => {
     if (!hydrated) return zone;
     try {
-      const name = new Intl.DateTimeFormat(locale, { timeZone: zone, timeZoneName: "longGeneric" }).formatToParts(new Date(0)).find((p) => p.type === "timeZoneName")?.value;
+      const name = new Intl.DateTimeFormat(locale, {
+        timeZone: zone,
+        timeZoneName: "longGeneric",
+      })
+        .formatToParts(new Date(0))
+        .find((p) => p.type === "timeZoneName")?.value;
       return name ? `${name} (${zone})` : zone;
     } catch {
       return zone;
@@ -196,16 +271,25 @@ function AccountProfileScreen({
   return (
     <div className={cn("min-h-svh bg-background text-foreground", className)}>
       <div className="mx-auto max-w-3xl px-4 pt-8 pb-32 sm:px-6 sm:pt-12 lg:px-8">
-        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
+        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+          {t.eyebrow}
+        </div>
         <h1 className="mt-1 font-heading text-3xl">{t.title}</h1>
         <p className="mt-1.5 text-muted-foreground text-sm">{t.subtitle}</p>
 
         {status === "error" ? (
           <div className="mt-8 rounded-xl border border-border/60 p-10 text-center">
             <p className="font-medium">{t.errorTitle}</p>
-            {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+            {error ? (
+              <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+            ) : null}
             {onRetry ? (
-              <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+              <Button
+                className="mt-4"
+                onClick={onRetry}
+                size="sm"
+                variant="outline"
+              >
                 {t.retry}
               </Button>
             ) : null}
@@ -220,9 +304,18 @@ function AccountProfileScreen({
             <Section title={t.photo}>
               <div className="flex items-center gap-4 sm:gap-5">
                 {profile.avatarUrl ? (
-                  <img alt="" className="size-16 shrink-0 rounded-full object-cover ring-1 ring-border/60 sm:size-20" height={80} src={profile.avatarUrl} width={80} />
+                  <img
+                    alt=""
+                    className="size-16 shrink-0 rounded-full object-cover ring-1 ring-border/60 sm:size-20"
+                    height={80}
+                    src={profile.avatarUrl}
+                    width={80}
+                  />
                 ) : (
-                  <div aria-hidden className="size-16 shrink-0 rounded-full bg-linear-to-br from-primary/40 to-primary/10 ring-1 ring-border/60 sm:size-20" />
+                  <div
+                    aria-hidden
+                    className="size-16 shrink-0 rounded-full bg-linear-to-br from-primary/40 to-primary/10 ring-1 ring-border/60 sm:size-20"
+                  />
                 )}
                 <div className="flex min-w-0 flex-1 flex-col gap-2">
                   {onUploadPhoto || (onRemovePhoto && profile.avatarUrl) ? (
@@ -242,14 +335,32 @@ function AccountProfileScreen({
                             tabIndex={-1}
                             type="file"
                           />
-                          <Button aria-busy={upload.isPending()} disabled={upload.isPending()} onClick={() => fileRef.current?.click()} size="sm" type="button" variant="outline">
-                            {upload.isPending() ? <Spinner data-icon="inline-start" /> : <UploadIcon />}
+                          <Button
+                            aria-busy={upload.isPending()}
+                            disabled={upload.isPending()}
+                            onClick={() => fileRef.current?.click()}
+                            size="sm"
+                            type="button"
+                            variant="outline"
+                          >
+                            {upload.isPending() ? (
+                              <Spinner data-icon="inline-start" />
+                            ) : (
+                              <UploadIcon />
+                            )}
                             {t.upload}
                           </Button>
                         </>
                       ) : null}
                       {onRemovePhoto && profile.avatarUrl ? (
-                        <Button aria-busy={remove.isPending()} disabled={remove.isPending()} onClick={() => void remove.run()} size="sm" type="button" variant="ghost">
+                        <Button
+                          aria-busy={remove.isPending()}
+                          disabled={remove.isPending()}
+                          onClick={() => void remove.run()}
+                          size="sm"
+                          type="button"
+                          variant="ghost"
+                        >
                           {t.remove}
                         </Button>
                       ) : null}
@@ -267,30 +378,57 @@ function AccountProfileScreen({
 
             <Separator className="my-8" />
 
-            <Form className="flex flex-col" id={FORM_ID} key={formKey} noValidate onChange={() => setDirty(true)} {...form.formProps}>
+            <Form
+              className="flex flex-col"
+              id={FORM_ID}
+              key={formKey}
+              noValidate
+              onChange={() => setDirty(true)}
+              {...form.formProps}
+            >
               <Section title={t.identity}>
-                <Field.Root className="flex flex-col gap-1.5" name="displayName">
+                <Field.Root
+                  className="flex flex-col gap-1.5"
+                  name="displayName"
+                >
                   <Field.Label className={label}>{t.displayName}</Field.Label>
-                  <Input autoComplete="nickname" defaultValue={profile.displayName} />
+                  <Input
+                    autoComplete="nickname"
+                    defaultValue={profile.displayName}
+                  />
                   <Field.Error className={fieldError} />
                 </Field.Root>
                 <Field.Root className="flex flex-col gap-1.5" name="handle">
                   <Field.Label className={label}>{t.handle}</Field.Label>
                   <div className="flex h-9 items-center gap-1 rounded-lg border border-input bg-background px-3 font-mono text-sm focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/24">
                     <AtSignIcon aria-hidden className="size-3.5 opacity-60" />
-                    <Field.Control autoComplete="off" className="min-w-0 flex-1 bg-transparent outline-none" defaultValue={profile.handle} spellCheck={false} />
+                    <Field.Control
+                      autoComplete="off"
+                      className="min-w-0 flex-1 bg-transparent outline-none"
+                      defaultValue={profile.handle}
+                      spellCheck={false}
+                    />
                   </div>
                   <Field.Error className={fieldError} />
                 </Field.Root>
                 <Field.Root className="flex flex-col gap-1.5" name="pronouns">
                   <Field.Label className={label}>{t.pronouns}</Field.Label>
-                  <Input defaultValue={profile.pronouns} placeholder={t.pronounsPlaceholder} />
+                  <Input
+                    defaultValue={profile.pronouns}
+                    placeholder={t.pronounsPlaceholder}
+                  />
                   <Field.Error className={fieldError} />
                 </Field.Root>
                 <Field.Root className="flex flex-col gap-1.5" name="bio">
                   <Field.Label className={label}>{t.bio}</Field.Label>
-                  <Field.Control defaultValue={profile.bio} placeholder={t.bioPlaceholder} render={<Textarea rows={3} />} />
-                  <Field.Description className="text-muted-foreground text-xs">{t.bioHint}</Field.Description>
+                  <Field.Control
+                    defaultValue={profile.bio}
+                    placeholder={t.bioPlaceholder}
+                    render={<Textarea rows={3} />}
+                  />
+                  <Field.Description className="text-muted-foreground text-xs">
+                    {t.bioHint}
+                  </Field.Description>
                   <Field.Error className={fieldError} />
                 </Field.Root>
               </Section>
@@ -302,7 +440,13 @@ function AccountProfileScreen({
                   <label className={label} htmlFor={`${id}-email`}>
                     {t.email}
                   </label>
-                  <Input autoComplete="email" defaultValue={profile.email} id={`${id}-email`} readOnly type="email" />
+                  <Input
+                    autoComplete="email"
+                    defaultValue={profile.email}
+                    id={`${id}-email`}
+                    readOnly
+                    type="email"
+                  />
                 </div>
                 <Field.Root className="flex flex-col gap-1.5" name="language">
                   <Field.Label className={label}>{t.language}</Field.Label>
@@ -324,7 +468,14 @@ function AccountProfileScreen({
                   <Field.Control
                     defaultValue={profile.timeZone}
                     render={
-                      <NativeSelect icon={<GlobeIcon aria-hidden className="size-3.5 opacity-60" />}>
+                      <NativeSelect
+                        icon={
+                          <GlobeIcon
+                            aria-hidden
+                            className="size-3.5 opacity-60"
+                          />
+                        }
+                      >
                         {timeZones.map((zone) => (
                           <option key={zone} value={zone}>
                             {zoneName(zone)}
@@ -341,10 +492,33 @@ function AccountProfileScreen({
               <>
                 <Separator className="my-8" />
                 <Section title={t.security}>
-                  {twoFactor ? <SecurityLink cta={t.manage} description={twoFactor.description} href={twoFactor.href} icon={<ShieldCheckIcon className="size-4" />} title={t.twoFactor} /> : null}
-                  {sessions ? <SecurityLink cta={t.review} description={sessions.description} href={sessions.href} icon={<KeyRoundIcon className="size-4" />} title={t.sessions} /> : null}
+                  {twoFactor ? (
+                    <SecurityLink
+                      cta={t.manage}
+                      description={twoFactor.description}
+                      href={twoFactor.href}
+                      icon={<ShieldCheckIcon className="size-4" />}
+                      title={t.twoFactor}
+                    />
+                  ) : null}
+                  {sessions ? (
+                    <SecurityLink
+                      cta={t.review}
+                      description={sessions.description}
+                      href={sessions.href}
+                      icon={<KeyRoundIcon className="size-4" />}
+                      title={t.sessions}
+                    />
+                  ) : null}
                   {deleteAccountHref ? (
-                    <SecurityLink cta={t.delete} description={t.deleteHint} destructive href={deleteAccountHref} icon={<TrashIcon className="size-4" />} title={t.deleteAccount} />
+                    <SecurityLink
+                      cta={t.delete}
+                      description={t.deleteHint}
+                      destructive
+                      href={deleteAccountHref}
+                      icon={<TrashIcon className="size-4" />}
+                      title={t.deleteAccount}
+                    />
                   ) : null}
                 </Section>
               </>
@@ -362,14 +536,28 @@ function AccountProfileScreen({
                   {form.formError}
                 </p>
               ) : (
-                <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">{dirty ? t.unsaved : t.saved}</p>
+                <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">
+                  {dirty ? t.unsaved : t.saved}
+                </p>
               )}
             </div>
             <div className="flex items-center gap-2">
-              <Button disabled={!dirty || form.pending} onClick={discard} size="sm" type="button" variant="ghost">
+              <Button
+                disabled={!dirty || form.pending}
+                onClick={discard}
+                size="sm"
+                type="button"
+                variant="ghost"
+              >
                 {t.discard}
               </Button>
-              <Button aria-busy={form.pending} disabled={!dirty || form.pending} form={FORM_ID} size="sm" type="submit">
+              <Button
+                aria-busy={form.pending}
+                disabled={!dirty || form.pending}
+                form={FORM_ID}
+                size="sm"
+                type="submit"
+              >
                 {form.pending ? <Spinner data-icon="inline-start" /> : null}
                 {t.save}
               </Button>

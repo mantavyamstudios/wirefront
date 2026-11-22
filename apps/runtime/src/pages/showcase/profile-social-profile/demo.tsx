@@ -9,7 +9,8 @@ import * as fixtures from "./fixtures";
 import { SocialProfile } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const save = () => wait(250);
 
 export function ProfileSocialProfileShowcasePage() {
@@ -26,7 +27,9 @@ export function ProfileSocialProfileShowcasePage() {
           onToggleFollow={save}
           onToggleMute={save}
           onToggleNotify={save}
-          postUrl={(id) => `https://ripple.example/${fixtures.getSocialProfile.handle}/${id}`}
+          postUrl={(id) =>
+            `https://ripple.example/${fixtures.getSocialProfile.handle}/${id}`
+          }
           posts={fixtures.listPosts}
           profileUrl={`https://ripple.example/@${fixtures.getSocialProfile.handle}`}
           replies={fixtures.listReplies}

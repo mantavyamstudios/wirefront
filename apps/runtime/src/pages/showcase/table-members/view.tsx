@@ -36,17 +36,49 @@ import {
   DropdownMenuTrigger,
 } from "@wirefront/ui/dropdown-menu";
 import { Input } from "@wirefront/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { Spinner } from "@wirefront/ui/spinner";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@wirefront/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@wirefront/ui/table";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
-import { pageCount, toggleSort, withFilter, withPage, withSearch } from "@wirefront/ui/wirefront/list";
-import { interpolate, useCan, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
-import type { Action, AsyncStatus, ListQuery } from "@wirefront/ui/wirefront/types";
+import {
+  pageCount,
+  toggleSort,
+  withFilter,
+  withPage,
+  withSearch,
+} from "@wirefront/ui/wirefront/list";
+import {
+  interpolate,
+  useCan,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
+import type {
+  Action,
+  AsyncStatus,
+  ListQuery,
+} from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
   ArrowDownIcon,
@@ -62,7 +94,12 @@ import {
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
-import { type AssignableRole, InviteInput, type Member, type Role } from "./schema";
+import {
+  type AssignableRole,
+  InviteInput,
+  type Member,
+  type Role,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("membersTable.<key>"). */
 export const MEMBERS_TABLE_MESSAGES = {
@@ -95,9 +132,11 @@ export const MEMBERS_TABLE_MESSAGES = {
   remove: "Remove",
   revokeInvite: "Revoke invitation",
   removeTitle: "Remove {name}?",
-  removeDescription: "They lose access to this workspace straight away. You can invite them again later.",
+  removeDescription:
+    "They lose access to this workspace straight away. You can invite them again later.",
   transferTitle: "Make {name} the owner?",
-  transferDescription: "They get full control of the workspace, including billing. You become an admin.",
+  transferDescription:
+    "They get full control of the workspace, including billing. You become an admin.",
   cancel: "Cancel",
   emptyTitle: "No members yet",
   emptyDescription: "Invite your team to start working together.",
@@ -198,8 +237,13 @@ function MembersTableScreen({
   const [inviting, setInviting] = useState(false);
   const [confirm, setConfirm] = useState<Confirm>(null);
 
-  const [local, setLocal] = useState<Local>({ source: members, roles: {}, removed: new Set() });
-  if (local.source !== members) setLocal({ source: members, roles: {}, removed: new Set() });
+  const [local, setLocal] = useState<Local>({
+    source: members,
+    roles: {},
+    removed: new Set(),
+  });
+  if (local.source !== members)
+    setLocal({ source: members, roles: {}, removed: new Set() });
 
   const roleChange = useAction(onRoleChange ?? (async () => {}), {
     optimistic: ({ id, role }) => {
@@ -212,31 +256,51 @@ function MembersTableScreen({
     },
   });
   const remove = useAction(onRemove ?? (async () => {}), {
-    onSuccess: (_, id) => setLocal((l) => ({ ...l, removed: new Set(l.removed).add(id) })),
+    onSuccess: (_, id) =>
+      setLocal((l) => ({ ...l, removed: new Set(l.removed).add(id) })),
   });
   const transfer = useAction(onTransferOwnership ?? (async () => {}));
   const actionError = roleChange.error ?? remove.error ?? transfer.error;
 
   const rows = members
     .filter((m) => !local.removed.has(m.id))
-    .map((m) => (local.roles[m.id] ? { ...m, role: local.roles[m.id] as Role } : m));
+    .map((m) =>
+      local.roles[m.id] ? { ...m, role: local.roles[m.id] as Role } : m
+    );
   const roleLabel = (role: Role) => t[role];
   const filtered = Boolean(query.search || query.filters?.role);
   const pages = pageCount(query, total);
   const from = total === 0 ? 0 : (query.page - 1) * query.pageSize + 1;
   const to = Math.min(query.page * query.pageSize, total);
 
-  const sortHead = (id: "name" | "lastActiveAt", label: string, cellClass?: string) => {
+  const sortHead = (
+    id: "name" | "lastActiveAt",
+    label: string,
+    cellClass?: string
+  ) => {
     const active = query.sort?.id === id ? query.sort.direction : undefined;
     return (
-      <TableHead aria-sort={active === "asc" ? "ascending" : active === "desc" ? "descending" : "none"} className={cellClass}>
+      <TableHead
+        aria-sort={
+          active === "asc"
+            ? "ascending"
+            : active === "desc"
+              ? "descending"
+              : "none"
+        }
+        className={cellClass}
+      >
         <button
           className="-mx-1 inline-flex items-center gap-1 rounded-sm px-1 outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           onClick={() => onQueryChange(toggleSort(query, id))}
           type="button"
         >
           {label}
-          {active === "asc" ? <ArrowUpIcon className="size-3" /> : active === "desc" ? <ArrowDownIcon className="size-3" /> : null}
+          {active === "asc" ? (
+            <ArrowUpIcon className="size-3" />
+          ) : active === "desc" ? (
+            <ArrowDownIcon className="size-3" />
+          ) : null}
         </button>
       </TableHead>
     );
@@ -244,7 +308,10 @@ function MembersTableScreen({
 
   let body: ReactNode;
   if (status === "loading") {
-    body = SKELETON_ROWS.slice(0, Math.min(query.pageSize, SKELETON_ROWS.length)).map((key) => (
+    body = SKELETON_ROWS.slice(
+      0,
+      Math.min(query.pageSize, SKELETON_ROWS.length)
+    ).map((key) => (
       <TableRow key={key}>
         <TableCell className="ps-4" colSpan={6}>
           <div className="flex items-center gap-3">
@@ -262,9 +329,16 @@ function MembersTableScreen({
       <TableRow>
         <TableCell className="whitespace-normal py-12 text-center" colSpan={6}>
           <p className="font-medium">{t.errorTitle}</p>
-          {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+          {error ? (
+            <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+          ) : null}
           {onRetry ? (
-            <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+            <Button
+              className="mt-4"
+              onClick={onRetry}
+              size="sm"
+              variant="outline"
+            >
               {t.retry}
             </Button>
           ) : null}
@@ -275,12 +349,20 @@ function MembersTableScreen({
     body = (
       <TableRow>
         <TableCell className="whitespace-normal py-12 text-center" colSpan={6}>
-          <p className="font-medium">{filtered ? t.noMatchTitle : t.emptyTitle}</p>
-          <p className="mt-1 text-muted-foreground text-sm">{filtered ? t.noMatchDescription : t.emptyDescription}</p>
+          <p className="font-medium">
+            {filtered ? t.noMatchTitle : t.emptyTitle}
+          </p>
+          <p className="mt-1 text-muted-foreground text-sm">
+            {filtered ? t.noMatchDescription : t.emptyDescription}
+          </p>
           {filtered ? (
             <Button
               className="mt-4"
-              onClick={() => onQueryChange(withFilter(withSearch(query, ""), "role", undefined))}
+              onClick={() =>
+                onQueryChange(
+                  withFilter(withSearch(query, ""), "role", undefined)
+                )
+              }
               size="sm"
               variant="outline"
             >
@@ -294,12 +376,34 @@ function MembersTableScreen({
     body = rows.map((m) => (
       <MemberRow
         key={m.id}
-        lastActive={m.status === "invited" ? t.invited : m.lastActiveAt ? format.relative(m.lastActiveAt) : t.never}
+        lastActive={
+          m.status === "invited"
+            ? t.invited
+            : m.lastActiveAt
+              ? format.relative(m.lastActiveAt)
+              : t.never
+        }
         m={m}
-        onRoleChange={manage && onRoleChange ? (role) => void roleChange.run({ id: m.id, role }, m.id) : undefined}
-        onRemove={manage && onRemove ? () => setConfirm({ kind: "remove", member: m }) : undefined}
-        onTransfer={manage && onTransferOwnership && m.status === "active" ? () => setConfirm({ kind: "transfer", member: m }) : undefined}
-        pending={roleChange.isPending(m.id) || remove.isPending(m.id) || transfer.isPending(m.id)}
+        onRoleChange={
+          manage && onRoleChange
+            ? (role) => void roleChange.run({ id: m.id, role }, m.id)
+            : undefined
+        }
+        onRemove={
+          manage && onRemove
+            ? () => setConfirm({ kind: "remove", member: m })
+            : undefined
+        }
+        onTransfer={
+          manage && onTransferOwnership && m.status === "active"
+            ? () => setConfirm({ kind: "transfer", member: m })
+            : undefined
+        }
+        pending={
+          roleChange.isPending(m.id) ||
+          remove.isPending(m.id) ||
+          transfer.isPending(m.id)
+        }
         roleLabel={roleLabel}
         t={t}
       />
@@ -307,17 +411,28 @@ function MembersTableScreen({
   }
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12",
+        className
+      )}
+    >
       <div className="mx-auto max-w-5xl">
         <header className="mb-6 flex items-end justify-between gap-4">
           <div className="min-w-0">
             <h1 className="font-heading text-xl">{t.title}</h1>
             <p className="text-muted-foreground text-sm">
-              {total === 1 ? t.countOne : interpolate(t.countOther, { count: format.number(total) })}
+              {total === 1
+                ? t.countOne
+                : interpolate(t.countOther, { count: format.number(total) })}
             </p>
           </div>
           {manage && onInvite ? (
-            <Button className="pointer-coarse:h-10" onClick={() => setInviting(true)} size="sm">
+            <Button
+              className="pointer-coarse:h-10"
+              onClick={() => setInviting(true)}
+              size="sm"
+            >
               <UserPlusIcon />
               {t.invite}
             </Button>
@@ -338,8 +453,18 @@ function MembersTableScreen({
             />
           </InputGroup>
           <Select
-            items={[{ label: t.allRoles, value: "all" }, ...(["owner", ...ASSIGNABLE] as Role[]).map((r) => ({ label: roleLabel(r), value: r }))]}
-            onValueChange={(v) => onQueryChange(withFilter(query, "role", v === "all" ? undefined : v))}
+            items={[
+              { label: t.allRoles, value: "all" },
+              ...(["owner", ...ASSIGNABLE] as Role[]).map((r) => ({
+                label: roleLabel(r),
+                value: r,
+              })),
+            ]}
+            onValueChange={(v) =>
+              onQueryChange(
+                withFilter(query, "role", v === "all" ? undefined : v)
+              )
+            }
             value={query.filters?.role ?? "all"}
           >
             <SelectTrigger aria-label={t.columnRole} className="sm:w-40">
@@ -374,7 +499,9 @@ function MembersTableScreen({
                 {sortHead("name", t.columnMember, "ps-4")}
                 <TableHead className="max-md:hidden">{t.columnTeam}</TableHead>
                 <TableHead className="max-sm:hidden">{t.columnRole}</TableHead>
-                <TableHead className="max-lg:hidden">{t.columnTwoFactor}</TableHead>
+                <TableHead className="max-lg:hidden">
+                  {t.columnTwoFactor}
+                </TableHead>
                 {sortHead("lastActiveAt", t.columnLastActive, "max-md:hidden")}
                 <TableHead className="w-px pe-4">
                   <span className="sr-only">{t.actions}</span>
@@ -386,12 +513,19 @@ function MembersTableScreen({
         </div>
 
         {status === "ready" && pages > 1 ? (
-          <nav aria-label={t.pagination} className="mt-3 flex items-center justify-end gap-2 text-muted-foreground text-sm">
-            <span className="tabular-nums">{interpolate(t.range, { from, to, total })}</span>
+          <nav
+            aria-label={t.pagination}
+            className="mt-3 flex items-center justify-end gap-2 text-muted-foreground text-sm"
+          >
+            <span className="tabular-nums">
+              {interpolate(t.range, { from, to, total })}
+            </span>
             <Button
               aria-label={t.previous}
               disabled={query.page <= 1}
-              onClick={() => onQueryChange(withPage(query, query.page - 1, total))}
+              onClick={() =>
+                onQueryChange(withPage(query, query.page - 1, total))
+              }
               size="icon-sm"
               variant="outline"
             >
@@ -400,7 +534,9 @@ function MembersTableScreen({
             <Button
               aria-label={t.next}
               disabled={query.page >= pages}
-              onClick={() => onQueryChange(withPage(query, query.page + 1, total))}
+              onClick={() =>
+                onQueryChange(withPage(query, query.page + 1, total))
+              }
               size="icon-sm"
               variant="outline"
             >
@@ -410,15 +546,35 @@ function MembersTableScreen({
         ) : null}
       </div>
 
-      {onInvite ? <InviteDialog onInvite={onInvite} onOpenChange={setInviting} open={inviting} roleLabel={roleLabel} t={t} /> : null}
+      {onInvite ? (
+        <InviteDialog
+          onInvite={onInvite}
+          onOpenChange={setInviting}
+          open={inviting}
+          roleLabel={roleLabel}
+          t={t}
+        />
+      ) : null}
 
-      <AlertDialog onOpenChange={(open) => !open && setConfirm(null)} open={confirm !== null}>
+      <AlertDialog
+        onOpenChange={(open) => !open && setConfirm(null)}
+        open={confirm !== null}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {confirm ? interpolate(confirm.kind === "remove" ? t.removeTitle : t.transferTitle, { name: confirm.member.name }) : null}
+              {confirm
+                ? interpolate(
+                    confirm.kind === "remove" ? t.removeTitle : t.transferTitle,
+                    { name: confirm.member.name }
+                  )
+                : null}
             </AlertDialogTitle>
-            <AlertDialogDescription>{confirm?.kind === "transfer" ? t.transferDescription : t.removeDescription}</AlertDialogDescription>
+            <AlertDialogDescription>
+              {confirm?.kind === "transfer"
+                ? t.transferDescription
+                : t.removeDescription}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t.cancel}</AlertDialogCancel>
@@ -426,12 +582,18 @@ function MembersTableScreen({
               onClick={() => {
                 if (!confirm) return;
                 const { id } = confirm.member;
-                void (confirm.kind === "remove" ? remove.run(id, id) : transfer.run(id, id));
+                void (confirm.kind === "remove"
+                  ? remove.run(id, id)
+                  : transfer.run(id, id));
                 setConfirm(null);
               }}
               variant={confirm?.kind === "remove" ? "destructive" : "default"}
             >
-              {confirm?.kind === "transfer" ? t.transferOwnership : confirm?.member.status === "invited" ? t.revokeInvite : t.remove}
+              {confirm?.kind === "transfer"
+                ? t.transferOwnership
+                : confirm?.member.status === "invited"
+                  ? t.revokeInvite
+                  : t.remove}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -464,26 +626,41 @@ function MemberRow({
   const owner = m.role === "owner";
   const editable = !owner && onRoleChange;
   const twoFactor = (
-    <span className={cn("size-1.5 rounded-full", m.twoFactor ? "bg-category-2" : "bg-muted-foreground/40")} />
+    <span
+      className={cn(
+        "size-1.5 rounded-full",
+        m.twoFactor ? "bg-category-2" : "bg-muted-foreground/40"
+      )}
+    />
   );
   return (
-    <TableRow aria-busy={pending || undefined} className={cn(pending && "opacity-60")}>
+    <TableRow
+      aria-busy={pending || undefined}
+      className={cn(pending && "opacity-60")}
+    >
       <TableCell className="w-full max-w-0 ps-4 sm:w-auto sm:max-w-none">
         <div className="flex items-center gap-3">
           <Avatar className={cn("size-8 shrink-0", toneFor(m.id))}>
             {m.avatarUrl ? <AvatarImage alt="" src={m.avatarUrl} /> : null}
-            <AvatarFallback className="bg-transparent font-medium text-[11px]">{initials(m.name)}</AvatarFallback>
+            <AvatarFallback className="bg-transparent font-medium text-[11px]">
+              {initials(m.name)}
+            </AvatarFallback>
           </Avatar>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="truncate font-medium">{m.name}</span>
               {m.status === "invited" ? (
-                <Badge className="h-4.5 rounded-sm px-1 font-mono text-[10px] uppercase tracking-wider" variant="outline">
+                <Badge
+                  className="h-4.5 rounded-sm px-1 font-mono text-[10px] uppercase tracking-wider"
+                  variant="outline"
+                >
                   {t.invited}
                 </Badge>
               ) : null}
             </div>
-            <div className="truncate text-muted-foreground text-xs">{m.email}</div>
+            <div className="truncate text-muted-foreground text-xs">
+              {m.email}
+            </div>
             <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-muted-foreground text-xs lg:hidden">
               <span className="sm:hidden">{roleLabel(m.role)}</span>
               {m.team ? <span className="md:hidden">{m.team}</span> : null}
@@ -495,7 +672,9 @@ function MemberRow({
           </div>
         </div>
       </TableCell>
-      <TableCell className="text-muted-foreground max-md:hidden">{m.team}</TableCell>
+      <TableCell className="text-muted-foreground max-md:hidden">
+        {m.team}
+      </TableCell>
       <TableCell className="max-sm:hidden">
         {editable ? (
           <Select
@@ -503,7 +682,11 @@ function MemberRow({
             onValueChange={(v) => onRoleChange(v as AssignableRole)}
             value={m.role}
           >
-            <SelectTrigger aria-label={interpolate(t.roleFor, { name: m.name })} className="h-8 w-32 text-sm pointer-coarse:h-10" size="sm">
+            <SelectTrigger
+              aria-label={interpolate(t.roleFor, { name: m.name })}
+              className="h-8 w-32 text-sm pointer-coarse:h-10"
+              size="sm"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="start">
@@ -520,16 +703,22 @@ function MemberRow({
             {t.owner}
           </Badge>
         ) : (
-          <span className="text-muted-foreground text-sm">{roleLabel(m.role)}</span>
+          <span className="text-muted-foreground text-sm">
+            {roleLabel(m.role)}
+          </span>
         )}
       </TableCell>
       <TableCell className="max-lg:hidden">
         <div className="inline-flex items-center gap-1.5">
           {twoFactor}
-          <span className="text-muted-foreground text-xs">{m.twoFactor ? t.twoFactorOn : t.twoFactorOff}</span>
+          <span className="text-muted-foreground text-xs">
+            {m.twoFactor ? t.twoFactorOn : t.twoFactorOff}
+          </span>
         </div>
       </TableCell>
-      <TableCell className="text-muted-foreground tabular-nums max-md:hidden">{lastActive}</TableCell>
+      <TableCell className="text-muted-foreground tabular-nums max-md:hidden">
+        {lastActive}
+      </TableCell>
       <TableCell className="pe-4">
         <DropdownMenu>
           <DropdownMenuTrigger
@@ -549,7 +738,10 @@ function MemberRow({
               <>
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>{t.role}</DropdownMenuLabel>
-                  <DropdownMenuRadioGroup onValueChange={(v) => onRoleChange(v as AssignableRole)} value={m.role}>
+                  <DropdownMenuRadioGroup
+                    onValueChange={(v) => onRoleChange(v as AssignableRole)}
+                    value={m.role}
+                  >
                     {ASSIGNABLE.map((r) => (
                       <DropdownMenuRadioItem key={r} value={r}>
                         {roleLabel(r)}
@@ -563,12 +755,17 @@ function MemberRow({
             <DropdownMenuItem render={<a href={`mailto:${m.email}`} />}>
               <MailIcon /> {t.sendEmail}
             </DropdownMenuItem>
-            {onTransfer && !owner ? <DropdownMenuItem onClick={onTransfer}>{t.transferOwnership}</DropdownMenuItem> : null}
+            {onTransfer && !owner ? (
+              <DropdownMenuItem onClick={onTransfer}>
+                {t.transferOwnership}
+              </DropdownMenuItem>
+            ) : null}
             {onRemove && !owner ? (
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={onRemove} variant="destructive">
-                  <TrashIcon /> {m.status === "invited" ? t.revokeInvite : t.remove}
+                  <TrashIcon />{" "}
+                  {m.status === "invited" ? t.revokeInvite : t.remove}
                 </DropdownMenuItem>
               </>
             ) : null}
@@ -592,7 +789,11 @@ function InviteDialog({
   roleLabel: (role: Role) => string;
   t: Messages;
 }) {
-  const form = useActionForm({ schema: InviteInput, action: onInvite, onSuccess: () => onOpenChange(false) });
+  const form = useActionForm({
+    schema: InviteInput,
+    action: onInvite,
+    onSuccess: () => onOpenChange(false),
+  });
   const fieldError = "text-destructive-foreground text-xs";
   return (
     <Dialog
@@ -610,12 +811,21 @@ function InviteDialog({
         <Form className="flex flex-col gap-4" noValidate {...form.formProps}>
           <Field.Root className="flex flex-col gap-2" name="email">
             <Field.Label className="font-medium text-sm">{t.email}</Field.Label>
-            <Input autoComplete="off" inputMode="email" placeholder={t.emailPlaceholder} type="text" />
+            <Input
+              autoComplete="off"
+              inputMode="email"
+              placeholder={t.emailPlaceholder}
+              type="text"
+            />
             <Field.Error className={fieldError} />
           </Field.Root>
           <Field.Root className="flex flex-col gap-2" name="role">
             <Field.Label className="font-medium text-sm">{t.role}</Field.Label>
-            <Select defaultValue="member" items={ASSIGNABLE.map((r) => ({ label: roleLabel(r), value: r }))} name="role">
+            <Select
+              defaultValue="member"
+              items={ASSIGNABLE.map((r) => ({ label: roleLabel(r), value: r }))}
+              name="role"
+            >
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
@@ -635,7 +845,11 @@ function InviteDialog({
             </p>
           ) : null}
           <DialogFooter>
-            <Button aria-busy={form.pending} disabled={form.pending} type="submit">
+            <Button
+              aria-busy={form.pending}
+              disabled={form.pending}
+              type="submit"
+            >
               {form.pending ? <Spinner data-icon="inline-start" /> : null}
               {t.sendInvite}
             </Button>

@@ -25,11 +25,16 @@ import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { DevlFrame } from "../_devl-frame";
 import * as fixtures from "./fixtures";
-import type { AssistantChat, AssistantMessage, AssistantRequest } from "./schema";
+import type {
+  AssistantChat,
+  AssistantMessage,
+  AssistantRequest,
+} from "./schema";
 import { AssistantStart } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const icons = {
   mail: <MailIcon />,
   cal: <CalendarDaysIcon />,
@@ -52,15 +57,21 @@ const navigation = [
 ];
 
 /** The canned reply's steps and text for what was asked with. */
-function buildReply(request: Pick<AssistantRequest, "apps" | "files" | "tools">) {
+function buildReply(
+  request: Pick<AssistantRequest, "apps" | "files" | "tools">
+) {
   const apps = fixtures.listApps.filter((a) => request.apps.includes(a.id));
   const steps = apps.map((a) => `Read ${a.name} · ${a.detail.toLowerCase()}`);
   if (request.tools.includes("web")) steps.push("Searched the web · 6 sources");
-  if (request.tools.includes("research")) steps.push("Ran deep research · 4 passes");
+  if (request.tools.includes("research"))
+    steps.push("Ran deep research · 4 passes");
   for (const f of request.files) steps.push(`Opened ${f}`);
   if (steps.length === 0) steps.push("Thought for 3 seconds");
   const sources = [...apps.map((a) => a.name), ...request.files];
-  const from = sources.length === 0 ? "" : ` from ${new Intl.ListFormat("en-US").format(sources)}`;
+  const from =
+    sources.length === 0
+      ? ""
+      : ` from ${new Intl.ListFormat("en-US").format(sources)}`;
   return { steps, text: fixtures.reply.replace("{from}", from) };
 }
 
@@ -70,9 +81,13 @@ export function AiAssistantStartShowcasePage() {
   const [chats, setChats] = useState<AssistantChat[]>(fixtures.listChats);
   const [apps, setApps] = useState(fixtures.listApps);
   const [files, setFiles] = useState<string[]>([]);
-  const [messages, setMessages] = useState<(AssistantMessage & { full?: string })[]>([]);
+  const [messages, setMessages] = useState<
+    (AssistantMessage & { full?: string })[]
+  >([]);
   const [activeChat, setActiveChat] = useState<string>();
-  const [stream, setStream] = useState<{ id: string; words: number } | null>(null);
+  const [stream, setStream] = useState<{ id: string; words: number } | null>(
+    null
+  );
 
   // Reveal the streaming reply two words at a time after a short "thinking" pause.
   useEffect(() => {
@@ -80,34 +95,62 @@ export function AiAssistantStartShowcasePage() {
     const full = messages.find((m) => m.id === stream.id)?.full ?? "";
     const total = full.split(" ").length;
     if (stream.words >= total) {
-      setMessages((ms) => ms.map((m) => (m.id === stream.id ? { ...m, text: full, streaming: false } : m)));
+      setMessages((ms) =>
+        ms.map((m) =>
+          m.id === stream.id ? { ...m, text: full, streaming: false } : m
+        )
+      );
       setStream(null);
       return;
     }
     const id = setTimeout(
       () => {
         const words = stream.words + (reduce ? total : 2);
-        setMessages((ms) => ms.map((m) => (m.id === stream.id ? { ...m, text: full.split(" ").slice(0, words).join(" ") } : m)));
+        setMessages((ms) =>
+          ms.map((m) =>
+            m.id === stream.id
+              ? { ...m, text: full.split(" ").slice(0, words).join(" ") }
+              : m
+          )
+        );
         setStream({ id: stream.id, words });
       },
-      stream.words === 0 ? 900 : 45,
+      stream.words === 0 ? 900 : 45
     );
     return () => clearTimeout(id);
   }, [stream, messages, reduce]);
 
-  const ask = (text: string, request: Pick<AssistantRequest, "apps" | "files" | "tools">, chatId?: string) => {
+  const ask = (
+    text: string,
+    request: Pick<AssistantRequest, "apps" | "files" | "tools">,
+    chatId?: string
+  ) => {
     const n = ++seq.current;
     const reply = buildReply(request);
     const pair: (AssistantMessage & { full?: string })[] = [
       { id: `u-${n}`, role: "user", text },
-      { id: `a-${n}`, role: "assistant", text: "", full: reply.text, steps: reply.steps, streaming: true },
+      {
+        id: `a-${n}`,
+        role: "assistant",
+        text: "",
+        full: reply.text,
+        steps: reply.steps,
+        streaming: true,
+      },
     ];
     setMessages((m) => (chatId ? pair : [...m, ...pair]));
     setStream({ id: `a-${n}`, words: 0 });
     if (chatId) setActiveChat(chatId);
     else if (messages.length === 0) {
       const id = `new-${n}`;
-      setChats((c) => [{ id, title: text.length > 48 ? `${text.slice(0, 46).trimEnd()}…` : text, updatedAt: fixtures.now }, ...c]);
+      setChats((c) => [
+        {
+          id,
+          title: text.length > 48 ? `${text.slice(0, 46).trimEnd()}…` : text,
+          updatedAt: fixtures.now,
+        },
+        ...c,
+      ]);
       setActiveChat(id);
     }
   };
@@ -125,11 +168,23 @@ export function AiAssistantStartShowcasePage() {
           messages={messages}
           models={fixtures.models}
           navigation={navigation}
-          onAttach={() => setFiles((f) => (f.includes("q3-renewals.csv") ? [...f, `notes-${f.length}.pdf`] : [...f, "q3-renewals.csv"]))}
+          onAttach={() =>
+            setFiles((f) =>
+              f.includes("q3-renewals.csv")
+                ? [...f, `notes-${f.length}.pdf`]
+                : [...f, "q3-renewals.csv"]
+            )
+          }
           onBrowseApps={() => {}}
           onConnectApp={async ({ id }) => {
             await wait(1400);
-            setApps((all) => all.map((a) => (a.id === id ? { ...a, connected: true, detail: "Last 90 days" } : a)));
+            setApps((all) =>
+              all.map((a) =>
+                a.id === id
+                  ? { ...a, connected: true, detail: "Last 90 days" }
+                  : a
+              )
+            );
           }}
           onNewChat={() => {
             setMessages([]);
@@ -137,10 +192,22 @@ export function AiAssistantStartShowcasePage() {
             setActiveChat(undefined);
           }}
           onNewProject={() => {}}
-          onOpenChat={(id) => ask(chats.find((c) => c.id === id)?.title ?? "", { apps: [], files: [], tools: ["web"] }, id)}
+          onOpenChat={(id) =>
+            ask(
+              chats.find((c) => c.id === id)?.title ?? "",
+              { apps: [], files: [], tools: ["web"] },
+              id
+            )
+          }
           onRate={() => {}}
           onRegenerate={(id) => {
-            setMessages((ms) => ms.map((m) => (m.id === id ? { ...m, text: "", streaming: true, stopped: false } : m)));
+            setMessages((ms) =>
+              ms.map((m) =>
+                m.id === id
+                  ? { ...m, text: "", streaming: true, stopped: false }
+                  : m
+              )
+            );
             setStream({ id, words: 0 });
           }}
           onRemoveFile={(name) => setFiles((f) => f.filter((x) => x !== name))}
@@ -153,8 +220,13 @@ export function AiAssistantStartShowcasePage() {
               ms.map((m) => {
                 if (m.id !== stream.id) return m;
                 const kept = m.text.replace(/[\s,.;:]+$/, "");
-                return { ...m, text: kept ? `${kept}…` : "", streaming: false, stopped: true };
-              }),
+                return {
+                  ...m,
+                  text: kept ? `${kept}…` : "",
+                  streaming: false,
+                  stopped: true,
+                };
+              })
             );
             setStream(null);
           }}

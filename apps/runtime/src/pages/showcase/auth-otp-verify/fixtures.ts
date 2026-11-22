@@ -6,4 +6,7 @@ import type { Session } from "./schema";
 export const email = "you@example.com";
 
 /** What the mocks return for a correct code (operation `verifyOtp`). */
-export const verifyOtp: Session = { userId: "usr_01", redirectTo: "/dashboard" };
+export const verifyOtp: Session = {
+  userId: "usr_01",
+  redirectTo: "/dashboard",
+};

@@ -11,11 +11,22 @@ import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Spinner } from "@wirefront/ui/spinner";
 import { Textarea } from "@wirefront/ui/textarea";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
@@ -35,9 +46,23 @@ import {
   XIcon,
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { type KeyboardEvent, type ReactNode, useEffect, useId, useState } from "react";
+import {
+  type KeyboardEvent,
+  type ReactNode,
+  useEffect,
+  useId,
+  useState,
+} from "react";
 
-import { type AgentInput, type FirstRunTone, type InviteRole, type InviteStepInput, slugify, type WorkspaceColor, type WorkspaceStepInput } from "./schema";
+import {
+  type AgentInput,
+  type FirstRunTone,
+  type InviteRole,
+  type InviteStepInput,
+  slugify,
+  type WorkspaceColor,
+  type WorkspaceStepInput,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("firstRun.<key>"). */
 export const FIRST_RUN_MESSAGES = {
@@ -84,7 +109,8 @@ export const FIRST_RUN_MESSAGES = {
   slugFromName: "Filled in from the name. Edit it if you like.",
   useFor: "What will you use {product} for?",
   toolsTitle: "Connect your tools",
-  toolsSub: "Agents can read and act in the tools you connect. You can change this later.",
+  toolsSub:
+    "Agents can read and act in the tools you connect. You can change this later.",
   connect: "Connect",
   connecting: "Connecting",
   connected: "Connected",
@@ -118,7 +144,8 @@ export const FIRST_RUN_MESSAGES = {
   agentNameMissing: "Your agent needs a name.",
   defaultAgentName: "My agent",
   instructions: "Instructions",
-  instructionsPlaceholder: "Describe what this agent should do, in plain words.",
+  instructionsPlaceholder:
+    "Describe what this agent should do, in plain words.",
   preview: "Preview",
   untitled: "Untitled agent",
   inWorkspace: "in {name}",
@@ -210,12 +237,16 @@ const ROLES: InviteRole[] = ["admin", "member", "viewer"];
 
 const spring = { type: "spring", stiffness: 420, damping: 38 } as const;
 const easeOut = [0.23, 1, 0.32, 1] as const;
-const press = "transition-[box-shadow,transform,background-color] duration-150 ease-out active:scale-[0.97]";
+const press =
+  "transition-[box-shadow,transform,background-color] duration-150 ease-out active:scale-[0.97]";
 const STEPS = ["workspace", "tools", "team", "agent"] as const;
 const STEP_COUNT = STEPS.length;
 
 function initials(v: string) {
-  const parts = v.trim().split(/[\s@._-]+/).filter(Boolean);
+  const parts = v
+    .trim()
+    .split(/[\s@._-]+/)
+    .filter(Boolean);
   return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
 }
 
@@ -247,7 +278,6 @@ function Rolling({ value }: { value: number | string }) {
   );
 }
 
-
 function CheckDot({ checked, active }: { checked: boolean; active?: boolean }) {
   const reduce = useReducedMotionAfterMount();
   return (
@@ -255,12 +285,23 @@ function CheckDot({ checked, active }: { checked: boolean; active?: boolean }) {
       animate={checked && !reduce ? { scale: [1, 1.12, 1] } : { scale: 1 }}
       className={cn(
         "relative flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors duration-200",
-        checked ? "border-primary bg-primary text-primary-foreground" : active ? "border-foreground/72 bg-background" : "border-input bg-background",
+        checked
+          ? "border-primary bg-primary text-primary-foreground"
+          : active
+            ? "border-foreground/72 bg-background"
+            : "border-input bg-background"
       )}
       transition={{ duration: 0.3, times: [0, 0.4, 1], ease: "easeOut" }}
     >
-      {active && !checked && <span className="size-1.5 rounded-full bg-primary" />}
-      <svg aria-hidden className="absolute size-3" fill="none" viewBox="0 0 24 24">
+      {active && !checked && (
+        <span className="size-1.5 rounded-full bg-primary" />
+      )}
+      <svg
+        aria-hidden
+        className="absolute size-3"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
         <motion.path
           animate={{ pathLength: checked ? 1 : 0, opacity: checked ? 1 : 0 }}
           d="M5 12.5l4.5 4.5L19 7.5"
@@ -269,7 +310,11 @@ function CheckDot({ checked, active }: { checked: boolean; active?: boolean }) {
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={3.5}
-          transition={reduce ? { duration: 0.15 } : { duration: 0.25, delay: checked ? 0.05 : 0, ease: "easeOut" }}
+          transition={
+            reduce
+              ? { duration: 0.15 }
+              : { duration: 0.25, delay: checked ? 0.05 : 0, ease: "easeOut" }
+          }
         />
       </svg>
     </motion.span>
@@ -283,7 +328,17 @@ interface ChecklistItem {
   step: number;
 }
 
-function Checklist({ items, current, onGo, t }: { items: ChecklistItem[]; current: number | null; onGo: (step: number) => void; t: Messages }) {
+function Checklist({
+  items,
+  current,
+  onGo,
+  t,
+}: {
+  items: ChecklistItem[];
+  current: number | null;
+  onGo: (step: number) => void;
+  t: Messages;
+}) {
   const reduce = useReducedMotionAfterMount();
   const doneCount = items.filter((i) => i.done).length;
 
@@ -291,7 +346,9 @@ function Checklist({ items, current, onGo, t }: { items: ChecklistItem[]; curren
     <div className="flex flex-col">
       <div className="px-2">
         <div className="flex items-baseline justify-between text-xs">
-          <span className="font-medium">{doneCount === items.length ? t.allDone : t.progress}</span>
+          <span className="font-medium">
+            {doneCount === items.length ? t.allDone : t.progress}
+          </span>
           <span className="flex text-muted-foreground tabular-nums">
             <Rolling value={doneCount} />
             &nbsp;{interpolate(t.ofTotal, { total: items.length })}
@@ -302,7 +359,11 @@ function Checklist({ items, current, onGo, t }: { items: ChecklistItem[]; curren
             animate={{ scaleX: doneCount / items.length }}
             className="block h-full origin-left rounded-full bg-primary/72"
             initial={false}
-            transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 220, damping: 32 }}
+            transition={
+              reduce
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 220, damping: 32 }
+            }
           />
         </span>
       </div>
@@ -315,15 +376,24 @@ function Checklist({ items, current, onGo, t }: { items: ChecklistItem[]; curren
                 aria-current={active ? "step" : undefined}
                 className={cn(
                   "flex w-full cursor-pointer items-start gap-2.5 rounded-md px-2 py-2 text-start outline-none transition-[background-color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]",
-                  active ? "bg-accent" : "hover:bg-accent/60",
+                  active ? "bg-accent" : "hover:bg-accent/60"
                 )}
                 onClick={() => onGo(item.step)}
                 type="button"
               >
                 <CheckDot active={active} checked={item.done} />
                 <span className="min-w-0 flex-1">
-                  <span className={cn("block font-medium leading-5 transition-colors", item.done && !active && "text-muted-foreground")}>{item.label}</span>
-                  <span className="block truncate text-muted-foreground text-xs">{item.hint}</span>
+                  <span
+                    className={cn(
+                      "block font-medium leading-5 transition-colors",
+                      item.done && !active && "text-muted-foreground"
+                    )}
+                  >
+                    {item.label}
+                  </span>
+                  <span className="block truncate text-muted-foreground text-xs">
+                    {item.hint}
+                  </span>
                 </span>
               </button>
             </li>
@@ -337,13 +407,21 @@ function Checklist({ items, current, onGo, t }: { items: ChecklistItem[]; curren
 function StepTitle({ title, sub }: { title: string; sub: string }) {
   return (
     <div className="mb-8">
-      <h2 className="text-balance font-heading font-semibold text-2xl tracking-tight">{title}</h2>
+      <h2 className="text-balance font-heading font-semibold text-2xl tracking-tight">
+        {title}
+      </h2>
       <p className="mt-1.5 text-pretty text-muted-foreground">{sub}</p>
     </div>
   );
 }
 
-function FieldLabelText({ children, htmlFor }: { children: ReactNode; htmlFor?: string }) {
+function FieldLabelText({
+  children,
+  htmlFor,
+}: {
+  children: ReactNode;
+  htmlFor?: string;
+}) {
   return (
     <label className="mb-2 block font-medium" htmlFor={htmlFor}>
       {children}
@@ -385,7 +463,10 @@ export interface FirstRunProps {
   className?: string;
 }
 
-const failMessage = (result: { error?: string; fieldErrors?: Record<string, string | string[]> }, fallback: string) =>
+const failMessage = (
+  result: { error?: string; fieldErrors?: Record<string, string | string[]> },
+  fallback: string
+) =>
   Object.values(result.fieldErrors ?? {}).flat()[0] ?? result.error ?? fallback;
 
 const noAction = async () => {};
@@ -424,7 +505,9 @@ function FirstRunScreen({
   const [name, setName] = useState(defaultWorkspaceName);
   const [slug, setSlug] = useState(() => slugify(defaultWorkspaceName));
   const [slugEdited, setSlugEdited] = useState(false);
-  const [availability, setAvailability] = useState<"idle" | "checking" | "available" | "taken">("idle");
+  const [availability, setAvailability] = useState<
+    "idle" | "checking" | "available" | "taken"
+  >("idle");
   const [picked, setPicked] = useState<string[]>(defaultUseCases);
   const [color, setColor] = useState<WorkspaceColor>("teal");
 
@@ -435,12 +518,16 @@ function FirstRunScreen({
   const [emailError, setEmailError] = useState("");
   const [shake, setShake] = useState(0);
   const [role, setRole] = useState<InviteRole>("member");
-  const [invites, setInvites] = useState<{ email: string; role: InviteRole }[]>([]);
+  const [invites, setInvites] = useState<{ email: string; role: InviteRole }[]>(
+    []
+  );
 
   const [templateId, setTemplateId] = useState(templates[0]?.id ?? "");
   const [agentName, setAgentName] = useState(templates[0]?.name ?? "");
   const [agentNameEdited, setAgentNameEdited] = useState(false);
-  const [instructions, setInstructions] = useState(templates[0]?.instructions ?? "");
+  const [instructions, setInstructions] = useState(
+    templates[0]?.instructions ?? ""
+  );
 
   // Ask the backend straight away for the starting URL, then once typing
   // pauses; ignore answers for an older slug.
@@ -456,10 +543,10 @@ function FirstRunScreen({
       () => {
         checkSlug(slug).then(
           (free) => current && setAvailability(free ? "available" : "taken"),
-          () => current && setAvailability("idle"),
+          () => current && setAvailability("idle")
         );
       },
-      slug === initialSlug ? 0 : 300,
+      slug === initialSlug ? 0 : 300
     );
     return () => {
       current = false;
@@ -480,7 +567,8 @@ function FirstRunScreen({
 
   const save = useAction(onSaveWorkspace);
   const connect = useAction(onConnectTool, {
-    onSuccess: (_, id) => setConnected((c) => (c.includes(id) ? c : [...c, id])),
+    onSuccess: (_, id) =>
+      setConnected((c) => (c.includes(id) ? c : [...c, id])),
     onError: setStepError,
   });
   const disconnect = useAction(onDisconnectTool ?? noAction, {
@@ -504,12 +592,23 @@ function FirstRunScreen({
   const connectedTools = tools.filter((tool) => connected.includes(tool.id));
   const template = templates.find((x) => x.id === templateId) ?? templates[0];
   const slugTaken = availability === "taken";
-  const workspaceValid = !!name.trim() && !!slug && availability === "available";
+  const workspaceValid =
+    !!name.trim() && !!slug && availability === "available";
 
-  const doneByStep = [left.includes(0) || finished, connectedTools.length > 0, invites.length > 0, finished];
+  const doneByStep = [
+    left.includes(0) || finished,
+    connectedTools.length > 0,
+    invites.length > 0,
+    finished,
+  ];
 
   const checklist: ChecklistItem[] = [
-    { label: t.checkName, hint: name.trim() ? `${domain}/${slug || "…"}` : t.checkNamePending, done: doneByStep[0], step: 0 },
+    {
+      label: t.checkName,
+      hint: name.trim() ? `${domain}/${slug || "…"}` : t.checkNamePending,
+      done: doneByStep[0],
+      step: 0,
+    },
     {
       label: t.checkTools,
       hint: connectedTools.length
@@ -537,13 +636,25 @@ function FirstRunScreen({
       done: doneByStep[2],
       step: 2,
     },
-    { label: t.checkAgent, hint: finished ? interpolate(t.checkAgentLive, { name: agentName }) : t.checkAgentPending, done: doneByStep[3], step: 3 },
+    {
+      label: t.checkAgent,
+      hint: finished
+        ? interpolate(t.checkAgentLive, { name: agentName })
+        : t.checkAgentPending,
+      done: doneByStep[3],
+      step: 3,
+    },
   ];
 
   const next = async () => {
     setStepError("");
     if (step === 0) {
-      const result = await save.run({ name: name.trim(), slug, color, useCases: picked });
+      const result = await save.run({
+        name: name.trim(),
+        slug,
+        color,
+        useCases: picked,
+      });
       if (!result.ok) {
         if (result.fieldErrors?.slug) setAvailability("taken");
         setStepError(failMessage(result, t.genericError));
@@ -551,7 +662,11 @@ function FirstRunScreen({
       }
     }
     if (step === STEP_COUNT - 1) {
-      const result = await create.run({ templateId, name: agentName.trim(), instructions });
+      const result = await create.run({
+        templateId,
+        name: agentName.trim(),
+        instructions,
+      });
       if (!result.ok) {
         setStepError(failMessage(result, t.genericError));
         return;
@@ -585,7 +700,9 @@ function FirstRunScreen({
       return false;
     }
     setEmailError("");
-    setDraft((d) => (d.includes(v) || invites.some((i) => i.email === v) ? d : [...d, v]));
+    setDraft((d) =>
+      d.includes(v) || invites.some((i) => i.email === v) ? d : [...d, v]
+    );
     setEmailText("");
     return true;
   };
@@ -602,9 +719,10 @@ function FirstRunScreen({
   const sendInvites = async () => {
     if (!commitEmail(emailText)) return;
     const typed = emailText.trim();
-    const pending = [...draft, ...(isEmail(typed) && !draft.includes(typed) ? [typed] : [])].filter(
-      (email) => !invites.some((i) => i.email === email),
-    );
+    const pending = [
+      ...draft,
+      ...(isEmail(typed) && !draft.includes(typed) ? [typed] : []),
+    ].filter((email) => !invites.some((i) => i.email === email));
     if (!pending.length) return;
     setStepError("");
     const invitations = pending.map((email) => ({ email, role }));
@@ -623,12 +741,16 @@ function FirstRunScreen({
     if (!chosen) return;
     setTemplateId(chosen.id);
     setInstructions(chosen.instructions);
-    if (!agentNameEdited) setAgentName(chosen.instructions ? chosen.name : t.defaultAgentName);
+    if (!agentNameEdited)
+      setAgentName(chosen.instructions ? chosen.name : t.defaultAgentName);
   };
 
   const busy = save.isPending() || create.isPending();
-  const canNext = (step === 0 ? workspaceValid : step === 3 ? !!agentName.trim() : true) && !busy;
-  const skipping = (step === 1 && !connectedTools.length) || (step === 2 && !invites.length);
+  const canNext =
+    (step === 0 ? workspaceValid : step === 3 ? !!agentName.trim() : true) &&
+    !busy;
+  const skipping =
+    (step === 1 && !connectedTools.length) || (step === 2 && !invites.length);
   const showWalkthrough = !!onBookWalkthrough && walkthroughSlots.length > 0;
   const roleLabel = (r: InviteRole) => t[r];
   const roleItems = Object.fromEntries(ROLES.map((r) => [r, roleLabel(r)]));
@@ -636,11 +758,20 @@ function FirstRunScreen({
   const variants = {
     enter: (d: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: d * 32 }),
     center: { opacity: 1, x: 0 },
-    exit: (d: number) => ({ opacity: 0, x: reduce ? 0 : d * -24, transition: { duration: 0.12 } }),
+    exit: (d: number) => ({
+      opacity: 0,
+      x: reduce ? 0 : d * -24,
+      transition: { duration: 0.12 },
+    }),
   };
 
   return (
-    <div className={cn("@container/screen relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm", className)}>
+    <div
+      className={cn(
+        "@container/screen relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm",
+        className
+      )}
+    >
       <aside className="hidden w-64 shrink-0 flex-col border-e bg-muted/30 px-3 py-4 @3xl/screen:flex">
         <div className="flex h-8 items-center gap-2 px-2">
           <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -650,12 +781,25 @@ function FirstRunScreen({
         </div>
         <div className="mt-8 px-2">
           <p className="font-medium">{t.setUp}</p>
-          <p className="mt-0.5 text-muted-foreground text-xs">{t.takesMinutes}</p>
+          <p className="mt-0.5 text-muted-foreground text-xs">
+            {t.takesMinutes}
+          </p>
         </div>
         <div className="mt-6">
-          <Checklist current={finished ? null : step} items={checklist} onGo={go} t={t} />
+          <Checklist
+            current={finished ? null : step}
+            items={checklist}
+            onGo={go}
+            t={t}
+          />
         </div>
-        {showWalkthrough ? <WalkthroughCard onBook={onBookWalkthrough} slots={walkthroughSlots} t={t} /> : null}
+        {showWalkthrough ? (
+          <WalkthroughCard
+            onBook={onBookWalkthrough}
+            slots={walkthroughSlots}
+            t={t}
+          />
+        ) : null}
       </aside>
 
       <div className="@container flex min-w-0 flex-1 flex-col">
@@ -671,15 +815,24 @@ function FirstRunScreen({
           <div className="mx-auto flex max-w-2xl flex-col px-5 pt-8 pb-10 @2xl:px-6 @3xl/screen:pt-16">
             {!finished && (
               <div className="mb-6 flex items-center gap-3">
-                <span className="shrink-0 text-muted-foreground text-xs tabular-nums">{interpolate(t.stepOf, { n: step + 1, total: STEP_COUNT })}</span>
+                <span className="shrink-0 text-muted-foreground text-xs tabular-nums">
+                  {interpolate(t.stepOf, { n: step + 1, total: STEP_COUNT })}
+                </span>
                 <div aria-hidden className="flex w-28 gap-1">
                   {STEPS.map((key, i) => (
-                    <span className="h-1 flex-1 overflow-hidden rounded-full bg-foreground/10" key={key}>
+                    <span
+                      className="h-1 flex-1 overflow-hidden rounded-full bg-foreground/10"
+                      key={key}
+                    >
                       <motion.span
                         animate={{ scaleX: i <= step ? 1 : 0 }}
                         className="block h-full origin-left rounded-full bg-primary/80"
                         initial={false}
-                        transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 320, damping: 36 }}
+                        transition={
+                          reduce
+                            ? { duration: 0 }
+                            : { type: "spring", stiffness: 320, damping: 36 }
+                        }
                       />
                     </span>
                   ))}
@@ -706,30 +859,42 @@ function FirstRunScreen({
                   exit="exit"
                   initial="enter"
                   key={step}
-                  transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 34 }}
+                  transition={
+                    reduce
+                      ? { duration: 0 }
+                      : { type: "spring", stiffness: 380, damping: 34 }
+                  }
                   variants={variants}
                 >
                   {step === 0 && (
                     <>
-                      <StepTitle sub={t.workspaceSub} title={t.workspaceTitle} />
+                      <StepTitle
+                        sub={t.workspaceSub}
+                        title={t.workspaceTitle}
+                      />
                       <div className="flex flex-col gap-5">
                         <div className="flex items-center gap-4">
                           <span
                             className={cn(
                               "flex size-14 shrink-0 items-center justify-center rounded-2xl font-heading font-semibold text-lg text-white tabular-nums transition-colors duration-200 ease-out",
-                              tileTone[color],
+                              tileTone[color]
                             )}
                           >
                             {initials(name)}
                           </span>
                           <div>
-                            <p className="mb-1.5 font-medium" id={`${ids}-colour`}>
+                            <p
+                              className="mb-1.5 font-medium"
+                              id={`${ids}-colour`}
+                            >
                               {t.colour}
                             </p>
                             <RadioGroup
                               aria-labelledby={`${ids}-colour`}
                               className="-ms-1 flex flex-wrap gap-0.5"
-                              onValueChange={(value) => setColor(value as WorkspaceColor)}
+                              onValueChange={(value) =>
+                                setColor(value as WorkspaceColor)
+                              }
                               value={color}
                             >
                               {SWATCHES.map((tone) => (
@@ -743,17 +908,26 @@ function FirstRunScreen({
                                     <motion.span
                                       className="absolute inset-0.5 rounded-full border-2 border-foreground/70"
                                       layoutId={`${ids}-swatch`}
-                                      transition={reduce ? { duration: 0 } : spring}
+                                      transition={
+                                        reduce ? { duration: 0 } : spring
+                                      }
                                     />
                                   )}
-                                  <span className={cn("size-5 rounded-full", tileTone[tone])} />
+                                  <span
+                                    className={cn(
+                                      "size-5 rounded-full",
+                                      tileTone[tone]
+                                    )}
+                                  />
                                 </Radio.Root>
                               ))}
                             </RadioGroup>
                           </div>
                         </div>
                         <div>
-                          <FieldLabelText htmlFor={`${ids}-name`}>{t.workspaceName}</FieldLabelText>
+                          <FieldLabelText htmlFor={`${ids}-name`}>
+                            {t.workspaceName}
+                          </FieldLabelText>
                           <Input
                             aria-describedby={`${ids}-name-hint`}
                             aria-invalid={!name.trim() || undefined}
@@ -762,19 +936,32 @@ function FirstRunScreen({
                             placeholder={t.workspaceNamePlaceholder}
                             value={name}
                           />
-                          <p className={cn("mt-1.5 text-xs", name.trim() ? "text-muted-foreground" : "text-destructive-foreground")} id={`${ids}-name-hint`}>
+                          <p
+                            className={cn(
+                              "mt-1.5 text-xs",
+                              name.trim()
+                                ? "text-muted-foreground"
+                                : "text-destructive-foreground"
+                            )}
+                            id={`${ids}-name-hint`}
+                          >
                             {name.trim() ? t.nameHint : t.nameMissing}
                           </p>
                         </div>
                         <div>
-                          <FieldLabelText htmlFor={`${ids}-slug`}>{t.workspaceUrl}</FieldLabelText>
+                          <FieldLabelText htmlFor={`${ids}-slug`}>
+                            {t.workspaceUrl}
+                          </FieldLabelText>
                           <div
                             className={cn(
                               "flex w-full items-center overflow-hidden rounded-lg border border-input bg-background shadow-xs/5 focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/24",
-                              (slugTaken || !slug) && "border-destructive/48 focus-within:border-destructive/64 focus-within:ring-destructive/16",
+                              (slugTaken || !slug) &&
+                                "border-destructive/48 focus-within:border-destructive/64 focus-within:ring-destructive/16"
                             )}
                           >
-                            <span className="shrink-0 border-e bg-muted px-2.5 py-1.5 text-muted-foreground">{domain}/</span>
+                            <span className="shrink-0 border-e bg-muted px-2.5 py-1.5 text-muted-foreground">
+                              {domain}/
+                            </span>
                             <input
                               aria-describedby={`${ids}-slug-hint`}
                               aria-invalid={slugTaken || !slug || undefined}
@@ -792,12 +979,23 @@ function FirstRunScreen({
                                   animate={{ scale: 1, opacity: 1 }}
                                   className={cn(
                                     "me-2.5 flex items-center gap-1 text-xs",
-                                    availability === "taken" && "text-destructive-foreground",
-                                    availability === "available" && "text-success-foreground",
-                                    availability === "checking" && "text-muted-foreground",
+                                    availability === "taken" &&
+                                      "text-destructive-foreground",
+                                    availability === "available" &&
+                                      "text-success-foreground",
+                                    availability === "checking" &&
+                                      "text-muted-foreground"
                                   )}
-                                  exit={{ scale: 0.95, opacity: 0, transition: { duration: 0.1 } }}
-                                  initial={reduce ? { opacity: 0 } : { scale: 0.95, opacity: 0 }}
+                                  exit={{
+                                    scale: 0.95,
+                                    opacity: 0,
+                                    transition: { duration: 0.1 },
+                                  }}
+                                  initial={
+                                    reduce
+                                      ? { opacity: 0 }
+                                      : { scale: 0.95, opacity: 0 }
+                                  }
                                   key={availability}
                                   transition={{ duration: 0.18, ease: easeOut }}
                                 >
@@ -809,24 +1007,40 @@ function FirstRunScreen({
                                     <CheckIcon className="size-3.5" />
                                   )}
                                   <span className="hidden @md:inline">
-                                    {availability === "checking" ? t.checking : availability === "taken" ? t.taken : t.available}
+                                    {availability === "checking"
+                                      ? t.checking
+                                      : availability === "taken"
+                                        ? t.taken
+                                        : t.available}
                                   </span>
                                 </motion.span>
                               )}
                             </AnimatePresence>
                           </div>
-                          <p className={cn("mt-1.5 text-xs", slugTaken || !slug ? "text-destructive-foreground" : "text-muted-foreground")} id={`${ids}-slug-hint`}>
+                          <p
+                            className={cn(
+                              "mt-1.5 text-xs",
+                              slugTaken || !slug
+                                ? "text-destructive-foreground"
+                                : "text-muted-foreground"
+                            )}
+                            id={`${ids}-slug-hint`}
+                          >
                             {!slug
                               ? t.slugMissing
                               : slugTaken
-                                ? interpolate(t.slugTaken, { url: `${domain}/${slug}` })
+                                ? interpolate(t.slugTaken, {
+                                    url: `${domain}/${slug}`,
+                                  })
                                 : slugEdited
                                   ? t.slugEdited
                                   : t.slugFromName}
                           </p>
                         </div>
                         <div>
-                          <p className="mb-2 font-medium">{interpolate(t.useFor, { product })}</p>
+                          <p className="mb-2 font-medium">
+                            {interpolate(t.useFor, { product })}
+                          </p>
                           <div className="flex flex-wrap gap-1.5">
                             {useCases.map((u) => {
                               const on = picked.includes(u);
@@ -835,14 +1049,22 @@ function FirstRunScreen({
                                   aria-pressed={on}
                                   className={cn(
                                     "flex h-8 cursor-pointer items-center gap-1 rounded-full border px-3 outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ring",
-                                    on ? "border-primary bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:text-foreground",
+                                    on
+                                      ? "border-primary bg-primary text-primary-foreground"
+                                      : "bg-background text-muted-foreground hover:text-foreground"
                                   )}
                                   key={u}
                                   layout={!reduce}
-                                  onClick={() => setPicked((p) => (on ? p.filter((x) => x !== u) : [...p, u]))}
+                                  onClick={() =>
+                                    setPicked((p) =>
+                                      on ? p.filter((x) => x !== u) : [...p, u]
+                                    )
+                                  }
                                   transition={spring}
                                   type="button"
-                                  whileTap={reduce ? undefined : { scale: 0.97 }}
+                                  whileTap={
+                                    reduce ? undefined : { scale: 0.97 }
+                                  }
                                 >
                                   <AnimatePresence initial={false}>
                                     {on && (
@@ -872,12 +1094,16 @@ function FirstRunScreen({
                       <StepTitle sub={t.toolsSub} title={t.toolsTitle} />
                       <div className="divide-y overflow-hidden rounded-xl border bg-card">
                         {tools.map((tool, i) => {
-                          const busyTool = connect.isPending(tool.id) || disconnect.isPending(tool.id);
+                          const busyTool =
+                            connect.isPending(tool.id) ||
+                            disconnect.isPending(tool.id);
                           const isOn = connected.includes(tool.id);
                           const Icon = tool.icon;
                           const look = cn(
                             "flex h-8 w-28 shrink-0 items-center justify-center gap-1 overflow-hidden rounded-lg border px-2.5 font-medium text-xs shadow-xs/5",
-                            isOn ? "border-success/32 bg-success/8 text-success-foreground dark:bg-success/16" : "bg-background text-foreground",
+                            isOn
+                              ? "border-success/32 bg-success/8 text-success-foreground dark:bg-success/16"
+                              : "bg-background text-foreground"
                           );
                           const content = (
                             <>
@@ -885,14 +1111,27 @@ function FirstRunScreen({
                               {isOn && !busyTool && (
                                 <motion.span
                                   animate={{ scale: 1, opacity: 1 }}
-                                  initial={reduce ? { opacity: 0 } : { scale: 0.8, opacity: 0 }}
+                                  initial={
+                                    reduce
+                                      ? { opacity: 0 }
+                                      : { scale: 0.8, opacity: 0 }
+                                  }
                                   transition={{ duration: 0.18, ease: easeOut }}
                                 >
-                                  <CheckIcon className="size-3.5" strokeWidth={3} />
+                                  <CheckIcon
+                                    className="size-3.5"
+                                    strokeWidth={3}
+                                  />
                                 </motion.span>
                               )}
-                              {!isOn && !busyTool && <PlusIcon className="size-3.5" />}
-                              {busyTool ? t.connecting : isOn ? t.connected : t.connect}
+                              {!isOn && !busyTool && (
+                                <PlusIcon className="size-3.5" />
+                              )}
+                              {busyTool
+                                ? t.connecting
+                                : isOn
+                                  ? t.connected
+                                  : t.connect}
                             </>
                           );
                           return (
@@ -901,24 +1140,46 @@ function FirstRunScreen({
                               className="flex items-center gap-3 px-4 py-3"
                               initial={reduce ? false : { opacity: 0, y: 6 }}
                               key={tool.id}
-                              transition={{ duration: 0.22, ease: easeOut, delay: i * 0.03 }}
+                              transition={{
+                                duration: 0.22,
+                                ease: easeOut,
+                                delay: i * 0.03,
+                              }}
                             >
-                              <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg", softTone[tool.tone])}>
+                              <span
+                                className={cn(
+                                  "flex size-9 shrink-0 items-center justify-center rounded-lg",
+                                  softTone[tool.tone]
+                                )}
+                              >
                                 <Icon className="size-4.5" />
                               </span>
                               <span className="min-w-0 flex-1">
-                                <span className="block truncate font-medium">{tool.name}</span>
-                                <span className="block truncate text-muted-foreground text-xs">{tool.blurb}</span>
+                                <span className="block truncate font-medium">
+                                  {tool.name}
+                                </span>
+                                <span className="block truncate text-muted-foreground text-xs">
+                                  {tool.blurb}
+                                </span>
                               </span>
                               {isOn && !onDisconnectTool ? (
                                 <span className={look}>{content}</span>
                               ) : (
                                 <button
-                                  aria-label={interpolate(busyTool ? t.connectingLabel : isOn ? t.connectedLabel : t.connectLabel, { name: tool.name })}
+                                  aria-label={interpolate(
+                                    busyTool
+                                      ? t.connectingLabel
+                                      : isOn
+                                        ? t.connectedLabel
+                                        : t.connectLabel,
+                                    { name: tool.name }
+                                  )}
                                   className={cn(
                                     look,
                                     "cursor-pointer outline-none transition-[background-color,border-color,color,transform] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] disabled:cursor-default",
-                                    isOn ? "hover:bg-success/14" : "hover:bg-accent",
+                                    isOn
+                                      ? "hover:bg-success/14"
+                                      : "hover:bg-accent"
                                   )}
                                   disabled={busyTool}
                                   onClick={() => toggleTool(tool.id)}
@@ -933,7 +1194,8 @@ function FirstRunScreen({
                       </div>
                       <p className="mt-3 flex text-muted-foreground text-xs tabular-nums">
                         <Rolling value={connectedTools.length} />
-                        &nbsp;{interpolate(t.toolsCount, { total: tools.length })}
+                        &nbsp;
+                        {interpolate(t.toolsCount, { total: tools.length })}
                       </p>
                     </>
                   )}
@@ -942,13 +1204,24 @@ function FirstRunScreen({
                     <>
                       <StepTitle sub={t.teamSub} title={t.teamTitle} />
                       <div className="flex flex-col gap-2">
-                        <FieldLabelText htmlFor={`${ids}-email`}>{t.emails}</FieldLabelText>
+                        <FieldLabelText htmlFor={`${ids}-email`}>
+                          {t.emails}
+                        </FieldLabelText>
                         <div className="flex flex-col gap-2 @md:flex-row">
                           <motion.div
-                            animate={shake && !reduce ? { x: shake % 2 ? [0, -6, 6, -4, 4, 0] : [0, 6, -6, 4, -4, 0] } : { x: 0 }}
+                            animate={
+                              shake && !reduce
+                                ? {
+                                    x:
+                                      shake % 2
+                                        ? [0, -6, 6, -4, 4, 0]
+                                        : [0, 6, -6, 4, -4, 0],
+                                  }
+                                : { x: 0 }
+                            }
                             className={cn(
                               "flex min-h-9 min-w-0 flex-1 flex-wrap items-center gap-1 rounded-lg border border-input bg-background px-1.5 py-1 shadow-xs/5 focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/24",
-                              emailError && "border-destructive/60",
+                              emailError && "border-destructive/60"
                             )}
                             transition={{ duration: 0.35 }}
                           >
@@ -957,17 +1230,33 @@ function FirstRunScreen({
                                 <motion.span
                                   animate={{ scale: 1, opacity: 1 }}
                                   className="flex h-6 items-center gap-1 rounded-full bg-muted ps-2 pe-0.5 text-xs"
-                                  exit={{ scale: 0.95, opacity: 0, transition: { duration: 0.1 } }}
-                                  initial={reduce ? { opacity: 0 } : { scale: 0.95, opacity: 0 }}
+                                  exit={{
+                                    scale: 0.95,
+                                    opacity: 0,
+                                    transition: { duration: 0.1 },
+                                  }}
+                                  initial={
+                                    reduce
+                                      ? { opacity: 0 }
+                                      : { scale: 0.95, opacity: 0 }
+                                  }
                                   key={d}
                                   layout={!reduce}
-                                  transition={{ type: "spring", stiffness: 520, damping: 40 }}
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 520,
+                                    damping: 40,
+                                  }}
                                 >
                                   {d}
                                   <button
-                                    aria-label={interpolate(t.removeEmail, { email: d })}
+                                    aria-label={interpolate(t.removeEmail, {
+                                      email: d,
+                                    })}
                                     className="relative flex size-5 cursor-pointer items-center justify-center rounded-full text-muted-foreground outline-none transition-colors before:absolute before:-inset-1.5 before:rounded-full hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-                                    onClick={() => setDraft((x) => x.filter((y) => y !== d))}
+                                    onClick={() =>
+                                      setDraft((x) => x.filter((y) => y !== d))
+                                    }
                                     type="button"
                                   >
                                     <XIcon className="size-3" />
@@ -980,19 +1269,32 @@ function FirstRunScreen({
                               aria-invalid={!!emailError || undefined}
                               className="h-6 min-w-32 flex-1 bg-transparent px-1 outline-none placeholder:text-muted-foreground/72"
                               id={`${ids}-email`}
-                              onBlur={() => emailText.trim() && commitEmail(emailText)}
+                              onBlur={() =>
+                                emailText.trim() && commitEmail(emailText)
+                              }
                               onChange={(e) => {
                                 setEmailText(e.target.value);
                                 if (emailError) setEmailError("");
                               }}
                               onKeyDown={onEmailKey}
-                              placeholder={draft.length ? t.addAnother : t.emailPlaceholder}
+                              placeholder={
+                                draft.length ? t.addAnother : t.emailPlaceholder
+                              }
                               value={emailText}
                             />
                           </motion.div>
                           <div className="flex gap-2">
-                            <Select items={roleItems} onValueChange={(v) => v && setRole(v as InviteRole)} value={role}>
-                              <SelectTrigger aria-label={t.role} className="w-28">
+                            <Select
+                              items={roleItems}
+                              onValueChange={(v) =>
+                                v && setRole(v as InviteRole)
+                              }
+                              value={role}
+                            >
+                              <SelectTrigger
+                                aria-label={t.role}
+                                className="w-28"
+                              >
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent align="start">
@@ -1005,25 +1307,48 @@ function FirstRunScreen({
                             </Select>
                             <Button
                               className={cn("flex-1 @md:flex-none", press)}
-                              disabled={(!draft.length && !emailText.trim()) || invite.isPending()}
+                              disabled={
+                                (!draft.length && !emailText.trim()) ||
+                                invite.isPending()
+                              }
                               onClick={sendInvites}
                             >
-                              {invite.isPending() ? <Spinner /> : <UserPlusIcon />}
+                              {invite.isPending() ? (
+                                <Spinner />
+                              ) : (
+                                <UserPlusIcon />
+                              )}
                               {t.invite}
                             </Button>
                           </div>
                         </div>
-                        <p className={cn("text-xs", emailError ? "text-destructive-foreground" : "text-muted-foreground")} id={`${ids}-email-err`}>
+                        <p
+                          className={cn(
+                            "text-xs",
+                            emailError
+                              ? "text-destructive-foreground"
+                              : "text-muted-foreground"
+                          )}
+                          id={`${ids}-email-err`}
+                        >
                           {emailError || t.emailHint}
                         </p>
                       </div>
 
-                      {inviteSuggestions.some((s) => !invites.some((i) => i.email === s) && !draft.includes(s)) && (
+                      {inviteSuggestions.some(
+                        (s) =>
+                          !invites.some((i) => i.email === s) &&
+                          !draft.includes(s)
+                      ) && (
                         <div className="mt-4">
                           <p className="mb-2 font-medium">{t.suggested}</p>
                           <div className="flex flex-wrap gap-1.5">
                             {inviteSuggestions
-                              .filter((s) => !invites.some((i) => i.email === s) && !draft.includes(s))
+                              .filter(
+                                (s) =>
+                                  !invites.some((i) => i.email === s) &&
+                                  !draft.includes(s)
+                              )
                               .map((s) => (
                                 <button
                                   className="flex h-8 cursor-pointer items-center gap-1.5 rounded-full border border-dashed ps-1.5 pe-3 text-xs outline-none transition-[background-color,transform] duration-150 ease-out hover:border-solid hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97]"
@@ -1032,7 +1357,9 @@ function FirstRunScreen({
                                   type="button"
                                 >
                                   <Avatar className="size-5 text-[9px]">
-                                    <AvatarFallback>{initials(s)}</AvatarFallback>
+                                    <AvatarFallback>
+                                      {initials(s)}
+                                    </AvatarFallback>
                                   </Avatar>
                                   {s}
                                   <PlusIcon className="size-3 text-muted-foreground" />
@@ -1044,7 +1371,9 @@ function FirstRunScreen({
 
                       <div className="mt-5 rounded-xl border">
                         <div className="flex items-center justify-between border-b px-3 py-2">
-                          <span className="font-medium text-xs">{t.pendingInvites}</span>
+                          <span className="font-medium text-xs">
+                            {t.pendingInvites}
+                          </span>
                           <span className="text-muted-foreground text-xs">
                             <Rolling value={invites.length} />
                           </span>
@@ -1055,7 +1384,12 @@ function FirstRunScreen({
                               <motion.li
                                 animate={{ opacity: 1 }}
                                 className="px-3 py-6 text-center text-muted-foreground text-xs"
-                                exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
+                                exit={{
+                                  opacity: 0,
+                                  height: 0,
+                                  paddingTop: 0,
+                                  paddingBottom: 0,
+                                }}
                                 initial={{ opacity: 0 }}
                                 key="empty"
                               >
@@ -1067,25 +1401,41 @@ function FirstRunScreen({
                                 animate={{ opacity: 1, height: "auto" }}
                                 className="overflow-hidden"
                                 exit={{ opacity: 0, height: 0 }}
-                                initial={reduce ? false : { opacity: 0, height: 0 }}
+                                initial={
+                                  reduce ? false : { opacity: 0, height: 0 }
+                                }
                                 key={inv.email}
                                 transition={spring}
                               >
                                 <div className="flex items-center gap-2.5 py-2 ps-3 pe-2">
                                   <Avatar className="size-7 text-[11px]">
-                                    <AvatarFallback>{initials(inv.email)}</AvatarFallback>
+                                    <AvatarFallback>
+                                      {initials(inv.email)}
+                                    </AvatarFallback>
                                   </Avatar>
                                   <span className="min-w-0 flex-1">
-                                    <span className="block truncate">{inv.email}</span>
-                                    <span className="block text-muted-foreground text-xs">{t.invitePending}</span>
+                                    <span className="block truncate">
+                                      {inv.email}
+                                    </span>
+                                    <span className="block text-muted-foreground text-xs">
+                                      {t.invitePending}
+                                    </span>
                                   </span>
-                                  <Badge variant="outline">{roleLabel(inv.role)}</Badge>
+                                  <Badge variant="outline">
+                                    {roleLabel(inv.role)}
+                                  </Badge>
                                   {onCancelInvite ? (
                                     <Button
-                                      aria-label={interpolate(t.cancelInvite, { email: inv.email })}
+                                      aria-label={interpolate(t.cancelInvite, {
+                                        email: inv.email,
+                                      })}
                                       className={press}
-                                      disabled={cancelInvite.isPending(inv.email)}
-                                      onClick={() => cancelInvite.run(inv.email, inv.email)}
+                                      disabled={cancelInvite.isPending(
+                                        inv.email
+                                      )}
+                                      onClick={() =>
+                                        cancelInvite.run(inv.email, inv.email)
+                                      }
                                       size="icon-sm"
                                       variant="ghost"
                                     >
@@ -1106,7 +1456,12 @@ function FirstRunScreen({
                       <StepTitle sub={t.agentSub} title={t.agentTitle} />
                       <div className="grid grid-cols-1 gap-6 @3xl:grid-cols-[1fr_16rem]">
                         <div className="flex min-w-0 flex-col gap-4">
-                          <RadioGroup aria-label={t.template} className="grid grid-cols-2 gap-2" onValueChange={(v) => pickTemplate(v as string)} value={templateId}>
+                          <RadioGroup
+                            aria-label={t.template}
+                            className="grid grid-cols-2 gap-2"
+                            onValueChange={(v) => pickTemplate(v as string)}
+                            value={templateId}
+                          >
                             {templates.map((x) => {
                               const Icon = x.icon;
                               return (
@@ -1119,22 +1474,35 @@ function FirstRunScreen({
                                     <motion.span
                                       className="absolute -inset-px rounded-xl border-2 border-primary"
                                       layoutId={`${ids}-template`}
-                                      transition={reduce ? { duration: 0 } : spring}
+                                      transition={
+                                        reduce ? { duration: 0 } : spring
+                                      }
                                     />
                                   )}
-                                  <span className={cn("relative flex size-8 items-center justify-center rounded-lg", softTone[x.tone])}>
+                                  <span
+                                    className={cn(
+                                      "relative flex size-8 items-center justify-center rounded-lg",
+                                      softTone[x.tone]
+                                    )}
+                                  >
                                     <Icon className="size-4" />
                                   </span>
                                   <span className="relative min-w-0">
-                                    <span className="block font-medium leading-tight">{x.name}</span>
-                                    <span className="block text-muted-foreground text-xs leading-snug">{x.description}</span>
+                                    <span className="block font-medium leading-tight">
+                                      {x.name}
+                                    </span>
+                                    <span className="block text-muted-foreground text-xs leading-snug">
+                                      {x.description}
+                                    </span>
                                   </span>
                                 </Radio.Root>
                               );
                             })}
                           </RadioGroup>
                           <div>
-                            <FieldLabelText htmlFor={`${ids}-agent`}>{t.agentName}</FieldLabelText>
+                            <FieldLabelText htmlFor={`${ids}-agent`}>
+                              {t.agentName}
+                            </FieldLabelText>
                             <Input
                               aria-describedby={`${ids}-agent-hint`}
                               aria-invalid={!agentName.trim() || undefined}
@@ -1145,12 +1513,24 @@ function FirstRunScreen({
                               }}
                               value={agentName}
                             />
-                            <p className={cn("mt-1.5 text-xs", agentName.trim() ? "text-muted-foreground" : "text-destructive-foreground")} id={`${ids}-agent-hint`}>
-                              {agentName.trim() ? t.agentNameHint : t.agentNameMissing}
+                            <p
+                              className={cn(
+                                "mt-1.5 text-xs",
+                                agentName.trim()
+                                  ? "text-muted-foreground"
+                                  : "text-destructive-foreground"
+                              )}
+                              id={`${ids}-agent-hint`}
+                            >
+                              {agentName.trim()
+                                ? t.agentNameHint
+                                : t.agentNameMissing}
                             </p>
                           </div>
                           <div>
-                            <FieldLabelText htmlFor={`${ids}-instr`}>{t.instructions}</FieldLabelText>
+                            <FieldLabelText htmlFor={`${ids}-instr`}>
+                              {t.instructions}
+                            </FieldLabelText>
                             <Textarea
                               id={`${ids}-instr`}
                               onChange={(e) => setInstructions(e.target.value)}
@@ -1167,9 +1547,20 @@ function FirstRunScreen({
                               <AnimatePresence initial={false} mode="popLayout">
                                 <motion.span
                                   animate={{ scale: 1, opacity: 1 }}
-                                  className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl", softTone[template.tone])}
-                                  exit={{ scale: 0.95, opacity: 0, transition: { duration: 0.1 } }}
-                                  initial={reduce ? { opacity: 0 } : { scale: 0.95, opacity: 0 }}
+                                  className={cn(
+                                    "flex size-10 shrink-0 items-center justify-center rounded-xl",
+                                    softTone[template.tone]
+                                  )}
+                                  exit={{
+                                    scale: 0.95,
+                                    opacity: 0,
+                                    transition: { duration: 0.1 },
+                                  }}
+                                  initial={
+                                    reduce
+                                      ? { opacity: 0 }
+                                      : { scale: 0.95, opacity: 0 }
+                                  }
                                   key={template.id}
                                   transition={{ duration: 0.2, ease: easeOut }}
                                 >
@@ -1177,27 +1568,43 @@ function FirstRunScreen({
                                 </motion.span>
                               </AnimatePresence>
                               <span className="min-w-0 flex-1">
-                                <span className="block truncate font-medium">{agentName || t.untitled}</span>
-                                <span className="block truncate text-muted-foreground text-xs">{interpolate(t.inWorkspace, { name: name || t.yourWorkspace })}</span>
+                                <span className="block truncate font-medium">
+                                  {agentName || t.untitled}
+                                </span>
+                                <span className="block truncate text-muted-foreground text-xs">
+                                  {interpolate(t.inWorkspace, {
+                                    name: name || t.yourWorkspace,
+                                  })}
+                                </span>
                               </span>
-                              <Badge className="bg-warning/8 text-warning-foreground dark:bg-warning/16" variant="secondary">
+                              <Badge
+                                className="bg-warning/8 text-warning-foreground dark:bg-warning/16"
+                                variant="secondary"
+                              >
                                 {t.draft}
                               </Badge>
                             </div>
-                            <p className="mt-3 line-clamp-4 text-muted-foreground text-xs leading-relaxed">{instructions || t.noInstructions}</p>
+                            <p className="mt-3 line-clamp-4 text-muted-foreground text-xs leading-relaxed">
+                              {instructions || t.noInstructions}
+                            </p>
                             <div className="mt-3 flex flex-wrap gap-1">
                               {connectedTools.length ? (
                                 connectedTools.map((x) => {
                                   const Icon = x.icon;
                                   return (
-                                    <span className="flex h-6 items-center gap-1 rounded-full bg-muted px-2 text-xs" key={x.id}>
+                                    <span
+                                      className="flex h-6 items-center gap-1 rounded-full bg-muted px-2 text-xs"
+                                      key={x.id}
+                                    >
                                       <Icon className="size-3" />
                                       {x.name}
                                     </span>
                                   );
                                 })
                               ) : (
-                                <span className="text-muted-foreground text-xs">{t.noTools}</span>
+                                <span className="text-muted-foreground text-xs">
+                                  {t.noTools}
+                                </span>
                               )}
                             </div>
                           </div>
@@ -1213,13 +1620,21 @@ function FirstRunScreen({
 
         <footer className="shrink-0 border-t bg-background">
           {stepError ? (
-            <p className="mx-auto max-w-2xl px-5 pt-2 text-destructive-foreground text-xs @2xl:px-6" role="alert">
+            <p
+              className="mx-auto max-w-2xl px-5 pt-2 text-destructive-foreground text-xs @2xl:px-6"
+              role="alert"
+            >
               {stepError}
             </p>
           ) : null}
           <div className="mx-auto flex h-14 max-w-2xl items-center gap-2 px-5 @2xl:px-6">
             {finished ? null : (
-              <Button className={cn("-ms-2.5", press)} disabled={step === 0 || busy} onClick={() => go(step - 1)} variant="ghost">
+              <Button
+                className={cn("-ms-2.5", press)}
+                disabled={step === 0 || busy}
+                onClick={() => go(step - 1)}
+                variant="ghost"
+              >
                 <ArrowLeftIcon />
                 {t.back}
               </Button>
@@ -1227,16 +1642,32 @@ function FirstRunScreen({
             <div className="ms-auto">
               {finished ? (
                 workspaceHref ? (
-                  <WirefrontLink className={cn(buttonVariants(), "min-w-32", press)} href={workspaceHref}>
+                  <WirefrontLink
+                    className={cn(buttonVariants(), "min-w-32", press)}
+                    href={workspaceHref}
+                  >
                     {t.openWorkspace}
                     <ArrowRightIcon />
                   </WirefrontLink>
                 ) : null
               ) : (
-                <Button className={cn("min-w-32", press)} disabled={!canNext} onClick={next} variant={skipping ? "outline" : "default"}>
+                <Button
+                  className={cn("min-w-32", press)}
+                  disabled={!canNext}
+                  onClick={next}
+                  variant={skipping ? "outline" : "default"}
+                >
                   {busy ? <Spinner /> : null}
-                  {step === STEP_COUNT - 1 ? t.createAgent : skipping ? t.skip : t.continue}
-                  {busy ? null : step === STEP_COUNT - 1 ? <SparklesIcon /> : <ArrowRightIcon />}
+                  {step === STEP_COUNT - 1
+                    ? t.createAgent
+                    : skipping
+                      ? t.skip
+                      : t.continue}
+                  {busy ? null : step === STEP_COUNT - 1 ? (
+                    <SparklesIcon />
+                  ) : (
+                    <ArrowRightIcon />
+                  )}
                 </Button>
               )}
             </div>
@@ -1247,7 +1678,15 @@ function FirstRunScreen({
   );
 }
 
-function WalkthroughCard({ slots, onBook, t }: { slots: string[]; onBook: Action<string>; t: Messages }) {
+function WalkthroughCard({
+  slots,
+  onBook,
+  t,
+}: {
+  slots: string[];
+  onBook: Action<string>;
+  t: Messages;
+}) {
   const ids = useId();
   const format = useFormat();
   const [open, setOpen] = useState(false);
@@ -1259,7 +1698,14 @@ function WalkthroughCard({ slots, onBook, t }: { slots: string[]; onBook: Action
       setOpen(false);
     },
   });
-  const when = (slot: string) => format.date(slot, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  const when = (slot: string) =>
+    format.date(slot, {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
 
   return (
     <div className="mt-auto rounded-xl border bg-card p-2">
@@ -1267,28 +1713,53 @@ function WalkthroughCard({ slots, onBook, t }: { slots: string[]; onBook: Action
         <span
           className={cn(
             "flex size-7 shrink-0 items-center justify-center rounded-lg transition-colors duration-200",
-            booked ? "bg-success/12 text-success-foreground" : "bg-muted text-muted-foreground",
+            booked
+              ? "bg-success/12 text-success-foreground"
+              : "bg-muted text-muted-foreground"
           )}
         >
-          {booked ? <CalendarCheckIcon className="size-4" /> : <LifeBuoyIcon className="size-4" />}
+          {booked ? (
+            <CalendarCheckIcon className="size-4" />
+          ) : (
+            <LifeBuoyIcon className="size-4" />
+          )}
         </span>
         <div className="min-w-0">
-          <p className="font-medium text-xs">{booked ? t.booked : t.needHand}</p>
+          <p className="font-medium text-xs">
+            {booked ? t.booked : t.needHand}
+          </p>
           <p className="mt-0.5 text-pretty text-muted-foreground text-xs tabular-nums">
-            {booked ? interpolate(t.bookedBody, { when: when(booked) }) : t.needHandBody}
+            {booked
+              ? interpolate(t.bookedBody, { when: when(booked) })
+              : t.needHandBody}
           </p>
         </div>
       </div>
       <Popover onOpenChange={setOpen} open={open}>
-        <PopoverTrigger render={<Button className={cn("w-full", press)} size="sm" variant="outline" />}>
+        <PopoverTrigger
+          render={
+            <Button
+              className={cn("w-full", press)}
+              size="sm"
+              variant="outline"
+            />
+          }
+        >
           {booked ? t.changeTime : t.bookWalkthrough}
         </PopoverTrigger>
         <PopoverContent align="end" className="w-64" side="top" sideOffset={6}>
           <p className="font-medium text-sm" id={`${ids}-title`}>
             {t.pickTime}
           </p>
-          <p className="mt-0.5 text-muted-foreground text-xs">{t.pickTimeHint}</p>
-          <RadioGroup aria-labelledby={`${ids}-title`} className="mt-3 flex flex-col gap-1" onValueChange={(v) => setChoice(v as string)} value={choice}>
+          <p className="mt-0.5 text-muted-foreground text-xs">
+            {t.pickTimeHint}
+          </p>
+          <RadioGroup
+            aria-labelledby={`${ids}-title`}
+            className="mt-3 flex flex-col gap-1"
+            onValueChange={(v) => setChoice(v as string)}
+            value={choice}
+          >
             {slots.map((slot) => (
               <Radio.Root
                 className="flex h-8 cursor-pointer items-center justify-between rounded-md border border-transparent px-2.5 text-start text-xs tabular-nums outline-none transition-[background-color,border-color,transform] duration-150 ease-out hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] data-checked:border-border data-checked:bg-accent data-checked:font-medium"
@@ -1301,14 +1772,19 @@ function WalkthroughCard({ slots, onBook, t }: { slots: string[]; onBook: Action
             ))}
           </RadioGroup>
           {book.error ? (
-            <p className="mt-2 text-destructive-foreground text-xs" role="alert">
+            <p
+              className="mt-2 text-destructive-foreground text-xs"
+              role="alert"
+            >
               {book.error}
             </p>
           ) : null}
           <Button
             className={cn("mt-3 w-full", press)}
             disabled={book.isPending()}
-            onClick={() => (booked === choice ? setOpen(false) : book.run(choice))}
+            onClick={() =>
+              booked === choice ? setOpen(false) : book.run(choice)
+            }
             size="sm"
           >
             {book.isPending() ? <Spinner /> : null}
@@ -1340,19 +1816,34 @@ function FinishView({
   t: Messages;
 }) {
   const reduce = useReducedMotionAfterMount();
-  const rows: { step: number; label: string; value: ReactNode; icon: ReactNode; empty?: boolean }[] = [
+  const rows: {
+    step: number;
+    label: string;
+    value: ReactNode;
+    icon: ReactNode;
+    empty?: boolean;
+  }[] = [
     {
       step: 0,
       label: t.rowWorkspace,
       icon: (
-        <span className={cn("flex size-8 items-center justify-center rounded-lg font-semibold text-[11px] text-white", tileTone[color])}>
+        <span
+          className={cn(
+            "flex size-8 items-center justify-center rounded-lg font-semibold text-[11px] text-white",
+            tileTone[color]
+          )}
+        >
           {initials(workspace)}
         </span>
       ),
       value: (
         <>
-          <span className="block truncate font-medium">{workspace || t.yourWorkspace}</span>
-          <span className="block truncate font-mono text-muted-foreground text-xs">{url}</span>
+          <span className="block truncate font-medium">
+            {workspace || t.yourWorkspace}
+          </span>
+          <span className="block truncate font-mono text-muted-foreground text-xs">
+            {url}
+          </span>
         </>
       ),
     },
@@ -1368,7 +1859,9 @@ function FinishView({
       value: (
         <>
           <span className="block truncate font-medium tabular-nums">
-            {tools.length ? interpolate(t.toolsConnected, { count: tools.length }) : t.noToolsYet}
+            {tools.length
+              ? interpolate(t.toolsConnected, { count: tools.length })
+              : t.noToolsYet}
           </span>
           <span className="block truncate text-muted-foreground text-xs">
             {tools.length ? tools.map((x) => x.name).join(", ") : t.toolsAdvice}
@@ -1388,7 +1881,11 @@ function FinishView({
       value: (
         <>
           <span className="block truncate font-medium tabular-nums">
-            {invites ? (invites === 1 ? t.invitesPendingOne : interpolate(t.invitesPending, { count: invites })) : t.justYou}
+            {invites
+              ? invites === 1
+                ? t.invitesPendingOne
+                : interpolate(t.invitesPending, { count: invites })
+              : t.justYou}
           </span>
           <span className="block truncate text-muted-foreground text-xs">
             {invites ? t.invitesEmail : t.inviteLater}
@@ -1408,11 +1905,16 @@ function FinishView({
         <>
           <span className="flex min-w-0 items-center gap-2">
             <span className="truncate font-medium">{agentName}</span>
-            <Badge className="bg-success/8 text-success-foreground dark:bg-success/16 shrink-0" variant="secondary">
+            <Badge
+              className="bg-success/8 text-success-foreground dark:bg-success/16 shrink-0"
+              variant="secondary"
+            >
               {t.live}
             </Badge>
           </span>
-          <span className="block truncate text-muted-foreground text-xs">{t.firstTask}</span>
+          <span className="block truncate text-muted-foreground text-xs">
+            {t.firstTask}
+          </span>
         </>
       ),
     },
@@ -1468,24 +1970,43 @@ function FinishView({
             className="flex items-center gap-3 py-2.5 ps-3 pe-2"
             initial={reduce ? false : { opacity: 0, y: 4 }}
             key={r.label}
-            transition={{ duration: 0.22, ease: easeOut, delay: 0.12 + i * 0.035 }}
+            transition={{
+              duration: 0.22,
+              ease: easeOut,
+              delay: 0.12 + i * 0.035,
+            }}
           >
             <span className="shrink-0">{r.icon}</span>
             <span className="min-w-0 flex-1">{r.value}</span>
             {r.empty ? (
-              <Button aria-label={interpolate(t.addRow, { row: r.label.toLowerCase() })} className={press} onClick={() => onEdit(r.step)} size="sm" variant="outline">
+              <Button
+                aria-label={interpolate(t.addRow, {
+                  row: r.label.toLowerCase(),
+                })}
+                className={press}
+                onClick={() => onEdit(r.step)}
+                size="sm"
+                variant="outline"
+              >
                 <PlusIcon />
                 {t.add}
               </Button>
             ) : (
-              <Button aria-label={interpolate(t.editRow, { row: r.label.toLowerCase() })} className={press} onClick={() => onEdit(r.step)} size="sm" variant="ghost">
+              <Button
+                aria-label={interpolate(t.editRow, {
+                  row: r.label.toLowerCase(),
+                })}
+                className={press}
+                onClick={() => onEdit(r.step)}
+                size="sm"
+                variant="ghost"
+              >
                 {t.edit}
               </Button>
             )}
           </motion.li>
         ))}
       </ul>
-
     </motion.section>
   );
 }

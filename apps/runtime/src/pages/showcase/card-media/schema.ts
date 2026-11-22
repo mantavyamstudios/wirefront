@@ -18,11 +18,24 @@ export const ArticleTeaser = z
   .meta({ id: "ArticleTeaser" });
 export type ArticleTeaser = z.infer<typeof ArticleTeaser>;
 
-export const SaveArticleInput = z.object({ articleId: z.string(), saved: z.boolean() }).meta({ id: "SaveArticleInput" });
+export const SaveArticleInput = z
+  .object({ articleId: z.string(), saved: z.boolean() })
+  .meta({ id: "SaveArticleInput" });
 export type SaveArticleInput = z.infer<typeof SaveArticleInput>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listLatestArticles: { method: "GET", path: "/articles/latest", summary: "The latest articles", response: z.array(ArticleTeaser) },
-  saveArticle: { method: "PUT", path: "/me/saved-articles/{articleId}", summary: "Save or unsave an article for later", params: z.object({ articleId: z.string() }), body: SaveArticleInput.pick({ saved: true }) },
+  listLatestArticles: {
+    method: "GET",
+    path: "/articles/latest",
+    summary: "The latest articles",
+    response: z.array(ArticleTeaser),
+  },
+  saveArticle: {
+    method: "PUT",
+    path: "/me/saved-articles/{articleId}",
+    summary: "Save or unsave an article for later",
+    params: z.object({ articleId: z.string() }),
+    body: SaveArticleInput.pick({ saved: true }),
+  },
 });

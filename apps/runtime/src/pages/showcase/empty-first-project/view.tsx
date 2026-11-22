@@ -3,7 +3,14 @@
 "use client";
 
 import { Button } from "@wirefront/ui/button";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@wirefront/ui/empty";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@wirefront/ui/empty";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Separator } from "@wirefront/ui/separator";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
@@ -13,7 +20,8 @@ import { ArrowRightIcon, FolderPlusIcon, ImportIcon } from "lucide-react";
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("firstProject.<key>"). */
 export const FIRST_PROJECT_MESSAGES = {
   title: "Start your first project.",
-  description: "A project is where you’ll keep tasks, docs, and assets. Most teams start with one and split things out later.",
+  description:
+    "A project is where you’ll keep tasks, docs, and assets. Most teams start with one and split things out later.",
   create: "Create project",
   or: "or",
   import: "Import from Linear or Notion",
@@ -28,7 +36,11 @@ export interface FirstProjectProps {
   className?: string;
 }
 
-function FirstProjectScreen({ onCreateProject, onImport, className }: FirstProjectProps) {
+function FirstProjectScreen({
+  onCreateProject,
+  onImport,
+  className,
+}: FirstProjectProps) {
   const t = useMessages("firstProject", FIRST_PROJECT_MESSAGES);
   return (
     <Empty className={cn("w-full", className)}>
@@ -48,10 +60,17 @@ function FirstProjectScreen({ onCreateProject, onImport, className }: FirstProje
           <>
             <div className="flex w-full max-w-xs items-center gap-3 text-muted-foreground text-xs">
               <Separator className="flex-1" />
-              <span className="font-mono uppercase tracking-[0.3em]">{t.or}</span>
+              <span className="font-mono uppercase tracking-[0.3em]">
+                {t.or}
+              </span>
               <Separator className="flex-1" />
             </div>
-            <Button className="w-full max-w-xs" onClick={onImport} size="lg" variant="outline">
+            <Button
+              className="w-full max-w-xs"
+              onClick={onImport}
+              size="lg"
+              variant="outline"
+            >
               <ImportIcon />
               {t.import}
             </Button>

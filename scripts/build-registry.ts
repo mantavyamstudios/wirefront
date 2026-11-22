@@ -93,7 +93,14 @@ interface RegistryItem {
 }
 
 // Wirefront's own components, also published as standalone items.
-const WIREFRONT_COMPONENTS = ["autocomplete", "checkbox-group", "command", "otp-field", "segmented-control", "settings-shell"] as const;
+const WIREFRONT_COMPONENTS = [
+  "autocomplete",
+  "checkbox-group",
+  "command",
+  "otp-field",
+  "segmented-control",
+  "settings-shell",
+] as const;
 const SITE_HOMEPAGE = "https://github.com/mantavyamstudios/wirefront";
 
 interface InlinedFile {
@@ -204,30 +211,31 @@ function mapLibraryPath(absPath: string): {
 function rewriteShowcaseImports(source: string): string {
   let out = source.replace(
     /from\s+(["'])@wirefront\/ui\/lib\/utils\1/g,
-    "from $1@/lib/utils$1",
+    "from $1@/lib/utils$1"
   );
   // Contract helpers ship under components/wirefront (see crawl).
   out = out.replace(
     /from\s+(["'])@wirefront\/ui\/wirefront\/([a-z0-9-]+)\1/g,
-    "from $1@/components/wirefront/$2$1",
+    "from $1@/components/wirefront/$2$1"
   );
   // Hooks are inlined into the item (see crawl), under the consumer's
   // @/hooks/wirefront so they never collide with the builder's own hooks.
   out = out.replace(
     /from\s+(["'])@wirefront\/ui\/hooks\/([a-z0-9-]+)\1/g,
-    "from $1@/hooks/wirefront/$2$1",
+    "from $1@/hooks/wirefront/$2$1"
   );
   out = out.replace(
     /from\s+(["'])@wirefront\/ui\/([a-z0-9-]+)\1/g,
     (_match, q: string, name: string) => {
-      const dir = name in LOCAL_INLINES ? "components/wirefront" : "components/ui";
+      const dir =
+        name in LOCAL_INLINES ? "components/wirefront" : "components/ui";
       return `from ${q}@/${dir}/${name}${q}`;
-    },
+    }
   );
   // App-level components (@/components/<name>) ship under components/wirefront.
   out = out.replace(
     /from\s+(["'])@\/components\/(?!ui\/|wirefront\/)([a-z0-9-]+)\1/g,
-    "from $1@/components/wirefront/$2$1",
+    "from $1@/components/wirefront/$2$1"
   );
   return out;
 }
@@ -235,7 +243,10 @@ function rewriteShowcaseImports(source: string): string {
 // Rewrite imports in a file being inlined from packages/ui. Returns the
 // rewritten source plus the absolute paths of any further library files
 // to follow, and the registry / npm deps it surfaces.
-function rewriteLibraryFile(absPath: string, source: string): {
+function rewriteLibraryFile(
+  absPath: string,
+  source: string
+): {
   rewritten: string;
   follow: string[];
   registryDeps: Set<string>;
@@ -258,14 +269,14 @@ function rewriteLibraryFile(absPath: string, source: string): {
       const target = candidates.find((p) => existsSync(p));
       if (!target) {
         throw new Error(
-          `cannot resolve relative import "${spec}" from ${absPath}`,
+          `cannot resolve relative import "${spec}" from ${absPath}`
         );
       }
       const { alias, output, shadcnDep } = mapLibraryPath(target);
       if (shadcnDep) registryDeps.add(shadcnDep);
       if (output) follow.push(target);
       return `from ${q}${alias}${q}`;
-    },
+    }
   );
 
   // 2. @wirefront/ui/<name> imports — rewrite to consumer alias and either
@@ -285,12 +296,17 @@ function rewriteLibraryFile(absPath: string, source: string): {
         return `from ${q}@/components/wirefront/${baseName}${q}`;
       }
       if (LOCAL_INLINES[baseName]) {
-        follow.push(resolve(UI_PKG_DIR, must(LOCAL_INLINES[baseName], `a local inline for ${baseName}`)));
+        follow.push(
+          resolve(
+            UI_PKG_DIR,
+            must(LOCAL_INLINES[baseName], `a local inline for ${baseName}`)
+          )
+        );
         return `from ${q}@/components/wirefront/${baseName}${q}`;
       }
       registryDeps.add(baseName);
       return `from ${q}@/components/ui/${baseName}${q}`;
-    },
+    }
   );
 
   // 3. Track known npm deps (anything not relative and not @/ or @wirefront/).
@@ -300,7 +316,9 @@ function rewriteLibraryFile(absPath: string, source: string): {
     const spec = must(m[1], "an import specifier");
     // Match on the package name so subpath imports (motion/react) count too.
     const parts = spec.split("/");
-    const pkg = spec.startsWith("@") ? parts.slice(0, 2).join("/") : must(parts[0], "a package name");
+    const pkg = spec.startsWith("@")
+      ? parts.slice(0, 2).join("/")
+      : must(parts[0], "a package name");
     if (TRACKED_NPM_DEPS.has(pkg)) npmDeps.add(pkg);
   }
 
@@ -316,9 +334,17 @@ function isScreenFolder(filename: string): boolean {
 }
 
 /** The file's source and its extension (folder screens mix .tsx and .ts). */
-async function readShowcase(filename: string): Promise<{ raw: string; ext: string }> {
+async function readShowcase(
+  filename: string
+): Promise<{ raw: string; ext: string }> {
   if (filename.startsWith(APP_PREFIX)) {
-    return { raw: await readFile(resolve(APP_COMPONENTS_DIR, `${filename.slice(APP_PREFIX.length)}.tsx`), "utf8"), ext: "tsx" };
+    return {
+      raw: await readFile(
+        resolve(APP_COMPONENTS_DIR, `${filename.slice(APP_PREFIX.length)}.tsx`),
+        "utf8"
+      ),
+      ext: "tsx",
+    };
   }
   for (const ext of filename.includes("/") ? ["tsx", "ts"] : ["tsx"]) {
     const path = resolve(SHOWCASE_DIR, `${filename}.${ext}`);
@@ -349,14 +375,22 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
       if (!output) continue;
 
       const raw = await readFile(absPath, "utf8");
-      const { rewritten, follow, registryDeps: rDeps, npmDeps: nDeps } =
-        rewriteLibraryFile(absPath, raw);
+      const {
+        rewritten,
+        follow,
+        registryDeps: rDeps,
+        npmDeps: nDeps,
+      } = rewriteLibraryFile(absPath, raw);
 
       for (const d of rDeps) registryDeps.add(d);
       for (const d of nDeps) npmDeps.add(d);
       for (const next of follow) libQueue.push(next);
 
-      inlinedByOutput.set(output, { outputPath: output, type, content: rewritten });
+      inlinedByOutput.set(output, {
+        outputPath: output,
+        type,
+        content: rewritten,
+      });
     }
   };
 
@@ -371,7 +405,9 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
       ({ raw, ext } = await readShowcase(fname));
     } catch (err) {
       // Every queued file comes from a real import, so a missing one is a broken screen.
-      throw new Error(`${rootFilename}: ${err instanceof Error ? err.message : String(err)}`);
+      throw new Error(
+        `${rootFilename}: ${err instanceof Error ? err.message : String(err)}`
+      );
     }
     // Imports are read from code only: code shown as text inside template
     // literals (a diff viewer's sample, for example) is not followed.
@@ -387,9 +423,16 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
         libQueue.push(resolve(UI_PKG_DIR, `${importPath}.ts`));
       } else if (importPath.startsWith("wirefront/")) {
         const ts = resolve(UI_PKG_DIR, `${importPath}.ts`);
-        libQueue.push(existsSync(ts) ? ts : resolve(UI_PKG_DIR, `${importPath}.tsx`));
+        libQueue.push(
+          existsSync(ts) ? ts : resolve(UI_PKG_DIR, `${importPath}.tsx`)
+        );
       } else if (LOCAL_INLINES[baseName]) {
-        libQueue.push(resolve(UI_PKG_DIR, must(LOCAL_INLINES[baseName], `a local inline for ${baseName}`)));
+        libQueue.push(
+          resolve(
+            UI_PKG_DIR,
+            must(LOCAL_INLINES[baseName], `a local inline for ${baseName}`)
+          )
+        );
       } else {
         registryDeps.add(baseName);
       }
@@ -399,7 +442,10 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
     const relRe = /from\s+["']\.\/([a-z0-9_-]+)["']/g;
     for (const m of code.matchAll(relRe)) {
       // Inside a screen folder, ./x is a file of that folder.
-      const dir = fname.includes("/") && !fname.startsWith(APP_PREFIX) ? fname.slice(0, fname.lastIndexOf("/") + 1) : "";
+      const dir =
+        fname.includes("/") && !fname.startsWith(APP_PREFIX)
+          ? fname.slice(0, fname.lastIndexOf("/") + 1)
+          : "";
       const sibling = `${dir}${must(m[1], "a sibling file")}`;
       if (!visitedShowcase.has(sibling)) showcaseQueue.push(sibling);
     }
@@ -415,7 +461,9 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
     for (const m of code.matchAll(importRe)) {
       const spec = must(m[1], "an import specifier");
       const parts = spec.split("/");
-      const pkg = spec.startsWith("@") ? parts.slice(0, 2).join("/") : must(parts[0], "a package name");
+      const pkg = spec.startsWith("@")
+        ? parts.slice(0, 2).join("/")
+        : must(parts[0], "a package name");
       if (TRACKED_NPM_DEPS.has(pkg)) npmDeps.add(pkg);
     }
 
@@ -438,7 +486,10 @@ async function crawl(rootFilename: string): Promise<CrawlResult> {
 }
 
 async function writeItem(item: RegistryItem): Promise<void> {
-  await writeFile(resolve(OUT_DIR, `${item.name}.json`), `${JSON.stringify(item, null, 2)}\n`);
+  await writeFile(
+    resolve(OUT_DIR, `${item.name}.json`),
+    `${JSON.stringify(item, null, 2)}\n`
+  );
 }
 
 // Everything Wirefront ships lives under a wirefront/ folder so it never
@@ -449,11 +500,23 @@ function targetFor(path: string): string {
   return `@${m[1]}/${m[2]}`;
 }
 
-function withDeps(item: RegistryItem, registryDeps: Set<string>, npmDeps: Set<string>): RegistryItem {
-  item.files = item.files.map((f) => ({ path: f.path, target: targetFor(f.path), type: f.type, content: f.content }));
-  if (registryDeps.size > 0) item.registryDependencies = [...registryDeps].sort();
+function withDeps(
+  item: RegistryItem,
+  registryDeps: Set<string>,
+  npmDeps: Set<string>
+): RegistryItem {
+  item.files = item.files.map((f) => ({
+    path: f.path,
+    target: targetFor(f.path),
+    type: f.type,
+    content: f.content,
+  }));
+  if (registryDeps.size > 0)
+    item.registryDependencies = [...registryDeps].sort();
   if (npmDeps.size > 0) item.dependencies = [...npmDeps].sort();
-  const cssVars = cssVarsFor(tokensUsed(item.files.map((f) => f.content).join("\n")));
+  const cssVars = cssVarsFor(
+    tokensUsed(item.files.map((f) => f.content).join("\n"))
+  );
   if (cssVars) item.cssVars = cssVars;
   return item;
 }
@@ -462,18 +525,24 @@ async function main() {
   await rm(OUT_DIR, { recursive: true, force: true });
   await mkdir(OUT_DIR, { recursive: true });
 
-  const meta = new Map(readDesignMeta().map((d) => [`${d.category}/${d.slug}`, d]));
+  const meta = new Map(
+    readDesignMeta().map((d) => [`${d.category}/${d.slug}`, d])
+  );
   const index: RegistryItem[] = [];
 
   for (const [category, designs] of Object.entries(SOURCE_FILES)) {
     if (!designs) continue;
     for (const [designSlug, filename] of Object.entries(designs)) {
-      const { showcaseFiles, inlined, registryDeps, npmDeps } = await crawl(filename);
+      const { showcaseFiles, inlined, registryDeps, npmDeps } =
+        await crawl(filename);
       if (showcaseFiles.length === 0) {
         throw new Error(`${category}/${designSlug}: no source for ${filename}`);
       }
       const d = meta.get(`${category}/${designSlug}`);
-      if (!d) throw new Error(`${category}/${designSlug} is mapped in source-files.ts but not listed in designs.ts`);
+      if (!d)
+        throw new Error(
+          `${category}/${designSlug} is mapped in source-files.ts but not listed in designs.ts`
+        );
       const item = withDeps(
         {
           $schema: "https://ui.shadcn.com/schema/registry-item.json",
@@ -487,11 +556,15 @@ async function main() {
               content: f.content,
               type: "registry:component" as const,
             })),
-            ...inlined.map((f) => ({ path: f.outputPath, content: f.content, type: f.type })),
+            ...inlined.map((f) => ({
+              path: f.outputPath,
+              content: f.content,
+              type: f.type,
+            })),
           ],
         },
         registryDeps,
-        npmDeps,
+        npmDeps
       );
       await writeItem(item);
       index.push(item);
@@ -500,7 +573,10 @@ async function main() {
 
   for (const name of WIREFRONT_COMPONENTS) {
     const absPath = resolve(UI_PKG_DIR, LOCAL_INLINES[name] ?? "");
-    const { rewritten, registryDeps, npmDeps, follow } = rewriteLibraryFile(absPath, await readFile(absPath, "utf8"));
+    const { rewritten, registryDeps, npmDeps, follow } = rewriteLibraryFile(
+      absPath,
+      await readFile(absPath, "utf8")
+    );
     // Ship what the component imports from Wirefront (e.g. the provider), as screen items do.
     const extra = new Map<string, InlinedFile>();
     const queue = [...follow];
@@ -521,12 +597,20 @@ async function main() {
         title: titleCase(name),
         description: `Wirefront's ${name.replace(/-/g, " ")} component, built on Base UI.`,
         files: [
-          { path: `components/wirefront/${name}.tsx`, content: rewritten, type: "registry:component" },
-          ...[...extra.values()].map((f) => ({ path: f.outputPath, content: f.content, type: f.type })),
+          {
+            path: `components/wirefront/${name}.tsx`,
+            content: rewritten,
+            type: "registry:component",
+          },
+          ...[...extra.values()].map((f) => ({
+            path: f.outputPath,
+            content: f.content,
+            type: f.type,
+          })),
         ],
       },
       registryDeps,
-      npmDeps,
+      npmDeps
     );
     await writeItem(item);
     index.push(item);
@@ -541,8 +625,13 @@ async function main() {
       files: files.map(({ path, type }) => ({ path, type })),
     })),
   };
-  await writeFile(resolve(OUT_DIR, "registry.json"), `${JSON.stringify(registry, null, 2)}\n`);
-  console.log(`wrote ${index.length} registry items and registry.json to ${OUT_DIR}`);
+  await writeFile(
+    resolve(OUT_DIR, "registry.json"),
+    `${JSON.stringify(registry, null, 2)}\n`
+  );
+  console.log(
+    `wrote ${index.length} registry items and registry.json to ${OUT_DIR}`
+  );
 }
 
 main().catch((err) => {

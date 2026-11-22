@@ -8,22 +8,67 @@ import { Radio } from "@base-ui/react/radio";
 import { RadioGroup } from "@base-ui/react/radio-group";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@wirefront/ui/dropdown-menu";
 import { Input } from "@wirefront/ui/input";
 import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@wirefront/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@wirefront/ui/sheet";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { Spinner } from "@wirefront/ui/spinner";
 import { Switch } from "@wirefront/ui/switch";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { CheckIcon, CircleAlertIcon, DatabaseIcon, EllipsisIcon, LayoutGridIcon, MailIcon, MegaphoneIcon, PlugIcon, RotateCwIcon, SearchIcon, SearchXIcon, Settings2Icon, ShieldCheckIcon, UnplugIcon, XIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CircleAlertIcon,
+  DatabaseIcon,
+  EllipsisIcon,
+  LayoutGridIcon,
+  MailIcon,
+  MegaphoneIcon,
+  PlugIcon,
+  RotateCwIcon,
+  SearchIcon,
+  SearchXIcon,
+  Settings2Icon,
+  ShieldCheckIcon,
+  UnplugIcon,
+  XIcon,
+} from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { type ReactNode, useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { ConnectorApp } from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("connectorMarketplace.<key>"). */
@@ -33,7 +78,8 @@ export const CONNECTOR_MARKETPLACE_MESSAGES = {
   categories: "Categories",
   all: "All",
   reviewedTitle: "Reviewed apps only",
-  reviewedBody: "Every app here passed a security review. Admins approve new connections.",
+  reviewedBody:
+    "Every app here passed a security review. Admins approve new connections.",
   summary: "{apps} apps · {connected} connected",
   search: "Search apps",
   clearSearch: "Clear search",
@@ -51,7 +97,8 @@ export const CONNECTOR_MARKETPLACE_MESSAGES = {
   noneConnected: "Nothing connected here yet",
   allConnected: "Every app here is connected",
   none: "No apps in the directory yet",
-  noMatchHint: "Try another name or category. Missing an app your team uses? Ask us to add it.",
+  noMatchHint:
+    "Try another name or category. Missing an app your team uses? Ask us to add it.",
   emptyHint: "Try another category, or browse the full directory.",
   clearFilters: "Clear filters",
   request: "Request “{query}”",
@@ -112,9 +159,21 @@ type ConnState = "idle" | "connecting" | "connected" | "error";
 type Filter = "all" | "connected" | "available";
 type Sort = "popular" | "name" | "newest";
 const FILTERS: Filter[] = ["all", "connected", "available"];
-const FILTER_KEY = { all: "filterAll", connected: "filterConnected", available: "filterAvailable" } as const;
-const SORT_KEY = { popular: "sortPopular", name: "sortName", newest: "sortNewest" } as const;
-const TAG_KEY = { Popular: "tagPopular", New: "tagNew", Beta: "tagBeta" } as const;
+const FILTER_KEY = {
+  all: "filterAll",
+  connected: "filterConnected",
+  available: "filterAvailable",
+} as const;
+const SORT_KEY = {
+  popular: "sortPopular",
+  name: "sortName",
+  newest: "sortNewest",
+} as const;
+const TAG_KEY = {
+  Popular: "tagPopular",
+  New: "tagNew",
+  Beta: "tagBeta",
+} as const;
 const TAG_TONE = {
   Popular: "bg-info/8 text-info-foreground dark:bg-info/16",
   New: "bg-success/8 text-success-foreground dark:bg-success/16",
@@ -130,13 +189,24 @@ const TONE_CLASS: Record<ConnectorApp["tone"], string> = {
   success: "bg-success/12 text-success-foreground",
   warning: "bg-warning/14 text-warning-foreground",
 };
-const STATUS_DOT: Record<ConnState, string> = { idle: "bg-muted-foreground/40", connecting: "bg-info", connected: "bg-success", error: "bg-destructive" };
-const STATUS_KEY = { idle: "statusIdle", connecting: "statusConnecting", connected: "statusConnected", error: "statusError" } as const;
+const STATUS_DOT: Record<ConnState, string> = {
+  idle: "bg-muted-foreground/40",
+  connecting: "bg-info",
+  connected: "bg-success",
+  error: "bg-destructive",
+};
+const STATUS_KEY = {
+  idle: "statusIdle",
+  connecting: "statusConnecting",
+  connected: "statusConnected",
+  error: "statusError",
+} as const;
 
 const easeOut = [0.23, 1, 0.32, 1] as const;
 const quick = { duration: 0.18, ease: easeOut };
 const glide = { type: "spring", duration: 0.3, bounce: 0 } as const;
-const press = "transition-[scale,box-shadow,background-color,color] duration-150 ease-out active:scale-[0.97]";
+const press =
+  "transition-[scale,box-shadow,background-color,color] duration-150 ease-out active:scale-[0.97]";
 const menuMotion =
   "min-w-40 transition-[scale,opacity] duration-150 ease-out data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0 motion-reduce:data-ending-style:scale-100 motion-reduce:data-starting-style:scale-100";
 
@@ -160,7 +230,9 @@ function rich(template: string, values: Record<string, ReactNode>) {
       const at = offset;
       offset += part.length;
       const name = part.match(/^\{(\w+)\}$/)?.[1];
-      return <span key={at}>{name && name in values ? values[name] : part}</span>;
+      return (
+        <span key={at}>{name && name in values ? values[name] : part}</span>
+      );
     });
 }
 
@@ -192,14 +264,24 @@ function RollingNumber({ value }: { value: number }) {
   );
 }
 
-function AppIcon({ app, icon, size }: { app: ConnectorApp; icon?: ReactNode; size: "sm" | "lg" }) {
+function AppIcon({
+  app,
+  icon,
+  size,
+}: {
+  app: ConnectorApp;
+  icon?: ReactNode;
+  size: "sm" | "lg";
+}) {
   return (
     <span
       aria-hidden
       className={cn(
         "flex shrink-0 items-center justify-center font-semibold",
-        size === "sm" ? "size-9 rounded-lg text-xs [&_svg]:size-4.5" : "size-12 rounded-xl text-sm [&_svg]:size-6",
-        TONE_CLASS[app.tone],
+        size === "sm"
+          ? "size-9 rounded-lg text-xs [&_svg]:size-4.5"
+          : "size-12 rounded-xl text-sm [&_svg]:size-6",
+        TONE_CLASS[app.tone]
       )}
     >
       {icon ?? initials(app.name)}
@@ -210,7 +292,10 @@ function AppIcon({ app, icon, size }: { app: ConnectorApp; icon?: ReactNode; siz
 function TagBadge({ tag, t }: { tag: ConnectorApp["tag"]; t: Messages }) {
   if (!tag) return null;
   return (
-    <Badge className={cn(TAG_TONE[tag], "h-4.5 rounded-sm px-1 text-[0.625rem]")} variant="secondary">
+    <Badge
+      className={cn(TAG_TONE[tag], "h-4.5 rounded-sm px-1 text-[0.625rem]")}
+      variant="secondary"
+    >
       {t[TAG_KEY[tag]]}
     </Badge>
   );
@@ -249,16 +334,37 @@ function ConnectButton({
     <div className="flex h-8 min-w-24 items-center justify-end">
       <AnimatePresence initial={false} mode="popLayout">
         {connected ? (
-          <motion.div animate="animate" className="flex items-center gap-0.5" exit="exit" initial="initial" key="connected" transition={quick} variants={variants}>
+          <motion.div
+            animate="animate"
+            className="flex items-center gap-0.5"
+            exit="exit"
+            initial="initial"
+            key="connected"
+            transition={quick}
+            variants={variants}
+          >
             <span className="inline-flex items-center gap-1.5 font-medium text-success-foreground text-xs">
-              <span aria-hidden className="flex size-4 items-center justify-center rounded-full bg-success/16">
+              <span
+                aria-hidden
+                className="flex size-4 items-center justify-center rounded-full bg-success/16"
+              >
                 <CheckIcon className="size-3" />
               </span>
               {t.connected}
             </span>
             <DropdownMenu>
               <DropdownMenuTrigger
-                render={<Button aria-label={interpolate(t.options, { name: app.name })} className={cn("size-8 text-muted-foreground hover:text-foreground sm:size-8", press)} size="icon" variant="ghost" />}
+                render={
+                  <Button
+                    aria-label={interpolate(t.options, { name: app.name })}
+                    className={cn(
+                      "size-8 text-muted-foreground hover:text-foreground sm:size-8",
+                      press
+                    )}
+                    size="icon"
+                    variant="ghost"
+                  />
+                }
               >
                 <EllipsisIcon />
               </DropdownMenuTrigger>
@@ -270,7 +376,10 @@ function ConnectButton({
                 {canDisconnect ? (
                   <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={onDisconnect} variant="destructive">
+                    <DropdownMenuItem
+                      onClick={onDisconnect}
+                      variant="destructive"
+                    >
                       <UnplugIcon />
                       {t.disconnect}
                     </DropdownMenuItem>
@@ -280,13 +389,49 @@ function ConnectButton({
             </DropdownMenu>
           </motion.div>
         ) : (
-          <motion.div animate="animate" exit="exit" initial="initial" key="action" transition={quick} variants={variants}>
-            <Button className={cn("h-8 min-w-24 text-xs sm:h-8 sm:text-xs", press)} disabled={state === "connecting"} onClick={onConnect} variant="outline">
-              <span aria-hidden className="relative flex size-3.5 items-center justify-center">
-                {state === "connecting" ? <Spinner className="size-3.5" /> : state === "error" ? <RotateCwIcon className="size-3.5" /> : <PlugIcon className="size-3.5" />}
+          <motion.div
+            animate="animate"
+            exit="exit"
+            initial="initial"
+            key="action"
+            transition={quick}
+            variants={variants}
+          >
+            <Button
+              className={cn("h-8 min-w-24 text-xs sm:h-8 sm:text-xs", press)}
+              disabled={state === "connecting"}
+              onClick={onConnect}
+              variant="outline"
+            >
+              <span
+                aria-hidden
+                className="relative flex size-3.5 items-center justify-center"
+              >
+                {state === "connecting" ? (
+                  <Spinner className="size-3.5" />
+                ) : state === "error" ? (
+                  <RotateCwIcon className="size-3.5" />
+                ) : (
+                  <PlugIcon className="size-3.5" />
+                )}
               </span>
-              <span className="sr-only">{interpolate(state === "connecting" ? t.connectingName : state === "error" ? t.retryName : t.connectName, { name: app.name })}</span>
-              <span aria-hidden>{state === "connecting" ? t.connecting : state === "error" ? t.retry : t.connect}</span>
+              <span className="sr-only">
+                {interpolate(
+                  state === "connecting"
+                    ? t.connectingName
+                    : state === "error"
+                      ? t.retryName
+                      : t.connectName,
+                  { name: app.name }
+                )}
+              </span>
+              <span aria-hidden>
+                {state === "connecting"
+                  ? t.connecting
+                  : state === "error"
+                    ? t.retry
+                    : t.connect}
+              </span>
             </Button>
           </motion.div>
         )}
@@ -295,7 +440,19 @@ function ConnectButton({
   );
 }
 
-function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRetry, onConnect, onDisconnect, onSettingChange, onRequestApp, workspace, icons = {}, className }: ConnectorMarketplaceProps) {
+function ConnectorMarketplaceScreen({
+  apps: given,
+  status = "ready",
+  error,
+  onRetry,
+  onConnect,
+  onDisconnect,
+  onSettingChange,
+  onRequestApp,
+  workspace,
+  icons = {},
+  className,
+}: ConnectorMarketplaceProps) {
   const t = useMessages("connectorMarketplace", CONNECTOR_MARKETPLACE_MESSAGES);
   const { locale } = useWirefront();
   const uid = useId();
@@ -313,7 +470,8 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
   const searchRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const setConnected = (id: string, connected: boolean) => setApps((all) => all.map((a) => (a.id === id ? { ...a, connected } : a)));
+  const setConnected = (id: string, connected: boolean) =>
+    setApps((all) => all.map((a) => (a.id === id ? { ...a, connected } : a)));
   const connect = useAction(onConnect ?? (async () => {}), {
     optimistic: (id) => setErrors(({ [id]: _, ...rest }) => rest),
     onSuccess: (_, id) => setConnected(id, true),
@@ -328,14 +486,34 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
   const changeSetting = useAction(onSettingChange ?? (async () => {}), {
     optimistic: ({ appId, settingId, on }) => {
       const flip = (value: boolean) =>
-        setApps((all) => all.map((a) => (a.id === appId ? { ...a, settings: a.settings.map((s) => (s.id === settingId ? { ...s, on: value } : s)) } : a)));
+        setApps((all) =>
+          all.map((a) =>
+            a.id === appId
+              ? {
+                  ...a,
+                  settings: a.settings.map((s) =>
+                    s.id === settingId ? { ...s, on: value } : s
+                  ),
+                }
+              : a
+          )
+        );
       flip(on);
       return () => flip(!on);
     },
   });
-  const request = useAction(onRequestApp ?? (async () => {}), { onSuccess: (_, name) => setRequested((r) => [...r, name.toLowerCase()]) });
+  const request = useAction(onRequestApp ?? (async () => {}), {
+    onSuccess: (_, name) => setRequested((r) => [...r, name.toLowerCase()]),
+  });
 
-  const stateOf = (app: ConnectorApp): ConnState => (connect.isPending(app.id) ? "connecting" : app.connected ? "connected" : errors[app.id] ? "error" : "idle");
+  const stateOf = (app: ConnectorApp): ConnState =>
+    connect.isPending(app.id)
+      ? "connecting"
+      : app.connected
+        ? "connected"
+        : errors[app.id]
+          ? "error"
+          : "idle";
 
   // ⌘K / Ctrl+K anywhere in the screen jumps to search.
   useEffect(() => {
@@ -355,32 +533,67 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
   // Changing the category or filter scrolls the list back to the top.
   const pickCategory = (next: string | null) => {
     setCategory(next);
-    scrollRef.current?.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    scrollRef.current?.scrollTo({
+      top: 0,
+      behavior: reduce ? "auto" : "smooth",
+    });
   };
   const pickFilter = (next: Filter) => {
     setFilter(next);
-    scrollRef.current?.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    scrollRef.current?.scrollTo({
+      top: 0,
+      behavior: reduce ? "auto" : "smooth",
+    });
   };
 
   const categories = useMemo(() => {
     const names = Array.from(new Set(apps.map((a) => a.category)));
-    return names.map((name) => ({ name, count: apps.filter((a) => a.category === name).length }));
+    return names.map((name) => ({
+      name,
+      count: apps.filter((a) => a.category === name).length,
+    }));
   }, [apps]);
-  const categoryOptions = [{ id: "", name: t.all, count: apps.length }, ...categories.map((c) => ({ id: c.name, ...c }))];
+  const categoryOptions = [
+    { id: "", name: t.all, count: apps.length },
+    ...categories.map((c) => ({ id: c.name, ...c })),
+  ];
 
   const q = query.trim().toLowerCase();
   const visible = apps
     .filter((a) => !category || a.category === category)
-    .filter((a) => (filter === "connected" ? a.connected : filter === "available" ? !a.connected : true))
-    .filter((a) => !q || `${a.name} ${a.blurb} ${a.category}`.toLowerCase().includes(q))
-    .sort((a, b) => (sort === "name" ? a.name.localeCompare(b.name, locale) : sort === "newest" ? b.addedAt.localeCompare(a.addedAt) : b.installs - a.installs));
+    .filter((a) =>
+      filter === "connected"
+        ? a.connected
+        : filter === "available"
+          ? !a.connected
+          : true
+    )
+    .filter(
+      (a) =>
+        !q || `${a.name} ${a.blurb} ${a.category}`.toLowerCase().includes(q)
+    )
+    .sort((a, b) =>
+      sort === "name"
+        ? a.name.localeCompare(b.name, locale)
+        : sort === "newest"
+          ? b.addedAt.localeCompare(a.addedAt)
+          : b.installs - a.installs
+    );
   const sections =
     sort !== "popular" || category || q
       ? [{ title: null as string | null, apps: visible }]
-      : categories.map((c) => ({ title: c.name as string | null, apps: visible.filter((a) => a.category === c.name) })).filter((g) => g.apps.length > 0);
+      : categories
+          .map((c) => ({
+            title: c.name as string | null,
+            apps: visible.filter((a) => a.category === c.name),
+          }))
+          .filter((g) => g.apps.length > 0);
   const connectedCount = apps.filter((a) => a.connected).length;
   const open = apps.find((a) => a.id === openId) ?? null;
-  const installs = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
+  const installs = new Intl.NumberFormat(locale, {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  });
 
   const resetFilters = () => {
     setQuery("");
@@ -400,12 +613,24 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
 
   if (status === "error") {
     return (
-      <div className={cn("flex min-h-120 w-full items-center justify-center p-6", className)}>
+      <div
+        className={cn(
+          "flex min-h-120 w-full items-center justify-center p-6",
+          className
+        )}
+      >
         <div className="rounded-xl border border-border/60 p-10 text-center">
           <p className="font-medium">{t.errorTitle}</p>
-          {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+          {error ? (
+            <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+          ) : null}
           {onRetry ? (
-            <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+            <Button
+              className="mt-4"
+              onClick={onRetry}
+              size="sm"
+              variant="outline"
+            >
               {t.tryAgain}
             </Button>
           ) : null}
@@ -415,30 +640,56 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
   }
   if (!given || status === "loading") {
     return (
-      <div aria-busy="true" className={cn("grid w-full grid-cols-1 gap-2.5 p-6 sm:grid-cols-2", className)}>
+      <div
+        aria-busy="true"
+        className={cn(
+          "grid w-full grid-cols-1 gap-2.5 p-6 sm:grid-cols-2",
+          className
+        )}
+      >
         {["a", "b", "c", "d", "e", "f"].map((k) => (
-          <Skeleton className="h-20 w-full rounded-xl motion-reduce:animate-none" key={k} />
+          <Skeleton
+            className="h-20 w-full rounded-xl motion-reduce:animate-none"
+            key={k}
+          />
         ))}
       </div>
     );
   }
 
   return (
-    <div className={cn("@container/screen relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm", className)} ref={rootRef}>
+    <div
+      className={cn(
+        "@container/screen relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm",
+        className
+      )}
+      ref={rootRef}
+    >
       <aside className="hidden w-56 shrink-0 flex-col gap-1 border-e bg-muted/40 p-3 @3xl/screen:flex">
         <div className="flex items-center gap-2 px-2 pt-1 pb-4">
-          <span aria-hidden className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <span
+            aria-hidden
+            className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+          >
             <LayoutGridIcon className="size-4" />
           </span>
           <div className="min-w-0">
             <p className="truncate font-medium">{workspace}</p>
-            <p className="truncate text-muted-foreground text-xs">{t.workspaceSettings}</p>
+            <p className="truncate text-muted-foreground text-xs">
+              {t.workspaceSettings}
+            </p>
           </div>
         </div>
-        <p className="px-2 pb-1 font-medium text-muted-foreground text-xs" id={`${uid}-categories`}>
+        <p
+          className="px-2 pb-1 font-medium text-muted-foreground text-xs"
+          id={`${uid}-categories`}
+        >
           {t.categories}
         </p>
-        <nav aria-labelledby={`${uid}-categories`} className="flex flex-col gap-0.5">
+        <nav
+          aria-labelledby={`${uid}-categories`}
+          className="flex flex-col gap-0.5"
+        >
           {categoryOptions.map((c) => {
             const active = (category ?? "") === c.id;
             return (
@@ -446,25 +697,40 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
                 aria-current={active ? "true" : undefined}
                 className={cn(
                   "relative flex h-8 cursor-pointer items-center justify-between rounded-lg px-2.5 text-start outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ring",
-                  active ? "font-medium text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
+                  active
+                    ? "font-medium text-foreground"
+                    : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
                 )}
                 key={c.id || "all"}
                 onClick={() => pickCategory(c.id || null)}
                 type="button"
               >
-                {active && <motion.span className="absolute inset-0 -z-10 rounded-lg border bg-card shadow-xs/5" layoutId={`${uid}-rail`} transition={reduce ? { duration: 0 } : glide} />}
+                {active && (
+                  <motion.span
+                    className="absolute inset-0 -z-10 rounded-lg border bg-card shadow-xs/5"
+                    layoutId={`${uid}-rail`}
+                    transition={reduce ? { duration: 0 } : glide}
+                  />
+                )}
                 <span>{c.name}</span>
-                <span className="text-muted-foreground text-xs tabular-nums">{c.count}</span>
+                <span className="text-muted-foreground text-xs tabular-nums">
+                  {c.count}
+                </span>
               </button>
             );
           })}
         </nav>
         <div className="mt-auto rounded-xl border bg-card p-3">
           <div className="flex items-center gap-2 font-medium text-xs">
-            <ShieldCheckIcon aria-hidden className="size-4 text-success-foreground" />
+            <ShieldCheckIcon
+              aria-hidden
+              className="size-4 text-success-foreground"
+            />
             {t.reviewedTitle}
           </div>
-          <p className="mt-1 text-pretty text-muted-foreground text-xs">{t.reviewedBody}</p>
+          <p className="mt-1 text-pretty text-muted-foreground text-xs">
+            {t.reviewedBody}
+          </p>
         </div>
       </aside>
 
@@ -474,17 +740,38 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
             <div className="flex flex-col gap-3 px-4 pt-4 pb-3 @2xl:px-6">
               <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
                 <div className="min-w-0">
-                  <h2 className="text-balance font-heading font-semibold text-lg tracking-tight">{t.title}</h2>
-                  <p className="text-muted-foreground text-xs">{rich(t.summary, { apps: <RollingNumber value={visible.length} />, connected: <RollingNumber value={connectedCount} /> })}</p>
+                  <h2 className="text-balance font-heading font-semibold text-lg tracking-tight">
+                    {t.title}
+                  </h2>
+                  <p className="text-muted-foreground text-xs">
+                    {rich(t.summary, {
+                      apps: <RollingNumber value={visible.length} />,
+                      connected: <RollingNumber value={connectedCount} />,
+                    })}
+                  </p>
                 </div>
                 <div className="relative w-full @xl:w-72">
-                  <SearchIcon aria-hidden className="pointer-events-none absolute inset-s-2.5 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input aria-label={t.search} className="ps-8 pe-12" onChange={(e) => setQuery(e.target.value)} placeholder={t.search} ref={searchRef} type="search" value={query} />
+                  <SearchIcon
+                    aria-hidden
+                    className="pointer-events-none absolute inset-s-2.5 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground"
+                  />
+                  <Input
+                    aria-label={t.search}
+                    className="ps-8 pe-12"
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder={t.search}
+                    ref={searchRef}
+                    type="search"
+                    value={query}
+                  />
                   <span className="absolute inset-e-1.5 top-1/2 -translate-y-1/2">
                     {query ? (
                       <Button
                         aria-label={t.clearSearch}
-                        className={cn("size-7 rounded-full text-muted-foreground sm:size-7", press)}
+                        className={cn(
+                          "size-7 rounded-full text-muted-foreground sm:size-7",
+                          press
+                        )}
                         onClick={() => {
                           setQuery("");
                           searchRef.current?.focus();
@@ -514,37 +801,77 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
                       className={cn(
                         "relative flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring",
                         press,
-                        active ? "border-transparent text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+                        active
+                          ? "border-transparent text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
                       )}
                       key={c.id || "all"}
                       value={c.id}
                     >
-                      {active && <motion.span className="absolute -inset-px -z-10 rounded-full bg-primary" layoutId={`${uid}-chip`} transition={reduce ? { duration: 0 } : glide} />}
+                      {active && (
+                        <motion.span
+                          className="absolute -inset-px -z-10 rounded-full bg-primary"
+                          layoutId={`${uid}-chip`}
+                          transition={reduce ? { duration: 0 } : glide}
+                        />
+                      )}
                       {c.name}
-                      <span className={cn("tabular-nums", active ? "opacity-70" : "opacity-60")}>{c.count}</span>
+                      <span
+                        className={cn(
+                          "tabular-nums",
+                          active ? "opacity-70" : "opacity-60"
+                        )}
+                      >
+                        {c.count}
+                      </span>
                     </Radio.Root>
                   );
                 })}
               </RadioGroup>
 
               <div className="flex items-center justify-between gap-2">
-                <RadioGroup aria-label={t.filter} className="flex rounded-lg bg-muted p-0.5" onValueChange={(v) => pickFilter(v as Filter)} value={filter}>
+                <RadioGroup
+                  aria-label={t.filter}
+                  className="flex rounded-lg bg-muted p-0.5"
+                  onValueChange={(v) => pickFilter(v as Filter)}
+                  value={filter}
+                >
                   {FILTERS.map((f) => (
                     <Radio.Root
                       className={cn(
                         "relative h-7 cursor-pointer rounded-md px-2.5 font-medium text-xs outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ring",
-                        filter === f ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                        filter === f
+                          ? "text-foreground"
+                          : "text-muted-foreground hover:text-foreground"
                       )}
                       key={f}
                       value={f}
                     >
-                      {filter === f && <motion.span className="absolute inset-0 -z-10 rounded-md bg-background shadow-xs/5 dark:bg-input" layoutId={`${uid}-filter`} transition={reduce ? { duration: 0 } : glide} />}
+                      {filter === f && (
+                        <motion.span
+                          className="absolute inset-0 -z-10 rounded-md bg-background shadow-xs/5 dark:bg-input"
+                          layoutId={`${uid}-filter`}
+                          transition={reduce ? { duration: 0 } : glide}
+                        />
+                      )}
                       {t[FILTER_KEY[f]]}
                     </Radio.Root>
                   ))}
                 </RadioGroup>
-                <Select items={{ popular: t.sortPopular, name: t.sortName, newest: t.sortNewest }} onValueChange={(v) => v && setSort(v as Sort)} value={sort}>
-                  <SelectTrigger aria-label={t.sort} className="w-auto min-w-36 text-sm" size="sm">
+                <Select
+                  items={{
+                    popular: t.sortPopular,
+                    name: t.sortName,
+                    newest: t.sortNewest,
+                  }}
+                  onValueChange={(v) => v && setSort(v as Sort)}
+                  value={sort}
+                >
+                  <SelectTrigger
+                    aria-label={t.sort}
+                    className="w-auto min-w-36 text-sm"
+                    size="sm"
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent align="start">
@@ -578,30 +905,63 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
                     <SearchXIcon className="size-5" />
                   </span>
                 </div>
-                <p className="text-balance font-medium">{q ? interpolate(t.noMatch, { query: query.trim() }) : apps.length === 0 ? t.none : filter === "connected" ? t.noneConnected : t.allConnected}</p>
-                {apps.length ? <p className="mt-1 max-w-72 text-pretty text-muted-foreground text-xs">{q ? t.noMatchHint : t.emptyHint}</p> : null}
+                <p className="text-balance font-medium">
+                  {q
+                    ? interpolate(t.noMatch, { query: query.trim() })
+                    : apps.length === 0
+                      ? t.none
+                      : filter === "connected"
+                        ? t.noneConnected
+                        : t.allConnected}
+                </p>
+                {apps.length ? (
+                  <p className="mt-1 max-w-72 text-pretty text-muted-foreground text-xs">
+                    {q ? t.noMatchHint : t.emptyHint}
+                  </p>
+                ) : null}
                 <div className="mt-5 flex flex-wrap justify-center gap-2">
                   {apps.length ? (
-<Button className={press} onClick={resetFilters} size="sm" variant="outline">
-                    {t.clearFilters}
-                  </Button>
-) : null}
+                    <Button
+                      className={press}
+                      onClick={resetFilters}
+                      size="sm"
+                      variant="outline"
+                    >
+                      {t.clearFilters}
+                    </Button>
+                  ) : null}
                   {q && onRequestApp ? (
                     requested.includes(q) ? (
-                      <Button aria-live="polite" disabled size="sm" variant="ghost">
+                      <Button
+                        aria-live="polite"
+                        disabled
+                        size="sm"
+                        variant="ghost"
+                      >
                         <CheckIcon />
                         {t.requested}
                       </Button>
                     ) : (
-                      <Button className={press} disabled={request.isPending()} onClick={() => void request.run(query.trim())} size="sm" variant="ghost">
+                      <Button
+                        className={press}
+                        disabled={request.isPending()}
+                        onClick={() => void request.run(query.trim())}
+                        size="sm"
+                        variant="ghost"
+                      >
                         {request.isPending() ? <Spinner /> : <MegaphoneIcon />}
-                        {interpolate(t.request, { query: query.trim().slice(0, 18) })}
+                        {interpolate(t.request, {
+                          query: query.trim().slice(0, 18),
+                        })}
                       </Button>
                     )
                   ) : null}
                 </div>
                 {request.error ? (
-                  <p className="mt-3 text-destructive-foreground text-xs" role="alert">
+                  <p
+                    className="mt-3 text-destructive-foreground text-xs"
+                    role="alert"
+                  >
                     {request.error}
                   </p>
                 ) : null}
@@ -609,19 +969,31 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
             ) : (
               <div className="flex flex-col gap-8">
                 {disconnect.error ? (
-                  <p className="text-destructive-foreground text-sm" role="alert">
+                  <p
+                    className="text-destructive-foreground text-sm"
+                    role="alert"
+                  >
                     {disconnect.error}
                   </p>
                 ) : null}
                 {sections.map((section) => (
-                  <section aria-label={section.title ?? t.apps} key={section.title ?? "all"}>
+                  <section
+                    aria-label={section.title ?? t.apps}
+                    key={section.title ?? "all"}
+                  >
                     {section.title && (
                       <h3 className="mb-2.5 flex items-baseline gap-2 font-medium text-sm">
                         {section.title}
-                        <span className="font-normal text-muted-foreground text-xs tabular-nums">{section.apps.length}</span>
+                        <span className="font-normal text-muted-foreground text-xs tabular-nums">
+                          {section.apps.length}
+                        </span>
                       </h3>
                     )}
-                    <motion.ul className="grid grid-cols-1 gap-2.5 @2xl:grid-cols-2" layout={!reduce} transition={glide}>
+                    <motion.ul
+                      className="grid grid-cols-1 gap-2.5 @2xl:grid-cols-2"
+                      layout={!reduce}
+                      transition={glide}
+                    >
                       <AnimatePresence initial={false} mode="popLayout">
                         {section.apps.map((app) => {
                           const s = stateOf(app);
@@ -630,15 +1002,27 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
                               animate={{ opacity: 1, scale: 1 }}
                               className={cn(
                                 "group relative flex items-start gap-3 rounded-xl border bg-card p-3.5 transition-[border-color,background-color,scale] duration-150 ease-out has-[[data-card-trigger]:active]:scale-[0.985] [@media(hover:hover)]:hover:border-foreground/16",
-                                s === "error" && "border-destructive/24",
+                                s === "error" && "border-destructive/24"
                               )}
-                              exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}
-                              initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}
+                              exit={
+                                reduce
+                                  ? { opacity: 0 }
+                                  : { opacity: 0, scale: 0.97 }
+                              }
+                              initial={
+                                reduce
+                                  ? { opacity: 0 }
+                                  : { opacity: 0, scale: 0.97 }
+                              }
                               key={app.id}
                               layout={!reduce}
                               transition={quick}
                             >
-                              <AppIcon app={app} icon={icons[app.id]} size="sm" />
+                              <AppIcon
+                                app={app}
+                                icon={icons[app.id]}
+                                size="sm"
+                              />
                               <div className="min-w-0 flex-1">
                                 <div className="flex h-5 items-center gap-1.5">
                                   <button
@@ -652,12 +1036,22 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
                                   <TagBadge t={t} tag={app.tag} />
                                 </div>
                                 {s === "error" ? (
-                                  <p className="mt-0.5 flex min-w-0 items-center gap-1.5 text-destructive-foreground text-xs" role="status">
-                                    <CircleAlertIcon aria-hidden className="size-3.5 shrink-0" />
-                                    <span className="truncate">{t.authFailed}</span>
+                                  <p
+                                    className="mt-0.5 flex min-w-0 items-center gap-1.5 text-destructive-foreground text-xs"
+                                    role="status"
+                                  >
+                                    <CircleAlertIcon
+                                      aria-hidden
+                                      className="size-3.5 shrink-0"
+                                    />
+                                    <span className="truncate">
+                                      {t.authFailed}
+                                    </span>
                                   </p>
                                 ) : (
-                                  <p className="mt-0.5 line-clamp-2 text-pretty text-muted-foreground text-xs @2xl:line-clamp-1">{app.blurb}</p>
+                                  <p className="mt-0.5 line-clamp-2 text-pretty text-muted-foreground text-xs @2xl:line-clamp-1">
+                                    {app.blurb}
+                                  </p>
                                 )}
                               </div>
                               <div className="relative z-1 -my-0.5 shrink-0">
@@ -678,7 +1072,25 @@ function ConnectorMarketplaceScreen({ apps: given, status = "ready", error, onRe
 
       <Sheet onOpenChange={(o) => !o && setOpenId(null)} open={Boolean(open)}>
         <SheetContent className="w-full gap-0 p-0 sm:max-w-100" side="right">
-          {open ? <DetailPanel {...cardProps(open)} changeSetting={onSettingChange ? (settingId, on) => void changeSetting.run({ appId: open.id, settingId, on }, `${open.id}:${settingId}`) : undefined} error={errors[open.id]} icon={icons[open.id]} installs={installs.format(open.installs)} settingError={changeSetting.error} workspace={workspace} /> : null}
+          {open ? (
+            <DetailPanel
+              {...cardProps(open)}
+              changeSetting={
+                onSettingChange
+                  ? (settingId, on) =>
+                      void changeSetting.run(
+                        { appId: open.id, settingId, on },
+                        `${open.id}:${settingId}`
+                      )
+                  : undefined
+              }
+              error={errors[open.id]}
+              icon={icons[open.id]}
+              installs={installs.format(open.installs)}
+              settingError={changeSetting.error}
+              workspace={workspace}
+            />
+          ) : null}
         </SheetContent>
       </Sheet>
     </div>
@@ -729,30 +1141,58 @@ function DetailPanel({
   return (
     <>
       <SheetHeader className="border-b px-4 py-3">
-        <SheetDescription className="font-medium text-xs">{t.details}</SheetDescription>
+        <SheetDescription className="font-medium text-xs">
+          {t.details}
+        </SheetDescription>
       </SheetHeader>
       <div className="min-h-0 flex-1 overflow-y-auto p-5 text-sm">
         <div className="flex items-start gap-3">
           <AppIcon app={app} icon={icon} size="lg" />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <SheetTitle className="truncate font-heading font-semibold text-base">{app.name}</SheetTitle>
+              <SheetTitle className="truncate font-heading font-semibold text-base">
+                {app.name}
+              </SheetTitle>
               <TagBadge t={t} tag={app.tag} />
             </div>
-            <p className="text-muted-foreground text-xs tabular-nums">{interpolate(t.meta, { category: app.category, installs })}</p>
+            <p className="text-muted-foreground text-xs tabular-nums">
+              {interpolate(t.meta, { category: app.category, installs })}
+            </p>
           </div>
         </div>
 
-        <p className="mt-4 text-pretty text-muted-foreground">{app.description}</p>
+        <p className="mt-4 text-pretty text-muted-foreground">
+          {app.description}
+        </p>
 
-        <div className={cn("mt-4 flex min-h-14 items-center gap-3 rounded-xl border py-2 ps-3 pe-2 transition-colors duration-200", state === "error" ? "border-destructive/24 bg-destructive/4" : "bg-background")} role="status">
+        <div
+          className={cn(
+            "mt-4 flex min-h-14 items-center gap-3 rounded-xl border py-2 ps-3 pe-2 transition-colors duration-200",
+            state === "error"
+              ? "border-destructive/24 bg-destructive/4"
+              : "bg-background"
+          )}
+          role="status"
+        >
           <div className="flex min-w-0 flex-1 items-center gap-2.5">
-            <span aria-hidden className={cn("relative flex size-2 shrink-0 rounded-full", STATUS_DOT[state])}>
-              {state === "connecting" && !reduce && <span className="absolute inset-0 animate-ping rounded-full bg-info/60 motion-reduce:animate-none" />}
+            <span
+              aria-hidden
+              className={cn(
+                "relative flex size-2 shrink-0 rounded-full",
+                STATUS_DOT[state]
+              )}
+            >
+              {state === "connecting" && !reduce && (
+                <span className="absolute inset-0 animate-ping rounded-full bg-info/60 motion-reduce:animate-none" />
+              )}
             </span>
             <span className="min-w-0">
-              <span className="block font-medium text-sm">{t[STATUS_KEY[state]]}</span>
-              <span className="block text-pretty text-muted-foreground text-xs">{hint}</span>
+              <span className="block font-medium text-sm">
+                {t[STATUS_KEY[state]]}
+              </span>
+              <span className="block text-pretty text-muted-foreground text-xs">
+                {hint}
+              </span>
             </span>
           </div>
           {canAct ? (
@@ -760,12 +1200,35 @@ function DetailPanel({
               className={cn("min-w-30 text-sm", press)}
               disabled={state === "connecting"}
               onClick={state === "connected" ? onDisconnect : onConnect}
-              variant={state === "connected" ? "destructive" : state === "connecting" ? "outline" : "default"}
+              variant={
+                state === "connected"
+                  ? "destructive"
+                  : state === "connecting"
+                    ? "outline"
+                    : "default"
+              }
             >
-              <span aria-hidden className="relative flex size-4 items-center justify-center">
-                {state === "connected" ? <UnplugIcon /> : state === "connecting" ? <Spinner className="size-3.5" /> : state === "error" ? <RotateCwIcon /> : <PlugIcon />}
+              <span
+                aria-hidden
+                className="relative flex size-4 items-center justify-center"
+              >
+                {state === "connected" ? (
+                  <UnplugIcon />
+                ) : state === "connecting" ? (
+                  <Spinner className="size-3.5" />
+                ) : state === "error" ? (
+                  <RotateCwIcon />
+                ) : (
+                  <PlugIcon />
+                )}
               </span>
-              {state === "connected" ? t.disconnect : state === "connecting" ? t.connecting : state === "error" ? t.retry : t.connect}
+              {state === "connected"
+                ? t.disconnect
+                : state === "connecting"
+                  ? t.connecting
+                  : state === "error"
+                    ? t.retry
+                    : t.connect}
             </Button>
           ) : null}
         </div>
@@ -776,8 +1239,17 @@ function DetailPanel({
           </h4>
           <ul className="flex flex-col gap-1.5 rounded-xl border bg-background p-3">
             {app.permissions.map((p, i) => (
-              <motion.li animate={{ opacity: 1, x: 0 }} className="flex items-center gap-2" initial={reduce ? false : { opacity: 0, x: 6 }} key={p} transition={{ ...quick, delay: 0.08 + i * 0.03 }}>
-                <span aria-hidden className="flex size-4 items-center justify-center rounded-full bg-success/16 text-success-foreground">
+              <motion.li
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center gap-2"
+                initial={reduce ? false : { opacity: 0, x: 6 }}
+                key={p}
+                transition={{ ...quick, delay: 0.08 + i * 0.03 }}
+              >
+                <span
+                  aria-hidden
+                  className="flex size-4 items-center justify-center rounded-full bg-success/16 text-success-foreground"
+                >
                   <CheckIcon className="size-3" />
                 </span>
                 {p}
@@ -791,20 +1263,47 @@ function DetailPanel({
             <h4 className="mb-2 font-medium text-xs" id={`${id}-settings`}>
               {t.settings}
             </h4>
-            <div className={cn("flex flex-col divide-y rounded-xl border transition-opacity duration-200", state !== "connected" && "opacity-56")}>
+            <div
+              className={cn(
+                "flex flex-col divide-y rounded-xl border transition-opacity duration-200",
+                state !== "connected" && "opacity-56"
+              )}
+            >
               {app.settings.map((o) => (
-                <div className="flex items-center justify-between gap-3 p-3" key={o.id}>
-                  <label className="min-w-0 flex-1 cursor-pointer" htmlFor={`${id}-${o.id}`}>
+                <div
+                  className="flex items-center justify-between gap-3 p-3"
+                  key={o.id}
+                >
+                  <label
+                    className="min-w-0 flex-1 cursor-pointer"
+                    htmlFor={`${id}-${o.id}`}
+                  >
                     <span className="block font-medium">{o.label}</span>
-                    {o.hint ? <span className="block text-muted-foreground text-xs">{o.hint}</span> : null}
+                    {o.hint ? (
+                      <span className="block text-muted-foreground text-xs">
+                        {o.hint}
+                      </span>
+                    ) : null}
                   </label>
-                  <Switch checked={o.on} disabled={state !== "connected" || !changeSetting} id={`${id}-${o.id}`} onCheckedChange={(v) => changeSetting?.(o.id, v)} />
+                  <Switch
+                    checked={o.on}
+                    disabled={state !== "connected" || !changeSetting}
+                    id={`${id}-${o.id}`}
+                    onCheckedChange={(v) => changeSetting?.(o.id, v)}
+                  />
                 </div>
               ))}
             </div>
-            {state !== "connected" ? <p className="mt-2 text-muted-foreground text-xs">{interpolate(t.settingsLocked, { name: app.name })}</p> : null}
+            {state !== "connected" ? (
+              <p className="mt-2 text-muted-foreground text-xs">
+                {interpolate(t.settingsLocked, { name: app.name })}
+              </p>
+            ) : null}
             {settingError ? (
-              <p className="mt-2 text-destructive-foreground text-xs" role="alert">
+              <p
+                className="mt-2 text-destructive-foreground text-xs"
+                role="alert"
+              >
                 {settingError}
               </p>
             ) : null}

@@ -3,10 +3,14 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const ShellUser = z.object({ name: z.string(), email: z.email(), avatarUrl: z.url().optional() }).meta({ id: "InsetShellUser" });
+export const ShellUser = z
+  .object({ name: z.string(), email: z.email(), avatarUrl: z.url().optional() })
+  .meta({ id: "InsetShellUser" });
 export type ShellUser = z.infer<typeof ShellUser>;
 
-export const ShellWorkspace = z.object({ id: z.string(), name: z.string(), plan: z.string().optional() }).meta({ id: "InsetShellWorkspace" });
+export const ShellWorkspace = z
+  .object({ id: z.string(), name: z.string(), plan: z.string().optional() })
+  .meta({ id: "InsetShellWorkspace" });
 export type ShellWorkspace = z.infer<typeof ShellWorkspace>;
 
 export const InsetShellContext = z
@@ -35,5 +39,9 @@ export const api = defineApi({
     summary: "Make another workspace the current one",
     body: z.object({ workspaceId: z.string() }),
   },
-  signOut: { method: "POST", path: "/auth/sign-out", summary: "End the session" },
+  signOut: {
+    method: "POST",
+    path: "/auth/sign-out",
+    summary: "End the session",
+  },
 });

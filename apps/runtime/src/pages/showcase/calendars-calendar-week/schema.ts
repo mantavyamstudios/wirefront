@@ -8,7 +8,13 @@ export const CalendarTone = z.enum(["teal", "violet", "sky", "amber", "rose"]);
 export type CalendarTone = z.infer<typeof CalendarTone>;
 
 export const CalendarSource = z
-  .object({ id: z.string(), name: z.string(), tone: CalendarTone, visible: z.boolean().optional(), readOnly: z.boolean().optional() })
+  .object({
+    id: z.string(),
+    name: z.string(),
+    tone: CalendarTone,
+    visible: z.boolean().optional(),
+    readOnly: z.boolean().optional(),
+  })
   .meta({ id: "CalendarSource" });
 export type CalendarSource = z.infer<typeof CalendarSource>;
 
@@ -36,8 +42,31 @@ export type WeekEvent = z.infer<typeof WeekEvent>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listCalendars: { method: "GET", path: "/calendars", summary: "The user's calendars", response: z.array(CalendarSource) },
-  listEvents: { method: "GET", path: "/calendar/events", summary: "Events around the shown weeks", query: z.object({ from: z.string(), to: z.string() }), response: z.array(WeekEvent) },
-  saveEvent: { method: "PUT", path: "/calendar/events/{id}", summary: "Create or update an event; returns it with its saved id", params: z.object({ id: z.string() }), body: WeekEvent, response: WeekEvent },
-  deleteEvent: { method: "DELETE", path: "/calendar/events/{id}", summary: "Delete an event", params: z.object({ id: z.string() }) },
+  listCalendars: {
+    method: "GET",
+    path: "/calendars",
+    summary: "The user's calendars",
+    response: z.array(CalendarSource),
+  },
+  listEvents: {
+    method: "GET",
+    path: "/calendar/events",
+    summary: "Events around the shown weeks",
+    query: z.object({ from: z.string(), to: z.string() }),
+    response: z.array(WeekEvent),
+  },
+  saveEvent: {
+    method: "PUT",
+    path: "/calendar/events/{id}",
+    summary: "Create or update an event; returns it with its saved id",
+    params: z.object({ id: z.string() }),
+    body: WeekEvent,
+    response: WeekEvent,
+  },
+  deleteEvent: {
+    method: "DELETE",
+    path: "/calendar/events/{id}",
+    summary: "Delete an event",
+    params: z.object({ id: z.string() }),
+  },
 });

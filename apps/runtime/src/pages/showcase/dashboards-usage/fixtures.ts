@@ -14,8 +14,20 @@ export const getUsage: Usage = {
   limits: [
     { id: "seats", label: "Seats", used: 18, limit: 25, unit: "count" },
     { id: "projects", label: "Projects", used: 47, limit: 50, unit: "count" },
-    { id: "requests", label: "API requests", used: 612_000, limit: 1_000_000, unit: "per-month" },
-    { id: "storage", label: "Storage", used: 84, limit: 200, unit: "gigabytes" },
+    {
+      id: "requests",
+      label: "API requests",
+      used: 612_000,
+      limit: 1_000_000,
+      unit: "per-month",
+    },
+    {
+      id: "storage",
+      label: "Storage",
+      used: 84,
+      limit: 200,
+      unit: "gigabytes",
+    },
     { id: "webhooks", label: "Webhooks", used: 6, limit: 20, unit: "count" },
   ],
 };

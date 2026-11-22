@@ -7,21 +7,65 @@ import { Radio } from "@base-ui/react/radio";
 import { RadioGroup } from "@base-ui/react/radio-group";
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@wirefront/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@wirefront/ui/dialog";
 import { Input } from "@wirefront/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Slider } from "@wirefront/ui/slider";
 import { Spinner } from "@wirefront/ui/spinner";
 import { Textarea } from "@wirefront/ui/textarea";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { CheckIcon, MoveIcon, PaletteIcon, RotateCcwIcon, XIcon, ZoomInIcon, ZoomOutIcon } from "lucide-react";
-import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from "motion/react";
-import { type KeyboardEvent, type PointerEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
+import {
+  CheckIcon,
+  MoveIcon,
+  PaletteIcon,
+  RotateCcwIcon,
+  XIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+} from "lucide-react";
+import {
+  AnimatePresence,
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+} from "motion/react";
+import {
+  type KeyboardEvent,
+  type PointerEvent,
+  type ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
 import type { AvatarCrop, AvatarPalette, Profile, ProfileZone } from "./schema";
 
@@ -59,7 +103,8 @@ export const PROFILE_SETTINGS_MESSAGES = {
   bioHelp: "A sentence or two about what you work on.",
   bioPlaceholder: "What you work on, what you’re into.",
   timeZone: "Time zone",
-  timeZoneDescription: "Teammates see your local time on your profile and in mentions.",
+  timeZoneDescription:
+    "Teammates see your local time on your profile and in mentions.",
   itsBefore: "It’s",
   itsAfter: "for you",
   sameAsBrowser: "same as your browser",
@@ -69,7 +114,8 @@ export const PROFILE_SETTINGS_MESSAGES = {
   blockUsername: "Fix your username",
   blockTaken: "That username is taken",
   blockChecking: "Checking username…",
-  blockCheckFailed: "Couldn’t check the username. Try another or wait a moment.",
+  blockCheckFailed:
+    "Couldn’t check the username. Try another or wait a moment.",
   blockEmail: "Enter a valid email",
   blockBio: "Bio is too long",
   unsavedShort: "Unsaved changes",
@@ -80,7 +126,8 @@ export const PROFILE_SETTINGS_MESSAGES = {
   cropTitle: "Adjust picture",
   cropDescription: "Drag to reposition, then zoom to frame it.",
   cropHint: "Drag to reposition",
-  cropStage: "Picture framing. Drag or use the arrow keys to move, plus and minus to zoom.",
+  cropStage:
+    "Picture framing. Drag or use the arrow keys to move, plus and minus to zoom.",
   cropRole: "picture framer",
   cropStyle: "Colour",
   zoom: "Zoom",
@@ -108,24 +155,39 @@ export interface ProfileSettingsProps {
    */
   onSave: Action<Profile>;
   /** Check a new username; resolve with whether it's free and, if not, a few suggestions. */
-  checkUsername: (username: string) => Promise<{ available: boolean; suggestions?: string[] }>;
+  checkUsername: (
+    username: string
+  ) => Promise<{ available: boolean; suggestions?: string[] }>;
   /** Longest bio allowed. */
   bioLimit?: number;
   className?: string;
 }
 
-type UsernameStatus = "current" | "checking" | "available" | "taken" | "invalid";
+type UsernameStatus =
+  | "current"
+  | "checking"
+  | "available"
+  | "taken"
+  | "invalid";
 
 const easeOut = [0.23, 1, 0.32, 1] as const;
-const press = "transition-[background-color,color,box-shadow,scale] duration-150 ease-out motion-safe:active:scale-[0.97]";
+const press =
+  "transition-[background-color,color,box-shadow,scale] duration-150 ease-out motion-safe:active:scale-[0.97]";
 const stageSpan = 136;
 const zoomRange = [1, 2.4] as const;
 const artBleed = 1.3;
 
-const palettes: Record<AvatarPalette, { label: string; stops: [string, string, string]; swatch: string }> = {
+const palettes: Record<
+  AvatarPalette,
+  { label: string; stops: [string, string, string]; swatch: string }
+> = {
   dusk: {
     label: "Dusk",
-    stops: ["text-category-8-foreground", "text-category-5-foreground", "text-category-3"],
+    stops: [
+      "text-category-8-foreground",
+      "text-category-5-foreground",
+      "text-category-3",
+    ],
     swatch: "from-category-8 via-category-5 to-category-3/35",
   },
   tide: {
@@ -135,17 +197,23 @@ const palettes: Record<AvatarPalette, { label: string; stops: [string, string, s
   },
   ember: {
     label: "Ember",
-    stops: ["text-category-4-foreground", "text-category-7-foreground", "text-category-3"],
+    stops: [
+      "text-category-4-foreground",
+      "text-category-7-foreground",
+      "text-category-3",
+    ],
     swatch: "from-category-4-strong via-category-7 to-category-3/35",
   },
   moss: {
     label: "Moss",
-    stops: ["text-category-2-foreground", "text-category-2-foreground", "text-category-2"],
+    stops: [
+      "text-category-2-foreground",
+      "text-category-2-foreground",
+      "text-category-2",
+    ],
     swatch: "from-category-2-strong via-category-2 to-category-2/35",
   },
 };
-
-
 
 function useReducedMotionSafe() {
   const prefers = useReducedMotion();
@@ -161,7 +229,9 @@ function useSafeId() {
 function initialsOf(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return "?";
-  return (parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : parts[0][0]).toUpperCase();
+  return (
+    parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : parts[0][0]
+  ).toUpperCase();
 }
 
 function clampCrop(crop: AvatarCrop): AvatarCrop {
@@ -177,7 +247,9 @@ function artTransform(crop: AvatarCrop) {
 
 function sameCrop(a: AvatarCrop | null, b: AvatarCrop | null) {
   if (!a || !b) return a === b;
-  return a.palette === b.palette && a.x === b.x && a.y === b.y && a.zoom === b.zoom;
+  return (
+    a.palette === b.palette && a.x === b.x && a.y === b.y && a.zoom === b.zoom
+  );
 }
 
 function validateUsername(value: string, t: Messages): string | null {
@@ -188,9 +260,11 @@ function validateUsername(value: string, t: Messages): string | null {
   return null;
 }
 
-
 function offsetMinutes(timeZone: string, date: Date) {
-  const part = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "shortOffset" })
+  const part = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    timeZoneName: "shortOffset",
+  })
     .formatToParts(date)
     .find((p) => p.type === "timeZoneName")?.value;
   const match = part?.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/);
@@ -211,10 +285,20 @@ function formatDiff(minutes: number, t: Messages) {
   const abs = Math.abs(minutes);
   const m = abs % 60;
   const span = `${Math.floor(abs / 60)}h${m ? ` ${m}m` : ""}`;
-  return interpolate(minutes > 0 ? t.aheadOfBrowser : t.behindBrowser, { span });
+  return interpolate(minutes > 0 ? t.aheadOfBrowser : t.behindBrowser, {
+    span,
+  });
 }
 
-function AvatarArt({ palette, initials, uid }: { palette: AvatarPalette; initials: string; uid: string }) {
+function AvatarArt({
+  palette,
+  initials,
+  uid,
+}: {
+  palette: AvatarPalette;
+  initials: string;
+  uid: string;
+}) {
   const p = palettes[palette];
   return (
     <>
@@ -224,15 +308,39 @@ function AvatarArt({ palette, initials, uid }: { palette: AvatarPalette; initial
           <stop className={p.stops[1]} offset="1" stopColor="currentColor" />
         </linearGradient>
         <radialGradient id={`${uid}-glow`}>
-          <stop className={p.stops[2]} offset="0" stopColor="currentColor" stopOpacity="0.9" />
-          <stop className={p.stops[2]} offset="1" stopColor="currentColor" stopOpacity="0" />
+          <stop
+            className={p.stops[2]}
+            offset="0"
+            stopColor="currentColor"
+            stopOpacity="0.9"
+          />
+          <stop
+            className={p.stops[2]}
+            offset="1"
+            stopColor="currentColor"
+            stopOpacity="0"
+          />
         </radialGradient>
       </defs>
       <rect fill={`url(#${uid}-bg)`} height="100" width="100" />
       <circle cx="68" cy="30" fill={`url(#${uid}-glow)`} r="30" />
-      <circle className={p.stops[2]} cx="68" cy="30" fill="currentColor" r="8" />
-      <path d="M0 66 Q 20 54 42 63 T 100 56 V100 H0Z" fill="black" fillOpacity="0.14" />
-      <path d="M0 80 Q 28 68 56 78 T 100 72 V100 H0Z" fill="black" fillOpacity="0.2" />
+      <circle
+        className={p.stops[2]}
+        cx="68"
+        cy="30"
+        fill="currentColor"
+        r="8"
+      />
+      <path
+        d="M0 66 Q 20 54 42 63 T 100 56 V100 H0Z"
+        fill="black"
+        fillOpacity="0.14"
+      />
+      <path
+        d="M0 80 Q 28 68 56 78 T 100 72 V100 H0Z"
+        fill="black"
+        fillOpacity="0.2"
+      />
       <text
         dominantBaseline="central"
         fill="white"
@@ -249,7 +357,15 @@ function AvatarArt({ palette, initials, uid }: { palette: AvatarPalette; initial
   );
 }
 
-function ProfileAvatar({ crop, initials, className }: { crop: AvatarCrop | null; initials: string; className?: string }) {
+function ProfileAvatar({
+  crop,
+  initials,
+  className,
+}: {
+  crop: AvatarCrop | null;
+  initials: string;
+  className?: string;
+}) {
   const uid = useSafeId();
   if (!crop) {
     return (
@@ -257,7 +373,7 @@ function ProfileAvatar({ crop, initials, className }: { crop: AvatarCrop | null;
         aria-hidden
         className={cn(
           "flex shrink-0 items-center justify-center rounded-full border bg-muted font-medium text-muted-foreground @container-size",
-          className,
+          className
         )}
       >
         <span className="text-[38cqh] leading-none">{initials}</span>
@@ -265,7 +381,11 @@ function ProfileAvatar({ crop, initials, className }: { crop: AvatarCrop | null;
     );
   }
   return (
-    <svg aria-hidden className={cn("shrink-0", className)} viewBox="0 0 100 100">
+    <svg
+      aria-hidden
+      className={cn("shrink-0", className)}
+      viewBox="0 0 100 100"
+    >
       <clipPath id={`${uid}-clip`}>
         <circle cx="50" cy="50" r="50" />
       </clipPath>
@@ -274,7 +394,14 @@ function ProfileAvatar({ crop, initials, className }: { crop: AvatarCrop | null;
           <AvatarArt initials={initials} palette={crop.palette} uid={uid} />
         </g>
       </g>
-      <circle cx="50" cy="50" fill="none" r="49.5" stroke="black" strokeOpacity="0.08" />
+      <circle
+        cx="50"
+        cy="50"
+        fill="none"
+        r="49.5"
+        stroke="black"
+        strokeOpacity="0.08"
+      />
     </svg>
   );
 }
@@ -297,7 +424,9 @@ function CropStage({
 }) {
   const uid = useSafeId();
   const ref = useRef<HTMLButtonElement>(null);
-  const drag = useRef<{ px: number; py: number; x: number; y: number } | null>(null);
+  const drag = useRef<{ px: number; py: number; x: number; y: number } | null>(
+    null
+  );
   const [dragging, setDragging] = useState(false);
   const thirds = [100 / 3, 200 / 3];
 
@@ -311,7 +440,13 @@ function CropStage({
     const el = ref.current;
     if (!start || !el) return;
     const k = stageSpan / el.clientWidth;
-    onChange(clampCrop({ ...crop, x: start.x + (e.clientX - start.px) * k, y: start.y + (e.clientY - start.py) * k }));
+    onChange(
+      clampCrop({
+        ...crop,
+        x: start.x + (e.clientX - start.px) * k,
+        y: start.y + (e.clientY - start.py) * k,
+      })
+    );
   };
   const endDrag = () => {
     drag.current = null;
@@ -331,7 +466,14 @@ function CropStage({
     const move = moves[e.key];
     if (!move) return;
     e.preventDefault();
-    onChange(clampCrop({ ...crop, x: crop.x + move[0], y: crop.y + move[1], zoom: crop.zoom + move[2] }));
+    onChange(
+      clampCrop({
+        ...crop,
+        x: crop.x + move[0],
+        y: crop.y + move[1],
+        zoom: crop.zoom + move[2],
+      })
+    );
   };
 
   return (
@@ -375,12 +517,20 @@ function CropStage({
             </g>
           ))}
         </g>
-        <circle cx="50" cy="50" fill="none" r="50" stroke="white" strokeOpacity="0.9" strokeWidth="0.6" />
+        <circle
+          cx="50"
+          cy="50"
+          fill="none"
+          r="50"
+          stroke="white"
+          strokeOpacity="0.9"
+          strokeWidth="0.6"
+        />
       </svg>
       <span
         className={cn(
           "pointer-events-none absolute bottom-2.5 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-popover/88 px-2.5 py-1 font-medium text-foreground text-xs shadow-xs/5 backdrop-blur-sm transition-opacity duration-150",
-          dragging ? "opacity-0" : "opacity-100",
+          dragging ? "opacity-0" : "opacity-100"
         )}
       >
         <MoveIcon className="size-3" />
@@ -417,19 +567,30 @@ function CropDialog({
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle className="font-semibold text-lg">{t.cropTitle}</DialogTitle>
+          <DialogTitle className="font-semibold text-lg">
+            {t.cropTitle}
+          </DialogTitle>
           <DialogDescription>{t.cropDescription}</DialogDescription>
         </DialogHeader>
         <div className="-mx-4 min-h-0 min-w-0 overflow-y-auto px-4 flex flex-col gap-5">
           <div className="mx-auto w-full max-w-64">
-            <CropStage crop={crop} initials={initials} label={t.cropStage} onChange={setCrop} roleDescription={t.cropRole} hint={t.cropHint} />
+            <CropStage
+              crop={crop}
+              initials={initials}
+              label={t.cropStage}
+              onChange={setCrop}
+              roleDescription={t.cropRole}
+              hint={t.cropHint}
+            />
           </div>
           <div className="flex items-center gap-2">
             <Button
               aria-label={t.zoomOut}
               className={press}
               disabled={crop.zoom <= zoomRange[0]}
-              onClick={() => setCrop((c) => clampCrop({ ...c, zoom: c.zoom - 0.2 }))}
+              onClick={() =>
+                setCrop((c) => clampCrop({ ...c, zoom: c.zoom - 0.2 }))
+              }
               size="icon-sm"
               variant="ghost"
             >
@@ -442,7 +603,11 @@ function CropDialog({
               aria-labelledby={zoomId}
               max={zoomRange[1]}
               min={zoomRange[0]}
-              onValueChange={(v) => setCrop((c) => clampCrop({ ...c, zoom: Array.isArray(v) ? v[0] : v }))}
+              onValueChange={(v) =>
+                setCrop((c) =>
+                  clampCrop({ ...c, zoom: Array.isArray(v) ? v[0] : v })
+                )
+              }
               step={0.01}
               value={crop.zoom}
             />
@@ -450,7 +615,9 @@ function CropDialog({
               aria-label={t.zoomIn}
               className={press}
               disabled={crop.zoom >= zoomRange[1]}
-              onClick={() => setCrop((c) => clampCrop({ ...c, zoom: c.zoom + 0.2 }))}
+              onClick={() =>
+                setCrop((c) => clampCrop({ ...c, zoom: c.zoom + 0.2 }))
+              }
               size="icon-sm"
               variant="ghost"
             >
@@ -464,7 +631,9 @@ function CropDialog({
             <RadioGroup
               aria-labelledby={`${zoomId}-style`}
               className="flex gap-2"
-              onValueChange={(value) => setCrop((c) => ({ ...c, palette: value as AvatarPalette }))}
+              onValueChange={(value) =>
+                setCrop((c) => ({ ...c, palette: value as AvatarPalette }))
+              }
               value={crop.palette}
             >
               {(Object.keys(palettes) as AvatarPalette[]).map((key) => {
@@ -476,7 +645,7 @@ function CropDialog({
                       "relative size-10 rounded-lg bg-linear-to-br outline-none ring-offset-2 ring-offset-popover focus-visible:ring-2 focus-visible:ring-ring",
                       press,
                       palettes[key].swatch,
-                      active && "ring-2 ring-foreground",
+                      active && "ring-2 ring-foreground"
                     )}
                     key={key}
                     value={key}
@@ -502,7 +671,11 @@ function CropDialog({
             <RotateCcwIcon />
             {t.reset}
           </Button>
-          <Button className={press} onClick={() => onOpenChange(false)} variant="outline">
+          <Button
+            className={press}
+            onClick={() => onOpenChange(false)}
+            variant="outline"
+          >
             {t.cancel}
           </Button>
           <Button
@@ -533,15 +706,27 @@ function useUnwrappedAngle(angle: number | null) {
     }
     const delta = ((((angle - last.current) % 360) + 540) % 360) - 180;
     last.current += delta;
-    const controls = animate(mv, last.current, { type: "spring", stiffness: 140, damping: 18 });
+    const controls = animate(mv, last.current, {
+      type: "spring",
+      stiffness: 140,
+      damping: 18,
+    });
     return () => controls.stop();
   }, [angle, reduce, mv]);
   return mv;
 }
 
-function MiniClock({ hours, minutes }: { hours: number | null; minutes: number | null }) {
+function MiniClock({
+  hours,
+  minutes,
+}: {
+  hours: number | null;
+  minutes: number | null;
+}) {
   const ready = hours !== null && minutes !== null;
-  const hour = useUnwrappedAngle(ready ? (hours % 12) * 30 + minutes * 0.5 : null);
+  const hour = useUnwrappedAngle(
+    ready ? (hours % 12) * 30 + minutes * 0.5 : null
+  );
   const minute = useUnwrappedAngle(ready ? minutes * 6 : null);
   const night = ready && (hours < 7 || hours >= 19);
   return (
@@ -549,20 +734,22 @@ function MiniClock({ hours, minutes }: { hours: number | null; minutes: number |
       aria-hidden
       className={cn(
         "relative flex size-8 shrink-0 items-center justify-center rounded-full border shadow-xs/5 transition-colors duration-300",
-        night ? "border-category-8-strong bg-category-8-strong text-category-8" : "bg-background text-foreground",
+        night
+          ? "border-category-8-strong bg-category-8-strong text-category-8"
+          : "bg-background text-foreground"
       )}
     >
       <motion.span
         className={cn(
           "absolute bottom-1/2 inset-s-[calc(50%-1px)] h-2 w-0.5 origin-bottom rounded-full bg-current transition-opacity",
-          ready ? "opacity-100" : "opacity-0",
+          ready ? "opacity-100" : "opacity-0"
         )}
         style={{ rotate: hour }}
       />
       <motion.span
         className={cn(
           "absolute bottom-1/2 inset-s-[calc(50%-0.75px)] h-3 w-[1.5px] origin-bottom rounded-full bg-current transition-opacity",
-          ready ? "opacity-100" : "opacity-0",
+          ready ? "opacity-100" : "opacity-0"
         )}
         style={{ rotate: minute }}
       />
@@ -616,7 +803,11 @@ function Field({
             </label>
             <DirtyDot label={edited} show={Boolean(dirty)} />
           </span>
-          {help && <span className="text-pretty text-muted-foreground text-xs">{help}</span>}
+          {help && (
+            <span className="text-pretty text-muted-foreground text-xs">
+              {help}
+            </span>
+          )}
         </div>
         {aside}
       </div>
@@ -625,16 +816,27 @@ function Field({
   );
 }
 
-function Section({ title, description, children }: { title: string; description?: string; children: ReactNode }) {
+function Section({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children: ReactNode;
+}) {
   return (
     <section className="mt-10">
       <h2 className="font-medium text-sm">{title}</h2>
-      {description && <p className="text-pretty text-muted-foreground text-sm">{description}</p>}
+      {description && (
+        <p className="text-pretty text-muted-foreground text-sm">
+          {description}
+        </p>
+      )}
       {children}
     </section>
   );
 }
-
 
 function UsernameStatusLine({
   status,
@@ -654,7 +856,9 @@ function UsernameStatusLine({
   const reduce = useReducedMotionSafe();
   const content: Record<UsernameStatus, ReactNode> = {
     current: <span className="text-muted-foreground">{t.usernameCurrent}</span>,
-    checking: <span className="text-muted-foreground">{t.usernameChecking}</span>,
+    checking: (
+      <span className="text-muted-foreground">{t.usernameChecking}</span>
+    ),
     available: (
       <span className="flex items-center gap-1 text-success-foreground">
         <CheckIcon className="size-3.5" />
@@ -669,12 +873,16 @@ function UsernameStatusLine({
             animate={{ opacity: 1, y: 0 }}
             className={cn(
               "inline-flex h-6 items-center rounded-md border bg-background px-1.5 font-mono text-foreground text-xs outline-none ring-ring/24 hover:bg-accent focus-visible:ring-[3px]",
-              press,
+              press
             )}
             initial={{ opacity: 0, y: reduce ? 0 : 3 }}
             key={s}
             onClick={() => onPick(s)}
-            transition={{ duration: 0.18, ease: easeOut, delay: reduce ? 0 : 0.03 + i * 0.03 }}
+            transition={{
+              duration: 0.18,
+              ease: easeOut,
+              delay: reduce ? 0 : 0.03 + i * 0.03,
+            }}
             type="button"
           >
             {s}
@@ -720,27 +928,49 @@ function ProfileSettingsScreen({
   const [draft, setDraft] = useState(profile);
   const [cropOpen, setCropOpen] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
-  const [checked, setChecked] = useState<{ value: string; taken: boolean; suggestions: string[] } | null>(null);
+  const [checked, setChecked] = useState<{
+    value: string;
+    taken: boolean;
+    suggestions: string[];
+  } | null>(null);
   const [offsets, setOffsets] = useState<Record<string, number> | null>(null);
   const [localOffset, setLocalOffset] = useState<number | null>(null);
-  const [clock, setClock] = useState<{ time: string; day: string; hours: number; minutes: number } | null>(null);
+  const [clock, setClock] = useState<{
+    time: string;
+    day: string;
+    hours: number;
+    minutes: number;
+  } | null>(null);
   const [saved, setSaved] = useState(false);
   const [checkFailed, setCheckFailed] = useState(false);
   const emailRef = useRef<HTMLInputElement>(null);
 
-  const usernameError = draft.username === baseline.username ? null : validateUsername(draft.username, t);
+  const usernameError =
+    draft.username === baseline.username
+      ? null
+      : validateUsername(draft.username, t);
 
   // Ask the backend once typing pauses; ignore answers for an older username.
   useEffect(() => {
-    if (draft.username === baseline.username || validateUsername(draft.username, t)) return;
+    if (
+      draft.username === baseline.username ||
+      validateUsername(draft.username, t)
+    )
+      return;
     if (checked?.value === draft.username) return;
     const value = draft.username;
     let current = true;
     setCheckFailed(false);
     const timer = setTimeout(() => {
       checkUsername(value).then(
-        (result) => current && setChecked({ value, taken: !result.available, suggestions: result.suggestions ?? [] }),
-        () => current && setCheckFailed(true),
+        (result) =>
+          current &&
+          setChecked({
+            value,
+            taken: !result.available,
+            suggestions: result.suggestions ?? [],
+          }),
+        () => current && setCheckFailed(true)
       );
     }, 400);
     return () => {
@@ -767,7 +997,9 @@ function ProfileSettingsScreen({
 
   useEffect(() => {
     const at = now();
-    setOffsets(Object.fromEntries(zones.map((z) => [z.id, offsetMinutes(z.id, at)])));
+    setOffsets(
+      Object.fromEntries(zones.map((z) => [z.id, offsetMinutes(z.id, at)]))
+    );
     setLocalOffset(-at.getTimezoneOffset());
   }, [zones, now]);
 
@@ -781,10 +1013,16 @@ function ProfileSettingsScreen({
         weekday: "short",
         hourCycle: "h23",
       }).formatToParts(at);
-      const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+      const get = (type: string) =>
+        parts.find((p) => p.type === type)?.value ?? "";
       const hours = Number(get("hour")) % 24;
       const minutes = Number(get("minute"));
-      setClock({ time: `${get("hour")}:${get("minute")}`, day: get("weekday"), hours, minutes });
+      setClock({
+        time: `${get("hour")}:${get("minute")}`,
+        day: get("weekday"),
+        hours,
+        minutes,
+      });
     };
     tick();
     const interval = setInterval(tick, 15000);
@@ -835,9 +1073,11 @@ function ProfileSettingsScreen({
 
   const zone = zones.find((z) => z.id === draft.timeZone) ?? zones[0];
   const zoneOffset = offsets?.[zone.id] ?? null;
-  const suggestions = usernameStatus === "taken" ? (checked?.suggestions ?? []) : [];
+  const suggestions =
+    usernameStatus === "taken" ? (checked?.suggestions ?? []) : [];
   const initials = initialsOf(draft.fullName || baseline.fullName);
-  const set = <K extends keyof Profile>(key: K, value: Profile[K]) => setDraft((d) => ({ ...d, [key]: value }));
+  const set = <K extends keyof Profile>(key: K, value: Profile[K]) =>
+    setDraft((d) => ({ ...d, [key]: value }));
   const bioLeft = bioLimit - draft.bio.length;
 
   const discard = () => {
@@ -861,295 +1101,404 @@ function ProfileSettingsScreen({
   const barVisible = dirtyCount > 0 || saved;
 
   return (
-    <div className={cn("relative mx-auto w-full max-w-2xl px-6 py-10 md:px-10", className)}>
-        <h1 className="font-semibold text-2xl tracking-tight">{t.title}</h1>
-        <p className="mt-1 text-muted-foreground text-sm">{interpolate(t.subtitle, { product })}</p>
+    <div
+      className={cn(
+        "relative mx-auto w-full max-w-2xl px-6 py-10 md:px-10",
+        className
+      )}
+    >
+      <h1 className="font-semibold text-2xl tracking-tight">{t.title}</h1>
+      <p className="mt-1 text-muted-foreground text-sm">
+        {interpolate(t.subtitle, { product })}
+      </p>
 
-        <section className="mt-10 flex items-center gap-4">
-          <ProfileAvatar className="size-16" crop={draft.avatar} initials={initials} />
-          <div className="flex min-w-0 flex-col gap-2">
-            <span className="flex items-center gap-2">
-              <span className="font-medium text-sm">{t.picture}</span>
-              <DirtyDot label={t.edited} show={dirty.avatar} />
-            </span>
-            <div className="flex flex-wrap items-center gap-2">
-              <Button className={press} onClick={() => setCropOpen(true)} size="sm" variant="outline">
-                <PaletteIcon />
-                {t.changePicture}
-              </Button>
-              <Button className={press} disabled={!draft.avatar} onClick={() => set("avatar", null)} size="sm" variant="ghost">
-                {t.removePicture}
-              </Button>
-            </div>
-            <span className="text-muted-foreground text-xs">{t.pictureHint}</span>
+      <section className="mt-10 flex items-center gap-4">
+        <ProfileAvatar
+          className="size-16"
+          crop={draft.avatar}
+          initials={initials}
+        />
+        <div className="flex min-w-0 flex-col gap-2">
+          <span className="flex items-center gap-2">
+            <span className="font-medium text-sm">{t.picture}</span>
+            <DirtyDot label={t.edited} show={dirty.avatar} />
+          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              className={press}
+              onClick={() => setCropOpen(true)}
+              size="sm"
+              variant="outline"
+            >
+              <PaletteIcon />
+              {t.changePicture}
+            </Button>
+            <Button
+              className={press}
+              disabled={!draft.avatar}
+              onClick={() => set("avatar", null)}
+              size="sm"
+              variant="ghost"
+            >
+              {t.removePicture}
+            </Button>
           </div>
-        </section>
+          <span className="text-muted-foreground text-xs">{t.pictureHint}</span>
+        </div>
+      </section>
 
-        <div className="mt-10 flex flex-col gap-6">
-          <div className="grid gap-6 sm:grid-cols-2">
-            <Field dirty={dirty.fullName} edited={t.edited} help={t.fullNameHelp} htmlFor={ids.fullName} label={t.fullName}>
-              <Input
-                aria-invalid={!draft.fullName.trim() || undefined}
-                autoComplete="name"
-                id={ids.fullName}
-                maxLength={48}
-                onChange={(e) => set("fullName", e.target.value)}
-                value={draft.fullName}
-               />
-            </Field>
-            <Field dirty={dirty.publicName} edited={t.edited} help={t.publicNameHelp} htmlFor={ids.publicName} label={t.publicName}>
-              <Input
-                autoComplete="nickname"
-                id={ids.publicName}
-                maxLength={32}
-                onChange={(e) => set("publicName", e.target.value)}
-                placeholder={draft.fullName.split(" ")[0]}
-                value={draft.publicName}
-               />
-            </Field>
-          </div>
-
-          <Field dirty={dirty.username} edited={t.edited} help={t.usernameHelp} htmlFor={ids.username} label={t.username}>
-            <div className="flex flex-col gap-1">
-              <InputGroup>
-                <InputGroupAddon>
-                  <InputGroupText>{domain}/</InputGroupText>
-                </InputGroupAddon>
-                <InputGroupInput
-                  aria-describedby={`${ids.username}-status`}
-                  aria-invalid={usernameStatus === "taken" || usernameStatus === "invalid" || undefined}
-                  autoCapitalize="none"
-                  autoComplete="off"
-                  className="ps-0.5!"
-                  id={ids.username}
-                  maxLength={28}
-                  onChange={(e) => set("username", e.target.value.toLowerCase().replace(/\s+/g, "-"))}
-                  spellCheck={false}
-                  value={draft.username}
-                />
-                <InputGroupAddon align="inline-end">
-                  <span className="relative flex size-4 items-center justify-center">
-                    <AnimatePresence initial={false} mode="popLayout">
-                      <motion.span
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="absolute inset-0 flex items-center justify-center"
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        key={usernameStatus}
-                        transition={{ duration: 0.15, ease: easeOut }}
-                      >
-                        {usernameStatus === "checking" && <Spinner className="size-4 text-muted-foreground" />}
-                        {usernameStatus === "available" && <CheckIcon className="size-4 text-success-foreground" />}
-                        {(usernameStatus === "taken" || usernameStatus === "invalid") && (
-                          <XIcon className="size-4 text-destructive-foreground" />
-                        )}
-                      </motion.span>
-                    </AnimatePresence>
-                  </span>
-                </InputGroupAddon>
-              </InputGroup>
-              <UsernameStatusLine
-                id={`${ids.username}-status`}
-                message={usernameError}
-                onPick={(value) => set("username", value)}
-                status={usernameStatus}
-                suggestions={suggestions}
-                t={t}
-              />
-            </div>
-          </Field>
-
+      <div className="mt-10 flex flex-col gap-6">
+        <div className="grid gap-6 sm:grid-cols-2">
           <Field
-            aside={
-              !editingEmail && (
-                <Button className={cn(press, "-me-2")} onClick={() => setEditingEmail(true)} size="xs" variant="ghost">
-                  {t.change}
-                </Button>
-              )
-            }
-            dirty={dirty.email}
+            dirty={dirty.fullName}
             edited={t.edited}
-            help={dirty.email ? t.emailHelpChanged : t.emailHelp}
-            htmlFor={ids.email}
-            label={t.email}
+            help={t.fullNameHelp}
+            htmlFor={ids.fullName}
+            label={t.fullName}
           >
-            <InputGroup>
-              <InputGroupInput
-                aria-invalid={!emailValid || undefined}
-                autoComplete="email"
-                id={ids.email}
-                onChange={(e) => set("email", e.target.value.trim())}
-                readOnly={!editingEmail}
-                ref={emailRef}
-                type="email"
-                value={draft.email}
-              />
-              <InputGroupAddon align="inline-end">
-                <AnimatePresence initial={false} mode="popLayout">
-                  {dirty.email ? (
-                    <motion.span
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      key="pending"
-                      transition={{ duration: 0.15, ease: easeOut }}
-                    >
-                      <Badge className="bg-warning/8 text-warning-foreground dark:bg-warning/16" variant="secondary">
-                        {t.unverified}
-                      </Badge>
-                    </motion.span>
-                  ) : (
-                    <motion.span
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      key="verified"
-                      transition={{ duration: 0.15, ease: easeOut }}
-                    >
-                      <Badge variant="secondary" className="bg-success/8 text-success-foreground dark:bg-success/16">
-                        <CheckIcon />
-                        {t.verified}
-                      </Badge>
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </InputGroupAddon>
-            </InputGroup>
+            <Input
+              aria-invalid={!draft.fullName.trim() || undefined}
+              autoComplete="name"
+              id={ids.fullName}
+              maxLength={48}
+              onChange={(e) => set("fullName", e.target.value)}
+              value={draft.fullName}
+            />
           </Field>
-
           <Field
-            aside={
-              <span
-                className={cn(
-                  "text-xs tabular-nums transition-colors",
-                  bioLeft < 0 ? "text-destructive-foreground" : bioLeft <= 20 ? "text-warning-foreground" : "text-muted-foreground",
-                )}
-                id={`${ids.bio}-count`}
-              >
-                {draft.bio.length}/{bioLimit}
-              </span>
-            }
-            dirty={dirty.bio}
+            dirty={dirty.publicName}
             edited={t.edited}
-            help={t.bioHelp}
-            htmlFor={ids.bio}
-            label={t.bio}
+            help={t.publicNameHelp}
+            htmlFor={ids.publicName}
+            label={t.publicName}
           >
-            <Textarea
-              aria-describedby={`${ids.bio}-count`}
-              aria-invalid={bioLeft < 0 || undefined}
-              className="**:[textarea]:resize-none"
-              id={ids.bio}
-              onChange={(e) => set("bio", e.target.value)}
-              placeholder={t.bioPlaceholder}
-              value={draft.bio}
+            <Input
+              autoComplete="nickname"
+              id={ids.publicName}
+              maxLength={32}
+              onChange={(e) => set("publicName", e.target.value)}
+              placeholder={draft.fullName.split(" ")[0]}
+              value={draft.publicName}
             />
           </Field>
         </div>
 
-        <Section description={t.timeZoneDescription} title={t.timeZone}>
-          <div className="mt-3 rounded-xl border bg-card">
-            <div className="flex flex-col gap-3 px-4 py-3.5 sm:flex-row sm:items-center sm:gap-4">
-              <div className="flex min-w-0 flex-1 items-center gap-3">
-                <MiniClock hours={clock?.hours ?? null} minutes={clock?.minutes ?? null} />
-                <div className="flex min-w-0 flex-col">
-                  <span className="flex items-center gap-2 text-sm">
-                    <span>
-                      {t.itsBefore} <span className="font-medium tabular-nums">{clock?.time ?? "––:––"}</span> {t.itsAfter}
-                    </span>
-                    <DirtyDot label={t.edited} show={dirty.timeZone} />
-                  </span>
-                  <span className="truncate text-muted-foreground text-xs tabular-nums">
-                    {clock?.day ?? ""}
-                    {zoneOffset !== null && ` · ${formatOffset(zoneOffset)}`}
-                    {zoneOffset !== null && localOffset !== null && ` · ${formatDiff(zoneOffset - localOffset, t)}`}
-                  </span>
-                </div>
-              </div>
-              <Select
-                items={zones.map((z) => ({ value: z.id, label: z.city }))}
-                onValueChange={(value) => value && set("timeZone", value as string)}
-                value={draft.timeZone}
+        <Field
+          dirty={dirty.username}
+          edited={t.edited}
+          help={t.usernameHelp}
+          htmlFor={ids.username}
+          label={t.username}
+        >
+          <div className="flex flex-col gap-1">
+            <InputGroup>
+              <InputGroupAddon>
+                <InputGroupText>{domain}/</InputGroupText>
+              </InputGroupAddon>
+              <InputGroupInput
+                aria-describedby={`${ids.username}-status`}
+                aria-invalid={
+                  usernameStatus === "taken" ||
+                  usernameStatus === "invalid" ||
+                  undefined
+                }
+                autoCapitalize="none"
+                autoComplete="off"
+                className="ps-0.5!"
+                id={ids.username}
+                maxLength={28}
+                onChange={(e) =>
+                  set(
+                    "username",
+                    e.target.value.toLowerCase().replace(/\s+/g, "-")
+                  )
+                }
+                spellCheck={false}
+                value={draft.username}
+              />
+              <InputGroupAddon align="inline-end">
+                <span className="relative flex size-4 items-center justify-center">
+                  <AnimatePresence initial={false} mode="popLayout">
+                    <motion.span
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="absolute inset-0 flex items-center justify-center"
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      key={usernameStatus}
+                      transition={{ duration: 0.15, ease: easeOut }}
+                    >
+                      {usernameStatus === "checking" && (
+                        <Spinner className="size-4 text-muted-foreground" />
+                      )}
+                      {usernameStatus === "available" && (
+                        <CheckIcon className="size-4 text-success-foreground" />
+                      )}
+                      {(usernameStatus === "taken" ||
+                        usernameStatus === "invalid") && (
+                        <XIcon className="size-4 text-destructive-foreground" />
+                      )}
+                    </motion.span>
+                  </AnimatePresence>
+                </span>
+              </InputGroupAddon>
+            </InputGroup>
+            <UsernameStatusLine
+              id={`${ids.username}-status`}
+              message={usernameError}
+              onPick={(value) => set("username", value)}
+              status={usernameStatus}
+              suggestions={suggestions}
+              t={t}
+            />
+          </div>
+        </Field>
+
+        <Field
+          aside={
+            !editingEmail && (
+              <Button
+                className={cn(press, "-me-2")}
+                onClick={() => setEditingEmail(true)}
+                size="xs"
+                variant="ghost"
               >
-                <SelectTrigger aria-label={t.timeZone} className="sm:w-48" id={ids.zone} size="sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent align="start">
-                  {zones.map((z) => (
-                    <SelectItem key={z.id} value={z.id}>
-                      <span className="flex w-full items-center justify-between gap-4">
-                        {z.city}
-                        <span className="font-mono text-muted-foreground text-xs tabular-nums">
-                          {offsets ? formatOffset(offsets[z.id] ?? 0) : ""}
+                {t.change}
+              </Button>
+            )
+          }
+          dirty={dirty.email}
+          edited={t.edited}
+          help={dirty.email ? t.emailHelpChanged : t.emailHelp}
+          htmlFor={ids.email}
+          label={t.email}
+        >
+          <InputGroup>
+            <InputGroupInput
+              aria-invalid={!emailValid || undefined}
+              autoComplete="email"
+              id={ids.email}
+              onChange={(e) => set("email", e.target.value.trim())}
+              readOnly={!editingEmail}
+              ref={emailRef}
+              type="email"
+              value={draft.email}
+            />
+            <InputGroupAddon align="inline-end">
+              <AnimatePresence initial={false} mode="popLayout">
+                {dirty.email ? (
+                  <motion.span
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    key="pending"
+                    transition={{ duration: 0.15, ease: easeOut }}
+                  >
+                    <Badge
+                      className="bg-warning/8 text-warning-foreground dark:bg-warning/16"
+                      variant="secondary"
+                    >
+                      {t.unverified}
+                    </Badge>
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    key="verified"
+                    transition={{ duration: 0.15, ease: easeOut }}
+                  >
+                    <Badge
+                      variant="secondary"
+                      className="bg-success/8 text-success-foreground dark:bg-success/16"
+                    >
+                      <CheckIcon />
+                      {t.verified}
+                    </Badge>
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </InputGroupAddon>
+          </InputGroup>
+        </Field>
+
+        <Field
+          aside={
+            <span
+              className={cn(
+                "text-xs tabular-nums transition-colors",
+                bioLeft < 0
+                  ? "text-destructive-foreground"
+                  : bioLeft <= 20
+                    ? "text-warning-foreground"
+                    : "text-muted-foreground"
+              )}
+              id={`${ids.bio}-count`}
+            >
+              {draft.bio.length}/{bioLimit}
+            </span>
+          }
+          dirty={dirty.bio}
+          edited={t.edited}
+          help={t.bioHelp}
+          htmlFor={ids.bio}
+          label={t.bio}
+        >
+          <Textarea
+            aria-describedby={`${ids.bio}-count`}
+            aria-invalid={bioLeft < 0 || undefined}
+            className="**:[textarea]:resize-none"
+            id={ids.bio}
+            onChange={(e) => set("bio", e.target.value)}
+            placeholder={t.bioPlaceholder}
+            value={draft.bio}
+          />
+        </Field>
+      </div>
+
+      <Section description={t.timeZoneDescription} title={t.timeZone}>
+        <div className="mt-3 rounded-xl border bg-card">
+          <div className="flex flex-col gap-3 px-4 py-3.5 sm:flex-row sm:items-center sm:gap-4">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
+              <MiniClock
+                hours={clock?.hours ?? null}
+                minutes={clock?.minutes ?? null}
+              />
+              <div className="flex min-w-0 flex-col">
+                <span className="flex items-center gap-2 text-sm">
+                  <span>
+                    {t.itsBefore}{" "}
+                    <span className="font-medium tabular-nums">
+                      {clock?.time ?? "––:––"}
+                    </span>{" "}
+                    {t.itsAfter}
+                  </span>
+                  <DirtyDot label={t.edited} show={dirty.timeZone} />
+                </span>
+                <span className="truncate text-muted-foreground text-xs tabular-nums">
+                  {clock?.day ?? ""}
+                  {zoneOffset !== null && ` · ${formatOffset(zoneOffset)}`}
+                  {zoneOffset !== null &&
+                    localOffset !== null &&
+                    ` · ${formatDiff(zoneOffset - localOffset, t)}`}
+                </span>
+              </div>
+            </div>
+            <Select
+              items={zones.map((z) => ({ value: z.id, label: z.city }))}
+              onValueChange={(value) =>
+                value && set("timeZone", value as string)
+              }
+              value={draft.timeZone}
+            >
+              <SelectTrigger
+                aria-label={t.timeZone}
+                className="sm:w-48"
+                id={ids.zone}
+                size="sm"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="start">
+                {zones.map((z) => (
+                  <SelectItem key={z.id} value={z.id}>
+                    <span className="flex w-full items-center justify-between gap-4">
+                      {z.city}
+                      <span className="font-mono text-muted-foreground text-xs tabular-nums">
+                        {offsets ? formatOffset(offsets[z.id] ?? 0) : ""}
+                      </span>
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </Section>
+      {save.error ? (
+        <p className="mt-6 text-destructive-foreground text-sm" role="alert">
+          {save.error}
+        </p>
+      ) : null}
+      <AnimatePresence>
+        {barVisible && (
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            className="pointer-events-none sticky bottom-4 z-20 mt-6 flex justify-center"
+            exit={{ opacity: 0, y: reduce ? 0 : 16 }}
+            initial={{ opacity: 0, y: reduce ? 0 : 24 }}
+            transition={
+              reduce
+                ? { duration: 0.15 }
+                : { type: "spring", stiffness: 480, damping: 34 }
+            }
+          >
+            <div className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-xl border bg-popover py-2 ps-4 pe-2 shadow-lg/5">
+              <AnimatePresence initial={false} mode="popLayout">
+                {saved && dirtyCount === 0 ? (
+                  <motion.span
+                    animate={{ opacity: 1, y: 0 }}
+                    aria-live="polite"
+                    className="flex min-h-8 flex-1 items-center gap-2 font-medium text-sm"
+                    exit={{ opacity: 0, y: reduce ? 0 : -6 }}
+                    initial={{ opacity: 0, y: reduce ? 0 : 6 }}
+                    key="saved"
+                    transition={{ duration: 0.18, ease: easeOut }}
+                  >
+                    <CheckIcon className="size-4 text-success-foreground" />
+                    {t.saved}
+                  </motion.span>
+                ) : (
+                  <motion.div
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex min-w-0 flex-1 items-center gap-2"
+                    exit={{ opacity: 0, y: reduce ? 0 : -6 }}
+                    initial={{ opacity: 0, y: reduce ? 0 : 6 }}
+                    key="dirty"
+                    transition={{ duration: 0.18, ease: easeOut }}
+                  >
+                    <span
+                      aria-live="polite"
+                      className="flex min-w-0 flex-1 flex-col"
+                    >
+                      <span className="truncate font-medium text-sm">
+                        <span className="sm:hidden">{t.unsavedShort}</span>
+                        <span className="hidden sm:inline">
+                          {t.unsavedLong}
                         </span>
                       </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </Section>
-        {save.error ? (
-          <p className="mt-6 text-destructive-foreground text-sm" role="alert">
-            {save.error}
-          </p>
-        ) : null}
-          <AnimatePresence>
-            {barVisible && (
-              <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                className="pointer-events-none sticky bottom-4 z-20 mt-6 flex justify-center"
-                exit={{ opacity: 0, y: reduce ? 0 : 16 }}
-                initial={{ opacity: 0, y: reduce ? 0 : 24 }}
-                transition={reduce ? { duration: 0.15 } : { type: "spring", stiffness: 480, damping: 34 }}
-              >
-                <div className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-xl border bg-popover py-2 ps-4 pe-2 shadow-lg/5">
-                  <AnimatePresence initial={false} mode="popLayout">
-                    {saved && dirtyCount === 0 ? (
-                      <motion.span
-                        animate={{ opacity: 1, y: 0 }}
-                        aria-live="polite"
-                        className="flex min-h-8 flex-1 items-center gap-2 font-medium text-sm"
-                        exit={{ opacity: 0, y: reduce ? 0 : -6 }}
-                        initial={{ opacity: 0, y: reduce ? 0 : 6 }}
-                        key="saved"
-                        transition={{ duration: 0.18, ease: easeOut }}
-                      >
-                        <CheckIcon className="size-4 text-success-foreground" />
-                        {t.saved}
-                      </motion.span>
-                    ) : (
-                      <motion.div
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex min-w-0 flex-1 items-center gap-2"
-                        exit={{ opacity: 0, y: reduce ? 0 : -6 }}
-                        initial={{ opacity: 0, y: reduce ? 0 : 6 }}
-                        key="dirty"
-                        transition={{ duration: 0.18, ease: easeOut }}
-                      >
-                        <span aria-live="polite" className="flex min-w-0 flex-1 flex-col">
-                          <span className="truncate font-medium text-sm">
-                            <span className="sm:hidden">{t.unsavedShort}</span>
-                            <span className="hidden sm:inline">{t.unsavedLong}</span>
-                          </span>
-                          {blocker && !saving && <span className="truncate text-warning-foreground text-xs">{blocker}</span>}
+                      {blocker && !saving && (
+                        <span className="truncate text-warning-foreground text-xs">
+                          {blocker}
                         </span>
-                        <Button className={press} disabled={saving} onClick={discard} size="sm" variant="ghost">
-                          {t.discard}
-                        </Button>
-                        <Button aria-busy={saving} className={cn(press, "min-w-14")} disabled={Boolean(blocker) || saving} onClick={submit} size="sm">
-                          {saving ? <Spinner data-icon="inline-start" /> : null}
-                          {t.save}
-                        </Button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        
+                      )}
+                    </span>
+                    <Button
+                      className={press}
+                      disabled={saving}
+                      onClick={discard}
+                      size="sm"
+                      variant="ghost"
+                    >
+                      {t.discard}
+                    </Button>
+                    <Button
+                      aria-busy={saving}
+                      className={cn(press, "min-w-14")}
+                      disabled={Boolean(blocker) || saving}
+                      onClick={submit}
+                      size="sm"
+                    >
+                      {saving ? <Spinner data-icon="inline-start" /> : null}
+                      {t.save}
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <CropDialog
         initial={draft.avatar ?? { palette: "dusk", x: 0, y: 0, zoom: 1 }}

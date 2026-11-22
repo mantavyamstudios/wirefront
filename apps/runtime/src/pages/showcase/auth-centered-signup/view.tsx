@@ -5,17 +5,32 @@
 import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { Button } from "@wirefront/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@wirefront/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@wirefront/ui/card";
 import { Checkbox } from "@wirefront/ui/checkbox";
 import { Input } from "@wirefront/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Separator } from "@wirefront/ui/separator";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import { type Action, fail } from "@wirefront/ui/wirefront/types";
 import { CheckIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { type ReactNode, useId, useState } from "react";
@@ -85,21 +100,46 @@ function strengthOf(password: string): Strength | undefined {
   if (!password) return undefined;
   const digit = /\d/.test(password);
   const symbol = /[^\w\s]/.test(password);
-  if (password.length >= 12 || (password.length >= PASSWORD_MIN_LENGTH && digit && symbol)) return "strong";
+  if (
+    password.length >= 12 ||
+    (password.length >= PASSWORD_MIN_LENGTH && digit && symbol)
+  )
+    return "strong";
   if (password.length >= PASSWORD_MIN_LENGTH && (digit || symbol)) return "ok";
   return "weak";
 }
 
-const STRENGTH: Record<Strength, { segments: number; bar: string; text: string }> = {
-  weak: { segments: 1, bar: "bg-category-3", text: "text-category-3-foreground" },
+const STRENGTH: Record<
+  Strength,
+  { segments: number; bar: string; text: string }
+> = {
+  weak: {
+    segments: 1,
+    bar: "bg-category-3",
+    text: "text-category-3-foreground",
+  },
   ok: { segments: 2, bar: "bg-category-1", text: "text-category-1-foreground" },
-  strong: { segments: 3, bar: "bg-category-2", text: "text-category-2-foreground" },
+  strong: {
+    segments: 3,
+    bar: "bg-category-2",
+    text: "text-category-2-foreground",
+  },
 };
 
 const fieldError = "text-destructive-foreground text-xs";
 const link = "text-foreground underline underline-offset-4";
 
-function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, termsHref, privacyHref, signInHref, highlights = [], logo }: CenteredSignUpProps) {
+function CenteredSignUpScreen({
+  onSignUp,
+  onSuccess,
+  providers = [],
+  onProvider,
+  termsHref,
+  privacyHref,
+  signInHref,
+  highlights = [],
+  logo,
+}: CenteredSignUpProps) {
   const t = useMessages("centeredSignUp", CENTERED_SIGN_UP_MESSAGES);
   const id = useId();
   const [reveal, setReveal] = useState(false);
@@ -109,7 +149,8 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
   const form = useActionForm({
     schema: SignUpInput,
     // The checkbox lives outside the form fields, so it is checked here.
-    action: async (input: SignUpInput) => (askTerms && !agreed ? fail(t.mustAgree) : onSignUp(input)),
+    action: async (input: SignUpInput) =>
+      askTerms && !agreed ? fail(t.mustAgree) : onSignUp(input),
     onSuccess: (_, input) => onSuccess?.(input),
   });
   const provider = useAction(onProvider ?? (async () => {}));
@@ -119,10 +160,19 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
 
   return (
     <div className="relative min-h-svh overflow-x-clip bg-background text-foreground">
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
         <div className="absolute inset-s-[-10%] top-[-10%] size-96 rounded-full bg-primary/10 blur-3xl sm:size-160" />
         <div className="absolute inset-e-[-10%] bottom-[-10%] size-96 rounded-full bg-accent/15 blur-3xl sm:size-160" />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(60% 50% at 50% 0%, color-mix(in oklch, var(--color-foreground) 4%, transparent), transparent 70%)" }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(60% 50% at 50% 0%, color-mix(in oklch, var(--color-foreground) 4%, transparent), transparent 70%)",
+          }}
+        />
       </div>
       <div className="relative flex min-h-svh flex-col items-center justify-center-safe px-4 py-12">
         {highlights.length ? (
@@ -132,7 +182,10 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
                 className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-2.5 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] backdrop-blur-sm"
                 key={label}
               >
-                <CheckIcon aria-hidden className="size-3 text-category-2-foreground" />
+                <CheckIcon
+                  aria-hidden
+                  className="size-3 text-category-2-foreground"
+                />
                 {label}
               </li>
             ))}
@@ -141,7 +194,9 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
 
         <Card className="w-full max-w-md">
           <CardHeader className="items-center text-center">
-            {logo ? <div className="mb-3 flex justify-center">{logo}</div> : null}
+            {logo ? (
+              <div className="mb-3 flex justify-center">{logo}</div>
+            ) : null}
             <CardTitle className="font-heading text-2xl tracking-tight">
               <h1>{t.title}</h1>
             </CardTitle>
@@ -151,10 +206,27 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
           <CardContent className="flex flex-col gap-5">
             {shownProviders.length ? (
               <>
-                <div className={cn("grid gap-2.5", shownProviders.length > 1 && "grid-cols-2")}>
+                <div
+                  className={cn(
+                    "grid gap-2.5",
+                    shownProviders.length > 1 && "grid-cols-2"
+                  )}
+                >
                   {shownProviders.map((p) => (
-                    <Button aria-busy={provider.isPending(p.id)} disabled={provider.isPending()} key={p.id} onClick={() => void provider.run(p.id, p.id)} size="lg" type="button" variant="outline">
-                      {provider.isPending(p.id) ? <Spinner data-icon="inline-start" /> : p.icon}
+                    <Button
+                      aria-busy={provider.isPending(p.id)}
+                      disabled={provider.isPending()}
+                      key={p.id}
+                      onClick={() => void provider.run(p.id, p.id)}
+                      size="lg"
+                      type="button"
+                      variant="outline"
+                    >
+                      {provider.isPending(p.id) ? (
+                        <Spinner data-icon="inline-start" />
+                      ) : (
+                        p.icon
+                      )}
                       {p.name}
                     </Button>
                   ))}
@@ -166,30 +238,49 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
                 ) : null}
                 <div className="flex items-center gap-3">
                   <Separator className="flex-1" />
-                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.orEmail}</span>
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+                    {t.orEmail}
+                  </span>
                   <Separator className="flex-1" />
                 </div>
               </>
             ) : null}
 
-            <Form className="flex flex-col gap-4" noValidate {...form.formProps}>
+            <Form
+              className="flex flex-col gap-4"
+              noValidate
+              {...form.formProps}
+            >
               <Field.Root className="flex flex-col gap-2" name="name">
-                <Field.Label className="font-medium text-sm leading-none">{t.name}</Field.Label>
+                <Field.Label className="font-medium text-sm leading-none">
+                  {t.name}
+                </Field.Label>
                 <Input autoComplete="name" placeholder={t.namePlaceholder} />
                 <Field.Error className={fieldError} />
               </Field.Root>
               <Field.Root className="flex flex-col gap-2" name="email">
-                <Field.Label className="font-medium text-sm leading-none">{t.email}</Field.Label>
-                <Input autoComplete="email" inputMode="email" placeholder={t.emailPlaceholder} type="email" />
+                <Field.Label className="font-medium text-sm leading-none">
+                  {t.email}
+                </Field.Label>
+                <Input
+                  autoComplete="email"
+                  inputMode="email"
+                  placeholder={t.emailPlaceholder}
+                  type="email"
+                />
                 <Field.Error className={fieldError} />
               </Field.Root>
               <Field.Root className="flex flex-col gap-2" name="password">
-                <Field.Label className="font-medium text-sm leading-none">{t.password}</Field.Label>
+                <Field.Label className="font-medium text-sm leading-none">
+                  {t.password}
+                </Field.Label>
                 <InputGroup>
                   <InputGroupInput
                     autoComplete="new-password"
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder={interpolate(t.passwordPlaceholder, { min: PASSWORD_MIN_LENGTH })}
+                    placeholder={interpolate(t.passwordPlaceholder, {
+                      min: PASSWORD_MIN_LENGTH,
+                    })}
                     type={reveal ? "text" : "password"}
                   />
                   <InputGroupAddon align="inline-end">
@@ -200,17 +291,33 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
                       onClick={() => setReveal((v) => !v)}
                       type="button"
                     >
-                      {reveal ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+                      {reveal ? (
+                        <EyeOffIcon className="size-4" />
+                      ) : (
+                        <EyeIcon className="size-4" />
+                      )}
                     </button>
                   </InputGroupAddon>
                 </InputGroup>
                 <div className="mt-1 flex items-center gap-2">
                   <div aria-hidden className="flex flex-1 gap-1">
                     {(["weak", "ok", "strong"] as const).map((level, i) => (
-                      <div className={cn("h-1.5 flex-1 rounded-full transition-colors", meta && i < meta.segments ? meta.bar : "bg-border")} key={level} />
+                      <div
+                        className={cn(
+                          "h-1.5 flex-1 rounded-full transition-colors",
+                          meta && i < meta.segments ? meta.bar : "bg-border"
+                        )}
+                        key={level}
+                      />
                     ))}
                   </div>
-                  <span aria-live="polite" className={cn("min-w-14 text-end font-mono text-[10px] uppercase tracking-[0.2em]", meta?.text)}>
+                  <span
+                    aria-live="polite"
+                    className={cn(
+                      "min-w-14 text-end font-mono text-[10px] uppercase tracking-[0.2em]",
+                      meta?.text
+                    )}
+                  >
                     {strength ? (
                       <>
                         <span className="sr-only">{t.strength} </span>
@@ -224,8 +331,16 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
 
               {askTerms ? (
                 <div className="flex items-start gap-2.5 pointer-coarse:min-h-11">
-                  <Checkbox checked={agreed} className="mt-0.5" id={`${id}-terms`} onCheckedChange={(v) => setAgreed(v === true)} />
-                  <label className="block text-muted-foreground text-sm leading-snug" htmlFor={`${id}-terms`}>
+                  <Checkbox
+                    checked={agreed}
+                    className="mt-0.5"
+                    id={`${id}-terms`}
+                    onCheckedChange={(v) => setAgreed(v === true)}
+                  />
+                  <label
+                    className="block text-muted-foreground text-sm leading-snug"
+                    htmlFor={`${id}-terms`}
+                  >
                     {t.agree}{" "}
                     <WirefrontLink className={link} href={termsHref ?? ""}>
                       {t.terms}
@@ -243,7 +358,13 @@ function CenteredSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider,
                   {form.formError}
                 </p>
               ) : null}
-              <Button aria-busy={form.pending} className="mt-1 w-full" disabled={form.pending} size="lg" type="submit">
+              <Button
+                aria-busy={form.pending}
+                className="mt-1 w-full"
+                disabled={form.pending}
+                size="lg"
+                type="submit"
+              >
                 {form.pending ? <Spinner data-icon="inline-start" /> : null}
                 {t.submit}
               </Button>

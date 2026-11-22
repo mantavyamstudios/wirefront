@@ -31,8 +31,7 @@ export const entries: LogEntry[] = [
     ],
     payload: {
       kind: "json",
-      body:
-        '{\n  "items": [\n    { "id": "p_q3", "name": "Q3 planning" },\n    { "id": "p_obd", "name": "Onboarding redesign" },\n    { "id": "p_mkt", "name": "Marketing site" }\n  ],\n  "next_cursor": null\n}',
+      body: '{\n  "items": [\n    { "id": "p_q3", "name": "Q3 planning" },\n    { "id": "p_obd", "name": "Onboarding redesign" },\n    { "id": "p_mkt", "name": "Marketing site" }\n  ],\n  "next_cursor": null\n}',
     },
   },
   {
@@ -115,8 +114,7 @@ export const entries: LogEntry[] = [
     ],
     payload: {
       kind: "json",
-      body:
-        '{\n  "error": {\n    "type": "card_error",\n    "code": "card_declined",\n    "decline_code": "generic_decline",\n    "message": "Your card was declined.",\n    "param": "card"\n  }\n}',
+      body: '{\n  "error": {\n    "type": "card_error",\n    "code": "card_declined",\n    "decline_code": "generic_decline",\n    "message": "Your card was declined.",\n    "param": "card"\n  }\n}',
     },
     stack: [
       "billing/card-billing-provider.ts:184  charge()",
@@ -206,8 +204,7 @@ export const entries: LogEntry[] = [
     ],
     payload: {
       kind: "json",
-      body:
-        '{\n  "type": "validation_error",\n  "errors": [\n    { "path": "event.id", "code": "required" }\n  ]\n}',
+      body: '{\n  "type": "validation_error",\n  "errors": [\n    { "path": "event.id", "code": "required" }\n  ]\n}',
     },
     stack: [
       "ingest/validator.ts:127     validateEvent()",

@@ -14,8 +14,16 @@ export function ProfileTeamGridShowcasePage() {
       error="The team didn’t load. Check your connection and try again."
       onInvite={() => {}}
       onRetry={() => {}}
-      people={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listTeammates}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      people={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : fixtures.listTeammates
+      }
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

@@ -13,7 +13,12 @@ import { Mail } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
 const save = () => new Promise<void>((resolve) => setTimeout(resolve, 200));
-const attachmentsOf = (files: File[]) => files.map((f) => ({ name: f.name, size: `${Math.max(1, Math.round(f.size / 1024))} KB`, kind: "doc" as const }));
+const attachmentsOf = (files: File[]) =>
+  files.map((f) => ({
+    name: f.name,
+    size: `${Math.max(1, Math.round(f.size / 1024))} KB`,
+    kind: "doc" as const,
+  }));
 
 export function AppsMailShowcasePage() {
   const count = useRef(0);
@@ -29,12 +34,33 @@ export function AppsMailShowcasePage() {
             await save();
             const thread = threads.current.find((th) => th.id === threadId);
             const to = thread?.messages.at(-1)?.from.name.split(" ")[0] ?? "";
-            return ok({ id: `reply-${++count.current}`, from: fixtures.account, to: `to ${to}`, sentAt: fixtures.now, body: body ? body.split(/\n{2,}/) : [], attachments: files.length ? attachmentsOf(files) : undefined });
+            return ok({
+              id: `reply-${++count.current}`,
+              from: fixtures.account,
+              to: `to ${to}`,
+              sentAt: fixtures.now,
+              body: body ? body.split(/\n{2,}/) : [],
+              attachments: files.length ? attachmentsOf(files) : undefined,
+            });
           }}
           onSend={async ({ to, subject, body, files }) => {
             await save();
             const n = ++count.current;
-            return ok({ id: `sent-${n}`, subject, folder: "sent", messages: [{ id: "m1", from: fixtures.account, to: `to ${to}`, sentAt: fixtures.now, body: body ? body.split(/\n{2,}/) : [], attachments: files.length ? attachmentsOf(files) : undefined }] });
+            return ok({
+              id: `sent-${n}`,
+              subject,
+              folder: "sent",
+              messages: [
+                {
+                  id: "m1",
+                  from: fixtures.account,
+                  to: `to ${to}`,
+                  sentAt: fixtures.now,
+                  body: body ? body.split(/\n{2,}/) : [],
+                  attachments: files.length ? attachmentsOf(files) : undefined,
+                },
+              ],
+            });
           }}
           onUpdateThread={save}
           quickReplies={fixtures.quickReplies}

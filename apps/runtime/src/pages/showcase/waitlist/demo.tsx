@@ -5,7 +5,8 @@
 import emptyRoomSrc from "@/assets/figures/empty-room.png";
 import { Waitlist } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function WaitlistShowcasePage() {
   return <Waitlist illustration={emptyRoomSrc} onJoin={() => wait(600)} />;

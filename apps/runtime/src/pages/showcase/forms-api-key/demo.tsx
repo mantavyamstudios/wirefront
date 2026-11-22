@@ -6,7 +6,8 @@ import { ok } from "@wirefront/ui/wirefront/types";
 import * as fixtures from "./fixtures";
 import { CreateApiKey } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 async function demoCreate() {
   await wait(700);
@@ -14,5 +15,12 @@ async function demoCreate() {
 }
 
 export function FormsApiKeyShowcasePage() {
-  return <CreateApiKey defaultScopes={fixtures.defaultScopes} onCancel={() => {}} onCreate={demoCreate} scopeGroups={fixtures.scopeGroups} />;
+  return (
+    <CreateApiKey
+      defaultScopes={fixtures.defaultScopes}
+      onCancel={() => {}}
+      onCreate={demoCreate}
+      scopeGroups={fixtures.scopeGroups}
+    />
+  );
 }

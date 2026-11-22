@@ -8,7 +8,16 @@ import { Radio } from "@base-ui/react/radio";
 import { RadioGroup } from "@base-ui/react/radio-group";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@wirefront/ui/dialog";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
 import { Textarea } from "@wirefront/ui/textarea";
@@ -16,7 +25,14 @@ import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { interpolate, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
-import { BugIcon, HeartIcon, ImageIcon, LightbulbIcon, type LucideIcon, XIcon } from "lucide-react";
+import {
+  BugIcon,
+  HeartIcon,
+  ImageIcon,
+  LightbulbIcon,
+  type LucideIcon,
+  XIcon,
+} from "lucide-react";
 import { useId, useRef, useState } from "react";
 
 import { FeedbackInput, type FeedbackKind } from "./schema";
@@ -63,9 +79,21 @@ export interface SendFeedbackProps {
   className?: string;
 }
 
-const KINDS: Record<FeedbackKind, LucideIcon> = { bug: BugIcon, idea: LightbulbIcon, praise: HeartIcon };
+const KINDS: Record<FeedbackKind, LucideIcon> = {
+  bug: BugIcon,
+  idea: LightbulbIcon,
+  praise: HeartIcon,
+};
 
-function SendFeedbackScreen({ onSend, product, allowScreenshot = true, allowLogs = true, defaultKind = "idea", defaultOpen, className }: SendFeedbackProps) {
+function SendFeedbackScreen({
+  onSend,
+  product,
+  allowScreenshot = true,
+  allowLogs = true,
+  defaultKind = "idea",
+  defaultOpen,
+  className,
+}: SendFeedbackProps) {
   const t = useMessages("sendFeedback", SEND_FEEDBACK_MESSAGES);
   const id = useId();
   const [open, setOpen] = useState(Boolean(defaultOpen));
@@ -86,8 +114,16 @@ function SendFeedbackScreen({ onSend, product, allowScreenshot = true, allowLogs
       reset();
     },
   });
-  const hint = { bug: t.bugHint, idea: interpolate(t.ideaHint, { product }), praise: t.praiseHint }[kind];
-  const placeholder = { bug: t.bugPlaceholder, idea: t.ideaPlaceholder, praise: t.praisePlaceholder }[kind];
+  const hint = {
+    bug: t.bugHint,
+    idea: interpolate(t.ideaHint, { product }),
+    praise: t.praiseHint,
+  }[kind];
+  const placeholder = {
+    bug: t.bugPlaceholder,
+    idea: t.ideaPlaceholder,
+    praise: t.praisePlaceholder,
+  }[kind];
 
   return (
     // Real Dialog (focus trap, Esc, scroll lock); bottom sheet on phones.
@@ -102,16 +138,31 @@ function SendFeedbackScreen({ onSend, product, allowScreenshot = true, allowLogs
           }}
           open={open}
         >
-          <DialogTrigger render={<Button variant="outline" />}>{t.trigger}</DialogTrigger>
+          <DialogTrigger render={<Button variant="outline" />}>
+            {t.trigger}
+          </DialogTrigger>
           <DialogContent className="sm:max-w-md">
-            <Form className="contents" errors={form.formProps.errors} noValidate onFormSubmit={(values) => void form.submit({ ...values, kind, includeLogs })}>
+            <Form
+              className="contents"
+              errors={form.formProps.errors}
+              noValidate
+              onFormSubmit={(values) =>
+                void form.submit({ ...values, kind, includeLogs })
+              }
+            >
               <DialogHeader>
                 <DialogTitle className="text-base">{t.title}</DialogTitle>
                 <DialogDescription>{t.description}</DialogDescription>
               </DialogHeader>
 
               <div className="-mx-4 min-h-0 min-w-0 space-y-4 overflow-y-auto px-4">
-                <RadioGroup aria-describedby={`${id}-hint`} aria-label={t.kind} className="grid grid-cols-3 gap-2" onValueChange={(v) => setKind(v as FeedbackKind)} value={kind}>
+                <RadioGroup
+                  aria-describedby={`${id}-hint`}
+                  aria-label={t.kind}
+                  className="grid grid-cols-3 gap-2"
+                  onValueChange={(v) => setKind(v as FeedbackKind)}
+                  value={kind}
+                >
                   {(Object.keys(KINDS) as FeedbackKind[]).map((k) => {
                     const Icon = KINDS[k];
                     return (
@@ -121,7 +172,9 @@ function SendFeedbackScreen({ onSend, product, allowScreenshot = true, allowLogs
                         value={k}
                       >
                         <Icon aria-hidden className="size-4 opacity-80" />
-                        <span className="text-[12px] leading-tight">{t[k]}</span>
+                        <span className="text-[12px] leading-tight">
+                          {t[k]}
+                        </span>
                       </Radio.Root>
                     );
                   })}
@@ -133,7 +186,14 @@ function SendFeedbackScreen({ onSend, product, allowScreenshot = true, allowLogs
 
                 <Field.Root className="flex flex-col gap-1.5" name="message">
                   <Field.Label className="sr-only">{t.message}</Field.Label>
-                  <Field.Control render={<Textarea className="min-h-32" placeholder={placeholder} />} />
+                  <Field.Control
+                    render={
+                      <Textarea
+                        className="min-h-32"
+                        placeholder={placeholder}
+                      />
+                    }
+                  />
                   <Field.Error className="text-destructive-foreground text-xs" />
                 </Field.Root>
 
@@ -153,10 +213,15 @@ function SendFeedbackScreen({ onSend, product, allowScreenshot = true, allowLogs
                     />
                     {screenshot ? (
                       <span className="inline-flex max-w-full items-center gap-2 rounded-md border bg-background px-3 py-1.5 text-xs">
-                        <ImageIcon aria-hidden className="size-3.5 shrink-0 opacity-70" />
+                        <ImageIcon
+                          aria-hidden
+                          className="size-3.5 shrink-0 opacity-70"
+                        />
                         <span className="truncate">{screenshot.name}</span>
                         <button
-                          aria-label={interpolate(t.removeScreenshot, { name: screenshot.name })}
+                          aria-label={interpolate(t.removeScreenshot, {
+                            name: screenshot.name,
+                          })}
                           className="-me-1 inline-flex size-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-accent hover:text-foreground pointer-coarse:size-9"
                           onClick={() => setScreenshot(undefined)}
                           type="button"
@@ -179,25 +244,42 @@ function SendFeedbackScreen({ onSend, product, allowScreenshot = true, allowLogs
 
                 {allowLogs ? (
                   <div className="flex items-center gap-2 pointer-coarse:min-h-11">
-                    <Checkbox checked={includeLogs} id={`${id}-logs`} onCheckedChange={setIncludeLogs} />
-                    <label className="cursor-pointer text-muted-foreground text-xs" htmlFor={`${id}-logs`}>
+                    <Checkbox
+                      checked={includeLogs}
+                      id={`${id}-logs`}
+                      onCheckedChange={setIncludeLogs}
+                    />
+                    <label
+                      className="cursor-pointer text-muted-foreground text-xs"
+                      htmlFor={`${id}-logs`}
+                    >
                       {t.includeLogs}
                     </label>
                   </div>
                 ) : null}
 
                 {form.formError ? (
-                  <p className="text-destructive-foreground text-sm" role="alert">
+                  <p
+                    className="text-destructive-foreground text-sm"
+                    role="alert"
+                  >
                     {form.formError}
                   </p>
                 ) : null}
               </div>
 
               <DialogFooter>
-                <DialogClose disabled={form.pending} render={<Button type="button" variant="ghost" />}>
+                <DialogClose
+                  disabled={form.pending}
+                  render={<Button type="button" variant="ghost" />}
+                >
                   {t.cancel}
                 </DialogClose>
-                <Button aria-busy={form.pending} disabled={form.pending} type="submit">
+                <Button
+                  aria-busy={form.pending}
+                  disabled={form.pending}
+                  type="submit"
+                >
                   {form.pending ? <Spinner data-icon="inline-start" /> : null}
                   {t.send}
                 </Button>

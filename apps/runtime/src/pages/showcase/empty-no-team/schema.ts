@@ -8,5 +8,10 @@ export type InviteLink = z.infer<typeof InviteLink>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getInviteLink: { method: "GET", path: "/workspace/invite-link", summary: "The workspace's join link", response: InviteLink },
+  getInviteLink: {
+    method: "GET",
+    path: "/workspace/invite-link",
+    summary: "The workspace's join link",
+    response: InviteLink,
+  },
 });

@@ -7,15 +7,29 @@ import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { Building2Icon, CheckIcon, EyeIcon, EyeOffIcon, FingerprintIcon } from "lucide-react";
+import {
+  Building2Icon,
+  CheckIcon,
+  EyeIcon,
+  EyeOffIcon,
+  FingerprintIcon,
+} from "lucide-react";
 import { motion, useAnimationControls, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 
@@ -88,7 +102,13 @@ function Mark() {
   return (
     <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xs/5">
       <svg aria-hidden className="size-6" fill="none" viewBox="0 0 28 28">
-        <path d="M7 18.5 12 12l3.5 4.5 2-2.5 3.5 4.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" />
+        <path
+          d="M7 18.5 12 12l3.5 4.5 2-2.5 3.5 4.5"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2.2"
+        />
       </svg>
     </span>
   );
@@ -127,7 +147,11 @@ function SignInScreen({
     setDone(true);
     onSuccess?.(session);
   };
-  const form = useActionForm({ schema: SignInInput, action: onSignIn, onSuccess: complete });
+  const form = useActionForm({
+    schema: SignInInput,
+    action: onSignIn,
+    onSuccess: complete,
+  });
   const passkey = useAction(onPasskey ?? noPasskey, { onSuccess: complete });
   const provider = useAction(onProvider ?? noProvider, { onSuccess: complete });
   const magic = useActionForm({
@@ -138,37 +162,69 @@ function SignInScreen({
   const sendMagicLink = () => {
     setSentTo(undefined);
     form.reset();
-    void magic.submit({ email: formRef.current ? new FormData(formRef.current).get("email") : "" });
+    void magic.submit({
+      email: formRef.current ? new FormData(formRef.current).get("email") : "",
+    });
   };
 
-  const failure = form.formError ?? magic.formError ?? passkey.error ?? provider.error ?? error;
+  const failure =
+    form.formError ??
+    magic.formError ??
+    passkey.error ??
+    provider.error ??
+    error;
   const errors = { ...form.errors, ...magic.errors };
   const hasFieldErrors = Object.keys(form.errors).length > 0;
   useEffect(() => {
     if ((form.formError || hasFieldErrors || passkey.error) && !reduce) {
-      void shake.start({ x: [0, -6, 6, -4, 4, 0], transition: { duration: 0.36 } });
+      void shake.start({
+        x: [0, -6, 6, -4, 4, 0],
+        transition: { duration: 0.36 },
+      });
     }
   }, [form.formError, hasFieldErrors, passkey.error, reduce, shake]);
 
-  const busy = form.pending || magic.pending || passkey.isPending() || provider.isPending();
+  const busy =
+    form.pending ||
+    magic.pending ||
+    passkey.isPending() ||
+    provider.isPending();
   const shownProviders = onProvider ? providers : [];
-  const options = (onPasskey ? 1 : 0) + shownProviders.length + (ssoHref ? 1 : 0);
+  const options =
+    (onPasskey ? 1 : 0) + shownProviders.length + (ssoHref ? 1 : 0);
   // Two per row; an odd last option takes the full row.
-  const optionClass = (index: number) => (options > 1 && options % 2 === 1 && index === options - 1 ? "col-span-2" : undefined);
+  const optionClass = (index: number) =>
+    options > 1 && options % 2 === 1 && index === options - 1
+      ? "col-span-2"
+      : undefined;
   const fieldError = "text-destructive-foreground text-xs";
   const linkClass =
     "rounded-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring";
 
   return (
-    <div className={cn("flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground", className)}>
+    <div
+      className={cn(
+        "flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground",
+        className
+      )}
+    >
       <div className="m-auto flex w-full max-w-85 flex-col items-center">
         {logo ?? <Mark />}
-        <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">{interpolate(t.title, { product })}</h1>
-        <p className="mt-1.5 text-balance text-center text-muted-foreground text-sm">{t.subtitle}</p>
+        <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">
+          {interpolate(t.title, { product })}
+        </h1>
+        <p className="mt-1.5 text-balance text-center text-muted-foreground text-sm">
+          {t.subtitle}
+        </p>
 
         {options > 0 ? (
           <>
-            <div className={cn("mt-8 grid w-full gap-2", options > 1 ? "grid-cols-2" : "grid-cols-1")}>
+            <div
+              className={cn(
+                "mt-8 grid w-full gap-2",
+                options > 1 ? "grid-cols-2" : "grid-cols-1"
+              )}
+            >
               {onPasskey ? (
                 <Button
                   aria-busy={passkey.isPending()}
@@ -178,7 +234,11 @@ function SignInScreen({
                   type="button"
                   variant="outline"
                 >
-                  {passkey.isPending() ? <Spinner data-icon="inline-start" /> : <FingerprintIcon />}
+                  {passkey.isPending() ? (
+                    <Spinner data-icon="inline-start" />
+                  ) : (
+                    <FingerprintIcon />
+                  )}
                   {t.passkey}
                 </Button>
               ) : null}
@@ -193,12 +253,22 @@ function SignInScreen({
                   type="button"
                   variant="outline"
                 >
-                  {provider.isPending(p.id) ? <Spinner data-icon="inline-start" /> : p.icon}
+                  {provider.isPending(p.id) ? (
+                    <Spinner data-icon="inline-start" />
+                  ) : (
+                    p.icon
+                  )}
                   {p.name}
                 </Button>
               ))}
               {ssoHref ? (
-                <WirefrontLink className={cn(buttonVariants({ variant: "outline" }), optionClass(options - 1))} href={ssoHref}>
+                <WirefrontLink
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    optionClass(options - 1)
+                  )}
+                  href={ssoHref}
+                >
                   <Building2Icon />
                   {t.sso}
                 </WirefrontLink>
@@ -214,8 +284,18 @@ function SignInScreen({
           <div className="mt-8" />
         )}
 
-        <Form className="flex w-full flex-col gap-4" noValidate ref={formRef} {...form.formProps} errors={errors}>
-          <Field.Root className="flex flex-col gap-2" disabled={done} name="email">
+        <Form
+          className="flex w-full flex-col gap-4"
+          noValidate
+          ref={formRef}
+          {...form.formProps}
+          errors={errors}
+        >
+          <Field.Root
+            className="flex flex-col gap-2"
+            disabled={done}
+            name="email"
+          >
             <Field.Label className="font-medium text-sm">{t.email}</Field.Label>
             <Input
               autoComplete="email"
@@ -227,11 +307,23 @@ function SignInScreen({
             <Field.Error className={fieldError} />
           </Field.Root>
           <motion.div animate={shake}>
-            <Field.Root className="flex flex-col gap-2" disabled={done} name="password">
+            <Field.Root
+              className="flex flex-col gap-2"
+              disabled={done}
+              name="password"
+            >
               <div className="flex items-center justify-between">
-                <Field.Label className="font-medium text-sm">{t.password}</Field.Label>
+                <Field.Label className="font-medium text-sm">
+                  {t.password}
+                </Field.Label>
                 {forgotPasswordHref ? (
-                  <WirefrontLink className={cn(linkClass, "text-muted-foreground text-sm hover:text-foreground")} href={forgotPasswordHref}>
+                  <WirefrontLink
+                    className={cn(
+                      linkClass,
+                      "text-muted-foreground text-sm hover:text-foreground"
+                    )}
+                    href={forgotPasswordHref}
+                  >
                     {t.forgotPassword}
                   </WirefrontLink>
                 ) : null}
@@ -249,7 +341,11 @@ function SignInScreen({
                     onClick={() => setReveal((value) => !value)}
                     type="button"
                   >
-                    {reveal ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+                    {reveal ? (
+                      <EyeOffIcon className="size-4" />
+                    ) : (
+                      <EyeIcon className="size-4" />
+                    )}
                   </button>
                 </InputGroupAddon>
               </InputGroup>
@@ -274,7 +370,11 @@ function SignInScreen({
           >
             {form.pending ? <Spinner data-icon="inline-start" /> : null}
             {done ? (
-              <motion.span animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-2" initial={reduce ? false : { opacity: 0, scale: 0.9 }}>
+              <motion.span
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-2"
+                initial={reduce ? false : { opacity: 0, scale: 0.9 }}
+              >
                 <CheckIcon />
                 {t.signedIn}
               </motion.span>
@@ -283,7 +383,14 @@ function SignInScreen({
             )}
           </Button>
           {onMagicLink ? (
-            <Button aria-busy={magic.pending} className="w-full" disabled={done || busy} onClick={sendMagicLink} type="button" variant="ghost">
+            <Button
+              aria-busy={magic.pending}
+              className="w-full"
+              disabled={done || busy}
+              onClick={sendMagicLink}
+              type="button"
+              variant="ghost"
+            >
               {magic.pending ? <Spinner data-icon="inline-start" /> : null}
               {t.magicLink}
             </Button>
@@ -293,7 +400,13 @@ function SignInScreen({
         {signUpHref ? (
           <p className="mt-8 text-center text-muted-foreground text-sm">
             {t.noAccount}{" "}
-            <WirefrontLink className={cn(linkClass, "font-medium text-foreground underline-offset-4 hover:underline")} href={signUpHref}>
+            <WirefrontLink
+              className={cn(
+                linkClass,
+                "font-medium text-foreground underline-offset-4 hover:underline"
+              )}
+              href={signUpHref}
+            >
               {t.signUp}
             </WirefrontLink>
           </p>

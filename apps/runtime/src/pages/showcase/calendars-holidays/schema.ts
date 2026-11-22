@@ -17,18 +17,33 @@ export const TeamMember = z
   .meta({ id: "TeamMember" });
 export type TeamMember = z.infer<typeof TeamMember>;
 
-export const Holiday = z.object({ date: z.string(), label: z.string() }).meta({ id: "Holiday" });
+export const Holiday = z
+  .object({ date: z.string(), label: z.string() })
+  .meta({ id: "Holiday" });
 export type Holiday = z.infer<typeof Holiday>;
 
-export const TeamMonth = z.object({ members: z.array(TeamMember), holidays: z.array(Holiday) }).meta({ id: "TeamMonth" });
+export const TeamMonth = z
+  .object({ members: z.array(TeamMember), holidays: z.array(Holiday) })
+  .meta({ id: "TeamMonth" });
 export type TeamMonth = z.infer<typeof TeamMonth>;
 
-export const NewMember = z.object({ name: z.string().trim().min(1, "Enter a name."), role: z.string().trim().optional() }).meta({ id: "NewMember" });
+export const NewMember = z
+  .object({
+    name: z.string().trim().min(1, "Enter a name."),
+    role: z.string().trim().optional(),
+  })
+  .meta({ id: "NewMember" });
 export type NewMember = z.infer<typeof NewMember>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getTeamMonth: { method: "GET", path: "/team/time-off", summary: "Time off and holidays for a month", query: z.object({ month: z.string() }), response: TeamMonth },
+  getTeamMonth: {
+    method: "GET",
+    path: "/team/time-off",
+    summary: "Time off and holidays for a month",
+    query: z.object({ month: z.string() }),
+    response: TeamMonth,
+  },
   setTimeOff: {
     method: "PUT",
     path: "/team/{memberId}/time-off/{date}",
@@ -36,7 +51,24 @@ export const api = defineApi({
     params: z.object({ memberId: z.string(), date: z.string() }),
     body: z.object({ type: AbsenceType.nullable() }),
   },
-  setHoliday: { method: "PUT", path: "/team/holidays/{date}", summary: "Mark or unmark a team holiday", params: z.object({ date: z.string() }), body: z.object({ on: z.boolean() }) },
-  addTeamMember: { method: "POST", path: "/team/members", summary: "Add someone to the time-off calendar", body: NewMember, response: TeamMember },
-  removeTeamMember: { method: "DELETE", path: "/team/members/{id}", summary: "Remove someone from the time-off calendar", params: z.object({ id: z.string() }) },
+  setHoliday: {
+    method: "PUT",
+    path: "/team/holidays/{date}",
+    summary: "Mark or unmark a team holiday",
+    params: z.object({ date: z.string() }),
+    body: z.object({ on: z.boolean() }),
+  },
+  addTeamMember: {
+    method: "POST",
+    path: "/team/members",
+    summary: "Add someone to the time-off calendar",
+    body: NewMember,
+    response: TeamMember,
+  },
+  removeTeamMember: {
+    method: "DELETE",
+    path: "/team/members/{id}",
+    summary: "Remove someone from the time-off calendar",
+    params: z.object({ id: z.string() }),
+  },
 });

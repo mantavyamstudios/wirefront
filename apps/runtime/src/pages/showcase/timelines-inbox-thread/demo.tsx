@@ -7,7 +7,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { EmailThread } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function TimelinesInboxThreadShowcasePage() {
   const state = useShowcaseState();
@@ -19,8 +20,18 @@ export function TimelinesInboxThreadShowcasePage() {
         onRetry={() => {}}
         onSaveDraft={() => wait(300)}
         onToggleStar={() => wait(300)}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
-        thread={state === "loading" || state === "error" ? undefined : fixtures.getThread}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
+        thread={
+          state === "loading" || state === "error"
+            ? undefined
+            : fixtures.getThread
+        }
       />
     </WirefrontProvider>
   );

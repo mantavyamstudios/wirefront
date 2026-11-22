@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const UploadState = z.enum(["uploading", "paused", "done", "failed"]).meta({ id: "UploadState" });
+export const UploadState = z
+  .enum(["uploading", "paused", "done", "failed"])
+  .meta({ id: "UploadState" });
 export type UploadState = z.infer<typeof UploadState>;
 
 /** One file in the queue, as the builder's uploader reports it. */
@@ -28,8 +30,17 @@ export const api = defineApi({
     method: "POST",
     path: "/uploads",
     summary: "Register a file and get where to upload it",
-    body: z.object({ name: z.string(), size: z.int().min(0), type: z.string() }),
+    body: z.object({
+      name: z.string(),
+      size: z.int().min(0),
+      type: z.string(),
+    }),
     response: z.object({ id: z.string(), uploadUrl: z.url() }),
   },
-  cancelUpload: { method: "DELETE", path: "/uploads/{id}", summary: "Cancel an upload", params: z.object({ id: z.string() }) },
+  cancelUpload: {
+    method: "DELETE",
+    path: "/uploads/{id}",
+    summary: "Cancel an upload",
+    params: z.object({ id: z.string() }),
+  },
 });

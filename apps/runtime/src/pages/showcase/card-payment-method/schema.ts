@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const CardBrand = z.enum(["visa", "mastercard", "amex", "discover", "other"]).meta({ id: "CardBrand" });
+export const CardBrand = z
+  .enum(["visa", "mastercard", "amex", "discover", "other"])
+  .meta({ id: "CardBrand" });
 export type CardBrand = z.infer<typeof CardBrand>;
 
 /** A saved card, as your payment processor describes it. Never the full number. */
@@ -22,6 +24,16 @@ export type SavedCard = z.infer<typeof SavedCard>;
 
 /** The backend operations this screen calls. Adding a card happens in your processor's own form. */
 export const api = defineApi({
-  listCards: { method: "GET", path: "/billing/cards", summary: "Saved cards", response: z.array(SavedCard) },
-  makePrimary: { method: "POST", path: "/billing/cards/{id}/primary", summary: "Use this card for future charges", params: z.object({ id: z.string() }) },
+  listCards: {
+    method: "GET",
+    path: "/billing/cards",
+    summary: "Saved cards",
+    response: z.array(SavedCard),
+  },
+  makePrimary: {
+    method: "POST",
+    path: "/billing/cards/{id}/primary",
+    summary: "Use this card for future charges",
+    params: z.object({ id: z.string() }),
+  },
 });

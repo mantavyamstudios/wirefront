@@ -37,12 +37,17 @@ export interface ApiOperation {
 export type ApiContract = Record<string, ApiOperation>;
 
 /** Declare a screen's API contract (identity function, for types and tooling). */
-export function defineApi<Contract extends ApiContract>(contract: Contract): Contract {
+export function defineApi<Contract extends ApiContract>(
+  contract: Contract
+): Contract {
   for (const [name, op] of Object.entries(contract)) {
     const inPath = [...op.path.matchAll(/\{(\w+)\}/g)].map((m) => m[1]);
     const declared = op.params ? Object.keys(op.params.shape) : [];
     const missing = inPath.filter((p) => !declared.includes(p as string));
-    if (missing.length) throw new Error(`${name}: path ${op.path} has {${missing.join("}, {")}} but no matching params`);
+    if (missing.length)
+      throw new Error(
+        `${name}: path ${op.path} has {${missing.join("}, {")}} but no matching params`
+      );
   }
   return contract;
 }

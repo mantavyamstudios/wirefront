@@ -8,7 +8,13 @@ import { DocsTreeShell } from "./view";
 
 export function SidebarsDocsTreeShowcasePage() {
   return (
-    <DocsTreeShell activeId="events-projector" defaultExpanded={["getting-started"]} onNewPage={() => {}} onSearch={() => {}} tree={fixtures.getDocsTree}>
+    <DocsTreeShell
+      activeId="events-projector"
+      defaultExpanded={["getting-started"]}
+      onNewPage={() => {}}
+      onSearch={() => {}}
+      tree={fixtures.getDocsTree}
+    >
       <div className="flex min-h-[calc(100svh-3.5rem)] items-center justify-center px-6 text-muted-foreground md:min-h-svh">
         <div className="text-center">
           <StickyNoteIcon className="mx-auto size-6 opacity-40" />

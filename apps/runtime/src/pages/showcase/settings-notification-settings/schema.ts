@@ -4,13 +4,21 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const ChannelId = z.enum(["desktop", "mobile", "email", "chat"]).meta({ id: "NotifyChannelId" });
+export const ChannelId = z
+  .enum(["desktop", "mobile", "email", "chat"])
+  .meta({ id: "NotifyChannelId" });
 export type ChannelId = z.infer<typeof ChannelId>;
-export const ChannelMode = z.enum(["all", "mentions", "off"]).meta({ id: "NotifyChannelMode" });
+export const ChannelMode = z
+  .enum(["all", "mentions", "off"])
+  .meta({ id: "NotifyChannelMode" });
 export type ChannelMode = z.infer<typeof ChannelMode>;
-export const Medium = z.enum(["email", "push", "chat"]).meta({ id: "NotifyMedium" });
+export const Medium = z
+  .enum(["email", "push", "chat"])
+  .meta({ id: "NotifyMedium" });
 export type Medium = z.infer<typeof Medium>;
-export const DigestFrequency = z.enum(["off", "daily", "weekly"]).meta({ id: "DigestFrequency" });
+export const DigestFrequency = z
+  .enum(["off", "daily", "weekly"])
+  .meta({ id: "DigestFrequency" });
 export type DigestFrequency = z.infer<typeof DigestFrequency>;
 
 export const NotifyEvent = z
@@ -27,7 +35,13 @@ export const NotifyEvent = z
   .meta({ id: "NotifyEvent" });
 
 export const NotifySection = z
-  .object({ id: z.string(), label: z.string(), description: z.string(), enabled: z.boolean(), events: z.array(NotifyEvent) })
+  .object({
+    id: z.string(),
+    label: z.string(),
+    description: z.string(),
+    enabled: z.boolean(),
+    events: z.array(NotifyEvent),
+  })
   .meta({ id: "NotifySection" });
 
 export const NotificationPreferences = z
@@ -35,7 +49,11 @@ export const NotificationPreferences = z
     channels: z.record(ChannelId, ChannelMode),
     sections: z.array(NotifySection),
     /** Hours 0–23; may wrap past midnight (22 → 8). */
-    quietHours: z.object({ enabled: z.boolean(), from: z.int().min(0).max(23), to: z.int().min(0).max(23) }),
+    quietHours: z.object({
+      enabled: z.boolean(),
+      from: z.int().min(0).max(23),
+      to: z.int().min(0).max(23),
+    }),
     digest: DigestFrequency,
   })
   .meta({ id: "NotificationPreferences" });
@@ -59,13 +77,15 @@ export const api = defineApi({
   getNotificationSettings: {
     method: "GET",
     path: "/me/notifications",
-    summary: "The user's notification preferences, the defaults and channel details",
+    summary:
+      "The user's notification preferences, the defaults and channel details",
     response: NotificationSettingsData,
   },
   saveNotificationPreferences: {
     method: "PUT",
     path: "/me/notifications",
-    summary: "Replace the user's notification preferences (sent after every change)",
+    summary:
+      "Replace the user's notification preferences (sent after every change)",
     body: NotificationPreferences,
   },
 });

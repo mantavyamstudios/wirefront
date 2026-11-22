@@ -4,11 +4,15 @@ import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** The period the figures cover. */
-export const VelocityRange = z.enum(["7d", "30d", "90d"]).meta({ id: "VelocityRange" });
+export const VelocityRange = z
+  .enum(["7d", "30d", "90d"])
+  .meta({ id: "VelocityRange" });
 export type VelocityRange = z.infer<typeof VelocityRange>;
 
 /** DORA performance bands. */
-export const DoraRating = z.enum(["elite", "high", "medium", "low"]).meta({ id: "DoraRating" });
+export const DoraRating = z
+  .enum(["elite", "high", "medium", "low"])
+  .meta({ id: "DoraRating" });
 export type DoraRating = z.infer<typeof DoraRating>;
 
 export const DoraMetric = z
@@ -64,7 +68,12 @@ export const Velocity = z
       avgDurationSeconds: z.number().nonnegative(),
       totalRuns: z.number().int().nonnegative(),
       /** Slowest first. */
-      slowestJobs: z.array(z.object({ name: z.string(), durationSeconds: z.number().nonnegative() })),
+      slowestJobs: z.array(
+        z.object({
+          name: z.string(),
+          durationSeconds: z.number().nonnegative(),
+        })
+      ),
     }),
     /** Ranked by merged PRs, most first. */
     contributors: z.array(Contributor),
@@ -77,7 +86,8 @@ export const api = defineApi({
   getVelocity: {
     method: "GET",
     path: "/engineering/velocity",
-    summary: "DORA metrics, PR throughput, CI health and top contributors for a period",
+    summary:
+      "DORA metrics, PR throughput, CI health and top contributors for a period",
     query: z.object({ range: VelocityRange }),
     response: Velocity,
   },

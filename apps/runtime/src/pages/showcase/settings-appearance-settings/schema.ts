@@ -19,12 +19,29 @@ export type ThemePrefs = z.infer<typeof ThemePrefs>;
 
 /** A sample row for the live preview. */
 export const PreviewTask = z
-  .object({ id: z.string(), title: z.string(), owner: z.string(), due: z.string(), dueToday: z.boolean().optional(), done: z.boolean().optional() })
+  .object({
+    id: z.string(),
+    title: z.string(),
+    owner: z.string(),
+    due: z.string(),
+    dueToday: z.boolean().optional(),
+    done: z.boolean().optional(),
+  })
   .meta({ id: "PreviewTask" });
 export type PreviewTask = z.infer<typeof PreviewTask>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getThemePrefs: { method: "GET", path: "/me/appearance", summary: "The signed-in user's appearance on this device", response: ThemePrefs },
-  saveThemePrefs: { method: "PUT", path: "/me/appearance", summary: "Save appearance preferences", body: ThemePrefs },
+  getThemePrefs: {
+    method: "GET",
+    path: "/me/appearance",
+    summary: "The signed-in user's appearance on this device",
+    response: ThemePrefs,
+  },
+  saveThemePrefs: {
+    method: "PUT",
+    path: "/me/appearance",
+    summary: "Save appearance preferences",
+    body: ThemePrefs,
+  },
 });

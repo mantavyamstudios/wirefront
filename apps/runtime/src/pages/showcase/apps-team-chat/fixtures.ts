@@ -11,12 +11,48 @@ export const me = "maya";
 export const workspace = "Kestrel";
 
 export const people: ChatPerson[] = [
-  { id: "maya", name: "Maya Okafor", tone: "teal", title: "Head of Product", presence: "active" },
-  { id: "priya", name: "Priya Raman", tone: "violet", title: "Product Designer", presence: "active" },
-  { id: "jonas", name: "Jonas Weber", tone: "blue", title: "Growth", presence: "active" },
-  { id: "leo", name: "Leo Marchetti", tone: "rose", title: "Mobile", presence: "away" },
-  { id: "sam", name: "Sam Whitfield", tone: "amber", title: "Platform", presence: "active" },
-  { id: "ana", name: "Ana Sousa", tone: "orange", title: "Research", presence: "offline" },
+  {
+    id: "maya",
+    name: "Maya Okafor",
+    tone: "teal",
+    title: "Head of Product",
+    presence: "active",
+  },
+  {
+    id: "priya",
+    name: "Priya Raman",
+    tone: "violet",
+    title: "Product Designer",
+    presence: "active",
+  },
+  {
+    id: "jonas",
+    name: "Jonas Weber",
+    tone: "blue",
+    title: "Growth",
+    presence: "active",
+  },
+  {
+    id: "leo",
+    name: "Leo Marchetti",
+    tone: "rose",
+    title: "Mobile",
+    presence: "away",
+  },
+  {
+    id: "sam",
+    name: "Sam Whitfield",
+    tone: "amber",
+    title: "Platform",
+    presence: "active",
+  },
+  {
+    id: "ana",
+    name: "Ana Sousa",
+    tone: "orange",
+    title: "Research",
+    presence: "offline",
+  },
 ];
 
 export const listChannels: ChatChannel[] = [
@@ -46,10 +82,31 @@ export const listChannels: ChatChannel[] = [
           { emoji: "👀", people: ["ana", "maya"] },
         ],
         replies: [
-          { id: "r1", author: "jonas", sentAt: "2026-10-23T09:20:00Z", text: "Love that it ends on their first project instead of a form." },
-          { id: "r2", author: "ana", sentAt: "2026-10-23T09:31:00Z", text: "Can we test step 4 with the beta teams before we lock it?" },
-          { id: "r3", author: "priya", sentAt: "2026-10-23T09:40:00Z", text: "@Ana yes, booked three sessions for Tuesday.", reactions: [{ emoji: "🙌", people: ["ana"] }] },
-          { id: "r4", author: "leo", sentAt: "2026-10-23T10:15:00Z", text: "I'll bring the mobile prototype so we test both." },
+          {
+            id: "r1",
+            author: "jonas",
+            sentAt: "2026-10-23T09:20:00Z",
+            text: "Love that it ends on their first project instead of a form.",
+          },
+          {
+            id: "r2",
+            author: "ana",
+            sentAt: "2026-10-23T09:31:00Z",
+            text: "Can we test step 4 with the beta teams before we lock it?",
+          },
+          {
+            id: "r3",
+            author: "priya",
+            sentAt: "2026-10-23T09:40:00Z",
+            text: "@Ana yes, booked three sessions for Tuesday.",
+            reactions: [{ emoji: "🙌", people: ["ana"] }],
+          },
+          {
+            id: "r4",
+            author: "leo",
+            sentAt: "2026-10-23T10:15:00Z",
+            text: "I'll bring the mobile prototype so we test both.",
+          },
         ],
       },
       {
@@ -59,15 +116,30 @@ export const listChannels: ChatChannel[] = [
         text: "The empty project state on step 3 is so much calmer. Can we reuse it in the mobile app?",
         reactions: [{ emoji: "👍", people: ["priya", "maya"] }],
       },
-      { id: "d3", author: "leo", sentAt: "2026-10-23T09:25:00Z", text: "Also, the progress dots feel small on phones. 6px is hard to read at arm's length." },
+      {
+        id: "d3",
+        author: "leo",
+        sentAt: "2026-10-23T09:25:00Z",
+        text: "Also, the progress dots feel small on phones. 6px is hard to read at arm's length.",
+      },
       {
         id: "d4",
         author: "jonas",
         sentAt: "2026-10-23T10:02:00Z",
         text: "From the pricing side: if team name comes last, can we still show the plan picker before invites? I need it for the Starter experiment.",
         replies: [
-          { id: "r1", author: "priya", sentAt: "2026-10-23T10:06:00Z", text: "Yes, plan picker stays on step 2." },
-          { id: "r2", author: "jonas", sentAt: "2026-10-23T10:07:00Z", text: "Perfect, thank you." },
+          {
+            id: "r1",
+            author: "priya",
+            sentAt: "2026-10-23T10:06:00Z",
+            text: "Yes, plan picker stays on step 2.",
+          },
+          {
+            id: "r2",
+            author: "jonas",
+            sentAt: "2026-10-23T10:07:00Z",
+            text: "Perfect, thank you.",
+          },
         ],
       },
       {
@@ -96,8 +168,19 @@ export const listChannels: ChatChannel[] = [
     members: 9,
     unread: 3,
     messages: [
-      { id: "e1", author: "sam", sentAt: "2026-10-23T08:02:00Z", text: "Webhook backlog is back to zero. Postmortem draft is in the doc, comments open until Monday." },
-      { id: "e2", author: "sam", sentAt: "2026-10-23T08:03:00Z", text: "Three follow-ups: poison-message handling, consumer lag alert at 2 minutes, and a replay tool.", saved: true },
+      {
+        id: "e1",
+        author: "sam",
+        sentAt: "2026-10-23T08:02:00Z",
+        text: "Webhook backlog is back to zero. Postmortem draft is in the doc, comments open until Monday.",
+      },
+      {
+        id: "e2",
+        author: "sam",
+        sentAt: "2026-10-23T08:03:00Z",
+        text: "Three follow-ups: poison-message handling, consumer lag alert at 2 minutes, and a replay tool.",
+        saved: true,
+      },
       {
         id: "e3",
         author: "jonas",
@@ -115,7 +198,12 @@ export const listChannels: ChatChannel[] = [
     members: 32,
     mentions: 1,
     messages: [
-      { id: "l1", author: "jonas", sentAt: "2026-10-23T11:02:00Z", text: "@Maya can you sign off the Starter pricing copy before 3pm? Release notes go out at 4." },
+      {
+        id: "l1",
+        author: "jonas",
+        sentAt: "2026-10-23T11:02:00Z",
+        text: "@Maya can you sign off the Starter pricing copy before 3pm? Release notes go out at 4.",
+      },
     ],
   },
   {
@@ -125,7 +213,14 @@ export const listChannels: ChatChannel[] = [
     private: true,
     members: 5,
     topic: "Interview notes and synthesis",
-    messages: [{ id: "x1", author: "ana", sentAt: "2026-10-22T15:10:00Z", text: "Uploaded the last two interview recordings." }],
+    messages: [
+      {
+        id: "x1",
+        author: "ana",
+        sentAt: "2026-10-22T15:10:00Z",
+        text: "Uploaded the last two interview recordings.",
+      },
+    ],
   },
   {
     id: "random",
@@ -134,7 +229,14 @@ export const listChannels: ChatChannel[] = [
     muted: true,
     members: 41,
     topic: "Dogs, lunch, and the office plant",
-    messages: [{ id: "z1", author: "leo", sentAt: "2026-10-23T08:30:00Z", text: "Someone watered the fern twice again. It's thriving out of spite." }],
+    messages: [
+      {
+        id: "z1",
+        author: "leo",
+        sentAt: "2026-10-23T08:30:00Z",
+        text: "Someone watered the fern twice again. It's thriving out of spite.",
+      },
+    ],
   },
   {
     id: "dm-priya",
@@ -142,7 +244,12 @@ export const listChannels: ChatChannel[] = [
     kind: "dm",
     with: "priya",
     messages: [
-      { id: "p1", author: "priya", sentAt: "2026-10-23T08:55:00Z", text: "Do you have 10 minutes before crit? I want a second pair of eyes on step 4." },
+      {
+        id: "p1",
+        author: "priya",
+        sentAt: "2026-10-23T08:55:00Z",
+        text: "Do you have 10 minutes before crit? I want a second pair of eyes on step 4.",
+      },
     ],
   },
   {
@@ -151,25 +258,67 @@ export const listChannels: ChatChannel[] = [
     kind: "dm",
     with: "sam",
     unread: 1,
-    messages: [{ id: "s1", author: "sam", sentAt: "2026-10-23T10:58:00Z", text: "Heads up: deploy freeze starts Thursday 6pm for the board demo." }],
+    messages: [
+      {
+        id: "s1",
+        author: "sam",
+        sentAt: "2026-10-23T10:58:00Z",
+        text: "Heads up: deploy freeze starts Thursday 6pm for the board demo.",
+      },
+    ],
   },
   {
     id: "dm-leo",
     name: "Leo Marchetti",
     kind: "dm",
     with: "leo",
-    messages: [{ id: "o1", author: "leo", sentAt: "2026-10-22T18:12:00Z", text: "Venue options for Lisbon are in your email." }],
+    messages: [
+      {
+        id: "o1",
+        author: "leo",
+        sentAt: "2026-10-22T18:12:00Z",
+        text: "Venue options for Lisbon are in your email.",
+      },
+    ],
   },
 ];
 
 /** Who answers in each channel when the demo sends a message there. */
 export const autoReplies: Record<string, { author: string; text: string }> = {
-  design: { author: "priya", text: "Good call. Adding it to the crit doc so we don’t lose it." },
-  "eng-platform": { author: "sam", text: "On it. I’ll post an update here after standup." },
+  design: {
+    author: "priya",
+    text: "Good call. Adding it to the crit doc so we don’t lose it.",
+  },
+  "eng-platform": {
+    author: "sam",
+    text: "On it. I’ll post an update here after standup.",
+  },
   launches: { author: "jonas", text: "Thanks! Locking the copy now." },
 };
 
-export const sendChatMessage: ChatMessage = { id: "sent", author: "maya", sentAt: now, text: "On it." };
-export const replyInThread = { id: "reply", author: "maya", sentAt: now, text: "Agreed." };
-export const createChannel: ChatChannel = { id: "new-channel", name: "new-channel", kind: "channel", members: 1, messages: [] };
-export const openDirectMessage: ChatChannel = { id: "dm-ana", name: "Ana Sousa", kind: "dm", with: "ana", messages: [] };
+export const sendChatMessage: ChatMessage = {
+  id: "sent",
+  author: "maya",
+  sentAt: now,
+  text: "On it.",
+};
+export const replyInThread = {
+  id: "reply",
+  author: "maya",
+  sentAt: now,
+  text: "Agreed.",
+};
+export const createChannel: ChatChannel = {
+  id: "new-channel",
+  name: "new-channel",
+  kind: "channel",
+  members: 1,
+  messages: [],
+};
+export const openDirectMessage: ChatChannel = {
+  id: "dm-ana",
+  name: "Ana Sousa",
+  kind: "dm",
+  with: "ana",
+  messages: [],
+};

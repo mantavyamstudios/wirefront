@@ -32,9 +32,18 @@ export function ToastsUndoShowcasePage() {
           {fixtures.projects
             .filter((p) => !archived.includes(p))
             .map((p) => (
-              <li className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-foreground/2 px-4 py-3" key={p}>
+              <li
+                className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-foreground/2 px-4 py-3"
+                key={p}
+              >
                 <span className="min-w-0 truncate text-sm">{p}</span>
-                <Button aria-label={`Archive ${p}`} onClick={() => archive(p)} size="sm" type="button" variant="ghost">
+                <Button
+                  aria-label={`Archive ${p}`}
+                  onClick={() => archive(p)}
+                  size="sm"
+                  type="button"
+                  variant="ghost"
+                >
                   <ArchiveIcon />
                   <span className="max-sm:sr-only">Archive</span>
                 </Button>

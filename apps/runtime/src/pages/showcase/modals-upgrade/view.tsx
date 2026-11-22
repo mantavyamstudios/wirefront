@@ -3,12 +3,25 @@
 "use client";
 
 import { Button } from "@wirefront/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@wirefront/ui/dialog";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { CheckIcon, SparklesIcon } from "lucide-react";
 
@@ -20,7 +33,8 @@ export const UPGRADE_DIALOG_MESSAGES = {
   trigger: "Upgrade",
   limit: "Limit reached · {used} / {limit} {resource}",
   title: "Time to grow into a bigger plan",
-  description: "You’ve hit the {resource} limit on {plan}. Upgrade to keep shipping — switch back any time.",
+  description:
+    "You’ve hit the {resource} limit on {plan}. Upgrade to keep shipping — switch back any time.",
   recommended: "Recommended",
   perMember: "/ member / mo",
   upgradeTo: "Upgrade to {plan}",
@@ -45,7 +59,15 @@ export interface UpgradeDialogProps {
   className?: string;
 }
 
-function UpgradeDialogScreen({ plans, currentPlan, limit, onChoosePlan, compareHref, defaultOpen, className }: UpgradeDialogProps) {
+function UpgradeDialogScreen({
+  plans,
+  currentPlan,
+  limit,
+  onChoosePlan,
+  compareHref,
+  defaultOpen,
+  className,
+}: UpgradeDialogProps) {
   const t = useMessages("upgradeDialog", UPGRADE_DIALOG_MESSAGES);
   const format = useFormat();
   const choose = useAction(onChoosePlan, {
@@ -72,29 +94,60 @@ function UpgradeDialogScreen({ plans, currentPlan, limit, onChoosePlan, compareH
               <div className="flex flex-col gap-1">
                 {limit ? (
                   <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">
-                    {interpolate(t.limit, { used: format.number(limit.used), limit: format.number(limit.limit), resource: limit.resource })}
+                    {interpolate(t.limit, {
+                      used: format.number(limit.used),
+                      limit: format.number(limit.limit),
+                      resource: limit.resource,
+                    })}
                   </div>
                 ) : null}
                 <DialogTitle className="text-xl">{t.title}</DialogTitle>
-                <DialogDescription>{interpolate(t.description, { resource: limit?.resource ?? "", plan: currentPlan })}</DialogDescription>
+                <DialogDescription>
+                  {interpolate(t.description, {
+                    resource: limit?.resource ?? "",
+                    plan: currentPlan,
+                  })}
+                </DialogDescription>
               </div>
             </DialogHeader>
 
             <div className="-mx-4 grid min-h-0 min-w-0 grid-cols-1 gap-3 overflow-y-auto px-4 pt-2 sm:grid-cols-2">
               {plans.map((p) => (
-                <div className={cn("relative rounded-xl border p-4 sm:p-5", p.recommended ? "border-foreground/60 bg-foreground/4" : "border-border/60")} key={p.id}>
+                <div
+                  className={cn(
+                    "relative rounded-xl border p-4 sm:p-5",
+                    p.recommended
+                      ? "border-foreground/60 bg-foreground/4"
+                      : "border-border/60"
+                  )}
+                  key={p.id}
+                >
                   {p.recommended ? (
-                    <span className="absolute inset-e-4 -top-2 rounded-full bg-foreground px-2 py-0.5 font-mono text-[10px] text-background uppercase tracking-[0.2em]">{t.recommended}</span>
+                    <span className="absolute inset-e-4 -top-2 rounded-full bg-foreground px-2 py-0.5 font-mono text-[10px] text-background uppercase tracking-[0.2em]">
+                      {t.recommended}
+                    </span>
                   ) : null}
                   <h2 className="font-heading text-base">{p.name}</h2>
                   <div className="mt-1 flex items-baseline gap-1">
-                    <span className="font-heading text-3xl tracking-tight">{format.money(p.price, p.currency, { maximumFractionDigits: 0 })}</span>
-                    <span className="text-muted-foreground text-xs">{t.perMember}</span>
+                    <span className="font-heading text-3xl tracking-tight">
+                      {format.money(p.price, p.currency, {
+                        maximumFractionDigits: 0,
+                      })}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      {t.perMember}
+                    </span>
                   </div>
                   <ul className="mt-4 flex flex-col gap-2">
                     {p.features.map((f) => (
-                      <li className="flex items-center gap-2 text-foreground/85 text-sm" key={f}>
-                        <CheckIcon aria-hidden className="size-3.5 text-category-2-foreground" />
+                      <li
+                        className="flex items-center gap-2 text-foreground/85 text-sm"
+                        key={f}
+                      >
+                        <CheckIcon
+                          aria-hidden
+                          className="size-3.5 text-category-2-foreground"
+                        />
                         {f}
                       </li>
                     ))}
@@ -107,8 +160,12 @@ function UpgradeDialogScreen({ plans, currentPlan, limit, onChoosePlan, compareH
                     type="button"
                     variant={p.recommended ? "default" : "outline"}
                   >
-                    {choose.isPending(p.id) ? <Spinner data-icon="inline-start" /> : null}
-                    {interpolate(p.recommended ? t.upgradeTo : t.choose, { plan: p.name })}
+                    {choose.isPending(p.id) ? (
+                      <Spinner data-icon="inline-start" />
+                    ) : null}
+                    {interpolate(p.recommended ? t.upgradeTo : t.choose, {
+                      plan: p.name,
+                    })}
                   </Button>
                 </div>
               ))}
@@ -123,7 +180,10 @@ function UpgradeDialogScreen({ plans, currentPlan, limit, onChoosePlan, compareH
             <DialogFooter className="text-muted-foreground text-xs sm:items-center sm:justify-between">
               <span className="text-center sm:text-start">{t.guarantee}</span>
               {compareHref ? (
-                <WirefrontLink className="inline-flex min-h-8 items-center underline-offset-2 hover:text-foreground hover:underline pointer-coarse:min-h-10" href={compareHref}>
+                <WirefrontLink
+                  className="inline-flex min-h-8 items-center underline-offset-2 hover:text-foreground hover:underline pointer-coarse:min-h-10"
+                  href={compareHref}
+                >
                   {t.compare}
                 </WirefrontLink>
               ) : null}

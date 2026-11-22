@@ -6,7 +6,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { ChecksConsole } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function TimelinesPrOpsConsoleShowcasePage() {
   const state = useShowcaseState();
@@ -18,8 +19,14 @@ export function TimelinesPrOpsConsoleShowcasePage() {
       onReadyForReview={() => wait(500)}
       onRetry={() => {}}
       onUpdateBranch={() => wait(700)}
-      pr={state === "loading" || state === "error" ? undefined : fixtures.getPrChecks}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      pr={
+        state === "loading" || state === "error"
+          ? undefined
+          : fixtures.getPrChecks
+      }
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

@@ -5,7 +5,8 @@
 import * as fixtures from "./fixtures";
 import { UpgradeDialog } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ModalsUpgradeShowcasePage() {
   // The demo stays on the page instead of following a checkout URL.

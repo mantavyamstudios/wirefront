@@ -12,7 +12,13 @@ export const PlanTier = z
     price: z.number().min(0).nullable(),
     currency: z.string().length(3),
     /** What the price covers. */
-    billing: z.enum(["forever", "seat-month", "month", "year", "annual-contract"]),
+    billing: z.enum([
+      "forever",
+      "seat-month",
+      "month",
+      "year",
+      "annual-contract",
+    ]),
     features: z.array(z.string()),
     /** Called out as the most popular plan. */
     featured: z.boolean().optional(),
@@ -24,5 +30,10 @@ export type PlanTier = z.infer<typeof PlanTier>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listPlanTiers: { method: "GET", path: "/plans", summary: "The plans to show on the pricing page", response: z.array(PlanTier) },
+  listPlanTiers: {
+    method: "GET",
+    path: "/plans",
+    summary: "The plans to show on the pricing page",
+    response: z.array(PlanTier),
+  },
 });

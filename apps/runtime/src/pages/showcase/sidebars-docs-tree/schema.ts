@@ -4,7 +4,12 @@ import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** A page, or a folder of pages when it has children. */
-export type DocNode = { id: string; title: string; href?: string; children?: DocNode[] };
+export type DocNode = {
+  id: string;
+  title: string;
+  href?: string;
+  children?: DocNode[];
+};
 
 export const DocNode: z.ZodType<DocNode> = z
   .lazy(() =>
@@ -14,11 +19,16 @@ export const DocNode: z.ZodType<DocNode> = z
       /** Where the page lives. Folders without an href only open and close. */
       href: z.string().optional(),
       children: z.array(DocNode).optional(),
-    }),
+    })
   )
   .meta({ id: "DocNode" });
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getDocsTree: { method: "GET", path: "/docs/tree", summary: "The documentation's table of contents", response: z.array(DocNode) },
+  getDocsTree: {
+    method: "GET",
+    path: "/docs/tree",
+    summary: "The documentation's table of contents",
+    response: z.array(DocNode),
+  },
 });

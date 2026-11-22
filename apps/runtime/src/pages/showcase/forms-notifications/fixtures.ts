@@ -10,9 +10,21 @@ export const sections: NotificationSection[] = [
     title: "Activity",
     description: "Things happening in projects you follow.",
     preferences: [
-      { key: "comments", title: "Comments and replies", description: "When someone replies to a thread you’re in." },
-      { key: "mentions", title: "@mentions", description: "When you’re called out specifically." },
-      { key: "assignments", title: "Assignments", description: "When something is assigned to you." },
+      {
+        key: "comments",
+        title: "Comments and replies",
+        description: "When someone replies to a thread you’re in.",
+      },
+      {
+        key: "mentions",
+        title: "@mentions",
+        description: "When you’re called out specifically.",
+      },
+      {
+        key: "assignments",
+        title: "Assignments",
+        description: "When something is assigned to you.",
+      },
     ],
   },
   {
@@ -20,8 +32,16 @@ export const sections: NotificationSection[] = [
     title: "Workspace",
     description: "Membership, billing, and admin events.",
     preferences: [
-      { key: "invites", title: "New members", description: "Someone joins or accepts an invite." },
-      { key: "billing", title: "Billing receipts", description: "Monthly invoices and payment failures." },
+      {
+        key: "invites",
+        title: "New members",
+        description: "Someone joins or accepts an invite.",
+      },
+      {
+        key: "billing",
+        title: "Billing receipts",
+        description: "Monthly invoices and payment failures.",
+      },
     ],
   },
   {
@@ -29,8 +49,16 @@ export const sections: NotificationSection[] = [
     title: "Product updates",
     description: "Newsletters and what’s new.",
     preferences: [
-      { key: "weekly", title: "Weekly digest", description: "A short Monday summary of activity." },
-      { key: "changelog", title: "Changelog highlights", description: "Major shipments, about once a month." },
+      {
+        key: "weekly",
+        title: "Weekly digest",
+        description: "A short Monday summary of activity.",
+      },
+      {
+        key: "changelog",
+        title: "Changelog highlights",
+        description: "Major shipments, about once a month.",
+      },
     ],
   },
 ];

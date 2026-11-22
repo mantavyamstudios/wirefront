@@ -4,10 +4,24 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@wirefront/ui/avatar";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@wirefront/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
-import { CheckIcon, ChevronDownIcon, PlusIcon, SettingsIcon } from "lucide-react";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  PlusIcon,
+  SettingsIcon,
+} from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import type { RailWorkspace } from "./schema";
@@ -71,7 +85,8 @@ const TINT = [
   "from-category-7/70 to-category-7/30",
   "from-category-8/70 to-category-8/30",
 ];
-const railButton = "flex size-9 items-center justify-center rounded-lg transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring";
+const railButton =
+  "flex size-9 items-center justify-center rounded-lg transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring";
 const initialsOf = (name: string) =>
   name
     .split(/\s+/)
@@ -80,9 +95,22 @@ const initialsOf = (name: string) =>
     .map((w) => w[0]?.toUpperCase())
     .join("");
 
-function Tile({ workspace, size = "size-9" }: { workspace: RailWorkspace; size?: string }) {
+function Tile({
+  workspace,
+  size = "size-9",
+}: {
+  workspace: RailWorkspace;
+  size?: string;
+}) {
   return (
-    <span aria-hidden className={cn("flex items-center justify-center rounded-lg bg-linear-to-br font-medium text-[12px] text-foreground/85", size, TINT[workspace.color])}>
+    <span
+      aria-hidden
+      className={cn(
+        "flex items-center justify-center rounded-lg bg-linear-to-br font-medium text-[12px] text-foreground/85",
+        size,
+        TINT[workspace.color]
+      )}
+    >
       {workspace.name.charAt(0).toUpperCase()}
     </span>
   );
@@ -90,7 +118,13 @@ function Tile({ workspace, size = "size-9" }: { workspace: RailWorkspace; size?:
 
 function Badge({ count, className }: { count: number; className?: string }) {
   return (
-    <span aria-hidden className={cn("absolute flex size-4 items-center justify-center rounded-full bg-destructive font-medium text-[10px] text-white ring-2 ring-background", className)}>
+    <span
+      aria-hidden
+      className={cn(
+        "absolute flex size-4 items-center justify-center rounded-full bg-destructive font-medium text-[10px] text-white ring-2 ring-background",
+        className
+      )}
+    >
       {count > 9 ? "9+" : count}
     </span>
   );
@@ -111,25 +145,41 @@ export function MiniRailShell({
 }: MiniRailShellProps) {
   const t = useMessages("miniRailShell", MINI_RAIL_SHELL_MESSAGES);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const current = workspaces.find((w) => w.id === currentWorkspaceId) ?? workspaces[0];
-  const itemLabel = (item: RailItem) => (item.count ? interpolate(t.unread, { label: item.label, count: item.count }) : item.label);
+  const current =
+    workspaces.find((w) => w.id === currentWorkspaceId) ?? workspaces[0];
+  const itemLabel = (item: RailItem) =>
+    item.count
+      ? interpolate(t.unread, { label: item.label, count: item.count })
+      : item.label;
   const avatar = (
     <Avatar className="size-8">
       {user.avatarUrl ? <AvatarImage alt="" src={user.avatarUrl} /> : null}
-      <AvatarFallback className="bg-foreground font-medium text-[11px] text-background">{initialsOf(user.name)}</AvatarFallback>
+      <AvatarFallback className="bg-foreground font-medium text-[11px] text-background">
+        {initialsOf(user.name)}
+      </AvatarFallback>
     </Avatar>
   );
   const account = accountHref ? (
-    <WirefrontLink className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring" href={accountHref}>
+    <WirefrontLink
+      className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      href={accountHref}
+    >
       <span aria-hidden>{avatar}</span>
-      <span className="sr-only">{interpolate(t.accountName, { name: user.name })}</span>
+      <span className="sr-only">
+        {interpolate(t.accountName, { name: user.name })}
+      </span>
     </WirefrontLink>
   ) : (
     <span title={user.name}>{avatar}</span>
   );
 
   return (
-    <div className={cn("min-h-svh bg-background text-foreground md:grid md:grid-cols-[60px_minmax(0,1fr)]", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background text-foreground md:grid md:grid-cols-[60px_minmax(0,1fr)]",
+        className
+      )}
+    >
       {/* Phones: top bar with the workspace switcher. */}
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-2 border-border/60 border-b bg-background/90 px-3 backdrop-blur md:hidden">
         {current ? (
@@ -140,9 +190,14 @@ export function MiniRailShell({
               <span className="font-medium text-sm">{current.name}</span>
               <ChevronDownIcon aria-hidden className="size-3.5 opacity-60" />
             </SheetTrigger>
-            <SheetContent className="pb-[env(safe-area-inset-bottom)]" side="bottom">
+            <SheetContent
+              className="pb-[env(safe-area-inset-bottom)]"
+              side="bottom"
+            >
               <div className="px-4 pt-4 pb-2">
-                <SheetTitle className="font-heading text-base">{t.workspaces}</SheetTitle>
+                <SheetTitle className="font-heading text-base">
+                  {t.workspaces}
+                </SheetTitle>
               </div>
               <ul className="px-2 pb-3">
                 {workspaces.map((w) => (
@@ -158,7 +213,9 @@ export function MiniRailShell({
                     >
                       <Tile size="size-8" workspace={w} />
                       <span className="flex-1">{w.name}</span>
-                      {w.id === current.id ? <CheckIcon aria-hidden className="size-4" /> : null}
+                      {w.id === current.id ? (
+                        <CheckIcon aria-hidden className="size-4" />
+                      ) : null}
                     </button>
                   </li>
                 ))}
@@ -172,7 +229,10 @@ export function MiniRailShell({
                       }}
                       type="button"
                     >
-                      <span aria-hidden className="flex size-8 items-center justify-center rounded-lg border border-border/70 border-dashed">
+                      <span
+                        aria-hidden
+                        className="flex size-8 items-center justify-center rounded-lg border border-border/70 border-dashed"
+                      >
                         <PlusIcon className="size-4" />
                       </span>
                       {t.addWorkspace}
@@ -188,21 +248,34 @@ export function MiniRailShell({
 
       {/* md+: a 60px icon rail with tooltips. */}
       <aside className="sticky top-0 hidden h-svh flex-col items-center overflow-x-clip border-border/60 border-e bg-foreground/2 py-3 md:flex">
-        <ul aria-label={t.workspaces} className="flex flex-col items-center gap-1.5">
+        <ul
+          aria-label={t.workspaces}
+          className="flex flex-col items-center gap-1.5"
+        >
           {workspaces.map((w) => (
             <li className="relative" key={w.id}>
               <Tooltip>
                 <TooltipTrigger
                   aria-current={w.id === current?.id ? "true" : undefined}
                   aria-label={interpolate(t.switchTo, { name: w.name })}
-                  className={cn(railButton, "transition-transform hover:scale-105 motion-reduce:hover:scale-100")}
-                  onClick={() => w.id !== current?.id && onSwitchWorkspace(w.id)}
+                  className={cn(
+                    railButton,
+                    "transition-transform hover:scale-105 motion-reduce:hover:scale-100"
+                  )}
+                  onClick={() =>
+                    w.id !== current?.id && onSwitchWorkspace(w.id)
+                  }
                 >
                   <Tile workspace={w} />
                 </TooltipTrigger>
                 <TooltipContent side="right">{w.name}</TooltipContent>
               </Tooltip>
-              {w.id === current?.id ? <span aria-hidden className="absolute top-1/2 -inset-s-3 h-5 w-1 -translate-y-1/2 rounded-e-full bg-foreground" /> : null}
+              {w.id === current?.id ? (
+                <span
+                  aria-hidden
+                  className="absolute top-1/2 -inset-s-3 h-5 w-1 -translate-y-1/2 rounded-e-full bg-foreground"
+                />
+              ) : null}
             </li>
           ))}
           {onAddWorkspace ? (
@@ -210,7 +283,10 @@ export function MiniRailShell({
               <Tooltip>
                 <TooltipTrigger
                   aria-label={t.addWorkspace}
-                  className={cn(railButton, "border border-border/70 border-dashed text-muted-foreground hover:bg-foreground/4 hover:text-foreground")}
+                  className={cn(
+                    railButton,
+                    "border border-border/70 border-dashed text-muted-foreground hover:bg-foreground/4 hover:text-foreground"
+                  )}
                   onClick={onAddWorkspace}
                 >
                   <PlusIcon className="size-4" />
@@ -233,15 +309,28 @@ export function MiniRailShell({
                     <TooltipTrigger
                       aria-current={active ? "page" : undefined}
                       aria-label={itemLabel(item)}
-                      className={cn(railButton, "[&_svg]:size-4", active ? "bg-foreground/8 text-foreground" : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground")}
+                      className={cn(
+                        railButton,
+                        "[&_svg]:size-4",
+                        active
+                          ? "bg-foreground/8 text-foreground"
+                          : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground"
+                      )}
                       render={<WirefrontLink href={item.href} />}
                     >
                       {item.icon}
                     </TooltipTrigger>
                     <TooltipContent side="right">{item.label}</TooltipContent>
                   </Tooltip>
-                  {active ? <span aria-hidden className="absolute top-1/2 -inset-s-3 h-5 w-1 -translate-y-1/2 rounded-e-full bg-foreground" /> : null}
-                  {item.count ? <Badge className="inset-e-0.5 top-0.5" count={item.count} /> : null}
+                  {active ? (
+                    <span
+                      aria-hidden
+                      className="absolute top-1/2 -inset-s-3 h-5 w-1 -translate-y-1/2 rounded-e-full bg-foreground"
+                    />
+                  ) : null}
+                  {item.count ? (
+                    <Badge className="inset-e-0.5 top-0.5" count={item.count} />
+                  ) : null}
                 </li>
               );
             })}
@@ -253,7 +342,10 @@ export function MiniRailShell({
             <Tooltip>
               <TooltipTrigger
                 aria-label={t.settings}
-                className={cn(railButton, "text-muted-foreground hover:bg-foreground/4 hover:text-foreground")}
+                className={cn(
+                  railButton,
+                  "text-muted-foreground hover:bg-foreground/4 hover:text-foreground"
+                )}
                 render={<WirefrontLink href={settingsHref} />}
               >
                 <SettingsIcon className="size-4" />
@@ -265,26 +357,48 @@ export function MiniRailShell({
         </div>
       </aside>
 
-      <main className="min-w-0 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">{children}</main>
+      <main className="min-w-0 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+        {children}
+      </main>
 
       {/* Phones: bottom tab bar (five destinations fit). */}
-      <nav aria-label={t.main} className="fixed inset-x-0 bottom-0 z-30 border-border/60 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
-        <ul className="grid" style={{ gridTemplateColumns: `repeat(${Math.min(items.length, 5)}, minmax(0, 1fr))` }}>
+      <nav
+        aria-label={t.main}
+        className="fixed inset-x-0 bottom-0 z-30 border-border/60 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+      >
+        <ul
+          className="grid"
+          style={{
+            gridTemplateColumns: `repeat(${Math.min(items.length, 5)}, minmax(0, 1fr))`,
+          }}
+        >
           {items.slice(0, 5).map((item) => {
             const active = item.id === activeId;
             return (
               <li key={item.id}>
                 <WirefrontLink
                   aria-current={active ? "page" : undefined}
-                  className={cn("relative flex h-16 w-full flex-col items-center justify-center gap-1 text-[11px] transition-colors [&_svg]:size-5", active ? "text-foreground" : "text-muted-foreground")}
+                  className={cn(
+                    "relative flex h-16 w-full flex-col items-center justify-center gap-1 text-[11px] transition-colors [&_svg]:size-5",
+                    active ? "text-foreground" : "text-muted-foreground"
+                  )}
                   href={item.href}
                 >
                   <span aria-hidden className="relative">
                     {item.icon}
-                    {item.count ? <Badge className="-inset-e-2.5 -top-1.5" count={item.count} /> : null}
+                    {item.count ? (
+                      <Badge
+                        className="-inset-e-2.5 -top-1.5"
+                        count={item.count}
+                      />
+                    ) : null}
                   </span>
                   {item.label}
-                  {item.count ? <span className="sr-only">{interpolate(t.unreadCount, { count: item.count })}</span> : null}
+                  {item.count ? (
+                    <span className="sr-only">
+                      {interpolate(t.unreadCount, { count: item.count })}
+                    </span>
+                  ) : null}
                 </WirefrontLink>
               </li>
             );

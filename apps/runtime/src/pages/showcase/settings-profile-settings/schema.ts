@@ -4,12 +4,19 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const AvatarPalette = z.enum(["dusk", "tide", "ember", "moss"]).meta({ id: "AvatarPalette" });
+export const AvatarPalette = z
+  .enum(["dusk", "tide", "ember", "moss"])
+  .meta({ id: "AvatarPalette" });
 export type AvatarPalette = z.infer<typeof AvatarPalette>;
 
 /** A generated avatar: a colour palette, framed by an offset and zoom. */
 export const AvatarCrop = z
-  .object({ palette: AvatarPalette, x: z.number(), y: z.number(), zoom: z.number().min(1).max(2.4) })
+  .object({
+    palette: AvatarPalette,
+    x: z.number(),
+    y: z.number(),
+    zoom: z.number().min(1).max(2.4),
+  })
   .meta({ id: "AvatarCrop" });
 export type AvatarCrop = z.infer<typeof AvatarCrop>;
 
@@ -27,18 +34,31 @@ export const Profile = z
   .meta({ id: "Profile" });
 export type Profile = z.infer<typeof Profile>;
 
-export const ProfileZone = z.object({ id: z.string(), city: z.string() }).meta({ id: "ProfileZone" });
+export const ProfileZone = z
+  .object({ id: z.string(), city: z.string() })
+  .meta({ id: "ProfileZone" });
 export type ProfileZone = z.infer<typeof ProfileZone>;
 
-export const UsernameCheck = z.object({ available: z.boolean(), suggestions: z.array(z.string()).optional() }).meta({ id: "UsernameCheck" });
+export const UsernameCheck = z
+  .object({
+    available: z.boolean(),
+    suggestions: z.array(z.string()).optional(),
+  })
+  .meta({ id: "UsernameCheck" });
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getProfile: { method: "GET", path: "/me/profile", summary: "The signed-in user's profile", response: Profile },
+  getProfile: {
+    method: "GET",
+    path: "/me/profile",
+    summary: "The signed-in user's profile",
+    response: Profile,
+  },
   saveProfile: {
     method: "PUT",
     path: "/me/profile",
-    summary: "Save the profile; a changed email is confirmed by a link before it takes effect",
+    summary:
+      "Save the profile; a changed email is confirmed by a link before it takes effect",
     body: Profile,
     errors: { 409: "The username was taken in the meantime" },
   },

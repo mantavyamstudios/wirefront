@@ -4,7 +4,13 @@
 /**
  * The shells' wiring contract: frames around the builder's page.
  */
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import type { AnchorHTMLAttributes } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
@@ -22,10 +28,16 @@ function AppLink(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
 const base = {
   user: { name: "Ada Lovelace", email: "ada@acme.dev" },
   workspace: { id: "ws", name: "Acme" },
-  sections: [{ id: "main", label: "Workspace", items: [
-    { id: "home", label: "Home", href: "/home" },
-    { id: "inbox", label: "Inbox", href: "/inbox", count: 4 },
-  ] }],
+  sections: [
+    {
+      id: "main",
+      label: "Workspace",
+      items: [
+        { id: "home", label: "Home", href: "/home" },
+        { id: "inbox", label: "Inbox", href: "/inbox", count: 4 },
+      ],
+    },
+  ],
 };
 
 describe("AppShell", () => {
@@ -35,7 +47,7 @@ describe("AppShell", () => {
         <AppShell {...base} activeId="inbox">
           <h1>Inbox page</h1>
         </AppShell>
-      </WirefrontProvider>,
+      </WirefrontProvider>
     );
     expect(screen.getByRole("heading", { name: "Inbox page" })).toBeTruthy();
     const nav = screen.getAllByRole("navigation", { name: "Workspace" })[0];
@@ -48,15 +60,31 @@ describe("AppShell", () => {
 
   it("shows search, the switcher and notifications only when wired", () => {
     const onSearch = vi.fn();
-    const { rerender } = render(<AppShell {...base}><p>x</p></AppShell>);
+    const { rerender } = render(
+      <AppShell {...base}>
+        <p>x</p>
+      </AppShell>
+    );
     expect(screen.queryByRole("button", { name: /Search/ })).toBeNull();
-    expect(screen.queryByRole("button", { name: /Switch workspace/ })).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /Switch workspace/ })
+    ).toBeNull();
     expect(screen.queryByRole("link", { name: /Notifications/ })).toBeNull();
 
-    rerender(<AppShell {...base} notificationsHref="/n" onSearch={onSearch} unread={3}><p>x</p></AppShell>);
-    fireEvent.click(screen.getAllByRole("button", { name: /Search/ })[0] as HTMLElement);
+    rerender(
+      <AppShell {...base} notificationsHref="/n" onSearch={onSearch} unread={3}>
+        <p>x</p>
+      </AppShell>
+    );
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Search/ })[0] as HTMLElement
+    );
     expect(onSearch).toHaveBeenCalled();
-    expect(screen.getByRole("link", { name: "Notifications, 3 unread" }).getAttribute("href")).toBe("/n");
+    expect(
+      screen
+        .getByRole("link", { name: "Notifications, 3 unread" })
+        .getAttribute("href")
+    ).toBe("/n");
   });
 });
 
@@ -65,26 +93,57 @@ describe("InsetShell", () => {
     user: { name: "Ines Moreau", email: "ines@northwind.dev" },
     workspace: { id: "nw", name: "Northwind Labs", plan: "Team" },
     sections: [
-      { id: "main", items: [{ id: "inbox", label: "Inbox", href: "/inbox", count: 4, attention: true }] },
-      { id: "projects", label: "Projects", addHref: "/projects/new", items: [{ id: "atlas", label: "Atlas", href: "/p/atlas", color: "orange" }] },
+      {
+        id: "main",
+        items: [
+          {
+            id: "inbox",
+            label: "Inbox",
+            href: "/inbox",
+            count: 4,
+            attention: true,
+          },
+        ],
+      },
+      {
+        id: "projects",
+        label: "Projects",
+        addHref: "/projects/new",
+        items: [
+          { id: "atlas", label: "Atlas", href: "/p/atlas", color: "orange" },
+        ],
+      },
     ],
   };
 
   it("frames the page, links through the builder's router and shows breadcrumbs", () => {
     render(
       <WirefrontProvider link={AppLink}>
-        <InsetShell {...inset} activeId="atlas" breadcrumbs={[{ label: "Projects", href: "/projects" }, { label: "Atlas" }]}>
+        <InsetShell
+          {...inset}
+          activeId="atlas"
+          breadcrumbs={[
+            { label: "Projects", href: "/projects" },
+            { label: "Atlas" },
+          ]}
+        >
           <p>Page body</p>
         </InsetShell>
-      </WirefrontProvider>,
+      </WirefrontProvider>
     );
     expect(screen.getByText("Page body")).toBeTruthy();
     const primary = within(screen.getByRole("navigation", { name: "Primary" }));
     const atlas = primary.getByRole("link", { name: "Atlas" });
     expect(atlas.getAttribute("aria-current")).toBe("page");
     expect(atlas.hasAttribute("data-app-link")).toBe(true);
-    expect(primary.getByRole("link", { name: "New in Projects" }).getAttribute("href")).toBe("/projects/new");
-    expect(screen.getByRole("link", { name: "Projects" }).getAttribute("href")).toBe("/projects");
+    expect(
+      primary
+        .getByRole("link", { name: "New in Projects" })
+        .getAttribute("href")
+    ).toBe("/projects/new");
+    expect(
+      screen.getByRole("link", { name: "Projects" }).getAttribute("href")
+    ).toBe("/projects");
   });
 
   it("collapses a labelled section and hides everything unwired", () => {
@@ -94,7 +153,11 @@ describe("InsetShell", () => {
     expect(screen.queryByRole("link", { name: "Help & support" })).toBeNull();
     expect(screen.queryByRole("button", { name: /Ines Moreau/ })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Projects" }));
-    expect(screen.getByRole("button", { name: "Projects" }).getAttribute("aria-expanded")).toBe("false");
+    expect(
+      screen
+        .getByRole("button", { name: "Projects" })
+        .getAttribute("aria-expanded")
+    ).toBe("false");
   });
 
   it("switches workspace and signs out through the builder's actions", async () => {
@@ -102,13 +165,24 @@ describe("InsetShell", () => {
     const onSignOut = vi.fn(async () => {});
     const workspaces = [inset.workspace, { id: "fable", name: "Fable & Co" }];
     render(
-      <InsetShell {...inset} notificationsHref="/inbox" onSignOut={onSignOut} onSwitchWorkspace={onSwitchWorkspace} unread={4} workspaces={workspaces}>
+      <InsetShell
+        {...inset}
+        notificationsHref="/inbox"
+        onSignOut={onSignOut}
+        onSwitchWorkspace={onSwitchWorkspace}
+        unread={4}
+        workspaces={workspaces}
+      >
         x
-      </InsetShell>,
+      </InsetShell>
     );
-    expect(screen.getByRole("link", { name: "Notifications, 4 unread" })).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: "Notifications, 4 unread" })
+    ).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /Northwind Labs/ }));
-    fireEvent.click(await screen.findByRole("menuitemradio", { name: /Fable & Co/ }));
+    fireEvent.click(
+      await screen.findByRole("menuitemradio", { name: /Fable & Co/ })
+    );
     expect(onSwitchWorkspace).toHaveBeenCalledWith("fable");
     fireEvent.click(screen.getByRole("button", { name: /Ines Moreau/ }));
     fireEvent.click(await screen.findByRole("menuitem", { name: "Sign out" }));
@@ -123,9 +197,13 @@ describe("SplitShell", () => {
     class {
       observe() {}
       disconnect() {}
-    },
+    }
   );
-  const split = { brand: { name: "Orbit" }, items: splitFixtures.listTasks, user: splitFixtures.user };
+  const split = {
+    brand: { name: "Orbit" },
+    items: splitFixtures.listTasks,
+    user: splitFixtures.user,
+  };
 
   it("lists the builder's items as links with their state and marks the open one", () => {
     render(
@@ -133,10 +211,12 @@ describe("SplitShell", () => {
         <SplitShell {...split} activeId="t2">
           <p>Thread</p>
         </SplitShell>
-      </WirefrontProvider>,
+      </WirefrontProvider>
     );
     expect(screen.getByText("Thread")).toBeTruthy();
-    const sidebar = within(screen.getByRole("complementary", { name: "Sidebar" }));
+    const sidebar = within(
+      screen.getByRole("complementary", { name: "Sidebar" })
+    );
     const open = sidebar.getByRole("link", { name: /Draft Q4 pricing memo/ });
     expect(open.getAttribute("aria-current")).toBe("page");
     expect(open.hasAttribute("data-app-link")).toBe(true);
@@ -151,14 +231,28 @@ describe("SplitShell", () => {
     expect(screen.queryByRole("button", { name: /Search/ })).toBeNull();
 
     rerender(
-      <SplitShell {...split} newHref="/new" panel={({ close }) => <button onClick={close} type="button">Close panel</button>}>
+      <SplitShell
+        {...split}
+        newHref="/new"
+        panel={({ close }) => (
+          <button onClick={close} type="button">
+            Close panel
+          </button>
+        )}
+      >
         x
-      </SplitShell>,
+      </SplitShell>
     );
-    expect(screen.getAllByRole("link", { name: "New task" })[0]?.getAttribute("href")).toBe("/new");
+    expect(
+      screen.getAllByRole("link", { name: "New task" })[0]?.getAttribute("href")
+    ).toBe("/new");
     const toggle = screen.getByRole("button", { name: "Hide work panel" });
     expect(toggle.getAttribute("aria-expanded")).toBe("true");
     fireEvent.click(screen.getByRole("button", { name: "Close panel" }));
-    expect(screen.getByRole("button", { name: "Show work panel" }).getAttribute("aria-expanded")).toBe("false");
+    expect(
+      screen
+        .getByRole("button", { name: "Show work panel" })
+        .getAttribute("aria-expanded")
+    ).toBe("false");
   });
 });

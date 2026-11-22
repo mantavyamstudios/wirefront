@@ -13,20 +13,26 @@ const demoNow = () => new Date(fixtures.now);
 function runQuery(query: CustomersListQuery) {
   const search = query.search?.trim().toLowerCase();
   const f = query.filters ?? {};
-  const since = f.activeWithinDays ? Date.parse(fixtures.now) - f.activeWithinDays * 86_400_000 : 0;
+  const since = f.activeWithinDays
+    ? Date.parse(fixtures.now) - f.activeWithinDays * 86_400_000
+    : 0;
   const tag = f.tag?.trim().toLowerCase();
   const items = fixtures.customers.filter(
     (c) =>
       (!search || c.name.toLowerCase().includes(search)) &&
       (!f.status?.length || f.status.includes(c.status)) &&
       (!f.plan || c.plan === f.plan) &&
-      (!f.country?.length || f.country.includes(c.country) !== (f.excludeCountry === true)) &&
+      (!f.country?.length ||
+        f.country.includes(c.country) !== (f.excludeCountry === true)) &&
       (f.mrrMin === undefined || c.mrr >= f.mrrMin) &&
       Date.parse(c.lastActiveAt) >= since &&
-      (!tag || c.tags.some((t) => t.includes(tag))),
+      (!tag || c.tags.some((t) => t.includes(tag)))
   );
   const start = (query.page - 1) * query.pageSize;
-  return { items: items.slice(start, start + query.pageSize), total: items.length };
+  return {
+    items: items.slice(start, start + query.pageSize),
+    total: items.length,
+  };
 }
 
 export function FilterChipsShowcasePage() {
@@ -38,7 +44,9 @@ export function FilterChipsShowcasePage() {
         <div className="mx-auto max-w-5xl">
           <header className="mb-6">
             <h1 className="font-heading text-xl">Active filter chips</h1>
-            <p className="text-muted-foreground text-sm">Field · operator · value pills with quick edit and removal.</p>
+            <p className="text-muted-foreground text-sm">
+              Field · operator · value pills with quick edit and removal.
+            </p>
           </header>
           <CustomerFilterChips
             countries={fixtures.countries}

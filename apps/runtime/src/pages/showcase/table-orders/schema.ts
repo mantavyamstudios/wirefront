@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const OrderStage = z.enum(["ordered", "packed", "shipped", "delivered"]).meta({ id: "OrderStage" });
+export const OrderStage = z
+  .enum(["ordered", "packed", "shipped", "delivered"])
+  .meta({ id: "OrderStage" });
 export type OrderStage = z.infer<typeof OrderStage>;
 
 export const Order = z
@@ -36,19 +38,35 @@ export const OrdersQuery = z
   .meta({ id: "OrdersQuery" });
 export type OrdersQuery = z.infer<typeof OrdersQuery>;
 
-export const OrdersPage = z.object({ items: z.array(Order), total: z.int().min(0) }).meta({ id: "OrdersPage" });
+export const OrdersPage = z
+  .object({ items: z.array(Order), total: z.int().min(0) })
+  .meta({ id: "OrdersPage" });
 export type OrdersPage = z.infer<typeof OrdersPage>;
 
-const OrderIds = z.object({ ids: z.array(z.string()).min(1) }).meta({ id: "OrderIds" });
+const OrderIds = z
+  .object({ ids: z.array(z.string()).min(1) })
+  .meta({ id: "OrderIds" });
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listOrders: { method: "GET", path: "/orders", summary: "List orders, sorted and paginated", query: OrdersQuery, response: OrdersPage },
-  markShipped: { method: "POST", path: "/orders/mark-shipped", summary: "Mark the selected orders as shipped", body: OrderIds },
+  listOrders: {
+    method: "GET",
+    path: "/orders",
+    summary: "List orders, sorted and paginated",
+    query: OrdersQuery,
+    response: OrdersPage,
+  },
+  markShipped: {
+    method: "POST",
+    path: "/orders/mark-shipped",
+    summary: "Mark the selected orders as shipped",
+    body: OrderIds,
+  },
   printLabels: {
     method: "POST",
     path: "/orders/labels",
-    summary: "Create shipping labels for the selected orders; returns a URL to the printable file",
+    summary:
+      "Create shipping labels for the selected orders; returns a URL to the printable file",
     body: OrderIds,
     response: z.object({ url: z.url() }),
   },

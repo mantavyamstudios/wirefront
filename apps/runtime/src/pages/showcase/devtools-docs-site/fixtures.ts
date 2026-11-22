@@ -17,15 +17,28 @@ export const pages: DocsPage[] = [
         id: "what-you-can-build",
         title: "What you can build",
         blocks: [
-          { type: "p", text: "Anything your customers would otherwise poll for. Teams use Kestrel to send order updates to warehouses, sync CRM records, trigger builds and page on-call when a job fails." },
-          { type: "list", items: ["Outgoing webhooks with per-customer endpoints", "A hosted portal where customers manage their own endpoints", "Delivery logs, replays and alerts without building them yourself"] },
+          {
+            type: "p",
+            text: "Anything your customers would otherwise poll for. Teams use Kestrel to send order updates to warehouses, sync CRM records, trigger builds and page on-call when a job fails.",
+          },
+          {
+            type: "list",
+            items: [
+              "Outgoing webhooks with per-customer endpoints",
+              "A hosted portal where customers manage their own endpoints",
+              "Delivery logs, replays and alerts without building them yourself",
+            ],
+          },
         ],
       },
       {
         id: "how-it-fits",
         title: "How it fits together",
         blocks: [
-          { type: "p", text: "Your backend publishes an event once. Kestrel fans it out to every subscribed endpoint, signs each request, retries failures and records every attempt." },
+          {
+            type: "p",
+            text: "Your backend publishes an event once. Kestrel fans it out to every subscribed endpoint, signs each request, retries failures and records every attempt.",
+          },
         ],
       },
     ],
@@ -44,7 +57,12 @@ export const pages: DocsPage[] = [
         blocks: [
           {
             type: "code",
-            samples: { node: "npm install @kestrel/node", python: "pip install kestrel", go: "go get kestrel.dev/go/v2", curl: "# No install needed. Every SDK call maps to one HTTP request." },
+            samples: {
+              node: "npm install @kestrel/node",
+              python: "pip install kestrel",
+              go: "go get kestrel.dev/go/v2",
+              curl: "# No install needed. Every SDK call maps to one HTTP request.",
+            },
           },
         ],
       },
@@ -52,7 +70,10 @@ export const pages: DocsPage[] = [
         id: "send-event",
         title: "Send an event",
         blocks: [
-          { type: "p", text: "Publish an event with a type and a JSON payload. Every endpoint subscribed to that type receives it." },
+          {
+            type: "p",
+            text: "Publish an event with a type and a JSON payload. Every endpoint subscribed to that type receives it.",
+          },
           {
             type: "code",
             samples: {
@@ -62,7 +83,12 @@ export const pages: DocsPage[] = [
               curl: `curl https://api.kestrel.dev/v2/events \\\n  -H "Authorization: Bearer $KESTREL_KEY" \\\n  -d type=order.shipped \\\n  -d data[orderId]=ord_9QX2`,
             },
           },
-          { type: "callout", tone: "info", title: "Use a test key first", text: "Keys starting with `kst_test_` deliver to test endpoints only, so you can try this without touching customer traffic." },
+          {
+            type: "callout",
+            tone: "info",
+            title: "Use a test key first",
+            text: "Keys starting with `kst_test_` deliver to test endpoints only, so you can try this without touching customer traffic.",
+          },
         ],
       },
     ],
@@ -87,7 +113,12 @@ export const pages: DocsPage[] = [
               ["kst_test_", "Test", "Test endpoints and the local CLI"],
             ],
           },
-          { type: "callout", tone: "warning", title: "Keep secret keys on the server", text: "Anyone with a secret key can publish events as you. Never ship one in a browser bundle or a mobile app." },
+          {
+            type: "callout",
+            tone: "warning",
+            title: "Keep secret keys on the server",
+            text: "Anyone with a secret key can publish events as you. Never ship one in a browser bundle or a mobile app.",
+          },
         ],
       },
     ],
@@ -104,7 +135,10 @@ export const pages: DocsPage[] = [
         id: "how-signing-works",
         title: "How signing works",
         blocks: [
-          { type: "p", text: "Each request carries a `Kestrel-Signature` header: a timestamp and an HMAC-SHA256 of the timestamp and raw body, keyed with the endpoint's signing secret." },
+          {
+            type: "p",
+            text: "Each request carries a `Kestrel-Signature` header: a timestamp and an HMAC-SHA256 of the timestamp and raw body, keyed with the endpoint's signing secret.",
+          },
         ],
       },
       {
@@ -142,7 +176,10 @@ export const pages: DocsPage[] = [
             title: "Changed in v2.4",
             text: "Events now move to the dead-letter queue after three failed attempts. Before v2.4 they were retried for up to 24 hours.",
           },
-          { type: "p", text: "A delivery fails when the endpoint answers with anything other than a `2xx`, takes longer than 15 seconds, or can't be reached. Each retry waits longer than the last, with jitter so a recovering endpoint isn't hit by every event at once." },
+          {
+            type: "p",
+            text: "A delivery fails when the endpoint answers with anything other than a `2xx`, takes longer than 15 seconds, or can't be reached. Each retry waits longer than the last, with jitter so a recovering endpoint isn't hit by every event at once.",
+          },
           {
             type: "table",
             head: ["Attempt", "Sent after", "If it fails"],
@@ -152,14 +189,20 @@ export const pages: DocsPage[] = [
               ["3", "~10 minutes", "Move to the dead-letter queue"],
             ],
           },
-          { type: "p", text: "An endpoint that answers `410 Gone` is disabled straight away and its pending events are dead-lettered." },
+          {
+            type: "p",
+            text: "An endpoint that answers `410 Gone` is disabled straight away and its pending events are dead-lettered.",
+          },
         ],
       },
       {
         id: "dead-letter-queue",
         title: "The dead-letter queue",
         blocks: [
-          { type: "p", text: "Dead-lettered events keep their payload, every attempt and the last error for 7 days. List them per endpoint to see what went wrong." },
+          {
+            type: "p",
+            text: "Dead-lettered events keep their payload, every attempt and the last error for 7 days. List them per endpoint to see what went wrong.",
+          },
           {
             type: "code",
             title: "List dead letters for an endpoint",
@@ -232,7 +275,10 @@ export const pages: DocsPage[] = [
         id: "choose-window",
         title: "Choose a window",
         blocks: [
-          { type: "p", text: "Pick a start and end time and an optional event type. Kestrel shows how many events match before anything is sent." },
+          {
+            type: "p",
+            text: "Pick a start and end time and an optional event type. Kestrel shows how many events match before anything is sent.",
+          },
           {
             type: "code",
             samples: {
@@ -245,7 +291,12 @@ export const pages: DocsPage[] = [
       {
         id: "pacing",
         title: "Pacing",
-        blocks: [{ type: "p", text: "Bulk replays are paced at the endpoint's replay rate and pause automatically if the endpoint starts failing again." }],
+        blocks: [
+          {
+            type: "p",
+            text: "Bulk replays are paced at the endpoint's replay rate and pause automatically if the endpoint starts failing again.",
+          },
+        ],
       },
     ],
   },
@@ -317,7 +368,10 @@ export const pages: DocsPage[] = [
   },
 ];
 export const listDocsPages = pages;
-export const languages: { id: "node" | "python" | "go" | "curl"; label: string }[] = [
+export const languages: {
+  id: "node" | "python" | "go" | "curl";
+  label: string;
+}[] = [
   { id: "node", label: "Node.js" },
   { id: "python", label: "Python" },
   { id: "go", label: "Go" },

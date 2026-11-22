@@ -37,7 +37,11 @@ import {
 } from "lucide-react";
 import { type ComponentType, useEffect, useState } from "react";
 
-import type { CommandEntry, CommandKind, CommandGroup as Group } from "./schema";
+import type {
+  CommandEntry,
+  CommandKind,
+  CommandGroup as Group,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("commandPalette.<key>"). */
 export const COMMAND_PALETTE_MESSAGES = {
@@ -75,10 +79,21 @@ const ICONS: Record<CommandKind, ComponentType<{ className?: string }>> = {
   settings: SettingsIcon,
 };
 
-function CommandPaletteScreen({ groups, onSelect, onQueryChange, defaultOpen, hotkey = true, className }: CommandPaletteProps) {
+function CommandPaletteScreen({
+  groups,
+  onSelect,
+  onQueryChange,
+  defaultOpen,
+  hotkey = true,
+  className,
+}: CommandPaletteProps) {
   const t = useMessages("commandPalette", COMMAND_PALETTE_MESSAGES);
   const [open, setOpen] = useState(Boolean(defaultOpen));
-  const items = groups.map((g) => ({ value: g.label, id: g.id, items: g.items.map((entry) => ({ ...entry, value: entry.label })) }));
+  const items = groups.map((g) => ({
+    value: g.label,
+    id: g.id,
+    items: g.items.map((entry) => ({ ...entry, value: entry.label })),
+  }));
 
   useEffect(() => {
     if (!hotkey) return;
@@ -104,7 +119,10 @@ function CommandPaletteScreen({ groups, onSelect, onQueryChange, defaultOpen, ho
               <Kbd className="pointer-coarse:hidden">⌘K</Kbd>
             </CommandDialogTrigger>
             <CommandDialogPopup>
-              <Command items={items} onValueChange={(value) => onQueryChange?.(String(value ?? ""))}>
+              <Command
+                items={items}
+                onValueChange={(value) => onQueryChange?.(String(value ?? ""))}
+              >
                 <CommandInput placeholder={t.placeholder} />
                 <CommandEmpty>{t.empty}</CommandEmpty>
                 <CommandList>
@@ -127,10 +145,16 @@ function CommandPaletteScreen({ groups, onSelect, onQueryChange, defaultOpen, ho
                               <Icon className="size-4 shrink-0 opacity-70" />
                               <span className="min-w-0 flex-1 truncate">
                                 {entry.label}
-                                {entry.hint ? <span className="ms-2 text-muted-foreground text-xs">{entry.hint}</span> : null}
+                                {entry.hint ? (
+                                  <span className="ms-2 text-muted-foreground text-xs">
+                                    {entry.hint}
+                                  </span>
+                                ) : null}
                               </span>
                               {entry.shortcut ? (
-                                <CommandShortcut className="pointer-coarse:hidden">{entry.shortcut}</CommandShortcut>
+                                <CommandShortcut className="pointer-coarse:hidden">
+                                  {entry.shortcut}
+                                </CommandShortcut>
                               ) : (
                                 <ArrowRightIcon className="size-3.5 opacity-30" />
                               )}
@@ -160,9 +184,15 @@ function CommandPaletteScreen({ groups, onSelect, onQueryChange, defaultOpen, ho
             </CommandDialogPopup>
           </CommandDialog>
         </div>
-        <div aria-hidden className="mt-4 grid grid-cols-1 gap-3 opacity-40 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          aria-hidden
+          className="mt-4 grid grid-cols-1 gap-3 opacity-40 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {PLACEHOLDER_CARDS.map((key) => (
-            <div className="h-24 rounded-xl border border-border/60 bg-background" key={key} />
+            <div
+              className="h-24 rounded-xl border border-border/60 bg-background"
+              key={key}
+            />
           ))}
         </div>
       </div>

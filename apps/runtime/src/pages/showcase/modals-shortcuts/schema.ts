@@ -12,7 +12,9 @@ export const Shortcut = z
   .meta({ id: "Shortcut" });
 export type Shortcut = z.infer<typeof Shortcut>;
 
-export const ShortcutGroup = z.object({ name: z.string(), shortcuts: z.array(Shortcut) }).meta({ id: "ShortcutGroup" });
+export const ShortcutGroup = z
+  .object({ name: z.string(), shortcuts: z.array(Shortcut) })
+  .meta({ id: "ShortcutGroup" });
 export type ShortcutGroup = z.infer<typeof ShortcutGroup>;
 
 /** The backend operations this screen calls: none. Shortcuts usually ship with the app. */

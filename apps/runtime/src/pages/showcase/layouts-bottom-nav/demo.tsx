@@ -3,7 +3,12 @@
 // Showcase only: the tab shell inside a phone mockup, with sample pages per tab.
 // Not shipped by the registry; builders render their own pages as children.
 
-import { type AnchorHTMLAttributes, createContext, useContext, useState } from "react";
+import {
+  type AnchorHTMLAttributes,
+  createContext,
+  useContext,
+  useState,
+} from "react";
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
 import { type BottomTab, BottomTabShell } from "./view";
 import {
@@ -78,11 +83,23 @@ function PhoneFrame({ activeTab }: { activeTab: TabKey }) {
   return (
     <div className="relative min-h-svh w-full bg-background md:h-[min(760px,calc(100svh-6rem))] md:min-h-0 md:w-95 md:overflow-hidden md:rounded-[40px] md:border-8 md:border-foreground/15 md:shadow-2xl">
       <div className="relative min-h-svh w-full md:h-full md:min-h-0 md:overflow-hidden md:rounded-[28px]">
-        <div aria-hidden className="absolute top-2 left-1/2 z-30 hidden h-6 w-24 -translate-x-1/2 rounded-full bg-foreground/85 md:block" />
+        <div
+          aria-hidden
+          className="absolute top-2 left-1/2 z-30 hidden h-6 w-24 -translate-x-1/2 rounded-full bg-foreground/85 md:block"
+        />
         <div className="flex min-h-svh flex-col md:h-full md:min-h-0">
           <StatusBar />
-          <ScrollRegion aria-label={TAB_TITLES[activeTab]} className="flex-1 md:min-h-0">
-            <BottomTabShell activeId={activeTab} onBack={() => {}} onSearch={() => {}} tabs={TABS} title={TAB_TITLES[activeTab]}>
+          <ScrollRegion
+            aria-label={TAB_TITLES[activeTab]}
+            className="flex-1 md:min-h-0"
+          >
+            <BottomTabShell
+              activeId={activeTab}
+              onBack={() => {}}
+              onSearch={() => {}}
+              tabs={TABS}
+              title={TAB_TITLES[activeTab]}
+            >
               <TabContent tab={activeTab} />
             </BottomTabShell>
           </ScrollRegion>
@@ -94,7 +111,10 @@ function PhoneFrame({ activeTab }: { activeTab: TabKey }) {
 
 function StatusBar() {
   return (
-    <div aria-hidden className="hidden h-10 items-center justify-between px-6 pt-3 font-medium text-xs md:flex">
+    <div
+      aria-hidden
+      className="hidden h-10 items-center justify-between px-6 pt-3 font-medium text-xs md:flex"
+    >
       <span>9:41</span>
       <div className="flex items-center gap-1.5">
         <SignalHigh className="size-3.5" />
@@ -268,7 +288,7 @@ const ALERTS_TODAY = [
   {
     name: "Mira Solis",
     initials: "MS",
-    text: "commented: \"This palette is gorgeous.\"",
+    text: 'commented: "This palette is gorgeous."',
     time: "3h",
   },
 ];
@@ -311,7 +331,10 @@ function AlertSection({
       </p>
       <div className="flex flex-col rounded-2xl border border-border/60 bg-card divide-y divide-border/60">
         {items.map((item) => (
-          <div key={item.name + item.time} className="flex items-start gap-2.5 p-3">
+          <div
+            key={item.name + item.time}
+            className="flex items-start gap-2.5 p-3"
+          >
             <Avatar className="size-8 mt-0.5">
               <AvatarFallback className="text-[11px]">
                 {item.initials}
@@ -334,9 +357,17 @@ function AlertSection({
 }
 
 const PROFILE_ACTIONS = [
-  { icon: SettingsIcon, label: "Account settings", hint: "Profile, plan, billing" },
+  {
+    icon: SettingsIcon,
+    label: "Account settings",
+    hint: "Profile, plan, billing",
+  },
   { icon: BellIcon, label: "Notifications", hint: "Email, push, digest" },
-  { icon: ShieldIcon, label: "Privacy & security", hint: "2FA, sessions, devices" },
+  {
+    icon: ShieldIcon,
+    label: "Privacy & security",
+    hint: "2FA, sessions, devices",
+  },
 ];
 
 function ProfileView() {
@@ -398,19 +429,39 @@ function ProfileStat({ label, value }: { label: string; value: string }) {
   );
 }
 
-
 const TABS: BottomTab[] = [
   { id: "home", label: "Home", href: "#home", icon: <HomeIcon /> },
-  { id: "discover", label: "Discover", href: "#discover", icon: <CompassIcon /> },
-  { id: "create", label: "Create", href: "#create", icon: <PlusIcon />, primary: true },
-  { id: "alerts", label: "Alerts", href: "#alerts", icon: <BellIcon />, badge: 3 },
+  {
+    id: "discover",
+    label: "Discover",
+    href: "#discover",
+    icon: <CompassIcon />,
+  },
+  {
+    id: "create",
+    label: "Create",
+    href: "#create",
+    icon: <PlusIcon />,
+    primary: true,
+  },
+  {
+    id: "alerts",
+    label: "Alerts",
+    href: "#alerts",
+    icon: <BellIcon />,
+    badge: 3,
+  },
   { id: "profile", label: "Profile", href: "#profile", icon: <UserIcon /> },
 ];
 
 const GoContext = createContext<(id: string) => void>(() => {});
 
 /** Hash links switch the demo's tab instead of navigating. */
-function DemoLink({ href, onClick, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+function DemoLink({
+  href,
+  onClick,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement>) {
   const go = useContext(GoContext);
   return (
     <a
@@ -426,4 +477,3 @@ function DemoLink({ href, onClick, ...props }: AnchorHTMLAttributes<HTMLAnchorEl
     />
   );
 }
-

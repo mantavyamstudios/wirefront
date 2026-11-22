@@ -3,12 +3,23 @@
 /** The registry builder reads designs.ts as text; it must see exactly the real catalogue. */
 import { describe, expect, it } from "vitest";
 import { CATEGORIES } from "@/lib/designs";
-import { readDesignMeta, readTokenValues, tokensUsed, WIREFRONT_TOKENS } from "../../../scripts/lib/registry-meta";
+import {
+  readDesignMeta,
+  readTokenValues,
+  tokensUsed,
+  WIREFRONT_TOKENS,
+} from "../../../scripts/lib/registry-meta";
 
 describe("registry metadata", () => {
   it("parses every design's slug, title, blurb and states from designs.ts", () => {
     const real = CATEGORIES.flatMap((c) =>
-      c.designs.map((d) => ({ category: c.slug, slug: d.slug, title: d.title, blurb: d.blurb, ...(d.states ? { states: d.states } : {}) })),
+      c.designs.map((d) => ({
+        category: c.slug,
+        slug: d.slug,
+        title: d.title,
+        blurb: d.blurb,
+        ...(d.states ? { states: d.states } : {}),
+      }))
     );
     expect(readDesignMeta()).toEqual(real);
   });
@@ -19,12 +30,13 @@ describe("registry metadata", () => {
   });
 
   it("detects token use in class names and CSS variables", () => {
-    expect(tokensUsed('className="bg-success/8 text-success-foreground ring-info" style={{ color: "var(--brand-ink)" }}')).toEqual([
-      "brand-ink",
-      "info",
-      "success",
-      "success-foreground",
-    ]);
-    expect(tokensUsed('className="bg-emerald-500 text-successful"')).toEqual([]);
+    expect(
+      tokensUsed(
+        'className="bg-success/8 text-success-foreground ring-info" style={{ color: "var(--brand-ink)" }}'
+      )
+    ).toEqual(["brand-ink", "info", "success", "success-foreground"]);
+    expect(tokensUsed('className="bg-emerald-500 text-successful"')).toEqual(
+      []
+    );
   });
 });

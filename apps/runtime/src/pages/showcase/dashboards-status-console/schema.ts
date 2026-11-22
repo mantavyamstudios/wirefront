@@ -4,7 +4,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const ServiceHealth = z.enum(["operational", "degraded", "down"]).meta({ id: "ConsoleServiceHealth" });
+export const ServiceHealth = z
+  .enum(["operational", "degraded", "down"])
+  .meta({ id: "ConsoleServiceHealth" });
 export type ServiceHealth = z.infer<typeof ServiceHealth>;
 
 export const ConsoleService = z
@@ -38,7 +40,16 @@ export const ConsolePerson = z
   .meta({ id: "ConsolePerson" });
 export type ConsolePerson = z.infer<typeof ConsolePerson>;
 
-export const IncidentState = z.enum(["alert", "investigating", "identified", "monitoring", "resolved", "note"]).meta({ id: "IncidentState" });
+export const IncidentState = z
+  .enum([
+    "alert",
+    "investigating",
+    "identified",
+    "monitoring",
+    "resolved",
+    "note",
+  ])
+  .meta({ id: "IncidentState" });
 export type IncidentState = z.infer<typeof IncidentState>;
 
 export const IncidentUpdate = z
@@ -68,7 +79,9 @@ export const Incident = z
   .meta({ id: "Incident" });
 export type Incident = z.infer<typeof Incident>;
 
-export const DeployStatus = z.enum(["succeeded", "rolling", "failed", "rolled-back"]).meta({ id: "DeployStatus" });
+export const DeployStatus = z
+  .enum(["succeeded", "rolling", "failed", "rolled-back"])
+  .meta({ id: "DeployStatus" });
 export type DeployStatus = z.infer<typeof DeployStatus>;
 
 export const ConsoleDeploy = z
@@ -106,14 +119,29 @@ export const StatusOverview = z
     incident: Incident.nullable(),
     /** Newest first. */
     deploys: z.array(ConsoleDeploy),
-    onCall: z.object({ team: z.string(), until: z.iso.datetime({ offset: true }), primary: OnCallSlot, secondary: OnCallSlot }),
+    onCall: z.object({
+      team: z.string(),
+      until: z.iso.datetime({ offset: true }),
+      primary: OnCallSlot,
+      secondary: OnCallSlot,
+    }),
     /** Daily degraded minutes for the last 60 days, oldest first, and the overall uptime fraction. */
-    uptime: z.object({ value: z.number().min(0).max(1), days: z.array(z.object({ date: z.iso.date(), degradedMinutes: z.number().nonnegative() })) }),
+    uptime: z.object({
+      value: z.number().min(0).max(1),
+      days: z.array(
+        z.object({
+          date: z.iso.date(),
+          degradedMinutes: z.number().nonnegative(),
+        })
+      ),
+    }),
   })
   .meta({ id: "StatusOverview" });
 export type StatusOverview = z.infer<typeof StatusOverview>;
 
-export const PostUpdateInput = z.object({ text: z.string().trim().min(1).max(2000) }).meta({ id: "PostUpdateInput" });
+export const PostUpdateInput = z
+  .object({ text: z.string().trim().min(1).max(2000) })
+  .meta({ id: "PostUpdateInput" });
 export type PostUpdateInput = z.infer<typeof PostUpdateInput>;
 
 /** The backend operations this screen calls. */
@@ -121,7 +149,8 @@ export const api = defineApi({
   getStatus: {
     method: "GET",
     path: "/status",
-    summary: "Services, the current incident, deploys, on-call and uptime for an environment",
+    summary:
+      "Services, the current incident, deploys, on-call and uptime for an environment",
     query: z.object({ environment: z.string() }),
     response: StatusOverview,
   },

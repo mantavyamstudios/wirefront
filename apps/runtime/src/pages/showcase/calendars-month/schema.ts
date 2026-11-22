@@ -18,5 +18,11 @@ export type CalendarEvent = z.infer<typeof CalendarEvent>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listMonthEvents: { method: "GET", path: "/calendar/events", summary: "Events overlapping a month", query: z.object({ month: z.string() }), response: z.array(CalendarEvent) },
+  listMonthEvents: {
+    method: "GET",
+    path: "/calendar/events",
+    summary: "Events overlapping a month",
+    query: z.object({ month: z.string() }),
+    response: z.array(CalendarEvent),
+  },
 });

@@ -4,8 +4,14 @@
 import * as fixtures from "./fixtures";
 import { ArticleCards } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function CardMediaShowcasePage() {
-  return <ArticleCards articles={fixtures.listLatestArticles} onSave={() => wait(400)} />;
+  return (
+    <ArticleCards
+      articles={fixtures.listLatestArticles}
+      onSave={() => wait(400)}
+    />
+  );
 }

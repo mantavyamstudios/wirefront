@@ -27,7 +27,9 @@ import {
   useState,
 } from "react";
 
-export type LinkComponent = ComponentType<AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }>;
+export type LinkComponent = ComponentType<
+  AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }
+>;
 
 export interface ToastInput {
   title: string;
@@ -64,15 +66,25 @@ export interface WirefrontConfig {
    * Report a screen that crashed while rendering (send it to Sentry, your logs, …). The screen shows a
    * retry fallback instead of taking the page down; React still logs the error to the console.
    */
-  onError?: (error: Error, info: { screen: string; componentStack?: string }) => void;
+  onError?: (
+    error: Error,
+    info: { screen: string; componentStack?: string }
+  ) => void;
 }
 
 const Context = createContext<WirefrontConfig>({});
 
-export function WirefrontProvider({ children, ...config }: WirefrontConfig & { children: ReactNode }) {
+export function WirefrontProvider({
+  children,
+  ...config
+}: WirefrontConfig & { children: ReactNode }) {
   // Nested providers inherit and override their parent's settings.
   const parent = useContext(Context);
-  return <Context.Provider value={{ ...parent, ...config }}>{children}</Context.Provider>;
+  return (
+    <Context.Provider value={{ ...parent, ...config }}>
+      {children}
+    </Context.Provider>
+  );
 }
 
 export const DEFAULTS = {
@@ -102,7 +114,9 @@ export function useWirefront() {
 }
 
 /** The app's link, or a plain <a> when none is configured. */
-export function WirefrontLink(props: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+export function WirefrontLink(
+  props: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }
+) {
   const { link: Link } = useContext(Context);
   return Link ? <Link {...props} /> : <a {...props} />;
 }
@@ -111,15 +125,36 @@ export function WirefrontLink(props: AnchorHTMLAttributes<HTMLAnchorElement> & {
 export function useFormat() {
   const { locale, timeZone, currency, now } = useWirefront();
   return useMemo(() => {
-    const number = (value: number, options?: Intl.NumberFormatOptions) => new Intl.NumberFormat(locale, options).format(value);
-    const money = (value: number, code: string = currency, options?: Intl.NumberFormatOptions) =>
-      new Intl.NumberFormat(locale, { style: "currency", currency: code, ...options }).format(value);
-    const date = (value: Date | string | number, options: Intl.DateTimeFormatOptions = { dateStyle: "medium" }) =>
-      new Intl.DateTimeFormat(locale, { timeZone, ...options }).format(new Date(value));
-    const time = (value: Date | string | number, options: Intl.DateTimeFormatOptions = { timeStyle: "short" }) =>
-      new Intl.DateTimeFormat(locale, { timeZone, ...options }).format(new Date(value));
+    const number = (value: number, options?: Intl.NumberFormatOptions) =>
+      new Intl.NumberFormat(locale, options).format(value);
+    const money = (
+      value: number,
+      code: string = currency,
+      options?: Intl.NumberFormatOptions
+    ) =>
+      new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency: code,
+        ...options,
+      }).format(value);
+    const date = (
+      value: Date | string | number,
+      options: Intl.DateTimeFormatOptions = { dateStyle: "medium" }
+    ) =>
+      new Intl.DateTimeFormat(locale, { timeZone, ...options }).format(
+        new Date(value)
+      );
+    const time = (
+      value: Date | string | number,
+      options: Intl.DateTimeFormatOptions = { timeStyle: "short" }
+    ) =>
+      new Intl.DateTimeFormat(locale, { timeZone, ...options }).format(
+        new Date(value)
+      );
     const relative = (value: Date | string | number) => {
-      const seconds = Math.round((new Date(value).getTime() - now().getTime()) / 1000);
+      const seconds = Math.round(
+        (new Date(value).getTime() - now().getTime()) / 1000
+      );
       const units: [Intl.RelativeTimeFormatUnit, number][] = [
         ["year", 31_536_000],
         ["month", 2_592_000],
@@ -129,7 +164,9 @@ export function useFormat() {
         ["minute", 60],
       ];
       const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
-      for (const [unit, size] of units) if (Math.abs(seconds) >= size) return rtf.format(Math.round(seconds / size), unit);
+      for (const [unit, size] of units)
+        if (Math.abs(seconds) >= size)
+          return rtf.format(Math.round(seconds / size), unit);
       return rtf.format(seconds, "second");
     };
     return { number, money, date, time, relative };
@@ -137,15 +174,23 @@ export function useFormat() {
 }
 
 /** Replace {name} placeholders. */
-export function interpolate(template: string, values: Record<string, string | number> = {}): string {
-  return template.replace(/\{(\w+)\}/g, (match, key: string) => (key in values ? String(values[key]) : match));
+export function interpolate(
+  template: string,
+  values: Record<string, string | number> = {}
+): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) =>
+    key in values ? String(values[key]) : match
+  );
 }
 
 /**
  * A screen's copy, with the builder's overrides applied. Pass the screen's
  * English defaults and its namespace; overrides are keyed "<namespace>.<key>".
  */
-export function useMessages<Messages extends Record<string, string>>(namespace: string, defaults: Messages): Messages {
+export function useMessages<Messages extends Record<string, string>>(
+  namespace: string,
+  defaults: Messages
+): Messages {
   const { messages } = useContext(Context);
   return useMemo(() => {
     if (!messages) return defaults;
@@ -174,7 +219,8 @@ export function useColorScheme(): "light" | "dark" {
   useEffect(() => {
     if (colorScheme) return;
     const root = document.documentElement;
-    const read = () => setFromClass(root.classList.contains("dark") ? "dark" : "light");
+    const read = () =>
+      setFromClass(root.classList.contains("dark") ? "dark" : "light");
     read();
     const observer = new MutationObserver(read);
     observer.observe(root, { attributes: true, attributeFilter: ["class"] });

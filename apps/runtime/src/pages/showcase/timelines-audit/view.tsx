@@ -7,9 +7,22 @@ import { Button } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { ActivityIcon, ChevronDownIcon, ChevronRightIcon, KeyIcon, ShieldIcon, Trash2Icon, UserCogIcon, UserPlusIcon } from "lucide-react";
+import {
+  ActivityIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  KeyIcon,
+  ShieldIcon,
+  Trash2Icon,
+  UserCogIcon,
+  UserPlusIcon,
+} from "lucide-react";
 import type { ReactNode } from "react";
 import type { AuditEvent, AuditLog } from "./schema";
 
@@ -60,7 +73,11 @@ const SEV_RING: Record<AuditEvent["severity"], string> = {
   warn: "bg-warning/15 text-warning-foreground",
   danger: "bg-destructive/15 text-destructive-foreground",
 };
-const SEV_DOT: Record<AuditEvent["severity"], string> = { info: "bg-foreground/40", warn: "bg-warning", danger: "bg-destructive" };
+const SEV_DOT: Record<AuditEvent["severity"], string> = {
+  info: "bg-foreground/40",
+  warn: "bg-warning",
+  danger: "bg-destructive",
+};
 
 function initials(name: string) {
   return name
@@ -71,19 +88,36 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-function AuditTrailScreen({ data, status = "ready", error, onRetry, note, onViewEvent, className }: AuditTrailProps) {
+function AuditTrailScreen({
+  data,
+  status = "ready",
+  error,
+  onRetry,
+  note,
+  onViewEvent,
+  className,
+}: AuditTrailProps) {
   const t = useMessages("auditTrail", AUDIT_TRAIL_MESSAGES);
   const fmt = useFormat();
   const events = data?.events ?? [];
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10",
+        className
+      )}
+    >
       <div className="mx-auto max-w-3xl">
-        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
+        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+          {t.eyebrow}
+        </div>
         <h1 className="mt-1 font-heading text-2xl">{t.title}</h1>
         {data ? (
           <p className="mt-1 text-muted-foreground text-sm">
-            {interpolate(t.summary, { count: fmt.number(data.total ?? events.length) })}
+            {interpolate(t.summary, {
+              count: fmt.number(data.total ?? events.length),
+            })}
             {note ? ` · ${note}` : ""}
           </p>
         ) : null}
@@ -92,9 +126,16 @@ function AuditTrailScreen({ data, status = "ready", error, onRetry, note, onView
           {status === "error" ? (
             <div className="py-12 text-center">
               <p className="font-medium">{t.errorTitle}</p>
-              {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+              {error ? (
+                <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+              ) : null}
               {onRetry ? (
-                <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+                <Button
+                  className="mt-4"
+                  onClick={onRetry}
+                  size="sm"
+                  variant="outline"
+                >
                   {t.retry}
                 </Button>
               ) : null}
@@ -102,33 +143,64 @@ function AuditTrailScreen({ data, status = "ready", error, onRetry, note, onView
           ) : !data || status === "loading" ? (
             <div aria-busy="true" className="flex flex-col gap-4 py-3">
               {["a", "b", "c", "d"].map((k) => (
-                <Skeleton className="h-12 w-full motion-reduce:animate-none" key={k} />
+                <Skeleton
+                  className="h-12 w-full motion-reduce:animate-none"
+                  key={k}
+                />
               ))}
             </div>
           ) : events.length === 0 ? (
-            <p className="py-12 text-center text-muted-foreground text-sm">{t.empty}</p>
+            <p className="py-12 text-center text-muted-foreground text-sm">
+              {t.empty}
+            </p>
           ) : (
             <ol className="relative">
-              <span aria-hidden className="absolute inset-s-4.25 top-2 bottom-2 w-px bg-border/50" />
+              <span
+                aria-hidden
+                className="absolute inset-s-4.25 top-2 bottom-2 w-px bg-border/50"
+              />
               {events.map((e) => (
-                <li className={cn("relative grid items-start gap-3 py-3", onViewEvent ? "grid-cols-[34px_minmax(0,1fr)_auto]" : "grid-cols-[34px_minmax(0,1fr)]")} key={e.id}>
-                  <span aria-hidden className={cn("z-10 grid size-8.5 place-items-center rounded-full ring-4 ring-background", SEV_RING[e.severity])}>
+                <li
+                  className={cn(
+                    "relative grid items-start gap-3 py-3",
+                    onViewEvent
+                      ? "grid-cols-[34px_minmax(0,1fr)_auto]"
+                      : "grid-cols-[34px_minmax(0,1fr)]"
+                  )}
+                  key={e.id}
+                >
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "z-10 grid size-8.5 place-items-center rounded-full ring-4 ring-background",
+                      SEV_RING[e.severity]
+                    )}
+                  >
                     {ICONS[e.kind]}
                   </span>
                   <div className="min-w-0 pt-1.5">
                     {/* Wraps instead of truncating, so the action's target stays readable on phones. */}
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
                       <Avatar aria-hidden className="size-5 shrink-0">
-                        <AvatarFallback className="text-[10px]">{initials(e.actor)}</AvatarFallback>
+                        <AvatarFallback className="text-[10px]">
+                          {initials(e.actor)}
+                        </AvatarFallback>
                       </Avatar>
                       <span className="font-medium">{e.actor}</span>
                       <span className="text-muted-foreground">{e.action}</span>
-                      {e.target ? <span className="min-w-0 wrap-break-word text-foreground/85">{e.target}</span> : null}
+                      {e.target ? (
+                        <span className="min-w-0 wrap-break-word text-foreground/85">
+                          {e.target}
+                        </span>
+                      ) : null}
                     </div>
                     {e.diff ? (
                       <details className="group mt-2">
                         <summary className="inline-flex min-h-6 cursor-pointer list-none items-center gap-1 rounded bg-foreground/4 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] hover:bg-foreground/6">
-                          <ChevronDownIcon aria-hidden className="size-3 -rotate-90 transition-transform group-open:rotate-0" />
+                          <ChevronDownIcon
+                            aria-hidden
+                            className="size-3 -rotate-90 transition-transform group-open:rotate-0"
+                          />
                           {t.diff}
                         </summary>
                         <div className="mt-2 overflow-hidden rounded-md border border-border/60 font-mono text-[11px] [&>div]:break-all">
@@ -146,10 +218,20 @@ function AuditTrailScreen({ data, status = "ready", error, onRetry, note, onView
                       </details>
                     ) : null}
                     <div className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-[10px] text-muted-foreground">
-                      <span aria-hidden className={cn("size-1 rounded-full", SEV_DOT[e.severity])} />
-                      <span className="sr-only">{interpolate(t.severity, { severity: t[e.severity] })}</span>
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "size-1 rounded-full",
+                          SEV_DOT[e.severity]
+                        )}
+                      />
+                      <span className="sr-only">
+                        {interpolate(t.severity, { severity: t[e.severity] })}
+                      </span>
                       <time dateTime={e.at}>{fmt.relative(e.at)}</time>
-                      {e.ip ? <span>{interpolate(t.from, { ip: e.ip })}</span> : null}
+                      {e.ip ? (
+                        <span>{interpolate(t.from, { ip: e.ip })}</span>
+                      ) : null}
                     </div>
                   </div>
                   {onViewEvent ? (
@@ -159,11 +241,20 @@ function AuditTrailScreen({ data, status = "ready", error, onRetry, note, onView
                       onClick={() => onViewEvent(e.id)}
                       type="button"
                     >
-                      <span className="sr-only">{interpolate(t.viewEvent, { actor: e.actor, action: e.action, target: e.target ?? "" }).trim()}</span>
+                      <span className="sr-only">
+                        {interpolate(t.viewEvent, {
+                          actor: e.actor,
+                          action: e.action,
+                          target: e.target ?? "",
+                        }).trim()}
+                      </span>
                       <span aria-hidden className="max-sm:hidden">
                         {t.view}
                       </span>
-                      <ChevronRightIcon aria-hidden className="size-4 sm:hidden" />
+                      <ChevronRightIcon
+                        aria-hidden
+                        className="size-4 sm:hidden"
+                      />
                     </button>
                   ) : null}
                 </li>

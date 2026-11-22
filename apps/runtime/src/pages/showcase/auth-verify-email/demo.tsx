@@ -14,7 +14,8 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 /** Simulated backend: a code of one repeated digit (e.g. 111111) is wrong. */
 async function demoVerify({ code }: VerifyEmailInput) {
   await wait(800);
-  if (/^(\d)\1+$/.test(code)) return fail("That code didn’t work. Check the email and try again.");
+  if (/^(\d)\1+$/.test(code))
+    return fail("That code didn’t work. Check the email and try again.");
 }
 
 async function demoResend() {
@@ -24,7 +25,13 @@ async function demoResend() {
 export function AuthVerifyEmailShowcasePage() {
   return (
     <DevlFrame>
-      <VerifyEmail changeEmailHref="#sign-up" continueHref="#continue" email={fixtures.email} onResend={demoResend} onVerify={demoVerify} />
+      <VerifyEmail
+        changeEmailHref="#sign-up"
+        continueHref="#continue"
+        email={fixtures.email}
+        onResend={demoResend}
+        onVerify={demoVerify}
+      />
     </DevlFrame>
   );
 }

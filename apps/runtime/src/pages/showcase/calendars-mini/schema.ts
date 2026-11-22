@@ -16,5 +16,11 @@ export type MiniEvent = z.infer<typeof MiniEvent>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listMiniEvents: { method: "GET", path: "/calendar/events", summary: "Events in a month, for the dots", query: z.object({ month: z.string() }), response: z.array(MiniEvent) },
+  listMiniEvents: {
+    method: "GET",
+    path: "/calendar/events",
+    summary: "Events in a month, for the dots",
+    query: z.object({ month: z.string() }),
+    response: z.array(MiniEvent),
+  },
 });

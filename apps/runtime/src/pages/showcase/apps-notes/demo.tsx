@@ -24,7 +24,12 @@ export function AppsNotesShowcasePage() {
           onChange={() => {}}
           onCreate={async ({ folderId }) => {
             const n = ++count.current;
-            return ok({ ...fixtures.createNote, id: `n-new-${n}`, folderId, blocks: [{ id: `b-new-${n}`, type: "p", text: "" }] });
+            return ok({
+              ...fixtures.createNote,
+              id: `n-new-${n}`,
+              folderId,
+              blocks: [{ id: `b-new-${n}`, type: "p", text: "" }],
+            });
           }}
         />
       </DevlFrame>

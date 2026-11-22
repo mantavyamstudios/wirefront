@@ -5,14 +5,27 @@
 
 import { Button, buttonVariants } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
-import { OTPField, OTPFieldInput, OTPFieldSeparator } from "@wirefront/ui/otp-field";
+import {
+  OTPField,
+  OTPFieldInput,
+  OTPFieldSeparator,
+} from "@wirefront/ui/otp-field";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, MailIcon } from "lucide-react";
-import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useAnimationControls,
+  useReducedMotion,
+} from "motion/react";
 import { useEffect, useId, useState } from "react";
 
 import { CODE_LENGTH, VerifyEmailInput } from "./schema";
@@ -60,7 +73,9 @@ function Tile({ done }: { done: boolean }) {
     <span
       className={cn(
         "relative flex size-10 items-center justify-center overflow-hidden rounded-xl border shadow-xs/5 transition-colors duration-300",
-        done ? "border-success/30 bg-success/10 text-success-foreground" : "bg-card text-foreground",
+        done
+          ? "border-success/30 bg-success/10 text-success-foreground"
+          : "bg-card text-foreground"
       )}
     >
       <AnimatePresence initial={false} mode="popLayout">
@@ -72,7 +87,11 @@ function Tile({ done }: { done: boolean }) {
           key={done ? "done" : "mail"}
           transition={{ type: "spring", stiffness: 420, damping: 30 }}
         >
-          {done ? <CheckIcon className="size-5" /> : <MailIcon className="size-5" />}
+          {done ? (
+            <CheckIcon className="size-5" />
+          ) : (
+            <MailIcon className="size-5" />
+          )}
         </motion.span>
       </AnimatePresence>
     </span>
@@ -83,7 +102,16 @@ const DIGITS = Array.from({ length: CODE_LENGTH }, (_, i) => `d${i}`);
 const linkClass =
   "cursor-pointer rounded-sm font-medium text-foreground underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring";
 
-function VerifyEmailScreen({ email, onVerify, onResend, resendAfter = 30, onSuccess, continueHref, changeEmailHref, className }: VerifyEmailProps) {
+function VerifyEmailScreen({
+  email,
+  onVerify,
+  onResend,
+  resendAfter = 30,
+  onSuccess,
+  continueHref,
+  changeEmailHref,
+  className,
+}: VerifyEmailProps) {
   const t = useMessages("verifyEmail", VERIFY_EMAIL_MESSAGES);
   const id = useId();
   const reduce = useReducedMotion();
@@ -99,10 +127,16 @@ function VerifyEmailScreen({ email, onVerify, onResend, resendAfter = 30, onSucc
       onSuccess?.();
     },
     onError: () => {
-      if (!reduce) void shake.start({ x: [0, -6, 6, -4, 4, 0], transition: { duration: 0.36 } });
+      if (!reduce)
+        void shake.start({
+          x: [0, -6, 6, -4, 4, 0],
+          transition: { duration: 0.36 },
+        });
     },
   });
-  const resend = useAction(onResend ?? (async () => {}), { onSuccess: () => setLeft(resendAfter) });
+  const resend = useAction(onResend ?? (async () => {}), {
+    onSuccess: () => setLeft(resendAfter),
+  });
 
   useEffect(() => {
     if (left <= 0 || done) return;
@@ -126,12 +160,22 @@ function VerifyEmailScreen({ email, onVerify, onResend, resendAfter = 30, onSucc
   const half = Math.ceil(CODE_LENGTH / 2);
 
   return (
-    <div className={cn("flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground", className)}>
+    <div
+      className={cn(
+        "flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground",
+        className
+      )}
+    >
       <div className="m-auto flex w-full max-w-85 flex-col items-center">
         <Tile done={done} />
-        <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">{done ? t.doneTitle : t.title}</h1>
+        <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">
+          {done ? t.doneTitle : t.title}
+        </h1>
         <p className="mt-1.5 text-balance text-center text-muted-foreground text-sm">
-          {interpolate(done ? t.doneSubtitle : t.subtitle, { email, length: CODE_LENGTH })}
+          {interpolate(done ? t.doneSubtitle : t.subtitle, {
+            email,
+            length: CODE_LENGTH,
+          })}
         </p>
 
         <form
@@ -163,26 +207,44 @@ function VerifyEmailScreen({ email, onVerify, onResend, resendAfter = 30, onSucc
                   {i === half && <OTPFieldSeparator />}
                   <OTPFieldInput
                     aria-invalid={error ? true : undefined}
-                    aria-label={interpolate(t.digit, { n: i + 1, length: CODE_LENGTH })}
-                    className={cn("transition-colors duration-300", done && "border-success/40 bg-success/6")}
+                    aria-label={interpolate(t.digit, {
+                      n: i + 1,
+                      length: CODE_LENGTH,
+                    })}
+                    className={cn(
+                      "transition-colors duration-300",
+                      done && "border-success/40 bg-success/6"
+                    )}
                   />
                 </span>
               ))}
             </OTPField>
           </motion.div>
           {error ? (
-            <p className="-mt-1 text-center text-destructive-foreground text-xs" id={`${id}-error`} role="alert">
+            <p
+              className="-mt-1 text-center text-destructive-foreground text-xs"
+              id={`${id}-error`}
+              role="alert"
+            >
               {error}
             </p>
           ) : null}
           {done ? (
             continueHref ? (
-              <WirefrontLink className={cn(buttonVariants(), "mt-2 w-full")} href={continueHref}>
+              <WirefrontLink
+                className={cn(buttonVariants(), "mt-2 w-full")}
+                href={continueHref}
+              >
                 {t.continue}
               </WirefrontLink>
             ) : null
           ) : (
-            <Button aria-busy={busy} className="mt-2 w-full" disabled={code.length < CODE_LENGTH || busy} type="submit">
+            <Button
+              aria-busy={busy}
+              className="mt-2 w-full"
+              disabled={code.length < CODE_LENGTH || busy}
+              type="submit"
+            >
               {busy ? <Spinner data-icon="inline-start" /> : null}
               {t.submit}
             </Button>
@@ -192,11 +254,20 @@ function VerifyEmailScreen({ email, onVerify, onResend, resendAfter = 30, onSucc
         {!done && onResend ? (
           <p className="mt-6 text-center text-muted-foreground text-sm">
             {left > 0 ? (
-              <span className="tabular-nums">{interpolate(t.resendIn, { time: `0:${String(left).padStart(2, "0")}` })}</span>
+              <span className="tabular-nums">
+                {interpolate(t.resendIn, {
+                  time: `0:${String(left).padStart(2, "0")}`,
+                })}
+              </span>
             ) : (
               <>
                 {t.noCode}{" "}
-                <button className={linkClass} disabled={resend.isPending()} onClick={() => void resend.run()} type="button">
+                <button
+                  className={linkClass}
+                  disabled={resend.isPending()}
+                  onClick={() => void resend.run()}
+                  type="button"
+                >
                   {t.resend}
                 </button>
               </>
@@ -205,7 +276,12 @@ function VerifyEmailScreen({ email, onVerify, onResend, resendAfter = 30, onSucc
         ) : null}
 
         {changeEmailHref ? (
-          <p className={cn("mt-8 text-center text-muted-foreground text-sm", done && "invisible")}>
+          <p
+            className={cn(
+              "mt-8 text-center text-muted-foreground text-sm",
+              done && "invisible"
+            )}
+          >
             {t.wrongEmail}{" "}
             <WirefrontLink className={linkClass} href={changeEmailHref}>
               {t.changeIt}

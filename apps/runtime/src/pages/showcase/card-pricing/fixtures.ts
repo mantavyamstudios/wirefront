@@ -12,7 +12,12 @@ export const listPlanTiers: PlanTier[] = [
     currency: "USD",
     billing: "forever",
     action: "trial",
-    features: ["Up to 3 projects", "Single user", "Community support", "1 GB storage"],
+    features: [
+      "Up to 3 projects",
+      "Single user",
+      "Community support",
+      "1 GB storage",
+    ],
   },
   {
     id: "team",
@@ -23,7 +28,13 @@ export const listPlanTiers: PlanTier[] = [
     billing: "seat-month",
     action: "trial",
     featured: true,
-    features: ["Unlimited projects", "Up to 25 seats", "Priority support", "100 GB storage", "SSO & audit logs"],
+    features: [
+      "Unlimited projects",
+      "Up to 25 seats",
+      "Priority support",
+      "100 GB storage",
+      "SSO & audit logs",
+    ],
   },
   {
     id: "enterprise",
@@ -33,6 +44,12 @@ export const listPlanTiers: PlanTier[] = [
     currency: "USD",
     billing: "annual-contract",
     action: "sales",
-    features: ["Custom seat count", "Dedicated CSM", "99.99% SLA", "Custom data residency", "Procurement-ready DPA"],
+    features: [
+      "Custom seat count",
+      "Dedicated CSM",
+      "99.99% SLA",
+      "Custom data residency",
+      "Procurement-ready DPA",
+    ],
   },
 ];

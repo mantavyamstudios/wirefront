@@ -7,12 +7,29 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
-import { ChevronLeftIcon, PlusIcon, SendIcon, SettingsIcon, UsersIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  PlusIcon,
+  SendIcon,
+  SettingsIcon,
+  UsersIcon,
+} from "lucide-react";
 import { type KeyboardEvent, useState } from "react";
 
-import type { ChatChannel, ChatDirect, ChatMessage, ChatWorkspaceSummary, SendChatInput } from "./schema";
+import type {
+  ChatChannel,
+  ChatDirect,
+  ChatMessage,
+  ChatWorkspaceSummary,
+  SendChatInput,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("chatWorkspace.<key>"). */
 export const CHAT_WORKSPACE_MESSAGES = {
@@ -78,8 +95,13 @@ const TINT = [
   "from-category-7/70 to-category-7/30",
   "from-category-8/70 to-category-8/30",
 ];
-const PRESENCE = { online: "bg-category-2", away: "bg-category-3", offline: "bg-muted-foreground/40" };
-const row = "flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11";
+const PRESENCE = {
+  online: "bg-category-2",
+  away: "bg-category-3",
+  offline: "bg-muted-foreground/40",
+};
+const row =
+  "flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11";
 const initialsOf = (name: string) =>
   name
     .split(/\s+/)
@@ -114,7 +136,8 @@ function ChatWorkspaceScreen({
   const isPhone = useMediaQuery("max-md");
   const [draft, setDraft] = useState("");
   const send = useAction(onSend, { onSuccess: () => setDraft("") });
-  const workspace = workspaces.find((w) => w.id === currentWorkspaceId) ?? workspaces[0];
+  const workspace =
+    workspaces.find((w) => w.id === currentWorkspaceId) ?? workspaces[0];
   const channel = channels.find((c) => c.id === activeId);
   const direct = directs.find((d) => d.id === activeId);
   const title = channel?.name ?? direct?.name ?? "";
@@ -126,12 +149,19 @@ function ChatWorkspaceScreen({
     setDrawerOpen(false);
   };
 
-  const dayKey = (iso: string) => format.date(iso, { year: "numeric", month: "2-digit", day: "2-digit" });
+  const dayKey = (iso: string) =>
+    format.date(iso, { year: "numeric", month: "2-digit", day: "2-digit" });
   const dayLabel = (iso: string) => {
     const today = dayKey(now().toISOString());
-    const yesterday = dayKey(new Date(now().getTime() - 86_400_000).toISOString());
+    const yesterday = dayKey(
+      new Date(now().getTime() - 86_400_000).toISOString()
+    );
     const key = dayKey(iso);
-    return key === today ? t.today : key === yesterday ? t.yesterday : format.date(iso, { weekday: "long", month: "short", day: "numeric" });
+    return key === today
+      ? t.today
+      : key === yesterday
+        ? t.yesterday
+        : format.date(iso, { weekday: "long", month: "short", day: "numeric" });
   };
 
   const submit = () => {
@@ -140,14 +170,23 @@ function ChatWorkspaceScreen({
   };
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     // Enter sends; Shift+Enter adds a line.
-    if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
       event.preventDefault();
       submit();
     }
   };
 
   return (
-    <div className={cn("min-h-svh bg-background text-foreground md:grid md:grid-cols-[64px_240px_minmax(0,1fr)]", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background text-foreground md:grid md:grid-cols-[64px_240px_minmax(0,1fr)]",
+        className
+      )}
+    >
       {/* Workspace rail: always visible, pinned to the start edge on phones. */}
       <aside
         aria-label={t.workspaces}
@@ -162,7 +201,7 @@ function ChatWorkspaceScreen({
                 aria-label={w.name}
                 className={cn(
                   "flex size-9 items-center justify-center rounded-lg bg-linear-to-br font-medium text-[12px] text-foreground/85 outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring motion-reduce:hover:scale-100 pointer-coarse:size-11",
-                  TINT[w.color],
+                  TINT[w.color]
                 )}
                 onClick={() => {
                   if (!active) onSwitchWorkspace(w.id);
@@ -172,7 +211,12 @@ function ChatWorkspaceScreen({
               >
                 <span aria-hidden>{w.name.charAt(0).toUpperCase()}</span>
               </button>
-              {active ? <span aria-hidden className="absolute top-1/2 inset-s-0 h-5 w-1 -translate-y-1/2 rounded-e bg-foreground" /> : null}
+              {active ? (
+                <span
+                  aria-hidden
+                  className="absolute top-1/2 inset-s-0 h-5 w-1 -translate-y-1/2 rounded-e bg-foreground"
+                />
+              ) : null}
             </div>
           );
         })}
@@ -191,7 +235,10 @@ function ChatWorkspaceScreen({
       {/* Scrim over the visible strip of conversation while the drawer is open. */}
       <button
         aria-label={t.closeList}
-        className={cn("fixed inset-0 z-30 bg-black/45 transition-opacity duration-200 motion-reduce:transition-none md:hidden", drawerOpen ? "opacity-100" : "pointer-events-none opacity-0")}
+        className={cn(
+          "fixed inset-0 z-30 bg-black/45 transition-opacity duration-200 motion-reduce:transition-none md:hidden",
+          drawerOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        )}
         onClick={() => setDrawerOpen(false)}
         tabIndex={-1}
         type="button"
@@ -201,16 +248,24 @@ function ChatWorkspaceScreen({
         aria-label={t.channelsRegion}
         className={cn(
           "flex flex-col border-border/60 bg-background max-md:fixed max-md:inset-y-0 max-md:inset-s-16 max-md:z-40 max-md:w-[calc(78vw-4rem)] max-md:max-w-75 max-md:pt-[env(safe-area-inset-top)] max-md:shadow-2xl max-md:transition-[translate,opacity] max-md:duration-200 motion-reduce:transition-none md:sticky md:top-0 md:h-svh md:border-e md:bg-foreground/1.5",
-          !drawerOpen && "max-md:pointer-events-none max-md:-translate-x-full max-md:opacity-0 max-md:rtl:translate-x-full",
+          !drawerOpen &&
+            "max-md:pointer-events-none max-md:-translate-x-full max-md:opacity-0 max-md:rtl:translate-x-full"
         )}
         inert={channelsHidden || undefined}
       >
         <div className="border-border/60 border-b px-3 py-3">
           <div className="font-heading text-sm">{workspace?.name}</div>
-          <div className="mt-0.5 text-muted-foreground text-xs">{interpolate(t.members, { count: memberCount })}</div>
+          <div className="mt-0.5 text-muted-foreground text-xs">
+            {interpolate(t.members, { count: memberCount })}
+          </div>
         </div>
-        <nav aria-label={t.channelsNav} className="flex-1 overflow-y-auto px-1.5 py-2">
-          <h2 className="mt-1 mb-1 px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{t.channels}</h2>
+        <nav
+          aria-label={t.channelsNav}
+          className="flex-1 overflow-y-auto px-1.5 py-2"
+        >
+          <h2 className="mt-1 mb-1 px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+            {t.channels}
+          </h2>
           <ul className="flex flex-col gap-0.5">
             {channels.map((c) => {
               const active = c.id === activeId;
@@ -218,7 +273,14 @@ function ChatWorkspaceScreen({
                 <li key={c.id}>
                   <button
                     aria-current={active ? "page" : undefined}
-                    className={cn(row, active ? "bg-foreground/8 text-foreground" : c.unread ? "font-medium text-foreground hover:bg-foreground/4" : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground")}
+                    className={cn(
+                      row,
+                      active
+                        ? "bg-foreground/8 text-foreground"
+                        : c.unread
+                          ? "font-medium text-foreground hover:bg-foreground/4"
+                          : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground"
+                    )}
                     onClick={() => pick(c.id)}
                     type="button"
                   >
@@ -238,7 +300,9 @@ function ChatWorkspaceScreen({
               );
             })}
           </ul>
-          <h2 className="mt-4 mb-1 px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{t.directs}</h2>
+          <h2 className="mt-4 mb-1 px-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+            {t.directs}
+          </h2>
           <ul className="flex flex-col gap-0.5">
             {directs.map((d) => {
               const active = d.id === activeId;
@@ -246,14 +310,26 @@ function ChatWorkspaceScreen({
                 <li key={d.id}>
                   <button
                     aria-current={active ? "page" : undefined}
-                    className={cn(row, active ? "bg-foreground/8 text-foreground" : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground")}
+                    className={cn(
+                      row,
+                      active
+                        ? "bg-foreground/8 text-foreground"
+                        : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground"
+                    )}
                     onClick={() => pick(d.id)}
                     type="button"
                   >
                     <span className="flex min-w-0 items-center gap-2">
                       <span aria-hidden className="relative">
-                        <span className="flex size-5 items-center justify-center rounded-full bg-foreground/10 font-medium text-[10px] text-foreground">{initialsOf(d.name)}</span>
-                        <span className={cn("absolute -inset-e-0.5 -bottom-0.5 size-1.5 rounded-full ring-2 ring-background", PRESENCE[d.presence])} />
+                        <span className="flex size-5 items-center justify-center rounded-full bg-foreground/10 font-medium text-[10px] text-foreground">
+                          {initialsOf(d.name)}
+                        </span>
+                        <span
+                          className={cn(
+                            "absolute -inset-e-0.5 -bottom-0.5 size-1.5 rounded-full ring-2 ring-background",
+                            PRESENCE[d.presence]
+                          )}
+                        />
                       </span>
                       <span className="truncate">{d.name}</span>
                       <span className="sr-only">, {t[d.presence]}</span>
@@ -261,7 +337,9 @@ function ChatWorkspaceScreen({
                     {d.unread ? (
                       <span className="rounded-full bg-primary px-1.5 py-0.5 font-mono text-[10px] text-primary-foreground">
                         <span aria-hidden>{d.unread}</span>
-                        <span className="sr-only">, {interpolate(t.unreadCount, { count: d.unread })}</span>
+                        <span className="sr-only">
+                          , {interpolate(t.unreadCount, { count: d.unread })}
+                        </span>
                       </span>
                     ) : null}
                   </button>
@@ -272,7 +350,10 @@ function ChatWorkspaceScreen({
         </nav>
       </aside>
 
-      <main className="flex min-h-svh min-w-0 flex-col max-md:ps-16 md:h-svh" inert={conversationCovered || undefined}>
+      <main
+        className="flex min-h-svh min-w-0 flex-col max-md:ps-16 md:h-svh"
+        inert={conversationCovered || undefined}
+      >
         <header className="sticky top-0 z-10 flex items-center gap-2 border-border/60 border-b bg-background/95 px-2 py-2 backdrop-blur sm:gap-3 md:static md:px-5 md:py-3">
           <button
             aria-expanded={drawerOpen}
@@ -290,12 +371,18 @@ function ChatWorkspaceScreen({
               </span>
             ) : null}
             <h1 className="truncate font-heading text-base">{title}</h1>
-            {channel?.topic ? <span className="hidden truncate text-muted-foreground text-xs xl:inline">{channel.topic}</span> : null}
+            {channel?.topic ? (
+              <span className="hidden truncate text-muted-foreground text-xs xl:inline">
+                {channel.topic}
+              </span>
+            ) : null}
           </div>
           <div className="ms-auto flex shrink-0 items-center gap-1">
             {channel && onShowMembers ? (
               <button
-                aria-label={interpolate(t.showMembers, { count: channel.memberCount })}
+                aria-label={interpolate(t.showMembers, {
+                  count: channel.memberCount,
+                })}
                 className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/4 hover:text-foreground pointer-coarse:size-11"
                 onClick={onShowMembers}
                 type="button"
@@ -316,31 +403,53 @@ function ChatWorkspaceScreen({
           </div>
         </header>
 
-        <ol aria-label={title} className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4 md:px-5">
-          {messages.length === 0 ? <li className="m-auto text-muted-foreground text-sm">{t.empty}</li> : null}
+        <ol
+          aria-label={title}
+          className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4 md:px-5"
+        >
+          {messages.length === 0 ? (
+            <li className="m-auto text-muted-foreground text-sm">{t.empty}</li>
+          ) : null}
           {messages.map((m, i) => {
-            const newDay = i === 0 || dayKey(m.at) !== dayKey((messages[i - 1] as ChatMessage).at);
+            const newDay =
+              i === 0 ||
+              dayKey(m.at) !== dayKey((messages[i - 1] as ChatMessage).at);
             return (
               <li className="flex flex-col gap-2" key={m.id}>
                 {newDay ? (
                   <div className="flex items-center gap-3 py-1">
                     <div aria-hidden className="h-px flex-1 bg-border/60" />
-                    <span className="rounded-full border border-border/60 bg-card px-2.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{dayLabel(m.at)}</span>
+                    <span className="rounded-full border border-border/60 bg-card px-2.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                      {dayLabel(m.at)}
+                    </span>
                     <div aria-hidden className="h-px flex-1 bg-border/60" />
                   </div>
                 ) : null}
                 <div className="flex gap-3">
-                  <div aria-hidden className={cn("mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md bg-linear-to-br font-medium text-[11px] text-foreground/85", TINT[m.author.color])}>
+                  <div
+                    aria-hidden
+                    className={cn(
+                      "mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md bg-linear-to-br font-medium text-[11px] text-foreground/85",
+                      TINT[m.author.color]
+                    )}
+                  >
                     {initialsOf(m.author.name)}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline gap-2">
-                      <span className="font-heading text-sm">{m.author.name}</span>
-                      <time className="font-mono text-[10px] text-muted-foreground" dateTime={m.at}>
+                      <span className="font-heading text-sm">
+                        {m.author.name}
+                      </span>
+                      <time
+                        className="font-mono text-[10px] text-muted-foreground"
+                        dateTime={m.at}
+                      >
                         {format.time(m.at)}
                       </time>
                     </div>
-                    <p className="mt-0.5 whitespace-pre-line text-foreground text-sm leading-relaxed">{m.body}</p>
+                    <p className="mt-0.5 whitespace-pre-line text-foreground text-sm leading-relaxed">
+                      {m.body}
+                    </p>
                   </div>
                 </div>
                 {m.thread ? (
@@ -350,14 +459,29 @@ function ChatWorkspaceScreen({
                       onClick={() => onOpenThread(m)}
                       type="button"
                     >
-                      <span className="text-foreground text-xs">{m.thread.replies === 1 ? t.repliesOne : interpolate(t.replies, { count: m.thread.replies })}</span>
-                      <span aria-hidden className="text-muted-foreground text-xs">
+                      <span className="text-foreground text-xs">
+                        {m.thread.replies === 1
+                          ? t.repliesOne
+                          : interpolate(t.replies, { count: m.thread.replies })}
+                      </span>
+                      <span
+                        aria-hidden
+                        className="text-muted-foreground text-xs"
+                      >
                         ·
                       </span>
-                      <span className="text-muted-foreground text-xs">{interpolate(t.lastReply, { when: format.relative(m.thread.lastReplyAt) })}</span>
+                      <span className="text-muted-foreground text-xs">
+                        {interpolate(t.lastReply, {
+                          when: format.relative(m.thread.lastReplyAt),
+                        })}
+                      </span>
                     </button>
                   ) : (
-                    <p className="self-start text-muted-foreground text-xs sm:ms-12">{m.thread.replies === 1 ? t.repliesOne : interpolate(t.replies, { count: m.thread.replies })}</p>
+                    <p className="self-start text-muted-foreground text-xs sm:ms-12">
+                      {m.thread.replies === 1
+                        ? t.repliesOne
+                        : interpolate(t.replies, { count: m.thread.replies })}
+                    </p>
                   )
                 ) : null}
               </li>
@@ -367,7 +491,10 @@ function ChatWorkspaceScreen({
 
         <div className="sticky bottom-0 bg-background px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:static md:px-5 md:pb-5">
           {send.error ? (
-            <p className="mb-2 text-destructive-foreground text-sm" role="alert">
+            <p
+              className="mb-2 text-destructive-foreground text-sm"
+              role="alert"
+            >
               {send.error}
             </p>
           ) : null}
@@ -388,7 +515,11 @@ function ChatWorkspaceScreen({
               onClick={submit}
               type="button"
             >
-              {send.isPending() ? <Spinner className="size-3.5" /> : <SendIcon aria-hidden className="size-3.5" />}
+              {send.isPending() ? (
+                <Spinner className="size-3.5" />
+              ) : (
+                <SendIcon aria-hidden className="size-3.5" />
+              )}
               {t.send}
             </button>
           </div>

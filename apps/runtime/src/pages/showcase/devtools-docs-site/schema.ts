@@ -13,23 +13,58 @@ export const DocsBlock = z
     z.object({ type: z.literal("p"), text: z.string() }),
     z.object({ type: z.literal("list"), items: z.array(z.string()) }),
     z.object({ type: z.literal("steps"), items: z.array(z.string()) }),
-    z.object({ type: z.literal("callout"), tone: z.enum(["info", "warning"]), title: z.string(), text: z.string() }),
-    z.object({ type: z.literal("code"), samples: z.partialRecord(DocsLang, z.string()), title: z.string().optional() }),
-    z.object({ type: z.literal("table"), head: z.array(z.string()), rows: z.array(z.array(z.string())) }),
+    z.object({
+      type: z.literal("callout"),
+      tone: z.enum(["info", "warning"]),
+      title: z.string(),
+      text: z.string(),
+    }),
+    z.object({
+      type: z.literal("code"),
+      samples: z.partialRecord(DocsLang, z.string()),
+      title: z.string().optional(),
+    }),
+    z.object({
+      type: z.literal("table"),
+      head: z.array(z.string()),
+      rows: z.array(z.array(z.string())),
+    }),
   ])
   .meta({ id: "DocsBlock" });
 export type DocsBlock = z.infer<typeof DocsBlock>;
 
-export const DocsSection = z.object({ id: z.string(), title: z.string(), blocks: z.array(DocsBlock) }).meta({ id: "DocsSection" });
+export const DocsSection = z
+  .object({ id: z.string(), title: z.string(), blocks: z.array(DocsBlock) })
+  .meta({ id: "DocsSection" });
 export type DocsSection = z.infer<typeof DocsSection>;
 
 export const DocsPage = z
-  .object({ id: z.string(), title: z.string(), group: z.string(), lead: z.string(), /** ISO date. */ updatedAt: z.string(), minutes: z.number().int(), /** A short tag in the sidebar, e.g. "New". */ badge: z.string().optional(), sections: z.array(DocsSection) })
+  .object({
+    id: z.string(),
+    title: z.string(),
+    group: z.string(),
+    lead: z.string(),
+    /** ISO date. */ updatedAt: z.string(),
+    minutes: z.number().int(),
+    /** A short tag in the sidebar, e.g. "New". */ badge: z.string().optional(),
+    sections: z.array(DocsSection),
+  })
   .meta({ id: "DocsPage" });
 export type DocsPage = z.infer<typeof DocsPage>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listDocsPages: { method: "GET", path: "/docs/pages", summary: "Every page, in sidebar order", response: z.array(DocsPage) },
-  sendDocsFeedback: { method: "POST", path: "/docs/pages/{id}/feedback", summary: "Record whether a page helped", params: z.object({ id: z.string() }), body: z.object({ helpful: z.boolean() }) },
+  listDocsPages: {
+    method: "GET",
+    path: "/docs/pages",
+    summary: "Every page, in sidebar order",
+    response: z.array(DocsPage),
+  },
+  sendDocsFeedback: {
+    method: "POST",
+    path: "/docs/pages/{id}/feedback",
+    summary: "Record whether a page helped",
+    params: z.object({ id: z.string() }),
+    body: z.object({ helpful: z.boolean() }),
+  },
 });

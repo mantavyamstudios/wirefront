@@ -4,19 +4,46 @@
 "use client";
 
 import { cn } from "@wirefront/ui/lib/utils";
-import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  SegmentedControl,
+  SegmentedControlItem,
+} from "@wirefront/ui/segmented-control";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Switch } from "@wirefront/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@wirefront/ui/toggle-group";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { CheckIcon, ChevronRightIcon, MailIcon, MessagesSquareIcon, MonitorIcon, SmartphoneIcon } from "lucide-react";
+import {
+  CheckIcon,
+  ChevronRightIcon,
+  MailIcon,
+  MessagesSquareIcon,
+  MonitorIcon,
+  SmartphoneIcon,
+} from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useId, useState } from "react";
 
-import { type ChannelId, type ChannelMode, DigestFrequency, Medium, type NotificationPreferences, type NotificationSettingsData } from "./schema";
+import {
+  type ChannelId,
+  type ChannelMode,
+  DigestFrequency,
+  Medium,
+  type NotificationPreferences,
+  type NotificationSettingsData,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("notificationSettings.<key>"). */
 export const NOTIFICATION_SETTINGS_MESSAGES = {
@@ -26,7 +53,8 @@ export const NOTIFICATION_SETTINGS_MESSAGES = {
   saved: "Saved",
   restore: "Restore defaults",
   whereTitle: "Where we notify you",
-  whereDescription: "How each channel reaches you. Everything always lands in your {product} inbox.",
+  whereDescription:
+    "How each channel reaches you. Everything always lands in your {product} inbox.",
   desktop: "Desktop",
   mobile: "Mobile",
   email: "Email",
@@ -82,19 +110,40 @@ const CHANNEL_ICONS: Record<ChannelId, ReactNode> = {
 };
 const CHANNELS: ChannelId[] = ["desktop", "mobile", "email", "chat"];
 const MODES: ChannelMode[] = ["all", "mentions", "off"];
-const MODE_DOT: Record<ChannelMode, string> = { all: "bg-success", mentions: "bg-info", off: "bg-muted-foreground/40" };
-const MEDIUM_ICONS: Record<Medium, ReactNode> = { email: <MailIcon />, push: <SmartphoneIcon />, chat: <MessagesSquareIcon /> };
-const HOURS = Array.from({ length: 24 }, (_, h) => ({ value: String(h), label: `${String(h).padStart(2, "0")}:00` }));
+const MODE_DOT: Record<ChannelMode, string> = {
+  all: "bg-success",
+  mentions: "bg-info",
+  off: "bg-muted-foreground/40",
+};
+const MEDIUM_ICONS: Record<Medium, ReactNode> = {
+  email: <MailIcon />,
+  push: <SmartphoneIcon />,
+  chat: <MessagesSquareIcon />,
+};
+const HOURS = Array.from({ length: 24 }, (_, h) => ({
+  value: String(h),
+  label: `${String(h).padStart(2, "0")}:00`,
+}));
 
 type Messages = typeof NOTIFICATION_SETTINGS_MESSAGES;
 const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-function SectionHeader({ title, description, action }: { title: string; description: ReactNode; action?: ReactNode }) {
+function SectionHeader({
+  title,
+  description,
+  action,
+}: {
+  title: string;
+  description: ReactNode;
+  action?: ReactNode;
+}) {
   return (
     <div className="flex items-center gap-4">
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <h2 className="font-medium text-sm">{title}</h2>
-        <p className="text-pretty text-muted-foreground text-sm">{description}</p>
+        <p className="text-pretty text-muted-foreground text-sm">
+          {description}
+        </p>
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
     </div>
@@ -119,20 +168,37 @@ function RollingNumber({ value, reduce }: { value: number; reduce: boolean }) {
   );
 }
 
-function SaveStatus({ state, reduce, t }: { state: "idle" | "saving" | "saved"; reduce: boolean; t: Messages }) {
+function SaveStatus({
+  state,
+  reduce,
+  t,
+}: {
+  state: "idle" | "saving" | "saved";
+  reduce: boolean;
+  t: Messages;
+}) {
   return (
     <span aria-live="polite" className="inline-flex h-7 items-center text-xs">
       <AnimatePresence initial={false} mode="wait">
         {state !== "idle" && (
           <motion.span
             animate={{ opacity: 1, y: 0 }}
-            className={cn("inline-flex items-center gap-1.5", state === "saved" ? "text-success-foreground" : "text-muted-foreground")}
+            className={cn(
+              "inline-flex items-center gap-1.5",
+              state === "saved"
+                ? "text-success-foreground"
+                : "text-muted-foreground"
+            )}
             exit={{ opacity: 0, y: reduce ? 0 : -3 }}
             initial={{ opacity: 0, y: reduce ? 0 : 3 }}
             key={state}
             transition={{ duration: 0.15, ease: easeOut }}
           >
-            {state === "saved" ? <CheckIcon className="size-3.5" /> : <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground motion-reduce:animate-none" />}
+            {state === "saved" ? (
+              <CheckIcon className="size-3.5" />
+            ) : (
+              <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground motion-reduce:animate-none" />
+            )}
             {state === "saved" ? t.saved : t.saving}
           </motion.span>
         )}
@@ -171,11 +237,18 @@ function ChannelRow({
         onClick={onOpen}
         type="button"
       >
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border bg-background text-muted-foreground [&_svg]:size-4">{CHANNEL_ICONS[id]}</span>
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border bg-background text-muted-foreground [&_svg]:size-4">
+          {CHANNEL_ICONS[id]}
+        </span>
         <span className="flex min-w-0 flex-1 flex-col">
           <span className="font-medium text-sm">{label}</span>
           <span className="flex items-center gap-1.5 text-muted-foreground text-xs">
-            <span className={cn("size-1.5 rounded-full transition-colors duration-200", MODE_DOT[mode])} />
+            <span
+              className={cn(
+                "size-1.5 rounded-full transition-colors duration-200",
+                MODE_DOT[mode]
+              )}
+            />
             {t[`mode${capital(mode)}` as keyof Messages]}
           </span>
         </span>
@@ -183,7 +256,11 @@ function ChannelRow({
           animate={{ rotate: open ? 90 : 0 }}
           className="text-muted-foreground"
           initial={false}
-          transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 34 }}
+          transition={
+            reduce
+              ? { duration: 0 }
+              : { type: "spring", stiffness: 500, damping: 34 }
+          }
         >
           <ChevronRightIcon className="size-4" />
         </motion.span>
@@ -196,13 +273,27 @@ function ChannelRow({
             exit={{ height: 0, opacity: 0 }}
             id={panelId}
             initial={{ height: 0, opacity: 0 }}
-            transition={reduce ? { duration: 0 } : { duration: 0.22, ease: easeOut }}
+            transition={
+              reduce ? { duration: 0 } : { duration: 0.22, ease: easeOut }
+            }
           >
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5 px-4 pb-3.5 sm:ps-15">
-              <p className="min-w-0 flex-1 basis-44 text-pretty text-muted-foreground text-xs">{detail}</p>
-              <SegmentedControl aria-label={interpolate(t.channelNotifications, { channel: label })} size="sm">
+              <p className="min-w-0 flex-1 basis-44 text-pretty text-muted-foreground text-xs">
+                {detail}
+              </p>
+              <SegmentedControl
+                aria-label={interpolate(t.channelNotifications, {
+                  channel: label,
+                })}
+                size="sm"
+              >
                 {MODES.map((m) => (
-                  <SegmentedControlItem aria-pressed={mode === m} data-pressed={mode === m ? "" : undefined} key={m} onClick={() => onMode(m)}>
+                  <SegmentedControlItem
+                    aria-pressed={mode === m}
+                    data-pressed={mode === m ? "" : undefined}
+                    key={m}
+                    onClick={() => onMode(m)}
+                  >
                     {t[`short${capital(m)}` as keyof Messages]}
                   </SegmentedControlItem>
                 ))}
@@ -216,7 +307,13 @@ function ChannelRow({
 }
 
 function QuietTrack({ from, to }: { from: number; to: number }) {
-  const segments = from < to ? [[from, to]] : [[from, 24], [0, to]];
+  const segments =
+    from < to
+      ? [[from, to]]
+      : [
+          [from, 24],
+          [0, to],
+        ];
   return (
     <div aria-hidden className="flex w-full max-w-64 flex-col gap-1">
       <div className="relative h-1.5 overflow-hidden rounded-full bg-muted">
@@ -224,7 +321,10 @@ function QuietTrack({ from, to }: { from: number; to: number }) {
           <span
             className="absolute inset-y-0 rounded-full bg-category-8 transition-[left,width] duration-200 ease-out"
             key={`${a}-${b}`}
-            style={{ left: `${(a / 24) * 100}%`, width: `${((b - a) / 24) * 100}%` }}
+            style={{
+              left: `${(a / 24) * 100}%`,
+              width: `${((b - a) / 24) * 100}%`,
+            }}
           />
         ))}
       </div>
@@ -239,15 +339,35 @@ function QuietTrack({ from, to }: { from: number; to: number }) {
   );
 }
 
-function HourSelect({ label, value, onChange }: { label: string; value: number; onChange: (h: number) => void }) {
+function HourSelect({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (h: number) => void;
+}) {
   return (
-    <Select items={HOURS} onValueChange={(v) => v != null && onChange(Number(v))} value={String(value)}>
-      <SelectTrigger aria-label={label} className="w-24 min-w-0 font-mono tabular-nums" size="sm">
+    <Select
+      items={HOURS}
+      onValueChange={(v) => v != null && onChange(Number(v))}
+      value={String(value)}
+    >
+      <SelectTrigger
+        aria-label={label}
+        className="w-24 min-w-0 font-mono tabular-nums"
+        size="sm"
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent align="start">
         {HOURS.map((h) => (
-          <SelectItem className="font-mono tabular-nums" key={h.value} value={h.value}>
+          <SelectItem
+            className="font-mono tabular-nums"
+            key={h.value}
+            value={h.value}
+          >
             {h.label}
           </SelectItem>
         ))}
@@ -256,7 +376,12 @@ function HourSelect({ label, value, onChange }: { label: string; value: number; 
   );
 }
 
-function NotificationSettingsScreen({ data, onSave, product, className }: NotificationSettingsProps) {
+function NotificationSettingsScreen({
+  data,
+  onSave,
+  product,
+  className,
+}: NotificationSettingsProps) {
   const t = useMessages("notificationSettings", NOTIFICATION_SETTINGS_MESSAGES);
   const format = useFormat();
   const reduce = Boolean(useReducedMotion());
@@ -291,7 +416,9 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
     return () => clearTimeout(timer);
   }, [status]);
 
-  const change = (update: (p: NotificationPreferences) => NotificationPreferences) => {
+  const change = (
+    update: (p: NotificationPreferences) => NotificationPreferences
+  ) => {
     const next = update(prefs);
     setPrefs(next);
     setStatus("saving");
@@ -307,11 +434,21 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
   const digestCount = sections.reduce(
     (n, s) =>
       s.enabled
-        ? n + s.events.reduce((m, e) => (e.media.includes("email") && !mediumOff.email && (channels.email === "all" || e.mention) ? m + e.pending : m), 0)
+        ? n +
+          s.events.reduce(
+            (m, e) =>
+              e.media.includes("email") &&
+              !mediumOff.email &&
+              (channels.email === "all" || e.mention)
+                ? m + e.pending
+                : m,
+            0
+          )
         : n,
-    0,
+    0
   );
-  const digestLine = digest === "off" ? t.digestOff : mediumOff.email ? t.digestPaused : null;
+  const digestLine =
+    digest === "off" ? t.digestOff : mediumOff.email ? t.digestPaused : null;
   const isDefault = JSON.stringify(prefs) === JSON.stringify(data.defaults);
   const hour = (h: number) => HOURS[h]?.label ?? "";
 
@@ -330,7 +467,9 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
   );
 
   return (
-    <div className={cn("mx-auto w-full max-w-2xl px-6 py-10 md:px-10", className)}>
+    <div
+      className={cn("mx-auto w-full max-w-2xl px-6 py-10 md:px-10", className)}
+    >
       <div className="flex items-start gap-4">
         <div className="min-w-0 flex-1">
           <h1 className="font-semibold text-2xl tracking-tight">{t.title}</h1>
@@ -349,7 +488,10 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
       ) : null}
 
       <section className="mt-10">
-        <SectionHeader description={interpolate(t.whereDescription, { product })} title={t.whereTitle} />
+        <SectionHeader
+          description={interpolate(t.whereDescription, { product })}
+          title={t.whereTitle}
+        />
         <div className="mt-3 overflow-hidden rounded-xl border bg-card">
           {CHANNELS.map((c) => (
             <ChannelRow
@@ -357,7 +499,9 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
               id={c}
               key={c}
               mode={channels[c]}
-              onMode={(m) => change((p) => ({ ...p, channels: { ...p.channels, [c]: m } }))}
+              onMode={(m) =>
+                change((p) => ({ ...p, channels: { ...p.channels, [c]: m } }))
+              }
               onOpen={() => setOpenChannel((o) => (o === c ? null : c))}
               open={openChannel === c}
               reduce={reduce}
@@ -372,9 +516,18 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
           <SectionHeader
             action={
               <Switch
-                aria-label={interpolate(t.sectionNotifications, { section: section.label })}
+                aria-label={interpolate(t.sectionNotifications, {
+                  section: section.label,
+                })}
                 checked={section.enabled}
-                onCheckedChange={(v) => change((p) => ({ ...p, sections: p.sections.map((s) => (s.id === section.id ? { ...s, enabled: v } : s)) }))}
+                onCheckedChange={(v) =>
+                  change((p) => ({
+                    ...p,
+                    sections: p.sections.map((s) =>
+                      s.id === section.id ? { ...s, enabled: v } : s
+                    ),
+                  }))
+                }
               />
             }
             description={section.description}
@@ -391,12 +544,19 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
                 ))}
               </span>
             </div>
-            <ul className={cn("divide-y transition-opacity duration-200", !section.enabled && "opacity-50")}>
+            <ul
+              className={cn(
+                "divide-y transition-opacity duration-200",
+                !section.enabled && "opacity-50"
+              )}
+            >
               {section.events.map((e) => (
                 <li className="flex items-center gap-4 px-4 py-3.5" key={e.id}>
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <span className="font-medium text-sm">{e.label}</span>
-                    <span className="text-pretty text-muted-foreground text-xs">{e.hint}</span>
+                    <span className="text-pretty text-muted-foreground text-xs">
+                      {e.hint}
+                    </span>
                   </div>
                   <ToggleGroup
                     aria-label={interpolate(t.channelsFor, { event: e.label })}
@@ -407,7 +567,16 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
                       change((p) => ({
                         ...p,
                         sections: p.sections.map((s) =>
-                          s.id === section.id ? { ...s, events: s.events.map((x) => (x.id === e.id ? { ...x, media: value as Medium[] } : x)) } : s,
+                          s.id === section.id
+                            ? {
+                                ...s,
+                                events: s.events.map((x) =>
+                                  x.id === e.id
+                                    ? { ...x, media: value as Medium[] }
+                                    : x
+                                ),
+                              }
+                            : s
                         ),
                       }))
                     }
@@ -417,7 +586,10 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
                   >
                     {Medium.options.map((m) => (
                       <ToggleGroupItem
-                        aria-label={interpolate(mediumOff[m] ? t.mediumForOff : t.mediumFor, { medium: t[m], event: e.label })}
+                        aria-label={interpolate(
+                          mediumOff[m] ? t.mediumForOff : t.mediumFor,
+                          { medium: t[m], event: e.label }
+                        )}
                         className="w-9 text-muted-foreground/50 data-pressed:text-foreground"
                         disabled={!section.enabled || mediumOff[m]}
                         key={m}
@@ -435,22 +607,38 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
       ))}
 
       <section className="mt-10">
-        <SectionHeader description={t.deliveryDescription} title={t.deliveryTitle} />
+        <SectionHeader
+          description={t.deliveryDescription}
+          title={t.deliveryTitle}
+        />
         <div className="mt-3 overflow-hidden rounded-xl border bg-card">
           <div>
             <div className="flex items-center gap-4 px-4 py-3.5">
               <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <label className="cursor-pointer font-medium text-sm" htmlFor={`${id}-quiet`}>
+                <label
+                  className="cursor-pointer font-medium text-sm"
+                  htmlFor={`${id}-quiet`}
+                >
                   {t.quietHours}
                 </label>
                 <span className="text-pretty text-muted-foreground text-xs">
-                  {quiet.enabled ? interpolate(t.quietOn, { from: hour(quiet.from), to: hour(quiet.to) }) : t.quietOff}
+                  {quiet.enabled
+                    ? interpolate(t.quietOn, {
+                        from: hour(quiet.from),
+                        to: hour(quiet.to),
+                      })
+                    : t.quietOff}
                 </span>
               </span>
               <Switch
                 checked={quiet.enabled}
                 id={`${id}-quiet`}
-                onCheckedChange={(v) => change((p) => ({ ...p, quietHours: { ...p.quietHours, enabled: v } }))}
+                onCheckedChange={(v) =>
+                  change((p) => ({
+                    ...p,
+                    quietHours: { ...p.quietHours, enabled: v },
+                  }))
+                }
               />
             </div>
             <AnimatePresence initial={false}>
@@ -460,19 +648,33 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
                   className="overflow-hidden"
                   exit={{ height: 0, opacity: 0 }}
                   initial={{ height: 0, opacity: 0 }}
-                  transition={reduce ? { duration: 0 } : { duration: 0.22, ease: easeOut }}
+                  transition={
+                    reduce ? { duration: 0 } : { duration: 0.22, ease: easeOut }
+                  }
                 >
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-4 pb-4">
                     <div className="flex items-center gap-2 text-muted-foreground text-xs">
                       <HourSelect
                         label={t.quietStart}
-                        onChange={(h) => h !== quiet.to && change((p) => ({ ...p, quietHours: { ...p.quietHours, from: h } }))}
+                        onChange={(h) =>
+                          h !== quiet.to &&
+                          change((p) => ({
+                            ...p,
+                            quietHours: { ...p.quietHours, from: h },
+                          }))
+                        }
                         value={quiet.from}
                       />
                       <span>{t.to}</span>
                       <HourSelect
                         label={t.quietEnd}
-                        onChange={(h) => h !== quiet.from && change((p) => ({ ...p, quietHours: { ...p.quietHours, to: h } }))}
+                        onChange={(h) =>
+                          h !== quiet.from &&
+                          change((p) => ({
+                            ...p,
+                            quietHours: { ...p.quietHours, to: h },
+                          }))
+                        }
                         value={quiet.to}
                       />
                     </div>
@@ -487,23 +689,38 @@ function NotificationSettingsScreen({ data, onSave, product, className }: Notifi
           <div className="flex items-center gap-4 border-t px-4 py-3.5">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <span className="font-medium text-sm">{t.digest}</span>
-              <span aria-live="polite" className="text-pretty text-muted-foreground text-xs">
+              <span
+                aria-live="polite"
+                className="text-pretty text-muted-foreground text-xs"
+              >
                 {digestLine ?? (
                   <>
-                    {data.nextDigestAt ? `${interpolate(t.nextDigest, { when: format.date(data.nextDigestAt, { weekday: "long", hour: "2-digit", minute: "2-digit" }) })} · ` : null}
+                    {data.nextDigestAt
+                      ? `${interpolate(t.nextDigest, { when: format.date(data.nextDigestAt, { weekday: "long", hour: "2-digit", minute: "2-digit" }) })} · `
+                      : null}
                     <span className="font-medium text-foreground">
-                      <RollingNumber reduce={reduce} value={digestCount} /> {digestCount === 1 ? t.item : t.items}
+                      <RollingNumber reduce={reduce} value={digestCount} />{" "}
+                      {digestCount === 1 ? t.item : t.items}
                     </span>
                   </>
                 )}
               </span>
             </div>
             <Select
-              items={DigestFrequency.options.map((d) => ({ value: d, label: t[d] }))}
-              onValueChange={(v) => v && change((p) => ({ ...p, digest: v as DigestFrequency }))}
+              items={DigestFrequency.options.map((d) => ({
+                value: d,
+                label: t[d],
+              }))}
+              onValueChange={(v) =>
+                v && change((p) => ({ ...p, digest: v as DigestFrequency }))
+              }
               value={digest}
             >
-              <SelectTrigger aria-label={t.digest} className="w-28 min-w-0" size="sm">
+              <SelectTrigger
+                aria-label={t.digest}
+                className="w-28 min-w-0"
+                size="sm"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent align="start">

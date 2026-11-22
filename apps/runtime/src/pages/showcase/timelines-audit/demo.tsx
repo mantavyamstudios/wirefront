@@ -14,12 +14,24 @@ export function TimelinesAuditShowcasePage() {
   return (
     <WirefrontProvider locale="en-US" now={demoNow}>
       <AuditTrail
-        data={state === "loading" || state === "error" ? undefined : state === "empty" ? { events: [], total: 0 } : fixtures.listAuditEvents}
+        data={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? { events: [], total: 0 }
+              : fixtures.listAuditEvents
+        }
         error="The audit log didn’t load. Check your connection and try again."
         note="retained for 1 year on Business plan."
         onRetry={() => {}}
         onViewEvent={() => {}}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

@@ -26,7 +26,9 @@ export const RecurrenceRule = z
   .meta({ id: "RecurrenceRule" });
 export type RecurrenceRule = z.infer<typeof RecurrenceRule>;
 
-export const RecurrencePreset = z.object({ id: z.string(), label: z.string(), rule: RecurrenceRule.partial() }).meta({ id: "RecurrencePreset" });
+export const RecurrencePreset = z
+  .object({ id: z.string(), label: z.string(), rule: RecurrenceRule.partial() })
+  .meta({ id: "RecurrencePreset" });
 export type RecurrencePreset = z.infer<typeof RecurrencePreset>;
 
 /** The backend operations this screen calls. */

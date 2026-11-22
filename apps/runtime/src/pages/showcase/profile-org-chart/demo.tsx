@@ -7,7 +7,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { OrgChart } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ProfileOrgChartShowcasePage() {
   const state = useShowcaseState();
@@ -22,8 +23,16 @@ export function ProfileOrgChartShowcasePage() {
         setPeople((all) => [...all, ...more]);
       }}
       onRetry={() => {}}
-      people={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : people}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      people={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : people
+      }
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
       total={fixtures.listOrg.total}
     />
   );

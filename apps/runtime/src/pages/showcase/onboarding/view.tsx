@@ -5,18 +5,38 @@
 import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { Button, buttonVariants } from "@wirefront/ui/button";
-import { IllustratedAuthLayout, useAuthTypingImpulse } from "@wirefront/ui/illustrated-auth-layout";
+import {
+  IllustratedAuthLayout,
+  useAuthTypingImpulse,
+} from "@wirefront/ui/illustrated-auth-layout";
 import { Input } from "@wirefront/ui/input";
 import { cn } from "@wirefront/ui/lib/utils";
-import { bumpParticleTypingImpulse, pulseParticleSubmitImpulse } from "@wirefront/ui/particle-field";
+import {
+  bumpParticleTypingImpulse,
+  pulseParticleSubmitImpulse,
+} from "@wirefront/ui/particle-field";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
-import { type SubmitEvent, type ReactNode, useEffect, useRef, useState } from "react";
-import { CreateWorkspaceInput, InviteEmail, type InviteTeammatesInput } from "./schema";
+import {
+  type SubmitEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  CreateWorkspaceInput,
+  InviteEmail,
+  type InviteTeammatesInput,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("workspaceOnboarding.<key>"). */
 export const WORKSPACE_ONBOARDING_MESSAGES = {
@@ -68,10 +88,19 @@ export interface WorkspaceOnboardingProps {
   actions?: ReactNode;
 }
 
-const eyebrow = "mt-8 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.3em]";
+const eyebrow =
+  "mt-8 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.3em]";
 const error = "text-destructive-foreground text-xs";
 
-function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<WorkspaceOnboardingProps, "onCreateWorkspace" | "onInvite" | "enterHref" | "plan">) {
+function OnboardingFlow({
+  onCreateWorkspace,
+  onInvite,
+  enterHref,
+  plan,
+}: Pick<
+  WorkspaceOnboardingProps,
+  "onCreateWorkspace" | "onInvite" | "enterHref" | "plan"
+>) {
   const t = useMessages("workspaceOnboarding", WORKSPACE_ONBOARDING_MESSAGES);
   const impulse = useAuthTypingImpulse();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -129,10 +158,25 @@ function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<W
   return (
     <div className="w-full max-w-lg" ref={rootRef}>
       <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">
-        <span>{interpolate(t.step, { step: String(step + 1).padStart(2, "0"), total: steps })}</span>
+        <span>
+          {interpolate(t.step, {
+            step: String(step + 1).padStart(2, "0"),
+            total: steps,
+          })}
+        </span>
         <div aria-hidden className="ms-2 flex items-center gap-1.5">
           {Array.from({ length: steps }, (_, i) => `dot-${i}`).map((key, i) => (
-            <span className={cn("h-1.5 rounded-full transition-all", i === step ? "w-5 bg-foreground" : i < step ? "w-1.5 bg-foreground/70" : "w-1.5 bg-foreground/20")} key={key} />
+            <span
+              className={cn(
+                "h-1.5 rounded-full transition-all",
+                i === step
+                  ? "w-5 bg-foreground"
+                  : i < step
+                    ? "w-1.5 bg-foreground/70"
+                    : "w-1.5 bg-foreground/20"
+              )}
+              key={key}
+            />
           ))}
         </div>
       </div>
@@ -140,12 +184,24 @@ function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<W
       {step === 0 ? (
         <>
           <div className={eyebrow}>{t.nameEyebrow}</div>
-          <h1 className="mt-2 font-heading text-3xl leading-tight">{t.nameTitle}</h1>
+          <h1 className="mt-2 font-heading text-3xl leading-tight">
+            {t.nameTitle}
+          </h1>
           <p className="mt-2 text-muted-foreground text-sm">{t.nameHint}</p>
-          <Form className="mt-8 flex flex-col gap-4" noValidate {...create.formProps}>
+          <Form
+            className="mt-8 flex flex-col gap-4"
+            noValidate
+            {...create.formProps}
+          >
             <Field.Root className="flex flex-col gap-1.5" name="name">
-              <Field.Label className="font-medium text-sm leading-none">{t.nameLabel}</Field.Label>
-              <Input autoComplete="organization" defaultValue={workspace} placeholder={t.namePlaceholder} />
+              <Field.Label className="font-medium text-sm leading-none">
+                {t.nameLabel}
+              </Field.Label>
+              <Input
+                autoComplete="organization"
+                defaultValue={workspace}
+                placeholder={t.namePlaceholder}
+              />
               <Field.Error className={error} />
             </Field.Root>
             {create.formError ? (
@@ -153,7 +209,13 @@ function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<W
                 {create.formError}
               </p>
             ) : null}
-            <Button aria-busy={create.pending} className="mt-2" disabled={create.pending} size="lg" type="submit">
+            <Button
+              aria-busy={create.pending}
+              className="mt-2"
+              disabled={create.pending}
+              size="lg"
+              type="submit"
+            >
               {create.pending ? <Spinner data-icon="inline-start" /> : null}
               {t.continue}
             </Button>
@@ -164,15 +226,23 @@ function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<W
       {step === 1 && onInvite ? (
         <>
           <div className={eyebrow}>{t.inviteEyebrow}</div>
-          <h1 className="mt-2 font-heading text-3xl leading-tight">{t.inviteTitle}</h1>
+          <h1 className="mt-2 font-heading text-3xl leading-tight">
+            {t.inviteTitle}
+          </h1>
           <p className="mt-2 text-muted-foreground text-sm">{t.inviteHint}</p>
-          <form className="mt-8 flex flex-col gap-1.5" noValidate onSubmit={add}>
+          <form
+            className="mt-8 flex flex-col gap-1.5"
+            noValidate
+            onSubmit={add}
+          >
             <label className="sr-only" htmlFor="onboarding-invite">
               {t.inviteLabel}
             </label>
             <div className="flex gap-2">
               <Input
-                aria-describedby={draftError ? "onboarding-invite-error" : undefined}
+                aria-describedby={
+                  draftError ? "onboarding-invite-error" : undefined
+                }
                 aria-invalid={draftError ? true : undefined}
                 autoComplete="off"
                 id="onboarding-invite"
@@ -196,11 +266,16 @@ function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<W
           {invitees.length > 0 ? (
             <ul className="mt-5 flex flex-col gap-1.5">
               {invitees.map((email) => (
-                <li className="flex items-center justify-between gap-2 rounded-md border border-border/70 bg-background/40 py-1 ps-3 pe-1 text-sm" key={email}>
+                <li
+                  className="flex items-center justify-between gap-2 rounded-md border border-border/70 bg-background/40 py-1 ps-3 pe-1 text-sm"
+                  key={email}
+                >
                   <span className="truncate text-foreground/85">{email}</span>
                   <button
                     className="min-h-8 shrink-0 px-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] transition-colors hover:text-foreground pointer-coarse:min-h-11"
-                    onClick={() => setInvitees((prev) => prev.filter((e) => e !== email))}
+                    onClick={() =>
+                      setInvitees((prev) => prev.filter((e) => e !== email))
+                    }
                     type="button"
                   >
                     {t.remove}
@@ -210,7 +285,9 @@ function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<W
               ))}
             </ul>
           ) : (
-            <div className="mt-5 rounded-md border border-border/70 border-dashed bg-background/30 px-3 py-6 text-center text-muted-foreground text-xs">{t.noInvites}</div>
+            <div className="mt-5 rounded-md border border-border/70 border-dashed bg-background/30 px-3 py-6 text-center text-muted-foreground text-xs">
+              {t.noInvites}
+            </div>
           )}
 
           {invite.error ? (
@@ -226,12 +303,18 @@ function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<W
               aria-busy={invite.isPending()}
               className="max-sm:w-full"
               disabled={invite.isPending()}
-              onClick={() => (invitees.length ? void invite.run({ emails: invitees }) : next())}
+              onClick={() =>
+                invitees.length ? void invite.run({ emails: invitees }) : next()
+              }
               size="lg"
               type="button"
             >
               {invite.isPending() ? <Spinner data-icon="inline-start" /> : null}
-              {invitees.length === 0 ? t.skip : invitees.length === 1 ? t.sendOne : interpolate(t.sendMany, { count: invitees.length })}
+              {invitees.length === 0
+                ? t.skip
+                : invitees.length === 1
+                  ? t.sendOne
+                  : interpolate(t.sendMany, { count: invitees.length })}
             </Button>
           </div>
         </>
@@ -240,14 +323,25 @@ function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<W
       {ready && step > 0 ? (
         <>
           <div className={eyebrow}>{t.readyEyebrow}</div>
-          <h1 className="mt-2 font-heading text-3xl leading-tight">{interpolate(t.readyTitle, { workspace })}</h1>
-          <p className="mt-3 text-muted-foreground text-sm leading-relaxed">{sent === 0 ? t.readyQuiet : sent === 1 ? t.readyOne : interpolate(t.readyMany, { count: sent })}</p>
+          <h1 className="mt-2 font-heading text-3xl leading-tight">
+            {interpolate(t.readyTitle, { workspace })}
+          </h1>
+          <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
+            {sent === 0
+              ? t.readyQuiet
+              : sent === 1
+                ? t.readyOne
+                : interpolate(t.readyMany, { count: sent })}
+          </p>
           <dl className="mt-8 grid grid-cols-1 gap-2 min-[420px]:grid-cols-3">
             <Fact label={t.workspace} value={workspace} />
             <Fact label={t.members} value={String(sent + 1)} />
             {plan ? <Fact label={t.plan} value={plan} /> : null}
           </dl>
-          <WirefrontLink className={cn(buttonVariants({ size: "lg" }), "mt-8 w-full")} href={enterHref}>
+          <WirefrontLink
+            className={cn(buttonVariants({ size: "lg" }), "mt-8 w-full")}
+            href={enterHref}
+          >
             {t.enter}
           </WirefrontLink>
         </>
@@ -259,15 +353,28 @@ function OnboardingFlow({ onCreateWorkspace, onInvite, enterHref, plan }: Pick<W
 function Fact({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border border-border/70 bg-background/40 px-3 py-3">
-      <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{label}</dt>
+      <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+        {label}
+      </dt>
       <dd className="mt-1 truncate font-heading text-sm">{value}</dd>
     </div>
   );
 }
 
-function WorkspaceOnboardingScreen({ illustration, brand, caption, actions, ...flow }: WorkspaceOnboardingProps) {
+function WorkspaceOnboardingScreen({
+  illustration,
+  brand,
+  caption,
+  actions,
+  ...flow
+}: WorkspaceOnboardingProps) {
   return (
-    <IllustratedAuthLayout actions={actions} brand={brand} caption={caption} illustration={illustration}>
+    <IllustratedAuthLayout
+      actions={actions}
+      brand={brand}
+      caption={caption}
+      illustration={illustration}
+    >
       <OnboardingFlow {...flow} />
     </IllustratedAuthLayout>
   );

@@ -24,7 +24,11 @@ export function AppsDriveShowcasePage() {
           onCreateFolder={async () => {
             await save();
             const n = ++count.current;
-            return ok({ ...fixtures.createFolder, id: `new-${n}`, name: n === 1 ? "Untitled folder" : `Untitled folder ${n}` });
+            return ok({
+              ...fixtures.createFolder,
+              id: `new-${n}`,
+              name: n === 1 ? "Untitled folder" : `Untitled folder ${n}`,
+            });
           }}
           onCreateFromTemplate={() => {}}
           onBrowseTemplates={() => {}}

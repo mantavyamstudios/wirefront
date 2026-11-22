@@ -12,15 +12,35 @@ import {
   TrashIcon,
   UserPlusIcon,
 } from "lucide-react";
-import { AlertDialog, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogTitle } from "@wirefront/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogTitle,
+} from "@wirefront/ui/alert-dialog";
 import { Button } from "@wirefront/ui/button";
-import { Dialog, DialogHeader, DialogContent, DialogTitle } from "@wirefront/ui/dialog";
+import {
+  Dialog,
+  DialogHeader,
+  DialogContent,
+  DialogTitle,
+} from "@wirefront/ui/dialog";
 import { Input } from "@wirefront/ui/input";
 import { Kbd } from "@wirefront/ui/kbd";
-import { Sheet, SheetHeader, SheetContent, SheetTitle } from "@wirefront/ui/sheet";
+import {
+  Sheet,
+  SheetHeader,
+  SheetContent,
+  SheetTitle,
+} from "@wirefront/ui/sheet";
 import { useDemo, type Notification } from "./store";
 
-const ICONS: Record<Notification["Icon"], React.ComponentType<{ className?: string }>> = {
+const ICONS: Record<
+  Notification["Icon"],
+  React.ComponentType<{ className?: string }>
+> = {
   deploy: RocketIcon,
   comment: MessageCircleIcon,
   mention: AtSignIcon,
@@ -48,7 +68,10 @@ export function NotificationsSheet() {
   const buckets = ["Today", "Earlier"] as const;
 
   return (
-    <Sheet open={open} onOpenChange={(o) => setOverlay(o ? "notifications" : null)}>
+    <Sheet
+      open={open}
+      onOpenChange={(o) => setOverlay(o ? "notifications" : null)}
+    >
       <SheetContent side="right" className="max-w-md!">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
@@ -58,7 +81,13 @@ export function NotificationsSheet() {
               {notifications.filter((n) => !n.read).length}
             </span>
           </SheetTitle>
-          <Button size="sm" variant="ghost" type="button" onClick={markAllRead} className="mt-1 self-start">
+          <Button
+            size="sm"
+            variant="ghost"
+            type="button"
+            onClick={markAllRead}
+            className="mt-1 self-start"
+          >
             Mark all read
           </Button>
         </SheetHeader>
@@ -84,12 +113,20 @@ export function NotificationsSheet() {
                         {!n.read ? (
                           <span className="absolute top-4 left-1.5 size-1.5 rounded-full bg-primary" />
                         ) : null}
-                        <span className={`flex size-8 shrink-0 items-center justify-center rounded-full ${TONES[n.Icon]}`}>
+                        <span
+                          className={`flex size-8 shrink-0 items-center justify-center rounded-full ${TONES[n.Icon]}`}
+                        >
                           <Icon className="size-4" />
                         </span>
                         <div className="min-w-0 flex-1">
-                          <div className={`text-sm ${n.read ? "" : "font-medium"}`}>{n.title}</div>
-                          <div className="mt-0.5 text-muted-foreground text-xs">{n.body}</div>
+                          <div
+                            className={`text-sm ${n.read ? "" : "font-medium"}`}
+                          >
+                            {n.title}
+                          </div>
+                          <div className="mt-0.5 text-muted-foreground text-xs">
+                            {n.body}
+                          </div>
                         </div>
                         <button
                           type="button"
@@ -120,7 +157,10 @@ export function ShortcutsDialog() {
   const { overlay, setOverlay } = useDemo();
   const open = overlay === "shortcuts";
 
-  const sections: { title: string; items: { label: string; keys: string[] }[] }[] = [
+  const sections: {
+    title: string;
+    items: { label: string; keys: string[] }[];
+  }[] = [
     {
       title: "General",
       items: [
@@ -151,7 +191,10 @@ export function ShortcutsDialog() {
   ];
 
   return (
-    <Dialog open={open} onOpenChange={(o) => setOverlay(o ? "shortcuts" : null)}>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => setOverlay(o ? "shortcuts" : null)}
+    >
       <DialogContent className="max-w-2xl!">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -244,7 +287,7 @@ export function ConfirmArchiveAlert() {
             placeholder={pendingArchive.name}
             className="mt-2 font-mono"
             autoFocus
-            />
+          />
         </div>
         <AlertDialogFooter>
           <Button

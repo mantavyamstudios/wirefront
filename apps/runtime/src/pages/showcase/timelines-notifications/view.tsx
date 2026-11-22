@@ -10,9 +10,23 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { useFormat, useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  useFormat,
+  useMessages,
+  useWirefront,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { ActivityIcon, AtSignIcon, BellIcon, GitPullRequestIcon, HeartIcon, MessageCircleIcon, RocketIcon, SettingsIcon } from "lucide-react";
+import {
+  ActivityIcon,
+  AtSignIcon,
+  BellIcon,
+  GitPullRequestIcon,
+  HeartIcon,
+  MessageCircleIcon,
+  RocketIcon,
+  SettingsIcon,
+} from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 import type { Notification } from "./schema";
 
@@ -69,34 +83,67 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-function Item({ n, t, when }: { n: Notification; t: typeof NOTIFICATION_CENTER_MESSAGES; when: string }) {
+function Item({
+  n,
+  t,
+  when,
+}: {
+  n: Notification;
+  t: typeof NOTIFICATION_CENTER_MESSAGES;
+  when: string;
+}) {
   const body = (
     <>
-      {!n.read ? <span aria-hidden className="absolute inset-s-1.5 top-4 size-1.5 rounded-full bg-category-1" /> : null}
+      {!n.read ? (
+        <span
+          aria-hidden
+          className="absolute inset-s-1.5 top-4 size-1.5 rounded-full bg-category-1"
+        />
+      ) : null}
       <div aria-hidden className="relative shrink-0">
         <Avatar className="size-9">
-          <AvatarFallback className="text-[11px]">{initials(n.actor)}</AvatarFallback>
+          <AvatarFallback className="text-[11px]">
+            {initials(n.actor)}
+          </AvatarFallback>
         </Avatar>
         <span className="absolute -inset-e-1 -bottom-1 grid size-4 place-items-center rounded-full bg-background">
-          <span className="grid size-3.5 place-items-center rounded-full bg-foreground text-background">{ICONS[n.kind]}</span>
+          <span className="grid size-3.5 place-items-center rounded-full bg-foreground text-background">
+            {ICONS[n.kind]}
+          </span>
         </span>
       </div>
       <div className="min-w-0 flex-1 leading-snug">
         <div className="wrap-break-word text-sm">
           {!n.read ? <span className="sr-only">{t.unreadPrefix} </span> : null}
-          <span className="font-medium">{n.actor}</span> <span className="text-muted-foreground">{n.verb}</span> {n.context ? <span className="text-foreground/85">{n.context}</span> : null}
+          <span className="font-medium">{n.actor}</span>{" "}
+          <span className="text-muted-foreground">{n.verb}</span>{" "}
+          {n.context ? (
+            <span className="text-foreground/85">{n.context}</span>
+          ) : null}
         </div>
-        <time className="mt-0.5 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]" dateTime={n.at}>
+        <time
+          className="mt-0.5 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]"
+          dateTime={n.at}
+        >
           {when}
         </time>
       </div>
     </>
   );
-  const row = cn("relative flex items-start gap-3 px-4 py-3 transition-colors hover:bg-foreground/2", !n.read && "bg-foreground/1.5");
+  const row = cn(
+    "relative flex items-start gap-3 px-4 py-3 transition-colors hover:bg-foreground/2",
+    !n.read && "bg-foreground/1.5"
+  );
   return (
     <li>
       {n.href ? (
-        <WirefrontLink className={cn(row, "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset")} href={n.href}>
+        <WirefrontLink
+          className={cn(
+            row,
+            "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+          )}
+          href={n.href}
+        >
           {body}
         </WirefrontLink>
       ) : (
@@ -106,7 +153,15 @@ function Item({ n, t, when }: { n: Notification; t: typeof NOTIFICATION_CENTER_M
   );
 }
 
-function NotificationCenterScreen({ notifications, status = "ready", error, onRetry, onMarkAllRead, allHref, className }: NotificationCenterProps) {
+function NotificationCenterScreen({
+  notifications,
+  status = "ready",
+  error,
+  onRetry,
+  onMarkAllRead,
+  allHref,
+  className,
+}: NotificationCenterProps) {
   const t = useMessages("notificationCenter", NOTIFICATION_CENTER_MESSAGES);
   const fmt = useFormat();
   const { now, timeZone } = useWirefront();
@@ -120,25 +175,56 @@ function NotificationCenterScreen({ notifications, status = "ready", error, onRe
       return () => setItems(before);
     },
   });
-  const dayKey = (d: Date | string) => new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(d));
+  const dayKey = (d: Date | string) =>
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date(d));
   const today = dayKey(now());
-  const shown = items.filter((n) => (filter === "unread" ? !n.read : filter === "mentions" ? n.kind === "mention" : true));
+  const shown = items.filter((n) =>
+    filter === "unread"
+      ? !n.read
+      : filter === "mentions"
+        ? n.kind === "mention"
+        : true
+  );
   const sections = [
-    { id: "today", label: t.today, items: shown.filter((n) => dayKey(n.at) === today) },
-    { id: "earlier", label: t.earlier, items: shown.filter((n) => dayKey(n.at) !== today) },
+    {
+      id: "today",
+      label: t.today,
+      items: shown.filter((n) => dayKey(n.at) === today),
+    },
+    {
+      id: "earlier",
+      label: t.earlier,
+      items: shown.filter((n) => dayKey(n.at) !== today),
+    },
   ].filter((s) => s.items.length);
   const unread = items.filter((n) => !n.read).length;
 
   return (
     // On phones the notification centre is a full-screen panel (no card chrome);
     // from sm up it's the familiar popover-sized card.
-    <div className={cn("min-h-svh bg-background sm:px-6 sm:py-8 lg:px-10 lg:py-10", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background sm:px-6 sm:py-8 lg:px-10 lg:py-10",
+        className
+      )}
+    >
       <div className="mx-auto max-w-md">
-        <section aria-labelledby="notification-center-title" className="overflow-hidden bg-background max-sm:min-h-svh sm:rounded-xl sm:border sm:border-border sm:shadow-sm">
+        <section
+          aria-labelledby="notification-center-title"
+          className="overflow-hidden bg-background max-sm:min-h-svh sm:rounded-xl sm:border sm:border-border sm:shadow-sm"
+        >
           <div className="flex items-center justify-between gap-3 border-border/60 border-b px-4 py-3 max-sm:pt-[max(0.75rem,env(safe-area-inset-top))]">
             <div className="flex items-center gap-2">
               <BellIcon aria-hidden className="size-4 opacity-70" />
-              <h1 className="font-heading text-sm" id="notification-center-title">
+              <h1
+                className="font-heading text-sm"
+                id="notification-center-title"
+              >
                 {t.title}
               </h1>
               {unread ? (
@@ -160,12 +246,20 @@ function NotificationCenterScreen({ notifications, status = "ready", error, onRe
             ) : null}
           </div>
           {markAll.error ? (
-            <p className="border-border/60 border-b px-4 py-2 text-destructive-foreground text-xs" role="alert">
+            <p
+              className="border-border/60 border-b px-4 py-2 text-destructive-foreground text-xs"
+              role="alert"
+            >
               {markAll.error}
             </p>
           ) : null}
 
-          <RadioGroup aria-label={t.filter} className="flex items-center gap-1 border-border/60 border-b px-3 py-2" onValueChange={(v) => setFilter(v as Filter)} value={filter}>
+          <RadioGroup
+            aria-label={t.filter}
+            className="flex items-center gap-1 border-border/60 border-b px-3 py-2"
+            onValueChange={(v) => setFilter(v as Filter)}
+            value={filter}
+          >
             {FILTERS.map((f) => (
               <Radio.Root
                 className="inline-flex min-h-8 cursor-pointer items-center rounded-md px-3 text-muted-foreground text-sm outline-none hover:bg-foreground/3 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-foreground data-checked:text-background pointer-coarse:min-h-10 sm:text-xs"
@@ -180,9 +274,16 @@ function NotificationCenterScreen({ notifications, status = "ready", error, onRe
           {status === "error" ? (
             <div className="px-4 py-10 text-center">
               <p className="font-medium text-sm">{t.errorTitle}</p>
-              {error ? <p className="mt-1 text-muted-foreground text-xs">{error}</p> : null}
+              {error ? (
+                <p className="mt-1 text-muted-foreground text-xs">{error}</p>
+              ) : null}
               {onRetry ? (
-                <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+                <Button
+                  className="mt-4"
+                  onClick={onRetry}
+                  size="sm"
+                  variant="outline"
+                >
                   {t.retry}
                 </Button>
               ) : null}
@@ -190,15 +291,22 @@ function NotificationCenterScreen({ notifications, status = "ready", error, onRe
           ) : !notifications || status === "loading" ? (
             <div aria-busy="true" className="flex flex-col gap-3 p-4">
               {["a", "b", "c"].map((k) => (
-                <Skeleton className="h-12 w-full motion-reduce:animate-none" key={k} />
+                <Skeleton
+                  className="h-12 w-full motion-reduce:animate-none"
+                  key={k}
+                />
               ))}
             </div>
           ) : sections.length === 0 ? (
-            <p className="px-4 py-10 text-center text-muted-foreground text-sm">{t.caughtUp}</p>
+            <p className="px-4 py-10 text-center text-muted-foreground text-sm">
+              {t.caughtUp}
+            </p>
           ) : (
             sections.map((s) => (
               <div key={s.id}>
-                <h2 className="bg-background px-4 py-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{s.label}</h2>
+                <h2 className="bg-background px-4 py-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+                  {s.label}
+                </h2>
                 <ul className="divide-y divide-border/40">
                   {s.items.map((n) => (
                     <Item key={n.id} n={n} t={t} when={fmt.relative(n.at)} />

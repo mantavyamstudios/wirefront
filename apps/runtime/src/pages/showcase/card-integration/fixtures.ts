@@ -26,5 +26,13 @@ export const listConnectedServices: ConnectedService[] = [
     lastSyncAt: "2026-04-25T11:20:00Z",
     note: "rate-limited · retrying",
   },
-  { id: "tracker", name: "Tracklane", blurb: "Two-way sync with your issue tracker.", enabled: false, health: "ok", scopes: [], lastSyncAt: null },
+  {
+    id: "tracker",
+    name: "Tracklane",
+    blurb: "Two-way sync with your issue tracker.",
+    enabled: false,
+    health: "ok",
+    scopes: [],
+    lastSyncAt: null,
+  },
 ];

@@ -8,14 +8,19 @@ import * as fixtures from "./fixtures";
 import { CredentialsSessions } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ProfileCredentialsShowcasePage() {
   const state = useShowcaseState();
   return (
     <WirefrontProvider locale="en-US" now={demoNow} timeZone="UTC">
       <CredentialsSessions
-        data={state === "loading" || state === "error" ? undefined : fixtures.getCredentials}
+        data={
+          state === "loading" || state === "error"
+            ? undefined
+            : fixtures.getCredentials
+        }
         error="Your credentials didn’t load. Check your connection and try again."
         onAddPasskey={() => {}}
         onRemoveKey={() => wait(400)}
@@ -23,7 +28,13 @@ export function ProfileCredentialsShowcasePage() {
         onReview={() => {}}
         onSignOut={() => wait(400)}
         onSignOutAll={() => wait(600)}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

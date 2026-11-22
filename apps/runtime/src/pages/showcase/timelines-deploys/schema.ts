@@ -22,6 +22,16 @@ export type Deploy = z.infer<typeof Deploy>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listDeploys: { method: "GET", path: "/deploys", summary: "Recent deploys, newest first", response: z.array(Deploy) },
-  rollBackTo: { method: "POST", path: "/deploys/{id}/rollback", summary: "Redeploy production at this deploy", params: z.object({ id: z.string() }) },
+  listDeploys: {
+    method: "GET",
+    path: "/deploys",
+    summary: "Recent deploys, newest first",
+    response: z.array(Deploy),
+  },
+  rollBackTo: {
+    method: "POST",
+    path: "/deploys/{id}/rollback",
+    summary: "Redeploy production at this deploy",
+    params: z.object({ id: z.string() }),
+  },
 });

@@ -6,7 +6,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { PresenceRail } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ProfilePresenceRailShowcasePage() {
   const state = useShowcaseState();
@@ -16,8 +17,14 @@ export function ProfilePresenceRailShowcasePage() {
       meId={fixtures.me.id}
       onRetry={() => {}}
       onSetPresence={() => wait(300)}
-      people={state === "loading" || state === "error" ? undefined : fixtures.listPresence}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      people={
+        state === "loading" || state === "error"
+          ? undefined
+          : fixtures.listPresence
+      }
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
       workspace={fixtures.workspace}
     />
   );

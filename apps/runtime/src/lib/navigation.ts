@@ -9,15 +9,15 @@ export type DesignTarget = { category: string; design: string };
 /** Any other design that has a showcase, chosen at random (the R key). */
 export function pickRandomDesign(
   current: DesignTarget,
-  random: () => number = Math.random,
+  random: () => number = Math.random
 ): DesignTarget | null {
   const all = CATEGORIES.flatMap((c) =>
     c.designs
       .filter((d) => !!getShowcase(c.slug, d.slug))
-      .map((d) => ({ category: c.slug, design: d.slug })),
+      .map((d) => ({ category: c.slug, design: d.slug }))
   );
   const others = all.filter(
-    (d) => !(d.category === current.category && d.design === current.design),
+    (d) => !(d.category === current.category && d.design === current.design)
   );
   if (others.length === 0) return null;
   return others[Math.floor(random() * others.length)] ?? null;
@@ -26,7 +26,7 @@ export function pickRandomDesign(
 /** The previous or next design in the same category, wrapping around (← →). */
 export function siblingDesign(
   current: DesignTarget,
-  delta: 1 | -1,
+  delta: 1 | -1
 ): DesignTarget | null {
   const cat = CATEGORIES.find((c) => c.slug === current.category);
   if (!cat) return null;
@@ -42,10 +42,10 @@ export function siblingDesign(
 /** The first design of the previous or next category, wrapping around (↑ ↓). */
 export function siblingCategory(
   current: DesignTarget,
-  delta: 1 | -1,
+  delta: 1 | -1
 ): DesignTarget | null {
   const populated = CATEGORIES.filter((c) =>
-    c.designs.some((d) => !!getShowcase(c.slug, d.slug)),
+    c.designs.some((d) => !!getShowcase(c.slug, d.slug))
   );
   if (populated.length <= 1) return null;
   const idx = populated.findIndex((c) => c.slug === current.category);
@@ -54,7 +54,7 @@ export function siblingCategory(
   const nextCat = populated[nextIdx];
   if (!nextCat) return null;
   const firstDesign = nextCat.designs.find(
-    (d) => !!getShowcase(nextCat.slug, d.slug),
+    (d) => !!getShowcase(nextCat.slug, d.slug)
   );
   return firstDesign
     ? { category: nextCat.slug, design: firstDesign.slug }

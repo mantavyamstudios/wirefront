@@ -12,11 +12,15 @@ export function PersonalMusicPlayerShowcasePage() {
   const [trackId, setTrackId] = useState(fixtures.listTracks[0]?.id ?? "");
   const [position, setPosition] = useState(fixtures.startPosition);
   const [playing, setPlaying] = useState(true);
-  const duration = fixtures.listTracks.find((t) => t.id === trackId)?.duration ?? 0;
+  const duration =
+    fixtures.listTracks.find((t) => t.id === trackId)?.duration ?? 0;
 
   useEffect(() => {
     if (!playing) return;
-    const id = setInterval(() => setPosition((p) => Math.min(duration, p + 0.25)), 250);
+    const id = setInterval(
+      () => setPosition((p) => Math.min(duration, p + 0.25)),
+      250
+    );
     return () => clearInterval(id);
   }, [playing, duration]);
 

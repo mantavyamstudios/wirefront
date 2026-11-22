@@ -12,7 +12,12 @@ export const SignUpInput = z
   .object({
     name: z.string().trim().max(120),
     email: z.email("Enter a valid email address."),
-    password: z.string().min(PASSWORD_MIN_LENGTH, `Use at least ${PASSWORD_MIN_LENGTH} characters.`),
+    password: z
+      .string()
+      .min(
+        PASSWORD_MIN_LENGTH,
+        `Use at least ${PASSWORD_MIN_LENGTH} characters.`
+      ),
   })
   .meta({ id: "SignUpInput" });
 export type SignUpInput = z.infer<typeof SignUpInput>;
@@ -34,6 +39,9 @@ export const api = defineApi({
     summary: "Create an account with email and password",
     body: SignUpInput,
     response: Account,
-    errors: { 409: "An account with this email already exists", 429: "Too many attempts; try again later" },
+    errors: {
+      409: "An account with this email already exists",
+      429: "Too many attempts; try again later",
+    },
   },
 });

@@ -7,7 +7,10 @@ import type { Account } from "./schema";
 export const product = "Ridgeline";
 
 /** What the mocks return for a successful sign-up (operation `signUp`). */
-export const signUp: Account = { userId: "usr_02", redirectTo: "/verify-email" };
+export const signUp: Account = {
+  userId: "usr_02",
+  redirectTo: "/verify-email",
+};
 
 /** An address the demo backend treats as already registered. */
 export const takenEmail = "ada@ridgeline.app";

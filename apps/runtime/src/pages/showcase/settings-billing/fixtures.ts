@@ -6,9 +6,21 @@ const month = (n: number) => `2026-${String(n).padStart(2, "0")}-14`;
 
 /** What the mocks return for `getBilling`. */
 export const getBilling: Billing = {
-  plan: { name: "Pro", interval: "year", summary: "25 seats · unlimited projects · 1M API requests", status: "active", periodEnd: "2026-05-14" },
+  plan: {
+    name: "Pro",
+    interval: "year",
+    summary: "25 seats · unlimited projects · 1M API requests",
+    status: "active",
+    periodEnd: "2026-05-14",
+  },
   monthlyPrice: { amount: 240, currency: "USD" },
-  paymentMethod: { brand: "Visa", last4: "4242", expMonth: 9, expYear: 2027, email: "billing@acme.com" },
+  paymentMethod: {
+    brand: "Visa",
+    last4: "4242",
+    expMonth: 9,
+    expYear: 2027,
+    email: "billing@acme.com",
+  },
   credits: { amount: 48.2, currency: "USD" },
   taxId: { type: "EU VAT", value: "ATU 88374521" },
   invoices: [4, 3, 2, 1].map((m) => ({

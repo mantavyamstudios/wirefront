@@ -7,7 +7,8 @@ import { Card } from "@wirefront/ui/card";
 import { Separator } from "@wirefront/ui/separator";
 import { SplitSignIn } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function AuthLeftSigninShowcasePage() {
   return (

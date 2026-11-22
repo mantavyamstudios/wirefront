@@ -4,10 +4,21 @@
 // Not shipped by the registry.
 import { Button } from "@wirefront/ui/button";
 
-export function ToastBackdrop({ action, onAction, topPadding = "pt-24" }: { action: string; onAction: () => void; topPadding?: string }) {
+export function ToastBackdrop({
+  action,
+  onAction,
+  topPadding = "pt-24",
+}: {
+  action: string;
+  onAction: () => void;
+  topPadding?: string;
+}) {
   return (
     <div className="grid min-h-svh grid-cols-1 md:grid-cols-[200px_1fr]">
-      <div aria-hidden className="space-y-2 border-border/40 border-e bg-foreground/2 p-4 opacity-50 max-md:hidden">
+      <div
+        aria-hidden
+        className="space-y-2 border-border/40 border-e bg-foreground/2 p-4 opacity-50 max-md:hidden"
+      >
         <div className="h-3 w-24 rounded bg-foreground/10" />
         <div className="h-2 w-32 rounded bg-foreground/10" />
         <div className="h-2 w-28 rounded bg-foreground/10" />

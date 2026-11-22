@@ -14,7 +14,14 @@ export const getThread: Thread = {
       from: { name: "Maya Okafor", email: "maya@acme.dev" },
       at: "2026-04-22T09:14:00Z",
       body: "Hi James — wanted to share the audit log retention proposal we discussed. The headline is that we lift Business plans from 30 days to 1 year, with deeper export controls. Curious where you’d push back.",
-      attachments: [{ id: "f1", name: "audit-retention-proposal.pdf", bytes: 493568, href: "#file" }],
+      attachments: [
+        {
+          id: "f1",
+          name: "audit-retention-proposal.pdf",
+          bytes: 493568,
+          href: "#file",
+        },
+      ],
     },
     {
       id: "m2",

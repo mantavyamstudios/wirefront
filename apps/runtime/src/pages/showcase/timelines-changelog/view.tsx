@@ -6,7 +6,12 @@ import { Button } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
 import { CalendarIcon, RssIcon, SparklesIcon } from "lucide-react";
 import type { ChangeGroup, ChangelogEntry } from "./schema";
@@ -47,17 +52,34 @@ const TONE: Record<ChangeGroup["kind"], string> = {
   removed: "bg-category-4/12 text-category-4-foreground",
 };
 
-function ChangelogFeedScreen({ entries, product, subscribeHref, status = "ready", error, onRetry, className }: ChangelogFeedProps) {
+function ChangelogFeedScreen({
+  entries,
+  product,
+  subscribeHref,
+  status = "ready",
+  error,
+  onRetry,
+  className,
+}: ChangelogFeedProps) {
   const t = useMessages("changelogFeed", CHANGELOG_FEED_MESSAGES);
   const fmt = useFormat();
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12",
+        className
+      )}
+    >
       <div className="mx-auto max-w-3xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
-            <h1 className="mt-1 font-heading text-3xl tracking-tight">{interpolate(t.title, { product })}</h1>
+            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+              {t.eyebrow}
+            </div>
+            <h1 className="mt-1 font-heading text-3xl tracking-tight">
+              {interpolate(t.title, { product })}
+            </h1>
           </div>
           {subscribeHref ? (
             <WirefrontLink
@@ -73,9 +95,16 @@ function ChangelogFeedScreen({ entries, product, subscribeHref, status = "ready"
         {status === "error" ? (
           <div className="mt-10 rounded-xl border border-border/60 py-12 text-center">
             <p className="font-medium">{t.errorTitle}</p>
-            {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+            {error ? (
+              <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+            ) : null}
             {onRetry ? (
-              <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+              <Button
+                className="mt-4"
+                onClick={onRetry}
+                size="sm"
+                variant="outline"
+              >
                 {t.retry}
               </Button>
             ) : null}
@@ -86,7 +115,9 @@ function ChangelogFeedScreen({ entries, product, subscribeHref, status = "ready"
             <Skeleton className="h-40 w-full motion-reduce:animate-none" />
           </div>
         ) : entries.length === 0 ? (
-          <p className="mt-10 rounded-xl border border-border/60 py-12 text-center text-muted-foreground text-sm">{t.empty}</p>
+          <p className="mt-10 rounded-xl border border-border/60 py-12 text-center text-muted-foreground text-sm">
+            {t.empty}
+          </p>
         ) : (
           <div className="mt-6 flex flex-col sm:mt-10">
             {entries.map((r, i) => (
@@ -100,10 +131,18 @@ function ChangelogFeedScreen({ entries, product, subscribeHref, status = "ready"
                 <header className="flex flex-wrap items-center gap-x-3 gap-y-1 md:sticky md:top-8 md:block md:self-start">
                   <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                     <CalendarIcon aria-hidden className="size-3" />
-                    <time dateTime={r.date}>{fmt.date(`${r.date}T00:00:00Z`, { dateStyle: "medium", timeZone: "UTC" })}</time>
+                    <time dateTime={r.date}>
+                      {fmt.date(`${r.date}T00:00:00Z`, {
+                        dateStyle: "medium",
+                        timeZone: "UTC",
+                      })}
+                    </time>
                   </div>
                   <div className="flex items-center gap-2 md:mt-1">
-                    <h2 className="font-heading text-xl tracking-tight" id={`release-${r.version}`}>
+                    <h2
+                      className="font-heading text-xl tracking-tight"
+                      id={`release-${r.version}`}
+                    >
                       {r.version}
                     </h2>
                     {i === 0 ? (
@@ -120,8 +159,13 @@ function ChangelogFeedScreen({ entries, product, subscribeHref, status = "ready"
                     <div className="mb-5 aspect-16/7 w-full overflow-hidden rounded-xl border border-border/60 bg-linear-to-br from-category-8/10 via-foreground/4 to-category-6/10">
                       <div className="grid h-full place-items-center">
                         <div className="text-center">
-                          <SparklesIcon aria-hidden className="mx-auto size-6 opacity-50" />
-                          <p className="mt-2 px-4 font-heading text-base sm:text-lg">{r.headline}</p>
+                          <SparklesIcon
+                            aria-hidden
+                            className="mx-auto size-6 opacity-50"
+                          />
+                          <p className="mt-2 px-4 font-heading text-base sm:text-lg">
+                            {r.headline}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -129,11 +173,24 @@ function ChangelogFeedScreen({ entries, product, subscribeHref, status = "ready"
 
                   {r.groups.map((g) => (
                     <section className="mt-5 first:mt-0" key={g.kind}>
-                      <h3 className={cn("inline-flex items-center rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em]", TONE[g.kind])}>{t[g.kind]}</h3>
+                      <h3
+                        className={cn(
+                          "inline-flex items-center rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em]",
+                          TONE[g.kind]
+                        )}
+                      >
+                        {t[g.kind]}
+                      </h3>
                       <ul className="mt-2 space-y-1.5">
                         {g.items.map((it) => (
-                          <li className="flex gap-2 text-foreground/85 text-sm leading-relaxed" key={it}>
-                            <span aria-hidden className="mt-2 size-1 shrink-0 rounded-full bg-muted-foreground/60" />
+                          <li
+                            className="flex gap-2 text-foreground/85 text-sm leading-relaxed"
+                            key={it}
+                          >
+                            <span
+                              aria-hidden
+                              className="mt-2 size-1 shrink-0 rounded-full bg-muted-foreground/60"
+                            />
                             {it}
                           </li>
                         ))}

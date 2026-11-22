@@ -17,8 +17,16 @@ export function DashboardsServicesShowcasePage() {
       onRetry={() => {}}
       onWindowChange={setWindow}
       scope="acme/platform"
-      services={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listServiceHealth}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      services={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : fixtures.listServiceHealth
+      }
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
       window={window}
     />
   );

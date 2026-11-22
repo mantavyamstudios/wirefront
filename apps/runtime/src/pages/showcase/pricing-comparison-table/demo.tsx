@@ -5,5 +5,11 @@ import * as fixtures from "./fixtures";
 import { PlanComparison } from "./view";
 
 export function PricingComparisonTableShowcasePage() {
-  return <PlanComparison onChoose={() => {}} plans={fixtures.plans} sections={fixtures.sections} />;
+  return (
+    <PlanComparison
+      onChoose={() => {}}
+      plans={fixtures.plans}
+      sections={fixtures.sections}
+    />
+  );
 }

@@ -6,4 +6,6 @@ import type { InviteLink } from "./schema";
 export const userName = "Shreya";
 
 /** What the mocks return for `getInviteLink`. */
-export const getInviteLink: InviteLink = { url: "https://orbit.so/invite/8f3a2c" };
+export const getInviteLink: InviteLink = {
+  url: "https://orbit.so/invite/8f3a2c",
+};

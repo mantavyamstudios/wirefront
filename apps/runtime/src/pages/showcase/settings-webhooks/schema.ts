@@ -3,11 +3,19 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const EndpointStatus = z.enum(["success", "failing", "paused"]).meta({ id: "EndpointStatus" });
+export const EndpointStatus = z
+  .enum(["success", "failing", "paused"])
+  .meta({ id: "EndpointStatus" });
 export type EndpointStatus = z.infer<typeof EndpointStatus>;
 
 export const WebhookEndpoint = z
-  .object({ id: z.string(), url: z.string(), events: z.array(z.string()), status: EndpointStatus, lastDeliveryAt: z.iso.datetime({ offset: true }).nullable() })
+  .object({
+    id: z.string(),
+    url: z.string(),
+    events: z.array(z.string()),
+    status: EndpointStatus,
+    lastDeliveryAt: z.iso.datetime({ offset: true }).nullable(),
+  })
   .meta({ id: "WebhookEndpoint" });
 export type WebhookEndpoint = z.infer<typeof WebhookEndpoint>;
 
@@ -43,10 +51,42 @@ export type WebhookOverview = z.infer<typeof WebhookOverview>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getWebhooks: { method: "GET", path: "/webhooks", summary: "Endpoints, recent deliveries and the signing secret hint", response: WebhookOverview },
-  revealSecret: { method: "GET", path: "/webhooks/secret", summary: "The full signing secret (ask for re-authentication first if you need to)", response: z.object({ secret: z.string() }) },
-  rotateSecret: { method: "POST", path: "/webhooks/secret/rotate", summary: "Issue a new signing secret; the old one stays valid for 24 hours", response: z.object({ secret: z.string() }) },
-  setEndpointPaused: { method: "PATCH", path: "/webhooks/endpoints/{id}", summary: "Pause or resume an endpoint", params: z.object({ id: z.string() }), body: z.object({ paused: z.boolean() }) },
-  deleteEndpoint: { method: "DELETE", path: "/webhooks/endpoints/{id}", summary: "Delete an endpoint", params: z.object({ id: z.string() }) },
-  resendDelivery: { method: "POST", path: "/webhooks/deliveries/{id}/resend", summary: "Send a delivery again", params: z.object({ id: z.string() }) },
+  getWebhooks: {
+    method: "GET",
+    path: "/webhooks",
+    summary: "Endpoints, recent deliveries and the signing secret hint",
+    response: WebhookOverview,
+  },
+  revealSecret: {
+    method: "GET",
+    path: "/webhooks/secret",
+    summary:
+      "The full signing secret (ask for re-authentication first if you need to)",
+    response: z.object({ secret: z.string() }),
+  },
+  rotateSecret: {
+    method: "POST",
+    path: "/webhooks/secret/rotate",
+    summary: "Issue a new signing secret; the old one stays valid for 24 hours",
+    response: z.object({ secret: z.string() }),
+  },
+  setEndpointPaused: {
+    method: "PATCH",
+    path: "/webhooks/endpoints/{id}",
+    summary: "Pause or resume an endpoint",
+    params: z.object({ id: z.string() }),
+    body: z.object({ paused: z.boolean() }),
+  },
+  deleteEndpoint: {
+    method: "DELETE",
+    path: "/webhooks/endpoints/{id}",
+    summary: "Delete an endpoint",
+    params: z.object({ id: z.string() }),
+  },
+  resendDelivery: {
+    method: "POST",
+    path: "/webhooks/deliveries/{id}/resend",
+    summary: "Send a delivery again",
+    params: z.object({ id: z.string() }),
+  },
 });

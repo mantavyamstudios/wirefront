@@ -6,7 +6,8 @@ import { useState } from "react";
 import * as fixtures from "./fixtures";
 import { ChatWorkspace } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const demoNow = () => new Date(fixtures.now);
 
 export function LayoutsThreePaneShowcasePage() {
@@ -28,7 +29,15 @@ export function LayoutsThreePaneShowcasePage() {
         onSelect={setActive}
         onSend={async ({ body }) => {
           await wait(300);
-          setMessages((list) => [...list, { id: `local-${list.length}`, author: { name: "You", color: 6 }, at: fixtures.now, body }]);
+          setMessages((list) => [
+            ...list,
+            {
+              id: `local-${list.length}`,
+              author: { name: "You", color: 6 },
+              at: fixtures.now,
+              body,
+            },
+          ]);
         }}
         onShowMembers={() => {}}
         onSwitchWorkspace={setWorkspace}

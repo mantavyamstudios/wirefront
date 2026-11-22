@@ -25,10 +25,35 @@ export const stats = [
   { label: "Following", value: 8, note: "2 active" },
 ];
 export const activity = [
-  { id: "a1", name: "Maya Chen", action: "commented on Onboarding redesign", at: "2026-04-20T11:58:00.000Z" },
-  { id: "a2", name: "Riya Patel", action: "assigned you to Q3 planning", at: "2026-04-20T11:46:00.000Z" },
-  { id: "a3", name: "Tomás García", action: "mentioned you in Dust storm", at: "2026-04-20T11:00:00.000Z" },
-  { id: "a4", name: "Jules Wren", action: "merged a PR in Marketing site", at: "2026-04-20T09:00:00.000Z" },
-  { id: "a5", name: "Priya Shah", action: "shared a doc with Inbox", at: "2026-04-19T12:00:00.000Z" },
+  {
+    id: "a1",
+    name: "Maya Chen",
+    action: "commented on Onboarding redesign",
+    at: "2026-04-20T11:58:00.000Z",
+  },
+  {
+    id: "a2",
+    name: "Riya Patel",
+    action: "assigned you to Q3 planning",
+    at: "2026-04-20T11:46:00.000Z",
+  },
+  {
+    id: "a3",
+    name: "Tomás García",
+    action: "mentioned you in Dust storm",
+    at: "2026-04-20T11:00:00.000Z",
+  },
+  {
+    id: "a4",
+    name: "Jules Wren",
+    action: "merged a PR in Marketing site",
+    at: "2026-04-20T09:00:00.000Z",
+  },
+  {
+    id: "a5",
+    name: "Priya Shah",
+    action: "shared a doc with Inbox",
+    at: "2026-04-19T12:00:00.000Z",
+  },
 ];
 export const now = "2026-04-20T12:00:00.000Z";

@@ -3,7 +3,10 @@
 // Public origin of the deployed site, used for canonical, Open Graph and
 // Twitter URLs. Set VITE_SITE_URL (e.g. https://wirefront.example) at build
 // time; without it these URLs stay relative to whatever host serves the app.
-export const SITE_URL = (import.meta.env.VITE_SITE_URL ?? "").replace(/\/$/, "");
+export const SITE_URL = (import.meta.env.VITE_SITE_URL ?? "").replace(
+  /\/$/,
+  ""
+);
 
 export const SITE_NAME = "Wirefront";
 export const SITE_TITLE = "Wirefront - Production Ready UI Screens Wiring";

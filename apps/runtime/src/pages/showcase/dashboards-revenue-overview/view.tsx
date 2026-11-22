@@ -18,7 +18,13 @@ import {
   TagIcon,
   TruckIcon,
 } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion, useSpring, useTransform } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "motion/react";
 import {
   createContext,
   Fragment,
@@ -36,15 +42,40 @@ import {
 } from "react";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
-import { SegmentedControl, SegmentedControlItem } from "@wirefront/ui/segmented-control";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@wirefront/ui/dropdown-menu";
+import {
+  SegmentedControl,
+  SegmentedControlItem,
+} from "@wirefront/ui/segmented-control";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
-import type { MomentKind, RangeKey, RevenueChannel, RevenueDay, RevenueMoment, RevenueStoryData } from "./schema";
+import type {
+  MomentKind,
+  RangeKey,
+  RevenueChannel,
+  RevenueDay,
+  RevenueMoment,
+  RevenueStoryData,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("revenueStory.<key>"). */
 export const REVENUE_STORY_MESSAGES = {
@@ -61,7 +92,8 @@ export const REVENUE_STORY_MESSAGES = {
   summaryCopied: "Summary copied",
   couldntCopy: "Couldn’t copy",
   summaryText: "{store} revenue, {period}: {total}.",
-  summaryTextChange: "{store} revenue, {period}: {total}, {direction} {amount} on the previous period.",
+  summaryTextChange:
+    "{store} revenue, {period}: {total}, {direction} {amount} on the previous period.",
   up: "up",
   down: "down",
   csvDay: "date,revenue,previous",
@@ -74,13 +106,15 @@ export const REVENUE_STORY_MESSAGES = {
   rangeOption: "{short}, {long}",
   periodVs: "vs {start} – {end}",
   thisPeriod: "{total} this period",
-  thisPeriodChange: "{total} this period, {change} on the last one — {attribution} {channel}.",
+  thisPeriodChange:
+    "{total} this period, {change} on the last one — {attribution} {channel}.",
   changeUp: "up {amount}",
   changeDown: "down {amount}",
   mostlyFrom: "mostly from",
   mostOfItFrom: "most of it from",
   ledBy: "led by",
-  bestWorst: "Best {unit} was {best} at {bestValue}{bestDuring}. Slowest was {worst} at {worstValue}{worstDuring}.",
+  bestWorst:
+    "Best {unit} was {best} at {bestValue}{bestDuring}. Slowest was {worst} at {worstValue}{worstDuring}.",
   day: "day",
   week: "week",
   during: ", during {phrase}",
@@ -99,9 +133,11 @@ export const REVENUE_STORY_MESSAGES = {
   scrubValue: "{label}: {value}",
   scrubValueChange: "{label}: {value}, {direction} {percent} on {previous}",
   chipNote: "chart note: {title}, {dates}",
-  impactChannel: "{channel} has averaged {after} a day since, against {before} before.",
+  impactChannel:
+    "{channel} has averaged {after} a day since, against {before} before.",
   impactDay: "{current} that day, against {previous} the day before.",
-  impactDays: "{current} over {count} days, against {previous} the {count} days before.",
+  impactDays:
+    "{current} over {count} days, against {previous} the {count} days before.",
   promo: "Promotion",
   pricing: "Pricing",
   partner: "Partner",
@@ -114,7 +150,8 @@ export const REVENUE_STORY_MESSAGES = {
   moments: "Moments",
   momentsCount: "{count} in this period",
   noMoments: "None logged",
-  noMomentsHint: "Nothing happened worth pinning in this range. Add a moment to see it on the line.",
+  noMomentsHint:
+    "Nothing happened worth pinning in this range. Add a moment to see it on the line.",
   errorTitle: "Couldn’t load revenue",
   retry: "Try again",
 };
@@ -172,7 +209,10 @@ const RANGE_SPEC: Record<RangeKey, { buckets: number; step: number }> = {
 };
 const RANGE_ORDER: RangeKey[] = ["7d", "30d", "90d", "12m"];
 
-const KINDS: Record<MomentKind, { icon: LucideIcon; dot: string; band: string; stem: string; soft: string }> = {
+const KINDS: Record<
+  MomentKind,
+  { icon: LucideIcon; dot: string; band: string; stem: string; soft: string }
+> = {
   promo: {
     icon: MegaphoneIcon,
     dot: "fill-category-5",
@@ -203,7 +243,12 @@ const KINDS: Record<MomentKind, { icon: LucideIcon; dot: string; band: string; s
   },
 };
 
-const SHADES = ["bg-foreground", "bg-foreground/55", "bg-foreground/32", "bg-foreground/16"];
+const SHADES = [
+  "bg-foreground",
+  "bg-foreground/55",
+  "bg-foreground/32",
+  "bg-foreground/16",
+];
 
 /** Formatters built from the provider's locale and currency, plus the screen's messages. */
 interface Fmt {
@@ -223,21 +268,43 @@ function useFmt(): Fmt {
   const t = useMessages("revenueStory", REVENUE_STORY_MESSAGES);
   const format = useFormat();
   return useMemo(() => {
-    const compact = (n: number) => format.money(Math.abs(n), undefined, { notation: "compact", maximumFractionDigits: 1 });
+    const compact = (n: number) =>
+      format.money(Math.abs(n), undefined, {
+        notation: "compact",
+        maximumFractionDigits: 1,
+      });
     return {
       t,
-      money: (n: number) => format.money(Math.round(n), undefined, { maximumFractionDigits: 0 }),
+      money: (n: number) =>
+        format.money(Math.round(n), undefined, { maximumFractionDigits: 0 }),
       compact,
       signed: (n: number) => `${n < 0 ? "−" : "+"}${compact(n)}`,
-      percent: (n: number) => format.number(n, { style: "percent", maximumFractionDigits: 0, signDisplay: "exceptZero" }),
-      axis: (n: number) => format.money(n, undefined, { notation: "compact", maximumFractionDigits: 1 }),
+      percent: (n: number) =>
+        format.number(n, {
+          style: "percent",
+          maximumFractionDigits: 0,
+          signDisplay: "exceptZero",
+        }),
+      axis: (n: number) =>
+        format.money(n, undefined, {
+          notation: "compact",
+          maximumFractionDigits: 1,
+        }),
       day: (time: number, year?: number) => {
-        const base = format.date(time, { month: "short", day: "numeric", timeZone: "UTC" });
+        const base = format.date(time, {
+          month: "short",
+          day: "numeric",
+          timeZone: "UTC",
+        });
         const y = new Date(time).getUTCFullYear();
-        return year !== undefined && y !== year ? interpolate(t.dateWithYear, { date: base, year: y }) : base;
+        return year !== undefined && y !== year
+          ? interpolate(t.dateWithYear, { date: base, year: y })
+          : base;
       },
-      weekday: (time: number) => format.date(time, { weekday: "short", timeZone: "UTC" }),
-      month: (time: number) => format.date(time, { month: "short", timeZone: "UTC" }),
+      weekday: (time: number) =>
+        format.date(time, { weekday: "short", timeZone: "UTC" }),
+      month: (time: number) =>
+        format.date(time, { month: "short", timeZone: "UTC" }),
     };
   }, [t, format]);
 }
@@ -256,19 +323,26 @@ function rich(template: string, values: Record<string, ReactNode>): ReactNode {
     .split(/(\{\w+\})/)
     .filter((part) => part !== "")
     .map((part) => {
-    const at = offset;
-    offset += part.length;
-    const key = part.match(/^\{(\w+)\}$/)?.[1];
-    // Keyed by where the part starts in the template.
-    return <Fragment key={`at-${at}`}>{key !== undefined && key in values ? values[key] : part}</Fragment>;
-  });
+      const at = offset;
+      offset += part.length;
+      const key = part.match(/^\{(\w+)\}$/)?.[1];
+      // Keyed by where the part starts in the template.
+      return (
+        <Fragment key={`at-${at}`}>
+          {key !== undefined && key in values ? values[key] : part}
+        </Fragment>
+      );
+    });
 }
 
-const tone = (n: number) => (n < 0 ? "text-destructive-foreground" : "text-success-foreground");
-const totalOf = (day: RevenueDay) => Object.values(day.byChannel).reduce((a, b) => a + b, 0);
+const tone = (n: number) =>
+  n < 0 ? "text-destructive-foreground" : "text-success-foreground";
+const totalOf = (day: RevenueDay) =>
+  Object.values(day.byChannel).reduce((a, b) => a + b, 0);
 
 const ease = [0.23, 1, 0.32, 1] as const;
-const pressable = "transition-[color,background-color,scale] duration-150 ease-out active:scale-[0.97]";
+const pressable =
+  "transition-[color,background-color,scale] duration-150 ease-out active:scale-[0.97]";
 
 function useMounted() {
   const [mounted, setMounted] = useState(false);
@@ -281,7 +355,10 @@ function useReducedMotionAfterMount() {
   return useMounted() && Boolean(prefers);
 }
 
-function useElementSize<T extends HTMLElement>(): [RefObject<T | null>, { width: number; height: number }] {
+function useElementSize<T extends HTMLElement>(): [
+  RefObject<T | null>,
+  { width: number; height: number },
+] {
   const ref = useRef<T>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
   useLayoutEffect(() => {
@@ -289,7 +366,10 @@ function useElementSize<T extends HTMLElement>(): [RefObject<T | null>, { width:
     if (!el) return;
     setSize({ width: el.clientWidth, height: el.clientHeight });
     const ro = new ResizeObserver(([entry]) =>
-      setSize({ width: entry.contentRect.width, height: entry.contentRect.height }),
+      setSize({
+        width: entry.contentRect.width,
+        height: entry.contentRect.height,
+      })
     );
     ro.observe(el);
     return () => ro.disconnect();
@@ -298,7 +378,9 @@ function useElementSize<T extends HTMLElement>(): [RefObject<T | null>, { width:
 }
 
 function useTextWidth(ref: RefObject<HTMLElement | null>, ready: boolean) {
-  const [measure, setMeasure] = useState<((text: string, weight: number) => number) | null>(null);
+  const [measure, setMeasure] = useState<
+    ((text: string, weight: number) => number) | null
+  >(null);
   useEffect(() => {
     if (!ready || !ref.current) return;
     const ctx = document.createElement("canvas").getContext("2d");
@@ -351,7 +433,13 @@ interface Model {
   moments: PlacedMoment[];
 }
 
-function impactOf(m: RevenueMoment, days: RevenueDay[], index: Map<string, number>, channels: RevenueChannel[], fmt: Fmt): Impact | null {
+function impactOf(
+  m: RevenueMoment,
+  days: RevenueDay[],
+  index: Map<string, number>,
+  channels: RevenueChannel[],
+  fmt: Fmt
+): Impact | null {
   const a = index.get(m.date);
   if (a === undefined) return null;
   if (m.channel) {
@@ -367,7 +455,11 @@ function impactOf(m: RevenueMoment, days: RevenueDay[], index: Map<string, numbe
     const label = channels.find((c) => c.key === m.channel)?.label ?? m.channel;
     return {
       change: after / before - 1,
-      text: interpolate(fmt.t.impactChannel, { channel: label, after: fmt.compact(after / w), before: fmt.compact(before / w) }),
+      text: interpolate(fmt.t.impactChannel, {
+        channel: label,
+        after: fmt.compact(after / w),
+        before: fmt.compact(before / w),
+      }),
     };
   }
   const b = Math.min(index.get(m.endDate ?? m.date) ?? a, days.length - 1);
@@ -380,8 +472,15 @@ function impactOf(m: RevenueMoment, days: RevenueDay[], index: Map<string, numbe
     prev += totalOf(days[a - len + k]);
   }
   if (!prev) return null;
-  const values = { current: fmt.compact(cur), previous: fmt.compact(prev), count: len };
-  return { change: cur / prev - 1, text: interpolate(len === 1 ? fmt.t.impactDay : fmt.t.impactDays, values) };
+  const values = {
+    current: fmt.compact(cur),
+    previous: fmt.compact(prev),
+    count: len,
+  };
+  return {
+    change: cur / prev - 1,
+    text: interpolate(len === 1 ? fmt.t.impactDay : fmt.t.impactDays, values),
+  };
 }
 
 function buildModel(
@@ -390,7 +489,7 @@ function buildModel(
   moments: RevenueMoment[],
   index: Map<string, number>,
   impacts: Map<string, Impact | null>,
-  range: RangeKey,
+  range: RangeKey
 ): Model {
   const spec = RANGE_SPEC[range];
   const step = spec.step;
@@ -417,8 +516,11 @@ function buildModel(
   const rows = channels.map((c) => {
     let total = 0;
     let prev = 0;
-    for (let k = startIdx; k < endIdx; k++) total += days[k].byChannel[c.key] ?? 0;
-    if (prevIdx >= 0) for (let k = prevIdx; k < startIdx; k++) prev += days[k].byChannel[c.key] ?? 0;
+    for (let k = startIdx; k < endIdx; k++)
+      total += days[k].byChannel[c.key] ?? 0;
+    if (prevIdx >= 0)
+      for (let k = prevIdx; k < startIdx; k++)
+        prev += days[k].byChannel[c.key] ?? 0;
     return { key: c.key, label: c.label, total, prev };
   });
   const placed: PlacedMoment[] = [];
@@ -445,7 +547,8 @@ function buildModel(
     prevStart: prevIdx >= 0 ? parseDay(days[prevIdx].date) : null,
     prevEnd: prevIdx >= 0 ? parseDay(days[startIdx - 1].date) : null,
     total,
-    prevTotal: prevIdx >= 0 ? buckets.reduce((s, b) => s + (b.prev ?? 0), 0) : null,
+    prevTotal:
+      prevIdx >= 0 ? buckets.reduce((s, b) => s + (b.prev ?? 0), 0) : null,
     channels: rows,
     moments: placed,
   };
@@ -453,14 +556,20 @@ function buildModel(
 
 function bucketLabel(fmt: Fmt, model: Model, t: number, long = false) {
   const date = fmt.day(t, yearOf(model.end));
-  if (model.step === 7) return interpolate(long ? fmt.t.weekOfLong : fmt.t.weekOf, { date });
-  return long ? interpolate(fmt.t.dayLong, { weekday: fmt.weekday(t), date }) : date;
+  if (model.step === 7)
+    return interpolate(long ? fmt.t.weekOfLong : fmt.t.weekOf, { date });
+  return long
+    ? interpolate(fmt.t.dayLong, { weekday: fmt.weekday(t), date })
+    : date;
 }
 
 function momentDates(fmt: Fmt, m: RevenueMoment) {
   const a = parseDay(m.date);
   if (!m.endDate || m.endDate === m.date) return fmt.day(a);
-  return interpolate(fmt.t.span, { from: fmt.day(a), to: fmt.day(parseDay(m.endDate)) });
+  return interpolate(fmt.t.span, {
+    from: fmt.day(a),
+    to: fmt.day(parseDay(m.endDate)),
+  });
 }
 
 function momentAt(model: Model, i: number) {
@@ -476,7 +585,8 @@ function tangents(ys: number[]) {
   const d = ys.slice(1).map((y, i) => y - ys[i]);
   m[0] = d[0];
   m[n - 1] = d[n - 2];
-  for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+  for (let i = 1; i < n - 1; i++)
+    m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
   for (let i = 0; i < n - 1; i++) {
     if (d[i] === 0) {
       m[i] = 0;
@@ -499,19 +609,29 @@ const SAMPLES = 271;
 
 function resample(values: number[]): { at: number; v: number }[] {
   const n = values.length;
-  if (n < 2) return Array.from({ length: SAMPLES }, () => ({ at: 0, v: values[0] ?? 0 }));
+  if (n < 2)
+    return Array.from({ length: SAMPLES }, () => ({
+      at: 0,
+      v: values[0] ?? 0,
+    }));
   const m = tangents(values);
   const total = SAMPLES - 1;
   const out: { at: number; v: number }[] = [];
   for (let j = 0; j < n - 1; j++) {
-    const sub = Math.floor(((j + 1) * total) / (n - 1)) - Math.floor((j * total) / (n - 1));
+    const sub =
+      Math.floor(((j + 1) * total) / (n - 1)) -
+      Math.floor((j * total) / (n - 1));
     for (let k = 0; k < sub; k++) {
       const u = k / sub;
       const u2 = u * u;
       const u3 = u2 * u;
       out.push({
         at: j + u,
-        v: (2 * u3 - 3 * u2 + 1) * values[j] + (u3 - 2 * u2 + u) * m[j] + (-2 * u3 + 3 * u2) * values[j + 1] + (u3 - u2) * m[j + 1],
+        v:
+          (2 * u3 - 3 * u2 + 1) * values[j] +
+          (u3 - 2 * u2 + u) * m[j] +
+          (-2 * u3 + 3 * u2) * values[j + 1] +
+          (u3 - u2) * m[j + 1],
       });
     }
   }
@@ -523,7 +643,8 @@ function niceTicks(max: number) {
   const raw = Math.max(max, 1) / 4;
   const exp = 10 ** Math.floor(Math.log10(raw));
   const f = raw / exp;
-  const step = (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * exp;
+  const step =
+    (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * exp;
   const count = Math.ceil(max / step);
   return Array.from({ length: count + 1 }, (_, k) => k * step);
 }
@@ -550,10 +671,13 @@ function placeChips(
   left: number,
   right: number,
   rows: number,
-  labels: boolean,
+  labels: boolean
 ) {
   const taken: [number, number][][] = Array.from({ length: rows }, () => []);
-  const out = new Map<string, { left: number; row: number; compact: boolean }>();
+  const out = new Map<
+    string,
+    { left: number; row: number; compact: boolean }
+  >();
   const order = [...items].sort((a, b) => b.weight - a.weight || a.x - b.x);
   for (const item of order) {
     const widths = labels ? [item.full, 24] : [24];
@@ -573,7 +697,15 @@ function placeChips(
   return out;
 }
 
-function Rolling({ value, format, className }: { value: number; format: (n: number) => string; className?: string }) {
+function Rolling({
+  value,
+  format,
+  className,
+}: {
+  value: number;
+  format: (n: number) => string;
+  className?: string;
+}) {
   const reduce = useReducedMotionAfterMount();
   const spring = useSpring(value, { stiffness: 240, damping: 34 });
   const text = useTransform(spring, (v) => format(v));
@@ -581,16 +713,21 @@ function Rolling({ value, format, className }: { value: number; format: (n: numb
     if (reduce) spring.jump(value);
     else spring.set(value);
   }, [value, reduce, spring]);
-  return <motion.span className={cn("tabular-nums", className)}>{text}</motion.span>;
+  return (
+    <motion.span className={cn("tabular-nums", className)}>{text}</motion.span>
+  );
 }
 
-function RangeSwitch({ value, onChange }: { value: RangeKey; onChange: (v: RangeKey) => void }) {
+function RangeSwitch({
+  value,
+  onChange,
+}: {
+  value: RangeKey;
+  onChange: (v: RangeKey) => void;
+}) {
   const { t } = useFmtContext();
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const index = Math.max(
-    0,
-    RANGE_ORDER.indexOf(value),
-  );
+  const index = Math.max(0, RANGE_ORDER.indexOf(value));
   const onKeyDown = (e: KeyboardEvent<HTMLFieldSetElement>) => {
     const moves: Record<string, number> = {
       ArrowRight: index + 1,
@@ -602,18 +739,27 @@ function RangeSwitch({ value, onChange }: { value: RangeKey; onChange: (v: Range
     };
     if (!(e.key in moves)) return;
     e.preventDefault();
-    const next = ((moves[e.key] ?? index) + RANGE_ORDER.length) % RANGE_ORDER.length;
+    const next =
+      ((moves[e.key] ?? index) + RANGE_ORDER.length) % RANGE_ORDER.length;
     onChange(RANGE_ORDER[next] ?? value);
     refs.current[next]?.focus();
   };
   return (
-    <SegmentedControl aria-label={t.dateRange} onKeyDown={onKeyDown} role="radiogroup" size="sm">
+    <SegmentedControl
+      aria-label={t.dateRange}
+      onKeyDown={onKeyDown}
+      role="radiogroup"
+      size="sm"
+    >
       {RANGE_ORDER.map((r, i) => {
         const checked = r === value;
         return (
           <SegmentedControlItem
             aria-checked={checked}
-            aria-label={interpolate(t.rangeOption, { short: r, long: t[`range${r}`] })}
+            aria-label={interpolate(t.rangeOption, {
+              short: r,
+              long: t[`range${r}`],
+            })}
             className="min-w-11 px-2.5 text-muted-foreground text-xs tabular-nums focus-visible:ring-2 focus-visible:ring-ring"
             data-checked={checked ? "" : undefined}
             key={r}
@@ -632,16 +778,35 @@ function RangeSwitch({ value, onChange }: { value: RangeKey; onChange: (v: Range
   );
 }
 
-function Highlight({ children, className }: { children: ReactNode; className?: string }) {
-  return <span className={cn("font-semibold text-foreground", className)}>{children}</span>;
+function Highlight({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <span className={cn("font-semibold text-foreground", className)}>
+      {children}
+    </span>
+  );
 }
 
 function Summary({ model }: { model: Model }) {
   const fmt = useFmtContext();
   const { t } = fmt;
-  const change = model.prevTotal === null ? null : model.total - model.prevTotal;
-  const gains = model.channels.map((c) => ({ label: c.label, delta: c.total - c.prev }));
-  const lead = change === null ? null : [...gains].sort((a, b) => (change >= 0 ? b.delta - a.delta : a.delta - b.delta))[0];
+  const change =
+    model.prevTotal === null ? null : model.total - model.prevTotal;
+  const gains = model.channels.map((c) => ({
+    label: c.label,
+    delta: c.total - c.prev,
+  }));
+  const lead =
+    change === null
+      ? null
+      : [...gains].sort((a, b) =>
+          change >= 0 ? b.delta - a.delta : a.delta - b.delta
+        )[0];
   const most = lead && change ? lead.delta / change >= 0.5 : false;
   const values = model.buckets.map((b) => b.value);
   const best = values.indexOf(Math.max(...values));
@@ -650,10 +815,18 @@ function Summary({ model }: { model: Model }) {
   const worstMoment = momentAt(model, worst);
   const when = (i: number) => {
     const at = model.buckets[i]?.t ?? model.end;
-    return model.step === 7 ? interpolate(t.theWeekOf, { date: fmt.day(at, yearOf(model.end)) }) : bucketLabel(fmt, model, at);
+    return model.step === 7
+      ? interpolate(t.theWeekOf, { date: fmt.day(at, yearOf(model.end)) })
+      : bucketLabel(fmt, model, at);
   };
-  const strong = (node: ReactNode) => <span className="font-medium text-foreground">{node}</span>;
-  const figure = (n: number) => <span className="font-medium text-foreground tabular-nums">{fmt.compact(n)}</span>;
+  const strong = (node: ReactNode) => (
+    <span className="font-medium text-foreground">{node}</span>
+  );
+  const figure = (n: number) => (
+    <span className="font-medium text-foreground tabular-nums">
+      {fmt.compact(n)}
+    </span>
+  );
   const total = (
     <Highlight>
       <Rolling format={fmt.money} value={model.total} />
@@ -666,8 +839,20 @@ function Summary({ model }: { model: Model }) {
         {change !== null && lead
           ? rich(t.thisPeriodChange, {
               total,
-              change: <Highlight className={tone(change)}>{rich(change < 0 ? t.changeDown : t.changeUp, { amount: <Rolling format={fmt.compact} value={Math.abs(change)} /> })}</Highlight>,
-              attribution: most ? (change < 0 ? t.mostlyFrom : t.mostOfItFrom) : t.ledBy,
+              change: (
+                <Highlight className={tone(change)}>
+                  {rich(change < 0 ? t.changeDown : t.changeUp, {
+                    amount: (
+                      <Rolling format={fmt.compact} value={Math.abs(change)} />
+                    ),
+                  })}
+                </Highlight>
+              ),
+              attribution: most
+                ? change < 0
+                  ? t.mostlyFrom
+                  : t.mostOfItFrom
+                : t.ledBy,
               channel: <Highlight>{lead.label}</Highlight>,
             })
           : rich(`${t.thisPeriod}.`, { total })}
@@ -677,10 +862,14 @@ function Summary({ model }: { model: Model }) {
           unit: model.step === 7 ? t.week : t.day,
           best: strong(when(best)),
           bestValue: figure(values[best] ?? 0),
-          bestDuring: bestMoment?.phrase ? interpolate(t.during, { phrase: bestMoment.phrase }) : "",
+          bestDuring: bestMoment?.phrase
+            ? interpolate(t.during, { phrase: bestMoment.phrase })
+            : "",
           worst: strong(when(worst)),
           worstValue: figure(values[worst] ?? 0),
-          worstDuring: worstMoment?.phrase ? interpolate(t.during, { phrase: worstMoment.phrase }) : "",
+          worstDuring: worstMoment?.phrase
+            ? interpolate(t.during, { phrase: worstMoment.phrase })
+            : "",
         })}
       </p>
     </div>
@@ -695,16 +884,37 @@ interface MomentHandlers {
   onToggle: (id: string) => void;
 }
 
-function KindIcon({ kind, className }: { kind: MomentKind; className?: string }) {
+function KindIcon({
+  kind,
+  className,
+}: {
+  kind: MomentKind;
+  className?: string;
+}) {
   const k = KINDS[kind];
   return (
-    <span aria-hidden className={cn("flex shrink-0 items-center justify-center rounded-full", k.soft, className)}>
+    <span
+      aria-hidden
+      className={cn(
+        "flex shrink-0 items-center justify-center rounded-full",
+        k.soft,
+        className
+      )}
+    >
       <k.icon className="size-[0.7rem]" strokeWidth={2.25} />
     </span>
   );
 }
 
-function StoryChart({ model, handlers, cardId }: { model: Model; handlers: MomentHandlers; cardId: string }) {
+function StoryChart({
+  model,
+  handlers,
+  cardId,
+}: {
+  model: Model;
+  handlers: MomentHandlers;
+  cardId: string;
+}) {
   const fmt = useFmtContext();
   const { t } = fmt;
   const mounted = useMounted();
@@ -714,7 +924,9 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
   const [surfaceRef, size] = useElementSize<HTMLDivElement>();
   const ready = mounted && size.width > 0 && size.height > 0;
   const measure = useTextWidth(surfaceRef, ready);
-  const [scrub, setScrub] = useState<{ range: RangeKey; i: number } | null>(null);
+  const [scrub, setScrub] = useState<{ range: RangeKey; i: number } | null>(
+    null
+  );
   const [focused, setFocused] = useState(false);
 
   const { buckets } = model;
@@ -728,45 +940,75 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
   const base = Math.max(pad.t + 1, height - pad.b);
   const plotH = base - pad.t;
   const values = useMemo(() => buckets.map((b) => b.value), [buckets]);
-  const prevValues = useMemo(() => (buckets.every((b) => b.prev !== null) ? buckets.map((b) => b.prev ?? 0) : null), [buckets]);
+  const prevValues = useMemo(
+    () =>
+      buckets.every((b) => b.prev !== null)
+        ? buckets.map((b) => b.prev ?? 0)
+        : null,
+    [buckets]
+  );
   const ticks = niceTicks(Math.max(...values, ...(prevValues ?? [0])) * 1.04);
   const top = ticks[ticks.length - 1] || 1;
-  const x = (i: number) => pad.l + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW);
+  const x = (i: number) =>
+    pad.l + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW);
   const y = (v: number) => base - (v / top) * plotH;
-  const morph = reduce ? { duration: 0 } : ({ type: "spring", visualDuration: 0.38, bounce: 0 } as const);
+  const morph = reduce
+    ? { duration: 0 }
+    : ({ type: "spring", visualDuration: 0.38, bounce: 0 } as const);
 
   const samples = useMemo(() => resample(values), [values]);
-  const prevSamples = useMemo(() => (prevValues ? resample(prevValues) : null), [prevValues]);
+  const prevSamples = useMemo(
+    () => (prevValues ? resample(prevValues) : null),
+    [prevValues]
+  );
   const toPath = (pts: { at: number; v: number }[]) =>
-    pts.map((p, k) => `${k ? "L" : "M"}${x(p.at).toFixed(1)},${y(p.v).toFixed(1)}`).join("");
+    pts
+      .map(
+        (p, k) => `${k ? "L" : "M"}${x(p.at).toFixed(1)},${y(p.v).toFixed(1)}`
+      )
+      .join("");
   const line = toPath(samples);
   const area = `${line}L${x(n - 1).toFixed(1)},${base}L${x(0).toFixed(1)},${base}Z`;
   const prevLine = prevSamples ? toPath(prevSamples) : null;
 
   const open = model.moments.find((m) => m.id === handlers.openId) ?? null;
-  const scrubIndex = scrub && scrub.range === model.range ? Math.min(scrub.i, n - 1) : null;
+  const scrubIndex =
+    scrub && scrub.range === model.range ? Math.min(scrub.i, n - 1) : null;
   const active = scrubIndex ?? open?.i0 ?? n - 1;
   const showCrosshair = scrubIndex !== null || open !== null;
   const bucket = buckets[active] ?? (buckets[n - 1] as Bucket);
   const delta = bucket.prev ? bucket.value / bucket.prev - 1 : null;
   const here = model.moments.filter((m) => active >= m.i0 && active <= m.i1);
   const label = bucketLabel(fmt, model, bucket.t, true);
-  const prevLabel = model.step === 7 ? bucketLabel(fmt, model, bucket.prevT) : fmt.day(bucket.prevT, yearOf(model.end));
+  const prevLabel =
+    model.step === 7
+      ? bucketLabel(fmt, model, bucket.prevT)
+      : fmt.day(bucket.prevT, yearOf(model.end));
   const widest = fmt.money(Math.max(...values)).length;
 
-  const chipText = (m: PlacedMoment) => ({ label: m.short ?? m.title, delta: m.impact ? fmt.percent(m.impact.change) : "" });
+  const chipText = (m: PlacedMoment) => ({
+    label: m.short ?? m.title,
+    delta: m.impact ? fmt.percent(m.impact.change) : "",
+  });
   // Chips are laid out once per render; it's a handful of moments.
   const placement = ready
     ? placeChips(
         model.moments.map((m) => {
           const text = chipText(m);
-          const textW = measure ? measure(text.label, 500) + measure(text.delta, 400) : (text.label.length + text.delta.length) * 6.6;
-          return { id: m.id, x: x(m.i0), weight: m.weight ?? 1, full: Math.ceil(textW + 46) };
+          const textW = measure
+            ? measure(text.label, 500) + measure(text.delta, 400)
+            : (text.label.length + text.delta.length) * 6.6;
+          return {
+            id: m.id,
+            x: x(m.i0),
+            weight: m.weight ?? 1,
+            full: Math.ceil(textW + 46),
+          };
         }),
         pad.l - 10,
         width - 2,
         rows,
-        wide,
+        wide
       )
     : new Map<string, { left: number; row: number; compact: boolean }>();
 
@@ -800,7 +1042,10 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
     const rect = e.currentTarget.getBoundingClientRect();
     const scale = rect.width / (width || 1);
     const px = (e.clientX - rect.left) / (scale || 1);
-    return Math.min(n - 1, Math.max(0, Math.round(((px - pad.l) / plotW) * (n - 1))));
+    return Math.min(
+      n - 1,
+      Math.max(0, Math.round(((px - pad.l) / plotW) * (n - 1)))
+    );
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -821,24 +1066,46 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
     }
     if (!(e.key in moves)) return;
     e.preventDefault();
-    setScrub({ range: model.range, i: Math.min(n - 1, Math.max(0, moves[e.key])) });
+    setScrub({
+      range: model.range,
+      i: Math.min(n - 1, Math.max(0, moves[e.key])),
+    });
   };
 
   const cardW = wide ? 248 : Math.max(0, width - 8);
   const cardX = open ? x(open.i0) : 0;
   const cardRight = cardX + 14 + cardW <= width - 4;
-  const cardLeft = wide ? (cardRight ? cardX + 14 : Math.max(4, cardX - 14 - cardW)) : 4;
+  const cardLeft = wide
+    ? cardRight
+      ? cardX + 14
+      : Math.max(4, cardX - 14 - cardW)
+    : 4;
   const cardTop = pad.t + 2;
 
   return (
-    <section aria-label={t.chart} className="flex min-h-0 min-w-0 flex-1 flex-col">
+    <section
+      aria-label={t.chart}
+      className="flex min-h-0 min-w-0 flex-1 flex-col"
+    >
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div className="min-w-0">
           <div className="flex h-5 min-w-0 items-center gap-2 text-muted-foreground text-xs">
-            <span className="shrink-0 tabular-nums">{showCrosshair || focused ? label : interpolate(t.latest, { label })}</span>
+            <span className="shrink-0 tabular-nums">
+              {showCrosshair || focused
+                ? label
+                : interpolate(t.latest, { label })}
+            </span>
             {here[0] && (
-              <span className={cn("inline-flex h-5 min-w-0 items-center gap-1 rounded-full ps-0.5 pe-2 font-medium", KINDS[here[0].kind].soft)}>
-                <KindIcon className="size-4 bg-transparent" kind={here[0].kind} />
+              <span
+                className={cn(
+                  "inline-flex h-5 min-w-0 items-center gap-1 rounded-full ps-0.5 pe-2 font-medium",
+                  KINDS[here[0].kind].soft
+                )}
+              >
+                <KindIcon
+                  className="size-4 bg-transparent"
+                  kind={here[0].kind}
+                />
                 <span className="truncate">{here[0].title}</span>
               </span>
             )}
@@ -852,24 +1119,53 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
             </span>
             {delta !== null && bucket.prev !== null && (
               <span className="inline-flex items-center gap-1 text-xs tabular-nums">
-                <span className={cn("inline-flex items-center gap-0.5 font-medium", tone(delta))}>
-                  {delta < 0 ? <ArrowDownRightIcon aria-hidden className="size-3.5" /> : <ArrowUpRightIcon aria-hidden className="size-3.5" />}
+                <span
+                  className={cn(
+                    "inline-flex items-center gap-0.5 font-medium",
+                    tone(delta)
+                  )}
+                >
+                  {delta < 0 ? (
+                    <ArrowDownRightIcon aria-hidden className="size-3.5" />
+                  ) : (
+                    <ArrowUpRightIcon aria-hidden className="size-3.5" />
+                  )}
                   {fmt.percent(delta)}
                 </span>
-                <span className="text-muted-foreground">{interpolate(t.versus, { label: prevLabel, value: fmt.money(bucket.prev) })}</span>
+                <span className="text-muted-foreground">
+                  {interpolate(t.versus, {
+                    label: prevLabel,
+                    value: fmt.money(bucket.prev),
+                  })}
+                </span>
               </span>
             )}
           </div>
         </div>
-        <div aria-hidden className="flex items-center gap-4 pb-0.5 text-muted-foreground text-xs">
+        <div
+          aria-hidden
+          className="flex items-center gap-4 pb-0.5 text-muted-foreground text-xs"
+        >
           <span className="inline-flex items-center gap-1.5">
             <span className="h-0.5 w-4 rounded-full bg-foreground" />
             {t.legendThis}
           </span>
           {prevValues && (
             <span className="inline-flex items-center gap-1.5">
-              <svg aria-hidden className="h-0.5 w-4 overflow-visible" viewBox="0 0 16 2">
-                <line className="stroke-muted-foreground/70" strokeDasharray="3 3" strokeWidth={1.5} x1={0} x2={16} y1={1} y2={1} />
+              <svg
+                aria-hidden
+                className="h-0.5 w-4 overflow-visible"
+                viewBox="0 0 16 2"
+              >
+                <line
+                  className="stroke-muted-foreground/70"
+                  strokeDasharray="3 3"
+                  strokeWidth={1.5}
+                  x1={0}
+                  x2={16}
+                  y1={1}
+                  y2={1}
+                />
               </svg>
               {t.legendPrevious}
             </span>
@@ -877,7 +1173,10 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
         </div>
       </div>
 
-      <div className="relative mt-3 h-75 min-h-0 w-full @4xl:h-auto @4xl:min-h-65 @4xl:flex-1" ref={surroundRef}>
+      <div
+        className="relative mt-3 h-75 min-h-0 w-full @4xl:h-auto @4xl:min-h-65 @4xl:flex-1"
+        ref={surroundRef}
+      >
         <div
           aria-label={t.scrub}
           aria-valuemax={n - 1}
@@ -902,21 +1201,36 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
           tabIndex={0}
         >
           {ready && (
-            <svg aria-hidden className="absolute inset-0 overflow-visible" height={height} width={width}>
+            <svg
+              aria-hidden
+              className="absolute inset-0 overflow-visible"
+              height={height}
+              width={width}
+            >
               <defs>
                 <clipPath id={clipId}>
                   <motion.rect
                     animate={{ width: width + 8 }}
                     height={height + 8}
                     initial={{ width: reduce ? width + 8 : 0 }}
-                    transition={reduce ? { duration: 0 } : { duration: 0.7, ease }}
+                    transition={
+                      reduce ? { duration: 0 } : { duration: 0.7, ease }
+                    }
                     x={-4}
                     y={-4}
                   />
                 </clipPath>
                 <linearGradient id={fadeId} x1="0" x2="0" y1="0" y2="1">
-                  <stop className="[stop-color:var(--color-foreground)]" offset="0%" stopOpacity={0.09} />
-                  <stop className="[stop-color:var(--color-foreground)]" offset="100%" stopOpacity={0} />
+                  <stop
+                    className="[stop-color:var(--color-foreground)]"
+                    offset="0%"
+                    stopOpacity={0.09}
+                  />
+                  <stop
+                    className="[stop-color:var(--color-foreground)]"
+                    offset="100%"
+                    stopOpacity={0}
+                  />
                 </linearGradient>
               </defs>
 
@@ -928,20 +1242,37 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                   const right = Math.min(pad.l + plotW, x(m.i1) + half);
                   return (
                     <motion.rect
-                      animate={{ x: left, width: Math.max(2, right - left), opacity: 1 }}
+                      animate={{
+                        x: left,
+                        width: Math.max(2, right - left),
+                        opacity: 1,
+                      }}
                       className={KINDS[m.kind].band}
                       height={plotH}
-                      initial={{ x: left, width: Math.max(2, right - left), opacity: 0 }}
+                      initial={{
+                        x: left,
+                        width: Math.max(2, right - left),
+                        opacity: 0,
+                      }}
                       key={`band-${m.id}`}
                       rx={4}
-                      transition={{ x: morph, width: morph, opacity: { duration: 0.2 } }}
+                      transition={{
+                        x: morph,
+                        width: morph,
+                        opacity: { duration: 0.2 },
+                      }}
                       y={pad.t}
                     />
                   );
                 })}
 
               {ticks.map((v, k) => (
-                <motion.g animate={{ y: y(v) }} initial={false} key={`tick-${v}`} transition={morph}>
+                <motion.g
+                  animate={{ y: y(v) }}
+                  initial={false}
+                  key={`tick-${v}`}
+                  transition={morph}
+                >
                   <line
                     className={k === 0 ? "stroke-border" : "stroke-border/70"}
                     strokeDasharray={k === 0 ? undefined : "2 4"}
@@ -950,7 +1281,13 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                     y1={0}
                     y2={0}
                   />
-                  <text className="fill-muted-foreground text-[10px] tabular-nums" dominantBaseline="middle" textAnchor="end" x={pad.l - 10} y={0}>
+                  <text
+                    className="fill-muted-foreground text-[10px] tabular-nums"
+                    dominantBaseline="middle"
+                    textAnchor="end"
+                    x={pad.l - 10}
+                    y={0}
+                  >
                     {fmt.axis(v)}
                   </text>
                 </motion.g>
@@ -958,7 +1295,12 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
 
               {xTicks.map((i) => {
                 const px = x(i);
-                const anchor = i === n - 1 && n > 1 ? "end" : px - 24 < pad.l ? "start" : "middle";
+                const anchor =
+                  i === n - 1 && n > 1
+                    ? "end"
+                    : px - 24 < pad.l
+                      ? "start"
+                      : "middle";
                 const at = buckets[i]?.t ?? 0;
                 return (
                   <motion.text
@@ -988,7 +1330,12 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                     transition={morph}
                   />
                 )}
-                <motion.path animate={{ d: area }} fill={`url(#${fadeId})`} initial={false} transition={morph} />
+                <motion.path
+                  animate={{ d: area }}
+                  fill={`url(#${fadeId})`}
+                  initial={false}
+                  transition={morph}
+                />
                 <motion.path
                   animate={{ d: line }}
                   className="fill-none stroke-foreground"
@@ -1004,22 +1351,63 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                 const spot = placement.get(m.id);
                 const cx = x(m.i0);
                 const cy = y(values[m.i0]);
-                const settle = { duration: reduce ? 0 : 0.2, delay: reduce ? 0 : 0.36 };
+                const settle = {
+                  duration: reduce ? 0 : 0.2,
+                  delay: reduce ? 0 : 0.36,
+                };
                 return (
-                  <motion.g animate={{ opacity: 1 }} initial={{ opacity: 0 }} key={`mark-${model.range}-${m.id}`} transition={settle}>
-                    {spot && <line className={KINDS[m.kind].stem} strokeDasharray="2 3" x1={cx} x2={cx} y1={spot.row * 30 + 28} y2={cy - 7} />}
-                    <circle className={cn("stroke-background", KINDS[m.kind].dot)} cx={cx} cy={cy} r={spot ? 4.5 : 3.5} strokeWidth={2} />
+                  <motion.g
+                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0 }}
+                    key={`mark-${model.range}-${m.id}`}
+                    transition={settle}
+                  >
+                    {spot && (
+                      <line
+                        className={KINDS[m.kind].stem}
+                        strokeDasharray="2 3"
+                        x1={cx}
+                        x2={cx}
+                        y1={spot.row * 30 + 28}
+                        y2={cy - 7}
+                      />
+                    )}
+                    <circle
+                      className={cn("stroke-background", KINDS[m.kind].dot)}
+                      cx={cx}
+                      cy={cy}
+                      r={spot ? 4.5 : 3.5}
+                      strokeWidth={2}
+                    />
                   </motion.g>
                 );
               })}
 
               {showCrosshair ? (
                 <g>
-                  <line className="stroke-foreground/25" x1={x(active)} x2={x(active)} y1={pad.t - 4} y2={base} />
+                  <line
+                    className="stroke-foreground/25"
+                    x1={x(active)}
+                    x2={x(active)}
+                    y1={pad.t - 4}
+                    y2={base}
+                  />
                   {prevValues && (
-                    <circle className="fill-background stroke-muted-foreground" cx={x(active)} cy={y(prevValues[active])} r={3} strokeWidth={1.5} />
+                    <circle
+                      className="fill-background stroke-muted-foreground"
+                      cx={x(active)}
+                      cy={y(prevValues[active])}
+                      r={3}
+                      strokeWidth={1.5}
+                    />
                   )}
-                  <circle className="fill-foreground stroke-background" cx={x(active)} cy={y(values[active])} r={4.5} strokeWidth={2} />
+                  <circle
+                    className="fill-foreground stroke-background"
+                    cx={x(active)}
+                    cy={y(values[active])}
+                    r={4.5}
+                    strokeWidth={2}
+                  />
                 </g>
               ) : (
                 <motion.circle
@@ -1031,7 +1419,10 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                   key={`end-${model.range}`}
                   r={4}
                   strokeWidth={2}
-                  transition={{ duration: reduce ? 0 : 0.2, delay: reduce ? 0 : 0.36 }}
+                  transition={{
+                    duration: reduce ? 0 : 0.2,
+                    delay: reduce ? 0 : 0.36,
+                  }}
                 />
               )}
             </svg>
@@ -1047,7 +1438,12 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
               const isOpen = handlers.openId === m.id;
               return (
                 <motion.button
-                  animate={{ x: spot.left, y: spot.row * 30 + 4, opacity: 1, scale: 1 }}
+                  animate={{
+                    x: spot.left,
+                    y: spot.row * 30 + 4,
+                    opacity: 1,
+                    scale: 1,
+                  }}
                   aria-controls={isOpen ? cardId : undefined}
                   aria-expanded={isOpen}
                   aria-label={`${spot.compact ? "" : `${text.label}${text.delta ? ` ${text.delta}` : ""}, `}${interpolate(t.chipNote, { title: m.title, dates: momentDates(fmt, m) })}`}
@@ -1055,15 +1451,26 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                     "absolute top-0 inset-s-0 z-10 inline-flex h-6 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border bg-background text-xs shadow-xs/5 outline-none before:absolute before:-inset-x-1 before:-inset-y-1 focus-visible:ring-2 focus-visible:ring-ring",
                     "transition-[background-color,border-color,scale] duration-150 ease-out active:scale-[0.97] [@media(hover:hover)]:hover:bg-accent",
                     spot.compact ? "w-6 justify-center" : "ps-0.75 pe-2",
-                    isOpen && "border-foreground/25 bg-accent",
+                    isOpen && "border-foreground/25 bg-accent"
                   )}
-                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.12 } }}
-                  initial={{ x: spot.left, y: spot.row * 30 + 4, opacity: 0, scale: 0.95 }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.95,
+                    transition: { duration: 0.12 },
+                  }}
+                  initial={{
+                    x: spot.left,
+                    y: spot.row * 30 + 4,
+                    opacity: 0,
+                    scale: 0.95,
+                  }}
                   key={m.id}
                   onBlur={() => handlers.onFocus(null)}
                   onClick={() => handlers.onToggle(m.id)}
                   onFocus={() => handlers.onFocus(m.id)}
-                  onPointerEnter={(e) => e.pointerType === "mouse" && handlers.onHover(m.id)}
+                  onPointerEnter={(e) =>
+                    e.pointerType === "mouse" && handlers.onHover(m.id)
+                  }
                   onPointerLeave={() => handlers.onHover(null)}
                   transition={{
                     x: morph,
@@ -1077,7 +1484,11 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                   {!spot.compact && (
                     <>
                       <span className="font-medium">{text.label}</span>
-                      {text.delta && <span className="text-muted-foreground tabular-nums">{text.delta}</span>}
+                      {text.delta && (
+                        <span className="text-muted-foreground tabular-nums">
+                          {text.delta}
+                        </span>
+                      )}
                     </>
                   )}
                 </motion.button>
@@ -1095,8 +1506,20 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
               initial={{ opacity: 0, scale: 0.97, x: cardLeft, y: cardTop }}
               key="note"
               role="note"
-              style={{ width: cardW, originX: wide ? (cardRight ? 0 : 1) : 0.5, originY: 0 }}
-              transition={reduce ? { duration: 0 } : { duration: 0.16, ease, x: { type: "spring", visualDuration: 0.2, bounce: 0 } }}
+              style={{
+                width: cardW,
+                originX: wide ? (cardRight ? 0 : 1) : 0.5,
+                originY: 0,
+              }}
+              transition={
+                reduce
+                  ? { duration: 0 }
+                  : {
+                      duration: 0.16,
+                      ease,
+                      x: { type: "spring", visualDuration: 0.2, bounce: 0 },
+                    }
+              }
             >
               <div className="flex items-center gap-2 text-muted-foreground text-xs">
                 <KindIcon className="size-5" kind={open.kind} />
@@ -1105,11 +1528,22 @@ function StoryChart({ model, handlers, cardId }: { model: Model; handlers: Momen
                 <span className="tabular-nums">{momentDates(fmt, open)}</span>
               </div>
               <p className="mt-2 font-medium text-sm">{open.title}</p>
-              <p className="mt-1 text-pretty text-muted-foreground text-xs leading-relaxed">{open.note}</p>
+              <p className="mt-1 text-pretty text-muted-foreground text-xs leading-relaxed">
+                {open.note}
+              </p>
               {open.impact && (
                 <div className="mt-2.5 flex items-start justify-between gap-3 border-t pt-2.5 text-xs">
-                  <span className="text-pretty text-muted-foreground">{open.impact.text}</span>
-                  <span className={cn("shrink-0 font-medium tabular-nums", tone(open.impact.change))}>{fmt.percent(open.impact.change)}</span>
+                  <span className="text-pretty text-muted-foreground">
+                    {open.impact.text}
+                  </span>
+                  <span
+                    className={cn(
+                      "shrink-0 font-medium tabular-nums",
+                      tone(open.impact.change)
+                    )}
+                  >
+                    {fmt.percent(open.impact.change)}
+                  </span>
                 </div>
               )}
             </motion.div>
@@ -1136,10 +1570,18 @@ function Breakdown({ model }: { model: Model }) {
         <h2 className="font-medium text-sm" id={titleId}>
           {t.breakdown}
         </h2>
-        {hasPrev && <span className="text-muted-foreground text-xs">{t.vsLastPeriod}</span>}
+        {hasPrev && (
+          <span className="text-muted-foreground text-xs">
+            {t.vsLastPeriod}
+          </span>
+        )}
       </div>
       <div
-        aria-label={interpolate(t.shareLabel, { summary: ranked.map((c) => `${c.label} ${share(c.total / total)}`).join(", ") })}
+        aria-label={interpolate(t.shareLabel, {
+          summary: ranked
+            .map((c) => `${c.label} ${share(c.total / total)}`)
+            .join(", "),
+        })}
         className="mt-3 flex h-2.5 gap-0.75"
         role="img"
       >
@@ -1148,7 +1590,7 @@ function Breakdown({ model }: { model: Model }) {
             className={cn(
               "h-full min-w-1 basis-0 rounded-full transition-[flex-grow,opacity] duration-300 ease-out motion-reduce:transition-none",
               SHADES[i % SHADES.length],
-              hover && hover !== c.key && "opacity-30",
+              hover && hover !== c.key && "opacity-30"
             )}
             key={c.key}
             style={{ flexGrow: c.total }}
@@ -1163,20 +1605,37 @@ function Breakdown({ model }: { model: Model }) {
               className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 rounded-lg px-2 py-1 transition-colors duration-150 [@media(hover:hover)]:hover:bg-accent/60"
               key={c.key}
               layout={reduce ? false : "position"}
-              onPointerEnter={(e) => e.pointerType === "mouse" && setHover(c.key)}
+              onPointerEnter={(e) =>
+                e.pointerType === "mouse" && setHover(c.key)
+              }
               onPointerLeave={() => setHover(null)}
               transition={{ type: "spring", visualDuration: 0.3, bounce: 0 }}
             >
-              <span aria-hidden className={cn("size-2.5 rounded-full transition-colors duration-300", SHADES[i % SHADES.length])} />
+              <span
+                aria-hidden
+                className={cn(
+                  "size-2.5 rounded-full transition-colors duration-300",
+                  SHADES[i % SHADES.length]
+                )}
+              />
               <div className="min-w-0">
                 <div className="truncate">{c.label}</div>
-                <div className="text-muted-foreground text-xs tabular-nums">{interpolate(t.ofRevenue, { percent: share(c.total / total) })}</div>
+                <div className="text-muted-foreground text-xs tabular-nums">
+                  {interpolate(t.ofRevenue, {
+                    percent: share(c.total / total),
+                  })}
+                </div>
               </div>
               <div className="text-end">
-                <Rolling className="font-medium" format={fmt.compact} value={c.total} />
+                <Rolling
+                  className="font-medium"
+                  format={fmt.compact}
+                  value={c.total}
+                />
                 {hasPrev && (
                   <div className={cn("text-xs tabular-nums", tone(change))}>
-                    {fmt.signed(change)} · {c.prev ? fmt.percent(change / c.prev) : t.new}
+                    {fmt.signed(change)} ·{" "}
+                    {c.prev ? fmt.percent(change / c.prev) : t.new}
                   </div>
                 )}
               </div>
@@ -1188,17 +1647,32 @@ function Breakdown({ model }: { model: Model }) {
   );
 }
 
-function MomentList({ model, handlers, cardId }: { model: Model; handlers: MomentHandlers; cardId: string }) {
+function MomentList({
+  model,
+  handlers,
+  cardId,
+}: {
+  model: Model;
+  handlers: MomentHandlers;
+  cardId: string;
+}) {
   const fmt = useFmtContext();
   const { t } = fmt;
   const titleId = useId();
   return (
-    <section aria-labelledby={titleId} className="flex min-h-0 min-w-0 flex-col">
+    <section
+      aria-labelledby={titleId}
+      className="flex min-h-0 min-w-0 flex-col"
+    >
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="font-medium text-sm" id={titleId}>
           {t.moments}
         </h2>
-        <span className="text-muted-foreground text-xs tabular-nums">{model.moments.length ? interpolate(t.momentsCount, { count: model.moments.length }) : t.noMoments}</span>
+        <span className="text-muted-foreground text-xs tabular-nums">
+          {model.moments.length
+            ? interpolate(t.momentsCount, { count: model.moments.length })
+            : t.noMoments}
+        </span>
       </div>
       {model.moments.length ? (
         <ul className="-mx-2.5 mt-1.5 flex min-h-0 flex-col overflow-y-auto p-0.5 pb-3 mask-[linear-gradient(to_bottom,black_calc(100%-1.25rem),transparent)] scrollbar-thin">
@@ -1212,34 +1686,59 @@ function MomentList({ model, handlers, cardId }: { model: Model; handlers: Momen
                   className={cn(
                     "grid w-full cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 rounded-lg px-2 py-1 text-start outline-none focus-visible:ring-2 focus-visible:ring-ring [@media(hover:hover)]:hover:bg-accent/60",
                     pressable,
-                    isOpen && "bg-accent [@media(hover:hover)]:hover:bg-accent",
+                    isOpen && "bg-accent [@media(hover:hover)]:hover:bg-accent"
                   )}
                   onBlur={() => handlers.onFocus(null)}
                   onClick={() => handlers.onToggle(m.id)}
                   onFocus={() => handlers.onFocus(m.id)}
-                  onPointerEnter={(e) => e.pointerType === "mouse" && handlers.onHover(m.id)}
+                  onPointerEnter={(e) =>
+                    e.pointerType === "mouse" && handlers.onHover(m.id)
+                  }
                   onPointerLeave={() => handlers.onHover(null)}
                   type="button"
                 >
                   <KindIcon className="size-6 [&_svg]:size-3" kind={m.kind} />
                   <span className="min-w-0">
                     <span className="block truncate">{m.title}</span>
-                    <span className="block text-muted-foreground text-xs tabular-nums">{momentDates(fmt, m)}</span>
+                    <span className="block text-muted-foreground text-xs tabular-nums">
+                      {momentDates(fmt, m)}
+                    </span>
                   </span>
-                  {m.impact && <span className={cn("text-xs tabular-nums", tone(m.impact.change))}>{fmt.percent(m.impact.change)}</span>}
+                  {m.impact && (
+                    <span
+                      className={cn(
+                        "text-xs tabular-nums",
+                        tone(m.impact.change)
+                      )}
+                    >
+                      {fmt.percent(m.impact.change)}
+                    </span>
+                  )}
                 </button>
               </li>
             );
           })}
         </ul>
       ) : (
-        <p className="mt-2 text-pretty text-muted-foreground text-xs">{t.noMomentsHint}</p>
+        <p className="mt-2 text-pretty text-muted-foreground text-xs">
+          {t.noMomentsHint}
+        </p>
       )}
     </section>
   );
 }
 
-function RailLink({ label, href, current, children }: { label: string; href: string; current?: boolean; children: ReactNode }) {
+function RailLink({
+  label,
+  href,
+  current,
+  children,
+}: {
+  label: string;
+  href: string;
+  current?: boolean;
+  children: ReactNode;
+}) {
   return (
     <Tooltip>
       <TooltipTrigger
@@ -1250,7 +1749,9 @@ function RailLink({ label, href, current, children }: { label: string; href: str
             className={cn(
               "flex size-9 cursor-pointer items-center justify-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4",
               pressable,
-              current ? "bg-accent text-foreground" : "text-muted-foreground [@media(hover:hover)]:hover:bg-accent/60 [@media(hover:hover)]:hover:text-foreground",
+              current
+                ? "bg-accent text-foreground"
+                : "text-muted-foreground [@media(hover:hover)]:hover:bg-accent/60 [@media(hover:hover)]:hover:text-foreground"
             )}
             href={href}
           />
@@ -1290,9 +1791,24 @@ function RevenueStoryScreen({
   const days = data?.days ?? [];
   const channels = data?.channels ?? [];
   const moments = data?.moments ?? [];
-  const dayIndex = useMemo(() => new Map(days.map((d, i) => [d.date, i])), [days]);
-  const impacts = useMemo(() => new Map(moments.map((m) => [m.id, impactOf(m, days, dayIndex, channels, fmt)])), [moments, days, dayIndex, channels, fmt]);
-  const model = useMemo(() => (days.length ? buildModel(days, channels, moments, dayIndex, impacts, range) : null), [days, channels, moments, dayIndex, impacts, range]);
+  const dayIndex = useMemo(
+    () => new Map(days.map((d, i) => [d.date, i])),
+    [days]
+  );
+  const impacts = useMemo(
+    () =>
+      new Map(
+        moments.map((m) => [m.id, impactOf(m, days, dayIndex, channels, fmt)])
+      ),
+    [moments, days, dayIndex, channels, fmt]
+  );
+  const model = useMemo(
+    () =>
+      days.length
+        ? buildModel(days, channels, moments, dayIndex, impacts, range)
+        : null,
+    [days, channels, moments, dayIndex, impacts, range]
+  );
   const openId = hoverId ?? focusId ?? pinnedId;
 
   useEffect(() => {
@@ -1317,15 +1833,35 @@ function RevenueStoryScreen({
 
   const summaryText = (m: Model) => {
     const change = m.prevTotal === null ? null : m.total - m.prevTotal;
-    const period = interpolate(t.dateWithYear, { date: interpolate(t.span, { from: fmt.day(m.start), to: fmt.day(m.end) }), year: yearOf(m.end) });
+    const period = interpolate(t.dateWithYear, {
+      date: interpolate(t.span, { from: fmt.day(m.start), to: fmt.day(m.end) }),
+      year: yearOf(m.end),
+    });
     return change === null
-      ? interpolate(t.summaryText, { store: store.name, period, total: fmt.money(m.total) })
-      : interpolate(t.summaryTextChange, { store: store.name, period, total: fmt.money(m.total), direction: change < 0 ? t.down : t.up, amount: fmt.compact(change) });
+      ? interpolate(t.summaryText, {
+          store: store.name,
+          period,
+          total: fmt.money(m.total),
+        })
+      : interpolate(t.summaryTextChange, {
+          store: store.name,
+          period,
+          total: fmt.money(m.total),
+          direction: change < 0 ? t.down : t.up,
+          amount: fmt.compact(change),
+        });
   };
 
   const downloadCsv = (m: Model) => {
-    const lines = m.buckets.map((b) => `${isoOf(b.t)},${Math.round(b.value)},${b.prev === null ? "" : Math.round(b.prev)}`);
-    const url = URL.createObjectURL(new Blob([[m.step === 7 ? t.csvWeek : t.csvDay, ...lines].join("\n")], { type: "text/csv" }));
+    const lines = m.buckets.map(
+      (b) =>
+        `${isoOf(b.t)},${Math.round(b.value)},${b.prev === null ? "" : Math.round(b.prev)}`
+    );
+    const url = URL.createObjectURL(
+      new Blob([[m.step === 7 ? t.csvWeek : t.csvDay, ...lines].join("\n")], {
+        type: "text/csv",
+      })
+    );
     const a = document.createElement("a");
     a.href = url;
     a.download = `revenue-${m.range}.csv`;
@@ -1341,7 +1877,7 @@ function RevenueStoryScreen({
     }
     navigator.clipboard.writeText(summaryText(m)).then(
       () => setNotice(t.summaryCopied),
-      () => setNotice(t.couldntCopy),
+      () => setNotice(t.couldntCopy)
     );
   };
 
@@ -1356,15 +1892,32 @@ function RevenueStoryScreen({
   return (
     <FmtContext.Provider value={fmt}>
       <TooltipProvider>
-        <div className={cn("@container relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm", className)}>
-          <aside aria-label={t.app} className="hidden w-14 shrink-0 flex-col items-center gap-1 border-e bg-muted/40 py-3 @3xl:flex">
-            <span aria-label={store.name} className="mb-3 flex size-8 items-center justify-center rounded-lg bg-primary font-heading font-semibold text-primary-foreground text-sm" role="img">
+        <div
+          className={cn(
+            "@container relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm",
+            className
+          )}
+        >
+          <aside
+            aria-label={t.app}
+            className="hidden w-14 shrink-0 flex-col items-center gap-1 border-e bg-muted/40 py-3 @3xl:flex"
+          >
+            <span
+              aria-label={store.name}
+              className="mb-3 flex size-8 items-center justify-center rounded-lg bg-primary font-heading font-semibold text-primary-foreground text-sm"
+              role="img"
+            >
               {store.name[0]}
             </span>
             {nav.length ? (
               <nav aria-label={t.main} className="flex flex-col gap-1">
                 {nav.map((item) => (
-                  <RailLink current={item.current} href={item.href} key={item.href} label={item.label}>
+                  <RailLink
+                    current={item.current}
+                    href={item.href}
+                    key={item.href}
+                    label={item.label}
+                  >
                     {item.icon}
                   </RailLink>
                 ))}
@@ -1378,7 +1931,9 @@ function RevenueStoryScreen({
               ) : null}
               {user ? (
                 <Avatar aria-label={user.name} className="size-7" role="img">
-                  <AvatarFallback className="text-[11px]">{initials}</AvatarFallback>
+                  <AvatarFallback className="text-[11px]">
+                    {initials}
+                  </AvatarFallback>
                 </Avatar>
               ) : null}
             </div>
@@ -1386,22 +1941,49 @@ function RevenueStoryScreen({
 
           <div className="flex min-w-0 flex-1 flex-col">
             <header className="flex h-12 shrink-0 items-center gap-3 border-b px-4 @3xl:px-7">
-              <span aria-hidden className="flex size-6 items-center justify-center rounded-md bg-primary font-heading font-semibold text-primary-foreground text-xs @3xl:hidden">
+              <span
+                aria-hidden
+                className="flex size-6 items-center justify-center rounded-md bg-primary font-heading font-semibold text-primary-foreground text-xs @3xl:hidden"
+              >
                 {store.name[0]}
               </span>
-              <nav aria-label={t.breadcrumb} className="flex min-w-0 flex-1 items-center gap-1.5 text-sm">
-                <span className="hidden truncate text-muted-foreground @md:inline">{store.name}</span>
-                <ChevronRightIcon aria-hidden className="hidden size-3.5 shrink-0 text-muted-foreground @md:block rtl:rotate-180" />
+              <nav
+                aria-label={t.breadcrumb}
+                className="flex min-w-0 flex-1 items-center gap-1.5 text-sm"
+              >
+                <span className="hidden truncate text-muted-foreground @md:inline">
+                  {store.name}
+                </span>
+                <ChevronRightIcon
+                  aria-hidden
+                  className="hidden size-3.5 shrink-0 text-muted-foreground @md:block rtl:rotate-180"
+                />
                 <span aria-current="page" className="truncate font-medium">
                   {current?.label ?? t.title}
                 </span>
               </nav>
-              <span aria-live="polite" className="hidden text-muted-foreground text-xs @2xl:inline">
-                {notice ?? (updatedAt ? interpolate(t.updated, { when: format.relative(updatedAt) }) : null)}
+              <span
+                aria-live="polite"
+                className="hidden text-muted-foreground text-xs @2xl:inline"
+              >
+                {notice ??
+                  (updatedAt
+                    ? interpolate(t.updated, {
+                        when: format.relative(updatedAt),
+                      })
+                    : null)}
               </span>
               {ready ? (
                 <DropdownMenu>
-                  <DropdownMenuTrigger render={<Button className={pressable} size="sm" variant="outline" />}>
+                  <DropdownMenuTrigger
+                    render={
+                      <Button
+                        className={pressable}
+                        size="sm"
+                        variant="outline"
+                      />
+                    }
+                  >
                     <DownloadIcon />
                     {t.export}
                     <ChevronDownIcon className="-me-0.5 opacity-60" />
@@ -1420,13 +2002,25 @@ function RevenueStoryScreen({
               ) : null}
             </header>
 
-            <main aria-busy={status === "loading"} className="min-h-0 flex-1 overflow-y-auto">
+            <main
+              aria-busy={status === "loading"}
+              className="min-h-0 flex-1 overflow-y-auto"
+            >
               {status === "error" ? (
                 <div className="flex h-full flex-col items-center justify-center p-10 text-center">
                   <p className="font-medium">{t.errorTitle}</p>
-                  {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+                  {error ? (
+                    <p className="mt-1 text-muted-foreground text-sm">
+                      {error}
+                    </p>
+                  ) : null}
                   {onRetry ? (
-                    <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+                    <Button
+                      className="mt-4"
+                      onClick={onRetry}
+                      size="sm"
+                      variant="outline"
+                    >
                       {t.retry}
                     </Button>
                   ) : null}
@@ -1436,12 +2030,24 @@ function RevenueStoryScreen({
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
                       <p className="text-muted-foreground text-xs tabular-nums">
-                        <span className="font-medium text-foreground">{t[`range${range}`]}</span> ·{" "}
-                        {interpolate(t.span, { from: fmt.day(model.start, yearOf(model.end)), to: fmt.day(model.end) })}
+                        <span className="font-medium text-foreground">
+                          {t[`range${range}`]}
+                        </span>{" "}
+                        ·{" "}
+                        {interpolate(t.span, {
+                          from: fmt.day(model.start, yearOf(model.end)),
+                          to: fmt.day(model.end),
+                        })}
                         {model.prevStart !== null && model.prevEnd !== null && (
                           <span className="hidden @md:inline">
                             {" "}
-                            {interpolate(t.periodVs, { start: fmt.day(model.prevStart, yearOf(model.end)), end: fmt.day(model.prevEnd, yearOf(model.end)) })}
+                            {interpolate(t.periodVs, {
+                              start: fmt.day(
+                                model.prevStart,
+                                yearOf(model.end)
+                              ),
+                              end: fmt.day(model.prevEnd, yearOf(model.end)),
+                            })}
                           </span>
                         )}
                       </p>
@@ -1451,10 +2057,18 @@ function RevenueStoryScreen({
                   </div>
 
                   <div className="grid min-h-0 flex-1 grid-cols-1 gap-x-7 gap-y-8 @4xl:grid-cols-[minmax(0,1fr)_20rem] @4xl:grid-rows-[minmax(0,1fr)]">
-                    <StoryChart cardId={cardId} handlers={handlers} model={model} />
+                    <StoryChart
+                      cardId={cardId}
+                      handlers={handlers}
+                      model={model}
+                    />
                     <div className="flex min-h-0 min-w-0 flex-col gap-5 border-t pt-6 @4xl:border-t-0 @4xl:border-s @4xl:pt-0 @4xl:ps-7">
                       <Breakdown model={model} />
-                      <MomentList cardId={cardId} handlers={handlers} model={model} />
+                      <MomentList
+                        cardId={cardId}
+                        handlers={handlers}
+                        model={model}
+                      />
                     </div>
                   </div>
                 </div>

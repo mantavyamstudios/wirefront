@@ -4,10 +4,14 @@ import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** How far back the per-service trends and rates look. */
-export const HealthWindow = z.enum(["1h", "6h", "24h"]).meta({ id: "HealthWindow" });
+export const HealthWindow = z
+  .enum(["1h", "6h", "24h"])
+  .meta({ id: "HealthWindow" });
 export type HealthWindow = z.infer<typeof HealthWindow>;
 
-export const ServiceHealthState = z.enum(["healthy", "degraded", "down", "deploying"]).meta({ id: "ServiceHealthState" });
+export const ServiceHealthState = z
+  .enum(["healthy", "degraded", "down", "deploying"])
+  .meta({ id: "ServiceHealthState" });
 export type ServiceHealthState = z.infer<typeof ServiceHealthState>;
 
 export const ServiceStatus = z
@@ -38,7 +42,8 @@ export const api = defineApi({
   listServiceHealth: {
     method: "GET",
     path: "/services/health",
-    summary: "Each service's health, traffic, errors and SLO budget over a window",
+    summary:
+      "Each service's health, traffic, errors and SLO budget over a window",
     query: z.object({ window: HealthWindow }),
     response: z.array(ServiceStatus),
   },

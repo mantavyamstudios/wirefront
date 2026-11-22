@@ -7,7 +7,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { LocalizationSettings } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const demoNow = () => new Date(fixtures.now);
 
 export function SettingsLocalizationShowcasePage() {
@@ -20,8 +21,18 @@ export function SettingsLocalizationShowcasePage() {
         languages={fixtures.languages}
         onRetry={() => {}}
         onSave={() => wait(300)}
-        prefs={state === "loading" || state === "error" ? undefined : fixtures.getLocalePrefs}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        prefs={
+          state === "loading" || state === "error"
+            ? undefined
+            : fixtures.getLocalePrefs
+        }
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
         timeZones={fixtures.timeZones}
       />
     </WirefrontProvider>

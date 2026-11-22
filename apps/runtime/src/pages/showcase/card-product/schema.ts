@@ -26,7 +26,9 @@ export const ShopProduct = z
   .meta({ id: "ShopProduct" });
 export type ShopProduct = z.infer<typeof ShopProduct>;
 
-export const WishlistInput = z.object({ productId: z.string(), saved: z.boolean() }).meta({ id: "WishlistInput" });
+export const WishlistInput = z
+  .object({ productId: z.string(), saved: z.boolean() })
+  .meta({ id: "WishlistInput" });
 export type WishlistInput = z.infer<typeof WishlistInput>;
 
 /** The backend operations this screen calls. */
@@ -38,6 +40,17 @@ export const api = defineApi({
     params: z.object({ id: z.string() }),
     response: z.object({ items: z.array(ShopProduct), total: z.int().min(0) }),
   },
-  addToBag: { method: "POST", path: "/bag/items", summary: "Add one of a product to the bag", body: z.object({ productId: z.string(), quantity: z.int().min(1) }) },
-  setWishlisted: { method: "PUT", path: "/me/wishlist/{productId}", summary: "Save or unsave a product", params: z.object({ productId: z.string() }), body: WishlistInput.pick({ saved: true }) },
+  addToBag: {
+    method: "POST",
+    path: "/bag/items",
+    summary: "Add one of a product to the bag",
+    body: z.object({ productId: z.string(), quantity: z.int().min(1) }),
+  },
+  setWishlisted: {
+    method: "PUT",
+    path: "/me/wishlist/{productId}",
+    summary: "Save or unsave a product",
+    params: z.object({ productId: z.string() }),
+    body: WishlistInput.pick({ saved: true }),
+  },
 });

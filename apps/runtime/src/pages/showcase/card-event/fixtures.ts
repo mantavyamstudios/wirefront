@@ -5,7 +5,8 @@ import type { UpcomingEvent } from "./schema";
 /** The demo's clock: the platform weekly is on now. */
 export const now = "2026-04-25T14:10:00Z";
 
-const people = (...names: string[]) => names.map((name) => ({ id: name.toLowerCase().replace(/\s+/g, "-"), name }));
+const people = (...names: string[]) =>
+  names.map((name) => ({ id: name.toLowerCase().replace(/\s+/g, "-"), name }));
 
 /** What the mocks return for `listUpcomingEvents`. Demo data for the showcase and tests. */
 export const listUpcomingEvents: UpcomingEvent[] = [
@@ -27,7 +28,14 @@ export const listUpcomingEvents: UpcomingEvent[] = [
     startsAt: "2026-04-29T10:00:00Z",
     endsAt: "2026-04-29T11:30:00Z",
     location: "Main hall, 3F",
-    attendees: people("Lina Rodrigues", "Marco Kim", "Priya Joshi", "Sam Chen", "Ana Bell", "Tom Grey"),
+    attendees: people(
+      "Lina Rodrigues",
+      "Marco Kim",
+      "Priya Joshi",
+      "Sam Chen",
+      "Ana Bell",
+      "Tom Grey"
+    ),
     response: "pending",
   },
   {

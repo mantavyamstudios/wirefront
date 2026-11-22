@@ -19,6 +19,17 @@ export type OrgPerson = z.infer<typeof OrgPerson>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listOrg: { method: "GET", path: "/org", summary: "The top of the org chart", response: z.object({ people: z.array(OrgPerson), total: z.number().int() }) },
-  listReports: { method: "GET", path: "/org/{id}/reports", summary: "One manager's direct reports", params: z.object({ id: z.string() }), response: z.array(OrgPerson) },
+  listOrg: {
+    method: "GET",
+    path: "/org",
+    summary: "The top of the org chart",
+    response: z.object({ people: z.array(OrgPerson), total: z.number().int() }),
+  },
+  listReports: {
+    method: "GET",
+    path: "/org/{id}/reports",
+    summary: "One manager's direct reports",
+    params: z.object({ id: z.string() }),
+    response: z.array(OrgPerson),
+  },
 });

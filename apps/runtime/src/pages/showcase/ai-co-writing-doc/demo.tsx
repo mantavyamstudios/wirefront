@@ -13,7 +13,8 @@ import type { DocFormat } from "./view";
 import { CoWritingDoc } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function AiCoWritingDocShowcasePage() {
   const reduce = useReducedMotion();
@@ -38,7 +39,10 @@ export function AiCoWritingDocShowcasePage() {
 
   useEffect(() => {
     if (reduce) return;
-    const id = setInterval(() => setStop((m) => (m + 1) % fixtures.minaStops.length), 3400);
+    const id = setInterval(
+      () => setStop((m) => (m + 1) % fixtures.minaStops.length),
+      3400
+    );
     return () => clearInterval(id);
   }, [reduce]);
 
@@ -61,7 +65,11 @@ export function AiCoWritingDocShowcasePage() {
           onAcceptSuggestion={next}
           onAddComment={() => {}}
           onAskAgent={() => {}}
-          onFormat={(f) => setFormats((on) => (on.includes(f) ? on.filter((x) => x !== f) : [...on, f]))}
+          onFormat={(f) =>
+            setFormats((on) =>
+              on.includes(f) ? on.filter((x) => x !== f) : [...on, f]
+            )
+          }
           onRedo={() => {}}
           onRejectSuggestion={next}
           onReplyToComment={() => wait(300)}
@@ -69,8 +77,12 @@ export function AiCoWritingDocShowcasePage() {
           onShare={() => {}}
           onUndo={() => {}}
           people={fixtures.listCollaborators}
-          suggestion={full ? { ...full, text: full.text.slice(0, typed) } : undefined}
-          suggestionStreaming={Boolean(full) && typed < (full?.text.length ?? 0)}
+          suggestion={
+            full ? { ...full, text: full.text.slice(0, typed) } : undefined
+          }
+          suggestionStreaming={
+            Boolean(full) && typed < (full?.text.length ?? 0)
+          }
         />
       </DevlFrame>
     </WirefrontProvider>

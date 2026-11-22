@@ -16,7 +16,9 @@ export const InboxThread = z
   .meta({ id: "InboxThread" });
 export type InboxThread = z.infer<typeof InboxThread>;
 
-export const InboxFilter = z.enum(["unread", "all", "mentions"]).meta({ id: "InboxFilter" });
+export const InboxFilter = z
+  .enum(["unread", "all", "mentions"])
+  .meta({ id: "InboxFilter" });
 export type InboxFilter = z.infer<typeof InboxFilter>;
 
 /** The backend operations this screen calls. */
@@ -28,5 +30,9 @@ export const api = defineApi({
     query: z.object({ filter: InboxFilter }),
     response: z.object({ items: z.array(InboxThread), unread: z.int().min(0) }),
   },
-  archiveRead: { method: "POST", path: "/inbox/archive-read", summary: "Archive every read thread" },
+  archiveRead: {
+    method: "POST",
+    path: "/inbox/archive-read",
+    summary: "Archive every read thread",
+  },
 });

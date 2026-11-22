@@ -8,7 +8,8 @@ import * as fixtures from "./fixtures";
 import type { RevenueRange } from "./schema";
 import { RevenueDashboard } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function DashboardsRevenueShowcasePage() {
   const state = useShowcaseState();
@@ -16,13 +17,21 @@ export function DashboardsRevenueShowcasePage() {
   return (
     <RevenueDashboard
       accountsHref="#accounts"
-      data={state === "loading" || state === "error" ? undefined : state === "empty" ? fixtures.emptyRevenue : fixtures.revenueFor(range)}
+      data={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? fixtures.emptyRevenue
+            : fixtures.revenueFor(range)
+      }
       error="The billing service didn’t respond. Check your connection and try again."
       onExport={() => wait(600)}
       onRangeChange={setRange}
       onRetry={() => {}}
       range={range}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

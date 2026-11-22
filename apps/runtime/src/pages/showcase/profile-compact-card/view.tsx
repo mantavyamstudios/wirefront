@@ -4,14 +4,32 @@
 
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@wirefront/ui/dropdown-menu";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { ChevronDownIcon, CopyIcon, MoreHorizontalIcon, UserMinusIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  CopyIcon,
+  MoreHorizontalIcon,
+  UserMinusIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Permission, Roster, RosterMember } from "./schema";
 
@@ -54,7 +72,12 @@ export interface MemberRosterProps {
 }
 
 const PERMISSIONS: Permission[] = ["owner", "admin", "member", "viewer"];
-const DOT: Record<RosterMember["presence"], string> = { online: "bg-success", away: "bg-category-3", dnd: "bg-category-4", off: "bg-muted-foreground/40" };
+const DOT: Record<RosterMember["presence"], string> = {
+  online: "bg-success",
+  away: "bg-category-3",
+  dnd: "bg-category-4",
+  off: "bg-muted-foreground/40",
+};
 const TONE: Record<Permission, string> = {
   owner: "bg-category-5/15 text-category-5-foreground",
   admin: "bg-category-8/15 text-category-8-foreground",
@@ -71,7 +94,15 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-function MemberRosterScreen({ roster, status = "ready", error, onRetry, onChangePermission, onRemove, className }: MemberRosterProps) {
+function MemberRosterScreen({
+  roster,
+  status = "ready",
+  error,
+  onRetry,
+  onChangePermission,
+  onRemove,
+  className,
+}: MemberRosterProps) {
   const t = useMessages("memberRoster", MEMBER_ROSTER_MESSAGES);
   const fmt = useFormat();
   const { now } = useWirefront();
@@ -80,7 +111,9 @@ function MemberRosterScreen({ roster, status = "ready", error, onRetry, onChange
   const change = useAction(onChangePermission ?? (async () => {}), {
     optimistic: ({ id, permission }) => {
       const before = members;
-      setMembers((all) => all.map((m) => (m.id === id ? { ...m, permission } : m)));
+      setMembers((all) =>
+        all.map((m) => (m.id === id ? { ...m, permission } : m))
+      );
       return () => setMembers(before);
     },
   });
@@ -91,12 +124,27 @@ function MemberRosterScreen({ roster, status = "ready", error, onRetry, onChange
       return () => setMembers(before);
     },
   });
-  const active = (at: string) => (now().getTime() - new Date(at).getTime() < 5 * 60_000 ? t.activeNow : interpolate(t.activeAgo, { when: fmt.relative(at) }));
+  const active = (at: string) =>
+    now().getTime() - new Date(at).getTime() < 5 * 60_000
+      ? t.activeNow
+      : interpolate(t.activeAgo, { when: fmt.relative(at) });
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10",
+        className
+      )}
+    >
       <div className="mx-auto max-w-2xl">
-        {roster ? <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{interpolate(t.eyebrow, { shown: members.length, total: roster.total })}</div> : null}
+        {roster ? (
+          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+            {interpolate(t.eyebrow, {
+              shown: members.length,
+              total: roster.total,
+            })}
+          </div>
+        ) : null}
         <h1 className="mt-1 font-heading text-2xl">{t.title}</h1>
         {change.error || remove.error ? (
           <p className="mt-3 text-destructive-foreground text-sm" role="alert">
@@ -107,9 +155,16 @@ function MemberRosterScreen({ roster, status = "ready", error, onRetry, onChange
         {status === "error" ? (
           <div className="mt-5 rounded-xl border border-border/60 py-12 text-center">
             <p className="font-medium">{t.errorTitle}</p>
-            {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+            {error ? (
+              <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+            ) : null}
             {onRetry ? (
-              <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+              <Button
+                className="mt-4"
+                onClick={onRetry}
+                size="sm"
+                variant="outline"
+              >
                 {t.retry}
               </Button>
             ) : null}
@@ -117,11 +172,16 @@ function MemberRosterScreen({ roster, status = "ready", error, onRetry, onChange
         ) : !roster || status === "loading" ? (
           <div aria-busy="true" className="mt-5 flex flex-col gap-2">
             {["a", "b", "c", "d"].map((k) => (
-              <Skeleton className="h-16 w-full rounded-xl motion-reduce:animate-none" key={k} />
+              <Skeleton
+                className="h-16 w-full rounded-xl motion-reduce:animate-none"
+                key={k}
+              />
             ))}
           </div>
         ) : members.length === 0 ? (
-          <p className="mt-5 rounded-xl border border-border/60 py-12 text-center text-muted-foreground text-sm">{t.empty}</p>
+          <p className="mt-5 rounded-xl border border-border/60 py-12 text-center text-muted-foreground text-sm">
+            {t.empty}
+          </p>
         ) : (
           <ul className="mt-5 flex flex-col gap-2">
             {members.map((m) => (
@@ -133,37 +193,73 @@ function MemberRosterScreen({ roster, status = "ready", error, onRetry, onChange
               >
                 <div aria-hidden className="relative">
                   <Avatar className="size-10">
-                    <AvatarFallback className="text-xs">{initials(m.name)}</AvatarFallback>
+                    <AvatarFallback className="text-xs">
+                      {initials(m.name)}
+                    </AvatarFallback>
                   </Avatar>
-                  <span className={cn("absolute inset-e-0 bottom-0 size-3 rounded-full border-2 border-background", DOT[m.presence])} />
+                  <span
+                    className={cn(
+                      "absolute inset-e-0 bottom-0 size-3 rounded-full border-2 border-background",
+                      DOT[m.presence]
+                    )}
+                  />
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="truncate text-sm">{m.name}</span>
                     <span className="sr-only">, {t[m.presence]}</span>
-                    <span className="shrink-0 font-mono text-[10px] text-muted-foreground max-sm:hidden">{interpolate(t.handle, { handle: m.handle })}</span>
+                    <span className="shrink-0 font-mono text-[10px] text-muted-foreground max-sm:hidden">
+                      {interpolate(t.handle, { handle: m.handle })}
+                    </span>
                   </div>
-                  <div className={cn("mt-0.5 truncate text-xs", m.customStatus ? "text-foreground/80" : "text-muted-foreground")}>
-                    {m.team ? <span className="text-muted-foreground md:hidden">{m.team} · </span> : null}
+                  <div
+                    className={cn(
+                      "mt-0.5 truncate text-xs",
+                      m.customStatus
+                        ? "text-foreground/80"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {m.team ? (
+                      <span className="text-muted-foreground md:hidden">
+                        {m.team} ·{" "}
+                      </span>
+                    ) : null}
                     {m.customStatus ?? active(m.lastActiveAt)}
                   </div>
                 </div>
                 <div className="text-muted-foreground text-xs max-md:hidden">
                   {m.team ? <div>{m.team}</div> : null}
-                  <div className="font-mono text-[10px] uppercase tracking-[0.2em]">{active(m.lastActiveAt)}</div>
+                  <div className="font-mono text-[10px] uppercase tracking-[0.2em]">
+                    {active(m.lastActiveAt)}
+                  </div>
                 </div>
                 <div>
                   {onChangePermission ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger
-                        aria-label={interpolate(t.permissionFor, { name: m.name, permission: t[m.permission] })}
-                        className={cn("inline-flex min-h-8 w-full items-center justify-between gap-1.5 rounded-md px-2 py-1.5 font-mono text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10", TONE[m.permission])}
+                        aria-label={interpolate(t.permissionFor, {
+                          name: m.name,
+                          permission: t[m.permission],
+                        })}
+                        className={cn(
+                          "inline-flex min-h-8 w-full items-center justify-between gap-1.5 rounded-md px-2 py-1.5 font-mono text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10",
+                          TONE[m.permission]
+                        )}
                       >
                         {t[m.permission]}
                         <ChevronDownIcon aria-hidden className="size-3" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuRadioGroup onValueChange={(v) => void change.run({ id: m.id, permission: v as Permission }, m.id)} value={m.permission}>
+                        <DropdownMenuRadioGroup
+                          onValueChange={(v) =>
+                            void change.run(
+                              { id: m.id, permission: v as Permission },
+                              m.id
+                            )
+                          }
+                          value={m.permission}
+                        >
                           {PERMISSIONS.map((p) => (
                             <DropdownMenuRadioItem key={p} value={p}>
                               {t[p]}
@@ -173,7 +269,14 @@ function MemberRosterScreen({ roster, status = "ready", error, onRetry, onChange
                       </DropdownMenuContent>
                     </DropdownMenu>
                   ) : (
-                    <span className={cn("inline-flex min-h-8 w-full items-center rounded-md px-2 py-1.5 font-mono text-[11px]", TONE[m.permission])}>{t[m.permission]}</span>
+                    <span
+                      className={cn(
+                        "inline-flex min-h-8 w-full items-center rounded-md px-2 py-1.5 font-mono text-[11px]",
+                        TONE[m.permission]
+                      )}
+                    >
+                      {t[m.permission]}
+                    </span>
                   )}
                 </div>
                 <DropdownMenu>
@@ -184,14 +287,21 @@ function MemberRosterScreen({ roster, status = "ready", error, onRetry, onChange
                     <MoreHorizontalIcon aria-hidden className="size-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => void navigator.clipboard?.writeText(m.email)}>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        void navigator.clipboard?.writeText(m.email)
+                      }
+                    >
                       <CopyIcon aria-hidden />
                       {t.copyEmail}
                     </DropdownMenuItem>
                     {onRemove ? (
                       <>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => void remove.run(m.id, m.id)} variant="destructive">
+                        <DropdownMenuItem
+                          onClick={() => void remove.run(m.id, m.id)}
+                          variant="destructive"
+                        >
                           <UserMinusIcon aria-hidden />
                           {t.remove}
                         </DropdownMenuItem>

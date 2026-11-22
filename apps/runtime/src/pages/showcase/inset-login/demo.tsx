@@ -4,7 +4,8 @@
 // Not shipped by the registry; builders pass their own.
 import { InsetSignIn } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function InsetLoginShowcasePage() {
   return (
@@ -15,7 +16,8 @@ export function InsetLoginShowcasePage() {
         <>
           Orbit.
           <br />
-          <span className="text-white/55">The SaaS starter</span> you want <span className="text-white/55">and need.</span>
+          <span className="text-white/55">The SaaS starter</span> you want{" "}
+          <span className="text-white/55">and need.</span>
         </>
       }
       lastUsedProvider="google"

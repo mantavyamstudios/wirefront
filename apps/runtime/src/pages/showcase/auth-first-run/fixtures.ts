@@ -22,15 +22,58 @@ export const defaultWorkspaceName = "Northwind Labs";
 export const takenSlugs = ["northwind", "acme", "hearth", "admin"];
 export const workspaceHref = "/";
 
-export const useCases = ["Support", "Engineering", "Sales", "Research", "Operations", "Marketing"];
+export const useCases = [
+  "Support",
+  "Engineering",
+  "Sales",
+  "Research",
+  "Operations",
+  "Marketing",
+];
 
 export const tools: FirstRunTool[] = [
-  { id: "relay", name: "Relay", blurb: "Team chat", icon: MessagesSquareIcon, tone: "info" },
-  { id: "forge", name: "Forge", blurb: "Code & reviews", icon: GitBranchIcon, tone: "violet" },
-  { id: "postbox", name: "Postbox", blurb: "Shared inbox", icon: MailIcon, tone: "orange" },
-  { id: "gridline", name: "Gridline", blurb: "Spreadsheets", icon: TableIcon, tone: "success" },
-  { id: "harbor", name: "Harbor Desk", blurb: "Support tickets", icon: LifeBuoyIcon, tone: "teal" },
-  { id: "inkwell", name: "Inkwell", blurb: "Design files", icon: PenToolIcon, tone: "rose" },
+  {
+    id: "relay",
+    name: "Relay",
+    blurb: "Team chat",
+    icon: MessagesSquareIcon,
+    tone: "info",
+  },
+  {
+    id: "forge",
+    name: "Forge",
+    blurb: "Code & reviews",
+    icon: GitBranchIcon,
+    tone: "violet",
+  },
+  {
+    id: "postbox",
+    name: "Postbox",
+    blurb: "Shared inbox",
+    icon: MailIcon,
+    tone: "orange",
+  },
+  {
+    id: "gridline",
+    name: "Gridline",
+    blurb: "Spreadsheets",
+    icon: TableIcon,
+    tone: "success",
+  },
+  {
+    id: "harbor",
+    name: "Harbor Desk",
+    blurb: "Support tickets",
+    icon: LifeBuoyIcon,
+    tone: "teal",
+  },
+  {
+    id: "inkwell",
+    name: "Inkwell",
+    blurb: "Design files",
+    icon: PenToolIcon,
+    tone: "rose",
+  },
 ];
 
 export const templates: AgentTemplate[] = [
@@ -61,13 +104,29 @@ export const templates: AgentTemplate[] = [
     instructions:
       "Every weekday at 9:00, collect yesterday’s merged work and open blockers, then post a three-bullet standup per person in #team.",
   },
-  { id: "blank", name: "Start blank", description: "Write your own brief", icon: SparklesIcon, tone: "amber", instructions: "" },
+  {
+    id: "blank",
+    name: "Start blank",
+    description: "Write your own brief",
+    icon: SparklesIcon,
+    tone: "amber",
+    instructions: "",
+  },
 ];
 
-export const inviteSuggestions = ["maya@northwind.io", "theo@northwind.io", "ines@northwind.io"];
+export const inviteSuggestions = [
+  "maya@northwind.io",
+  "theo@northwind.io",
+  "ines@northwind.io",
+];
 
 /** Walkthrough slots the backend offers, as ISO date-times. */
-export const walkthroughSlots = ["2026-10-28T10:00:00Z", "2026-10-28T14:30:00Z", "2026-10-29T09:30:00Z", "2026-10-30T16:00:00Z"];
+export const walkthroughSlots = [
+  "2026-10-28T10:00:00Z",
+  "2026-10-28T14:30:00Z",
+  "2026-10-29T09:30:00Z",
+  "2026-10-30T16:00:00Z",
+];
 
 /** What the mocks return for `checkSlug`. */
 export const checkSlug = { available: true };

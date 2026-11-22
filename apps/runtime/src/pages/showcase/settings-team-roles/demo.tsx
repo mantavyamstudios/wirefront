@@ -12,7 +12,8 @@ import * as fixtures from "./fixtures";
 import type { InviteInput } from "./schema";
 import { TeamRoles } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const demoNow = () => new Date(fixtures.now);
 
 async function demoInvite(input: InviteInput) {
@@ -24,7 +25,12 @@ export function SettingsTeamRolesShowcasePage() {
   return (
     <WirefrontProvider now={demoNow}>
       <DevlFrame>
-        <SettingsShell activeId="members" back={settingsBack} groups={settingsNav} user={settingsUser}>
+        <SettingsShell
+          activeId="members"
+          back={settingsBack}
+          groups={settingsNav}
+          user={settingsUser}
+        >
           <TeamRoles
             data={fixtures.getTeam}
             onChangeRole={() => wait(400)}

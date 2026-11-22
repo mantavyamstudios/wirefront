@@ -28,14 +28,27 @@ export interface StandardSchemaV1<Input = unknown, Output = Input> {
   readonly "~standard": {
     readonly version: 1;
     readonly vendor: string;
-    readonly validate: (value: unknown) => StandardResult<Output> | Promise<StandardResult<Output>>;
-    readonly types?: { readonly input: Input; readonly output: Output } | undefined;
+    readonly validate: (
+      value: unknown
+    ) => StandardResult<Output> | Promise<StandardResult<Output>>;
+    readonly types?:
+      | { readonly input: Input; readonly output: Output }
+      | undefined;
   };
 }
-type StandardIssue = { readonly message: string; readonly path?: ReadonlyArray<PropertyKey | { readonly key: PropertyKey }> | undefined };
-type StandardResult<Output> = { readonly value: Output; readonly issues?: undefined } | { readonly issues: ReadonlyArray<StandardIssue> };
+type StandardIssue = {
+  readonly message: string;
+  readonly path?:
+    | ReadonlyArray<PropertyKey | { readonly key: PropertyKey }>
+    | undefined;
+};
+type StandardResult<Output> =
+  | { readonly value: Output; readonly issues?: undefined }
+  | { readonly issues: ReadonlyArray<StandardIssue> };
 /** The validated value type of a Standard Schema. */
-export type SchemaOutput<Schema extends StandardSchemaV1> = NonNullable<Schema["~standard"]["types"]>["output"];
+export type SchemaOutput<Schema extends StandardSchemaV1> = NonNullable<
+  Schema["~standard"]["types"]
+>["output"];
 
 /** Groups issues by their first path segment, like zod's flattenError; issues without a path are form-level. */
 function flattenIssues(issues: ReadonlyArray<StandardIssue>) {
@@ -43,7 +56,12 @@ function flattenIssues(issues: ReadonlyArray<StandardIssue>) {
   const formErrors: string[] = [];
   for (const issue of issues) {
     const first = issue.path?.[0];
-    const key = first === undefined ? undefined : typeof first === "object" ? first.key : first;
+    const key =
+      first === undefined
+        ? undefined
+        : typeof first === "object"
+          ? first.key
+          : first;
     if (key === undefined) formErrors.push(issue.message);
     else {
       const name = String(key);
@@ -111,7 +129,7 @@ export function useActionForm<Schema extends StandardSchemaV1, Output = void>({
         setFormError(result.error);
       }
     },
-    [schema, action, onSuccess],
+    [schema, action, onSuccess]
   );
 
   const reset = useCallback(() => {

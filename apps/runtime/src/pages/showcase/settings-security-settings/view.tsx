@@ -20,7 +20,12 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import {
@@ -42,7 +47,14 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 
-import { ChangePasswordInput, type DeviceKind, type Passkey, type RecoveryCodes, type SecurityOverview, type Session } from "./schema";
+import {
+  ChangePasswordInput,
+  type DeviceKind,
+  type Passkey,
+  type RecoveryCodes,
+  type SecurityOverview,
+  type Session,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("securitySettings.<key>"). */
 export const SECURITY_SETTINGS_MESSAGES = {
@@ -63,10 +75,12 @@ export const SECURITY_SETTINGS_MESSAGES = {
   cancel: "Cancel",
   currentPassword: "Current password",
   newPassword: "New password",
-  passwordHint: "Other sessions stay signed in. Sign them out below if you need to.",
+  passwordHint:
+    "Other sessions stay signed in. Sign them out below if you need to.",
   update: "Update",
   twoFactorTitle: "Two-factor authentication",
-  twoFactorDescription: "A second check after your password, so a leaked password isn’t enough.",
+  twoFactorDescription:
+    "A second check after your password, so a leaked password isn’t enough.",
   authenticator: "Authenticator app",
   enabled: "Enabled",
   off: "Off",
@@ -86,7 +100,8 @@ export const SECURITY_SETTINGS_MESSAGES = {
   hide: "Hide",
   regenerateTitle: "Make a new set?",
   regenerateDetail: "Your current codes stop working straight away.",
-  codesNote: "Each code works once. Keep them somewhere other than this device.",
+  codesNote:
+    "Each code works once. Keep them somewhere other than this device.",
   used: "(used)",
   download: "Download",
   copy: "Copy",
@@ -104,7 +119,8 @@ export const SECURITY_SETTINGS_MESSAGES = {
   rename: "Rename",
   remove: "Remove",
   removeTitle: "Remove {name}?",
-  removeLast: "It’s your only passkey, so you’ll sign in with your password and a code.",
+  removeLast:
+    "It’s your only passkey, so you’ll sign in with your password and a code.",
   removeOther: "You can still sign in with your other passkeys.",
   addedOn: "Added {date}",
   usedWhen: "Used {when}",
@@ -165,7 +181,8 @@ const DEVICE_ICONS: Record<DeviceKind, ReactNode> = {
   tablet: <TabletIcon />,
   key: <UsbIcon />,
 };
-const successBadge = "shrink-0 bg-success/8 text-success-foreground dark:bg-success/16";
+const successBadge =
+  "shrink-0 bg-success/8 text-success-foreground dark:bg-success/16";
 
 function useFocusOnMount<T extends HTMLElement>() {
   const ref = useRef<T>(null);
@@ -175,19 +192,37 @@ function useFocusOnMount<T extends HTMLElement>() {
   return ref;
 }
 
-function SectionHeader({ title, description, action }: { title: string; description: ReactNode; action?: ReactNode }) {
+function SectionHeader({
+  title,
+  description,
+  action,
+}: {
+  title: string;
+  description: ReactNode;
+  action?: ReactNode;
+}) {
   return (
     <div className="flex items-center gap-4">
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <h2 className="font-medium text-sm">{title}</h2>
-        <p className="text-pretty text-muted-foreground text-sm">{description}</p>
+        <p className="text-pretty text-muted-foreground text-sm">
+          {description}
+        </p>
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
     </div>
   );
 }
 
-function Collapse({ open, children, reduce }: { open: boolean; children: ReactNode; reduce: boolean }) {
+function Collapse({
+  open,
+  children,
+  reduce,
+}: {
+  open: boolean;
+  children: ReactNode;
+  reduce: boolean;
+}) {
   return (
     <AnimatePresence initial={false}>
       {open && (
@@ -196,7 +231,9 @@ function Collapse({ open, children, reduce }: { open: boolean; children: ReactNo
           className="overflow-hidden"
           exit={{ height: 0, opacity: 0 }}
           initial={{ height: 0, opacity: 0 }}
-          transition={reduce ? { duration: 0 } : { duration: 0.22, ease: easeOut }}
+          transition={
+            reduce ? { duration: 0 } : { duration: 0.22, ease: easeOut }
+          }
         >
           {children}
         </motion.div>
@@ -226,17 +263,32 @@ function ConfirmStrip({
 }) {
   const cancelRef = useFocusOnMount<HTMLButtonElement>();
   return (
-    <div className={cn("flex flex-wrap items-center gap-x-4 gap-y-2.5 border-t px-4 py-3", tone === "destructive" ? "bg-destructive/4" : "bg-muted/40")} role="alert">
+    <div
+      className={cn(
+        "flex flex-wrap items-center gap-x-4 gap-y-2.5 border-t px-4 py-3",
+        tone === "destructive" ? "bg-destructive/4" : "bg-muted/40"
+      )}
+      role="alert"
+    >
       <p className="min-w-0 flex-1 basis-56 text-pretty text-sm">
-        <span className="font-medium">{title}</span> <span className="text-muted-foreground">{detail}</span>
+        <span className="font-medium">{title}</span>{" "}
+        <span className="text-muted-foreground">{detail}</span>
       </p>
       <div className="flex gap-2">
-        <Button disabled={pending} onClick={onCancel} ref={cancelRef} size="sm" variant="ghost">
+        <Button
+          disabled={pending}
+          onClick={onCancel}
+          ref={cancelRef}
+          size="sm"
+          variant="ghost"
+        >
           {t.cancel}
         </Button>
         <Button
           aria-busy={pending}
-          className={tone === "destructive" ? "text-destructive-foreground" : undefined}
+          className={
+            tone === "destructive" ? "text-destructive-foreground" : undefined
+          }
           disabled={pending}
           onClick={onConfirm}
           size="sm"
@@ -252,7 +304,9 @@ function ConfirmStrip({
 
 function DeviceIcon({ kind }: { kind: DeviceKind }) {
   return (
-    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border bg-background text-muted-foreground [&_svg]:size-4">{DEVICE_ICONS[kind]}</span>
+    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border bg-background text-muted-foreground [&_svg]:size-4">
+      {DEVICE_ICONS[kind]}
+    </span>
   );
 }
 
@@ -266,11 +320,19 @@ function ProgressRing({ done, reduce }: { done: number; reduce: boolean }) {
   const seg = c / steps - gap;
   const complete = done === steps;
   return (
-    <svg aria-hidden className="-rotate-90 size-5 shrink-0" fill="none" viewBox="0 0 20 20">
+    <svg
+      aria-hidden
+      className="-rotate-90 size-5 shrink-0"
+      fill="none"
+      viewBox="0 0 20 20"
+    >
       {RING_SEGMENTS.map((key, i) => (
         <motion.circle
           animate={{ opacity: i < done ? 1 : 0.18 }}
-          className={cn("transition-[stroke] duration-300", i < done && complete ? "stroke-success" : "stroke-foreground")}
+          className={cn(
+            "transition-[stroke] duration-300",
+            i < done && complete ? "stroke-success" : "stroke-foreground"
+          )}
           cx="10"
           cy="10"
           initial={false}
@@ -280,7 +342,9 @@ function ProgressRing({ done, reduce }: { done: number; reduce: boolean }) {
           strokeDashoffset={(-(i * (c / steps)) - gap / 2).toFixed(2)}
           strokeLinecap="round"
           strokeWidth="2.5"
-          transition={reduce ? { duration: 0 } : { duration: 0.3, ease: easeOut }}
+          transition={
+            reduce ? { duration: 0 } : { duration: 0.3, ease: easeOut }
+          }
         />
       ))}
     </svg>
@@ -289,7 +353,12 @@ function ProgressRing({ done, reduce }: { done: number; reduce: boolean }) {
 
 function DrawnCheck({ className }: { className?: string }) {
   return (
-    <svg aria-hidden className={cn("size-3.5", className)} fill="none" viewBox="0 0 16 16">
+    <svg
+      aria-hidden
+      className={cn("size-3.5", className)}
+      fill="none"
+      viewBox="0 0 16 16"
+    >
       <motion.path
         animate={{ pathLength: 1 }}
         d="M3.5 8.5 6.5 11.5 12.5 4.5"
@@ -334,8 +403,16 @@ function PasswordRow({
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           <span className="font-medium text-sm">{t.password}</span>
           <span className="flex items-center gap-1 text-muted-foreground text-xs">
-            {updated ? <DrawnCheck className="text-success-foreground" /> : null}
-            {updated ? t.passwordJustChanged : changedAt ? interpolate(t.passwordChanged, { when: format.relative(changedAt) }) : t.passwordNever}
+            {updated ? (
+              <DrawnCheck className="text-success-foreground" />
+            ) : null}
+            {updated
+              ? t.passwordJustChanged
+              : changedAt
+                ? interpolate(t.passwordChanged, {
+                    when: format.relative(changedAt),
+                  })
+                : t.passwordNever}
           </span>
         </div>
         <Button
@@ -350,23 +427,37 @@ function PasswordRow({
         </Button>
       </div>
       <Collapse open={open} reduce={reduce}>
-        <Form className="flex flex-col gap-3 border-t bg-muted/30 px-4 py-3.5" noValidate {...form.formProps}>
+        <Form
+          className="flex flex-col gap-3 border-t bg-muted/30 px-4 py-3.5"
+          noValidate
+          {...form.formProps}
+        >
           <Field.Root className="flex flex-col gap-1.5" name="currentPassword">
-            <Field.Label className="font-medium text-sm">{t.currentPassword}</Field.Label>
+            <Field.Label className="font-medium text-sm">
+              {t.currentPassword}
+            </Field.Label>
             <Input autoComplete="current-password" type="password" />
             <Field.Error className={fieldError} />
           </Field.Root>
           <Field.Root className="flex flex-col gap-1.5" name="newPassword">
-            <Field.Label className="font-medium text-sm">{t.newPassword}</Field.Label>
+            <Field.Label className="font-medium text-sm">
+              {t.newPassword}
+            </Field.Label>
             <div className="flex gap-2">
               <Input autoComplete="new-password" type="password" />
-              <Button aria-busy={form.pending} disabled={form.pending} type="submit">
+              <Button
+                aria-busy={form.pending}
+                disabled={form.pending}
+                type="submit"
+              >
                 {form.pending ? <Spinner data-icon="inline-start" /> : null}
                 {t.update}
               </Button>
             </div>
             <Field.Error className={fieldError} />
-            <Field.Description className="text-muted-foreground text-xs">{t.passwordHint}</Field.Description>
+            <Field.Description className="text-muted-foreground text-xs">
+              {t.passwordHint}
+            </Field.Description>
           </Field.Root>
           {form.formError ? (
             <p className={fieldError} role="alert">
@@ -432,7 +523,9 @@ function PasskeyRow({
     else onCancelRename();
   };
   const added = format.date(passkey.createdAt, { dateStyle: "medium" });
-  const lastUsed = passkey.lastUsedAt ? format.relative(passkey.lastUsedAt) : null;
+  const lastUsed = passkey.lastUsedAt
+    ? format.relative(passkey.lastUsedAt)
+    : null;
 
   return (
     <motion.li
@@ -451,7 +544,12 @@ function PasskeyRow({
           transition={{ duration: 1.4, ease: "easeOut", delay: 0.3 }}
         />
       ) : null}
-      <div className={cn("relative flex items-center gap-3 px-4 py-3 sm:grid sm:grid-cols-[minmax(0,1fr)_7.5rem_7.5rem_2rem] sm:gap-4", pending && "opacity-60")}>
+      <div
+        className={cn(
+          "relative flex items-center gap-3 px-4 py-3 sm:grid sm:grid-cols-[minmax(0,1fr)_7.5rem_7.5rem_2rem] sm:gap-4",
+          pending && "opacity-60"
+        )}
+      >
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <DeviceIcon kind={passkey.kind} />
           <div className="flex min-w-0 flex-1 flex-col">
@@ -481,19 +579,35 @@ function PasskeyRow({
                 />
               </form>
             ) : (
-              <span className="truncate font-medium text-sm">{passkey.name}</span>
+              <span className="truncate font-medium text-sm">
+                {passkey.name}
+              </span>
             )}
             <span className="truncate text-muted-foreground text-xs sm:hidden">
-              {interpolate(t.addedOn, { date: added })} · {lastUsed ? interpolate(t.usedWhen, { when: lastUsed }) : t.notUsedYet}
+              {interpolate(t.addedOn, { date: added })} ·{" "}
+              {lastUsed
+                ? interpolate(t.usedWhen, { when: lastUsed })
+                : t.notUsedYet}
             </span>
           </div>
         </div>
-        <span className="hidden text-muted-foreground text-sm sm:block">{added}</span>
-        <span className="hidden text-muted-foreground text-sm sm:block">{lastUsed ?? t.notYet}</span>
+        <span className="hidden text-muted-foreground text-sm sm:block">
+          {added}
+        </span>
+        <span className="hidden text-muted-foreground text-sm sm:block">
+          {lastUsed ?? t.notYet}
+        </span>
         {canRename || canRemove ? (
           <DropdownMenu>
             <DropdownMenuTrigger
-              render={<Button aria-label={interpolate(t.optionsFor, { name: passkey.name })} className="shrink-0" size="icon-sm" variant="ghost" />}
+              render={
+                <Button
+                  aria-label={interpolate(t.optionsFor, { name: passkey.name })}
+                  className="shrink-0"
+                  size="icon-sm"
+                  variant="ghost"
+                />
+              }
             >
               {pending ? <Spinner /> : <MoreHorizontalIcon />}
             </DropdownMenuTrigger>
@@ -546,14 +660,20 @@ function PendingPasskeyRow({ reduce, t }: { reduce: boolean; t: Messages }) {
               animate={{ opacity: [0.6, 0], scale: [1, 1.45] }}
               aria-hidden
               className="pointer-events-none absolute inset-0 rounded-lg border border-foreground/30"
-              transition={{ duration: 1.4, ease: "easeOut", repeat: Number.POSITIVE_INFINITY }}
+              transition={{
+                duration: 1.4,
+                ease: "easeOut",
+                repeat: Number.POSITIVE_INFINITY,
+              }}
             />
           ) : null}
           <FingerprintIcon className="size-4" />
         </span>
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="font-medium text-sm">{t.waiting}</span>
-          <span className="truncate text-muted-foreground text-xs">{t.waitingDetail}</span>
+          <span className="truncate text-muted-foreground text-xs">
+            {t.waitingDetail}
+          </span>
         </div>
       </div>
     </motion.li>
@@ -578,20 +698,37 @@ function RecoveryCodesPanel({
       <ol className="grid max-w-md grid-cols-2 gap-x-6 gap-y-2 font-mono text-sm tabular-nums">
         {codes.map((c, i) => (
           <li className="flex items-baseline gap-3" key={c.code}>
-            <span className="w-4 text-end text-muted-foreground text-xs">{i + 1}</span>
-            <span className={cn(c.used && "text-muted-foreground line-through")}>{c.code}</span>
+            <span className="w-4 text-end text-muted-foreground text-xs">
+              {i + 1}
+            </span>
+            <span
+              className={cn(c.used && "text-muted-foreground line-through")}
+            >
+              {c.code}
+            </span>
             {c.used ? <span className="sr-only">{t.used}</span> : null}
           </li>
         ))}
       </ol>
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2.5">
-        <p className="min-w-0 flex-1 basis-48 text-pretty text-muted-foreground text-xs">{t.codesNote}</p>
+        <p className="min-w-0 flex-1 basis-48 text-pretty text-muted-foreground text-xs">
+          {t.codesNote}
+        </p>
         <div className="flex gap-2">
           <Button onClick={onDownload} size="sm" variant="ghost">
             <DownloadIcon /> {t.download}
           </Button>
-          <Button className="min-w-22" onClick={onCopy} size="sm" variant="outline">
-            {copied ? <DrawnCheck className="size-4 text-success-foreground" /> : <CopyIcon />}
+          <Button
+            className="min-w-22"
+            onClick={onCopy}
+            size="sm"
+            variant="outline"
+          >
+            {copied ? (
+              <DrawnCheck className="size-4 text-success-foreground" />
+            ) : (
+              <CopyIcon />
+            )}
             {copied ? t.copied : t.copy}
           </Button>
         </div>
@@ -614,7 +751,9 @@ function SessionRow({
   t: Messages;
 }) {
   const format = useFormat();
-  const when = session.current ? t.activeNow : format.relative(session.lastActiveAt);
+  const when = session.current
+    ? t.activeNow
+    : format.relative(session.lastActiveAt);
   return (
     <motion.li
       animate={{ opacity: 1, x: 0, height: "auto" }}
@@ -623,12 +762,22 @@ function SessionRow({
       initial={false}
       transition={reduce ? { duration: 0 } : { duration: 0.24, ease: easeOut }}
     >
-      <div className={cn("flex items-center gap-3 px-4 py-3 sm:grid sm:grid-cols-[minmax(0,1fr)_6.5rem_5.5rem_4.5rem] sm:gap-3", pending && "opacity-60")}>
+      <div
+        className={cn(
+          "flex items-center gap-3 px-4 py-3 sm:grid sm:grid-cols-[minmax(0,1fr)_6.5rem_5.5rem_4.5rem] sm:gap-3",
+          pending && "opacity-60"
+        )}
+      >
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <DeviceIcon kind={session.kind} />
           <div className="flex min-w-0 flex-1 flex-col">
             <span className="flex min-w-0 items-center gap-2">
-              <span className="truncate font-medium text-sm">{interpolate(t.browserOn, { browser: session.browser, os: session.os })}</span>
+              <span className="truncate font-medium text-sm">
+                {interpolate(t.browserOn, {
+                  browser: session.browser,
+                  os: session.os,
+                })}
+              </span>
               {session.current ? (
                 <Badge className={successBadge} variant="secondary">
                   {t.thisDevice}
@@ -640,13 +789,27 @@ function SessionRow({
             </span>
           </div>
         </div>
-        <span className="hidden truncate text-muted-foreground text-sm sm:block">{session.location}</span>
-        <span className={cn("hidden text-sm sm:block", session.current ? "text-success-foreground" : "text-muted-foreground")}>{when}</span>
+        <span className="hidden truncate text-muted-foreground text-sm sm:block">
+          {session.location}
+        </span>
+        <span
+          className={cn(
+            "hidden text-sm sm:block",
+            session.current
+              ? "text-success-foreground"
+              : "text-muted-foreground"
+          )}
+        >
+          {when}
+        </span>
         <div className="flex shrink-0 justify-end">
           {!session.current && onSignOut ? (
             <Button
               aria-busy={pending}
-              aria-label={interpolate(t.signOutSession, { browser: session.browser, os: session.os })}
+              aria-label={interpolate(t.signOutSession, {
+                browser: session.browser,
+                os: session.os,
+              })}
               disabled={pending}
               onClick={onSignOut}
               size="sm"
@@ -686,7 +849,9 @@ function SecuritySettingsScreen({
   const [passkeys, setPasskeys] = useState(data.passkeys);
   const [sessions, setSessions] = useState(data.sessions);
   const [twoFactorOn, setTwoFactorOn] = useState(data.twoFactor.enabled);
-  const [codesSaved, setCodesSaved] = useState(data.twoFactor.recoveryCodesSaved);
+  const [codesSaved, setCodesSaved] = useState(
+    data.twoFactor.recoveryCodesSaved
+  );
   const [codesLeft, setCodesLeft] = useState(data.twoFactor.recoveryCodesLeft);
   const [source, setSource] = useState(data);
   if (source !== data) {
@@ -733,7 +898,9 @@ function SecuritySettingsScreen({
       setCodesOpen(true);
     },
   });
-  const markSaved = useAction(onRecoveryCodesSaved ?? (async () => {}), { onSuccess: () => setCodesSaved(true) });
+  const markSaved = useAction(onRecoveryCodesSaved ?? (async () => {}), {
+    onSuccess: () => setCodesSaved(true),
+  });
   const addPasskey = useAction(onAddPasskey ?? (async () => {}), {
     onSuccess: (passkey) => {
       if (!passkey) return;
@@ -746,7 +913,10 @@ function SecuritySettingsScreen({
     optimistic: ({ id, name }) => {
       const before = passkeys.find((p) => p.id === id)?.name;
       setPasskeys((all) => all.map((p) => (p.id === id ? { ...p, name } : p)));
-      return () => setPasskeys((all) => all.map((p) => (p.id === id && before ? { ...p, name: before } : p)));
+      return () =>
+        setPasskeys((all) =>
+          all.map((p) => (p.id === id && before ? { ...p, name: before } : p))
+        );
     },
   });
   const removePasskey = useAction(onRemovePasskey ?? (async () => {}), {
@@ -755,7 +925,9 @@ function SecuritySettingsScreen({
       setPasskeys((all) => all.filter((p) => p.id !== id));
     },
   });
-  const signOut = useAction(onSignOutSession ?? (async () => {}), { onSuccess: (_, id) => setSessions((all) => all.filter((s) => s.id !== id)) });
+  const signOut = useAction(onSignOutSession ?? (async () => {}), {
+    onSuccess: (_, id) => setSessions((all) => all.filter((s) => s.id !== id)),
+  });
   const signOutOthers = useAction(onSignOutOtherSessions ?? (async () => {}), {
     onSuccess: () => {
       setConfirmAll(false);
@@ -770,7 +942,15 @@ function SecuritySettingsScreen({
   }, [copied]);
 
   const actionError =
-    disable.error ?? reveal.error ?? regenerate.error ?? markSaved.error ?? addPasskey.error ?? rename.error ?? removePasskey.error ?? signOut.error ?? signOutOthers.error;
+    disable.error ??
+    reveal.error ??
+    regenerate.error ??
+    markSaved.error ??
+    addPasskey.error ??
+    rename.error ??
+    removePasskey.error ??
+    signOut.error ??
+    signOutOthers.error;
   const others = sessions.filter((s) => !s.current);
   const unusedCodes = (codes ?? []).filter((c) => !c.used).map((c) => c.code);
   const steps = [
@@ -790,7 +970,10 @@ function SecuritySettingsScreen({
   const downloadCodes = () => {
     const text = `${interpolate(t.codesFile, { product, email: accountEmail })}\n\n${unusedCodes.join("\n")}\n`;
     const url = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
-    const a = Object.assign(document.createElement("a"), { href: url, download: `${product.toLowerCase()}-recovery-codes.txt` });
+    const a = Object.assign(document.createElement("a"), {
+      href: url,
+      download: `${product.toLowerCase()}-recovery-codes.txt`,
+    });
     a.click();
     URL.revokeObjectURL(url);
     void markSaved.run();
@@ -806,13 +989,23 @@ function SecuritySettingsScreen({
   };
 
   return (
-    <div className={cn("mx-auto w-full max-w-2xl px-6 py-10 md:px-10", className)}>
+    <div
+      className={cn("mx-auto w-full max-w-2xl px-6 py-10 md:px-10", className)}
+    >
       <h1 className="font-semibold text-2xl tracking-tight">{t.title}</h1>
       <p className="mt-1 text-muted-foreground text-sm">{t.subtitle}</p>
-      <div aria-live="polite" className="mt-4 flex min-h-6 flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+      <div
+        aria-live="polite"
+        className="mt-4 flex min-h-6 flex-wrap items-center gap-x-2 gap-y-1 text-sm"
+      >
         <ProgressRing done={doneCount} reduce={reduce} />
         <span className="font-medium tabular-nums">
-          {doneCount === steps.length ? t.stepsAllDone : interpolate(t.stepsDone, { done: doneCount, total: steps.length })}
+          {doneCount === steps.length
+            ? t.stepsAllDone
+            : interpolate(t.stepsDone, {
+                done: doneCount,
+                total: steps.length,
+              })}
         </span>
         {nextStep ? (
           <>
@@ -846,12 +1039,23 @@ function SecuritySettingsScreen({
       ) : null}
 
       <section className="mt-10">
-        <SectionHeader description={t.signInDescription} title={t.signInTitle} />
-        <PasswordRow changedAt={data.passwordChangedAt} onChangePassword={onChangePassword} reduce={reduce} t={t} />
+        <SectionHeader
+          description={t.signInDescription}
+          title={t.signInTitle}
+        />
+        <PasswordRow
+          changedAt={data.passwordChangedAt}
+          onChangePassword={onChangePassword}
+          reduce={reduce}
+          t={t}
+        />
       </section>
 
       <section className="mt-10">
-        <SectionHeader description={t.twoFactorDescription} title={t.twoFactorTitle} />
+        <SectionHeader
+          description={t.twoFactorDescription}
+          title={t.twoFactorTitle}
+        />
         <div className="mt-3 overflow-hidden rounded-xl border bg-card">
           <div className="flex items-center gap-4 px-4 py-3.5">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -867,18 +1071,29 @@ function SecuritySettingsScreen({
               </span>
               <span className="text-pretty text-muted-foreground text-xs">
                 {twoFactorOn && data.twoFactor.enabledAt
-                  ? interpolate(t.authenticatorOn, { date: format.date(data.twoFactor.enabledAt, { dateStyle: "medium" }) })
+                  ? interpolate(t.authenticatorOn, {
+                      date: format.date(data.twoFactor.enabledAt, {
+                        dateStyle: "medium",
+                      }),
+                    })
                   : t.authenticatorOff}
               </span>
             </div>
             {twoFactorOn ? (
               onDisableTwoFactor ? (
-                <Button onClick={() => setConfirmDisable((v) => !v)} size="sm" variant="outline">
+                <Button
+                  onClick={() => setConfirmDisable((v) => !v)}
+                  size="sm"
+                  variant="outline"
+                >
                   {t.disable}
                 </Button>
               ) : null
             ) : twoFactorSetupHref ? (
-              <WirefrontLink className={buttonVariants({ variant: "outline", size: "sm" })} href={twoFactorSetupHref}>
+              <WirefrontLink
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+                href={twoFactorSetupHref}
+              >
                 {t.setUp}
               </WirefrontLink>
             ) : null}
@@ -894,29 +1109,57 @@ function SecuritySettingsScreen({
               title={t.disableTitle}
             />
           </Collapse>
-          <div className={cn("flex items-center gap-4 border-t px-4 py-3.5 transition-opacity", !twoFactorOn && "opacity-60")}>
+          <div
+            className={cn(
+              "flex items-center gap-4 border-t px-4 py-3.5 transition-opacity",
+              !twoFactorOn && "opacity-60"
+            )}
+          >
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <span className="flex items-center gap-2">
                 <span className="font-medium text-sm">{t.recoveryCodes}</span>
                 {twoFactorOn && !codesSaved ? (
-                  <Badge className="bg-warning/8 text-warning-foreground dark:bg-warning/16" variant="secondary">
+                  <Badge
+                    className="bg-warning/8 text-warning-foreground dark:bg-warning/16"
+                    variant="secondary"
+                  >
                     {t.notSaved}
                   </Badge>
                 ) : null}
               </span>
               <span className="text-muted-foreground text-xs tabular-nums">
-                {twoFactorOn ? interpolate(t.codesLeft, { left: codesLeft, total: data.twoFactor.recoveryCodesTotal }) : t.codesUnavailable}
+                {twoFactorOn
+                  ? interpolate(t.codesLeft, {
+                      left: codesLeft,
+                      total: data.twoFactor.recoveryCodesTotal,
+                    })
+                  : t.codesUnavailable}
               </span>
             </div>
             <div className="flex shrink-0 gap-2">
               {onRegenerateRecoveryCodes ? (
-                <Button className="max-sm:hidden" disabled={!twoFactorOn} onClick={() => setConfirmRegen((v) => !v)} size="sm" variant="ghost">
+                <Button
+                  className="max-sm:hidden"
+                  disabled={!twoFactorOn}
+                  onClick={() => setConfirmRegen((v) => !v)}
+                  size="sm"
+                  variant="ghost"
+                >
                   {t.regenerate}
                 </Button>
               ) : null}
               {onRevealRecoveryCodes ? (
-                <Button aria-busy={reveal.isPending()} aria-expanded={codesOpen} disabled={!twoFactorOn || reveal.isPending()} onClick={toggleCodes} size="sm" variant="outline">
-                  {reveal.isPending() ? <Spinner data-icon="inline-start" /> : null}
+                <Button
+                  aria-busy={reveal.isPending()}
+                  aria-expanded={codesOpen}
+                  disabled={!twoFactorOn || reveal.isPending()}
+                  onClick={toggleCodes}
+                  size="sm"
+                  variant="outline"
+                >
+                  {reveal.isPending() ? (
+                    <Spinner data-icon="inline-start" />
+                  ) : null}
                   {codesOpen ? t.hide : t.view}
                 </Button>
               ) : null}
@@ -934,11 +1177,24 @@ function SecuritySettingsScreen({
               tone="default"
             />
           </Collapse>
-          <Collapse open={codesOpen && twoFactorOn && codes !== null} reduce={reduce}>
-            <RecoveryCodesPanel codes={codes ?? []} copied={copied} onCopy={copyCodes} onDownload={downloadCodes} t={t} />
+          <Collapse
+            open={codesOpen && twoFactorOn && codes !== null}
+            reduce={reduce}
+          >
+            <RecoveryCodesPanel
+              codes={codes ?? []}
+              copied={copied}
+              onCopy={copyCodes}
+              onDownload={downloadCodes}
+              t={t}
+            />
             {onRegenerateRecoveryCodes ? (
               <div className="flex justify-end border-t px-4 py-2.5 sm:hidden">
-                <Button onClick={() => setConfirmRegen(true)} size="sm" variant="ghost">
+                <Button
+                  onClick={() => setConfirmRegen(true)}
+                  size="sm"
+                  variant="ghost"
+                >
                   {t.regenerateCodes}
                 </Button>
               </div>
@@ -951,7 +1207,13 @@ function SecuritySettingsScreen({
         <SectionHeader
           action={
             onAddPasskey ? (
-              <Button aria-busy={addPasskey.isPending()} disabled={addPasskey.isPending()} onClick={() => void addPasskey.run()} size="sm" variant="outline">
+              <Button
+                aria-busy={addPasskey.isPending()}
+                disabled={addPasskey.isPending()}
+                onClick={() => void addPasskey.run()}
+                size="sm"
+                variant="outline"
+              >
                 <PlusIcon /> {t.addPasskey}
               </Button>
             ) : null
@@ -993,16 +1255,25 @@ function SecuritySettingsScreen({
                     setEditingId(p.id);
                   }}
                   passkey={p}
-                  pending={rename.isPending(p.id) || removePasskey.isPending(p.id)}
+                  pending={
+                    rename.isPending(p.id) || removePasskey.isPending(p.id)
+                  }
                   reduce={reduce}
                   t={t}
                 />
               ))}
-              {addPasskey.isPending() ? <PendingPasskeyRow key="pending" reduce={reduce} t={t} /> : null}
+              {addPasskey.isPending() ? (
+                <PendingPasskeyRow key="pending" reduce={reduce} t={t} />
+              ) : null}
             </AnimatePresence>
           </ul>
-          <Collapse open={passkeys.length === 0 && !addPasskey.isPending()} reduce={reduce}>
-            <p className="px-4 py-6 text-center text-muted-foreground text-sm">{t.noPasskeys}</p>
+          <Collapse
+            open={passkeys.length === 0 && !addPasskey.isPending()}
+            reduce={reduce}
+          >
+            <p className="px-4 py-6 text-center text-muted-foreground text-sm">
+              {t.noPasskeys}
+            </p>
           </Collapse>
         </div>
       </section>
@@ -1011,7 +1282,13 @@ function SecuritySettingsScreen({
         <SectionHeader
           action={
             onSignOutOtherSessions ? (
-              <Button className="max-sm:hidden" disabled={others.length === 0} onClick={() => setConfirmAll((v) => !v)} size="sm" variant="outline">
+              <Button
+                className="max-sm:hidden"
+                disabled={others.length === 0}
+                onClick={() => setConfirmAll((v) => !v)}
+                size="sm"
+                variant="outline"
+              >
                 {t.signOutOthers}
               </Button>
             ) : null
@@ -1031,7 +1308,11 @@ function SecuritySettingsScreen({
               {sessions.map((s) => (
                 <SessionRow
                   key={s.id}
-                  onSignOut={onSignOutSession ? () => void signOut.run(s.id, s.id) : undefined}
+                  onSignOut={
+                    onSignOutSession
+                      ? () => void signOut.run(s.id, s.id)
+                      : undefined
+                  }
                   pending={signOut.isPending(s.id)}
                   reduce={reduce}
                   session={s}
@@ -1042,18 +1323,29 @@ function SecuritySettingsScreen({
           </ul>
           <Collapse open={confirmAll && others.length > 0} reduce={reduce}>
             <ConfirmStrip
-              confirmLabel={interpolate(t.signOutCount, { count: others.length })}
+              confirmLabel={interpolate(t.signOutCount, {
+                count: others.length,
+              })}
               detail={t.signOutOthersDetail}
               onCancel={() => setConfirmAll(false)}
               onConfirm={() => void signOutOthers.run()}
               pending={signOutOthers.isPending()}
               t={t}
-              title={others.length === 1 ? t.signOutOthersTitleOne : interpolate(t.signOutOthersTitle, { count: others.length })}
+              title={
+                others.length === 1
+                  ? t.signOutOthersTitleOne
+                  : interpolate(t.signOutOthersTitle, { count: others.length })
+              }
             />
           </Collapse>
           {onSignOutOtherSessions && others.length > 0 && !confirmAll ? (
             <div className="border-t px-4 py-2.5 sm:hidden">
-              <Button className="w-full" onClick={() => setConfirmAll(true)} size="sm" variant="ghost">
+              <Button
+                className="w-full"
+                onClick={() => setConfirmAll(true)}
+                size="sm"
+                variant="ghost"
+              >
                 {t.signOutOthers}
               </Button>
             </div>

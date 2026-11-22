@@ -14,7 +14,8 @@ import { CheckIcon, RotateCwIcon } from "lucide-react";
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("endOfFeed.<key>"). */
 export const END_OF_FEED_MESSAGES = {
   title: "End of feed",
-  description: "You’ve seen everything from the last 24 hours. New events will appear at the top.",
+  description:
+    "You’ve seen everything from the last 24 hours. New events will appear at the top.",
   refresh: "Refresh",
 };
 
@@ -37,10 +38,20 @@ function EndOfFeedScreen({ onRefresh, className }: EndOfFeedProps) {
         </div>
         <div className="h-px flex-1 bg-border/70" />
       </div>
-      <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.25em]">{t.title}</p>
-      <p className="max-w-xs text-balance text-center text-muted-foreground text-xs">{t.description}</p>
+      <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.25em]">
+        {t.title}
+      </p>
+      <p className="max-w-xs text-balance text-center text-muted-foreground text-xs">
+        {t.description}
+      </p>
       {onRefresh ? (
-        <Button className="mt-1" disabled={refresh.isPending()} onClick={() => void refresh.run()} size="sm" variant="ghost">
+        <Button
+          className="mt-1"
+          disabled={refresh.isPending()}
+          onClick={() => void refresh.run()}
+          size="sm"
+          variant="ghost"
+        >
           {refresh.isPending() ? <Spinner /> : <RotateCwIcon />}
           {t.refresh}
         </Button>

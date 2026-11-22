@@ -10,18 +10,26 @@ import * as fixtures from "./fixtures";
 import { Checkout } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function CommerceCheckoutShowcasePage() {
   return (
-    <WirefrontProvider currency="USD" locale="en-US" now={demoNow} timeZone="UTC">
+    <WirefrontProvider
+      currency="USD"
+      locale="en-US"
+      now={demoNow}
+      timeZone="UTC"
+    >
       <DevlFrame>
         <Checkout
           countries={fixtures.countries}
           items={fixtures.getCart}
           onApplyPromo={async ({ code }) => {
             await wait(300);
-            return code === fixtures.applyPromo.code ? ok(fixtures.applyPromo) : fail("That code isn’t valid. Check for typos.");
+            return code === fixtures.applyPromo.code
+              ? ok(fixtures.applyPromo)
+              : fail("That code isn’t valid. Check for typos.");
           }}
           onPlaceOrder={async () => {
             await wait(1400);

@@ -20,7 +20,14 @@ export const DeviceSession = z
   .meta({ id: "DeviceSession" });
 export type DeviceSession = z.infer<typeof DeviceSession>;
 
-export const SecurityKey = z.object({ id: z.string(), label: z.string(), addedAt: z.string(), lastUsedAt: z.string().optional() }).meta({ id: "SecurityKey" });
+export const SecurityKey = z
+  .object({
+    id: z.string(),
+    label: z.string(),
+    addedAt: z.string(),
+    lastUsedAt: z.string().optional(),
+  })
+  .meta({ id: "SecurityKey" });
 export type SecurityKey = z.infer<typeof SecurityKey>;
 
 export const Credentials = z
@@ -36,8 +43,27 @@ export type Credentials = z.infer<typeof Credentials>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getCredentials: { method: "GET", path: "/me/credentials", summary: "Sign-in methods and active sessions", response: Credentials },
-  signOutSession: { method: "DELETE", path: "/me/sessions/{id}", summary: "Sign out one device", params: z.object({ id: z.string() }) },
-  signOutOtherSessions: { method: "DELETE", path: "/me/sessions", summary: "Sign out every device except this one" },
-  removeSecurityKey: { method: "DELETE", path: "/me/keys/{id}", summary: "Remove a passkey or security key", params: z.object({ id: z.string() }) },
+  getCredentials: {
+    method: "GET",
+    path: "/me/credentials",
+    summary: "Sign-in methods and active sessions",
+    response: Credentials,
+  },
+  signOutSession: {
+    method: "DELETE",
+    path: "/me/sessions/{id}",
+    summary: "Sign out one device",
+    params: z.object({ id: z.string() }),
+  },
+  signOutOtherSessions: {
+    method: "DELETE",
+    path: "/me/sessions",
+    summary: "Sign out every device except this one",
+  },
+  removeSecurityKey: {
+    method: "DELETE",
+    path: "/me/keys/{id}",
+    summary: "Remove a passkey or security key",
+    params: z.object({ id: z.string() }),
+  },
 });

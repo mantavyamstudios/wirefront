@@ -12,28 +12,51 @@ import * as fixtures from "./fixtures";
 import type { CreateKeyInput, EndpointInput } from "./schema";
 import { DeveloperSettings } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const demoNow = () => new Date(fixtures.now);
 
 export function SettingsDeveloperSettingsShowcasePage() {
   return (
     <WirefrontProvider now={demoNow}>
       <DevlFrame>
-        <SettingsShell activeId="developer" back={settingsBack} groups={settingsNav} user={settingsUser}>
+        <SettingsShell
+          activeId="developer"
+          back={settingsBack}
+          groups={settingsNav}
+          user={settingsUser}
+        >
           <DeveloperSettings
             data={fixtures.getDeveloper}
             onCreateEndpoint={async (input: EndpointInput) => {
               await wait(600);
-              return ok({ ...fixtures.createEndpoint, ...input, id: `e_${input.url.length}` });
+              return ok({
+                ...fixtures.createEndpoint,
+                ...input,
+                id: `e_${input.url.length}`,
+              });
             }}
             onCreateKey={async (input: CreateKeyInput) => {
               await wait(600);
-              return ok({ ...fixtures.createKey, key: { ...fixtures.createKey.key, name: input.name, scopes: input.scopes } });
+              return ok({
+                ...fixtures.createKey,
+                key: {
+                  ...fixtures.createKey.key,
+                  name: input.name,
+                  scopes: input.scopes,
+                },
+              });
             }}
             onDeleteEndpoint={() => wait(500)}
             onRetryDeliveries={async ({ deliveryIds }) => {
               await wait(900);
-              return ok(deliveryIds.map((id) => ({ ...fixtures.sendTest, id, event: "deployment.failed" })));
+              return ok(
+                deliveryIds.map((id) => ({
+                  ...fixtures.sendTest,
+                  id,
+                  event: "deployment.failed",
+                }))
+              );
             }}
             onRevealSecret={async () => ok(fixtures.getSigningSecret)}
             onRevokeKey={() => wait(500)}

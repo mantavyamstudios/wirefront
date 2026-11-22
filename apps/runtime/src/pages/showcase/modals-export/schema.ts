@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const ExportFormat = z.enum(["csv", "json", "pdf"]).meta({ id: "ExportFormat" });
+export const ExportFormat = z
+  .enum(["csv", "json", "pdf"])
+  .meta({ id: "ExportFormat" });
 export type ExportFormat = z.infer<typeof ExportFormat>;
 
 /** What "Export" sends. */
@@ -20,5 +22,10 @@ export type ExportInput = z.infer<typeof ExportInput>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  requestExport: { method: "POST", path: "/exports", summary: "Start an export; the download link is emailed when it's ready", body: ExportInput },
+  requestExport: {
+    method: "POST",
+    path: "/exports",
+    summary: "Start an export; the download link is emailed when it's ready",
+    body: ExportInput,
+  },
 });

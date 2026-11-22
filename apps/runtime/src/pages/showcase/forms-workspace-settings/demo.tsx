@@ -7,7 +7,8 @@ import * as fixtures from "./fixtures";
 import type { GeneralSettings } from "./schema";
 import { WorkspaceSettings } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 async function demoSave({ slug }: GeneralSettings) {
   await wait(700);

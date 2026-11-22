@@ -23,5 +23,11 @@ export type Kpi = z.infer<typeof Kpi>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listKpis: { method: "GET", path: "/metrics/overview", summary: "The overview metrics for the period", query: z.object({ period: z.string().optional() }), response: z.array(Kpi) },
+  listKpis: {
+    method: "GET",
+    path: "/metrics/overview",
+    summary: "The overview metrics for the period",
+    query: z.object({ period: z.string().optional() }),
+    response: z.array(Kpi),
+  },
 });

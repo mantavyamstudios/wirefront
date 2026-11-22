@@ -10,10 +10,18 @@ export function ChartsFunnelShowcasePage() {
   const state = useShowcaseState();
   return (
     <ConversionFunnel
-      data={state === "loading" || state === "error" ? undefined : state === "empty" ? { stages: [] } : fixtures.getFunnel}
+      data={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? { stages: [] }
+            : fixtures.getFunnel
+      }
       error="The funnel didn’t load. Check your connection and try again."
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

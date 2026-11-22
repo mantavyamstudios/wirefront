@@ -12,5 +12,7 @@ export function DevlFrame({ children }: { children: ReactNode }) {
     return () => root.classList.remove("font-sans");
   }, []);
 
-  return <div className="min-h-svh font-sans *:h-svh! *:min-h-150">{children}</div>;
+  return (
+    <div className="min-h-svh font-sans *:h-svh! *:min-h-150">{children}</div>
+  );
 }

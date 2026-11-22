@@ -24,10 +24,23 @@ import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { interpolate, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { BuildingIcon, EyeIcon, GlobeIcon, LockIcon, PlusIcon } from "lucide-react";
+import {
+  BuildingIcon,
+  EyeIcon,
+  GlobeIcon,
+  LockIcon,
+  PlusIcon,
+} from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
-import { CreateWorkspaceForm, type CreateWorkspaceInput, NAME_MAX_LENGTH, slugify, Visibility, type Workspace } from "./schema";
+import {
+  CreateWorkspaceForm,
+  type CreateWorkspaceInput,
+  NAME_MAX_LENGTH,
+  slugify,
+  Visibility,
+  type Workspace,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("createWorkspace.<key>"). */
 export const CREATE_WORKSPACE_MESSAGES = {
@@ -79,8 +92,13 @@ export interface CreateWorkspaceProps {
 }
 
 type Availability = "idle" | "checking" | "available" | "taken";
-const ICONS: Record<Visibility, typeof LockIcon> = { private: LockIcon, team: EyeIcon, public: GlobeIcon };
-const label = "mb-1.5 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]";
+const ICONS: Record<Visibility, typeof LockIcon> = {
+  private: LockIcon,
+  team: EyeIcon,
+  public: GlobeIcon,
+};
+const label =
+  "mb-1.5 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]";
 
 function CreateWorkspaceScreen({
   onCreate,
@@ -101,7 +119,9 @@ function CreateWorkspaceScreen({
   const slug = slugify(name);
   const options = Visibility.options.filter((v) => v !== "team" || teamDomain);
 
-  const [visibility, setVisibility] = useState<Visibility>(teamDomain ? "team" : "private");
+  const [visibility, setVisibility] = useState<Visibility>(
+    teamDomain ? "team" : "private"
+  );
   const form = useActionForm({
     schema: CreateWorkspaceForm.pick({ name: true }),
     action: ({ name: value }) => onCreate({ name: value, visibility, slug }),
@@ -121,12 +141,15 @@ function CreateWorkspaceScreen({
     }
     let current = true;
     setAvailability("checking");
-    const timer = setTimeout(() => {
-      checkSlug(slug).then(
-        (free) => current && setAvailability(free ? "available" : "taken"),
-        () => current && setAvailability("idle"),
-      );
-    }, slug === initialSlug ? 0 : 300);
+    const timer = setTimeout(
+      () => {
+        checkSlug(slug).then(
+          (free) => current && setAvailability(free ? "available" : "taken"),
+          () => current && setAvailability("idle")
+        );
+      },
+      slug === initialSlug ? 0 : 300
+    );
     return () => {
       current = false;
       clearTimeout(timer);
@@ -138,12 +161,23 @@ function CreateWorkspaceScreen({
       <span
         className={cn(
           "me-2 inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px]",
-          availability === "available" && "bg-success/15 text-success-foreground",
-          availability === "taken" && "bg-destructive/10 text-destructive-foreground",
-          availability === "checking" && "bg-muted text-muted-foreground",
+          availability === "available" &&
+            "bg-success/15 text-success-foreground",
+          availability === "taken" &&
+            "bg-destructive/10 text-destructive-foreground",
+          availability === "checking" && "bg-muted text-muted-foreground"
         )}
       >
-        <span className={cn("size-1 rounded-full", availability === "taken" ? "bg-destructive" : availability === "available" ? "bg-success" : "bg-muted-foreground")} />
+        <span
+          className={cn(
+            "size-1 rounded-full",
+            availability === "taken"
+              ? "bg-destructive"
+              : availability === "available"
+                ? "bg-success"
+                : "bg-muted-foreground"
+          )}
+        />
         {t[availability]}
       </span>
     );
@@ -171,7 +205,9 @@ function CreateWorkspaceScreen({
               </div>
               <div className="flex flex-col gap-0.5 text-start">
                 <DialogTitle className="text-base">{t.dialogTitle}</DialogTitle>
-                <DialogDescription className="text-xs">{t.dialogDescription}</DialogDescription>
+                <DialogDescription className="text-xs">
+                  {t.dialogDescription}
+                </DialogDescription>
               </div>
             </DialogHeader>
 
@@ -187,15 +223,22 @@ function CreateWorkspaceScreen({
                   />
                   <Field.Error className="mt-1.5 text-destructive-foreground text-xs" />
                   <div className="mt-1.5 text-muted-foreground text-xs tabular-nums">
-                    {interpolate(t.nameCount, { count: name.length, max: NAME_MAX_LENGTH })}
+                    {interpolate(t.nameCount, {
+                      count: name.length,
+                      max: NAME_MAX_LENGTH,
+                    })}
                   </div>
                 </Field.Root>
 
                 <div>
                   <div className={label}>{t.url}</div>
                   <div className="flex h-10 min-w-0 items-center rounded-md border border-border bg-background ps-3">
-                    <span className="shrink-0 text-muted-foreground text-sm">{urlPrefix}</span>
-                    <code className="min-w-0 flex-1 truncate bg-transparent font-mono text-foreground text-sm">{slug || t.slugPlaceholder}</code>
+                    <span className="shrink-0 text-muted-foreground text-sm">
+                      {urlPrefix}
+                    </span>
+                    <code className="min-w-0 flex-1 truncate bg-transparent font-mono text-foreground text-sm">
+                      {slug || t.slugPlaceholder}
+                    </code>
                     <span aria-live="polite">{badge}</span>
                   </div>
                 </div>
@@ -207,33 +250,43 @@ function CreateWorkspaceScreen({
                   <RadioGroup
                     aria-labelledby={`${id}-visibility`}
                     className="flex flex-col gap-2"
-                    onValueChange={(value) => setVisibility(value as Visibility)}
+                    onValueChange={(value) =>
+                      setVisibility(value as Visibility)
+                    }
                     value={visibility}
                   >
                     {options.map((option) => {
                       const Icon = ICONS[option];
                       return (
-                      <Radio.Root
-                        className="flex w-full cursor-pointer items-start gap-3 rounded-lg border border-border/60 px-3 py-2.5 text-start outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/4"
-                        key={option}
-                        value={option}
-                      >
-                        <span className="mt-1 flex size-3.5 shrink-0 items-center justify-center rounded-full border border-border in-data-checked:border-foreground in-data-checked:bg-foreground in-data-checked:ring-2 in-data-checked:ring-foreground/20 in-data-checked:ring-offset-2 in-data-checked:ring-offset-background" />
-                        <Icon aria-hidden className="mt-0.5 size-4 opacity-70" />
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-sm">{t[option]}</span>
-                          <span className="block text-muted-foreground text-xs">
-                            {interpolate(t[`${option}Meta`], { domain: teamDomain ?? "" })}
+                        <Radio.Root
+                          className="flex w-full cursor-pointer items-start gap-3 rounded-lg border border-border/60 px-3 py-2.5 text-start outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/4"
+                          key={option}
+                          value={option}
+                        >
+                          <span className="mt-1 flex size-3.5 shrink-0 items-center justify-center rounded-full border border-border in-data-checked:border-foreground in-data-checked:bg-foreground in-data-checked:ring-2 in-data-checked:ring-foreground/20 in-data-checked:ring-offset-2 in-data-checked:ring-offset-background" />
+                          <Icon
+                            aria-hidden
+                            className="mt-0.5 size-4 opacity-70"
+                          />
+                          <span className="min-w-0 flex-1">
+                            <span className="block text-sm">{t[option]}</span>
+                            <span className="block text-muted-foreground text-xs">
+                              {interpolate(t[`${option}Meta`], {
+                                domain: teamDomain ?? "",
+                              })}
+                            </span>
                           </span>
-                        </span>
-                      </Radio.Root>
+                        </Radio.Root>
                       );
                     })}
                   </RadioGroup>
                 </div>
 
                 {form.formError ? (
-                  <p className="text-destructive-foreground text-xs" role="alert">
+                  <p
+                    className="text-destructive-foreground text-xs"
+                    role="alert"
+                  >
                     {form.formError}
                   </p>
                 ) : null}
@@ -241,12 +294,21 @@ function CreateWorkspaceScreen({
 
               <DialogFooter className="sm:items-center">
                 {step ? (
-                  <span className="text-center text-muted-foreground text-xs sm:me-auto sm:text-start">{interpolate(t.step, step)}</span>
+                  <span className="text-center text-muted-foreground text-xs sm:me-auto sm:text-start">
+                    {interpolate(t.step, step)}
+                  </span>
                 ) : null}
-                <DialogClose disabled={form.pending} render={<Button type="button" variant="ghost" />}>
+                <DialogClose
+                  disabled={form.pending}
+                  render={<Button type="button" variant="ghost" />}
+                >
                   {t.cancel}
                 </DialogClose>
-                <Button aria-busy={form.pending} disabled={form.pending || availability === "taken" || !slug} type="submit">
+                <Button
+                  aria-busy={form.pending}
+                  disabled={form.pending || availability === "taken" || !slug}
+                  type="submit"
+                >
                   {form.pending ? <Spinner data-icon="inline-start" /> : null}
                   {t.create}
                 </Button>

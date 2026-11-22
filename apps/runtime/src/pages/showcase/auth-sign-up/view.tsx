@@ -7,11 +7,19 @@ import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { CheckIcon, EyeIcon, EyeOffIcon } from "lucide-react";
@@ -68,7 +76,13 @@ function Mark() {
   return (
     <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xs/5">
       <svg aria-hidden className="size-6" fill="none" viewBox="0 0 28 28">
-        <path d="M7 18.5 12 12l3.5 4.5 2-2.5 3.5 4.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" />
+        <path
+          d="M7 18.5 12 12l3.5 4.5 2-2.5 3.5 4.5"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2.2"
+        />
       </svg>
     </span>
   );
@@ -77,7 +91,16 @@ function Mark() {
 const linkClass =
   "rounded-sm text-foreground underline decoration-border underline-offset-4 outline-none hover:decoration-foreground focus-visible:ring-2 focus-visible:ring-ring";
 
-function SignUpScreen({ product, logo, onSignUp, onSuccess, signInHref, termsHref, privacyHref, className }: SignUpProps) {
+function SignUpScreen({
+  product,
+  logo,
+  onSignUp,
+  onSuccess,
+  signInHref,
+  termsHref,
+  privacyHref,
+  className,
+}: SignUpProps) {
   const t = useMessages("signUp", SIGN_UP_MESSAGES);
   const id = useId();
   const reduce = useReducedMotion();
@@ -98,25 +121,57 @@ function SignUpScreen({ product, logo, onSignUp, onSuccess, signInHref, termsHre
   const fieldError = "text-destructive-foreground text-xs";
 
   return (
-    <div className={cn("flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground", className)}>
+    <div
+      className={cn(
+        "flex h-190 w-full flex-col overflow-y-auto bg-background px-6 py-10 text-foreground",
+        className
+      )}
+    >
       <div className="m-auto flex w-full max-w-85 flex-col items-center">
         {logo ?? <Mark />}
-        <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">{interpolate(t.title, { product })}</h1>
-        <p className="mt-1.5 text-balance text-center text-muted-foreground text-sm">{t.subtitle}</p>
+        <h1 className="mt-6 text-balance text-center font-semibold text-xl tracking-tight">
+          {interpolate(t.title, { product })}
+        </h1>
+        <p className="mt-1.5 text-balance text-center text-muted-foreground text-sm">
+          {t.subtitle}
+        </p>
 
-        <Form className="mt-8 flex w-full flex-col gap-4" noValidate {...form.formProps}>
-          <Field.Root className="flex flex-col gap-2" disabled={done} name="name">
+        <Form
+          className="mt-8 flex w-full flex-col gap-4"
+          noValidate
+          {...form.formProps}
+        >
+          <Field.Root
+            className="flex flex-col gap-2"
+            disabled={done}
+            name="name"
+          >
             <Field.Label className="font-medium text-sm">{t.name}</Field.Label>
             <Input autoComplete="name" placeholder={t.namePlaceholder} />
             <Field.Error className={fieldError} />
           </Field.Root>
-          <Field.Root className="flex flex-col gap-2" disabled={done} name="email">
+          <Field.Root
+            className="flex flex-col gap-2"
+            disabled={done}
+            name="email"
+          >
             <Field.Label className="font-medium text-sm">{t.email}</Field.Label>
-            <Input autoComplete="email" inputMode="email" placeholder={t.emailPlaceholder} type="text" />
+            <Input
+              autoComplete="email"
+              inputMode="email"
+              placeholder={t.emailPlaceholder}
+              type="text"
+            />
             <Field.Error className={fieldError} />
           </Field.Root>
-          <Field.Root className="flex flex-col gap-2" disabled={done} name="password">
-            <Field.Label className="font-medium text-sm">{t.password}</Field.Label>
+          <Field.Root
+            className="flex flex-col gap-2"
+            disabled={done}
+            name="password"
+          >
+            <Field.Label className="font-medium text-sm">
+              {t.password}
+            </Field.Label>
             <InputGroup>
               <InputGroupInput
                 aria-describedby={`${id}-hint`}
@@ -132,21 +187,31 @@ function SignUpScreen({ product, logo, onSignUp, onSuccess, signInHref, termsHre
                   onClick={() => setReveal((value) => !value)}
                   type="button"
                 >
-                  {reveal ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+                  {reveal ? (
+                    <EyeOffIcon className="size-4" />
+                  ) : (
+                    <EyeIcon className="size-4" />
+                  )}
                 </button>
               </InputGroupAddon>
             </InputGroup>
             <p
               className={cn(
                 "flex items-center gap-1.5 text-xs transition-colors",
-                longEnough ? "text-success-foreground" : tooShort ? "text-destructive-foreground" : "text-muted-foreground",
+                longEnough
+                  ? "text-success-foreground"
+                  : tooShort
+                    ? "text-destructive-foreground"
+                    : "text-muted-foreground"
               )}
               id={`${id}-hint`}
             >
               <span
                 className={cn(
                   "flex size-3.5 items-center justify-center rounded-full border transition-colors",
-                  longEnough ? "border-success bg-success text-white" : "border-current/40",
+                  longEnough
+                    ? "border-success bg-success text-white"
+                    : "border-current/40"
                 )}
               >
                 {longEnough ? (
@@ -168,10 +233,19 @@ function SignUpScreen({ product, logo, onSignUp, onSuccess, signInHref, termsHre
               {form.formError}
             </p>
           ) : null}
-          <Button aria-busy={form.pending} className={cn("mt-2 w-full", done && "pointer-events-none")} disabled={form.pending} type="submit">
+          <Button
+            aria-busy={form.pending}
+            className={cn("mt-2 w-full", done && "pointer-events-none")}
+            disabled={form.pending}
+            type="submit"
+          >
             {form.pending ? <Spinner data-icon="inline-start" /> : null}
             {done ? (
-              <motion.span animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-2" initial={reduce ? false : { opacity: 0, scale: 0.9 }}>
+              <motion.span
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-2"
+                initial={reduce ? false : { opacity: 0, scale: 0.9 }}
+              >
                 <CheckIcon />
                 {t.created}
               </motion.span>

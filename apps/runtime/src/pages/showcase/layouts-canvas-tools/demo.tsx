@@ -5,5 +5,13 @@ import * as fixtures from "./fixtures";
 import { CanvasEditor } from "./view";
 
 export function LayoutsCanvasToolsShowcasePage() {
-  return <CanvasEditor collaborators={fixtures.collaborators} defaultSelectedId="hero" defaultShapes={fixtures.getCanvas} onChange={() => {}} onShare={() => {}} />;
+  return (
+    <CanvasEditor
+      collaborators={fixtures.collaborators}
+      defaultSelectedId="hero"
+      defaultShapes={fixtures.getCanvas}
+      onChange={() => {}}
+      onShare={() => {}}
+    />
+  );
 }

@@ -9,7 +9,8 @@ import * as fixtures from "./fixtures";
 import type { AgentInput, WorkspaceStepInput } from "./schema";
 import { FirstRun } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 async function demoCheckSlug(slug: string) {
   return !fixtures.takenSlugs.includes(slug);
@@ -17,7 +18,8 @@ async function demoCheckSlug(slug: string) {
 
 async function demoSaveWorkspace({ slug }: WorkspaceStepInput) {
   await wait(600);
-  if (fixtures.takenSlugs.includes(slug)) return fail(undefined, { slug: "That URL was just taken. Try another." });
+  if (fixtures.takenSlugs.includes(slug))
+    return fail(undefined, { slug: "That URL was just taken. Try another." });
 }
 
 async function demoConnectTool() {

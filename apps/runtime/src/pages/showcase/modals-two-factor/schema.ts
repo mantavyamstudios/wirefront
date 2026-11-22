@@ -18,12 +18,19 @@ export const TotpEnrollment = z
   .meta({ id: "TotpEnrollment" });
 export type TotpEnrollment = z.infer<typeof TotpEnrollment>;
 
-export const VerifyTotpInput = z.object({ code: z.string().regex(/^\d{6}$/, "Enter all 6 digits.") }).meta({ id: "VerifyTotpInput" });
+export const VerifyTotpInput = z
+  .object({ code: z.string().regex(/^\d{6}$/, "Enter all 6 digits.") })
+  .meta({ id: "VerifyTotpInput" });
 export type VerifyTotpInput = z.infer<typeof VerifyTotpInput>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  startTotpEnrollment: { method: "POST", path: "/me/two-factor/totp", summary: "Start TOTP enrolment: a new secret, QR code and recovery codes", response: TotpEnrollment },
+  startTotpEnrollment: {
+    method: "POST",
+    path: "/me/two-factor/totp",
+    summary: "Start TOTP enrolment: a new secret, QR code and recovery codes",
+    response: TotpEnrollment,
+  },
   verifyTotp: {
     method: "POST",
     path: "/me/two-factor/totp/verify",

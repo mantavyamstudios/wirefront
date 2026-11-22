@@ -14,7 +14,9 @@ export function EmptyNoResultsShowcasePage() {
       filters={filters}
       onClearFilters={() => setFilters([])}
       onQueryChange={setQuery}
-      onRemoveFilter={(id) => setFilters((all) => all.filter((f) => f.id !== id))}
+      onRemoveFilter={(id) =>
+        setFilters((all) => all.filter((f) => f.id !== id))
+      }
       query={query}
       searchPlaceholder="Search invoices…"
     />

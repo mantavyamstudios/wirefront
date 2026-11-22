@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const InvoiceCardStatus = z.enum(["paid", "open", "overdue", "void"]).meta({ id: "InvoiceCardStatus" });
+export const InvoiceCardStatus = z
+  .enum(["paid", "open", "overdue", "void"])
+  .meta({ id: "InvoiceCardStatus" });
 export type InvoiceCardStatus = z.infer<typeof InvoiceCardStatus>;
 
 export const InvoiceSummary = z
@@ -29,7 +31,14 @@ export const api = defineApi({
     path: "/invoices/recent",
     summary: "The most recent invoices, with how many there are in all",
     query: z.object({ limit: z.int().min(1).max(20).optional() }),
-    response: z.object({ items: z.array(InvoiceSummary), total: z.int().min(0) }),
+    response: z.object({
+      items: z.array(InvoiceSummary),
+      total: z.int().min(0),
+    }),
   },
-  exportInvoices: { method: "POST", path: "/invoices/export", summary: "Export all invoices as CSV" },
+  exportInvoices: {
+    method: "POST",
+    path: "/invoices/export",
+    summary: "Export all invoices as CSV",
+  },
 });

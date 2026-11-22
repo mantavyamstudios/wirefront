@@ -4,7 +4,8 @@
 // Not shipped by the registry; builders pass their own.
 import { CenteredSignIn } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function AuthCenteredSigninShowcasePage() {
   return (
@@ -40,14 +41,7 @@ function BrandMark() {
         strokeWidth="1"
         strokeDasharray="2 3"
       />
-      <rect
-        x="11"
-        y="11"
-        width="18"
-        height="18"
-        rx="3"
-        fill="currentColor"
-      />
+      <rect x="11" y="11" width="18" height="18" rx="3" fill="currentColor" />
       <path
         d="M16 22.5c.6.7 1.7 1.2 2.9 1.2 1.5 0 2.6-.7 2.6-1.8 0-1-.7-1.5-2.2-1.8l-.9-.2c-.9-.2-1.3-.5-1.3-1 0-.6.6-1 1.4-1 .9 0 1.5.4 1.7 1l1.4-.5c-.3-1.1-1.4-1.8-3-1.8-1.6 0-2.7.8-2.7 2 0 1 .7 1.6 2.1 1.9l.9.2c.9.2 1.4.5 1.4 1.1 0 .6-.6 1-1.5 1-1 0-1.7-.4-2-1.1l-1.5.6Z"
         fill="var(--background)"

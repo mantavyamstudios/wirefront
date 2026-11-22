@@ -8,9 +8,29 @@ import { Skeleton } from "@wirefront/ui/skeleton";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { ArrowRightIcon, BookOpenIcon, CheckIcon, ChevronDownIcon, ChevronUpIcon, CircleDotIcon, GitBranchIcon, GitMergeIcon, GitPullRequestIcon, MinusIcon, PlugIcon, ShieldIcon, TerminalIcon, TriangleIcon, XIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  BookOpenIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CircleDotIcon,
+  GitBranchIcon,
+  GitMergeIcon,
+  GitPullRequestIcon,
+  MinusIcon,
+  PlugIcon,
+  ShieldIcon,
+  TerminalIcon,
+  TriangleIcon,
+  XIcon,
+} from "lucide-react";
 import { type ReactNode, useId, useState } from "react";
 import type { CiCheck, PrChecks } from "./schema";
 
@@ -120,7 +140,12 @@ const APP_ICON: Record<CiCheck["app"], ReactNode> = {
 };
 
 function StatusIcon({ status, t }: { status: CiCheck["status"]; t: Messages }) {
-  const label = status === "failed" ? t.statusFailed : status === "passed" ? t.statusPassed : t.statusSkipped;
+  const label =
+    status === "failed"
+      ? t.statusFailed
+      : status === "passed"
+        ? t.statusPassed
+        : t.statusSkipped;
   const icon =
     status === "failed" ? (
       <span className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-category-4 text-white">
@@ -143,48 +168,137 @@ function StatusIcon({ status, t }: { status: CiCheck["status"]; t: Messages }) {
   );
 }
 
-function StatusRing({ passed, failed, total, label }: { passed: number; failed: number; total: number; label: string }) {
+function StatusRing({
+  passed,
+  failed,
+  total,
+  label,
+}: {
+  passed: number;
+  failed: number;
+  total: number;
+  label: string;
+}) {
   const r = 14;
   const c = 2 * Math.PI * r;
   const passLen = total ? (passed / total) * c : 0;
   const failLen = total ? (failed / total) * c : 0;
   const skipLen = c - passLen - failLen;
   return (
-    <svg aria-label={label} className="size-9 shrink-0 -rotate-90" role="img" viewBox="0 0 36 36">
-      <circle className="fill-none stroke-muted" cx="18" cy="18" r={r} strokeWidth="4" />
-      <circle className="fill-none stroke-category-2" cx="18" cy="18" r={r} strokeDasharray={`${passLen} ${c}`} strokeDashoffset={0} strokeWidth="4" />
-      <circle className="fill-none stroke-category-4" cx="18" cy="18" r={r} strokeDasharray={`${failLen} ${c}`} strokeDashoffset={-passLen} strokeWidth="4" />
-      <circle className="fill-none stroke-foreground/30" cx="18" cy="18" r={r} strokeDasharray={`${skipLen} ${c}`} strokeDashoffset={-(passLen + failLen)} strokeWidth="4" />
+    <svg
+      aria-label={label}
+      className="size-9 shrink-0 -rotate-90"
+      role="img"
+      viewBox="0 0 36 36"
+    >
+      <circle
+        className="fill-none stroke-muted"
+        cx="18"
+        cy="18"
+        r={r}
+        strokeWidth="4"
+      />
+      <circle
+        className="fill-none stroke-category-2"
+        cx="18"
+        cy="18"
+        r={r}
+        strokeDasharray={`${passLen} ${c}`}
+        strokeDashoffset={0}
+        strokeWidth="4"
+      />
+      <circle
+        className="fill-none stroke-category-4"
+        cx="18"
+        cy="18"
+        r={r}
+        strokeDasharray={`${failLen} ${c}`}
+        strokeDashoffset={-passLen}
+        strokeWidth="4"
+      />
+      <circle
+        className="fill-none stroke-foreground/30"
+        cx="18"
+        cy="18"
+        r={r}
+        strokeDasharray={`${skipLen} ${c}`}
+        strokeDashoffset={-(passLen + failLen)}
+        strokeWidth="4"
+      />
     </svg>
   );
 }
 
-function CheckGroup({ label, checks, open, tone, t }: { label: string; checks: CiCheck[]; open?: boolean; tone: "fail" | "ok" | "muted"; t: Messages }) {
+function CheckGroup({
+  label,
+  checks,
+  open,
+  tone,
+  t,
+}: {
+  label: string;
+  checks: CiCheck[];
+  open?: boolean;
+  tone: "fail" | "ok" | "muted";
+  t: Messages;
+}) {
   if (!checks.length) return null;
   return (
-    <details className="group border-border/70 border-b last:border-b-0" open={open}>
+    <details
+      className="group border-border/70 border-b last:border-b-0"
+      open={open}
+    >
       <summary className="flex min-h-10 cursor-pointer list-none items-center gap-1.5 px-4 py-2 text-[13px] hover:bg-muted/40 sm:px-5">
-        <ChevronDownIcon aria-hidden className="size-3.5 -rotate-90 text-muted-foreground transition-transform group-open:rotate-0" />
-        <span className={tone === "fail" ? "text-category-4-foreground" : tone === "ok" ? "text-category-2-foreground" : "text-foreground"}>{label}</span>
+        <ChevronDownIcon
+          aria-hidden
+          className="size-3.5 -rotate-90 text-muted-foreground transition-transform group-open:rotate-0"
+        />
+        <span
+          className={
+            tone === "fail"
+              ? "text-category-4-foreground"
+              : tone === "ok"
+                ? "text-category-2-foreground"
+                : "text-foreground"
+          }
+        >
+          {label}
+        </span>
       </summary>
       <ul className="divide-y divide-border/50">
         {checks.map((c) => (
-          <li className="flex items-center gap-2 px-4 py-2.5 hover:bg-muted/30 sm:gap-3 sm:px-5" key={c.id}>
+          <li
+            className="flex items-center gap-2 px-4 py-2.5 hover:bg-muted/30 sm:gap-3 sm:px-5"
+            key={c.id}
+          >
             <StatusIcon status={c.status} t={t} />
             {APP_ICON[c.app]}
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-baseline gap-x-2">
-                <span className="min-w-0 truncate font-medium text-[13px]">{c.name}</span>
-                <span className="min-w-0 truncate text-[12px] text-muted-foreground">{c.summary}</span>
+                <span className="min-w-0 truncate font-medium text-[13px]">
+                  {c.name}
+                </span>
+                <span className="min-w-0 truncate text-[12px] text-muted-foreground">
+                  {c.summary}
+                </span>
               </div>
             </div>
             {c.detailsHref ? (
-              <WirefrontLink className="inline-flex min-h-6 items-center rounded text-[12px] text-category-1-foreground outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10" href={c.detailsHref}>
-                <span className="sr-only">{interpolate(t.detailsFor, { name: c.name })}</span>
+              <WirefrontLink
+                className="inline-flex min-h-6 items-center rounded text-[12px] text-category-1-foreground outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10"
+                href={c.detailsHref}
+              >
+                <span className="sr-only">
+                  {interpolate(t.detailsFor, { name: c.name })}
+                </span>
                 <span aria-hidden>{t.details}</span>
               </WirefrontLink>
             ) : null}
-            {c.required ? <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground max-sm:hidden">{t.required}</span> : null}
+            {c.required ? (
+              <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground max-sm:hidden">
+                {t.required}
+              </span>
+            ) : null}
           </li>
         ))}
       </ul>
@@ -192,11 +306,31 @@ function CheckGroup({ label, checks, open, tone, t }: { label: string; checks: C
   );
 }
 
-function Notice({ tone, icon, title, body, action }: { tone: "warn" | "info"; icon: ReactNode; title: string; body: string; action?: ReactNode }) {
+function Notice({
+  tone,
+  icon,
+  title,
+  body,
+  action,
+}: {
+  tone: "warn" | "info";
+  icon: ReactNode;
+  title: string;
+  body: string;
+  action?: ReactNode;
+}) {
   return (
     // Action drops under the message on phones instead of crushing it.
     <div className="flex flex-wrap items-start gap-x-4 gap-y-3 border-border/70 border-b px-4 py-4 sm:flex-nowrap sm:px-5">
-      <span aria-hidden className={cn("mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-full", tone === "warn" ? "bg-category-3/15 text-category-3-foreground" : "bg-foreground/10 text-foreground")}>
+      <span
+        aria-hidden
+        className={cn(
+          "mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-full",
+          tone === "warn"
+            ? "bg-category-3/15 text-category-3-foreground"
+            : "bg-foreground/10 text-foreground"
+        )}
+      >
         {icon}
       </span>
       <div className="min-w-0 flex-1 basis-[calc(100%-3rem)] sm:basis-auto">
@@ -208,9 +342,20 @@ function Notice({ tone, icon, title, body, action }: { tone: "warn" | "info"; ic
   );
 }
 
-const plainButton = "inline-flex min-h-8 items-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 font-medium text-[13px] outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 pointer-coarse:min-h-10";
+const plainButton =
+  "inline-flex min-h-8 items-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 font-medium text-[13px] outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 pointer-coarse:min-h-10";
 
-function ChecksConsoleScreen({ pr, status = "ready", error, onRetry, onUpdateBranch, onReadyForReview, onMerge, commandLineHref, className }: ChecksConsoleProps) {
+function ChecksConsoleScreen({
+  pr,
+  status = "ready",
+  error,
+  onRetry,
+  onUpdateBranch,
+  onReadyForReview,
+  onMerge,
+  commandLineHref,
+  className,
+}: ChecksConsoleProps) {
   const t = useMessages("checksConsole", CHECKS_CONSOLE_MESSAGES);
   const id = useId();
   const [collapsed, setCollapsed] = useState(false);
@@ -220,14 +365,26 @@ function ChecksConsoleScreen({ pr, status = "ready", error, onRetry, onUpdateBra
 
   if (status === "error" || !pr || status === "loading") {
     return (
-      <div className={cn("min-h-svh bg-muted/30 px-3 py-6 sm:px-6 sm:py-10", className)}>
+      <div
+        className={cn(
+          "min-h-svh bg-muted/30 px-3 py-6 sm:px-6 sm:py-10",
+          className
+        )}
+      >
         <div className="mx-auto max-w-3xl">
           {status === "error" ? (
             <div className="rounded-xl border border-border bg-background py-12 text-center">
               <p className="font-medium">{t.errorTitle}</p>
-              {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+              {error ? (
+                <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+              ) : null}
               {onRetry ? (
-                <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+                <Button
+                  className="mt-4"
+                  onClick={onRetry}
+                  size="sm"
+                  variant="outline"
+                >
                   {t.retry}
                 </Button>
               ) : null}
@@ -251,21 +408,38 @@ function ChecksConsoleScreen({ pr, status = "ready", error, onRetry, onUpdateBra
   const error_ = update.error ?? ready.error ?? merge.error;
 
   return (
-    <div className={cn("min-h-svh bg-muted/30 px-3 py-6 sm:px-6 sm:py-10", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-muted/30 px-3 py-6 sm:px-6 sm:py-10",
+        className
+      )}
+    >
       <div className="mx-auto max-w-3xl space-y-4">
         <div className="flex items-start gap-3 px-1">
-          <span aria-hidden className="mt-0.5 inline-flex size-9 items-center justify-center rounded-full bg-category-3/15 text-category-3-foreground">
+          <span
+            aria-hidden
+            className="mt-0.5 inline-flex size-9 items-center justify-center rounded-full bg-category-3/15 text-category-3-foreground"
+          >
             <GitPullRequestIcon className="size-5" />
           </span>
           <div className="min-w-0">
             <h1 className="font-heading text-xl leading-tight">
               {pr.title}
-              <span className="ms-2 whitespace-nowrap font-mono text-base text-muted-foreground tabular-nums">#{pr.number}</span>
+              <span className="ms-2 whitespace-nowrap font-mono text-base text-muted-foreground tabular-nums">
+                #{pr.number}
+              </span>
             </h1>
             <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-muted-foreground">
-              <span className="inline-flex items-center gap-1 rounded bg-category-3/15 px-1.5 py-0.5 font-mono text-[11px] text-category-3-foreground uppercase tracking-wider">{pr.draft ? t.draft : t.open}</span>
+              <span className="inline-flex items-center gap-1 rounded bg-category-3/15 px-1.5 py-0.5 font-mono text-[11px] text-category-3-foreground uppercase tracking-wider">
+                {pr.draft ? t.draft : t.open}
+              </span>
               <span>
-                <strong className="text-foreground">{pr.author}</strong> {t.wantsToMerge} <strong className="text-foreground">{interpolate(t.commits, { count: pr.commits })}</strong> {t.into}
+                <strong className="text-foreground">{pr.author}</strong>{" "}
+                {t.wantsToMerge}{" "}
+                <strong className="text-foreground">
+                  {interpolate(t.commits, { count: pr.commits })}
+                </strong>{" "}
+                {t.into}
               </span>
               <span className="inline-flex items-center gap-1 rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[11px] text-foreground">
                 <GitBranchIcon aria-hidden className="size-2.5 opacity-60" />
@@ -281,16 +455,39 @@ function ChecksConsoleScreen({ pr, status = "ready", error, onRetry, onUpdateBra
           </div>
         </div>
 
-        <section aria-labelledby={`${id}-checks`} className="overflow-hidden rounded-xl border border-border bg-background shadow-sm">
+        <section
+          aria-labelledby={`${id}-checks`}
+          className="overflow-hidden rounded-xl border border-border bg-background shadow-sm"
+        >
           <div className="flex items-start gap-3 border-border/70 border-b px-4 py-4 sm:gap-4 sm:px-5">
-            <StatusRing failed={failing.length} label={interpolate(t.ring, { passed: passed.length, failed: failing.length, skipped: skipped.length, total: pr.checks.length })} passed={passed.length} total={pr.checks.length} />
+            <StatusRing
+              failed={failing.length}
+              label={interpolate(t.ring, {
+                passed: passed.length,
+                failed: failing.length,
+                skipped: skipped.length,
+                total: pr.checks.length,
+              })}
+              passed={passed.length}
+              total={pr.checks.length}
+            />
             <div className="min-w-0 flex-1">
               <h2 className="font-semibold text-[15px]" id={`${id}-checks`}>
                 {failing.length ? t.notSuccessful : t.allPassed}
               </h2>
               <p className="mt-0.5 text-[13px] text-muted-foreground">
-                <span className="font-medium text-category-4-foreground">{interpolate(t.failing, { count: failing.length })}</span>, <span className="font-medium text-foreground">{interpolate(t.skipped, { count: skipped.length })}</span>,{" "}
-                <span className="font-medium text-category-2-foreground">{interpolate(t.successful, { count: passed.length })}</span> {t.checks}
+                <span className="font-medium text-category-4-foreground">
+                  {interpolate(t.failing, { count: failing.length })}
+                </span>
+                ,{" "}
+                <span className="font-medium text-foreground">
+                  {interpolate(t.skipped, { count: skipped.length })}
+                </span>
+                ,{" "}
+                <span className="font-medium text-category-2-foreground">
+                  {interpolate(t.successful, { count: passed.length })}
+                </span>{" "}
+                {t.checks}
               </p>
             </div>
             <button
@@ -301,13 +498,33 @@ function ChecksConsoleScreen({ pr, status = "ready", error, onRetry, onUpdateBra
               onClick={() => setCollapsed((v) => !v)}
               type="button"
             >
-              {collapsed ? <ChevronDownIcon aria-hidden className="size-4" /> : <ChevronUpIcon aria-hidden className="size-4" />}
+              {collapsed ? (
+                <ChevronDownIcon aria-hidden className="size-4" />
+              ) : (
+                <ChevronUpIcon aria-hidden className="size-4" />
+              )}
             </button>
           </div>
           <div hidden={collapsed} id={`${id}-groups`}>
-            <CheckGroup checks={failing} label={interpolate(t.failingGroup, { count: failing.length })} open t={t} tone="fail" />
-            <CheckGroup checks={skipped} label={interpolate(t.skippedGroup, { count: skipped.length })} t={t} tone="muted" />
-            <CheckGroup checks={passed} label={interpolate(t.passedGroup, { count: passed.length })} t={t} tone="ok" />
+            <CheckGroup
+              checks={failing}
+              label={interpolate(t.failingGroup, { count: failing.length })}
+              open
+              t={t}
+              tone="fail"
+            />
+            <CheckGroup
+              checks={skipped}
+              label={interpolate(t.skippedGroup, { count: skipped.length })}
+              t={t}
+              tone="muted"
+            />
+            <CheckGroup
+              checks={passed}
+              label={interpolate(t.passedGroup, { count: passed.length })}
+              t={t}
+              tone="ok"
+            />
           </div>
         </section>
 
@@ -316,13 +533,27 @@ function ChecksConsoleScreen({ pr, status = "ready", error, onRetry, onUpdateBra
             <Notice
               action={
                 onUpdateBranch ? (
-                  <button className={plainButton} disabled={update.isPending()} onClick={() => void update.run()} type="button">
-                    {update.isPending() ? <Spinner className="size-3.5" /> : null}
+                  <button
+                    className={plainButton}
+                    disabled={update.isPending()}
+                    onClick={() => void update.run()}
+                    type="button"
+                  >
+                    {update.isPending() ? (
+                      <Spinner className="size-3.5" />
+                    ) : null}
                     {t.updateBranch}
                   </button>
                 ) : undefined
               }
-              body={[interpolate(t.behindBody, { base: pr.base }), pr.mergeAuthorEmail ? interpolate(t.behindAuthor, { email: pr.mergeAuthorEmail }) : ""].join(" ").trim()}
+              body={[
+                interpolate(t.behindBody, { base: pr.base }),
+                pr.mergeAuthorEmail
+                  ? interpolate(t.behindAuthor, { email: pr.mergeAuthorEmail })
+                  : "",
+              ]
+                .join(" ")
+                .trim()}
               icon={<GitMergeIcon className="size-4" />}
               title={t.behindTitle}
               tone="warn"
@@ -332,8 +563,15 @@ function ChecksConsoleScreen({ pr, status = "ready", error, onRetry, onUpdateBra
             <Notice
               action={
                 onReadyForReview ? (
-                  <button className={plainButton} disabled={ready.isPending()} onClick={() => void ready.run()} type="button">
-                    {ready.isPending() ? <Spinner className="size-3.5" /> : null}
+                  <button
+                    className={plainButton}
+                    disabled={ready.isPending()}
+                    onClick={() => void ready.run()}
+                    type="button"
+                  >
+                    {ready.isPending() ? (
+                      <Spinner className="size-3.5" />
+                    ) : null}
                     {t.readyForReview}
                   </button>
                 ) : undefined
@@ -345,7 +583,10 @@ function ChecksConsoleScreen({ pr, status = "ready", error, onRetry, onUpdateBra
             />
           ) : null}
           {error_ ? (
-            <p className="border-border/70 border-b px-4 py-2 text-destructive-foreground text-xs sm:px-5" role="alert">
+            <p
+              className="border-border/70 border-b px-4 py-2 text-destructive-foreground text-xs sm:px-5"
+              role="alert"
+            >
               {error_}
             </p>
           ) : null}
@@ -364,7 +605,10 @@ function ChecksConsoleScreen({ pr, status = "ready", error, onRetry, onUpdateBra
             {commandLineHref ? (
               <span className="text-[13px] text-muted-foreground">
                 {t.commandLine}{" "}
-                <WirefrontLink className="inline-flex items-center gap-1 rounded text-category-1-foreground outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring" href={commandLineHref}>
+                <WirefrontLink
+                  className="inline-flex items-center gap-1 rounded text-category-1-foreground outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+                  href={commandLineHref}
+                >
                   <TerminalIcon aria-hidden className="size-3" />
                   {t.commandLineLink}
                 </WirefrontLink>

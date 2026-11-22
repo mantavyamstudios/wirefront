@@ -9,7 +9,11 @@ import { Progress } from "@wirefront/ui/progress";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  useMessages,
+  useWirefront,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { WrenchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -18,7 +22,8 @@ import { useEffect, useState } from "react";
 export const MAINTENANCE_MESSAGES = {
   badge: "Scheduled maintenance",
   title: "We’ll be back shortly.",
-  description: "We’re rolling out a database migration. Reads and writes are paused for the duration. No data will be lost.",
+  description:
+    "We’re rolling out a database migration. Reads and writes are paused for the duration. No data will be lost.",
   eta: "ETA",
   progress: "Maintenance progress",
   overdue: "Any moment now",
@@ -39,12 +44,20 @@ export interface MaintenanceProps {
   className?: string;
 }
 
-function MaintenanceScreen({ startedAt, endsAt, onSubscribe, statusHref, className }: MaintenanceProps) {
+function MaintenanceScreen({
+  startedAt,
+  endsAt,
+  onSubscribe,
+  statusHref,
+  className,
+}: MaintenanceProps) {
   const t = useMessages("maintenance", MAINTENANCE_MESSAGES);
   const { now } = useWirefront();
   const [current, setCurrent] = useState(() => now().getTime());
   const [subscribed, setSubscribed] = useState(false);
-  const subscribe = useAction(onSubscribe ?? (async () => {}), { onSuccess: () => setSubscribed(true) });
+  const subscribe = useAction(onSubscribe ?? (async () => {}), {
+    onSuccess: () => setSubscribed(true),
+  });
 
   useEffect(() => {
     const id = window.setInterval(() => setCurrent(now().getTime()), 1000);
@@ -54,13 +67,24 @@ function MaintenanceScreen({ startedAt, endsAt, onSubscribe, statusHref, classNa
   const start = Date.parse(startedAt);
   const end = Date.parse(endsAt);
   const remaining = Math.max(0, Math.round((end - current) / 1000));
-  const progress = end > start ? Math.min(100, Math.max(0, ((current - start) / (end - start)) * 100)) : 100;
+  const progress =
+    end > start
+      ? Math.min(100, Math.max(0, ((current - start) / (end - start)) * 100))
+      : 100;
   const clock = `${String(Math.floor(remaining / 60)).padStart(2, "0")}:${String(remaining % 60).padStart(2, "0")}`;
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-10 sm:px-6 sm:py-16", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-10 sm:px-6 sm:py-16",
+        className
+      )}
+    >
       <div className="mx-auto flex max-w-xl flex-col items-center text-center">
-        <Badge className="gap-2 font-mono text-[10px] uppercase tracking-[0.25em]" variant="outline">
+        <Badge
+          className="gap-2 font-mono text-[10px] uppercase tracking-[0.25em]"
+          variant="outline"
+        >
           <span aria-hidden className="relative inline-flex">
             <span className="size-2 rounded-full bg-warning" />
             <span className="absolute inset-0 size-2 rounded-full bg-warning/60 motion-safe:animate-ping" />
@@ -70,25 +94,41 @@ function MaintenanceScreen({ startedAt, endsAt, onSubscribe, statusHref, classNa
         <div className="mt-8 flex size-14 items-center justify-center rounded-2xl border border-border bg-card text-foreground shadow-xs/5">
           <WrenchIcon aria-hidden className="size-6" />
         </div>
-        <h1 className="mt-6 font-heading text-2xl leading-tight md:text-3xl">{t.title}</h1>
-        <p className="mt-2 max-w-md text-balance text-muted-foreground text-sm">{t.description}</p>
+        <h1 className="mt-6 font-heading text-2xl leading-tight md:text-3xl">
+          {t.title}
+        </h1>
+        <p className="mt-2 max-w-md text-balance text-muted-foreground text-sm">
+          {t.description}
+        </p>
         <div className="mt-10 w-full max-w-sm">
           <div className="flex items-center justify-between font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
             <span>{t.eta}</span>
-            <span className="text-foreground tabular-nums">{remaining > 0 ? clock : t.overdue}</span>
+            <span className="text-foreground tabular-nums">
+              {remaining > 0 ? clock : t.overdue}
+            </span>
           </div>
           <Progress aria-label={t.progress} className="mt-2" value={progress} />
         </div>
         {onSubscribe || statusHref ? (
           <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
             {onSubscribe && !subscribed ? (
-              <Button disabled={subscribe.isPending()} onClick={() => void subscribe.run()} size="sm" variant="outline">
+              <Button
+                disabled={subscribe.isPending()}
+                onClick={() => void subscribe.run()}
+                size="sm"
+                variant="outline"
+              >
                 {subscribe.isPending() ? <Spinner /> : null}
                 {t.subscribe}
               </Button>
             ) : null}
             {statusHref ? (
-              <WirefrontLink className={buttonVariants({ size: "sm", variant: "ghost" })} href={statusHref} rel="noreferrer" target="_blank">
+              <WirefrontLink
+                className={buttonVariants({ size: "sm", variant: "ghost" })}
+                href={statusHref}
+                rel="noreferrer"
+                target="_blank"
+              >
                 {t.status}
               </WirefrontLink>
             ) : null}

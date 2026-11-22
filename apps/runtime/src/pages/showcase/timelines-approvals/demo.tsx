@@ -8,7 +8,8 @@ import * as fixtures from "./fixtures";
 import { MergeReadiness } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function TimelinesApprovalsShowcasePage() {
   const state = useShowcaseState();
@@ -18,8 +19,18 @@ export function TimelinesApprovalsShowcasePage() {
         error="The pull request didn’t load. Check your connection and try again."
         onMerge={() => wait(800)}
         onRetry={() => {}}
-        pr={state === "loading" || state === "error" ? undefined : fixtures.getPullRequest}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        pr={
+          state === "loading" || state === "error"
+            ? undefined
+            : fixtures.getPullRequest
+        }
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

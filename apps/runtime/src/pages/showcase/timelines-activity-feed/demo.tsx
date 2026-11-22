@@ -10,7 +10,8 @@ import * as fixtures from "./fixtures";
 import { ActivityFeed } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function TimelinesActivityFeedShowcasePage() {
   const state = useShowcaseState();
@@ -19,14 +20,26 @@ export function TimelinesActivityFeedShowcasePage() {
     <WirefrontProvider locale="en-US" now={demoNow} timeZone="UTC">
       <ActivityFeed
         error="Activity didn’t load. Check your connection and try again."
-        events={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listActivity.events}
+        events={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? []
+              : fixtures.listActivity.events
+        }
         hasMore={hasMore}
         onLoadMore={async () => {
           await wait(600);
           setHasMore(false);
         }}
         onRetry={() => {}}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

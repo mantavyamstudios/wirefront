@@ -8,7 +8,8 @@ import * as fixtures from "./fixtures";
 import { NotificationCenter } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function TimelinesNotificationsShowcasePage() {
   const state = useShowcaseState();
@@ -17,10 +18,22 @@ export function TimelinesNotificationsShowcasePage() {
       <NotificationCenter
         allHref="#activity"
         error="Notifications didn’t load. Check your connection and try again."
-        notifications={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listNotifications}
+        notifications={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? []
+              : fixtures.listNotifications
+        }
         onMarkAllRead={() => wait(400)}
         onRetry={() => {}}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

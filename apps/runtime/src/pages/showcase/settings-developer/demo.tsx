@@ -7,7 +7,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { DeveloperLabs } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function SettingsDeveloperShowcasePage() {
   const state = useShowcaseState();
@@ -15,14 +16,26 @@ export function SettingsDeveloperShowcasePage() {
     <WirefrontProvider timeZone="UTC">
       <DeveloperLabs
         apiExplorerHref="#api-explorer"
-        data={state === "loading" || state === "error" ? undefined : state === "empty" ? { ...fixtures.getDeveloperSettings, groups: [] } : fixtures.getDeveloperSettings}
+        data={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? { ...fixtures.getDeveloperSettings, groups: [] }
+              : fixtures.getDeveloperSettings
+        }
         error="Developer settings didn’t load. Check your connection and try again."
         logLines={fixtures.logLines}
         onRetry={() => {}}
         onSetDebug={() => wait(300)}
         onSetEnvironment={() => wait(300)}
         onSetFlag={() => wait(300)}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

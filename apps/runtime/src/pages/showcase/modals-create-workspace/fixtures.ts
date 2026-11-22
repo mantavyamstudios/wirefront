@@ -12,4 +12,9 @@ export const takenSlugs = ["acme", "acme-prod"];
 export const checkSlug = { available: true };
 
 /** What the mocks return for `createWorkspace`. */
-export const createWorkspace: Workspace = { id: "ws_new", name: "Acme studios", slug: "acme-studios", visibility: "team" };
+export const createWorkspace: Workspace = {
+  id: "ws_new",
+  name: "Acme studios",
+  slug: "acme-studios",
+  visibility: "team",
+};

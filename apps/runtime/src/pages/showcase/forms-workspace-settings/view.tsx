@@ -5,7 +5,13 @@
 import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { Button } from "@wirefront/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@wirefront/ui/dropdown-menu";
 import { Input } from "@wirefront/ui/input";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Separator } from "@wirefront/ui/separator";
@@ -14,12 +20,27 @@ import { Switch } from "@wirefront/ui/switch";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ChevronsUpDownIcon, type LucideIcon, UploadIcon } from "lucide-react";
-import { Fragment, type ReactNode, type SelectHTMLAttributes, useId, useRef, useState } from "react";
+import {
+  Fragment,
+  type ReactNode,
+  type SelectHTMLAttributes,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
-import { type DateFormat, GeneralSettings, type UploadedAvatar } from "./schema";
+import {
+  type DateFormat,
+  GeneralSettings,
+  type UploadedAvatar,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("workspaceSettings.<key>"). */
 export const WORKSPACE_SETTINGS_MESSAGES = {
@@ -48,9 +69,11 @@ export const WORKSPACE_SETTINGS_MESSAGES = {
   publicSignUp: "Public sign-up",
   publicSignUpDescription: "Anyone with a workspace email can request access.",
   requireAdminTwoFactor: "Two-factor for admins",
-  requireAdminTwoFactorDescription: "Require a second factor for owner and admin roles.",
+  requireAdminTwoFactorDescription:
+    "Require a second factor for owner and admin roles.",
   showProjectIds: "Show project IDs",
-  showProjectIdsDescription: "Display the short ID next to project names everywhere.",
+  showProjectIdsDescription:
+    "Display the short ID next to project names everywhere.",
   unsaved: "Unsaved changes",
   saving: "Saving",
   saved: "All saved",
@@ -93,9 +116,16 @@ export interface WorkspaceSettingsProps {
 }
 
 const DATE_FORMATS: DateFormat[] = ["ymd", "dmy", "mdy"];
-const TOGGLES = ["publicSignUp", "requireAdminTwoFactor", "showProjectIds"] as const;
+const TOGGLES = [
+  "publicSignUp",
+  "requireAdminTwoFactor",
+  "showProjectIds",
+] as const;
 
-const same = (a: GeneralSettings, b: GeneralSettings) => (Object.keys(a) as (keyof GeneralSettings)[]).every((key) => a[key] === b[key]);
+const same = (a: GeneralSettings, b: GeneralSettings) =>
+  (Object.keys(a) as (keyof GeneralSettings)[]).every(
+    (key) => a[key] === b[key]
+  );
 
 function WorkspaceSettingsScreen({
   defaultValues,
@@ -114,16 +144,31 @@ function WorkspaceSettingsScreen({
   const [values, setValues] = useState(defaultValues);
   const [avatar, setAvatar] = useState(avatarUrl);
   const fileInput = useRef<HTMLInputElement>(null);
-  const form = useActionForm({ schema: GeneralSettings, action: onSave, onSuccess: (_, input) => setSaved(input) });
-  const upload = useAction(onUploadAvatar ?? (async () => {}), { onSuccess: (result) => result && setAvatar(result.avatarUrl) });
+  const form = useActionForm({
+    schema: GeneralSettings,
+    action: onSave,
+    onSuccess: (_, input) => setSaved(input),
+  });
+  const upload = useAction(onUploadAvatar ?? (async () => {}), {
+    onSuccess: (result) => result && setAvatar(result.avatarUrl),
+  });
   const dirty = !same(values, saved);
-  const set = <Key extends keyof GeneralSettings>(key: Key, value: GeneralSettings[Key]) => setValues((v) => ({ ...v, [key]: value }));
+  const set = <Key extends keyof GeneralSettings>(
+    key: Key,
+    value: GeneralSettings[Key]
+  ) => setValues((v) => ({ ...v, [key]: value }));
   const active = nav?.find((item) => item.id === activeSection);
   const ActiveIcon = active?.icon;
 
   return (
     <div className={cn("min-h-svh bg-background text-foreground", className)}>
-      <div className={cn("mx-auto min-h-svh max-w-5xl", nav && "md:grid md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[220px_minmax(0,1fr)]")}>
+      <div
+        className={cn(
+          "mx-auto min-h-svh max-w-5xl",
+          nav &&
+            "md:grid md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[220px_minmax(0,1fr)]"
+        )}
+      >
         {nav ? (
           <>
             {/* Phones: one sticky section switcher (current section + a menu of
@@ -131,25 +176,59 @@ function WorkspaceSettingsScreen({
             <div className="sticky top-0 z-20 border-border/60 border-b bg-background/95 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger
-                  aria-label={interpolate(t.switchSection, { workspace: values.name, section: active?.label ?? t.title })}
+                  aria-label={interpolate(t.switchSection, {
+                    workspace: values.name,
+                    section: active?.label ?? t.title,
+                  })}
                   className="flex min-h-11 w-full items-center gap-3 rounded-lg border border-border/60 bg-card px-3 text-start"
                 >
-                  {ActiveIcon ? <ActiveIcon aria-hidden className={cn("size-4 shrink-0", active?.danger ? "text-destructive" : "opacity-70")} /> : null}
+                  {ActiveIcon ? (
+                    <ActiveIcon
+                      aria-hidden
+                      className={cn(
+                        "size-4 shrink-0",
+                        active?.danger ? "text-destructive" : "opacity-70"
+                      )}
+                    />
+                  ) : null}
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{values.name}</span>
-                    <span className="block truncate text-sm">{active?.label ?? t.title}</span>
+                    <span className="block truncate font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                      {values.name}
+                    </span>
+                    <span className="block truncate text-sm">
+                      {active?.label ?? t.title}
+                    </span>
                   </span>
-                  <ChevronsUpDownIcon aria-hidden className="size-4 shrink-0 opacity-60" />
+                  <ChevronsUpDownIcon
+                    aria-hidden
+                    className="size-4 shrink-0 opacity-60"
+                  />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-(--anchor-width)">
+                <DropdownMenuContent
+                  align="start"
+                  className="w-(--anchor-width)"
+                >
                   {nav.map(({ icon: Icon, ...item }) => (
                     <Fragment key={item.id}>
                       {item.danger ? <DropdownMenuSeparator /> : null}
                       <DropdownMenuItem
-                        className={item.danger ? "text-destructive-foreground" : undefined}
-                        render={<WirefrontLink aria-current={item.id === activeSection ? "page" : undefined} href={item.href} />}
+                        className={
+                          item.danger
+                            ? "text-destructive-foreground"
+                            : undefined
+                        }
+                        render={
+                          <WirefrontLink
+                            aria-current={
+                              item.id === activeSection ? "page" : undefined
+                            }
+                            href={item.href}
+                          />
+                        }
                       >
-                        {Icon ? <Icon aria-hidden className="opacity-70" /> : null}
+                        {Icon ? (
+                          <Icon aria-hidden className="opacity-70" />
+                        ) : null}
                         {item.label}
                       </DropdownMenuItem>
                     </Fragment>
@@ -159,14 +238,21 @@ function WorkspaceSettingsScreen({
             </div>
 
             <aside className="hidden border-border/60 border-e py-8 md:block md:px-4">
-              <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.workspace}</div>
-              <div className="mt-1 truncate font-heading text-lg">{values.name}</div>
+              <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+                {t.workspace}
+              </div>
+              <div className="mt-1 truncate font-heading text-lg">
+                {values.name}
+              </div>
               <nav aria-label={t.sections}>
                 <ul className="mt-6 flex flex-col gap-0.5">
                   {nav.map(({ icon: Icon, ...item }) => {
                     const current = item.id === activeSection;
                     return (
-                      <li className={item.danger ? "mt-3" : undefined} key={item.id}>
+                      <li
+                        className={item.danger ? "mt-3" : undefined}
+                        key={item.id}
+                      >
                         <WirefrontLink
                           aria-current={current ? "page" : undefined}
                           className={cn(
@@ -177,11 +263,13 @@ function WorkspaceSettingsScreen({
                                 : "text-destructive-foreground hover:bg-destructive/6"
                               : current
                                 ? "bg-foreground/6 text-foreground"
-                                : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground",
+                                : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground"
                           )}
                           href={item.href}
                         >
-                          {Icon ? <Icon aria-hidden className="size-4 opacity-70" /> : null}
+                          {Icon ? (
+                            <Icon aria-hidden className="size-4 opacity-70" />
+                          ) : null}
                           {item.label}
                         </WirefrontLink>
                       </li>
@@ -193,19 +281,35 @@ function WorkspaceSettingsScreen({
           </>
         ) : null}
 
-        <Form className="min-w-0 px-4 pt-8 pb-32 sm:px-6 md:pt-12 lg:px-10" errors={form.formProps.errors} noValidate onFormSubmit={() => void form.submit(values)}>
+        <Form
+          className="min-w-0 px-4 pt-8 pb-32 sm:px-6 md:pt-12 lg:px-10"
+          errors={form.formProps.errors}
+          noValidate
+          onFormSubmit={() => void form.submit(values)}
+        >
           <header className="border-border/60 border-b pb-6">
-            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
+            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+              {t.eyebrow}
+            </div>
             <h1 className="mt-1 font-heading text-2xl">{t.title}</h1>
-            <p className="mt-1 text-muted-foreground text-sm">{t.description}</p>
+            <p className="mt-1 text-muted-foreground text-sm">
+              {t.description}
+            </p>
           </header>
 
           <Section hint={t.identityHint} title={t.identity}>
             <div className="flex items-center gap-4">
               {avatar ? (
-                <img alt={t.avatar} className="size-14 shrink-0 rounded-lg object-cover ring-1 ring-border/60" src={avatar} />
+                <img
+                  alt={t.avatar}
+                  className="size-14 shrink-0 rounded-lg object-cover ring-1 ring-border/60"
+                  src={avatar}
+                />
               ) : (
-                <div aria-hidden className="size-14 shrink-0 rounded-lg bg-linear-to-br from-primary/40 to-primary/10 ring-1 ring-border/60" />
+                <div
+                  aria-hidden
+                  className="size-14 shrink-0 rounded-lg bg-linear-to-br from-primary/40 to-primary/10 ring-1 ring-border/60"
+                />
               )}
               {onUploadAvatar ? (
                 <div className="flex-1">
@@ -222,13 +326,29 @@ function WorkspaceSettingsScreen({
                     tabIndex={-1}
                     type="file"
                   />
-                  <Button aria-busy={upload.isPending()} disabled={upload.isPending()} onClick={() => fileInput.current?.click()} size="sm" type="button" variant="outline">
-                    {upload.isPending() ? <Spinner data-icon="inline-start" /> : <UploadIcon />}
+                  <Button
+                    aria-busy={upload.isPending()}
+                    disabled={upload.isPending()}
+                    onClick={() => fileInput.current?.click()}
+                    size="sm"
+                    type="button"
+                    variant="outline"
+                  >
+                    {upload.isPending() ? (
+                      <Spinner data-icon="inline-start" />
+                    ) : (
+                      <UploadIcon />
+                    )}
                     {t.uploadAvatar}
                   </Button>
-                  <p className="mt-1.5 text-muted-foreground text-xs">{t.avatarHint}</p>
+                  <p className="mt-1.5 text-muted-foreground text-xs">
+                    {t.avatarHint}
+                  </p>
                   {upload.error ? (
-                    <p className="mt-1.5 text-destructive-foreground text-xs" role="alert">
+                    <p
+                      className="mt-1.5 text-destructive-foreground text-xs"
+                      role="alert"
+                    >
                       {upload.error}
                     </p>
                   ) : null}
@@ -237,15 +357,27 @@ function WorkspaceSettingsScreen({
             </div>
 
             <Field.Root className="flex flex-col gap-1.5" name="name">
-              <Field.Label className="font-medium text-sm leading-none">{t.name}</Field.Label>
-              <Input autoComplete="organization" onChange={(e) => set("name", e.target.value)} value={values.name} />
+              <Field.Label className="font-medium text-sm leading-none">
+                {t.name}
+              </Field.Label>
+              <Input
+                autoComplete="organization"
+                onChange={(e) => set("name", e.target.value)}
+                value={values.name}
+              />
               <Field.Error className="text-destructive-foreground text-xs" />
             </Field.Root>
 
             <Field.Root className="flex flex-col gap-1.5" name="slug">
-              <Field.Label className="font-medium text-sm leading-none">{t.slug}</Field.Label>
+              <Field.Label className="font-medium text-sm leading-none">
+                {t.slug}
+              </Field.Label>
               <div className="flex h-9 items-center gap-1 rounded-lg border border-input bg-background px-3 font-mono text-sm focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/24 pointer-coarse:h-11">
-                {urlPrefix ? <span className="shrink-0 text-muted-foreground">{urlPrefix}</span> : null}
+                {urlPrefix ? (
+                  <span className="shrink-0 text-muted-foreground">
+                    {urlPrefix}
+                  </span>
+                ) : null}
                 <Field.Control
                   autoCapitalize="none"
                   autoCorrect="off"
@@ -255,7 +387,9 @@ function WorkspaceSettingsScreen({
                   value={values.slug}
                 />
               </div>
-              <Field.Description className="text-muted-foreground text-xs">{t.slugHint}</Field.Description>
+              <Field.Description className="text-muted-foreground text-xs">
+                {t.slugHint}
+              </Field.Description>
               <Field.Error className="text-destructive-foreground text-xs" />
             </Field.Root>
           </Section>
@@ -264,10 +398,17 @@ function WorkspaceSettingsScreen({
 
           <Section hint={t.regionHint} title={t.region}>
             <div className="flex flex-col gap-1.5">
-              <label className="font-medium text-sm leading-none" htmlFor={`${id}-tz`}>
+              <label
+                className="font-medium text-sm leading-none"
+                htmlFor={`${id}-tz`}
+              >
                 {t.timeZone}
               </label>
-              <NativeSelect id={`${id}-tz`} onChange={(e) => set("timeZone", e.target.value)} value={values.timeZone}>
+              <NativeSelect
+                id={`${id}-tz`}
+                onChange={(e) => set("timeZone", e.target.value)}
+                value={values.timeZone}
+              >
                 {timeZones.map((zone) => (
                   <option key={zone.value} value={zone.value}>
                     {zone.label}
@@ -276,10 +417,19 @@ function WorkspaceSettingsScreen({
               </NativeSelect>
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="font-medium text-sm leading-none" htmlFor={`${id}-fmt`}>
+              <label
+                className="font-medium text-sm leading-none"
+                htmlFor={`${id}-fmt`}
+              >
                 {t.dateFormat}
               </label>
-              <NativeSelect id={`${id}-fmt`} onChange={(e) => set("dateFormat", e.target.value as DateFormat)} value={values.dateFormat}>
+              <NativeSelect
+                id={`${id}-fmt`}
+                onChange={(e) =>
+                  set("dateFormat", e.target.value as DateFormat)
+                }
+                value={values.dateFormat}
+              >
                 {DATE_FORMATS.map((format) => (
                   <option key={format} value={format}>
                     {t[format]}
@@ -303,7 +453,10 @@ function WorkspaceSettingsScreen({
                   <div className="font-medium text-sm" id={`${id}-${key}`}>
                     {t[key]}
                   </div>
-                  <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed" id={`${id}-${key}-hint`}>
+                  <p
+                    className="mt-0.5 text-muted-foreground text-xs leading-relaxed"
+                    id={`${id}-${key}-hint`}
+                  >
                     {t[`${key}Description`]}
                   </p>
                 </div>
@@ -320,14 +473,20 @@ function WorkspaceSettingsScreen({
           </Section>
 
           {form.formError ? (
-            <p className="mt-8 text-destructive-foreground text-sm" role="alert">
+            <p
+              className="mt-8 text-destructive-foreground text-sm"
+              role="alert"
+            >
               {form.formError}
             </p>
           ) : null}
 
           <div className="fixed inset-x-0 bottom-0 z-30 border-border/60 border-t bg-background/85 pb-[env(safe-area-inset-bottom)] backdrop-blur">
             <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-10">
-              <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]" role="status">
+              <div
+                className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]"
+                role="status"
+              >
                 {form.pending ? t.saving : dirty ? t.unsaved : t.saved}
               </div>
               <div className="flex items-center gap-2">
@@ -344,7 +503,13 @@ function WorkspaceSettingsScreen({
                 >
                   {t.discard}
                 </Button>
-                <Button aria-busy={form.pending} className="pointer-coarse:h-11" disabled={!dirty || form.pending} size="sm" type="submit">
+                <Button
+                  aria-busy={form.pending}
+                  className="pointer-coarse:h-11"
+                  disabled={!dirty || form.pending}
+                  size="sm"
+                  type="submit"
+                >
                   {form.pending ? <Spinner data-icon="inline-start" /> : null}
                   {t.save}
                 </Button>
@@ -357,25 +522,40 @@ function WorkspaceSettingsScreen({
   );
 }
 
-function Section({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
+function Section({
+  title,
+  hint,
+  children,
+}: {
+  title: string;
+  hint?: string;
+  children: ReactNode;
+}) {
   return (
     <section className="mt-8 grid grid-cols-1 gap-x-10 gap-y-4 md:grid-cols-[160px_minmax(0,1fr)] md:gap-y-6 lg:grid-cols-[180px_minmax(0,1fr)]">
       <div>
         <h2 className="font-medium text-sm">{title}</h2>
-        {hint ? <p className="mt-1 text-muted-foreground text-xs leading-relaxed">{hint}</p> : null}
+        {hint ? (
+          <p className="mt-1 text-muted-foreground text-xs leading-relaxed">
+            {hint}
+          </p>
+        ) : null}
       </div>
       <div className="flex flex-col gap-5">{children}</div>
     </section>
   );
 }
 
-function NativeSelect({ className, ...props }: SelectHTMLAttributes<HTMLSelectElement>) {
+function NativeSelect({
+  className,
+  ...props
+}: SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <div className="relative">
       <select
         className={cn(
           "h-9 w-full appearance-none rounded-lg border border-input bg-background ps-3 pe-9 text-sm outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24 pointer-coarse:h-11",
-          className,
+          className
         )}
         {...props}
       />

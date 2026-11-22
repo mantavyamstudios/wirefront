@@ -3,7 +3,10 @@
 import type { MentionGroup, Mentionable } from "./schema";
 
 /** Demo data for the showcase, the generated mocks and tests. */
-export const listMentionables: { members: Mentionable[]; groups: MentionGroup[] } = {
+export const listMentionables: {
+  members: Mentionable[];
+  groups: MentionGroup[];
+} = {
   members: [
     { id: "u1", name: "Maya Okafor", handle: "maya", team: "Engineering" },
     { id: "u2", name: "James Lin", handle: "james", team: "Engineering" },

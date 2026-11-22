@@ -8,7 +8,8 @@ import * as fixtures from "./fixtures";
 import { PullRequestPage } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function TimelinesPullRequestShowcasePage() {
   const state = useShowcaseState();
@@ -20,8 +21,18 @@ export function TimelinesPullRequestShowcasePage() {
         onAddReviewer={() => {}}
         onMerge={() => wait(800)}
         onRetry={() => {}}
-        pr={state === "loading" || state === "error" ? undefined : fixtures.getPullRequestDetail}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        pr={
+          state === "loading" || state === "error"
+            ? undefined
+            : fixtures.getPullRequestDetail
+        }
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

@@ -4,7 +4,14 @@
 /**
  * The wiring contract of the settings shell and the settings screens.
  */
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SettingsShell } from "@wirefront/ui/settings-shell";
 import { fail } from "@wirefront/ui/wirefront/types";
@@ -30,16 +37,36 @@ describe("SettingsShell", () => {
       <SettingsShell
         activeId="security"
         back={{ href: "/", label: "Back to Acme" }}
-        groups={[{ label: "Account", items: [{ id: "profile", label: "Profile", href: "/settings/profile" }, { id: "security", label: "Security", href: "/settings/security" }] }]}
+        groups={[
+          {
+            label: "Account",
+            items: [
+              { id: "profile", label: "Profile", href: "/settings/profile" },
+              { id: "security", label: "Security", href: "/settings/security" },
+            ],
+          },
+        ]}
       >
         <h1>Security page</h1>
-      </SettingsShell>,
+      </SettingsShell>
     );
     expect(screen.getByRole("heading", { name: "Security page" })).toBeTruthy();
-    const nav = screen.getAllByRole("navigation", { name: "Settings" })[0] as HTMLElement;
-    expect(within(nav).getByRole("link", { name: "Security" }).getAttribute("aria-current")).toBe("page");
-    expect(within(nav).getByRole("link", { name: "Profile" }).getAttribute("href")).toBe("/settings/profile");
-    expect(screen.getAllByRole("link", { name: "Back to Acme" })[0]?.getAttribute("href")).toBe("/");
+    const nav = screen.getAllByRole("navigation", {
+      name: "Settings",
+    })[0] as HTMLElement;
+    expect(
+      within(nav)
+        .getByRole("link", { name: "Security" })
+        .getAttribute("aria-current")
+    ).toBe("page");
+    expect(
+      within(nav).getByRole("link", { name: "Profile" }).getAttribute("href")
+    ).toBe("/settings/profile");
+    expect(
+      screen
+        .getAllByRole("link", { name: "Back to Acme" })[0]
+        ?.getAttribute("href")
+    ).toBe("/");
   });
 });
 
@@ -49,26 +76,44 @@ describe("NotificationSettings", () => {
   it("saves the whole preference set after each change", async () => {
     const onSave = vi.fn(async (_prefs: typeof data.preferences) => {});
     render(<NotificationSettings data={data} onSave={onSave} product="Acme" />);
-    fireEvent.click(screen.getByRole("switch", { name: "Billing notifications" }));
+    fireEvent.click(
+      screen.getByRole("switch", { name: "Billing notifications" })
+    );
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
     const saved = onSave.mock.calls[0]?.[0];
-    expect(saved?.sections.find((s) => s.id === "billing")?.enabled).toBe(false);
+    expect(saved?.sections.find((s) => s.id === "billing")?.enabled).toBe(
+      false
+    );
     expect(saved?.channels).toEqual(data.preferences.channels);
     expect(await screen.findByText("Saved")).toBeTruthy();
   });
 
   it("goes back to the last saved preferences and shows why when a save fails", async () => {
-    render(<NotificationSettings data={data} onSave={async () => fail("Couldn't save. Try again.")} product="Acme" />);
-    const toggle = screen.getByRole("switch", { name: "Billing notifications" });
+    render(
+      <NotificationSettings
+        data={data}
+        onSave={async () => fail("Couldn't save. Try again.")}
+        product="Acme"
+      />
+    );
+    const toggle = screen.getByRole("switch", {
+      name: "Billing notifications",
+    });
     fireEvent.click(toggle);
-    expect((await screen.findByRole("alert")).textContent).toBe("Couldn't save. Try again.");
-    await waitFor(() => expect(toggle.getAttribute("aria-checked")).toBe("true"));
+    expect((await screen.findByRole("alert")).textContent).toBe(
+      "Couldn't save. Try again."
+    );
+    await waitFor(() =>
+      expect(toggle.getAttribute("aria-checked")).toBe("true")
+    );
   });
 
   it("restores defaults only when something changed", async () => {
     const onSave = vi.fn(async () => {});
     render(<NotificationSettings data={data} onSave={onSave} product="Acme" />);
-    const restore = screen.getAllByRole("button", { name: "Restore defaults" })[0] as HTMLElement;
+    const restore = screen.getAllByRole("button", {
+      name: "Restore defaults",
+    })[0] as HTMLElement;
     expect(restore.hasAttribute("disabled")).toBe(true);
     fireEvent.click(screen.getByRole("switch", { name: "Quiet hours" }));
     await waitFor(() => expect(restore.hasAttribute("disabled")).toBe(false));
@@ -78,46 +123,93 @@ describe("NotificationSettings", () => {
 });
 
 describe("SecuritySettings", () => {
-  const base = { accountEmail: "ada@acme.dev", data: securityFixtures.getSecurity, product: "Acme" };
+  const base = {
+    accountEmail: "ada@acme.dev",
+    data: securityFixtures.getSecurity,
+    product: "Acme",
+  };
 
   it("changes the password only with the current one", async () => {
     const onChangePassword = vi.fn(async () => {});
     render(<SecuritySettings {...base} onChangePassword={onChangePassword} />);
     fireEvent.click(screen.getByRole("button", { name: "Change" }));
-    fireEvent.change(screen.getByLabelText("New password"), { target: { value: "a much longer secret" } });
+    fireEvent.change(screen.getByLabelText("New password"), {
+      target: { value: "a much longer secret" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "Update" }));
-    expect(await screen.findByText("Enter your current password.")).toBeTruthy();
-    fireEvent.change(screen.getByLabelText("Current password"), { target: { value: "old secret" } });
+    expect(
+      await screen.findByText("Enter your current password.")
+    ).toBeTruthy();
+    fireEvent.change(screen.getByLabelText("Current password"), {
+      target: { value: "old secret" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "Update" }));
-    await waitFor(() => expect(onChangePassword).toHaveBeenCalledWith({ currentPassword: "old secret", newPassword: "a much longer secret" }));
+    await waitFor(() =>
+      expect(onChangePassword).toHaveBeenCalledWith({
+        currentPassword: "old secret",
+        newPassword: "a much longer secret",
+      })
+    );
     expect(await screen.findByText("Changed just now")).toBeTruthy();
   });
 
   it("shows recovery codes from the server, and regenerates after confirmation", async () => {
     const onReveal = vi.fn(async () => ok(securityFixtures.getRecoveryCodes));
-    const onRegenerate = vi.fn(async () => ok(securityFixtures.regenerateRecoveryCodes));
-    render(<SecuritySettings {...base} onChangePassword={vi.fn()} onRegenerateRecoveryCodes={onRegenerate} onRevealRecoveryCodes={onReveal} />);
+    const onRegenerate = vi.fn(async () =>
+      ok(securityFixtures.regenerateRecoveryCodes)
+    );
+    render(
+      <SecuritySettings
+        {...base}
+        onChangePassword={vi.fn()}
+        onRegenerateRecoveryCodes={onRegenerate}
+        onRevealRecoveryCodes={onReveal}
+      />
+    );
     fireEvent.click(screen.getByRole("button", { name: "View" }));
     expect(await screen.findByText("x4tn-9pwa")).toBeTruthy();
-    fireEvent.click(screen.getAllByRole("button", { name: "Regenerate" })[0] as HTMLElement);
-    const strip = (await screen.findAllByRole("alert")).find((el) => el.textContent?.includes("Make a new set?")) as HTMLElement;
+    fireEvent.click(
+      screen.getAllByRole("button", { name: "Regenerate" })[0] as HTMLElement
+    );
+    const strip = (await screen.findAllByRole("alert")).find((el) =>
+      el.textContent?.includes("Make a new set?")
+    ) as HTMLElement;
     fireEvent.click(within(strip).getByRole("button", { name: "Regenerate" }));
     expect(await screen.findByText("f3kd-8mwq")).toBeTruthy();
     expect(screen.queryByText("x4tn-9pwa")).toBeNull();
-    expect(screen.getByText("10 of 10 left. Use one if you lose your phone.")).toBeTruthy();
+    expect(
+      screen.getByText("10 of 10 left. Use one if you lose your phone.")
+    ).toBeTruthy();
   });
 
   it("adds a passkey through the builder's WebAuthn action and signs out other sessions", async () => {
     const onAddPasskey = vi.fn(async () => ok(securityFixtures.addPasskey));
     const onSignOutOtherSessions = vi.fn(async () => {});
-    render(<SecuritySettings {...base} onAddPasskey={onAddPasskey} onChangePassword={vi.fn()} onSignOutOtherSessions={onSignOutOtherSessions} />);
+    render(
+      <SecuritySettings
+        {...base}
+        onAddPasskey={onAddPasskey}
+        onChangePassword={vi.fn()}
+        onSignOutOtherSessions={onSignOutOtherSessions}
+      />
+    );
     fireEvent.click(screen.getByRole("button", { name: "Add passkey" }));
-    await waitFor(() => expect(screen.getByLabelText("Passkey name")).toBeTruthy());
+    await waitFor(() =>
+      expect(screen.getByLabelText("Passkey name")).toBeTruthy()
+    );
 
-    fireEvent.click(screen.getAllByRole("button", { name: "Sign out of all other sessions" })[0] as HTMLElement);
-    const strip = (await screen.findAllByRole("alert")).find((el) => el.textContent?.includes("other sessions?")) as HTMLElement;
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: "Sign out of all other sessions",
+      })[0] as HTMLElement
+    );
+    const strip = (await screen.findAllByRole("alert")).find((el) =>
+      el.textContent?.includes("other sessions?")
+    ) as HTMLElement;
     fireEvent.click(within(strip).getByRole("button", { name: "Sign out 3" }));
-    expect(await screen.findByText("You’re only signed in on this device.")).toBeTruthy();
+    expect(
+      await screen.findByText("You’re only signed in on this device.")
+    ).toBeTruthy();
   });
 
   it("hides what isn't wired", () => {
@@ -125,7 +217,9 @@ describe("SecuritySettings", () => {
     expect(screen.queryByRole("button", { name: "Add passkey" })).toBeNull();
     expect(screen.queryByRole("button", { name: "View" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Disable" })).toBeNull();
-    expect(screen.queryByRole("button", { name: /Sign out Ridgeline/ })).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /Sign out Ridgeline/ })
+    ).toBeNull();
   });
 });
 
@@ -138,22 +232,38 @@ describe("TeamRoles", () => {
     const email = screen.getByLabelText("Email address");
     fireEvent.change(email, { target: { value: "theo@ridgeline.app" } });
     fireEvent.click(screen.getByRole("button", { name: "Invite" }));
-    expect(await screen.findByText("That person is already here or invited.")).toBeTruthy();
+    expect(
+      await screen.findByText("That person is already here or invited.")
+    ).toBeTruthy();
     fireEvent.change(email, { target: { value: "sam@ridgeline.app" } });
     fireEvent.click(screen.getByRole("button", { name: "Invite" }));
-    await waitFor(() => expect(onInvite).toHaveBeenCalledWith({ email: "sam@ridgeline.app", roleId: "member" }));
-    expect(await screen.findByText("Invite sent to sam@ridgeline.app")).toBeTruthy();
+    await waitFor(() =>
+      expect(onInvite).toHaveBeenCalledWith({
+        email: "sam@ridgeline.app",
+        roleId: "member",
+      })
+    );
+    expect(
+      await screen.findByText("Invite sent to sam@ridgeline.app")
+    ).toBeTruthy();
   });
 
   it("edits roles as a draft and saves the whole set from the bar", async () => {
     const onSaveRoles = vi.fn(async (_roles: unknown) => {});
     render(<TeamRoles {...base} onSaveRoles={onSaveRoles} />);
-    fireEvent.click(screen.getByRole("checkbox", { name: "Viewer: Delete projects" }));
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "Viewer: Delete projects" })
+    );
     expect(await screen.findByText("You have unsaved changes")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
     await waitFor(() => expect(onSaveRoles).toHaveBeenCalled());
-    const saved = onSaveRoles.mock.calls[0]?.[0] as { id: string; grants: string[] }[];
-    expect(saved.find((r) => r.id === "viewer")?.grants).toContain("projects.delete");
+    const saved = onSaveRoles.mock.calls[0]?.[0] as {
+      id: string;
+      grants: string[];
+    }[];
+    expect(saved.find((r) => r.id === "viewer")?.grants).toContain(
+      "projects.delete"
+    );
     expect(saved.some((r) => r.id === "owner")).toBe(false);
     expect(await screen.findByText("Roles saved")).toBeTruthy();
   });
@@ -162,8 +272,17 @@ describe("TeamRoles", () => {
     render(<TeamRoles {...base} />);
     expect(screen.queryByLabelText("Email address")).toBeNull();
     expect(screen.queryByRole("button", { name: /Duplicate/ })).toBeNull();
-    expect(screen.getByRole("checkbox", { name: "Viewer: Delete projects" }).getAttribute("aria-disabled") ?? screen.getByRole("checkbox", { name: "Viewer: Delete projects" }).hasAttribute("data-disabled")).toBeTruthy();
-    expect(screen.queryByRole("combobox", { name: "Role for Theo Marsh" })).toBeNull();
+    expect(
+      screen
+        .getByRole("checkbox", { name: "Viewer: Delete projects" })
+        .getAttribute("aria-disabled") ??
+        screen
+          .getByRole("checkbox", { name: "Viewer: Delete projects" })
+          .hasAttribute("data-disabled")
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole("combobox", { name: "Role for Theo Marsh" })
+    ).toBeNull();
   });
 });
 
@@ -175,13 +294,22 @@ describe("DeveloperSettings", () => {
     render(<DeveloperSettings {...base} onCreateKey={onCreateKey} />);
     fireEvent.click(screen.getByRole("button", { name: "Create key" }));
     const dialog = await screen.findByRole("dialog");
-    fireEvent.change(within(dialog).getByLabelText("Name"), { target: { value: "Release pipeline" } });
-    fireEvent.click(within(dialog).getByRole("checkbox", { name: "Domains: write" }));
+    fireEvent.change(within(dialog).getByLabelText("Name"), {
+      target: { value: "Release pipeline" },
+    });
+    fireEvent.click(
+      within(dialog).getByRole("checkbox", { name: "Domains: write" })
+    );
     fireEvent.click(within(dialog).getByRole("button", { name: "Create key" }));
     expect(await screen.findByText(devFixtures.createKey.secret)).toBeTruthy();
     expect(onCreateKey).toHaveBeenCalledWith({
       name: "Release pipeline",
-      scopes: ["write:domains", "read:projects", "read:deployments", "read:domains"],
+      scopes: [
+        "write:domains",
+        "read:projects",
+        "read:deployments",
+        "read:domains",
+      ],
       expiresInDays: 90,
     });
   });
@@ -191,17 +319,33 @@ describe("DeveloperSettings", () => {
     render(<DeveloperSettings {...base} onRevealSecret={onRevealSecret} />);
     expect(screen.queryByText(devFixtures.getSigningSecret.secret)).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Reveal secret" }));
-    expect(await screen.findByText(devFixtures.getSigningSecret.secret)).toBeTruthy();
+    expect(
+      await screen.findByText(devFixtures.getSigningSecret.secret)
+    ).toBeTruthy();
     expect(onRevealSecret).toHaveBeenCalledWith("e1");
   });
 
   it("retries failed deliveries and shows the server's results", async () => {
-    const onRetryDeliveries = vi.fn(async ({ deliveryIds }: { endpointId: string; deliveryIds: string[] }) =>
-      ok(deliveryIds.map((id) => ({ ...devFixtures.sendTest, id, event: "deployment.failed" }))),
+    const onRetryDeliveries = vi.fn(
+      async ({ deliveryIds }: { endpointId: string; deliveryIds: string[] }) =>
+        ok(
+          deliveryIds.map((id) => ({
+            ...devFixtures.sendTest,
+            id,
+            event: "deployment.failed",
+          }))
+        )
     );
-    render(<DeveloperSettings {...base} onRetryDeliveries={onRetryDeliveries} />);
+    render(
+      <DeveloperSettings {...base} onRetryDeliveries={onRetryDeliveries} />
+    );
     fireEvent.click(screen.getByRole("button", { name: "Retry failed" }));
-    await waitFor(() => expect(onRetryDeliveries).toHaveBeenCalledWith({ endpointId: "e1", deliveryIds: ["d1", "d2"] }));
+    await waitFor(() =>
+      expect(onRetryDeliveries).toHaveBeenCalledWith({
+        endpointId: "e1",
+        deliveryIds: ["d1", "d2"],
+      })
+    );
     await waitFor(() => expect(screen.queryByText("503")).toBeNull());
   });
 
@@ -210,9 +354,15 @@ describe("DeveloperSettings", () => {
     render(<DeveloperSettings {...base} onCreateEndpoint={onCreateEndpoint} />);
     fireEvent.click(screen.getByRole("button", { name: "Add endpoint" }));
     const dialog = await screen.findByRole("dialog");
-    fireEvent.change(within(dialog).getByLabelText("Endpoint URL"), { target: { value: "http://insecure.example.com/hook" } });
-    fireEvent.click(within(dialog).getByRole("button", { name: "Add endpoint" }));
-    expect(await within(dialog).findByText("Use a full https:// address.")).toBeTruthy();
+    fireEvent.change(within(dialog).getByLabelText("Endpoint URL"), {
+      target: { value: "http://insecure.example.com/hook" },
+    });
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: "Add endpoint" })
+    );
+    expect(
+      await within(dialog).findByText("Use a full https:// address.")
+    ).toBeTruthy();
     expect(onCreateEndpoint).not.toHaveBeenCalled();
   });
 });
@@ -226,29 +376,65 @@ describe("ProfileSettings", () => {
   };
 
   it("checks a new username with the builder and offers its suggestions", async () => {
-    const checkUsername = vi.fn(async () => ({ available: false, suggestions: ["ada-hq"] }));
-    render(<ProfileSettings {...base} checkUsername={checkUsername} onSave={vi.fn()} />);
-    fireEvent.change(screen.getByLabelText("Username"), { target: { value: "ada" } });
-    expect(await screen.findByRole("button", { name: "ada-hq" }, { timeout: 2000 })).toBeTruthy();
+    const checkUsername = vi.fn(async () => ({
+      available: false,
+      suggestions: ["ada-hq"],
+    }));
+    render(
+      <ProfileSettings
+        {...base}
+        checkUsername={checkUsername}
+        onSave={vi.fn()}
+      />
+    );
+    fireEvent.change(screen.getByLabelText("Username"), {
+      target: { value: "ada" },
+    });
+    expect(
+      await screen.findByRole("button", { name: "ada-hq" }, { timeout: 2000 })
+    ).toBeTruthy();
     expect(checkUsername).toHaveBeenCalledWith("ada");
-    expect(screen.getByRole("button", { name: "Save" }).hasAttribute("disabled")).toBe(true);
+    expect(
+      screen.getByRole("button", { name: "Save" }).hasAttribute("disabled")
+    ).toBe(true);
   });
 
   it("saves the edited profile from the bar", async () => {
     const onSave = vi.fn(async (_p: typeof profileFixtures.getProfile) => {});
-    render(<ProfileSettings {...base} checkUsername={vi.fn()} onSave={onSave} />);
-    fireEvent.change(screen.getByLabelText("Public name"), { target: { value: "Ada L." } });
+    render(
+      <ProfileSettings {...base} checkUsername={vi.fn()} onSave={onSave} />
+    );
+    fireEvent.change(screen.getByLabelText("Public name"), {
+      target: { value: "Ada L." },
+    });
     fireEvent.click(await screen.findByRole("button", { name: "Save" }));
-    await waitFor(() => expect(onSave).toHaveBeenCalledWith({ ...profileFixtures.getProfile, publicName: "Ada L." }));
+    await waitFor(() =>
+      expect(onSave).toHaveBeenCalledWith({
+        ...profileFixtures.getProfile,
+        publicName: "Ada L.",
+      })
+    );
     expect(await screen.findByText("Profile saved")).toBeTruthy();
   });
 
   it("keeps the edits and shows why when saving fails", async () => {
-    render(<ProfileSettings {...base} checkUsername={vi.fn()} onSave={async () => fail("That username was just taken.")} />);
-    fireEvent.change(screen.getByLabelText("Public name"), { target: { value: "Ada L." } });
+    render(
+      <ProfileSettings
+        {...base}
+        checkUsername={vi.fn()}
+        onSave={async () => fail("That username was just taken.")}
+      />
+    );
+    fireEvent.change(screen.getByLabelText("Public name"), {
+      target: { value: "Ada L." },
+    });
     fireEvent.click(await screen.findByRole("button", { name: "Save" }));
-    expect((await screen.findByRole("alert")).textContent).toBe("That username was just taken.");
-    expect((screen.getByLabelText("Public name") as HTMLInputElement).value).toBe("Ada L.");
+    expect((await screen.findByRole("alert")).textContent).toBe(
+      "That username was just taken."
+    );
+    expect(
+      (screen.getByLabelText("Public name") as HTMLInputElement).value
+    ).toBe("Ada L.");
   });
 });
 
@@ -257,12 +443,28 @@ describe("SettingsAndPlans", () => {
 
   it("saves workspace settings from the bar, validating the URL", async () => {
     const onSaveWorkspace = vi.fn(async (_w: unknown) => {});
-    render(<SettingsAndPlans {...base} onSaveWorkspace={onSaveWorkspace} tab="workspace" />);
+    render(
+      <SettingsAndPlans
+        {...base}
+        onSaveWorkspace={onSaveWorkspace}
+        tab="workspace"
+      />
+    );
     fireEvent.change(screen.getByLabelText("URL"), { target: { value: "r" } });
-    expect(await screen.findAllByText("Use 3–32 letters, numbers or dashes.")).not.toHaveLength(0);
-    fireEvent.change(screen.getByLabelText("URL"), { target: { value: "ridgeline-hq" } });
+    expect(
+      await screen.findAllByText("Use 3–32 letters, numbers or dashes.")
+    ).not.toHaveLength(0);
+    fireEvent.change(screen.getByLabelText("URL"), {
+      target: { value: "ridgeline-hq" },
+    });
     fireEvent.click(await screen.findByRole("button", { name: "Save" }));
-    await waitFor(() => expect(onSaveWorkspace).toHaveBeenCalledWith({ name: "Ridgeline", slug: "ridgeline-hq", region: "eu-central" }));
+    await waitFor(() =>
+      expect(onSaveWorkspace).toHaveBeenCalledWith({
+        name: "Ridgeline",
+        slug: "ridgeline-hq",
+        region: "eu-central",
+      })
+    );
   });
 
   it("shows a new key's secret once, and never lists secrets", async () => {
@@ -270,22 +472,42 @@ describe("SettingsAndPlans", () => {
     render(<SettingsAndPlans {...base} onCreateKey={onCreateKey} tab="keys" />);
     expect(screen.getByText("rl_test_…Kd1f")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Create key" }));
-    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Staging worker" } });
+    fireEvent.change(screen.getByLabelText("Name"), {
+      target: { value: "Staging worker" },
+    });
     fireEvent.click(screen.getByRole("radio", { name: /Read & write/ }));
-    fireEvent.click(screen.getAllByRole("button", { name: "Create key" }).at(-1) as HTMLElement);
-    expect(await screen.findByText(plansFixtures.createKey.secret)).toBeTruthy();
-    expect(onCreateKey).toHaveBeenCalledWith({ name: "Staging worker", scope: "write" });
+    fireEvent.click(
+      screen
+        .getAllByRole("button", { name: "Create key" })
+        .at(-1) as HTMLElement
+    );
+    expect(
+      await screen.findByText(plansFixtures.createKey.secret)
+    ).toBeTruthy();
+    expect(onCreateKey).toHaveBeenCalledWith({
+      name: "Staging worker",
+      scope: "write",
+    });
   });
 
   it("retries a failed payment and switches plans through the builder's actions", async () => {
     const onRetryPayment = vi.fn(async () => {});
     const onChangePlan = vi.fn(async () => {});
-    render(<SettingsAndPlans {...base} onChangePlan={onChangePlan} onRetryPayment={onRetryPayment} tab="billing" />);
+    render(
+      <SettingsAndPlans
+        {...base}
+        onChangePlan={onChangePlan}
+        onRetryPayment={onRetryPayment}
+        tab="billing"
+      />
+    );
     fireEvent.click(screen.getByRole("button", { name: "Retry payment" }));
     await waitFor(() => expect(onRetryPayment).toHaveBeenCalledWith("in08"));
     expect(await screen.findByText("Payment received")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Change plan" }));
-    fireEvent.click(await screen.findByRole("button", { name: "Switch to Scale" }));
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Switch to Scale" })
+    );
     await waitFor(() => expect(onChangePlan).toHaveBeenCalledWith("scale"));
   });
 });

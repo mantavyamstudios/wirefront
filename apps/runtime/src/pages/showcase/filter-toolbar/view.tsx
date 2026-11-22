@@ -4,19 +4,56 @@
 
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Separator } from "@wirefront/ui/separator";
-import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@wirefront/ui/sheet";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { ToggleGroup, ToggleGroupItem } from "@wirefront/ui/toggle-group";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { pageCount, withFilter, withPage, withSearch } from "@wirefront/ui/wirefront/list";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  pageCount,
+  withFilter,
+  withPage,
+  withSearch,
+} from "@wirefront/ui/wirefront/list";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus, ListQuery } from "@wirefront/ui/wirefront/types";
-import { CalendarIcon, CircleAlertIcon, LayoutGridIcon, ListFilterIcon, RowsIcon, SearchIcon, Settings2Icon, XIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  CircleAlertIcon,
+  LayoutGridIcon,
+  ListFilterIcon,
+  RowsIcon,
+  SearchIcon,
+  Settings2Icon,
+  XIcon,
+} from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import type { ListedProject, ProjectFilters, ProjectStatus } from "./schema";
@@ -100,11 +137,20 @@ export interface ProjectsToolbarProps {
 }
 
 const ANY = "any";
-const STATUS_TONE: Record<ProjectStatus, string> = { active: "bg-category-2", paused: "bg-category-3", archived: "bg-muted-foreground/40" };
+const STATUS_TONE: Record<ProjectStatus, string> = {
+  active: "bg-category-2",
+  paused: "bg-category-3",
+  archived: "bg-muted-foreground/40",
+};
 const SKELETON_ROWS = ["s1", "s2", "s3", "s4", "s5"];
 
 function StatusDot({ status }: { status: ProjectStatus }) {
-  return <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", STATUS_TONE[status])} />;
+  return (
+    <span
+      aria-hidden
+      className={cn("size-1.5 shrink-0 rounded-full", STATUS_TONE[status])}
+    />
+  );
 }
 
 function ProjectsToolbarScreen({
@@ -136,9 +182,14 @@ function ProjectsToolbarScreen({
   // "/" jumps to search, as the hint in the field says.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey)
+        return;
       const target = event.target;
-      if (target instanceof Element && target.closest("input, textarea, select, [contenteditable='true']")) return;
+      if (
+        target instanceof Element &&
+        target.closest("input, textarea, select, [contenteditable='true']")
+      )
+        return;
       event.preventDefault();
       search.current?.focus();
     };
@@ -146,8 +197,10 @@ function ProjectsToolbarScreen({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const setFilter = (key: keyof ProjectFilters, value: unknown) => onQueryChange(withFilter(query, key, value === ANY ? undefined : value));
-  const reset = () => onQueryChange({ ...query, search: undefined, filters: undefined, page: 1 });
+  const setFilter = (key: keyof ProjectFilters, value: unknown) =>
+    onQueryChange(withFilter(query, key, value === ANY ? undefined : value));
+  const reset = () =>
+    onQueryChange({ ...query, search: undefined, filters: undefined, page: 1 });
 
   const statuses = [
     { value: ANY, label: t.allStatuses },
@@ -160,14 +213,28 @@ function ProjectsToolbarScreen({
     { value: "me", label: t.me },
     { value: "team", label: t.team },
   ];
-  const ranges = [{ value: ANY, label: t.anyTime }, ...activeWithinOptions.map((days) => ({ value: String(days), label: interpolate(t.lastDays, { count: days }) }))];
+  const ranges = [
+    { value: ANY, label: t.anyTime },
+    ...activeWithinOptions.map((days) => ({
+      value: String(days),
+      label: interpolate(t.lastDays, { count: days }),
+    })),
+  ];
 
   // The same controls render inline from md up and inside a bottom sheet on
   // phones; `stacked` makes each one full-width.
   const filterFields = (stacked: boolean) => (
     <>
-      <Select items={statuses} onValueChange={(v) => setFilter("status", v ?? ANY)} value={filters.status ?? ANY}>
-        <SelectTrigger aria-label={t.status} className={stacked ? "w-full" : "w-36"} size={stacked ? "default" : "sm"}>
+      <Select
+        items={statuses}
+        onValueChange={(v) => setFilter("status", v ?? ANY)}
+        value={filters.status ?? ANY}
+      >
+        <SelectTrigger
+          aria-label={t.status}
+          className={stacked ? "w-full" : "w-36"}
+          size={stacked ? "default" : "sm"}
+        >
           <SelectValue />
         </SelectTrigger>
         <SelectContent align="start">
@@ -178,8 +245,16 @@ function ProjectsToolbarScreen({
           ))}
         </SelectContent>
       </Select>
-      <Select items={owners} onValueChange={(v) => setFilter("owner", v ?? ANY)} value={filters.owner ?? ANY}>
-        <SelectTrigger aria-label={t.owner} className={stacked ? "w-full" : "w-32"} size={stacked ? "default" : "sm"}>
+      <Select
+        items={owners}
+        onValueChange={(v) => setFilter("owner", v ?? ANY)}
+        value={filters.owner ?? ANY}
+      >
+        <SelectTrigger
+          aria-label={t.owner}
+          className={stacked ? "w-full" : "w-32"}
+          size={stacked ? "default" : "sm"}
+        >
           <SelectValue />
         </SelectTrigger>
         <SelectContent align="start">
@@ -192,10 +267,18 @@ function ProjectsToolbarScreen({
       </Select>
       <Select
         items={ranges}
-        onValueChange={(v) => setFilter("activeWithinDays", !v || v === ANY ? undefined : Number(v))}
-        value={filters.activeWithinDays ? String(filters.activeWithinDays) : ANY}
+        onValueChange={(v) =>
+          setFilter("activeWithinDays", !v || v === ANY ? undefined : Number(v))
+        }
+        value={
+          filters.activeWithinDays ? String(filters.activeWithinDays) : ANY
+        }
       >
-        <SelectTrigger aria-label={t.lastActive} className={stacked ? "w-full" : "w-44"} size={stacked ? "default" : "sm"}>
+        <SelectTrigger
+          aria-label={t.lastActive}
+          className={stacked ? "w-full" : "w-44"}
+          size={stacked ? "default" : "sm"}
+        >
           <CalendarIcon aria-hidden className="text-muted-foreground" />
           <SelectValue />
         </SelectTrigger>
@@ -212,7 +295,13 @@ function ProjectsToolbarScreen({
 
   const name = (p: ListedProject, extra?: string) =>
     projectHref ? (
-      <WirefrontLink className={cn("rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring", extra)} href={projectHref(p)}>
+      <WirefrontLink
+        className={cn(
+          "rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring",
+          extra
+        )}
+        href={projectHref(p)}
+      >
         {p.name}
       </WirefrontLink>
     ) : (
@@ -222,7 +311,10 @@ function ProjectsToolbarScreen({
   let results: ReactNode;
   if (status === "loading") {
     results = (
-      <ul aria-busy className="mt-6 divide-y rounded-xl border bg-card shadow-xs/5">
+      <ul
+        aria-busy
+        className="mt-6 divide-y rounded-xl border bg-card shadow-xs/5"
+      >
         {SKELETON_ROWS.map((key) => (
           <li className="flex items-center gap-3 px-4 py-3" key={key}>
             <Skeleton className="size-1.5 rounded-full motion-reduce:animate-none" />
@@ -236,14 +328,24 @@ function ProjectsToolbarScreen({
     );
   } else if (status === "error") {
     results = (
-      <div className="mt-6 flex flex-col items-center gap-1 rounded-xl border bg-card px-6 py-12 text-center" role="alert">
+      <div
+        className="mt-6 flex flex-col items-center gap-1 rounded-xl border bg-card px-6 py-12 text-center"
+        role="alert"
+      >
         <span className="mb-3 flex size-10 items-center justify-center rounded-xl bg-destructive/10 text-destructive-foreground">
           <CircleAlertIcon aria-hidden className="size-4.5" />
         </span>
         <p className="font-medium text-sm">{t.errorTitle}</p>
-        {error ? <p className="text-pretty text-muted-foreground text-xs">{error}</p> : null}
+        {error ? (
+          <p className="text-pretty text-muted-foreground text-xs">{error}</p>
+        ) : null}
         {onRetry ? (
-          <Button className="mt-3" onClick={onRetry} size="sm" variant="outline">
+          <Button
+            className="mt-3"
+            onClick={onRetry}
+            size="sm"
+            variant="outline"
+          >
             {t.retry}
           </Button>
         ) : null}
@@ -267,12 +369,16 @@ function ProjectsToolbarScreen({
           <li className="rounded-xl border bg-card p-4 shadow-xs/5" key={p.id}>
             <div className="flex items-center gap-2">
               <StatusDot status={p.status} />
-              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{t[p.status]}</span>
+              <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
+                {t[p.status]}
+              </span>
             </div>
             <div className="mt-2 font-medium text-sm">{name(p)}</div>
             <div className="mt-1 flex items-center justify-between text-muted-foreground text-xs">
               <span>{p.ownerName}</span>
-              <span className="font-mono tabular-nums">{format.relative(p.lastActiveAt)}</span>
+              <span className="font-mono tabular-nums">
+                {format.relative(p.lastActiveAt)}
+              </span>
             </div>
           </li>
         ))}
@@ -282,16 +388,24 @@ function ProjectsToolbarScreen({
     results = (
       <ul className="mt-6 divide-y rounded-xl border bg-card shadow-xs/5">
         {projects.map((p) => (
-          <li className="flex items-center gap-3 px-4 py-3 first:rounded-t-xl last:rounded-b-xl hover:bg-background" key={p.id}>
+          <li
+            className="flex items-center gap-3 px-4 py-3 first:rounded-t-xl last:rounded-b-xl hover:bg-background"
+            key={p.id}
+          >
             <StatusDot status={p.status} />
             <span className="sr-only">{t[p.status]}</span>
             <div className="min-w-0 flex-1">
               <div className="truncate font-medium text-sm">{name(p)}</div>
               <div className="text-muted-foreground text-xs">
-                {p.ownerName} · {p.members === 1 ? t.membersOne : interpolate(t.members, { count: p.members })}
+                {p.ownerName} ·{" "}
+                {p.members === 1
+                  ? t.membersOne
+                  : interpolate(t.members, { count: p.members })}
               </div>
             </div>
-            <span className="font-mono text-[11px] text-muted-foreground tabular-nums">{format.relative(p.lastActiveAt)}</span>
+            <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
+              {format.relative(p.lastActiveAt)}
+            </span>
           </li>
         ))}
       </ul>
@@ -304,7 +418,10 @@ function ProjectsToolbarScreen({
         <div className="flex flex-wrap items-center gap-2">
           <InputGroup className="min-w-0 flex-1 md:w-64 md:flex-none">
             <InputGroupAddon>
-              <SearchIcon aria-hidden className="size-4 text-muted-foreground" />
+              <SearchIcon
+                aria-hidden
+                className="size-4 text-muted-foreground"
+              />
             </InputGroupAddon>
             <InputGroupInput
               aria-label={t.search}
@@ -314,12 +431,18 @@ function ProjectsToolbarScreen({
               type="search"
               value={query.search ?? ""}
             />
-            <InputGroupAddon align="inline-end" className="pointer-coarse:hidden">
+            <InputGroupAddon
+              align="inline-end"
+              className="pointer-coarse:hidden"
+            >
               <Kbd>/</Kbd>
             </InputGroupAddon>
           </InputGroup>
 
-          <Separator className="mx-1 h-6 max-md:hidden" orientation="vertical" />
+          <Separator
+            className="mx-1 h-6 max-md:hidden"
+            orientation="vertical"
+          />
 
           <div className="contents max-md:hidden">
             {filterFields(false)}
@@ -333,16 +456,30 @@ function ProjectsToolbarScreen({
 
           {/* Phones: one "Filters" button opens the same controls in a sheet. */}
           <Sheet>
-            <SheetTrigger render={<Button className="pointer-coarse:h-10 md:hidden" size="sm" variant="outline" />}>
+            <SheetTrigger
+              render={
+                <Button
+                  className="pointer-coarse:h-10 md:hidden"
+                  size="sm"
+                  variant="outline"
+                />
+              }
+            >
               <ListFilterIcon />
               {t.filters}
               {activeCount > 0 ? (
-                <Badge className="ms-1 h-4.5 rounded-sm px-1 font-mono text-[0.625rem]" variant="secondary">
+                <Badge
+                  className="ms-1 h-4.5 rounded-sm px-1 font-mono text-[0.625rem]"
+                  variant="secondary"
+                >
                   {activeCount}
                 </Badge>
               ) : null}
             </SheetTrigger>
-            <SheetContent className="pb-[env(safe-area-inset-bottom)]" side="bottom">
+            <SheetContent
+              className="pb-[env(safe-area-inset-bottom)]"
+              side="bottom"
+            >
               <SheetHeader>
                 <SheetTitle>{t.filters}</SheetTitle>
               </SheetHeader>
@@ -356,10 +493,18 @@ function ProjectsToolbarScreen({
                 ) : null}
               </div>
               <SheetFooter>
-                <Button disabled={activeCount === 0} onClick={reset} variant="ghost">
+                <Button
+                  disabled={activeCount === 0}
+                  onClick={reset}
+                  variant="ghost"
+                >
                   {t.clear}
                 </Button>
-                <SheetClose render={<Button />}>{total === 1 ? t.showResultsOne : interpolate(t.showResults, { count: total })}</SheetClose>
+                <SheetClose render={<Button />}>
+                  {total === 1
+                    ? t.showResultsOne
+                    : interpolate(t.showResults, { count: total })}
+                </SheetClose>
               </SheetFooter>
             </SheetContent>
           </Sheet>
@@ -381,7 +526,12 @@ function ProjectsToolbarScreen({
               </ToggleGroupItem>
             </ToggleGroup>
             {onViewOptions ? (
-              <Button aria-label={t.viewOptions} onClick={onViewOptions} size="icon-sm" variant="outline">
+              <Button
+                aria-label={t.viewOptions}
+                onClick={onViewOptions}
+                size="icon-sm"
+                variant="outline"
+              >
                 <Settings2Icon />
               </Button>
             ) : null}
@@ -391,22 +541,51 @@ function ProjectsToolbarScreen({
         <Separator />
 
         <div className="flex flex-wrap items-center gap-2">
-          {savedViews?.length || onCreateView ? <span className="text-muted-foreground text-xs">{t.savedView}</span> : null}
+          {savedViews?.length || onCreateView ? (
+            <span className="text-muted-foreground text-xs">{t.savedView}</span>
+          ) : null}
           {savedViews?.map((view) => (
-            <Button className="font-mono" key={view.id} onClick={() => onQueryChange({ ...view.query, page: 1 })} size="xs" variant="secondary">
+            <Button
+              className="font-mono"
+              key={view.id}
+              onClick={() => onQueryChange({ ...view.query, page: 1 })}
+              size="xs"
+              variant="secondary"
+            >
               {view.label}
             </Button>
           ))}
           {onCreateView ? (
-            <Button className="text-muted-foreground" onClick={() => onCreateView(query)} size="xs" variant="ghost">
+            <Button
+              className="text-muted-foreground"
+              onClick={() => onCreateView(query)}
+              size="xs"
+              variant="ghost"
+            >
               + {t.newView}
             </Button>
           ) : null}
-          <span aria-live="polite" className="inline-flex w-full items-center gap-1.5 text-muted-foreground text-xs sm:ms-auto sm:w-auto">
-            <span aria-hidden className={cn("size-1.5 rounded-full", total === 0 ? "bg-destructive" : "bg-category-2")} />
-            {status === "ready" ? interpolate(t.showing, { count: total, total: overall }) : null}
+          <span
+            aria-live="polite"
+            className="inline-flex w-full items-center gap-1.5 text-muted-foreground text-xs sm:ms-auto sm:w-auto"
+          >
+            <span
+              aria-hidden
+              className={cn(
+                "size-1.5 rounded-full",
+                total === 0 ? "bg-destructive" : "bg-category-2"
+              )}
+            />
+            {status === "ready"
+              ? interpolate(t.showing, { count: total, total: overall })
+              : null}
             {activeCount > 0 ? (
-              <Button className="-me-2 h-6 px-1.5 text-muted-foreground pointer-coarse:h-9 max-sm:ms-auto" onClick={reset} size="xs" variant="ghost">
+              <Button
+                className="-me-2 h-6 px-1.5 text-muted-foreground pointer-coarse:h-9 max-sm:ms-auto"
+                onClick={reset}
+                size="xs"
+                variant="ghost"
+              >
                 <XIcon /> {interpolate(t.clearCount, { count: activeCount })}
               </Button>
             ) : null}
@@ -418,11 +597,25 @@ function ProjectsToolbarScreen({
 
       {status === "ready" && pages > 1 ? (
         <nav className="flex items-center justify-between gap-2 text-muted-foreground text-xs">
-          <Button disabled={query.page <= 1} onClick={() => onQueryChange(withPage(query, query.page - 1, total))} size="sm" variant="outline">
+          <Button
+            disabled={query.page <= 1}
+            onClick={() =>
+              onQueryChange(withPage(query, query.page - 1, total))
+            }
+            size="sm"
+            variant="outline"
+          >
             {t.previous}
           </Button>
           <span>{interpolate(t.pageOf, { page: query.page, pages })}</span>
-          <Button disabled={query.page >= pages} onClick={() => onQueryChange(withPage(query, query.page + 1, total))} size="sm" variant="outline">
+          <Button
+            disabled={query.page >= pages}
+            onClick={() =>
+              onQueryChange(withPage(query, query.page + 1, total))
+            }
+            size="sm"
+            variant="outline"
+          >
             {t.next}
           </Button>
         </nav>

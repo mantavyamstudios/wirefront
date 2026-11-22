@@ -23,5 +23,10 @@ export type Teammate = z.infer<typeof Teammate>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listTeammates: { method: "GET", path: "/team", summary: "Everyone on the team, in display order", response: z.array(Teammate) },
+  listTeammates: {
+    method: "GET",
+    path: "/team",
+    summary: "Everyone on the team, in display order",
+    response: z.array(Teammate),
+  },
 });

@@ -15,7 +15,12 @@ export function CalendarsCalendarWeekShowcasePage() {
   return (
     <WirefrontProvider locale="en-US" now={demoNow} timeZone="UTC">
       <DevlFrame>
-        <CalendarWeek calendars={fixtures.listCalendars} events={fixtures.listEvents} onDeleteEvent={async () => {}} onSaveEvent={async (ev) => ok(ev)} />
+        <CalendarWeek
+          calendars={fixtures.listCalendars}
+          events={fixtures.listEvents}
+          onDeleteEvent={async () => {}}
+          onSaveEvent={async (ev) => ok(ev)}
+        />
       </DevlFrame>
     </WirefrontProvider>
   );

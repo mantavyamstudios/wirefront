@@ -129,7 +129,7 @@ export const SOURCE_FILES: Partial<
     "notification-settings": "settings-notification-settings",
     "team-roles": "settings-team-roles",
     "settings-and-plans": "settings-settings-and-plans",
-    "connectors": "settings-connectors",
+    connectors: "settings-connectors",
   },
   modals: {
     "confirm-delete": "modals-confirm-delete",
@@ -227,7 +227,7 @@ export const SOURCE_FILES: Partial<
   },
   ai: {
     "assistant-start": "ai-assistant-start",
-    "conductor": "ai-conductor",
+    conductor: "ai-conductor",
     "run-replay": "ai-run-replay",
     "prompt-test-bench": "ai-prompt-test-bench",
     "co-writing-doc": "ai-co-writing-doc",
@@ -238,28 +238,28 @@ export const SOURCE_FILES: Partial<
     "issue-tracker": "devtools-issue-tracker",
   },
   apps: {
-    "mail": "apps-mail",
+    mail: "apps-mail",
     "team-chat": "apps-team-chat",
     "video-call": "apps-video-call",
-    "notes": "apps-notes",
-    "drive": "apps-drive",
+    notes: "apps-notes",
+    drive: "apps-drive",
     "folder-view": "apps-folder-view",
     "help-centre": "apps-help-centre",
   },
   personal: {
-    "money": "personal-money",
-    "habits": "personal-habits",
+    money: "personal-money",
+    habits: "personal-habits",
     "music-player": "personal-music-player",
   },
   commerce: {
-    "checkout": "commerce-checkout",
+    checkout: "commerce-checkout",
     "delivery-tracker": "commerce-delivery-tracker",
   },
 };
 
 export function getSourceFile(
   category: CategorySlug,
-  design: string,
+  design: string
 ): string | undefined {
   return SOURCE_FILES[category]?.[design];
 }

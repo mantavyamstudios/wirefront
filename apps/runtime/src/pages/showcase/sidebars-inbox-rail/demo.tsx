@@ -14,7 +14,12 @@ export function SidebarsInboxRailShowcasePage() {
   const [filter, setFilter] = useState<InboxFilter>("all");
   const [selectedId, setSelectedId] = useState("3");
   const [detailOpen, setDetailOpen] = useState(false);
-  const shown = filter === "unread" ? fixtures.threads.filter((t) => t.unread) : filter === "mentions" ? fixtures.threads.slice(0, 1) : fixtures.threads;
+  const shown =
+    filter === "unread"
+      ? fixtures.threads.filter((t) => t.unread)
+      : filter === "mentions"
+        ? fixtures.threads.slice(0, 1)
+        : fixtures.threads;
   const selected = fixtures.threads.find((t) => t.id === selectedId);
   return (
     <WirefrontProvider now={demoNow}>
@@ -35,8 +40,12 @@ export function SidebarsInboxRailShowcasePage() {
       >
         <div className="flex flex-1 items-center justify-center px-6 text-center text-muted-foreground">
           <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.3em]">Conversation pane</div>
-            <p className="mt-1.5 text-sm">{selected ? `${selected.from.name} — ${selected.preview}` : null}</p>
+            <div className="font-mono text-[10px] uppercase tracking-[0.3em]">
+              Conversation pane
+            </div>
+            <p className="mt-1.5 text-sm">
+              {selected ? `${selected.from.name} — ${selected.preview}` : null}
+            </p>
           </div>
         </div>
       </InboxRail>

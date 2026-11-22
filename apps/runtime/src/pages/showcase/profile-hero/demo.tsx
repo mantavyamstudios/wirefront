@@ -8,7 +8,8 @@ import * as fixtures from "./fixtures";
 import { ProfilePage } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ProfileHeroShowcasePage() {
   const state = useShowcaseState();
@@ -19,8 +20,18 @@ export function ProfileHeroShowcasePage() {
         onMessage={() => {}}
         onRetry={() => {}}
         onToggleFollow={() => wait(400)}
-        profile={state === "loading" || state === "error" ? undefined : fixtures.getProfile}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        profile={
+          state === "loading" || state === "error"
+            ? undefined
+            : fixtures.getProfile
+        }
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

@@ -7,14 +7,26 @@ import * as fixtures from "./fixtures";
 import type { VerifyTotpInput } from "./schema";
 import { TwoFactorSetup } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 async function demoVerify({ code }: VerifyTotpInput) {
   await wait(700);
   // Any code but 000000 works in the demo.
-  if (code === "000000") return fail("That code didn’t match. Check your app’s clock and try again.");
+  if (code === "000000")
+    return fail(
+      "That code didn’t match. Check your app’s clock and try again."
+    );
 }
 
 export function ModalsTwoFactorShowcasePage() {
-  return <TwoFactorSetup account={fixtures.account} defaultOpen enrollment={fixtures.startTotpEnrollment} onVerify={demoVerify} step={{ current: 2, total: 3 }} />;
+  return (
+    <TwoFactorSetup
+      account={fixtures.account}
+      defaultOpen
+      enrollment={fixtures.startTotpEnrollment}
+      onVerify={demoVerify}
+      step={{ current: 2, total: 3 }}
+    />
+  );
 }

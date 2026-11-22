@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const FeedbackKind = z.enum(["bug", "idea", "praise"]).meta({ id: "FeedbackKind" });
+export const FeedbackKind = z
+  .enum(["bug", "idea", "praise"])
+  .meta({ id: "FeedbackKind" });
 export type FeedbackKind = z.infer<typeof FeedbackKind>;
 
 /** What "Send feedback" sends (a screenshot, when attached, goes as a separate file part). */
@@ -21,7 +23,8 @@ export const api = defineApi({
   sendFeedback: {
     method: "POST",
     path: "/feedback",
-    summary: "Send feedback to the product team (multipart/form-data: the fields, plus an optional \"screenshot\" file)",
+    summary:
+      'Send feedback to the product team (multipart/form-data: the fields, plus an optional "screenshot" file)',
     body: FeedbackInput,
   },
 });

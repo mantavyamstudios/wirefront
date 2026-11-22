@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-import type { Deal, DealOwner, FocusSignal, PipelineData, PipelineStage } from "./schema";
+import type {
+  Deal,
+  DealOwner,
+  FocusSignal,
+  PipelineData,
+  PipelineStage,
+} from "./schema";
 
 /** Demo data for the showcase, the generated mocks and tests: one account executive's Tuesday. */
 const stages: PipelineStage[] = [
@@ -33,7 +39,9 @@ const deals: Deal[] = [
     closeLabel: "Jan 15",
     nextStep: "Discovery call with Priya to map their intake process",
     contacts: [{ name: "Priya Nair", role: "Operations director" }],
-    activity: [{ label: "Inbound form: intake routing for 40 lawyers", when: "Oct 23" }],
+    activity: [
+      { label: "Inbound form: intake routing for 40 lawyers", when: "Oct 23" },
+    ],
   },
   {
     id: "mosswood",
@@ -63,7 +71,11 @@ const deals: Deal[] = [
     closeLabel: "Dec 12",
     nextStep: "Confirm Thursday demo and invite their IT lead",
     contacts: [
-      { name: "Hugo Ferrant", role: "Head of patient ops", tag: { label: "Champion", tone: "good" } },
+      {
+        name: "Hugo Ferrant",
+        role: "Head of patient ops",
+        tag: { label: "Champion", tone: "good" },
+      },
       { name: "Bea Lund", role: "IT manager" },
     ],
     activity: [
@@ -83,7 +95,13 @@ const deals: Deal[] = [
     lastTouch: "3d ago",
     closeLabel: "Dec 3",
     nextStep: "Scope the agency plan with Rosa",
-    contacts: [{ name: "Rosa Quint", role: "Studio director", tag: { label: "Champion", tone: "good" } }],
+    contacts: [
+      {
+        name: "Rosa Quint",
+        role: "Studio director",
+        tag: { label: "Champion", tone: "good" },
+      },
+    ],
     activity: [{ label: "Discovery call, 32 min", when: "Oct 24" }],
   },
   {
@@ -114,7 +132,11 @@ const deals: Deal[] = [
     closeLabel: "Nov 14",
     nextStep: "Price out 12 seats with the annual discount",
     contacts: [
-      { name: "Mika Sato", role: "Head of production", tag: { label: "Champion", tone: "good" } },
+      {
+        name: "Mika Sato",
+        role: "Head of production",
+        tag: { label: "Champion", tone: "good" },
+      },
       { name: "Jules Arden", role: "Finance" },
     ],
     activity: [
@@ -135,8 +157,16 @@ const deals: Deal[] = [
     closeLabel: "Nov 12",
     nextStep: "Walk Theo through pricing options on a call",
     contacts: [
-      { name: "Theo Marsh", role: "VP research ops", tag: { label: "Champion", tone: "good" } },
-      { name: "Clara Ng", role: "Procurement", tag: { label: "Economic buyer", tone: "neutral" } },
+      {
+        name: "Theo Marsh",
+        role: "VP research ops",
+        tag: { label: "Champion", tone: "good" },
+      },
+      {
+        name: "Clara Ng",
+        role: "Procurement",
+        tag: { label: "Economic buyer", tone: "neutral" },
+      },
     ],
     activity: [
       { label: "Theo opened the proposal (2nd time)", when: "Today, 9:41" },
@@ -158,7 +188,11 @@ const deals: Deal[] = [
     closeLabel: "Oct 24",
     nextStep: "Ask Lotte where procurement has it",
     contacts: [
-      { name: "Lotte Vos", role: "Digital programme lead", tag: { label: "Champion", tone: "good" } },
+      {
+        name: "Lotte Vos",
+        role: "Digital programme lead",
+        tag: { label: "Champion", tone: "good" },
+      },
       { name: "Bram Okon", role: "Procurement" },
     ],
     activity: [
@@ -179,7 +213,13 @@ const deals: Deal[] = [
     lastTouch: "5h ago",
     closeLabel: "Oct 30",
     nextStep: "Legal review of the order form",
-    contacts: [{ name: "Ada Whitlock", role: "CTO", tag: { label: "Champion", tone: "good" } }],
+    contacts: [
+      {
+        name: "Ada Whitlock",
+        role: "CTO",
+        tag: { label: "Champion", tone: "good" },
+      },
+    ],
     activity: [{ label: "Order form sent to legal", when: "Today, 7:30" }],
   },
   {
@@ -195,8 +235,16 @@ const deals: Deal[] = [
     closeLabel: "Oct 29",
     nextStep: "Send the security pack Ines asked for",
     contacts: [
-      { name: "Ines Okafor", role: "Head of logistics IT", tag: { label: "Champion", tone: "good" } },
-      { name: "Marcus Hale", role: "COO", tag: { label: "Economic buyer", tone: "neutral" } },
+      {
+        name: "Ines Okafor",
+        role: "Head of logistics IT",
+        tag: { label: "Champion", tone: "good" },
+      },
+      {
+        name: "Marcus Hale",
+        role: "COO",
+        tag: { label: "Economic buyer", tone: "neutral" },
+      },
     ],
     activity: [
       { label: "Ines asked for the security pack", when: "Oct 18" },
@@ -217,12 +265,23 @@ const deals: Deal[] = [
     closeLabel: "Nov 8",
     nextStep: "Find a new sponsor before the renewal date",
     contacts: [
-      { name: "Dana Reyes", role: "Former VP data", tag: { label: "Left Oct 19", tone: "bad" } },
-      { name: "Anil Bhatt", role: "CFO", tag: { label: "Economic buyer", tone: "neutral" } },
+      {
+        name: "Dana Reyes",
+        role: "Former VP data",
+        tag: { label: "Left Oct 19", tone: "bad" },
+      },
+      {
+        name: "Anil Bhatt",
+        role: "CFO",
+        tag: { label: "Economic buyer", tone: "neutral" },
+      },
       { name: "Wren Castillo", role: "Data platform lead" },
     ],
     activity: [
-      { label: "Dana's out-of-office: no longer with Quillstone", when: "Oct 21" },
+      {
+        label: "Dana's out-of-office: no longer with Quillstone",
+        when: "Oct 21",
+      },
       { label: "Renewal quote sent by you", when: "Oct 14" },
     ],
     note: "Renewal plus 40 seats. Wren runs the platform day to day and likes it.",

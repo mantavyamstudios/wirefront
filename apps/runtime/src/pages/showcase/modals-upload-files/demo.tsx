@@ -17,7 +17,13 @@ export function ModalsUploadFilesShowcasePage() {
     if (!running) return;
     const timer = setInterval(() => {
       setUploads((list) =>
-        list.map((u) => (u.state !== "uploading" ? u : u.progress >= 96 ? { ...u, progress: 100, state: "done" } : { ...u, progress: u.progress + 4 })),
+        list.map((u) =>
+          u.state !== "uploading"
+            ? u
+            : u.progress >= 96
+              ? { ...u, progress: 100, state: "done" }
+              : { ...u, progress: u.progress + 4 }
+        )
       );
     }, 400);
     return () => clearInterval(timer);
@@ -25,7 +31,9 @@ export function ModalsUploadFilesShowcasePage() {
 
   const update = (id: string, patch: Partial<UploadItem>) => {
     setRunning(true);
-    setUploads((list) => list.map((u) => (u.id === id ? { ...u, ...patch } : u)));
+    setUploads((list) =>
+      list.map((u) => (u.id === id ? { ...u, ...patch } : u))
+    );
   };
 
   return (
@@ -34,10 +42,21 @@ export function ModalsUploadFilesShowcasePage() {
       defaultOpen
       onAddFiles={(files) => {
         setRunning(true);
-        setUploads((list) => [...list, ...files.map((f, i) => ({ id: `new-${list.length + i}`, name: f.name, size: f.size, progress: 0, state: "uploading" as const }))]);
+        setUploads((list) => [
+          ...list,
+          ...files.map((f, i) => ({
+            id: `new-${list.length + i}`,
+            name: f.name,
+            size: f.size,
+            progress: 0,
+            state: "uploading" as const,
+          })),
+        ]);
       }}
       onCancel={(id) => setUploads((list) => list.filter((u) => u.id !== id))}
-      onCancelAll={() => setUploads((list) => list.filter((u) => u.state === "done"))}
+      onCancelAll={() =>
+        setUploads((list) => list.filter((u) => u.state === "done"))
+      }
       onResume={(id) => update(id, { state: "uploading", error: undefined })}
       pageTitle="Assets · Brand"
       typesLabel="png, jpg, pdf, fig, zip"

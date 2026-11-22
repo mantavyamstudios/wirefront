@@ -9,12 +9,31 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Separator } from "@wirefront/ui/separator";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { Spinner } from "@wirefront/ui/spinner";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@wirefront/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@wirefront/ui/table";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { ChevronDownIcon, CircleAlertIcon, CircleCheckIcon, CircleSlashIcon, PlusIcon, ShieldIcon, XIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  CircleAlertIcon,
+  CircleCheckIcon,
+  CircleSlashIcon,
+  PlusIcon,
+  ShieldIcon,
+  XIcon,
+} from "lucide-react";
 import type { ReactNode } from "react";
 
 import type { AuditEntry, AuditFilter, Outcome } from "./schema";
@@ -74,14 +93,30 @@ export interface AuditLogProps {
   className?: string;
 }
 
-const OUTCOME: Record<Outcome, { cls: string; Icon: typeof CircleCheckIcon }> = {
-  success: { cls: "border-success/30 text-success-foreground", Icon: CircleCheckIcon },
-  denied: { cls: "border-category-3/30 text-category-3-foreground", Icon: CircleSlashIcon },
-  alert: { cls: "border-destructive/30 text-destructive-foreground", Icon: CircleAlertIcon },
-};
+const OUTCOME: Record<Outcome, { cls: string; Icon: typeof CircleCheckIcon }> =
+  {
+    success: {
+      cls: "border-success/30 text-success-foreground",
+      Icon: CircleCheckIcon,
+    },
+    denied: {
+      cls: "border-category-3/30 text-category-3-foreground",
+      Icon: CircleSlashIcon,
+    },
+    alert: {
+      cls: "border-destructive/30 text-destructive-foreground",
+      Icon: CircleAlertIcon,
+    },
+  };
 const CHIP_TONE: Record<AuditFilter["tone"], { chip: string; op: string }> = {
-  include: { chip: "border-category-2/30 bg-category-2/5", op: "text-category-2-foreground" },
-  exclude: { chip: "border-destructive/30 bg-destructive/5", op: "text-destructive-foreground" },
+  include: {
+    chip: "border-category-2/30 bg-category-2/5",
+    op: "text-category-2-foreground",
+  },
+  exclude: {
+    chip: "border-destructive/30 bg-destructive/5",
+    op: "text-destructive-foreground",
+  },
   neutral: { chip: "border-border bg-background", op: "text-muted-foreground" },
 };
 const SKELETON_ROWS = ["s1", "s2", "s3", "s4", "s5"];
@@ -115,14 +150,22 @@ function AuditLogScreen({
   const format = useFormat();
   const more = useAction(onLoadMore ?? (async () => {}));
   const exporter = useAction(onExport ?? (async () => {}));
-  const time = (iso: string) => format.time(iso, { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+  const time = (iso: string) =>
+    format.time(iso, {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
   const actionError = more.error ?? exporter.error;
 
   const message = (title: string, description?: string, action?: ReactNode) => (
     <TableRow>
       <TableCell className="whitespace-normal py-12 text-center" colSpan={6}>
         <p className="font-medium">{title}</p>
-        {description ? <p className="mt-1 text-muted-foreground text-sm">{description}</p> : null}
+        {description ? (
+          <p className="mt-1 text-muted-foreground text-sm">{description}</p>
+        ) : null}
         {action}
       </TableCell>
     </TableRow>
@@ -148,7 +191,7 @@ function AuditLogScreen({
         <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
           {t.retry}
         </Button>
-      ) : null,
+      ) : null
     );
   } else if (entries.length === 0) {
     body = message(t.emptyTitle, t.emptyDescription);
@@ -157,28 +200,53 @@ function AuditLogScreen({
       const o = OUTCOME[e.outcome];
       const name = e.actor?.name ?? t.system;
       return (
-        <TableRow className={e.outcome === "alert" ? "bg-destructive/4" : undefined} key={e.id}>
+        <TableRow
+          className={e.outcome === "alert" ? "bg-destructive/4" : undefined}
+          key={e.id}
+        >
           <TableCell className="w-28 ps-4 font-mono text-muted-foreground text-xs tabular-nums max-sm:hidden">
             <time dateTime={e.at}>{time(e.at)}</time>
           </TableCell>
           <TableCell className="w-full max-w-0 max-sm:ps-4 sm:w-auto sm:max-w-none">
             <div className="flex items-center gap-2">
-              <Avatar className={cn("size-6", e.actor ? "bg-category-1/15" : "bg-muted")}>
-                <AvatarFallback className="bg-transparent font-medium text-[10px]">{e.actor ? initials(e.actor.name) : "?"}</AvatarFallback>
+              <Avatar
+                className={cn(
+                  "size-6",
+                  e.actor ? "bg-category-1/15" : "bg-muted"
+                )}
+              >
+                <AvatarFallback className="bg-transparent font-medium text-[10px]">
+                  {e.actor ? initials(e.actor.name) : "?"}
+                </AvatarFallback>
               </Avatar>
-              <span className={cn("truncate text-sm", !e.actor && "text-muted-foreground")}>{name}</span>
+              <span
+                className={cn(
+                  "truncate text-sm",
+                  !e.actor && "text-muted-foreground"
+                )}
+              >
+                {name}
+              </span>
             </div>
-            <div className="mt-1 truncate font-mono text-xs sm:hidden">{e.action}</div>
+            <div className="mt-1 truncate font-mono text-xs sm:hidden">
+              {e.action}
+            </div>
             <div className="truncate font-mono text-[11px] text-muted-foreground lg:hidden">
               <span className="sm:hidden">{time(e.at)} · </span>
               {e.resource}
             </div>
           </TableCell>
-          <TableCell className="font-mono text-xs max-sm:hidden">{e.action}</TableCell>
-          <TableCell className="font-mono text-muted-foreground text-xs max-lg:hidden">{e.resource}</TableCell>
+          <TableCell className="font-mono text-xs max-sm:hidden">
+            {e.action}
+          </TableCell>
+          <TableCell className="font-mono text-muted-foreground text-xs max-lg:hidden">
+            {e.resource}
+          </TableCell>
           <TableCell className="max-xl:hidden">
             <div className="font-mono text-xs">{e.ip ?? "—"}</div>
-            <div className="text-muted-foreground text-xs">{e.location ?? "—"}</div>
+            <div className="text-muted-foreground text-xs">
+              {e.location ?? "—"}
+            </div>
           </TableCell>
           <TableCell className="pe-4">
             <Badge className={cn("gap-1.5", o.cls)} variant="outline">
@@ -192,7 +260,12 @@ function AuditLogScreen({
   }
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12",
+        className
+      )}
+    >
       <div className="mx-auto max-w-6xl">
         <header className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
@@ -201,7 +274,10 @@ function AuditLogScreen({
               {t.title}
             </h1>
             <p className="text-muted-foreground text-sm">
-              {interpolate(t.summary, { shown: format.number(entries.length), total: format.number(total) })}
+              {interpolate(t.summary, {
+                shown: format.number(entries.length),
+                total: format.number(total),
+              })}
             </p>
           </div>
           {onExport ? (
@@ -213,7 +289,9 @@ function AuditLogScreen({
               size="sm"
               variant="outline"
             >
-              {exporter.isPending() ? <Spinner data-icon="inline-start" /> : null}
+              {exporter.isPending() ? (
+                <Spinner data-icon="inline-start" />
+              ) : null}
               {t.export}
             </Button>
           ) : null}
@@ -229,21 +307,42 @@ function AuditLogScreen({
           {filters.length || onAddFilter ? (
             <div className="flex flex-col gap-2 border-b p-3">
               <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
-                <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{t.filters}</span>
-                <Separator className="h-4 max-sm:hidden" orientation="vertical" />
+                <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
+                  {t.filters}
+                </span>
+                <Separator
+                  className="h-4 max-sm:hidden"
+                  orientation="vertical"
+                />
                 <div className="order-last flex w-full min-w-0 flex-wrap items-center gap-1.5 sm:order-0 sm:w-auto sm:flex-1">
                   {filters.map((f) => (
-                    <FilterChip chip={f} key={f.id} onEdit={onEditFilter} onRemove={onRemoveFilter} t={t} />
+                    <FilterChip
+                      chip={f}
+                      key={f.id}
+                      onEdit={onEditFilter}
+                      onRemove={onRemoveFilter}
+                      t={t}
+                    />
                   ))}
                   {onAddFilter ? (
-                    <Button className="border-dashed" onClick={onAddFilter} size="xs" variant="ghost">
+                    <Button
+                      className="border-dashed"
+                      onClick={onAddFilter}
+                      size="xs"
+                      variant="ghost"
+                    >
                       <PlusIcon />
                       {t.addFilter}
                     </Button>
                   ) : null}
                 </div>
                 {onClearFilters && filters.length ? (
-                  <Button className="ms-auto text-muted-foreground pointer-coarse:h-9 sm:ms-0" onClick={onClearFilters} size="xs" variant="ghost">
+                  <Button
+                    className="ms-auto text-muted-foreground pointer-coarse:h-9 sm:ms-0"
+                    onClick={onClearFilters}
+                    size="xs"
+                    variant="ghost"
+                  >
                     <XIcon />
                     {t.clearAll}
                   </Button>
@@ -260,13 +359,19 @@ function AuditLogScreen({
           <Table aria-busy={status === "loading"}>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-28 ps-4 max-sm:hidden">{t.columnTime}</TableHead>
+                <TableHead className="w-28 ps-4 max-sm:hidden">
+                  {t.columnTime}
+                </TableHead>
                 <TableHead className="max-sm:ps-4">
                   <span className="sm:hidden">{t.columnEvent}</span>
                   <span className="max-sm:hidden">{t.columnActor}</span>
                 </TableHead>
-                <TableHead className="max-sm:hidden">{t.columnAction}</TableHead>
-                <TableHead className="max-lg:hidden">{t.columnResource}</TableHead>
+                <TableHead className="max-sm:hidden">
+                  {t.columnAction}
+                </TableHead>
+                <TableHead className="max-lg:hidden">
+                  {t.columnResource}
+                </TableHead>
                 <TableHead className="max-xl:hidden">{t.columnWhere}</TableHead>
                 <TableHead className="pe-4">{t.columnOutcome}</TableHead>
               </TableRow>
@@ -276,11 +381,22 @@ function AuditLogScreen({
           {status === "ready" ? (
             <div className="flex items-center justify-between border-t p-3 text-muted-foreground text-xs">
               <span>
-                {filters.length === 1 ? t.filterCountOne : interpolate(t.filterCountOther, { count: filters.length })}
+                {filters.length === 1
+                  ? t.filterCountOne
+                  : interpolate(t.filterCountOther, { count: filters.length })}
               </span>
               {onLoadMore && hasMore ? (
-                <Button aria-busy={more.isPending()} className="pointer-coarse:h-9" disabled={more.isPending()} onClick={() => void more.run()} size="xs" variant="ghost">
-                  {more.isPending() ? <Spinner data-icon="inline-start" /> : null}
+                <Button
+                  aria-busy={more.isPending()}
+                  className="pointer-coarse:h-9"
+                  disabled={more.isPending()}
+                  onClick={() => void more.run()}
+                  size="xs"
+                  variant="ghost"
+                >
+                  {more.isPending() ? (
+                    <Spinner data-icon="inline-start" />
+                  ) : null}
                   {t.loadOlder}
                 </Button>
               ) : null}
@@ -305,12 +421,22 @@ function FilterChip({
 }) {
   const tone = CHIP_TONE[chip.tone];
   return (
-    <div className={cn("inline-flex max-w-full items-center divide-x divide-border overflow-hidden rounded-md border text-xs", tone.chip)}>
+    <div
+      className={cn(
+        "inline-flex max-w-full items-center divide-x divide-border overflow-hidden rounded-md border text-xs",
+        tone.chip
+      )}
+    >
       <span className="px-2 py-1 font-medium">{chip.field}</span>
-      <span className={cn("px-2 py-1 font-mono text-[11px]", tone.op)}>{chip.op}</span>
+      <span className={cn("px-2 py-1 font-mono text-[11px]", tone.op)}>
+        {chip.op}
+      </span>
       {onEdit ? (
         <button
-          aria-label={interpolate(t.editFilter, { field: chip.field, value: chip.value })}
+          aria-label={interpolate(t.editFilter, {
+            field: chip.field,
+            value: chip.value,
+          })}
           className="flex min-h-6 items-center gap-1 px-2 py-1 hover:bg-accent/60 pointer-coarse:min-h-9"
           onClick={() => onEdit(chip.id)}
           type="button"

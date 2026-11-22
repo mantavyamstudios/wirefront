@@ -4,7 +4,10 @@ import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 export const ChangeGroup = z
-  .object({ kind: z.enum(["new", "improved", "fixed", "removed"]), items: z.array(z.string()) })
+  .object({
+    kind: z.enum(["new", "improved", "fixed", "removed"]),
+    items: z.array(z.string()),
+  })
   .meta({ id: "ChangeGroup" });
 export type ChangeGroup = z.infer<typeof ChangeGroup>;
 
@@ -22,5 +25,10 @@ export type ChangelogEntry = z.infer<typeof ChangelogEntry>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listChangelog: { method: "GET", path: "/changelog", summary: "Releases, newest first", response: z.array(ChangelogEntry) },
+  listChangelog: {
+    method: "GET",
+    path: "/changelog",
+    summary: "Releases, newest first",
+    response: z.array(ChangelogEntry),
+  },
 });

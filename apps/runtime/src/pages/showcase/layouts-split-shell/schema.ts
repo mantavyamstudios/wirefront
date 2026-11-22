@@ -4,7 +4,11 @@ import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 export const SplitShellUser = z
-  .object({ name: z.string(), subtitle: z.string().optional(), avatarUrl: z.url().optional() })
+  .object({
+    name: z.string(),
+    subtitle: z.string().optional(),
+    avatarUrl: z.url().optional(),
+  })
   .meta({ id: "SplitShellUser" });
 export type SplitShellUser = z.infer<typeof SplitShellUser>;
 

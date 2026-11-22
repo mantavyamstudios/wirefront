@@ -4,7 +4,8 @@ import type { WebhookDelivery, WebhookOverview } from "./schema";
 
 /** Demo data for the showcase, the generated mocks and tests. */
 export const now = "2026-04-26T12:50:00Z";
-const ago = (minutes: number) => new Date(Date.parse(now) - minutes * 60_000).toISOString();
+const ago = (minutes: number) =>
+  new Date(Date.parse(now) - minutes * 60_000).toISOString();
 
 const rawDeliveries = [
   {
@@ -74,29 +75,88 @@ const rawDeliveries = [
 ];
 
 /** The raw demo log, mapped onto the delivery contract below. */
-type Raw = { id: string; ts: string; event: string; endpointShort: string; status: number; ms: number; retried?: boolean; request: string; response: string };
+type Raw = {
+  id: string;
+  ts: string;
+  event: string;
+  endpointShort: string;
+  status: number;
+  ms: number;
+  retried?: boolean;
+  request: string;
+  response: string;
+};
 
-export const deliveries: WebhookDelivery[] = (rawDeliveries as Raw[]).map((d) => ({
-  id: d.id,
-  at: `2026-04-26T${d.ts}Z`,
-  event: d.event,
-  endpoint: d.endpointShort,
-  status: d.status,
-  durationMs: d.ms,
-  attempt: d.retried ? 2 : 1,
-  maxAttempts: d.retried ? 3 : 1,
-  request: d.request || `{\n  "id": "${d.id}",\n  "type": "${d.event}"\n}`,
-  response: d.response || (d.status >= 500 ? '{\n  "error": "upstream timeout",\n  "retry_after": 30\n}' : d.status === 429 ? '{\n  "error": "rate_limited",\n  "retry_after": 12\n}' : '{\n  "received": true\n}'),
-}));
+export const deliveries: WebhookDelivery[] = (rawDeliveries as Raw[]).map(
+  (d) => ({
+    id: d.id,
+    at: `2026-04-26T${d.ts}Z`,
+    event: d.event,
+    endpoint: d.endpointShort,
+    status: d.status,
+    durationMs: d.ms,
+    attempt: d.retried ? 2 : 1,
+    maxAttempts: d.retried ? 3 : 1,
+    request: d.request || `{\n  "id": "${d.id}",\n  "type": "${d.event}"\n}`,
+    response:
+      d.response ||
+      (d.status >= 500
+        ? '{\n  "error": "upstream timeout",\n  "retry_after": 30\n}'
+        : d.status === 429
+          ? '{\n  "error": "rate_limited",\n  "retry_after": 12\n}'
+          : '{\n  "received": true\n}'),
+  })
+);
 
 export const getWebhooks: WebhookOverview = {
   secretHint: "2f3a",
   endpoints: [
-    { id: "we_8f4ad", url: "https://api.acme.com/hooks/app", events: ["user.created", "user.updated", "billing.updated", "team.invited", "team.removed"], status: "success", lastDeliveryAt: ago(2) },
-    { id: "we_220bc", url: "https://hooks.flux.dev/v2/app/incoming", events: ["billing.updated", "billing.refunded"], status: "failing", lastDeliveryAt: ago(11) },
-    { id: "we_e1d12", url: "https://ops.acme.com/internal/audit", events: ["audit.log", "user.created", "user.deleted", "team.invited"], status: "success", lastDeliveryAt: ago(180) },
-    { id: "we_aabc8", url: "https://stage.acme.com/integrations/app/webhook-receiver", events: ["user.created", "billing.updated"], status: "paused", lastDeliveryAt: null },
-    { id: "we_44910", url: "https://relay.zapier.com/hooks/catch/8829194/abcd", events: ["user.created", "user.updated", "billing.updated", "team.invited"], status: "success", lastDeliveryAt: ago(27) },
+    {
+      id: "we_8f4ad",
+      url: "https://api.acme.com/hooks/app",
+      events: [
+        "user.created",
+        "user.updated",
+        "billing.updated",
+        "team.invited",
+        "team.removed",
+      ],
+      status: "success",
+      lastDeliveryAt: ago(2),
+    },
+    {
+      id: "we_220bc",
+      url: "https://hooks.flux.dev/v2/app/incoming",
+      events: ["billing.updated", "billing.refunded"],
+      status: "failing",
+      lastDeliveryAt: ago(11),
+    },
+    {
+      id: "we_e1d12",
+      url: "https://ops.acme.com/internal/audit",
+      events: ["audit.log", "user.created", "user.deleted", "team.invited"],
+      status: "success",
+      lastDeliveryAt: ago(180),
+    },
+    {
+      id: "we_aabc8",
+      url: "https://stage.acme.com/integrations/app/webhook-receiver",
+      events: ["user.created", "billing.updated"],
+      status: "paused",
+      lastDeliveryAt: null,
+    },
+    {
+      id: "we_44910",
+      url: "https://relay.zapier.com/hooks/catch/8829194/abcd",
+      events: [
+        "user.created",
+        "user.updated",
+        "billing.updated",
+        "team.invited",
+      ],
+      status: "success",
+      lastDeliveryAt: ago(27),
+    },
   ],
   deliveries,
 };

@@ -22,5 +22,10 @@ export type Objective = z.infer<typeof Objective>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listObjectives: { method: "GET", path: "/slos", summary: "Service-level objectives with their current values", response: z.array(Objective) },
+  listObjectives: {
+    method: "GET",
+    path: "/slos",
+    summary: "Service-level objectives with their current values",
+    response: z.array(Objective),
+  },
 });

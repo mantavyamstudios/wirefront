@@ -11,5 +11,12 @@ export const getSeatPlan: SeatPlan = {
   minSeats: 1,
   maxSeats: 50,
   trialDays: 14,
-  features: ["Unlimited projects", "1M API requests / mo", "30-day audit log", "SSO via Google", "Priority email support", "Custom roles"],
+  features: [
+    "Unlimited projects",
+    "1M API requests / mo",
+    "30-day audit log",
+    "SSO via Google",
+    "Priority email support",
+    "Custom roles",
+  ],
 };

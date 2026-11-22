@@ -11,7 +11,16 @@ export function ToastsProgressShowcasePage() {
   const [uploads, setUploads] = useState(fixtures.uploads);
   const [open, setOpen] = useState(true);
   useEffect(() => {
-    const id = window.setInterval(() => setUploads((all) => all.map((u, i) => ({ ...u, progress: Math.min(1, u.progress + 0.02 + i * 0.01) }))), 600);
+    const id = window.setInterval(
+      () =>
+        setUploads((all) =>
+          all.map((u, i) => ({
+            ...u,
+            progress: Math.min(1, u.progress + 0.02 + i * 0.01),
+          }))
+        ),
+      600
+    );
     return () => window.clearInterval(id);
   }, []);
   return (
@@ -23,7 +32,13 @@ export function ToastsProgressShowcasePage() {
           setOpen(true);
         }}
       />
-      {open ? <UploadDock onCancel={(id) => setUploads((all) => all.filter((u) => u.id !== id))} onClose={() => setOpen(false)} uploads={uploads} /> : null}
+      {open ? (
+        <UploadDock
+          onCancel={(id) => setUploads((all) => all.filter((u) => u.id !== id))}
+          onClose={() => setOpen(false)}
+          uploads={uploads}
+        />
+      ) : null}
     </div>
   );
 }

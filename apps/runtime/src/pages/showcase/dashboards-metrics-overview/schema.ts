@@ -22,7 +22,9 @@ export const Metric = z
   .meta({ id: "Metric" });
 export type Metric = z.infer<typeof Metric>;
 
-export const SeriesPoint = z.object({ date: z.iso.date(), value: z.number() }).meta({ id: "SeriesPoint" });
+export const SeriesPoint = z
+  .object({ date: z.iso.date(), value: z.number() })
+  .meta({ id: "SeriesPoint" });
 export type SeriesPoint = z.infer<typeof SeriesPoint>;
 
 export const Activity = z

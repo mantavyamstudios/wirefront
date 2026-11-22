@@ -13,7 +13,9 @@ export function EmptyFirstProjectShowcasePage() {
             <span className="uppercase tracking-[0.2em]">Workspace</span>
             <span className="text-muted-foreground">/ mantavyam</span>
           </div>
-          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">Day 1</div>
+          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+            Day 1
+          </div>
         </div>
       </header>
       <main className="mx-auto flex max-w-5xl items-center px-6 py-16 lg:py-24">

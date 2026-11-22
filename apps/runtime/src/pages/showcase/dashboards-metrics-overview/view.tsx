@@ -5,7 +5,12 @@
 import { Button } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Skeleton } from "@wirefront/ui/skeleton";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ArrowDownRightIcon, ArrowUpRightIcon, PlusIcon } from "lucide-react";
@@ -54,7 +59,8 @@ export interface MetricsOverviewProps {
 
 const RANGES: Range[] = ["7d", "30d", "90d"];
 const SKELETON_CARDS = ["c1", "c2", "c3", "c4"];
-const eyebrow = "font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]";
+const eyebrow =
+  "font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]";
 const card = "rounded-xl border border-border/60 bg-background/40";
 
 function initials(name: string) {
@@ -85,9 +91,15 @@ function MetricsOverviewScreen({
   const value = (m: Pick<Metric, "value" | "unit">) => {
     switch (m.unit) {
       case "currency":
-        return format.money(m.value, undefined, { notation: "compact", maximumFractionDigits: 1 });
+        return format.money(m.value, undefined, {
+          notation: "compact",
+          maximumFractionDigits: 1,
+        });
       case "percent":
-        return format.number(m.value, { style: "percent", maximumFractionDigits: 1 });
+        return format.number(m.value, {
+          style: "percent",
+          maximumFractionDigits: 1,
+        });
       case "duration": {
         const minutes = Math.floor(m.value / 60);
         const seconds = Math.round(m.value % 60);
@@ -97,8 +109,14 @@ function MetricsOverviewScreen({
         return format.number(m.value);
     }
   };
-  const change = (m: Metric) => format.number(m.change, { style: "percent", maximumFractionDigits: 1, signDisplay: "exceptZero" });
-  const good = (m: Metric) => (m.goodWhen === "up" ? m.change >= 0 : m.change <= 0);
+  const change = (m: Metric) =>
+    format.number(m.change, {
+      style: "percent",
+      maximumFractionDigits: 1,
+      signDisplay: "exceptZero",
+    });
+  const good = (m: Metric) =>
+    m.goodWhen === "up" ? m.change >= 0 : m.change <= 0;
 
   const ready = status === "ready" && data;
   const chartMetric = data?.metrics.find((m) => m.id === data.chart.metricId);
@@ -119,7 +137,15 @@ function MetricsOverviewScreen({
             {ready ? (
               <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-md border border-border/70 bg-background/40 px-3 py-1.5 font-mono text-muted-foreground text-xs">
                 <span className="size-1.5 rounded-full bg-category-2" />
-                {format.date(data.period.start, { month: "short", day: "numeric" })} – {format.date(data.period.end, { month: "short", day: "numeric" })}
+                {format.date(data.period.start, {
+                  month: "short",
+                  day: "numeric",
+                })}{" "}
+                –{" "}
+                {format.date(data.period.end, {
+                  month: "short",
+                  day: "numeric",
+                })}
               </span>
             ) : null}
             {onNewReport ? (
@@ -132,13 +158,23 @@ function MetricsOverviewScreen({
         </div>
       </div>
 
-      <main aria-busy={status === "loading"} className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
+      <main
+        aria-busy={status === "loading"}
+        className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10"
+      >
         {status === "error" ? (
           <div className={cn(card, "p-10 text-center")}>
             <p className="font-medium">{t.errorTitle}</p>
-            {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+            {error ? (
+              <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+            ) : null}
             {onRetry ? (
-              <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+              <Button
+                className="mt-4"
+                onClick={onRetry}
+                size="sm"
+                variant="outline"
+              >
                 {t.retry}
               </Button>
             ) : null}
@@ -150,25 +186,36 @@ function MetricsOverviewScreen({
                 ? data.metrics.map((m) => (
                     <div className={cn(card, "p-4")} key={m.id}>
                       <div className={eyebrow}>{m.label}</div>
-                      <div className="mt-2 font-heading text-3xl tracking-tight">{value(m)}</div>
+                      <div className="mt-2 font-heading text-3xl tracking-tight">
+                        {value(m)}
+                      </div>
                       <div className="mt-1 flex items-center gap-1.5 text-xs">
                         <span
                           className={cn(
                             "inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 font-mono text-[10px]",
                             good(m)
                               ? "bg-success/12 text-success-foreground"
-                              : "bg-destructive/12 text-destructive-foreground",
+                              : "bg-destructive/12 text-destructive-foreground"
                           )}
                         >
-                          {m.change >= 0 ? <ArrowUpRightIcon className="size-3" /> : <ArrowDownRightIcon className="size-3" />}
+                          {m.change >= 0 ? (
+                            <ArrowUpRightIcon className="size-3" />
+                          ) : (
+                            <ArrowDownRightIcon className="size-3" />
+                          )}
                           {change(m)}
                         </span>
-                        <span className="text-muted-foreground">{interpolate(t.versus, { range: rangeLabel(range) })}</span>
+                        <span className="text-muted-foreground">
+                          {interpolate(t.versus, { range: rangeLabel(range) })}
+                        </span>
                       </div>
                     </div>
                   ))
                 : SKELETON_CARDS.map((key) => (
-                    <div className={cn(card, "flex flex-col gap-3 p-4")} key={key}>
+                    <div
+                      className={cn(card, "flex flex-col gap-3 p-4")}
+                      key={key}
+                    >
                       <Skeleton className="h-3 w-24 motion-reduce:animate-none" />
                       <Skeleton className="h-8 w-28 motion-reduce:animate-none" />
                       <Skeleton className="h-3 w-32 motion-reduce:animate-none" />
@@ -181,18 +228,24 @@ function MetricsOverviewScreen({
                 <div className="flex flex-wrap items-end justify-between gap-3">
                   <div>
                     <div className={eyebrow}>
-                      {chartMetric ? interpolate(t.daily, { metric: chartMetric.label }) : <Skeleton className="h-3 w-32 motion-reduce:animate-none" />}
+                      {chartMetric ? (
+                        interpolate(t.daily, { metric: chartMetric.label })
+                      ) : (
+                        <Skeleton className="h-3 w-32 motion-reduce:animate-none" />
+                      )}
                     </div>
                     <div className="mt-1 flex items-baseline gap-2">
                       {chartMetric ? (
                         <>
-                          <span className="font-heading text-2xl">{value(chartMetric)}</span>
+                          <span className="font-heading text-2xl">
+                            {value(chartMetric)}
+                          </span>
                           <span
                             className={cn(
                               "inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 font-mono text-[10px]",
                               good(chartMetric)
                                 ? "bg-success/12 text-success-foreground"
-                                : "bg-destructive/12 text-destructive-foreground",
+                                : "bg-destructive/12 text-destructive-foreground"
                             )}
                           >
                             {change(chartMetric)}
@@ -212,7 +265,9 @@ function MetricsOverviewScreen({
                         aria-pressed={r === range}
                         className={cn(
                           "min-h-7 rounded px-2.5 py-1 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10",
-                          r === range ? "bg-foreground/8 text-foreground" : "hover:bg-foreground/5",
+                          r === range
+                            ? "bg-foreground/8 text-foreground"
+                            : "hover:bg-foreground/5"
                         )}
                         key={r}
                         onClick={() => r !== range && onRangeChange(r)}
@@ -230,7 +285,10 @@ function MetricsOverviewScreen({
                       label={interpolate(t.chartLabel, {
                         metric: chartMetric.label,
                         count: data.chart.points.length,
-                        value: format.number(data.chart.points[data.chart.points.length - 1]?.value ?? 0),
+                        value: format.number(
+                          data.chart.points[data.chart.points.length - 1]
+                            ?.value ?? 0
+                        ),
                       })}
                       points={data.chart.points}
                     />
@@ -260,16 +318,25 @@ function MetricsOverviewScreen({
                   data.activity.length ? (
                     <ul className="mt-4 flex flex-col gap-3.5">
                       {data.activity.map((a) => (
-                        <ActivityItem a={a} key={a.id} when={format.relative(a.at)} />
+                        <ActivityItem
+                          a={a}
+                          key={a.id}
+                          when={format.relative(a.at)}
+                        />
                       ))}
                     </ul>
                   ) : (
-                    <p className="mt-4 text-muted-foreground text-sm">{t.noActivity}</p>
+                    <p className="mt-4 text-muted-foreground text-sm">
+                      {t.noActivity}
+                    </p>
                   )
                 ) : (
                   <div className="mt-4 flex flex-col gap-4">
                     {SKELETON_CARDS.map((key) => (
-                      <Skeleton className="h-8 w-full motion-reduce:animate-none" key={key} />
+                      <Skeleton
+                        className="h-8 w-full motion-reduce:animate-none"
+                        key={key}
+                      />
                     ))}
                   </div>
                 )}
@@ -289,15 +356,24 @@ function ActivityItem({ a, when }: { a: Activity; when: string }) {
         {initials(a.actor)}
       </span>
       <div className="min-w-0 flex-1 leading-snug">
-        <span className="font-medium">{a.actor}</span> <span className="text-muted-foreground">{a.action}</span>{" "}
+        <span className="font-medium">{a.actor}</span>{" "}
+        <span className="text-muted-foreground">{a.action}</span>{" "}
         <span className="text-foreground/85">{a.target}</span>
-        <div className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{when}</div>
+        <div className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+          {when}
+        </div>
       </div>
     </li>
   );
 }
 
-function Sparkline({ points, label }: { points: SeriesPoint[]; label: string }) {
+function Sparkline({
+  points,
+  label,
+}: {
+  points: SeriesPoint[];
+  label: string;
+}) {
   const gradientId = useId();
   const data = points.map((p) => p.value);
   const W = 600;
@@ -307,7 +383,10 @@ function Sparkline({ points, label }: { points: SeriesPoint[]; label: string }) 
   const max = Math.max(...data);
   const span = max - min || 1;
   const stepX = (W - PAD * 2) / (data.length - 1);
-  const coords = data.map((v, i) => [PAD + i * stepX, PAD + (1 - (v - min) / span) * (H - PAD * 2)] as const);
+  const coords = data.map(
+    (v, i) =>
+      [PAD + i * stepX, PAD + (1 - (v - min) / span) * (H - PAD * 2)] as const
+  );
   const line = coords.map(([x, y]) => `${x},${y}`).join(" ");
   const area = `M ${PAD} ${H - PAD} L ${coords.map(([x, y]) => `${x} ${y}`).join(" L ")} L ${W - PAD} ${H - PAD} Z`;
   const [lastX, lastY] = coords[coords.length - 1] ?? [0, 0];
@@ -316,7 +395,13 @@ function Sparkline({ points, label }: { points: SeriesPoint[]; label: string }) 
   // that would turn into an ellipse.
   return (
     <div className="relative h-full w-full">
-      <svg aria-label={label} className="h-full w-full" preserveAspectRatio="none" role="img" viewBox={`0 0 ${W} ${H}`}>
+      <svg
+        aria-label={label}
+        className="h-full w-full"
+        preserveAspectRatio="none"
+        role="img"
+        viewBox={`0 0 ${W} ${H}`}
+      >
         <defs>
           <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
             <stop offset="0%" stopColor="currentColor" stopOpacity="0.2" />

@@ -31,8 +31,14 @@ import { createServer } from "node:net";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const WWW = resolve(dirname(fileURLToPath(import.meta.url)), "../../apps/runtime");
-const STATUS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "../../.test-status");
+const WWW = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "../../apps/runtime"
+);
+const STATUS_DIR = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "../../.test-status"
+);
 const START_LIMIT_MS = 120_000;
 const WARMUP_LIMIT_MS = 180_000;
 const WARMUP_QUIET_MS = 3_000;
@@ -115,15 +121,21 @@ async function warmUp(url: string, serverLog: () => string): Promise<void> {
       loads += 1;
     });
     const started = Date.now();
-    const optimisations = () => (serverLog().match(/optimiz|reloading/gi) ?? []).length;
+    const optimisations = () =>
+      (serverLog().match(/optimiz|reloading/gi) ?? []).length;
     while (Date.now() - started < WARMUP_LIMIT_MS) {
       loads = 0;
       const before = optimisations();
-      await page.goto(`${url}/preview/tables/members`, { waitUntil: "networkidle", timeout: 120_000 });
+      await page.goto(`${url}/preview/tables/members`, {
+        waitUntil: "networkidle",
+        timeout: 120_000,
+      });
       await page.waitForTimeout(WARMUP_QUIET_MS);
       if (loads <= 1 && optimisations() === before) return;
     }
-    throw new Error(`[server] still reloading after ${WARMUP_LIMIT_MS / 1000}s of warm-up:\n${serverLog().slice(-2000)}`);
+    throw new Error(
+      `[server] still reloading after ${WARMUP_LIMIT_MS / 1000}s of warm-up:\n${serverLog().slice(-2000)}`
+    );
   } finally {
     await browser.close();
   }
@@ -133,25 +145,43 @@ async function warmUp(url: string, serverLog: () => string): Promise<void> {
 export async function startAppServer(label: string): Promise<AppServer> {
   if (process.env.APP_URL) {
     const url = process.env.APP_URL.replace(/\/$/, "");
-    console.log(`[server] ${label}: using APP_URL ${url} (not started or stopped by this check)`);
+    console.log(
+      `[server] ${label}: using APP_URL ${url} (not started or stopped by this check)`
+    );
     return { url, stop: async () => {} };
   }
   installExitHooks();
   const port = await freePort();
   const url = `http://127.0.0.1:${port}`;
-  const child = spawn("npx", ["vite", "dev", "--port", String(port), "--strictPort", "--host", "127.0.0.1", "--force"], {
-    cwd: WWW,
-    detached: true, // own process group, so stop() can kill everything it spawned
-    stdio: ["ignore", "pipe", "pipe"],
-    env: { ...process.env, BROWSER: "none" },
-  });
+  const child = spawn(
+    "npx",
+    [
+      "vite",
+      "dev",
+      "--port",
+      String(port),
+      "--strictPort",
+      "--host",
+      "127.0.0.1",
+      "--force",
+    ],
+    {
+      cwd: WWW,
+      detached: true, // own process group, so stop() can kill everything it spawned
+      stdio: ["ignore", "pipe", "pipe"],
+      env: { ...process.env, BROWSER: "none" },
+    }
+  );
   live.add(child);
   let log = "";
   let warm = false;
   mkdirSync(STATUS_DIR, { recursive: true });
   const logFile = resolve(STATUS_DIR, `server-${label}.log`);
   // Append, never reset: a failure noticed after a later run must still be traceable.
-  appendFileSync(logFile, `\n=== ${new Date().toISOString()} · ${label} server ===\n`);
+  appendFileSync(
+    logFile,
+    `\n=== ${new Date().toISOString()} · ${label} server ===\n`
+  );
   const keep = (d: Buffer) => {
     const text = d.toString();
     log = (log + text).slice(-20_000);
@@ -159,7 +189,9 @@ export async function startAppServer(label: string): Promise<AppServer> {
     if (!warm) return;
     for (const line of text.split("\n")) {
       if (/optimiz|reloading|page reload/i.test(line)) {
-        console.log(`[alert] ${label}: dev server after warm-up: ${line.trim()} (pages open now may reload; log: ${logFile})`);
+        console.log(
+          `[alert] ${label}: dev server after warm-up: ${line.trim()} (pages open now may reload; log: ${logFile})`
+        );
       }
     }
   };
@@ -182,7 +214,9 @@ export async function startAppServer(label: string): Promise<AppServer> {
   while (Date.now() - started < START_LIMIT_MS) {
     if (child.exitCode !== null) {
       live.delete(child);
-      throw new Error(`[server] ${label}: dev server exited (code ${child.exitCode}) before serving:\n${log.slice(-3000)}`);
+      throw new Error(
+        `[server] ${label}: dev server exited (code ${child.exitCode}) before serving:\n${log.slice(-3000)}`
+      );
     }
     if (await reachable(url)) {
       try {
@@ -192,17 +226,24 @@ export async function startAppServer(label: string): Promise<AppServer> {
         await stop();
         throw err;
       }
-      console.log(`[server] ${label}: fresh, warm server on ${url} (pid ${child.pid}) after ${Math.round((Date.now() - started) / 1000)}s`);
+      console.log(
+        `[server] ${label}: fresh, warm server on ${url} (pid ${child.pid}) after ${Math.round((Date.now() - started) / 1000)}s`
+      );
       return { url, stop };
     }
     await new Promise((r) => setTimeout(r, 500));
   }
   await stop();
-  throw new Error(`[server] ${label}: no response from ${url} within ${START_LIMIT_MS / 1000}s:\n${log.slice(-3000)}`);
+  throw new Error(
+    `[server] ${label}: no response from ${url} within ${START_LIMIT_MS / 1000}s:\n${log.slice(-3000)}`
+  );
 }
 
 /** Run `fn` with a fresh server and always retire it afterwards. */
-export async function withAppServer<T>(label: string, fn: (url: string) => Promise<T>): Promise<T> {
+export async function withAppServer<T>(
+  label: string,
+  fn: (url: string) => Promise<T>
+): Promise<T> {
   const server = await startAppServer(label);
   try {
     return await fn(server.url);

@@ -35,5 +35,10 @@ export type AuditLog = z.infer<typeof AuditLog>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listAuditEvents: { method: "GET", path: "/audit-events", summary: "Recent audit events, newest first", response: AuditLog },
+  listAuditEvents: {
+    method: "GET",
+    path: "/audit-events",
+    summary: "Recent audit events, newest first",
+    response: AuditLog,
+  },
 });

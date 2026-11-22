@@ -15,7 +15,12 @@ export const listNoteFolders: NoteFolder[] = [
 ];
 
 let seed = 0;
-const b = (type: NoteBlockType, text: string, done?: boolean): NoteBlock => ({ id: `b${++seed}`, type, text, done });
+const b = (type: NoteBlockType, text: string, done?: boolean): NoteBlock => ({
+  id: `b${++seed}`,
+  type,
+  text,
+  done,
+});
 
 export const listNotes: Note[] = [
   {
@@ -25,7 +30,10 @@ export const listNotes: Note[] = [
     updatedAt: "2026-10-24T09:41:00Z",
     pinned: true,
     blocks: [
-      b("p", "Five nights, flying in on the 14th. Staying in Príncipe Real, ten minutes up the hill from Bairro Alto."),
+      b(
+        "p",
+        "Five nights, flying in on the 14th. Staying in Príncipe Real, ten minutes up the hill from Bairro Alto."
+      ),
       b("h2", "Before we go"),
       b("todo", "Renew passport", true),
       b("todo", "Book the 28 tram early, before the queues", true),
@@ -36,7 +44,10 @@ export const listNotes: Note[] = [
       b("bullet", "Grilled sardines somewhere in Alfama"),
       b("bullet", "Ask Rui for the tasca with no sign on the door"),
       b("h2", "Maybe"),
-      b("p", "Day trip to Cascais if the weather holds. Train from Cais do Sodré, 40 minutes."),
+      b(
+        "p",
+        "Day trip to Cascais if the weather holds. Train from Cais do Sodré, 40 minutes."
+      ),
     ],
   },
   {
@@ -48,7 +59,10 @@ export const listNotes: Note[] = [
     blocks: [
       b("p", "Three bets for the quarter. Everything else waits for January."),
       b("h2", "Bets"),
-      b("bullet", "Self-serve onboarding: cut time to first project under 5 minutes"),
+      b(
+        "bullet",
+        "Self-serve onboarding: cut time to first project under 5 minutes"
+      ),
       b("bullet", "Usage-based billing for teams over 50 seats"),
       b("bullet", "Kill the legacy export pipeline"),
       b("h2", "Owners"),
@@ -63,7 +77,10 @@ export const listNotes: Note[] = [
     folderId: "recipes",
     updatedAt: "2026-10-22T08:05:00Z",
     blocks: [
-      b("p", "500g flour (80% bread, 20% whole wheat), 375g water, 100g starter, 10g salt."),
+      b(
+        "p",
+        "500g flour (80% bread, 20% whole wheat), 375g water, 100g starter, 10g salt."
+      ),
       b("h2", "Schedule"),
       b("todo", "Fri 9pm: feed starter", true),
       b("todo", "Sat 9am: mix, rest 1 hour", true),
@@ -82,7 +99,10 @@ export const listNotes: Note[] = [
       b("bullet", "Wants more ownership of the design system"),
       b("bullet", "Feeling stretched across two squads"),
       b("h2", "Mine"),
-      b("bullet", "Promo packet timeline: draft due before the end of the month"),
+      b(
+        "bullet",
+        "Promo packet timeline: draft due before the end of the month"
+      ),
       b("todo", "Move her off the billing squad after the RFC lands"),
     ],
   },
@@ -123,4 +143,10 @@ export const listNotes: Note[] = [
     ],
   },
 ];
-export const createNote: Note = { id: "n-new", title: "", folderId: "personal", updatedAt: now, blocks: [{ id: "b-new", type: "p", text: "" }] };
+export const createNote: Note = {
+  id: "n-new",
+  title: "",
+  folderId: "personal",
+  updatedAt: now,
+  blocks: [{ id: "b-new", type: "p", text: "" }],
+};

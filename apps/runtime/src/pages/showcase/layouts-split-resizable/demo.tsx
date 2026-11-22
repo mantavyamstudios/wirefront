@@ -18,7 +18,7 @@ const vsLightAA = {
       ? { ...rule, style: { ...rule.style, color: "rgb(204, 0, 0)" } }
       : rule.types.includes("class-name")
         ? { ...rule, style: { ...rule.style, color: "rgb(30, 105, 128)" } }
-        : rule,
+        : rule
   ),
 };
 
@@ -79,39 +79,60 @@ function EditorPane() {
         <EditorTab label="playground.tsx" active />
         <EditorTab label="config.json" />
       </div>
-      <ScrollRegion aria-label="playground.tsx" className="min-h-0 flex-1" orientation="both">
+      <ScrollRegion
+        aria-label="playground.tsx"
+        className="min-h-0 flex-1"
+        orientation="both"
+      >
         {!mounted ? (
           <pre className="m-0 whitespace-pre px-3 py-3 font-mono text-[12.5px] leading-[1.65]">
             {CODE.trimEnd()}
           </pre>
         ) : (
-        <Highlight code={CODE.trimEnd()} language="tsx" theme={theme}>
-          {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre
-              className={`m-0 px-3 py-3 font-mono text-[12.5px] leading-[1.65] ${className}`}
-              style={{ ...style, background: "transparent" }}
-            >
-              {withOffsets(tokens).map(({ line, number, offset, parts }) => (
-                // Lines and tokens are keyed by where they start in the code.
-                <div key={`line-${offset}`} {...getLineProps({ line })} className="table-row">
-                  <span className="table-cell select-none pe-4 text-end font-mono text-muted-foreground text-xs tabular-nums">
-                    {number}
-                  </span>
-                  <span className="table-cell whitespace-pre">
-                    {parts.length ? parts.map(({ token, at }) => <span key={`token-${at}`} {...getTokenProps({ token })} />) : " "}
-                  </span>
-                </div>
-              ))}
-            </pre>
-          )}
-        </Highlight>
+          <Highlight code={CODE.trimEnd()} language="tsx" theme={theme}>
+            {({ className, style, tokens, getLineProps, getTokenProps }) => (
+              <pre
+                className={`m-0 px-3 py-3 font-mono text-[12.5px] leading-[1.65] ${className}`}
+                style={{ ...style, background: "transparent" }}
+              >
+                {withOffsets(tokens).map(({ line, number, offset, parts }) => (
+                  // Lines and tokens are keyed by where they start in the code.
+                  <div
+                    key={`line-${offset}`}
+                    {...getLineProps({ line })}
+                    className="table-row"
+                  >
+                    <span className="table-cell select-none pe-4 text-end font-mono text-muted-foreground text-xs tabular-nums">
+                      {number}
+                    </span>
+                    <span className="table-cell whitespace-pre">
+                      {parts.length
+                        ? parts.map(({ token, at }) => (
+                            <span
+                              key={`token-${at}`}
+                              {...getTokenProps({ token })}
+                            />
+                          ))
+                        : " "}
+                    </span>
+                  </div>
+                ))}
+              </pre>
+            )}
+          </Highlight>
         )}
       </ScrollRegion>
     </div>
   );
 }
 
-function EditorTab({ label, active = false }: { label: string; active?: boolean }) {
+function EditorTab({
+  label,
+  active = false,
+}: {
+  label: string;
+  active?: boolean;
+}) {
   return (
     <span
       className={`rounded-md px-2.5 py-1 font-mono text-[11px] ${
@@ -130,9 +151,7 @@ function PreviewPane({ count }: { count: number }) {
         <EditorTab label="Preview" active />
         <EditorTab label="Console" />
       </div>
-      <div
-        className="flex flex-1 items-center justify-center overflow-auto p-4 sm:p-8"
-      >
+      <div className="flex flex-1 items-center justify-center overflow-auto p-4 sm:p-8">
         <div className="flex w-full max-w-sm flex-col gap-3 rounded-xl border border-border bg-card p-6 shadow-sm">
           <h2 className="font-heading font-semibold text-xl">Live preview</h2>
           <p className="text-muted-foreground text-sm">

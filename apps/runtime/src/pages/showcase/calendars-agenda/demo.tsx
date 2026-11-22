@@ -15,9 +15,21 @@ export function CalendarsAgendaShowcasePage() {
     <WirefrontProvider locale="en-GB" now={demoNow} timeZone="UTC">
       <DayAgenda
         error="The agenda didn’t load. Check your connection and try again."
-        events={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listAgenda}
+        events={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? []
+              : fixtures.listAgenda
+        }
         onRetry={() => {}}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

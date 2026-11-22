@@ -9,7 +9,14 @@ export const CODE_LENGTH = 6;
 
 /** What the screen sends when the code is complete. */
 export const VerifyEmailInput = z
-  .object({ code: z.string().regex(new RegExp(`^\\d{${CODE_LENGTH}}$`), `Enter the ${CODE_LENGTH}-digit code.`) })
+  .object({
+    code: z
+      .string()
+      .regex(
+        new RegExp(`^\\d{${CODE_LENGTH}}$`),
+        `Enter the ${CODE_LENGTH}-digit code.`
+      ),
+  })
   .meta({ id: "VerifyEmailInput" });
 export type VerifyEmailInput = z.infer<typeof VerifyEmailInput>;
 
@@ -20,7 +27,10 @@ export const api = defineApi({
     path: "/auth/verify-email",
     summary: "Confirm the signed-in user's email with the code they were sent",
     body: VerifyEmailInput,
-    errors: { 400: "The code is wrong", 410: "The code has expired; send a new one" },
+    errors: {
+      400: "The code is wrong",
+      410: "The code has expired; send a new one",
+    },
   },
   resendVerification: {
     method: "POST",

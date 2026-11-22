@@ -19,7 +19,15 @@ export function PersonalHabitsShowcasePage() {
       <DevlFrame>
         <Habits
           habits={fixtures.listHabits}
-          onCreate={async (habit) => ok({ ...habit, id: `new-${++count.current}`, carry: 0, since: 5, week: [0, 0, 0, 0, 0, 0, 0] })}
+          onCreate={async (habit) =>
+            ok({
+              ...habit,
+              id: `new-${++count.current}`,
+              carry: 0,
+              since: 5,
+              week: [0, 0, 0, 0, 0, 0, 0],
+            })
+          }
           onLog={async () => {}}
           productName={fixtures.productName}
           suggestions={fixtures.suggestions}

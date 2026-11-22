@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-import type { RevenueChannel, RevenueDay, RevenueMoment, RevenueStoryData } from "./schema";
+import type {
+  RevenueChannel,
+  RevenueDay,
+  RevenueMoment,
+  RevenueStoryData,
+} from "./schema";
 
 /** Demo data for the showcase, the generated mocks and tests: two years of a small shop's sales, seeded so it never changes. */
 const DAY = 86_400_000;
@@ -119,22 +124,59 @@ const moments: RevenueMoment[] = [
 ];
 
 const EFFECTS: { from: string; to: string; on: string[]; by: number[] }[] = [
-  { from: "2024-11-29", to: "2024-12-02", on: ["store", "market", "social"], by: [1.55, 1.28, 1.22, 1.38] },
-  { from: "2025-04-24", to: "2025-04-28", on: ["store", "social"], by: [1.34, 1.26, 1.22, 1.2, 1.14] },
+  {
+    from: "2024-11-29",
+    to: "2024-12-02",
+    on: ["store", "market", "social"],
+    by: [1.55, 1.28, 1.22, 1.38],
+  },
+  {
+    from: "2025-04-24",
+    to: "2025-04-28",
+    on: ["store", "social"],
+    by: [1.34, 1.26, 1.22, 1.2, 1.14],
+  },
   { from: "2025-06-02", to: "2025-12-12", on: ["market"], by: [0.84] },
-  { from: "2025-09-23", to: "2025-09-29", on: ["store"], by: [1.26, 1.18, 1.14, 1.1, 1.08, 1.06, 1.04] },
+  {
+    from: "2025-09-23",
+    to: "2025-09-29",
+    on: ["store"],
+    by: [1.26, 1.18, 1.14, 1.1, 1.08, 1.06, 1.04],
+  },
   { from: "2025-11-18", to: "2025-12-12", on: ["store"], by: [1.04] },
-  { from: "2025-11-28", to: "2025-12-01", on: ["store", "market", "social"], by: [1.85, 1.42, 1.32, 1.56] },
-  { from: "2025-12-02", to: "2025-12-12", on: ["wholesale"], by: [1.3, 3.6, 2.3] },
-  { from: "2025-12-08", to: "2025-12-10", on: ["store", "market"], by: [0.72, 0.6, 0.78] },
-  { from: "2025-12-11", to: "2025-12-12", on: ["store", "social"], by: [1.26, 1.12] },
+  {
+    from: "2025-11-28",
+    to: "2025-12-01",
+    on: ["store", "market", "social"],
+    by: [1.85, 1.42, 1.32, 1.56],
+  },
+  {
+    from: "2025-12-02",
+    to: "2025-12-12",
+    on: ["wholesale"],
+    by: [1.3, 3.6, 2.3],
+  },
+  {
+    from: "2025-12-08",
+    to: "2025-12-10",
+    on: ["store", "market"],
+    by: [0.72, 0.6, 0.78],
+  },
+  {
+    from: "2025-12-11",
+    to: "2025-12-12",
+    on: ["store", "social"],
+    by: [1.26, 1.12],
+  },
 ];
 
 function sampleDays(): RevenueDay[] {
   const rand = mulberry32(1128);
   const end = Date.UTC(2025, 11, 12);
   const count = 728;
-  const season = [0.84, 0.82, 0.9, 0.95, 0.97, 0.93, 0.9, 0.92, 0.98, 1.02, 1.03, 1.06];
+  const season = [
+    0.84, 0.82, 0.9, 0.95, 0.97, 0.93, 0.9, 0.92, 0.98, 1.02, 1.03, 1.06,
+  ];
   const week = [1.03, 0.94, 0.96, 0.98, 1.0, 1.04, 1.07];
   const out: RevenueDay[] = [];
   for (let i = 0; i < count; i++) {
@@ -142,7 +184,8 @@ function sampleDays(): RevenueDay[] {
     const date = isoOf(t);
     const d = new Date(t);
     const p = i / (count - 1);
-    const level = 5400 * (1 + 0.36 * p) * season[d.getUTCMonth()] * week[d.getUTCDay()];
+    const level =
+      5400 * (1 + 0.36 * p) * season[d.getUTCMonth()] * week[d.getUTCDay()];
     const shares: Record<string, number> = {
       store: 0.5 - 0.03 * p,
       wholesale: 0.14,
@@ -158,15 +201,20 @@ function sampleDays(): RevenueDay[] {
         boost *= e.by[Math.min(offset, e.by.length - 1)];
       }
       const spread = key === "wholesale" ? 0.5 : 0.14;
-      byChannel[key] = Math.round(level * shares[key] * boost * (1 + (rand() - 0.5) * spread));
+      byChannel[key] = Math.round(
+        level * shares[key] * boost * (1 + (rand() - 0.5) * spread)
+      );
     }
     out.push({ date, byChannel });
   }
   return out;
 }
 
-
-export const getRevenueStory: RevenueStoryData = { channels, days: sampleDays(), moments };
+export const getRevenueStory: RevenueStoryData = {
+  channels,
+  days: sampleDays(),
+  moments,
+};
 
 export const store = { name: "Fernwood Goods" };
 export const user = { name: "Ines Moreau" };

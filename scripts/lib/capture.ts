@@ -31,7 +31,15 @@
  * rectangles are reported so the visual check can leave them out.
  */
 import type { Page } from "playwright";
-import { DesignCrashedError, LayoutNeverSettledError, PROBE, SETTLE_MOTION_MS, SETTLE_STEP_MS, SETTLE_TIMER_MS, SETTLE_WATCHDOG_MS } from "./settle";
+import {
+  DesignCrashedError,
+  LayoutNeverSettledError,
+  PROBE,
+  SETTLE_MOTION_MS,
+  SETTLE_STEP_MS,
+  SETTLE_TIMER_MS,
+  SETTLE_WATCHDOG_MS,
+} from "./settle";
 
 export const CAPTURE_TIME = new Date("2026-04-14T09:30:00.000Z");
 export const CAPTURE_SEED = 20260414;
@@ -94,7 +102,9 @@ export async function waitForSettledVirtual(page: Page): Promise<number> {
   let quiet = 0;
   const motionSteps = SETTLE_MOTION_MS / SETTLE_STEP_MS;
   for (;;) {
-    const p = (await page.evaluate(`window.__wirefrontStep(${SETTLE_TIMER_MS}, ${motionSteps})`)) as {
+    const p = (await page.evaluate(
+      `window.__wirefrontStep(${SETTLE_TIMER_MS}, ${motionSteps})`
+    )) as {
       changed: boolean;
       moving: number;
       crashed: string | null;
@@ -105,7 +115,11 @@ export async function waitForSettledVirtual(page: Page): Promise<number> {
     if (!p.loaded) {
       // Virtual time stays put while the page loads, so the timeline starts
       // at the same instant however long loading takes.
-      if (Date.now() - realStart > SETTLE_WATCHDOG_MS) throw new LayoutNeverSettledError(SETTLE_WATCHDOG_MS, `still loading after ${SETTLE_WATCHDOG_MS}ms`);
+      if (Date.now() - realStart > SETTLE_WATCHDOG_MS)
+        throw new LayoutNeverSettledError(
+          SETTLE_WATCHDOG_MS,
+          `still loading after ${SETTLE_WATCHDOG_MS}ms`
+        );
       await page.waitForTimeout(50);
       continue;
     }
@@ -116,7 +130,10 @@ export async function waitForSettledVirtual(page: Page): Promise<number> {
       quiet = 0;
     }
     if (virtual >= VIRTUAL_CAP_MS) {
-      throw new LayoutNeverSettledError(VIRTUAL_CAP_MS, `still changing after ${VIRTUAL_CAP_MS / 1000}s of virtual time`);
+      throw new LayoutNeverSettledError(
+        VIRTUAL_CAP_MS,
+        `still changing after ${VIRTUAL_CAP_MS / 1000}s of virtual time`
+      );
     }
     if (p.animating) await page.waitForTimeout(16);
     await page.clock.runFor(SETTLE_STEP_MS);
@@ -158,18 +175,28 @@ export async function waitForChartAxes(page: Page): Promise<void> {
   for (;;) {
     const bare = (await page.evaluate(BARE_Y_AXES)) as number;
     if (bare === 0) return;
-    if (Date.now() - realStart > SETTLE_WATCHDOG_MS) throw new LayoutNeverSettledError(SETTLE_WATCHDOG_MS, `${bare} chart Y axis(es) never drew tick labels`);
+    if (Date.now() - realStart > SETTLE_WATCHDOG_MS)
+      throw new LayoutNeverSettledError(
+        SETTLE_WATCHDOG_MS,
+        `${bare} chart Y axis(es) never drew tick labels`
+      );
     await page.waitForTimeout(16);
     await page.clock.runFor(SETTLE_STEP_MS);
   }
 }
 
 /** Open a design's preview, wait until it has settled and take a PNG of the viewport. */
-export async function captureDesign(page: Page, url: string): Promise<{ png: Buffer; canvases: Rect[] }> {
+export async function captureDesign(
+  page: Page,
+  url: string
+): Promise<{ png: Buffer; canvases: Rect[] }> {
   await page.goto(url, { waitUntil: "networkidle", timeout: 60_000 });
   await waitForSettledVirtual(page);
   await waitForChartAxes(page);
   const canvases = await canvasRects(page);
-  const png = await page.screenshot({ fullPage: false, animations: "disabled" });
+  const png = await page.screenshot({
+    fullPage: false,
+    animations: "disabled",
+  });
   return { png, canvases };
 }

@@ -19,7 +19,12 @@ export const StatusComponent = z
 export type StatusComponent = z.infer<typeof StatusComponent>;
 
 export const IncidentUpdate = z
-  .object({ id: z.string(), state: z.enum(["investigating", "identified", "monitoring", "resolved"]), at: z.string(), text: z.string() })
+  .object({
+    id: z.string(),
+    state: z.enum(["investigating", "identified", "monitoring", "resolved"]),
+    at: z.string(),
+    text: z.string(),
+  })
   .meta({ id: "IncidentUpdate" });
 
 export const Incident = z
@@ -37,10 +42,20 @@ export const Incident = z
   .meta({ id: "Incident" });
 export type Incident = z.infer<typeof Incident>;
 
-export const StatusSummary = z.object({ components: z.array(StatusComponent), incidents: z.array(Incident) }).meta({ id: "StatusSummary" });
+export const StatusSummary = z
+  .object({
+    components: z.array(StatusComponent),
+    incidents: z.array(Incident),
+  })
+  .meta({ id: "StatusSummary" });
 export type StatusSummary = z.infer<typeof StatusSummary>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getStatus: { method: "GET", path: "/status", summary: "Component health, daily history and recent incidents", response: StatusSummary },
+  getStatus: {
+    method: "GET",
+    path: "/status",
+    summary: "Component health, daily history and recent incidents",
+    response: StatusSummary,
+  },
 });

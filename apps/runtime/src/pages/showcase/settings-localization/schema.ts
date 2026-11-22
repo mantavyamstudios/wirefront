@@ -21,6 +21,16 @@ export type LocalePrefs = z.infer<typeof LocalePrefs>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getLocalePrefs: { method: "GET", path: "/me/locale", summary: "The signed-in user's language and formatting preferences", response: LocalePrefs },
-  saveLocalePrefs: { method: "PUT", path: "/me/locale", summary: "Save language and formatting preferences", body: LocalePrefs },
+  getLocalePrefs: {
+    method: "GET",
+    path: "/me/locale",
+    summary: "The signed-in user's language and formatting preferences",
+    response: LocalePrefs,
+  },
+  saveLocalePrefs: {
+    method: "PUT",
+    path: "/me/locale",
+    summary: "Save language and formatting preferences",
+    body: LocalePrefs,
+  },
 });

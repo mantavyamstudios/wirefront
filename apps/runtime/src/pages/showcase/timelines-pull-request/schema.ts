@@ -9,18 +9,58 @@ export const DiffSnippet = z
   .object({
     file: z.string(),
     line: z.number().int(),
-    lines: z.array(z.object({ kind: z.enum(["context", "add", "del"]), n: z.number().int(), text: z.string() })),
+    lines: z.array(
+      z.object({
+        kind: z.enum(["context", "add", "del"]),
+        n: z.number().int(),
+        text: z.string(),
+      })
+    ),
   })
   .meta({ id: "DiffSnippet" });
 
 export const PrTimelineItem = z
   .discriminatedUnion("kind", [
-    z.object({ ...Base, kind: z.literal("commit"), actor: z.string(), commits: z.array(z.object({ sha: z.string(), message: z.string() })) }),
-    z.object({ ...Base, kind: z.literal("comment"), actor: z.string(), body: z.string(), diff: DiffSnippet.optional() }),
-    z.object({ ...Base, kind: z.literal("review"), actor: z.string(), state: z.enum(["approved", "changes", "commented"]), summary: z.string().optional() }),
-    z.object({ ...Base, kind: z.literal("ci"), passed: z.number().int(), total: z.number().int(), durationMs: z.number().nonnegative() }),
-    z.object({ ...Base, kind: z.literal("deploy"), env: z.string(), url: z.string(), durationMs: z.number().nonnegative() }),
-    z.object({ ...Base, kind: z.literal("status"), actor: z.string(), label: z.string() }),
+    z.object({
+      ...Base,
+      kind: z.literal("commit"),
+      actor: z.string(),
+      commits: z.array(z.object({ sha: z.string(), message: z.string() })),
+    }),
+    z.object({
+      ...Base,
+      kind: z.literal("comment"),
+      actor: z.string(),
+      body: z.string(),
+      diff: DiffSnippet.optional(),
+    }),
+    z.object({
+      ...Base,
+      kind: z.literal("review"),
+      actor: z.string(),
+      state: z.enum(["approved", "changes", "commented"]),
+      summary: z.string().optional(),
+    }),
+    z.object({
+      ...Base,
+      kind: z.literal("ci"),
+      passed: z.number().int(),
+      total: z.number().int(),
+      durationMs: z.number().nonnegative(),
+    }),
+    z.object({
+      ...Base,
+      kind: z.literal("deploy"),
+      env: z.string(),
+      url: z.string(),
+      durationMs: z.number().nonnegative(),
+    }),
+    z.object({
+      ...Base,
+      kind: z.literal("status"),
+      actor: z.string(),
+      label: z.string(),
+    }),
   ])
   .meta({ id: "PrTimelineItem" });
 export type PrTimelineItem = z.infer<typeof PrTimelineItem>;
@@ -45,13 +85,46 @@ export const PullRequestDetail = z
     requiredApprovals: z.number().int().nonnegative(),
     conflicts: z.boolean(),
     upToDate: z.boolean(),
-    reviewers: z.array(z.object({ id: z.string(), name: z.string(), state: z.enum(["approved", "changes", "pending"]), note: z.string().optional() })),
-    checks: z.array(z.object({ id: z.string(), name: z.string(), context: z.string(), status: z.enum(["passed", "failed", "running", "skipped"]), durationMs: z.number().nonnegative().optional() })),
+    reviewers: z.array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        state: z.enum(["approved", "changes", "pending"]),
+        note: z.string().optional(),
+      })
+    ),
+    checks: z.array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        context: z.string(),
+        status: z.enum(["passed", "failed", "running", "skipped"]),
+        durationMs: z.number().nonnegative().optional(),
+      })
+    ),
     /** Oldest first. */
     timeline: z.array(PrTimelineItem),
-    labels: z.array(z.object({ name: z.string(), tone: z.enum(["violet", "amber", "sky", "rose", "emerald"]) })),
-    linkedIssues: z.array(z.object({ number: z.number().int(), title: z.string(), href: z.string().optional() })),
-    milestone: z.object({ title: z.string(), done: z.number().int(), total: z.number().int(), dueAt: z.string().optional() }).optional(),
+    labels: z.array(
+      z.object({
+        name: z.string(),
+        tone: z.enum(["violet", "amber", "sky", "rose", "emerald"]),
+      })
+    ),
+    linkedIssues: z.array(
+      z.object({
+        number: z.number().int(),
+        title: z.string(),
+        href: z.string().optional(),
+      })
+    ),
+    milestone: z
+      .object({
+        title: z.string(),
+        done: z.number().int(),
+        total: z.number().int(),
+        dueAt: z.string().optional(),
+      })
+      .optional(),
   })
   .meta({ id: "PullRequestDetail" });
 export type PullRequestDetail = z.infer<typeof PullRequestDetail>;
@@ -65,5 +138,10 @@ export const api = defineApi({
     params: z.object({ repo: z.string(), number: z.string() }),
     response: PullRequestDetail,
   },
-  squashMerge: { method: "POST", path: "/repos/{repo}/pulls/{number}/merge", summary: "Squash and merge", params: z.object({ repo: z.string(), number: z.string() }) },
+  squashMerge: {
+    method: "POST",
+    path: "/repos/{repo}/pulls/{number}/merge",
+    summary: "Squash and merge",
+    params: z.object({ repo: z.string(), number: z.string() }),
+  },
 });

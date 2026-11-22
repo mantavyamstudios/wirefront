@@ -6,9 +6,26 @@ import { Button } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import { ScrollRegion } from "@wirefront/ui/wirefront/scroll-region";
-import { CalendarCheckIcon, CheckCircle2Icon, GlobeIcon, MinusIcon, MoonIcon, PlusIcon, SearchIcon, SparklesIcon, SunIcon, XCircleIcon, XIcon } from "lucide-react";
+import {
+  CalendarCheckIcon,
+  CheckCircle2Icon,
+  GlobeIcon,
+  MinusIcon,
+  MoonIcon,
+  PlusIcon,
+  SearchIcon,
+  SparklesIcon,
+  SunIcon,
+  XCircleIcon,
+  XIcon,
+} from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import type { MeetingWindow, QuickPick } from "./schema";
 
@@ -69,18 +86,30 @@ const HOURS = 24;
 const HOUR_W = 36;
 const MIN_DURATION = 1;
 const MAX_DURATION = 8;
-const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
-const city = (zone: string) => (zone.split("/").pop() ?? zone).replace(/_/g, " ");
+const clamp = (v: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, v));
+const city = (zone: string) =>
+  (zone.split("/").pop() ?? zone).replace(/_/g, " ");
 
 /** The zone's UTC offset in minutes at an instant. */
 function offsetMinutes(zone: string, at: Date) {
-  const name = new Intl.DateTimeFormat("en-US", { timeZone: zone, timeZoneName: "longOffset" }).formatToParts(at).find((p) => p.type === "timeZoneName")?.value ?? "GMT";
+  const name =
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: zone,
+      timeZoneName: "longOffset",
+    })
+      .formatToParts(at)
+      .find((p) => p.type === "timeZoneName")?.value ?? "GMT";
   const m = name.match(/GMT([+-])(\d{1,2}):?(\d{2})?/);
   if (!m) return 0;
   return (m[1] === "-" ? -1 : 1) * (Number(m[2]) * 60 + Number(m[3] ?? 0));
 }
 
-function verdictFor(localHour: number, work: [number, number], awake: [number, number]): Verdict {
+function verdictFor(
+  localHour: number,
+  work: [number, number],
+  awake: [number, number]
+): Verdict {
   if (localHour < awake[0] || localHour >= awake[1]) return "asleep";
   if (localHour < work[0] || localHour >= work[1]) return "edge";
   return "ok";
@@ -92,25 +121,58 @@ const VERDICT_TONE: Record<Verdict, string> = {
   asleep: "bg-category-4/15 text-category-4-foreground",
 };
 
-function VerdictPill({ verdict, label, compact }: { verdict: Verdict; label: string; compact?: boolean }) {
-  const Icon = verdict === "ok" ? CheckCircle2Icon : verdict === "edge" ? SunIcon : XCircleIcon;
+function VerdictPill({
+  verdict,
+  label,
+  compact,
+}: {
+  verdict: Verdict;
+  label: string;
+  compact?: boolean;
+}) {
+  const Icon =
+    verdict === "ok"
+      ? CheckCircle2Icon
+      : verdict === "edge"
+        ? SunIcon
+        : XCircleIcon;
   // Compact: icon-only, shown under the city on phones.
   if (compact)
     return (
-      <span className={cn("inline-grid size-3.5 place-items-center rounded-full sm:hidden", VERDICT_TONE[verdict])}>
+      <span
+        className={cn(
+          "inline-grid size-3.5 place-items-center rounded-full sm:hidden",
+          VERDICT_TONE[verdict]
+        )}
+      >
         <Icon aria-hidden className="size-2.5" />
         <span className="sr-only">{label}</span>
       </span>
     );
   return (
-    <span className={cn("inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em]", VERDICT_TONE[verdict])}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em]",
+        VERDICT_TONE[verdict]
+      )}
+    >
       <Icon aria-hidden className="size-2.5" />
       {label}
     </span>
   );
 }
 
-function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, homeZone, quickPicks = [], onUseTime, workHours = [9, 17], awakeHours = [7, 22], className }: MeetingPlannerProps) {
+function MeetingPlannerScreen({
+  availableZones,
+  defaultZones,
+  onZonesChange,
+  homeZone,
+  quickPicks = [],
+  onUseTime,
+  workHours = [9, 17],
+  awakeHours = [7, 22],
+  className,
+}: MeetingPlannerProps) {
   const t = useMessages("meetingPlanner", MEETING_PLANNER_MESSAGES);
   const fmt = useFormat();
   const { now } = useWirefront();
@@ -123,36 +185,65 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
   const at = now();
   const homeOffset = offsetMinutes(homeZone, at);
   const rows = zones
-    .map((zone) => ({ zone, offset: (offsetMinutes(zone, at) - homeOffset) / 60 }))
+    .map((zone) => ({
+      zone,
+      offset: (offsetMinutes(zone, at) - homeOffset) / 60,
+    }))
     .sort((a, b) => a.offset - b.offset);
-  const localHour = (offset: number, h: number) => (((h + offset) % 24) + 24) % 24;
+  const localHour = (offset: number, h: number) =>
+    (((h + offset) % 24) + 24) % 24;
   const verdicts = rows.map((r) => {
     let worst: Verdict = "ok";
     for (let i = 0; i < duration; i++) {
-      const v = verdictFor(localHour(r.offset, start + i), workHours, awakeHours);
+      const v = verdictFor(
+        localHour(r.offset, start + i),
+        workHours,
+        awakeHours
+      );
       if (v === "asleep") worst = "asleep";
       else if (v === "edge" && worst === "ok") worst = "edge";
     }
     return worst;
   });
   const count = (v: Verdict) => verdicts.filter((x) => x === v).length;
-  const headline = !rows.length ? t.noZones : !count("asleep") && !count("edge") ? t.allWorking : !count("asleep") ? interpolate(t.someEdge, { working: count("ok"), edge: count("edge") }) : interpolate(t.someAsleep, { asleep: count("asleep") });
+  const headline = !rows.length
+    ? t.noZones
+    : !count("asleep") && !count("edge")
+      ? t.allWorking
+      : !count("asleep")
+        ? interpolate(t.someEdge, { working: count("ok"), edge: count("edge") })
+        : interpolate(t.someAsleep, { asleep: count("asleep") });
   const updateZones = (next: string[]) => {
     setZones(next);
     onZonesChange?.(next);
   };
   const available = availableZones.filter((z) => !zones.includes(z));
   const q = query.trim().toLowerCase();
-  const matches = available.filter((z) => !q || z.toLowerCase().includes(q) || city(z).toLowerCase().includes(q));
-  const short = (zone: string) => new Intl.DateTimeFormat("en-US", { timeZone: zone, timeZoneName: "short" }).formatToParts(at).find((p) => p.type === "timeZoneName")?.value ?? "";
-  const offsetLabel = (o: number) => interpolate(t.offset, { home: city(homeZone), sign: o > 0 ? "+" : o < 0 ? "−" : "±", hours: Math.abs(o) });
+  const matches = available.filter(
+    (z) =>
+      !q || z.toLowerCase().includes(q) || city(z).toLowerCase().includes(q)
+  );
+  const short = (zone: string) =>
+    new Intl.DateTimeFormat("en-US", { timeZone: zone, timeZoneName: "short" })
+      .formatToParts(at)
+      .find((p) => p.type === "timeZoneName")?.value ?? "";
+  const offsetLabel = (o: number) =>
+    interpolate(t.offset, {
+      home: city(homeZone),
+      sign: o > 0 ? "+" : o < 0 ? "−" : "±",
+      hours: Math.abs(o),
+    });
 
   const findBest = () => {
     let best = 0;
     let bestScore = -Infinity;
     for (let s = 0; s + duration <= HOURS; s++) {
       let score = 0;
-      for (const r of rows) for (let i = 0; i < duration; i++) score += { ok: 3, edge: 1, asleep: -3 }[verdictFor(localHour(r.offset, s + i), workHours, awakeHours)];
+      for (const r of rows)
+        for (let i = 0; i < duration; i++)
+          score += { ok: 3, edge: 1, asleep: -3 }[
+            verdictFor(localHour(r.offset, s + i), workHours, awakeHours)
+          ];
       // Tiebreak: prefer windows centred near 13:00 home time.
       score -= Math.abs(s + duration / 2 - 13) * 0.05;
       if (score > bestScore) {
@@ -177,7 +268,12 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
   useEffect(() => {
     const grid = gridRef.current;
     if (!grid) return;
-    let drag: { mode: string; x: number; start: number; duration: number } | null = null;
+    let drag: {
+      mode: string;
+      x: number;
+      start: number;
+      duration: number;
+    } | null = null;
     const down = (e: PointerEvent) => {
       const target = e.target as HTMLElement;
       const mode = target.closest<HTMLElement>("[data-drag]")?.dataset.drag;
@@ -197,16 +293,31 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
     const move = (e: PointerEvent) => {
       if (!drag) return;
       const rtl = getComputedStyle(grid).direction === "rtl";
-      const delta = Math.round(((rtl ? -1 : 1) * (e.clientX - drag.x)) / HOUR_W);
-      if (drag.mode === "move") setStart(clamp(drag.start + delta, 0, HOURS - drag.duration));
+      const delta = Math.round(
+        ((rtl ? -1 : 1) * (e.clientX - drag.x)) / HOUR_W
+      );
+      if (drag.mode === "move")
+        setStart(clamp(drag.start + delta, 0, HOURS - drag.duration));
       else if (drag.mode === "start") {
-        const next = clamp(drag.start + delta, Math.max(0, drag.start + drag.duration - MAX_DURATION), drag.start + drag.duration - MIN_DURATION);
+        const next = clamp(
+          drag.start + delta,
+          Math.max(0, drag.start + drag.duration - MAX_DURATION),
+          drag.start + drag.duration - MIN_DURATION
+        );
         setStart(next);
         setDuration(drag.start + drag.duration - next);
-      } else setDuration(clamp(drag.duration + delta, MIN_DURATION, Math.min(MAX_DURATION, HOURS - drag.start)));
+      } else
+        setDuration(
+          clamp(
+            drag.duration + delta,
+            MIN_DURATION,
+            Math.min(MAX_DURATION, HOURS - drag.start)
+          )
+        );
     };
     const up = (e: PointerEvent) => {
-      if (drag && grid.hasPointerCapture(e.pointerId)) grid.releasePointerCapture(e.pointerId);
+      if (drag && grid.hasPointerCapture(e.pointerId))
+        grid.releasePointerCapture(e.pointerId);
       drag = null;
     };
     grid.addEventListener("pointerdown", down);
@@ -223,18 +334,43 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
 
   const bookWindow = () => {
     if (!onUseTime) return;
-    const day = new Intl.DateTimeFormat("en-CA", { timeZone: homeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(at);
-    const midnight = new Date(`${day}T00:00:00Z`).getTime() - homeOffset * 60_000;
-    onUseTime({ start: new Date(midnight + start * 3_600_000).toISOString(), end: new Date(midnight + (start + duration) * 3_600_000).toISOString() });
+    const day = new Intl.DateTimeFormat("en-CA", {
+      timeZone: homeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(at);
+    const midnight =
+      new Date(`${day}T00:00:00Z`).getTime() - homeOffset * 60_000;
+    onUseTime({
+      start: new Date(midnight + start * 3_600_000).toISOString(),
+      end: new Date(midnight + (start + duration) * 3_600_000).toISOString(),
+    });
   };
-  const two = (h: number) => String(Math.floor(h)).padStart(2, "0") + (h % 1 ? `:${String(Math.round((h % 1) * 60)).padStart(2, "0")}` : "");
+  const two = (h: number) =>
+    String(Math.floor(h)).padStart(2, "0") +
+    (h % 1 ? `:${String(Math.round((h % 1) * 60)).padStart(2, "0")}` : "");
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-6 text-foreground sm:px-6 sm:py-8 lg:px-10 lg:py-10", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-6 text-foreground sm:px-6 sm:py-8 lg:px-10 lg:py-10",
+        className
+      )}
+    >
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
-            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{interpolate(t.eyebrow, { date: fmt.date(at, { weekday: "long", month: "short", day: "numeric", timeZone: homeZone }) })}</div>
+            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+              {interpolate(t.eyebrow, {
+                date: fmt.date(at, {
+                  weekday: "long",
+                  month: "short",
+                  day: "numeric",
+                  timeZone: homeZone,
+                }),
+              })}
+            </div>
             <h1 className="mt-1 font-heading text-2xl">{t.title}</h1>
             <p className="mt-1 text-muted-foreground text-sm">
               {t.hint}{" "}
@@ -244,12 +380,24 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
-            <Button className={cn(pulse && "ring-2 ring-category-2/40")} disabled={!rows.length} onClick={findBest} size="sm" type="button" variant="outline">
+            <Button
+              className={cn(pulse && "ring-2 ring-category-2/40")}
+              disabled={!rows.length}
+              onClick={findBest}
+              size="sm"
+              type="button"
+              variant="outline"
+            >
               <SparklesIcon aria-hidden />
               {t.findBest}
             </Button>
             {onUseTime ? (
-              <Button disabled={!rows.length} onClick={bookWindow} size="sm" type="button">
+              <Button
+                disabled={!rows.length}
+                onClick={bookWindow}
+                size="sm"
+                type="button"
+              >
                 <CalendarCheckIcon aria-hidden />
                 {t.useTime}
               </Button>
@@ -264,27 +412,50 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
               <div className="grid grid-cols-[136px_auto] sm:grid-cols-[220px_auto]">
                 <div className="sticky inset-s-0 z-20 flex items-center gap-1 border-border/40 border-e border-b bg-background px-2.5 font-mono text-[10px] text-foreground/80 tracking-widest sm:px-3">
                   <span aria-live="polite" className="flex-1">
-                    {interpolate(t.window, { from: `${two(start)}:00`, to: `${two(start + duration)}:00`, hours: duration })}
+                    {interpolate(t.window, {
+                      from: `${two(start)}:00`,
+                      to: `${two(start + duration)}:00`,
+                      hours: duration,
+                    })}
                   </span>
-                  <button aria-label={t.shorter} className="grid size-6 place-items-center rounded outline-none hover:bg-foreground/6 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40" disabled={duration <= MIN_DURATION} onClick={() => setDuration((d) => d - 1)} type="button">
+                  <button
+                    aria-label={t.shorter}
+                    className="grid size-6 place-items-center rounded outline-none hover:bg-foreground/6 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
+                    disabled={duration <= MIN_DURATION}
+                    onClick={() => setDuration((d) => d - 1)}
+                    type="button"
+                  >
                     <MinusIcon aria-hidden className="size-3" />
                   </button>
                   <button
                     aria-label={t.longer}
                     className="grid size-6 place-items-center rounded outline-none hover:bg-foreground/6 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
-                    disabled={duration >= MAX_DURATION || start + duration >= HOURS}
+                    disabled={
+                      duration >= MAX_DURATION || start + duration >= HOURS
+                    }
                     onClick={() => setDuration((d) => d + 1)}
                     type="button"
                   >
                     <PlusIcon aria-hidden className="size-3" />
                   </button>
                 </div>
-                <div className="relative grid border-border/40 border-b" style={{ gridTemplateColumns: `repeat(${HOURS}, ${HOUR_W}px)`, width: HOURS * HOUR_W }}>
+                <div
+                  className="relative grid border-border/40 border-b"
+                  style={{
+                    gridTemplateColumns: `repeat(${HOURS}, ${HOUR_W}px)`,
+                    width: HOURS * HOUR_W,
+                  }}
+                >
                   {Array.from({ length: HOURS }, (_, h) => h).map((h) => (
                     <button
                       aria-label={interpolate(t.startAt, { hour: two(h) })}
                       aria-pressed={h === start}
-                      className={cn("border-border/40 border-s py-1.5 text-center font-mono text-[10px] outline-none hover:bg-foreground/4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", h >= start && h < start + duration ? "text-foreground" : "text-muted-foreground")}
+                      className={cn(
+                        "border-border/40 border-s py-1.5 text-center font-mono text-[10px] outline-none hover:bg-foreground/4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+                        h >= start && h < start + duration
+                          ? "text-foreground"
+                          : "text-muted-foreground"
+                      )}
                       key={h}
                       onClick={() => setStart(clamp(h, 0, HOURS - duration))}
                       type="button"
@@ -297,49 +468,96 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
               <ul>
                 {rows.map((r, ri) => {
                   const v = verdicts[ri] ?? "ok";
-                  const label = { ok: t.working, edge: t.edge, asleep: t.asleep }[v];
+                  const label = {
+                    ok: t.working,
+                    edge: t.edge,
+                    asleep: t.asleep,
+                  }[v];
                   return (
-                    <li className="group grid grid-cols-[136px_auto] border-border/40 border-b last:border-b-0 sm:grid-cols-[220px_auto]" key={r.zone}>
+                    <li
+                      className="group grid grid-cols-[136px_auto] border-border/40 border-b last:border-b-0 sm:grid-cols-[220px_auto]"
+                      key={r.zone}
+                    >
                       <div className="sticky inset-s-0 z-20 flex items-center gap-2 border-border/40 border-e bg-background px-2.5 py-2 sm:px-3 sm:py-2.5">
-                        <div aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/6 font-mono text-[9px] max-lg:hidden">
+                        <div
+                          aria-hidden
+                          className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/6 font-mono text-[9px] max-lg:hidden"
+                        >
                           {short(r.zone)}
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="truncate text-sm">{city(r.zone)}</div>
                           <div className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
                             <VerdictPill compact label={label} verdict={v} />
-                            <time dateTime={at.toISOString()}>{fmt.time(at, { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: r.zone })}</time>
+                            <time dateTime={at.toISOString()}>
+                              {fmt.time(at, {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hourCycle: "h23",
+                                timeZone: r.zone,
+                              })}
+                            </time>
                           </div>
                         </div>
                         <span className="max-sm:hidden">
                           <VerdictPill label={label} verdict={v} />
                         </span>
                         <button
-                          aria-label={interpolate(t.remove, { city: city(r.zone) })}
+                          aria-label={interpolate(t.remove, {
+                            city: city(r.zone),
+                          })}
                           className="inline-flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-all hover:bg-foreground/6 hover:text-destructive focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
-                          onClick={() => updateZones(zones.filter((z) => z !== r.zone))}
+                          onClick={() =>
+                            updateZones(zones.filter((z) => z !== r.zone))
+                          }
                           type="button"
                         >
                           <XIcon aria-hidden className="size-3" />
                         </button>
                       </div>
-                      <div aria-hidden className="relative h-12 cursor-pointer" data-track style={{ width: HOURS * HOUR_W }}>
+                      <div
+                        aria-hidden
+                        className="relative h-12 cursor-pointer"
+                        data-track
+                        style={{ width: HOURS * HOUR_W }}
+                      >
                         {Array.from({ length: HOURS }, (_, h) => h).map((h) => {
                           const local = localHour(r.offset, h);
-                          const sleeping = local < awakeHours[0] || local >= awakeHours[1];
+                          const sleeping =
+                            local < awakeHours[0] || local >= awakeHours[1];
                           return (
                             <div
                               className={cn(
                                 "absolute top-0 bottom-0 border-border/40 border-s",
-                                sleeping ? "bg-category-8/18" : local < 12 ? "bg-category-3/8" : local >= 18 ? "bg-category-4/6" : "",
+                                sleeping
+                                  ? "bg-category-8/18"
+                                  : local < 12
+                                    ? "bg-category-3/8"
+                                    : local >= 18
+                                      ? "bg-category-4/6"
+                                      : ""
                               )}
                               key={h}
-                              style={{ insetInlineStart: h * HOUR_W, width: HOUR_W }}
+                              style={{
+                                insetInlineStart: h * HOUR_W,
+                                width: HOUR_W,
+                              }}
                             >
-                              <span className={cn("pointer-events-none absolute inset-s-1 top-1/2 -translate-y-1/2 font-mono text-[10px]", sleeping ? "text-muted-foreground" : "text-foreground/85")}>
+                              <span
+                                className={cn(
+                                  "pointer-events-none absolute inset-s-1 top-1/2 -translate-y-1/2 font-mono text-[10px]",
+                                  sleeping
+                                    ? "text-muted-foreground"
+                                    : "text-foreground/85"
+                                )}
+                              >
                                 {two(local)}
-                                {local === 0 ? <MoonIcon className="ms-1 inline-block size-2.5 opacity-50" /> : null}
-                                {local === 12 ? <SunIcon className="ms-1 inline-block size-2.5 opacity-50" /> : null}
+                                {local === 0 ? (
+                                  <MoonIcon className="ms-1 inline-block size-2.5 opacity-50" />
+                                ) : null}
+                                {local === 12 ? (
+                                  <SunIcon className="ms-1 inline-block size-2.5 opacity-50" />
+                                ) : null}
                               </span>
                             </div>
                           );
@@ -348,30 +566,60 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                           className={cn(
                             // touch-none: dragging the window must not scroll the grid.
                             "absolute top-1 bottom-1 cursor-grab touch-none select-none rounded-md border-2 shadow-sm transition-all active:cursor-grabbing",
-                            v === "asleep" ? "border-category-4/70 bg-category-4/8" : v === "edge" ? "border-category-3/70 bg-category-3/8" : "border-foreground bg-foreground/6",
-                            pulse && "ring-2 ring-category-2/60",
+                            v === "asleep"
+                              ? "border-category-4/70 bg-category-4/8"
+                              : v === "edge"
+                                ? "border-category-3/70 bg-category-3/8"
+                                : "border-foreground bg-foreground/6",
+                            pulse && "ring-2 ring-category-2/60"
                           )}
                           data-drag="move"
-                          style={{ insetInlineStart: start * HOUR_W, width: duration * HOUR_W }}
+                          style={{
+                            insetInlineStart: start * HOUR_W,
+                            width: duration * HOUR_W,
+                          }}
                         >
-                          <div className="absolute inset-s-0 top-0 bottom-0 w-1.5 cursor-ew-resize rounded-s-md bg-foreground/20 transition-colors hover:bg-foreground/40 pointer-coarse:w-3" data-drag="start" />
-                          <div className="absolute inset-e-0 top-0 bottom-0 w-1.5 cursor-ew-resize rounded-e-md bg-foreground/20 transition-colors hover:bg-foreground/40 pointer-coarse:w-3" data-drag="end" />
+                          <div
+                            className="absolute inset-s-0 top-0 bottom-0 w-1.5 cursor-ew-resize rounded-s-md bg-foreground/20 transition-colors hover:bg-foreground/40 pointer-coarse:w-3"
+                            data-drag="start"
+                          />
+                          <div
+                            className="absolute inset-e-0 top-0 bottom-0 w-1.5 cursor-ew-resize rounded-e-md bg-foreground/20 transition-colors hover:bg-foreground/40 pointer-coarse:w-3"
+                            data-drag="end"
+                          />
                         </div>
                       </div>
                     </li>
                   );
                 })}
-                {!rows.length ? <li className="px-6 py-12 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{t.none}</li> : null}
+                {!rows.length ? (
+                  <li className="px-6 py-12 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+                    {t.none}
+                  </li>
+                ) : null}
               </ul>
             </div>
           </ScrollRegion>
           <div className="flex flex-wrap items-center justify-between gap-3 border-border/40 border-t px-3 py-2.5">
             <Popover onOpenChange={(open) => !open && setQuery("")}>
-              <PopoverTrigger render={<Button disabled={!available.length} size="sm" type="button" variant="outline" />}>
+              <PopoverTrigger
+                render={
+                  <Button
+                    disabled={!available.length}
+                    size="sm"
+                    type="button"
+                    variant="outline"
+                  />
+                }
+              >
                 <PlusIcon aria-hidden />
                 {t.add}
               </PopoverTrigger>
-              <PopoverContent align="start" className="w-80! p-0! overflow-hidden" side="top">
+              <PopoverContent
+                align="start"
+                className="w-80! p-0! overflow-hidden"
+                side="top"
+              >
                 <div className="flex items-center gap-2 border-border/60 border-b px-3 py-2">
                   <SearchIcon aria-hidden className="size-3.5 opacity-50" />
                   <input
@@ -386,7 +634,9 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                 </div>
                 <ul className="max-h-80 overflow-y-auto py-1">
                   {matches.length === 0 ? (
-                    <li className="px-3 py-6 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{t.noMatches}</li>
+                    <li className="px-3 py-6 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+                      {t.noMatches}
+                    </li>
                   ) : (
                     matches.map((z) => (
                       <li key={z}>
@@ -398,13 +648,21 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                           }}
                           type="button"
                         >
-                          <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/6 font-mono text-[9px]">
+                          <span
+                            aria-hidden
+                            className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground/6 font-mono text-[9px]"
+                          >
                             {short(z)}
                           </span>
                           <span className="min-w-0 flex-1">
-                            <span className="block truncate text-sm">{city(z)}</span>
+                            <span className="block truncate text-sm">
+                              {city(z)}
+                            </span>
                             <span className="block truncate font-mono text-[10px] text-muted-foreground">
-                              {z} · {offsetLabel((offsetMinutes(z, at) - homeOffset) / 60)}
+                              {z} ·{" "}
+                              {offsetLabel(
+                                (offsetMinutes(z, at) - homeOffset) / 60
+                              )}
                             </span>
                           </span>
                         </button>
@@ -414,7 +672,12 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                 </ul>
               </PopoverContent>
             </Popover>
-            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{interpolate(t.count, { zones: rows.length, more: available.length })}</span>
+            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+              {interpolate(t.count, {
+                zones: rows.length,
+                more: available.length,
+              })}
+            </span>
           </div>
           <div className="flex flex-col items-start justify-between gap-3 border-border/40 border-t px-4 py-3 sm:flex-row sm:items-center">
             <span className="inline-flex items-center gap-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
@@ -423,13 +686,25 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
             </span>
             <span className="flex flex-wrap items-center gap-3 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
               <span className="flex items-center gap-1.5">
-                <span aria-hidden className="size-2.5 rounded bg-category-3/40" /> {t.morning}
+                <span
+                  aria-hidden
+                  className="size-2.5 rounded bg-category-3/40"
+                />{" "}
+                {t.morning}
               </span>
               <span className="flex items-center gap-1.5">
-                <span aria-hidden className="size-2.5 rounded bg-category-4/30" /> {t.evening}
+                <span
+                  aria-hidden
+                  className="size-2.5 rounded bg-category-4/30"
+                />{" "}
+                {t.evening}
               </span>
               <span className="flex items-center gap-1.5">
-                <span aria-hidden className="size-2.5 rounded bg-category-8/40" /> {t.asleep}
+                <span
+                  aria-hidden
+                  className="size-2.5 rounded bg-category-8/40"
+                />{" "}
+                {t.asleep}
               </span>
             </span>
           </div>
@@ -437,7 +712,9 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
 
         {quickPicks.length ? (
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{t.quick}</span>
+            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+              {t.quick}
+            </span>
             {quickPicks.map((p) => {
               const active = p.start === start && p.hours === duration;
               return (
@@ -445,7 +722,9 @@ function MeetingPlannerScreen({ availableZones, defaultZones, onZonesChange, hom
                   aria-pressed={active}
                   className={cn(
                     "min-h-8 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10",
-                    active ? "border-foreground bg-foreground text-background" : "border-border/60 text-muted-foreground hover:border-border hover:text-foreground",
+                    active
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-border/60 text-muted-foreground hover:border-border hover:text-foreground"
                   )}
                   key={p.id}
                   onClick={() => {

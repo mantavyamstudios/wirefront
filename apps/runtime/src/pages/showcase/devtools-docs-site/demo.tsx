@@ -10,7 +10,17 @@ import { DocsSite } from "./view";
 export function DevtoolsDocsSiteShowcasePage() {
   return (
     <DevlFrame>
-      <DocsSite dashboardHref="https://kestrel.example/dashboard" editHref={(page) => `https://kestrel.example/docs/edit/${page}.mdx`} initialPage="retries" languages={fixtures.languages} onFeedback={() => {}} pages={fixtures.listDocsPages} product="Kestrel" topNav={fixtures.topNav} version="v2.4" />
+      <DocsSite
+        dashboardHref="https://kestrel.example/dashboard"
+        editHref={(page) => `https://kestrel.example/docs/edit/${page}.mdx`}
+        initialPage="retries"
+        languages={fixtures.languages}
+        onFeedback={() => {}}
+        pages={fixtures.listDocsPages}
+        product="Kestrel"
+        topNav={fixtures.topNav}
+        version="v2.4"
+      />
     </DevlFrame>
   );
 }

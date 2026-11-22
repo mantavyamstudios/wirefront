@@ -26,5 +26,11 @@ export type Commit = z.infer<typeof Commit>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listCommits: { method: "GET", path: "/repos/{repo}/commits", summary: "Recent commits on a branch, newest first, with graph lanes", params: z.object({ repo: z.string() }), response: z.array(Commit) },
+  listCommits: {
+    method: "GET",
+    path: "/repos/{repo}/commits",
+    summary: "Recent commits on a branch, newest first, with graph lanes",
+    params: z.object({ repo: z.string() }),
+    response: z.array(Commit),
+  },
 });

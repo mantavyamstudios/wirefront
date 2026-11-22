@@ -65,20 +65,20 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [preference, setPreferenceState] = useState<OrbitThemePreference>(() =>
-    typeof window === "undefined" ? "system" : readPreference(),
+    typeof window === "undefined" ? "system" : readPreference()
   );
 
   const [osScheme, setOsScheme] = useState<"light" | "dark">(() =>
-    typeof window === "undefined" ? "dark" : readOsScheme(),
+    typeof window === "undefined" ? "dark" : readOsScheme()
   );
 
   const [palette, setPaletteState] = useState<OrbitThemePalette>(() =>
-    typeof window === "undefined" ? DEFAULT_PALETTE : readPalette(),
+    typeof window === "undefined" ? DEFAULT_PALETTE : readPalette()
   );
 
   const resolved = useMemo(
     () => (preference === "system" ? osScheme : preference),
-    [preference, osScheme],
+    [preference, osScheme]
   );
 
   useEffect(() => {
@@ -143,7 +143,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setPalette,
       toggleLightDark,
     }),
-    [preference, resolved, palette, setPreference, setPalette, toggleLightDark],
+    [preference, resolved, palette, setPreference, setPalette, toggleLightDark]
   );
 
   return (

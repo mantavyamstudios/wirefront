@@ -17,5 +17,10 @@ export type Cohort = z.infer<typeof Cohort>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listCohorts: { method: "GET", path: "/reports/retention-cohorts", summary: "Monthly signup cohorts and their retention, oldest first", response: z.array(Cohort) },
+  listCohorts: {
+    method: "GET",
+    path: "/reports/retention-cohorts",
+    summary: "Monthly signup cohorts and their retention, oldest first",
+    response: z.array(Cohort),
+  },
 });

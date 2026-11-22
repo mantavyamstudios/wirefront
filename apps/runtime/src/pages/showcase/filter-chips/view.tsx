@@ -6,22 +6,54 @@ import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
 import { CheckboxGroup } from "@wirefront/ui/checkbox-group";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { Label } from "@wirefront/ui/label";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Separator } from "@wirefront/ui/separator";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { Slider } from "@wirefront/ui/slider";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { pageCount, withFilter, withPage, withSearch } from "@wirefront/ui/wirefront/list";
-import { interpolate, useFormat, useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  pageCount,
+  withFilter,
+  withPage,
+  withSearch,
+} from "@wirefront/ui/wirefront/list";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { AsyncStatus, ListQuery } from "@wirefront/ui/wirefront/types";
-import { ChevronDownIcon, CircleAlertIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  CircleAlertIcon,
+  PlusIcon,
+  SearchIcon,
+  XIcon,
+} from "lucide-react";
 import { type ReactNode, useId, useMemo, useState } from "react";
 
-import type { Customer, CustomerFilters, CustomerPlan, CustomerStatus } from "./schema";
+import type {
+  Customer,
+  CustomerFilters,
+  CustomerPlan,
+  CustomerStatus,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("customerFilterChips.<key>"). */
 export const CUSTOMER_FILTER_CHIPS_MESSAGES = {
@@ -73,7 +105,13 @@ export const CUSTOMER_FILTER_CHIPS_MESSAGES = {
 };
 
 export type CustomersListQuery = ListQuery<CustomerFilters>;
-type ChipKey = "status" | "plan" | "country" | "mrrMin" | "activeWithinDays" | "tag";
+type ChipKey =
+  | "status"
+  | "plan"
+  | "country"
+  | "mrrMin"
+  | "activeWithinDays"
+  | "tag";
 
 export interface CustomerFilterChipsProps {
   /** The current page of customers. */
@@ -103,7 +141,14 @@ export interface CustomerFilterChipsProps {
   className?: string;
 }
 
-const CHIPS: ChipKey[] = ["status", "plan", "country", "mrrMin", "activeWithinDays", "tag"];
+const CHIPS: ChipKey[] = [
+  "status",
+  "plan",
+  "country",
+  "mrrMin",
+  "activeWithinDays",
+  "tag",
+];
 const STATUSES: CustomerStatus[] = ["active", "trial", "paused", "churned"];
 const PLANS: CustomerPlan[] = ["free", "pro", "enterprise"];
 const STATUS_TONE: Record<CustomerStatus, string> = {
@@ -115,7 +160,8 @@ const STATUS_TONE: Record<CustomerStatus, string> = {
 const SKELETON_ROWS = ["s1", "s2", "s3", "s4", "s5"];
 
 /** Whether a chip's filter is set in the query. */
-const isSet = (filters: CustomerFilters, key: ChipKey) => filters[key] !== undefined;
+const isSet = (filters: CustomerFilters, key: ChipKey) =>
+  filters[key] !== undefined;
 
 function Chip({
   field,
@@ -142,14 +188,24 @@ function Chip({
     <div
       className={cn(
         "inline-flex max-w-full items-center divide-x divide-border overflow-hidden rounded-md border text-foreground text-xs",
-        tone === "include" ? "border-category-2/30 bg-category-2/5" : tone === "exclude" ? "border-destructive/30 bg-destructive/5" : "border-border bg-background",
+        tone === "include"
+          ? "border-category-2/30 bg-category-2/5"
+          : tone === "exclude"
+            ? "border-destructive/30 bg-destructive/5"
+            : "border-border bg-background"
       )}
     >
-      <span className="flex items-center gap-1.5 px-2 py-1 font-medium">{field}</span>
+      <span className="flex items-center gap-1.5 px-2 py-1 font-medium">
+        {field}
+      </span>
       <span
         className={cn(
           "px-2 py-1 font-mono text-[11px]",
-          tone === "include" ? "text-category-2-foreground" : tone === "exclude" ? "text-destructive-foreground" : "text-muted-foreground",
+          tone === "include"
+            ? "text-category-2-foreground"
+            : tone === "exclude"
+              ? "text-destructive-foreground"
+              : "text-muted-foreground"
         )}
       >
         {op}
@@ -163,7 +219,9 @@ function Chip({
               className="flex min-h-7 min-w-0 cursor-pointer items-center gap-1 px-2 py-1 hover:bg-accent/60 pointer-coarse:min-h-10"
               type="button"
             >
-              <span className="sr-only">{interpolate(t.editChip, { field })}</span>{" "}
+              <span className="sr-only">
+                {interpolate(t.editChip, { field })}
+              </span>{" "}
               <span className="font-medium">
                 {shown[0]}
                 {shown.length > 1 ? (
@@ -172,7 +230,9 @@ function Chip({
                       {" "}
                       +{shown.length - 1}
                     </span>
-                    <span className="sr-only">, {shown.slice(1).join(", ")}</span>
+                    <span className="sr-only">
+                      , {shown.slice(1).join(", ")}
+                    </span>
                   </>
                 ) : null}
               </span>
@@ -180,7 +240,9 @@ function Chip({
             </button>
           }
         />
-        <PopoverContent className="w-[min(14rem,calc(100vw-2rem))] p-2">{children}</PopoverContent>
+        <PopoverContent className="w-[min(14rem,calc(100vw-2rem))] p-2">
+          {children}
+        </PopoverContent>
       </Popover>
       <button
         aria-label={interpolate(t.removeChip, { field })}
@@ -195,7 +257,23 @@ function Chip({
 }
 
 /** A slider that shows its value while dragging and reports it once, on release. */
-function CommitSlider({ label, value, display, min, max, step, onCommit }: { label: string; value: number; display: (v: number) => string; min: number; max: number; step: number; onCommit: (v: number) => void }) {
+function CommitSlider({
+  label,
+  value,
+  display,
+  min,
+  max,
+  step,
+  onCommit,
+}: {
+  label: string;
+  value: number;
+  display: (v: number) => string;
+  min: number;
+  max: number;
+  step: number;
+  onCommit: (v: number) => void;
+}) {
   const id = useId();
   const [draft, setDraft] = useState(value);
   return (
@@ -204,7 +282,9 @@ function CommitSlider({ label, value, display, min, max, step, onCommit }: { lab
         <span className="text-muted-foreground" id={id}>
           {label}
         </span>
-        <span className="font-mono text-foreground tabular-nums">{display(draft)}</span>
+        <span className="font-mono text-foreground tabular-nums">
+          {display(draft)}
+        </span>
       </div>
       <Slider
         aria-labelledby={id}
@@ -247,11 +327,14 @@ function CustomerFilterChipsScreen({
   // Chips the user added but hasn't given a value yet; they filter nothing.
   const [drafts, setDrafts] = useState<ChipKey[]>([]);
   const [editing, setEditing] = useState<ChipKey>();
-  const shownChips = CHIPS.filter((key) => isSet(filters, key) || drafts.includes(key));
+  const shownChips = CHIPS.filter(
+    (key) => isSet(filters, key) || drafts.includes(key)
+  );
   const available = CHIPS.filter((key) => !shownChips.includes(key));
   const appliedCount = CHIPS.filter((key) => isSet(filters, key)).length;
   const pages = pageCount(query, total);
-  const money = (value: number) => format.money(value, undefined, { maximumFractionDigits: 0 });
+  const money = (value: number) =>
+    format.money(value, undefined, { maximumFractionDigits: 0 });
   const days = (count: number) => interpolate(t.daysShort, { count });
 
   const set = (key: keyof CustomerFilters, value: unknown) => {
@@ -274,16 +357,36 @@ function CustomerFilterChipsScreen({
     onOpenChange: (open: boolean) => setEditing(open ? key : undefined),
     onRemove: () => remove(key),
   });
-  const label: Record<ChipKey, string> = { status: t.status, plan: t.plan, country: t.country, mrrMin: t.mrr, activeWithinDays: t.lastActive, tag: t.tag };
+  const label: Record<ChipKey, string> = {
+    status: t.status,
+    plan: t.plan,
+    country: t.country,
+    mrrMin: t.mrr,
+    activeWithinDays: t.lastActive,
+    tag: t.tag,
+  };
 
-  const checkRow = "flex cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 font-normal text-sm hover:bg-accent pointer-coarse:min-h-10";
+  const checkRow =
+    "flex cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 font-normal text-sm hover:bg-accent pointer-coarse:min-h-10";
 
   const chip = (key: ChipKey) => {
     switch (key) {
       case "status":
         return (
-          <Chip {...chipProps(key)} field={t.status} key={key} op={t.isAnyOf} tone="include" values={(filters.status ?? []).map((s) => t[s])}>
-            <CheckboxGroup aria-label={t.status} className="flex flex-col gap-1" onValueChange={(v) => set("status", v)} value={filters.status ?? []}>
+          <Chip
+            {...chipProps(key)}
+            field={t.status}
+            key={key}
+            op={t.isAnyOf}
+            tone="include"
+            values={(filters.status ?? []).map((s) => t[s])}
+          >
+            <CheckboxGroup
+              aria-label={t.status}
+              className="flex flex-col gap-1"
+              onValueChange={(v) => set("status", v)}
+              value={filters.status ?? []}
+            >
               {STATUSES.map((s) => (
                 <Label className={checkRow} key={s}>
                   <Checkbox value={s} />
@@ -296,8 +399,19 @@ function CustomerFilterChipsScreen({
       case "plan": {
         const plans = PLANS.map((p) => ({ value: p, label: t[p] }));
         return (
-          <Chip {...chipProps(key)} field={t.plan} key={key} op={t.is} tone="include" values={filters.plan ? [t[filters.plan]] : []}>
-            <Select items={plans} onValueChange={(v) => v && set("plan", v)} value={filters.plan ?? null}>
+          <Chip
+            {...chipProps(key)}
+            field={t.plan}
+            key={key}
+            op={t.is}
+            tone="include"
+            values={filters.plan ? [t[filters.plan]] : []}
+          >
+            <Select
+              items={plans}
+              onValueChange={(v) => v && set("plan", v)}
+              value={filters.plan ?? null}
+            >
               <SelectTrigger aria-label={t.plan} className="w-full" size="sm">
                 <SelectValue />
               </SelectTrigger>
@@ -315,7 +429,14 @@ function CustomerFilterChipsScreen({
       case "country": {
         const exclude = filters.excludeCountry === true;
         return (
-          <Chip {...chipProps(key)} field={t.country} key={key} op={exclude ? t.isNot : t.is} tone={exclude ? "exclude" : "include"} values={filters.country ?? []}>
+          <Chip
+            {...chipProps(key)}
+            field={t.country}
+            key={key}
+            op={exclude ? t.isNot : t.is}
+            tone={exclude ? "exclude" : "include"}
+            values={filters.country ?? []}
+          >
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-1 rounded-md border p-0.5">
                 {[false, true].map((ex) => (
@@ -323,22 +444,36 @@ function CustomerFilterChipsScreen({
                     aria-pressed={exclude === ex}
                     className={cn(
                       "min-h-7 flex-1 rounded-sm px-2 py-1 font-mono text-[11px]",
-                      exclude === ex ? "bg-foreground text-background" : "text-muted-foreground hover:bg-accent",
+                      exclude === ex
+                        ? "bg-foreground text-background"
+                        : "text-muted-foreground hover:bg-accent"
                     )}
                     key={String(ex)}
-                    onClick={() => filters.country && onQueryChange(withFilter(query, "excludeCountry", ex || undefined))}
+                    onClick={() =>
+                      filters.country &&
+                      onQueryChange(
+                        withFilter(query, "excludeCountry", ex || undefined)
+                      )
+                    }
                     type="button"
                   >
                     {ex ? t.isNot : t.is}
                   </button>
                 ))}
               </div>
-              <CheckboxGroup aria-label={t.country} className="flex flex-col gap-1" onValueChange={(v) => set("country", v)} value={filters.country ?? []}>
+              <CheckboxGroup
+                aria-label={t.country}
+                className="flex flex-col gap-1"
+                onValueChange={(v) => set("country", v)}
+                value={filters.country ?? []}
+              >
                 {countries.map((code) => (
                   <Label className={checkRow} key={code}>
                     <Checkbox value={code} />
                     <span className="flex-1 truncate">{regionName(code)}</span>
-                    <span className="font-mono text-[10px] text-muted-foreground">{code}</span>
+                    <span className="font-mono text-[10px] text-muted-foreground">
+                      {code}
+                    </span>
                   </Label>
                 ))}
               </CheckboxGroup>
@@ -348,8 +483,23 @@ function CustomerFilterChipsScreen({
       }
       case "mrrMin":
         return (
-          <Chip {...chipProps(key)} field={t.mrr} key={key} op={t.atLeast} tone="default" values={filters.mrrMin !== undefined ? [money(filters.mrrMin)] : []}>
-            <CommitSlider display={money} label={t.minMrr} max={mrrMax} min={0} onCommit={(v) => set("mrrMin", v)} step={mrrStep} value={filters.mrrMin ?? 0} />
+          <Chip
+            {...chipProps(key)}
+            field={t.mrr}
+            key={key}
+            op={t.atLeast}
+            tone="default"
+            values={filters.mrrMin !== undefined ? [money(filters.mrrMin)] : []}
+          >
+            <CommitSlider
+              display={money}
+              label={t.minMrr}
+              max={mrrMax}
+              min={0}
+              onCommit={(v) => set("mrrMin", v)}
+              step={mrrStep}
+              value={filters.mrrMin ?? 0}
+            />
           </Chip>
         );
       case "activeWithinDays":
@@ -360,7 +510,9 @@ function CustomerFilterChipsScreen({
             key={key}
             op={t.within}
             tone="default"
-            values={filters.activeWithinDays ? [days(filters.activeWithinDays)] : []}
+            values={
+              filters.activeWithinDays ? [days(filters.activeWithinDays)] : []
+            }
           >
             <CommitSlider
               display={(count) => interpolate(t.days, { count })}
@@ -375,17 +527,29 @@ function CustomerFilterChipsScreen({
         );
       case "tag":
         return (
-          <Chip {...chipProps(key)} field={t.tag} key={key} op={t.contains} tone="default" values={filters.tag ? [filters.tag] : []}>
+          <Chip
+            {...chipProps(key)}
+            field={t.tag}
+            key={key}
+            op={t.contains}
+            tone="default"
+            values={filters.tag ? [filters.tag] : []}
+          >
             <InputGroup>
               <InputGroupAddon>
-                <SearchIcon aria-hidden className="size-3.5 text-muted-foreground" />
+                <SearchIcon
+                  aria-hidden
+                  className="size-3.5 text-muted-foreground"
+                />
               </InputGroupAddon>
               <InputGroupInput
                 aria-label={t.tag}
                 className="h-8 text-sm"
                 defaultValue={filters.tag ?? ""}
                 onKeyDown={(e) => e.key === "Enter" && setEditing(undefined)}
-                onChange={(e) => set("tag", e.target.value.trim() ? e.target.value : undefined)}
+                onChange={(e) =>
+                  set("tag", e.target.value.trim() ? e.target.value : undefined)
+                }
                 placeholder={t.tagPlaceholder}
               />
             </InputGroup>
@@ -397,7 +561,10 @@ function CustomerFilterChipsScreen({
   let list: ReactNode;
   if (status === "loading") {
     list = (
-      <ul aria-busy className="mt-6 divide-y rounded-xl border bg-card shadow-xs/5">
+      <ul
+        aria-busy
+        className="mt-6 divide-y rounded-xl border bg-card shadow-xs/5"
+      >
         {SKELETON_ROWS.map((key) => (
           <li className="flex items-center gap-3 px-4 py-3" key={key}>
             <Skeleton className="size-1.5 rounded-full motion-reduce:animate-none" />
@@ -411,14 +578,24 @@ function CustomerFilterChipsScreen({
     );
   } else if (status === "error") {
     list = (
-      <div className="mt-6 flex flex-col items-center gap-1 rounded-xl border bg-card px-6 py-12 text-center" role="alert">
+      <div
+        className="mt-6 flex flex-col items-center gap-1 rounded-xl border bg-card px-6 py-12 text-center"
+        role="alert"
+      >
         <span className="mb-3 flex size-10 items-center justify-center rounded-xl bg-destructive/10 text-destructive-foreground">
           <CircleAlertIcon aria-hidden className="size-4.5" />
         </span>
         <p className="font-medium text-sm">{t.errorTitle}</p>
-        {error ? <p className="text-pretty text-muted-foreground text-xs">{error}</p> : null}
+        {error ? (
+          <p className="text-pretty text-muted-foreground text-xs">{error}</p>
+        ) : null}
         {onRetry ? (
-          <Button className="mt-3" onClick={onRetry} size="sm" variant="outline">
+          <Button
+            className="mt-3"
+            onClick={onRetry}
+            size="sm"
+            variant="outline"
+          >
             {t.retry}
           </Button>
         ) : null}
@@ -434,13 +611,25 @@ function CustomerFilterChipsScreen({
     list = (
       <ul className="mt-6 divide-y rounded-xl border bg-card shadow-xs/5">
         {customers.map((c) => (
-          <li className="flex items-center gap-3 px-4 py-3 first:rounded-t-xl last:rounded-b-xl hover:bg-background" key={c.id}>
-            <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", STATUS_TONE[c.status])} />
+          <li
+            className="flex items-center gap-3 px-4 py-3 first:rounded-t-xl last:rounded-b-xl hover:bg-background"
+            key={c.id}
+          >
+            <span
+              aria-hidden
+              className={cn(
+                "size-1.5 shrink-0 rounded-full",
+                STATUS_TONE[c.status]
+              )}
+            />
             {/* Below sm, status/MRR/last seen stack on the right instead of three fixed columns. */}
             <div className="min-w-0 flex-1">
               <div className="truncate font-medium text-sm">
                 {customerHref ? (
-                  <WirefrontLink className="rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring" href={customerHref(c)}>
+                  <WirefrontLink
+                    className="rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+                    href={customerHref(c)}
+                  >
                     {c.name}
                   </WirefrontLink>
                 ) : (
@@ -451,11 +640,16 @@ function CustomerFilterChipsScreen({
                 {[c.country, t[c.plan], ...c.tags].join(" · ")}
               </div>
             </div>
-            <Badge className="h-4.5 rounded-sm px-1 font-mono text-[10px] uppercase max-sm:hidden" variant="outline">
+            <Badge
+              className="h-4.5 rounded-sm px-1 font-mono text-[10px] uppercase max-sm:hidden"
+              variant="outline"
+            >
               {t[c.status]}
             </Badge>
             <div className="shrink-0 text-end sm:contents">
-              <span className="block font-mono text-foreground text-xs tabular-nums sm:w-20">{money(c.mrr)}</span>
+              <span className="block font-mono text-foreground text-xs tabular-nums sm:w-20">
+                {money(c.mrr)}
+              </span>
               <span className="block font-mono text-[11px] text-muted-foreground tabular-nums sm:w-24 sm:text-end">
                 <span className="sm:hidden">{t[c.status]} · </span>
                 {format.relative(c.lastActiveAt)}
@@ -473,7 +667,10 @@ function CustomerFilterChipsScreen({
         <div className="flex flex-wrap items-center gap-2">
           <InputGroup className="w-full sm:w-72">
             <InputGroupAddon>
-              <SearchIcon aria-hidden className="size-4 text-muted-foreground" />
+              <SearchIcon
+                aria-hidden
+                className="size-4 text-muted-foreground"
+              />
             </InputGroupAddon>
             <InputGroupInput
               aria-label={t.search}
@@ -483,12 +680,22 @@ function CustomerFilterChipsScreen({
               value={query.search ?? ""}
             />
           </InputGroup>
-          <Separator className="mx-1 h-6 max-sm:hidden" orientation="vertical" />
-          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider max-sm:hidden">{t.filters}</span>
+          <Separator
+            className="mx-1 h-6 max-sm:hidden"
+            orientation="vertical"
+          />
+          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider max-sm:hidden">
+            {t.filters}
+          </span>
           <Popover>
             <PopoverTrigger
               render={
-                <Button className="ms-1 border-dashed" disabled={available.length === 0} size="xs" variant="outline">
+                <Button
+                  className="ms-1 border-dashed"
+                  disabled={available.length === 0}
+                  size="xs"
+                  variant="outline"
+                >
                   <PlusIcon />
                   {t.addFilter}
                 </Button>
@@ -509,16 +716,30 @@ function CustomerFilterChipsScreen({
                   {label[key]}
                 </Button>
               ))}
-              {available.length === 0 ? <p className="px-2 py-2 text-muted-foreground text-xs">{t.allAdded}</p> : null}
+              {available.length === 0 ? (
+                <p className="px-2 py-2 text-muted-foreground text-xs">
+                  {t.allAdded}
+                </p>
+              ) : null}
             </PopoverContent>
           </Popover>
-          <Button className="ms-auto text-muted-foreground" disabled={shownChips.length === 0 && !query.search} onClick={clearAll} size="xs" variant="ghost">
+          <Button
+            className="ms-auto text-muted-foreground"
+            disabled={shownChips.length === 0 && !query.search}
+            onClick={clearAll}
+            size="xs"
+            variant="ghost"
+          >
             <XIcon />
             {t.clearAll}
           </Button>
         </div>
 
-        {shownChips.length > 0 ? <div className="flex flex-wrap items-center gap-2">{shownChips.map(chip)}</div> : null}
+        {shownChips.length > 0 ? (
+          <div className="flex flex-wrap items-center gap-2">
+            {shownChips.map(chip)}
+          </div>
+        ) : null}
 
         <Separator />
 
@@ -526,20 +747,34 @@ function CustomerFilterChipsScreen({
           <span aria-live="polite">
             {status === "ready" ? (
               <>
-                <span className="font-medium text-foreground">{total === 1 ? t.matchOne : interpolate(t.match, { count: total })}</span>{" "}
-                {appliedCount === 1 ? t.appliedOne : interpolate(t.applied, { count: appliedCount })}
+                <span className="font-medium text-foreground">
+                  {total === 1
+                    ? t.matchOne
+                    : interpolate(t.match, { count: total })}
+                </span>{" "}
+                {appliedCount === 1
+                  ? t.appliedOne
+                  : interpolate(t.applied, { count: appliedCount })}
               </>
             ) : null}
           </span>
           {onSaveView || onShare ? (
             <div className="flex items-center gap-2">
               {onSaveView ? (
-                <Button onClick={() => onSaveView(query)} size="xs" variant="ghost">
+                <Button
+                  onClick={() => onSaveView(query)}
+                  size="xs"
+                  variant="ghost"
+                >
                   {t.saveView}
                 </Button>
               ) : null}
               {onShare ? (
-                <Button onClick={() => onShare(query)} size="xs" variant="outline">
+                <Button
+                  onClick={() => onShare(query)}
+                  size="xs"
+                  variant="outline"
+                >
                   {t.share}
                 </Button>
               ) : null}
@@ -552,11 +787,25 @@ function CustomerFilterChipsScreen({
 
       {status === "ready" && pages > 1 ? (
         <nav className="mt-3 flex items-center justify-between gap-2 text-muted-foreground text-xs">
-          <Button disabled={query.page <= 1} onClick={() => onQueryChange(withPage(query, query.page - 1, total))} size="sm" variant="outline">
+          <Button
+            disabled={query.page <= 1}
+            onClick={() =>
+              onQueryChange(withPage(query, query.page - 1, total))
+            }
+            size="sm"
+            variant="outline"
+          >
             {t.previous}
           </Button>
           <span>{interpolate(t.pageOf, { page: query.page, pages })}</span>
-          <Button disabled={query.page >= pages} onClick={() => onQueryChange(withPage(query, query.page + 1, total))} size="sm" variant="outline">
+          <Button
+            disabled={query.page >= pages}
+            onClick={() =>
+              onQueryChange(withPage(query, query.page + 1, total))
+            }
+            size="sm"
+            variant="outline"
+          >
             {t.next}
           </Button>
         </nav>

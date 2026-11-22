@@ -14,10 +14,17 @@ const www = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const routeTree = resolve(www, "src/routeTree.gen.ts");
 
 if (!existsSync(routeTree)) {
-  console.log("src/routeTree.gen.ts is missing; generating it with a Vite build…");
-  const result = spawnSync("npx", ["vite", "build"], { cwd: www, stdio: "inherit" });
+  console.log(
+    "src/routeTree.gen.ts is missing; generating it with a Vite build…"
+  );
+  const result = spawnSync("npx", ["vite", "build"], {
+    cwd: www,
+    stdio: "inherit",
+  });
   if (result.status !== 0 || !existsSync(routeTree)) {
-    console.error("Could not generate src/routeTree.gen.ts. Run `bun run dev` once, then retry.");
+    console.error(
+      "Could not generate src/routeTree.gen.ts. Run `bun run dev` once, then retry."
+    );
     process.exit(1);
   }
 }

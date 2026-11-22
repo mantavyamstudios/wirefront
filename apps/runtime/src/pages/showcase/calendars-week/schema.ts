@@ -19,5 +19,11 @@ export type TimedEvent = z.infer<typeof TimedEvent>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listWeekEvents: { method: "GET", path: "/calendar/events", summary: "Timed events in a week", query: z.object({ weekStart: z.string() }), response: z.array(TimedEvent) },
+  listWeekEvents: {
+    method: "GET",
+    path: "/calendar/events",
+    summary: "Timed events in a week",
+    query: z.object({ weekStart: z.string() }),
+    response: z.array(TimedEvent),
+  },
 });

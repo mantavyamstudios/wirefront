@@ -8,20 +8,33 @@ import * as fixtures from "./fixtures";
 import { DeployHistory } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function TimelinesDeploysShowcasePage() {
   const state = useShowcaseState();
   return (
     <WirefrontProvider locale="en-US" now={demoNow}>
       <DeployHistory
-        deploys={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listDeploys}
+        deploys={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? []
+              : fixtures.listDeploys
+        }
         error="Deploys didn’t load. Check your connection and try again."
         onRefresh={() => wait(700)}
         onRetry={() => {}}
         onRollBack={() => wait(900)}
         project={fixtures.project}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

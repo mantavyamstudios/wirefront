@@ -27,7 +27,14 @@
  * Wirefront file, so client/server boundaries are checked too.
  */
 import { execFileSync, spawn } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { dirname, join, resolve } from "node:path";
@@ -44,17 +51,32 @@ type Template = (typeof TEMPLATES)[number];
 
 const args = process.argv.slice(2);
 const fresh = args.includes("--fresh");
-const only = args.find((a) => a.startsWith("--templates="))?.split("=")[1]?.split(",");
+const only = args
+  .find((a) => a.startsWith("--templates="))
+  ?.split("=")[1]
+  ?.split(",");
 const templates = TEMPLATES.filter((t) => !only || only.includes(t));
-const onlyItems = args.find((a) => a.startsWith("--items="))?.split("=")[1]?.split(",");
+const onlyItems = args
+  .find((a) => a.startsWith("--items="))
+  ?.split("=")[1]
+  ?.split(",");
 const STEP_LIMIT_MS = 15 * 60_000;
 
 // Commands run asynchronously: the registry is served from this process,
 // and a blocking spawn would stall that server so `shadcn add` never gets
 // a response.
-function run(cmd: string, argv: string[], cwd: string, label: string): Promise<void> {
+function run(
+  cmd: string,
+  argv: string[],
+  cwd: string,
+  label: string
+): Promise<void> {
   return new Promise((ok, fail) => {
-    const child = spawn(cmd, argv, { cwd, stdio: ["ignore", "pipe", "pipe"], env: { ...process.env, CI: "1" } });
+    const child = spawn(cmd, argv, {
+      cwd,
+      stdio: ["ignore", "pipe", "pipe"],
+      env: { ...process.env, CI: "1" },
+    });
     let out = "";
     const collect = (d: Buffer) => {
       out = (out + d.toString()).slice(-200_000);
@@ -71,7 +93,11 @@ function run(cmd: string, argv: string[], cwd: string, label: string): Promise<v
         .join("\n");
     const timer = setTimeout(() => {
       child.kill("SIGTERM");
-      fail(new Error(`${label} was still running after ${STEP_LIMIT_MS / 60_000} minutes and was stopped:\n${tail()}`));
+      fail(
+        new Error(
+          `${label} was still running after ${STEP_LIMIT_MS / 60_000} minutes and was stopped:\n${tail()}`
+        )
+      );
     }, STEP_LIMIT_MS);
     child.on("error", (err) => {
       clearTimeout(timer);
@@ -87,15 +113,26 @@ function run(cmd: string, argv: string[], cwd: string, label: string): Promise<v
 
 // Transient network failures reaching the public shadcn registry. Only these
 // are retried (once, logged); anything else fails the template as usual.
-const NETWORK_ERROR = /ETIMEDOUT|ECONNRESET|ECONNREFUSED|ENOTFOUND|EAI_AGAIN|socket hang up|fetch failed/;
+const NETWORK_ERROR =
+  /ETIMEDOUT|ECONNRESET|ECONNREFUSED|ENOTFOUND|EAI_AGAIN|socket hang up|fetch failed/;
 
-async function runWithNetworkRetry(cmd: string, argv: string[], cwd: string, label: string): Promise<void> {
+async function runWithNetworkRetry(
+  cmd: string,
+  argv: string[],
+  cwd: string,
+  label: string
+): Promise<void> {
   try {
     await run(cmd, argv, cwd, label);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     if (!NETWORK_ERROR.test(msg)) throw err;
-    console.log(`[install] ${label}: network error reaching the registry, retrying once:\n  ${msg.split("\n").find((l) => NETWORK_ERROR.test(l))?.trim()}`);
+    console.log(
+      `[install] ${label}: network error reaching the registry, retrying once:\n  ${msg
+        .split("\n")
+        .find((l) => NETWORK_ERROR.test(l))
+        ?.trim()}`
+    );
     await run(cmd, argv, cwd, `${label} (retry)`);
   }
 }
@@ -110,12 +147,46 @@ async function scaffold(t: Template): Promise<string> {
   if (!existsSync(join(dir, ".git"))) {
     rmSync(dir, { recursive: true, force: true });
     mkdirSync(WORK, { recursive: true });
-    console.log(`[install] ${t}: scaffolding with shadcn init (first run only)…`);
-    await run("npx", ["-y", SHADCN, "init", "-t", t, "-b", "base", "-p", "nova", "-n", t, "--no-monorepo", "-y", "-c", WORK], WORK, `${t}: shadcn init`);
+    console.log(
+      `[install] ${t}: scaffolding with shadcn init (first run only)…`
+    );
+    await run(
+      "npx",
+      [
+        "-y",
+        SHADCN,
+        "init",
+        "-t",
+        t,
+        "-b",
+        "base",
+        "-p",
+        "nova",
+        "-n",
+        t,
+        "--no-monorepo",
+        "-y",
+        "-c",
+        WORK,
+      ],
+      WORK,
+      `${t}: shadcn init`
+    );
     git(dir, "init", "-q");
     writeFileSync(join(dir, ".git", "info", "exclude"), "node_modules\n");
     git(dir, "add", "-A");
-    git(dir, "-c", "user.name=install-test", "-c", "user.email=install-test@localhost", "commit", "-q", "--allow-empty", "-m", "scaffold");
+    git(
+      dir,
+      "-c",
+      "user.name=install-test",
+      "-c",
+      "user.email=install-test@localhost",
+      "commit",
+      "-q",
+      "--allow-empty",
+      "-m",
+      "scaffold"
+    );
   }
   // Back to the pristine scaffold (dependencies added by earlier runs stay installed; harmless).
   git(dir, "checkout", "-q", "--", ".");
@@ -126,12 +197,17 @@ async function scaffold(t: Template): Promise<string> {
 function serveRegistry(): Promise<{ url: string; close: () => void }> {
   return new Promise((ok) => {
     const server = createServer((req, res) => {
-      const file = join(REGISTRY_DIR, (req.url ?? "/").split("?")[0]?.replace(/^\/+/, "") ?? "");
+      const file = join(
+        REGISTRY_DIR,
+        (req.url ?? "/").split("?")[0]?.replace(/^\/+/, "") ?? ""
+      );
       if (!file.startsWith(REGISTRY_DIR) || !existsSync(file)) {
         res.writeHead(404).end();
         return;
       }
-      res.writeHead(200, { "content-type": "application/json" }).end(readFileSync(file));
+      res
+        .writeHead(200, { "content-type": "application/json" })
+        .end(readFileSync(file));
     });
     server.listen(0, "127.0.0.1", () => {
       const { port } = server.address() as AddressInfo;
@@ -157,8 +233,12 @@ function listFiles(dir: string, base = dir): string[] {
 function wireImportCheck(t: Template, dir: string): void {
   const src = srcRoot(dir);
   const files = [
-    ...listFiles(join(src, "components", "wirefront")).map((f) => `@/components/wirefront/${f}`),
-    ...listFiles(join(src, "hooks", "wirefront")).map((f) => `@/hooks/wirefront/${f}`),
+    ...listFiles(join(src, "components", "wirefront")).map(
+      (f) => `@/components/wirefront/${f}`
+    ),
+    ...listFiles(join(src, "hooks", "wirefront")).map(
+      (f) => `@/hooks/wirefront/${f}`
+    ),
   ]
     .filter((f) => /\.tsx?$/.test(f))
     .map((f) => f.replace(/\.tsx?$/, ""))
@@ -171,15 +251,27 @@ function wireImportCheck(t: Template, dir: string): void {
     writeFileSync(join(src, "app", "wirefront-check", "modules.ts"), body);
     writeFileSync(
       join(src, "app", "wirefront-check", "page.tsx"),
-      `import { wirefrontModules } from "./modules";\n\nexport default function Page() {\n  return <p>{wirefrontModules.length} Wirefront modules</p>;\n}\n`,
+      `import { wirefrontModules } from "./modules";\n\nexport default function Page() {\n  return <p>{wirefrontModules.length} Wirefront modules</p>;\n}\n`
     );
     return;
   }
   writeFileSync(join(src, "wirefront-check.ts"), body);
-  const entry = [join(src, "main.tsx"), join(src, "router.tsx"), join(src, "routes", "__root.tsx")].find(existsSync);
-  if (!entry) throw new Error(`${t}: no entry file found to import the check module from`);
-  const rel = `./${join(src, "wirefront-check").slice(dirname(entry).length + 1).replace(/\\/g, "/")}`;
-  writeFileSync(entry, `import { wirefrontModules } from "${rel}";\nvoid wirefrontModules;\n${readFileSync(entry, "utf8")}`);
+  const entry = [
+    join(src, "main.tsx"),
+    join(src, "router.tsx"),
+    join(src, "routes", "__root.tsx"),
+  ].find(existsSync);
+  if (!entry)
+    throw new Error(
+      `${t}: no entry file found to import the check module from`
+    );
+  const rel = `./${join(src, "wirefront-check")
+    .slice(dirname(entry).length + 1)
+    .replace(/\\/g, "/")}`;
+  writeFileSync(
+    entry,
+    `import { wirefrontModules } from "${rel}";\nvoid wirefrontModules;\n${readFileSync(entry, "utf8")}`
+  );
 }
 
 /**
@@ -205,23 +297,41 @@ function primitiveFidelityCheck(t: Template, dir: string) {
     .filter((f) => f.endsWith(".tsx"))
     .filter((f) => {
       const ours = resolve(ROOT, "packages/ui/src/components/ui", f);
-      return !existsSync(ours) || norm(readFileSync(ours, "utf8")) !== norm(readFileSync(join(installed, f), "utf8"));
+      return (
+        !existsSync(ours) ||
+        norm(readFileSync(ours, "utf8")) !==
+          norm(readFileSync(join(installed, f), "utf8"))
+      );
     });
   if (drift.length)
-    throw new Error(`${t}: packages/ui primitives differ from what shadcn installs (${drift.join(", ")}); the showcase would not show what builders get`);
+    throw new Error(
+      `${t}: packages/ui primitives differ from what shadcn installs (${drift.join(", ")}); the showcase would not show what builders get`
+    );
 }
 
 async function main(): Promise<void> {
   console.log("[install] building the registry…");
-  await run("npx", ["tsx", "scripts/build-registry.ts"], ROOT, "build-registry");
+  await run(
+    "npx",
+    ["tsx", "scripts/build-registry.ts"],
+    ROOT,
+    "build-registry"
+  );
   const items = readdirSync(REGISTRY_DIR)
     .filter((f) => f.endsWith(".json") && f !== "registry.json")
     .filter((f) => !onlyItems || onlyItems.includes(f.replace(/\.json$/, "")));
   const unknown = onlyItems?.filter((i) => !items.includes(`${i}.json`)) ?? [];
-  if (unknown.length) throw new Error(`[install] no registry item named ${unknown.join(", ")}; names match public/r/<name>.json`);
+  if (unknown.length)
+    throw new Error(
+      `[install] no registry item named ${unknown.join(", ")}; names match public/r/<name>.json`
+    );
   const server = await serveRegistry();
   const failures: string[] = [];
-  const progress = trackProgress("install", { total: templates.length, slowUnitMs: 5 * 60_000, stallMs: 10 * 60_000 });
+  const progress = trackProgress("install", {
+    total: templates.length,
+    slowUnitMs: 5 * 60_000,
+    stallMs: 10 * 60_000,
+  });
 
   try {
     for (const t of templates) {
@@ -234,24 +344,64 @@ async function main(): Promise<void> {
           git(dir, "ls-files")
             .split("\n")
             .filter(Boolean)
-            .map((f) => [f, readFileSync(join(dir, f), "utf8")]),
+            .map((f) => [f, readFileSync(join(dir, f), "utf8")])
         );
         console.log(`[install] ${t}: adding ${items.length} items…`);
-        await runWithNetworkRetry("npx", ["-y", SHADCN, "add", ...items.map((i) => `${server.url}/${i}`), "-y", "-c", dir], dir, `${t}: shadcn add`);
+        await runWithNetworkRetry(
+          "npx",
+          [
+            "-y",
+            SHADCN,
+            "add",
+            ...items.map((i) => `${server.url}/${i}`),
+            "-y",
+            "-c",
+            dir,
+          ],
+          dir,
+          `${t}: shadcn add`
+        );
 
         const overwritten = [...before]
-          .filter(([f, content]) => !/(^|\/)components\/ui\//.test(f) && existsSync(join(dir, f)) && readFileSync(join(dir, f), "utf8") !== content)
+          .filter(
+            ([f, content]) =>
+              !/(^|\/)components\/ui\//.test(f) &&
+              existsSync(join(dir, f)) &&
+              readFileSync(join(dir, f), "utf8") !== content
+          )
           .map(([f]) => f)
-          .filter((f) => !/^(package(-lock)?\.json|pnpm-lock\.yaml|bun\.lockb?|yarn\.lock)$/.test(f) && !/\.css$/.test(f));
-        if (overwritten.length) throw new Error(`${t}: installing changed the builder's own files: ${overwritten.join(", ")}`);
+          .filter(
+            (f) =>
+              !/^(package(-lock)?\.json|pnpm-lock\.yaml|bun\.lockb?|yarn\.lock)$/.test(
+                f
+              ) && !/\.css$/.test(f)
+          );
+        if (overwritten.length)
+          throw new Error(
+            `${t}: installing changed the builder's own files: ${overwritten.join(", ")}`
+          );
 
         wireImportCheck(t, dir);
         primitiveFidelityCheck(t, dir);
         console.log(`[install] ${t}: typecheck…`);
-        await run("npx", ["tsc", "--noEmit", "-p", existsSync(join(dir, "tsconfig.app.json")) ? "tsconfig.app.json" : "tsconfig.json"], dir, `${t}: typecheck`);
+        await run(
+          "npx",
+          [
+            "tsc",
+            "--noEmit",
+            "-p",
+            existsSync(join(dir, "tsconfig.app.json"))
+              ? "tsconfig.app.json"
+              : "tsconfig.json",
+          ],
+          dir,
+          `${t}: typecheck`
+        );
         console.log(`[install] ${t}: build…`);
         await run("npm", ["run", "build"], dir, `${t}: build`);
-        console.log(`[install] ${t} ✓ (${Math.round((Date.now() - started) / 1000)}s)`);
+        console.log(
+          `[install] ${t} ✓ (${Math.round((Date.now() - started) / 1000)}s)`
+        );
         ok = true;
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
@@ -264,13 +414,19 @@ async function main(): Promise<void> {
   } finally {
     server.close();
   }
-  progress.finish(`${templates.length - failures.length}/${templates.length} templates install, typecheck and build`);
+  progress.finish(
+    `${templates.length - failures.length}/${templates.length} templates install, typecheck and build`
+  );
 
   if (failures.length) {
-    console.error(`[install] ${failures.length}/${templates.length} template(s) failed.`);
+    console.error(
+      `[install] ${failures.length}/${templates.length} template(s) failed.`
+    );
     process.exit(1);
   }
-  console.log(`[install] all ${templates.length} template(s) install, typecheck and build with ${items.length} items.`);
+  console.log(
+    `[install] all ${templates.length} template(s) install, typecheck and build with ${items.length} items.`
+  );
 }
 
 main().catch((err) => {

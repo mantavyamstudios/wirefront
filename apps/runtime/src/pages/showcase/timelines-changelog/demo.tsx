@@ -10,11 +10,19 @@ export function TimelinesChangelogShowcasePage() {
   const state = useShowcaseState();
   return (
     <ChangelogFeed
-      entries={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listChangelog}
+      entries={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : fixtures.listChangelog
+      }
       error="The changelog didn’t load. Check your connection and try again."
       onRetry={() => {}}
       product={fixtures.product}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
       subscribeHref="#rss"
     />
   );

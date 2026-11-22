@@ -50,7 +50,7 @@ const SHOWCASE_DIR = resolve(ROOT, "apps/runtime/src/pages/showcase");
 const OUT_DIR = resolve(ROOT, ".audit/responsive");
 const CONCURRENCY = Math.max(
   1,
-  Number.parseInt(process.env.AUDIT_CONCURRENCY ?? "4", 10) || 4,
+  Number.parseInt(process.env.AUDIT_CONCURRENCY ?? "4", 10) || 4
 );
 
 // `isMobile` stays false on purpose: Chromium's mobile emulation widens the
@@ -68,7 +68,12 @@ type ViewportName = (typeof VIEWPORTS)[number]["name"];
 // Clipped containers are reported but not gated: decorative layers are
 // clipped intentionally and the metric can't tell them apart.
 const GATED_VIEWPORTS: ViewportName[] = ["mobile", "tablet", "laptop"];
-const GATES = ["pageOverflowX", "offenderCount", "squeezedCount", "targetSizeFails"] as const;
+const GATES = [
+  "pageOverflowX",
+  "offenderCount",
+  "squeezedCount",
+  "targetSizeFails",
+] as const;
 
 interface Metrics {
   vw: number;
@@ -267,10 +272,16 @@ function buildQueue(args: ReturnType<typeof parseArgs>): Task[] {
     if (!designs) continue;
     if (args.categories && !args.categories.includes(category)) continue;
     for (const [design, filename] of Object.entries(designs)) {
-      if (args.designs && !args.designs.includes(`${category}/${design}`)) continue;
+      if (args.designs && !args.designs.includes(`${category}/${design}`))
+        continue;
       // A flat screen is <file>.tsx; a ready-to-wire screen is a <file>/ folder.
-      if (!existsSync(resolve(SHOWCASE_DIR, `${filename}.tsx`)) && !existsSync(resolve(SHOWCASE_DIR, filename, "view.tsx"))) {
-        throw new Error(`[audit] ${category}/${design}: neither ${filename}.tsx nor ${filename}/view.tsx exists`);
+      if (
+        !existsSync(resolve(SHOWCASE_DIR, `${filename}.tsx`)) &&
+        !existsSync(resolve(SHOWCASE_DIR, filename, "view.tsx"))
+      ) {
+        throw new Error(
+          `[audit] ${category}/${design}: neither ${filename}.tsx nor ${filename}/view.tsx exists`
+        );
       }
       tasks.push({ category, design });
     }
@@ -303,7 +314,7 @@ async function runWorker(
   results: Record<string, Result>,
   screenshots: boolean,
   total: number,
-  rtl: boolean,
+  rtl: boolean
 ): Promise<void> {
   const contexts = new Map<ViewportName, BrowserContext>();
   for (const v of viewports) {
@@ -324,26 +335,41 @@ async function runWorker(
     progress.start(key);
 
     for (const v of viewports) {
-      const page = await must(contexts.get(v.name), `a browser context for ${v.name}`).newPage();
+      const page = await must(
+        contexts.get(v.name),
+        `a browser context for ${v.name}`
+      ).newPage();
       const errors: string[] = [];
-      page.on("pageerror", (e) => errors.push(String(e).split("\n")[0]?.slice(0, 200) ?? String(e)));
+      page.on("pageerror", (e) =>
+        errors.push(String(e).split("\n")[0]?.slice(0, 200) ?? String(e))
+      );
       try {
         await page.goto(
           `${base}/preview/${task.category}/${task.design}${rtl ? "?dir=%22rtl%22" : ""}`,
-          { waitUntil: "networkidle", timeout: 45_000 },
+          { waitUntil: "networkidle", timeout: 45_000 }
         );
         // Only a settled layout is measured (scripts/lib/settle.ts).
         const settleMs = await waitForSettledLayout(page);
-        const metrics = (await page.evaluate(MEASURE)) as Omit<Metrics, "errors" | "settleMs">;
+        const metrics = (await page.evaluate(MEASURE)) as Omit<
+          Metrics,
+          "errors" | "settleMs"
+        >;
         result[v.name] = { ...metrics, errors, settleMs };
         if (screenshots) {
           await page.screenshot({
-            path: resolve(OUT_DIR, "shots", `${task.category}__${task.design}--${v.name}.png`),
+            path: resolve(
+              OUT_DIR,
+              "shots",
+              `${task.category}__${task.design}--${v.name}.png`
+            ),
           });
         }
       } catch (err) {
         result[v.name] = {
-          error: err instanceof Error ? (err.message.split("\n")[0] ?? err.message) : String(err),
+          error:
+            err instanceof Error
+              ? (err.message.split("\n")[0] ?? err.message)
+              : String(err),
         };
       }
       await page.close();
@@ -354,7 +380,7 @@ async function runWorker(
     const failed = failures(result);
     progress.done(key, failed.length === 0);
     process.stdout.write(
-      `[audit] [${done}/${total}] ${key}${failed.length ? ` ✗ ${failed.join(", ")}` : " ✓"}\n`,
+      `[audit] [${done}/${total}] ${key}${failed.length ? ` ✗ ${failed.join(", ")}` : " ✓"}\n`
     );
   }
 
@@ -364,11 +390,11 @@ async function runWorker(
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
   const viewports = VIEWPORTS.filter(
-    (v) => !args.viewports || args.viewports.includes(v.name),
+    (v) => !args.viewports || args.viewports.includes(v.name)
   );
   if (viewports.length === 0) {
     console.error(
-      `[audit] no matching viewports; choose from ${VIEWPORTS.map((v) => v.name).join(", ")}`,
+      `[audit] no matching viewports; choose from ${VIEWPORTS.map((v) => v.name).join(", ")}`
     );
     process.exit(1);
   }
@@ -380,16 +406,21 @@ async function main(): Promise<void> {
   }
 
   await mkdir(OUT_DIR, { recursive: true });
-  if (args.screenshots) await mkdir(resolve(OUT_DIR, "shots"), { recursive: true });
+  if (args.screenshots)
+    await mkdir(resolve(OUT_DIR, "shots"), { recursive: true });
 
   const total = queue.length;
   console.log(
-    `[audit] ${total} designs × ${viewports.map((v) => `${v.name} ${v.width}px`).join(", ")} · concurrency=${CONCURRENCY}`,
+    `[audit] ${total} designs × ${viewports.map((v) => `${v.name} ${v.width}px`).join(", ")} · concurrency=${CONCURRENCY}`
   );
 
   const t0 = Date.now();
   const results: Record<string, Result> = {};
-  const progress = trackProgress("audit", { total, slowUnitMs: 60_000, stallMs: 120_000 });
+  const progress = trackProgress("audit", {
+    total,
+    slowUnitMs: 60_000,
+    stallMs: 120_000,
+  });
   let baseUrl = "";
   await withAppServer("audit", async (base) => {
     baseUrl = base;
@@ -397,8 +428,18 @@ async function main(): Promise<void> {
     try {
       await Promise.all(
         Array.from({ length: Math.min(CONCURRENCY, total) }, () =>
-          runWorker(base, progress, browser, [...viewports], queue, results, args.screenshots, total, args.rtl),
-        ),
+          runWorker(
+            base,
+            progress,
+            browser,
+            [...viewports],
+            queue,
+            results,
+            args.screenshots,
+            total,
+            args.rtl
+          )
+        )
       );
     } finally {
       await browser.close();
@@ -412,14 +453,19 @@ async function main(): Promise<void> {
     gates: { viewports: GATED_VIEWPORTS, metrics: GATES },
     results,
   };
-  const reportPath = resolve(OUT_DIR, args.rtl ? "report-rtl.json" : "report.json");
+  const reportPath = resolve(
+    OUT_DIR,
+    args.rtl ? "report-rtl.json" : "report.json"
+  );
   await writeFile(reportPath, JSON.stringify(report, null, 2));
 
-  const failing = Object.entries(results).filter(([, r]) => failures(r).length > 0);
+  const failing = Object.entries(results).filter(
+    ([, r]) => failures(r).length > 0
+  );
   const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
   progress.finish(`${total - failing.length}/${total} designs pass the gates`);
   console.log(
-    `[audit] ${total - failing.length}/${total} designs pass the gates in ${elapsed}s → ${reportPath}`,
+    `[audit] ${total - failing.length}/${total} designs pass the gates in ${elapsed}s → ${reportPath}`
   );
 
   if (args.strict && failing.length > 0) process.exit(1);

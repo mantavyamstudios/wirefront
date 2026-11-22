@@ -45,7 +45,9 @@ describe("progress alerts", () => {
     p.start("slow-screen");
     advance(1_100);
     expect(lines).toHaveLength(1);
-    expect(lines[0]).toMatch(/^\[alert\] unit-test: slow-screen has been running for 1s/);
+    expect(lines[0]).toMatch(
+      /^\[alert\] unit-test: slow-screen has been running for 1s/
+    );
     advance(500);
     expect(lines).toHaveLength(1);
     advance(600);
@@ -57,7 +59,11 @@ describe("progress alerts", () => {
     p.start("a");
     p.start("b");
     advance(2_100);
-    expect(lines.some((l) => /no progress for 2s \(0\/3 done; running: a, b\)/.test(l))).toBe(true);
+    expect(
+      lines.some((l) =>
+        /no progress for 2s \(0\/3 done; running: a, b\)/.test(l)
+      )
+    ).toBe(true);
   });
 
   it("prints a done line with the summary when finished", () => {

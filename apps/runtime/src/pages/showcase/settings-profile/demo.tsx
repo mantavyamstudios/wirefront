@@ -6,7 +6,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { AccountProfileSettings } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function SettingsProfileShowcasePage() {
   const state = useShowcaseState();
@@ -18,11 +19,23 @@ export function SettingsProfileShowcasePage() {
       onRetry={() => {}}
       onSave={() => wait(600)}
       onUploadPhoto={() => wait(800)}
-      profile={state === "loading" || state === "error" ? undefined : fixtures.getAccountProfile}
-      sessions={{ description: "3 devices · last active 2 minutes ago", href: "#sessions" }}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      profile={
+        state === "loading" || state === "error"
+          ? undefined
+          : fixtures.getAccountProfile
+      }
+      sessions={{
+        description: "3 devices · last active 2 minutes ago",
+        href: "#sessions",
+      }}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
       timeZones={fixtures.timeZones}
-      twoFactor={{ description: "Authenticator app · enabled", href: "#two-factor" }}
+      twoFactor={{
+        description: "Authenticator app · enabled",
+        href: "#two-factor",
+      }}
     />
   );
 }

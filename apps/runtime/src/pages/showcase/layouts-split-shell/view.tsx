@@ -8,10 +8,35 @@ import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Sheet, SheetContent, SheetTitle } from "@wirefront/ui/sheet";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
-import { BotIcon, CheckIcon, ChevronRightIcon, LoaderCircleIcon, MenuIcon, PanelRightIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
-import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@wirefront/ui/tooltip";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
+import {
+  BotIcon,
+  CheckIcon,
+  ChevronRightIcon,
+  LoaderCircleIcon,
+  MenuIcon,
+  PanelRightIcon,
+  PlusIcon,
+  SearchIcon,
+  XIcon,
+} from "lucide-react";
+import {
+  AnimatePresence,
+  LayoutGroup,
+  MotionConfig,
+  motion,
+} from "motion/react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { PaneResizer } from "@wirefront/ui/wirefront/pane-resizer";
 
@@ -103,7 +128,17 @@ function Sidebar({
   accountHref,
   onClose,
   t,
-}: Pick<SplitShellProps, "brand" | "newHref" | "onSearch" | "nav" | "items" | "activeId" | "user" | "accountHref"> & { onClose?: () => void; t: Messages }) {
+}: Pick<
+  SplitShellProps,
+  | "brand"
+  | "newHref"
+  | "onSearch"
+  | "nav"
+  | "items"
+  | "activeId"
+  | "user"
+  | "accountHref"
+> & { onClose?: () => void; t: Messages }) {
   const format = useFormat();
   const group = useId();
   const navRow =
@@ -112,11 +147,17 @@ function Sidebar({
     <>
       <Avatar className="size-7">
         {user.avatarUrl ? <AvatarImage alt="" src={user.avatarUrl} /> : null}
-        <AvatarFallback className="bg-category-7/16 text-[11px] text-category-7-foreground">{initials(user.name)}</AvatarFallback>
+        <AvatarFallback className="bg-category-7/16 text-[11px] text-category-7-foreground">
+          {initials(user.name)}
+        </AvatarFallback>
       </Avatar>
       <div className="min-w-0 flex-1 leading-tight">
         <div className="truncate font-medium">{user.name}</div>
-        {user.subtitle ? <div className="truncate text-muted-foreground text-xs">{user.subtitle}</div> : null}
+        {user.subtitle ? (
+          <div className="truncate text-muted-foreground text-xs">
+            {user.subtitle}
+          </div>
+        ) : null}
       </div>
     </>
   );
@@ -129,23 +170,43 @@ function Sidebar({
             <BotIcon className="size-4" />
           </span>
           <span className="font-semibold">{brand.name}</span>
-          {brand.subtitle ? <span className="text-muted-foreground text-xs">{brand.subtitle}</span> : null}
+          {brand.subtitle ? (
+            <span className="text-muted-foreground text-xs">
+              {brand.subtitle}
+            </span>
+          ) : null}
           {onClose && (
-            <Button aria-label={t.closeNavigation} className="ms-auto" onClick={onClose} size="icon-sm" variant="ghost">
+            <Button
+              aria-label={t.closeNavigation}
+              className="ms-auto"
+              onClick={onClose}
+              size="icon-sm"
+              variant="ghost"
+            >
               <XIcon />
             </Button>
           )}
         </div>
         {newHref ? (
           <div className="px-3 pb-2">
-            <WirefrontLink className={cn(buttonVariants({ variant: "outline" }), "w-full justify-start")} href={newHref} onClick={onClose}>
+            <WirefrontLink
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "w-full justify-start"
+              )}
+              href={newHref}
+              onClick={onClose}
+            >
               <PlusIcon />
               {t.newItem}
             </WirefrontLink>
           </div>
         ) : null}
         {onSearch || nav.length ? (
-          <nav aria-label={t.navigation} className="flex flex-col gap-0.5 px-2 pb-2">
+          <nav
+            aria-label={t.navigation}
+            className="flex flex-col gap-0.5 px-2 pb-2"
+          >
             {onSearch ? (
               <button className={navRow} onClick={onSearch} type="button">
                 <SearchIcon className="size-4 shrink-0" />
@@ -154,14 +215,27 @@ function Sidebar({
               </button>
             ) : null}
             {nav.map((n) => (
-              <WirefrontLink aria-current={activeId === n.id ? "page" : undefined} className={navRow} href={n.href} key={n.id} onClick={onClose}>
+              <WirefrontLink
+                aria-current={activeId === n.id ? "page" : undefined}
+                className={navRow}
+                href={n.href}
+                key={n.id}
+                onClick={onClose}
+              >
                 {n.icon ? (
-                  <span aria-hidden className="flex size-4 shrink-0 items-center justify-center [&>svg]:size-4">
+                  <span
+                    aria-hidden
+                    className="flex size-4 shrink-0 items-center justify-center [&>svg]:size-4"
+                  >
                     {n.icon}
                   </span>
                 ) : null}
                 <span className="flex-1">{n.label}</span>
-                {n.count ? <span className="rounded-full bg-info/14 px-1.5 font-medium text-[11px] text-info-foreground tabular-nums">{format.number(n.count)}</span> : null}
+                {n.count ? (
+                  <span className="rounded-full bg-info/14 px-1.5 font-medium text-[11px] text-info-foreground tabular-nums">
+                    {format.number(n.count)}
+                  </span>
+                ) : null}
               </WirefrontLink>
             ))}
           </nav>
@@ -172,7 +246,10 @@ function Sidebar({
           </span>
           <span className="tabular-nums">{format.number(items.length)}</span>
         </div>
-        <ul aria-labelledby={`${group}-items`} className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2">
+        <ul
+          aria-labelledby={`${group}-items`}
+          className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2"
+        >
           {items.map((item) => {
             const on = activeId === item.id;
             return (
@@ -181,32 +258,53 @@ function Sidebar({
                   aria-current={on ? "page" : undefined}
                   className={cn(
                     "relative flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 text-start outline-none transition-transform focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]",
-                    on ? "text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                    on
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
                   )}
                   href={item.href}
                   onClick={onClose}
                 >
                   {on && (
-                    <motion.span className="absolute inset-0 rounded-lg bg-background shadow-xs/5 ring-1 ring-border dark:bg-accent dark:ring-0" layoutId="split-shell-item" transition={spring} />
+                    <motion.span
+                      className="absolute inset-0 rounded-lg bg-background shadow-xs/5 ring-1 ring-border dark:bg-accent dark:ring-0"
+                      layoutId="split-shell-item"
+                      transition={spring}
+                    />
                   )}
                   <span className="relative flex size-4 shrink-0 items-center justify-center">
                     {item.state === "running" ? (
-                      <LoaderCircleIcon aria-label={t.running} className="size-3.5 animate-spin text-info motion-reduce:animate-none" role="img" />
+                      <LoaderCircleIcon
+                        aria-label={t.running}
+                        className="size-3.5 animate-spin text-info motion-reduce:animate-none"
+                        role="img"
+                      />
                     ) : item.state === "done" ? (
-                      <CheckIcon aria-label={t.done} className="size-3.5 text-success" role="img" />
+                      <CheckIcon
+                        aria-label={t.done}
+                        className="size-3.5 text-success"
+                        role="img"
+                      />
                     ) : (
                       <span className="size-1.5 rounded-full bg-muted-foreground/40" />
                     )}
                   </span>
-                  <span className="relative min-w-0 flex-1 truncate">{item.title}</span>
-                  <span className="relative text-muted-foreground text-xs tabular-nums">{format.relative(item.updatedAt)}</span>
+                  <span className="relative min-w-0 flex-1 truncate">
+                    {item.title}
+                  </span>
+                  <span className="relative text-muted-foreground text-xs tabular-nums">
+                    {format.relative(item.updatedAt)}
+                  </span>
                 </WirefrontLink>
               </li>
             );
           })}
         </ul>
         {accountHref ? (
-          <WirefrontLink className="flex items-center gap-2.5 p-3 transition-colors hover:bg-accent/60" href={accountHref}>
+          <WirefrontLink
+            className="flex items-center gap-2.5 p-3 transition-colors hover:bg-accent/60"
+            href={accountHref}
+          >
             {account}
           </WirefrontLink>
         ) : (
@@ -242,32 +340,49 @@ export function SplitShell({
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(([entry]) => entry && setRootWidth(entry.contentRect.width));
+    const ro = new ResizeObserver(
+      ([entry]) => entry && setRootWidth(entry.contentRect.width)
+    );
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
   const docked = rootWidth >= 1024;
   const sidebarWidth = rootWidth >= 768 ? 240 : 0;
-  const maxW = Math.max(minPanelWidth, Math.min(maxPanelWidth, rootWidth - sidebarWidth - 400));
+  const maxW = Math.max(
+    minPanelWidth,
+    Math.min(maxPanelWidth, rootWidth - sidebarWidth - 400)
+  );
   const w = Math.min(Math.max(width, minPanelWidth), maxW);
   const showPanel = !!panel && (docked ? panelOpen : overlayOpen);
 
-  const togglePanel = () => (docked ? setPanelOpen((o) => !o) : setOverlayOpen((o) => !o));
+  const togglePanel = () =>
+    docked ? setPanelOpen((o) => !o) : setOverlayOpen((o) => !o);
 
   return (
     <MotionConfig reducedMotion="user">
       <TooltipProvider delay={400}>
         <div
-          className={cn("@container relative isolate flex h-190 w-full overflow-hidden bg-sidebar text-foreground text-sm", dragging && "cursor-col-resize select-none", className)}
+          className={cn(
+            "@container relative isolate flex h-190 w-full overflow-hidden bg-sidebar text-foreground text-sm",
+            dragging && "cursor-col-resize select-none",
+            className
+          )}
           ref={rootRef}
         >
-          <aside aria-label={t.sidebar} className="hidden w-60 shrink-0 @3xl:block">
+          <aside
+            aria-label={t.sidebar}
+            className="hidden w-60 shrink-0 @3xl:block"
+          >
             <Sidebar {...sidebar} t={t} />
           </aside>
 
           <Sheet onOpenChange={setDrawer} open={drawer}>
-            <SheetContent className="w-72 max-w-[85%] bg-sidebar p-0" showCloseButton={false} side="left">
+            <SheetContent
+              className="w-72 max-w-[85%] bg-sidebar p-0"
+              showCloseButton={false}
+              side="left"
+            >
               <SheetTitle className="sr-only">{t.navigation}</SheetTitle>
               <Sidebar {...sidebar} onClose={() => setDrawer(false)} t={t} />
             </SheetContent>
@@ -276,7 +391,13 @@ export function SplitShell({
           <div className="flex min-w-0 flex-1 @3xl:py-2 @3xl:pe-2">
             <main className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background @3xl:rounded-2xl @3xl:border @3xl:shadow-xs/5">
               <header className="flex h-13 shrink-0 items-center gap-2 border-b px-3 @3xl:px-4">
-                <Button aria-label={t.openNavigation} className="@3xl:hidden" onClick={() => setDrawer(true)} size="icon-sm" variant="ghost">
+                <Button
+                  aria-label={t.openNavigation}
+                  className="@3xl:hidden"
+                  onClick={() => setDrawer(true)}
+                  size="icon-sm"
+                  variant="ghost"
+                >
                   <MenuIcon />
                 </Button>
                 <nav aria-label={t.breadcrumb} className="flex min-w-0 flex-1">
@@ -284,19 +405,38 @@ export function SplitShell({
                     {breadcrumbs.map((crumb, i) => {
                       const last = i === breadcrumbs.length - 1;
                       return (
-                        <li className={cn("flex min-w-0 items-center gap-1.5", !last && "hidden @md:flex")} key={`${crumb.label}-${crumb.href ?? "page"}`}>
+                        <li
+                          className={cn(
+                            "flex min-w-0 items-center gap-1.5",
+                            !last && "hidden @md:flex"
+                          )}
+                          key={`${crumb.label}-${crumb.href ?? "page"}`}
+                        >
                           {last ? (
-                            <span aria-current="page" className="truncate font-medium">
+                            <span
+                              aria-current="page"
+                              className="truncate font-medium"
+                            >
                               {crumb.label}
                             </span>
                           ) : crumb.href ? (
-                            <WirefrontLink className="text-muted-foreground transition-colors hover:text-foreground" href={crumb.href}>
+                            <WirefrontLink
+                              className="text-muted-foreground transition-colors hover:text-foreground"
+                              href={crumb.href}
+                            >
                               {crumb.label}
                             </WirefrontLink>
                           ) : (
-                            <span className="text-muted-foreground">{crumb.label}</span>
+                            <span className="text-muted-foreground">
+                              {crumb.label}
+                            </span>
                           )}
-                          {last ? null : <ChevronRightIcon aria-hidden className="size-3.5 text-muted-foreground/60" />}
+                          {last ? null : (
+                            <ChevronRightIcon
+                              aria-hidden
+                              className="size-3.5 text-muted-foreground/60"
+                            />
+                          )}
                         </li>
                       );
                     })}
@@ -319,7 +459,9 @@ export function SplitShell({
                     >
                       <PanelRightIcon />
                     </TooltipTrigger>
-                    <TooltipContent>{showPanel ? t.hidePanel : t.showPanel}</TooltipContent>
+                    <TooltipContent>
+                      {showPanel ? t.hidePanel : t.showPanel}
+                    </TooltipContent>
                   </Tooltip>
                 ) : null}
               </header>
@@ -353,12 +495,17 @@ export function SplitShell({
                         animate={{ height: dragging ? 56 : 32 }}
                         className={cn(
                           "w-1 rounded-full bg-muted-foreground/24 transition-colors group-hover/handle:bg-muted-foreground/48 group-focus-visible/handle:bg-ring",
-                          dragging && "bg-info!",
+                          dragging && "bg-info!"
                         )}
                         transition={spring}
                       />
                     </PaneResizer>
-                    <section aria-label={t.panel} className="relative flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border bg-background shadow-xs/5" id={panelId} style={{ width: w }}>
+                    <section
+                      aria-label={t.panel}
+                      className="relative flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border bg-background shadow-xs/5"
+                      id={panelId}
+                      style={{ width: w }}
+                    >
                       {panel({ close: () => setPanelOpen(false) })}
                       <AnimatePresence>
                         {dragging && (
@@ -368,7 +515,9 @@ export function SplitShell({
                             exit={{ opacity: 0, y: 4 }}
                             initial={{ opacity: 0, y: 4 }}
                           >
-                            {interpolate(t.panelWidth, { width: Math.round(w) })}
+                            {interpolate(t.panelWidth, {
+                              width: Math.round(w),
+                            })}
                           </motion.span>
                         )}
                       </AnimatePresence>
@@ -381,7 +530,12 @@ export function SplitShell({
 
           {panel && !docked ? (
             <Sheet onOpenChange={setOverlayOpen} open={overlayOpen}>
-              <SheetContent className="w-[min(400px,calc(100%-1rem))] gap-0 p-0" id={panelId} showCloseButton={false} side="right">
+              <SheetContent
+                className="w-[min(400px,calc(100%-1rem))] gap-0 p-0"
+                id={panelId}
+                showCloseButton={false}
+                side="right"
+              >
                 <SheetTitle className="sr-only">{t.panel}</SheetTitle>
                 {panel({ close: () => setOverlayOpen(false) })}
               </SheetContent>

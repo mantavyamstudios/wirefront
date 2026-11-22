@@ -1,7 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { fail } from "@wirefront/ui/wirefront/types";
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
 import type { ReactNode } from "react";
@@ -36,9 +43,13 @@ beforeAll(() => {
       observe() {}
       unobserve() {}
       disconnect() {}
-    },
+    }
   );
-  vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+  vi.stubGlobal("matchMedia", () => ({
+    matches: false,
+    addEventListener() {},
+    removeEventListener() {},
+  }));
   Element.prototype.scrollTo = () => {};
   Element.prototype.scrollIntoView = () => {};
   Element.prototype.getAnimations = () => [];
@@ -49,25 +60,34 @@ const at = (now: string, ui: ReactNode) =>
   render(
     <WirefrontProvider locale="en-US" now={() => new Date(now)} timeZone="UTC">
       {ui}
-    </WirefrontProvider>,
+    </WirefrontProvider>
   );
 
 describe("profile", () => {
   it("ProfilePage follows optimistically and reverts when it fails", async () => {
     const onToggleFollow = vi.fn(async () => fail("Couldn’t follow."));
-    at(hero.now, <ProfilePage onToggleFollow={onToggleFollow} profile={hero.getProfile} />);
+    at(
+      hero.now,
+      <ProfilePage onToggleFollow={onToggleFollow} profile={hero.getProfile} />
+    );
     expect(screen.getAllByText("12.4K").length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole("button", { name: "Follow" }));
     expect(onToggleFollow).toHaveBeenCalledWith(true);
     expect(await screen.findByText("Couldn’t follow.")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Follow" }).getAttribute("aria-pressed")).toBe("false");
+    expect(
+      screen
+        .getByRole("button", { name: "Follow" })
+        .getAttribute("aria-pressed")
+    ).toBe("false");
     expect(screen.getByText("Joined Apr 2021")).toBeTruthy();
   });
 
   it("PersonHoverCard shows each person's own card and mutuals", () => {
     at("2026-04-26T12:00:00Z", <PersonHoverCard inline person={hover.james} />);
     expect(screen.getByText("James Lin")).toBeTruthy();
-    expect(screen.getByText("Followed by Maya, Riya and 3 others you follow")).toBeTruthy();
+    expect(
+      screen.getByText("Followed by Maya, Riya and 3 others you follow")
+    ).toBeTruthy();
     expect(screen.queryByRole("button", { name: /Follow/ })).toBeNull();
   });
 
@@ -82,34 +102,71 @@ describe("profile", () => {
   it("TeamDirectory counts people and cities and filters by search", () => {
     render(<TeamDirectory company="Acme" people={team.listTeammates} />);
     expect(screen.getByText("Acme · 6 teammates · 6 cities")).toBeTruthy();
-    fireEvent.change(screen.getByRole("searchbox", { name: "Search teammates" }), { target: { value: "designer" } });
+    fireEvent.change(
+      screen.getByRole("searchbox", { name: "Search teammates" }),
+      { target: { value: "designer" } }
+    );
     expect(screen.getAllByRole("listitem")).toHaveLength(1);
-    expect(screen.getByRole("link", { name: "Email Dani Kim" }).getAttribute("href")).toBe("mailto:dani@acme.dev");
+    expect(
+      screen.getByRole("link", { name: "Email Dani Kim" }).getAttribute("href")
+    ).toBe("mailto:dani@acme.dev");
   });
 
   it("ContactDirectory groups by last name and runs contact actions", () => {
     const onMessage = vi.fn();
-    render(<ContactDirectory company="Acme" onMessage={onMessage} people={directory.listContacts} />);
+    render(
+      <ContactDirectory
+        company="Acme"
+        onMessage={onMessage}
+        people={directory.listContacts}
+      />
+    );
     expect(screen.getByRole("heading", { name: /^P/ }).textContent).toBe("P3");
     fireEvent.click(screen.getByRole("button", { name: "Message Riya Patel" }));
     expect(onMessage).toHaveBeenCalledWith("riya");
-    fireEvent.change(screen.getByRole("searchbox", { name: "Find people" }), { target: { value: "zzz" } });
+    fireEvent.change(screen.getByRole("searchbox", { name: "Find people" }), {
+      target: { value: "zzz" },
+    });
     expect(screen.getByText("Nobody matches “zzz”.")).toBeTruthy();
   });
 
   it("OrgChart computes depth and loads unloaded reports", async () => {
     const onLoadReports = vi.fn(async () => {});
-    render(<OrgChart company="Acme" onLoadReports={onLoadReports} people={org.listOrg.people} total={28} />);
+    render(
+      <OrgChart
+        company="Acme"
+        onLoadReports={onLoadReports}
+        people={org.listOrg.people}
+        total={28}
+      />
+    );
     expect(screen.getByText("Acme · 28 people · 4 levels deep")).toBeTruthy();
-    fireEvent.click(screen.getAllByRole("button", { name: "Show 3 reports of Carlos Mendes" })[0] as HTMLElement);
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: "Show 3 reports of Carlos Mendes",
+      })[0] as HTMLElement
+    );
     expect(onLoadReports).toHaveBeenCalledWith("carlos");
-    fireEvent.click(screen.getAllByRole("button", { name: "Hide 2 reports of Mia Lloyd" })[0] as HTMLElement);
-    expect(screen.getAllByRole("button", { name: "Show 2 reports of Mia Lloyd" }).length).toBeGreaterThan(0);
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: "Hide 2 reports of Mia Lloyd",
+      })[0] as HTMLElement
+    );
+    expect(
+      screen.getAllByRole("button", { name: "Show 2 reports of Mia Lloyd" })
+        .length
+    ).toBeGreaterThan(0);
   });
 
   it("SkillEndorsements totals endorsements and endorses optimistically", async () => {
     const onEndorse = vi.fn(async () => {});
-    render(<SkillEndorsements onEndorse={onEndorse} person="Maya Okafor" skills={skills.listSkills} />);
+    render(
+      <SkillEndorsements
+        onEndorse={onEndorse}
+        person="Maya Okafor"
+        skills={skills.listSkills}
+      />
+    );
     expect(screen.getByText("186 endorsements across 12 skills.")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Endorse Rust" }));
     expect(onEndorse).toHaveBeenCalledWith({ id: "rust", endorsed: true });
@@ -118,19 +175,38 @@ describe("profile", () => {
 
   it("PresenceRail counts presence and toggles do not disturb", () => {
     const onSetPresence = vi.fn(async () => {});
-    render(<PresenceRail meId={presence.me.id} onSetPresence={onSetPresence} people={presence.listPresence} workspace="Acme studios" />);
+    render(
+      <PresenceRail
+        meId={presence.me.id}
+        onSetPresence={onSetPresence}
+        people={presence.listPresence}
+        workspace="Acme studios"
+      />
+    );
     expect(screen.getByText(/^6 people active right now/)).toBeTruthy();
-    fireEvent.click(screen.getAllByRole("button", { name: "Turn on do not disturb" })[0] as HTMLElement);
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: "Turn on do not disturb",
+      })[0] as HTMLElement
+    );
     expect(onSetPresence).toHaveBeenCalledWith("dnd");
   });
 
   it("SuggestedIntros dismisses and follows", () => {
     const onDismiss = vi.fn(async () => {});
     const onFollow = vi.fn(async () => {});
-    render(<SuggestedIntros onDismiss={onDismiss} onFollow={onFollow} suggestions={intros.listSuggestions} />);
+    render(
+      <SuggestedIntros
+        onDismiss={onDismiss}
+        onFollow={onFollow}
+        suggestions={intros.listSuggestions}
+      />
+    );
     fireEvent.click(screen.getByRole("button", { name: "Dismiss Naomi Park" }));
     expect(screen.queryByText("Naomi Park")).toBeNull();
-    const helena = screen.getByText("Helena Marsh").closest("li") as HTMLElement;
+    const helena = screen
+      .getByText("Helena Marsh")
+      .closest("li") as HTMLElement;
     fireEvent.click(within(helena).getByRole("button", { name: /Follow/ }));
     expect(onFollow).toHaveBeenCalledWith({ id: "helena", following: true });
     expect(within(helena).getByText("8,402 followers")).toBeTruthy();
@@ -138,11 +214,24 @@ describe("profile", () => {
 
   it("CredentialsSessions signs devices out and keeps this one", () => {
     const onSignOutAll = vi.fn(async () => {});
-    at(creds.now, <CredentialsSessions data={creds.getCredentials} onSignOut={async () => {}} onSignOutAll={onSignOutAll} />);
-    expect(screen.getByText("Your account is protected with two-factor and a passkey.")).toBeTruthy();
+    at(
+      creds.now,
+      <CredentialsSessions
+        data={creds.getCredentials}
+        onSignOut={async () => {}}
+        onSignOutAll={onSignOutAll}
+      />
+    );
+    expect(
+      screen.getByText(
+        "Your account is protected with two-factor and a passkey."
+      )
+    ).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Sign out Pixel 8" }));
     expect(screen.queryByText("Pixel 8")).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "Sign out everywhere" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Sign out everywhere" })
+    );
     expect(onSignOutAll).toHaveBeenCalled();
     expect(screen.getByText("1 devices · 1 active now")).toBeTruthy();
   });
@@ -151,11 +240,27 @@ describe("profile", () => {
     const onReact = vi.fn(async () => {});
     at(
       social.now,
-      <SocialProfile media={social.listMedia} onReact={onReact} postUrl={(id) => `#${id}`} posts={social.listPosts} profileUrl="#me" replies={social.listReplies} user={social.getSocialProfile} />,
+      <SocialProfile
+        media={social.listMedia}
+        onReact={onReact}
+        postUrl={(id) => `#${id}`}
+        posts={social.listPosts}
+        profileUrl="#me"
+        replies={social.listReplies}
+        user={social.getSocialProfile}
+      />
     );
-    const like = screen.getAllByRole("button", { name: "Like" })[0] as HTMLElement;
+    const like = screen.getAllByRole("button", {
+      name: "Like",
+    })[0] as HTMLElement;
     fireEvent.click(like);
-    expect(onReact).toHaveBeenCalledWith(expect.objectContaining({ kind: "like", on: true }));
-    await waitFor(() => expect(screen.getAllByRole("button", { name: "Unlike" }).length).toBeGreaterThan(0));
+    expect(onReact).toHaveBeenCalledWith(
+      expect.objectContaining({ kind: "like", on: true })
+    );
+    await waitFor(() =>
+      expect(
+        screen.getAllByRole("button", { name: "Unlike" }).length
+      ).toBeGreaterThan(0)
+    );
   });
 });

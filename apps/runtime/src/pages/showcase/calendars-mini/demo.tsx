@@ -16,8 +16,20 @@ export function CalendarsMiniShowcasePage() {
     <WirefrontProvider locale="en-GB" now={demoNow} timeZone="UTC">
       <div className="grid min-h-svh place-items-center bg-background p-4 sm:p-8">
         <div className="grid w-full max-w-80 grid-cols-1 gap-6 md:w-auto md:max-w-none md:grid-cols-2 md:items-start">
-          <MiniCalendar className="md:w-72" events={events} month={month} onMonthChange={setMonth} openHref="#calendar" />
-          <MiniCalendar className="md:w-80" events={events} month={month} onMonthChange={setMonth} showDayList />
+          <MiniCalendar
+            className="md:w-72"
+            events={events}
+            month={month}
+            onMonthChange={setMonth}
+            openHref="#calendar"
+          />
+          <MiniCalendar
+            className="md:w-80"
+            events={events}
+            month={month}
+            onMonthChange={setMonth}
+            showDayList
+          />
         </div>
       </div>
     </WirefrontProvider>

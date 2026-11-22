@@ -3,9 +3,23 @@
 "use client";
 
 import { cn } from "@wirefront/ui/lib/utils";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@wirefront/ui/sheet";
 import { useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
-import { BookmarkIcon, ChevronRightIcon, FileTextIcon, FolderIcon, FolderOpenIcon, ListTreeIcon, PlusIcon, SearchIcon } from "lucide-react";
+import {
+  BookmarkIcon,
+  ChevronRightIcon,
+  FileTextIcon,
+  FolderIcon,
+  FolderOpenIcon,
+  ListTreeIcon,
+  PlusIcon,
+  SearchIcon,
+} from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 
 import type { DocNode } from "./schema";
@@ -35,10 +49,16 @@ export interface DocsTreeShellProps {
 }
 
 /** The ids of every folder above the node with this id. */
-function ancestorsOf(nodes: DocNode[], id: string, trail: string[] = []): string[] | undefined {
+function ancestorsOf(
+  nodes: DocNode[],
+  id: string,
+  trail: string[] = []
+): string[] | undefined {
   for (const n of nodes) {
     if (n.id === id) return trail;
-    const hit = n.children ? ancestorsOf(n.children, id, [...trail, n.id]) : undefined;
+    const hit = n.children
+      ? ancestorsOf(n.children, id, [...trail, n.id])
+      : undefined;
     if (hit) return hit;
   }
   return undefined;
@@ -53,10 +73,24 @@ function titleOf(nodes: DocNode[], id: string): string | undefined {
   return undefined;
 }
 
-export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], onSearch, onNewPage, className }: DocsTreeShellProps) {
+export function DocsTreeShell({
+  children,
+  tree,
+  activeId,
+  defaultExpanded = [],
+  onSearch,
+  onNewPage,
+  className,
+}: DocsTreeShellProps) {
   const t = useMessages("docsTreeShell", DOCS_TREE_SHELL_MESSAGES);
   const [navOpen, setNavOpen] = useState(false);
-  const [expanded, setExpanded] = useState<ReadonlySet<string>>(() => new Set([...defaultExpanded, ...(activeId ? (ancestorsOf(tree, activeId) ?? []) : [])]));
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(
+    () =>
+      new Set([
+        ...defaultExpanded,
+        ...(activeId ? (ancestorsOf(tree, activeId) ?? []) : []),
+      ])
+  );
   const toggle = (id: string) =>
     setExpanded((s) => {
       const next = new Set(s);
@@ -69,9 +103,14 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
   useEffect(() => {
     if (!onSearch) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey)
+        return;
       const target = event.target;
-      if (target instanceof Element && target.closest("input, textarea, select, [contenteditable='true']")) return;
+      if (
+        target instanceof Element &&
+        target.closest("input, textarea, select, [contenteditable='true']")
+      )
+        return;
       event.preventDefault();
       onSearch();
     };
@@ -79,32 +118,74 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
     return () => window.removeEventListener("keydown", onKey);
   }, [onSearch]);
 
-  const row = "flex w-full items-center gap-1.5 py-1 pe-3 text-start text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset pointer-coarse:min-h-11";
+  const row =
+    "flex w-full items-center gap-1.5 py-1 pe-3 text-start text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset pointer-coarse:min-h-11";
 
-  const renderNodes = (nodes: DocNode[], depth: number, inSheet: boolean): ReactNode =>
+  const renderNodes = (
+    nodes: DocNode[],
+    depth: number,
+    inSheet: boolean
+  ): ReactNode =>
     nodes.map((node) => {
       const isFolder = Boolean(node.children?.length);
       const isOpen = expanded.has(node.id);
       const active = node.id === activeId;
       // Indentation is capped so deep trees don't eat narrow screens.
-      const indent = { paddingInlineStart: `${Math.min(depth, 4) * 14 + 12}px` };
-      const look = active ? "bg-foreground/8 text-foreground" : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground";
+      const indent = {
+        paddingInlineStart: `${Math.min(depth, 4) * 14 + 12}px`,
+      };
+      const look = active
+        ? "bg-foreground/8 text-foreground"
+        : "text-muted-foreground hover:bg-foreground/3 hover:text-foreground";
       return (
         <li key={node.id}>
           {isFolder ? (
-            <button aria-expanded={isOpen} className={cn(row, look)} onClick={() => toggle(node.id)} style={indent} type="button">
-              <ChevronRightIcon aria-hidden className={cn("size-3.5 shrink-0 opacity-60 transition-transform motion-reduce:transition-none rtl:rotate-180", isOpen && "rotate-90 rtl:rotate-90")} />
-              {isOpen ? <FolderOpenIcon aria-hidden className="size-3.5 shrink-0 opacity-70" /> : <FolderIcon aria-hidden className="size-3.5 shrink-0 opacity-70" />}
+            <button
+              aria-expanded={isOpen}
+              className={cn(row, look)}
+              onClick={() => toggle(node.id)}
+              style={indent}
+              type="button"
+            >
+              <ChevronRightIcon
+                aria-hidden
+                className={cn(
+                  "size-3.5 shrink-0 opacity-60 transition-transform motion-reduce:transition-none rtl:rotate-180",
+                  isOpen && "rotate-90 rtl:rotate-90"
+                )}
+              />
+              {isOpen ? (
+                <FolderOpenIcon
+                  aria-hidden
+                  className="size-3.5 shrink-0 opacity-70"
+                />
+              ) : (
+                <FolderIcon
+                  aria-hidden
+                  className="size-3.5 shrink-0 opacity-70"
+                />
+              )}
               <span className="truncate">{node.title}</span>
             </button>
           ) : node.href ? (
-            <WirefrontLink aria-current={active ? "page" : undefined} className={cn(row, look)} href={node.href} onClick={() => inSheet && setNavOpen(false)} style={indent}>
+            <WirefrontLink
+              aria-current={active ? "page" : undefined}
+              className={cn(row, look)}
+              href={node.href}
+              onClick={() => inSheet && setNavOpen(false)}
+              style={indent}
+            >
               <span aria-hidden className="size-3.5 shrink-0" />
-              <FileTextIcon aria-hidden className="size-3.5 shrink-0 opacity-60" />
+              <FileTextIcon
+                aria-hidden
+                className="size-3.5 shrink-0 opacity-60"
+              />
               <span className="truncate">{node.title}</span>
             </WirefrontLink>
           ) : null}
-          {isFolder && isOpen && node.children ? <ul>{renderNodes(node.children, depth + 1, inSheet)}</ul> : null}
+          {isFolder && isOpen && node.children ? (
+            <ul>{renderNodes(node.children, depth + 1, inSheet)}</ul>
+          ) : null}
         </li>
       );
     });
@@ -113,7 +194,10 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
     <div className="flex h-full min-h-0 flex-col">
       <div className="border-border/60 border-b px-4 py-3.5">
         <div className="flex items-center gap-2">
-          <div aria-hidden className="flex size-6 items-center justify-center rounded bg-foreground/8">
+          <div
+            aria-hidden
+            className="flex size-6 items-center justify-center rounded bg-foreground/8"
+          >
             <BookmarkIcon className="size-3.5" />
           </div>
           <div className="font-medium text-sm">{t.title}</div>
@@ -128,8 +212,12 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
             type="button"
           >
             <SearchIcon aria-hidden className="size-3.5 opacity-50" />
-            <span className="flex-1 truncate text-muted-foreground text-xs">{t.search}</span>
-            <kbd className="rounded border border-border/60 bg-background/80 px-1 font-mono text-[10px] text-muted-foreground pointer-coarse:hidden">/</kbd>
+            <span className="flex-1 truncate text-muted-foreground text-xs">
+              {t.search}
+            </span>
+            <kbd className="rounded border border-border/60 bg-background/80 px-1 font-mono text-[10px] text-muted-foreground pointer-coarse:hidden">
+              /
+            </kbd>
           </button>
         ) : null}
       </div>
@@ -152,7 +240,12 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
   );
 
   return (
-    <div className={cn("min-h-svh bg-background text-foreground md:grid md:grid-cols-[280px_minmax(0,1fr)]", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background text-foreground md:grid md:grid-cols-[280px_minmax(0,1fr)]",
+        className
+      )}
+    >
       {/* Phones: content first, the tree behind a "Contents" trigger. */}
       <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-border/60 border-b bg-background/90 px-2 backdrop-blur md:hidden">
         <Sheet onOpenChange={setNavOpen} open={navOpen}>
@@ -165,10 +258,14 @@ export function DocsTreeShell({ children, tree, activeId, defaultExpanded = [], 
             {panel(true)}
           </SheetContent>
         </Sheet>
-        {activeId ? <span className="truncate text-sm">{titleOf(tree, activeId)}</span> : null}
+        {activeId ? (
+          <span className="truncate text-sm">{titleOf(tree, activeId)}</span>
+        ) : null}
       </header>
 
-      <aside className="sticky top-0 hidden h-svh flex-col border-border/60 border-e bg-foreground/2 md:flex">{panel(false)}</aside>
+      <aside className="sticky top-0 hidden h-svh flex-col border-border/60 border-e bg-foreground/2 md:flex">
+        {panel(false)}
+      </aside>
 
       <main className="min-w-0">{children}</main>
     </div>

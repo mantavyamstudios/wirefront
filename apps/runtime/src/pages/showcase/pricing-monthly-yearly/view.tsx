@@ -7,7 +7,11 @@ import { RadioGroup } from "@base-ui/react/radio-group";
 import { Button } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
 import { CheckIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -39,19 +43,36 @@ export interface BillingPeriodPricingProps {
   className?: string;
 }
 
-function BillingPeriodPricingScreen({ plans, onChoose, defaultBilling = "yearly", className }: BillingPeriodPricingProps) {
-  const t = useMessages("billingPeriodPricing", BILLING_PERIOD_PRICING_MESSAGES);
+function BillingPeriodPricingScreen({
+  plans,
+  onChoose,
+  defaultBilling = "yearly",
+  className,
+}: BillingPeriodPricingProps) {
+  const t = useMessages(
+    "billingPeriodPricing",
+    BILLING_PERIOD_PRICING_MESSAGES
+  );
   const format = useFormat();
   const [billing, setBilling] = useState(defaultBilling);
   // The best yearly saving across paid plans, for the toggle's tag.
-  const savePct = Math.max(0, ...plans.filter((p) => p.monthly > 0).map((p) => Math.round((1 - p.yearly / p.monthly) * 100)));
+  const savePct = Math.max(
+    0,
+    ...plans
+      .filter((p) => p.monthly > 0)
+      .map((p) => Math.round((1 - p.yearly / p.monthly) * 100))
+  );
 
   return (
     <div className={cn("min-h-svh bg-background text-foreground", className)}>
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
         <div className="text-center">
-          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
-          <h1 className="mt-2 text-balance font-heading text-3xl tracking-tight sm:text-4xl">{t.title}</h1>
+          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+            {t.eyebrow}
+          </div>
+          <h1 className="mt-2 text-balance font-heading text-3xl tracking-tight sm:text-4xl">
+            {t.title}
+          </h1>
 
           <RadioGroup
             aria-label={t.billing}
@@ -80,12 +101,15 @@ function BillingPeriodPricingScreen({ plans, onChoose, defaultBilling = "yearly"
         <ul className="mt-10 grid grid-cols-1 gap-x-3 gap-y-6 sm:mt-12 md:grid-cols-2 lg:grid-cols-3 md:max-lg:*:last:col-span-2">
           {plans.map((p) => {
             const price = billing === "yearly" ? p.yearly : p.monthly;
-            const money = (n: number) => format.money(n, p.currency, { maximumFractionDigits: 0 });
+            const money = (n: number) =>
+              format.money(n, p.currency, { maximumFractionDigits: 0 });
             return (
               <li
                 className={cn(
                   "relative flex flex-col rounded-2xl border p-5 sm:p-6",
-                  p.recommended ? "border-foreground bg-foreground/4 shadow-lg max-lg:order-first" : "border-border/60 bg-background/40",
+                  p.recommended
+                    ? "border-foreground bg-foreground/4 shadow-lg max-lg:order-first"
+                    : "border-border/60 bg-background/40"
                 )}
                 key={p.id}
               >
@@ -94,10 +118,19 @@ function BillingPeriodPricingScreen({ plans, onChoose, defaultBilling = "yearly"
                     {t.recommended}
                   </div>
                 ) : null}
-                <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{p.name}</h2>
-                <div aria-live="polite" className="mt-2 flex items-baseline gap-1">
-                  <span className="font-heading text-4xl tracking-tight">{money(price)}</span>
-                  <span className="text-muted-foreground text-xs">{price === 0 ? t.forever : t.perSeatMonth}</span>
+                <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+                  {p.name}
+                </h2>
+                <div
+                  aria-live="polite"
+                  className="mt-2 flex items-baseline gap-1"
+                >
+                  <span className="font-heading text-4xl tracking-tight">
+                    {money(price)}
+                  </span>
+                  <span className="text-muted-foreground text-xs">
+                    {price === 0 ? t.forever : t.perSeatMonth}
+                  </span>
                 </div>
                 {billing === "yearly" && price > 0 && p.monthly > price ? (
                   <div className="mt-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
@@ -113,12 +146,21 @@ function BillingPeriodPricingScreen({ plans, onChoose, defaultBilling = "yearly"
                 <ul className="mt-6 flex flex-1 flex-col gap-2.5">
                   {p.features.map((f) => (
                     <li className="flex items-start gap-2 text-sm" key={f}>
-                      <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-category-2-foreground" />
+                      <CheckIcon
+                        aria-hidden
+                        className="mt-0.5 size-4 shrink-0 text-category-2-foreground"
+                      />
                       {f}
                     </li>
                   ))}
                 </ul>
-                <Button className="mt-6" onClick={() => onChoose(p, billing)} size="lg" type="button" variant={p.recommended ? "default" : "outline"}>
+                <Button
+                  className="mt-6"
+                  onClick={() => onChoose(p, billing)}
+                  size="lg"
+                  type="button"
+                  variant={p.recommended ? "default" : "outline"}
+                >
                   {p.monthly === 0 ? t.getStarted : t.choose}
                 </Button>
               </li>

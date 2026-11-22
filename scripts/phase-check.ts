@@ -28,24 +28,35 @@ const CHECKS: [name: string, args: string[]][] = [
 
 function runCheck(args: string[]): Promise<number> {
   return new Promise((ok) => {
-    const child = spawn("bun", args, { cwd: ROOT, stdio: ["ignore", "inherit", "inherit"] });
+    const child = spawn("bun", args, {
+      cwd: ROOT,
+      stdio: ["ignore", "inherit", "inherit"],
+    });
     child.on("close", (code) => ok(code ?? 1));
     child.on("error", () => ok(1));
   });
 }
 
 async function main(): Promise<void> {
-  const progress = trackProgress("phase", { total: CHECKS.length, slowUnitMs: 20 * 60_000, stallMs: 30 * 60_000 });
+  const progress = trackProgress("phase", {
+    total: CHECKS.length,
+    slowUnitMs: 20 * 60_000,
+    stallMs: 30 * 60_000,
+  });
   const results: string[] = [];
   for (const [name, args] of CHECKS) {
     const started = Date.now();
     progress.start(name);
     const code = await runCheck(args);
     progress.done(name, code === 0);
-    results.push(`${code === 0 ? "✓" : "✗"} ${name} (${Math.round((Date.now() - started) / 1000)}s)`);
+    results.push(
+      `${code === 0 ? "✓" : "✗"} ${name} (${Math.round((Date.now() - started) / 1000)}s)`
+    );
   }
   const failed = results.filter((r) => r.startsWith("✗")).length;
-  progress.finish(`${results.join(" · ")}${failed ? ` — ${failed} failed` : ""}`);
+  progress.finish(
+    `${results.join(" · ")}${failed ? ` — ${failed} failed` : ""}`
+  );
   process.exit(failed ? 1 : 0);
 }
 

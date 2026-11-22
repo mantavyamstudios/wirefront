@@ -4,11 +4,32 @@
 
 import { Progress } from "@base-ui/react/progress";
 import { Button } from "@wirefront/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@wirefront/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@wirefront/ui/dialog";
 import { cn } from "@wirefront/ui/lib/utils";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
-import { CheckIcon, CloudUploadIcon, FileIcon, FileTextIcon, ImageIcon, PlayIcon, RotateCwIcon, XIcon } from "lucide-react";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
+import {
+  CheckIcon,
+  CloudUploadIcon,
+  FileIcon,
+  FileTextIcon,
+  ImageIcon,
+  PlayIcon,
+  RotateCwIcon,
+  XIcon,
+} from "lucide-react";
 import { useRef, useState } from "react";
 
 import type { UploadItem, UploadState } from "./schema";
@@ -58,7 +79,12 @@ export interface UploadDialogProps {
   className?: string;
 }
 
-const BAR: Record<UploadState, string> = { uploading: "bg-foreground", paused: "bg-category-3", done: "bg-category-2", failed: "bg-destructive" };
+const BAR: Record<UploadState, string> = {
+  uploading: "bg-foreground",
+  paused: "bg-category-3",
+  done: "bg-category-2",
+  failed: "bg-destructive",
+};
 
 function glyph(name: string) {
   if (/\.(png|jpe?g|gif|webp|svg|avif)$/i.test(name)) return ImageIcon;
@@ -66,16 +92,37 @@ function glyph(name: string) {
   return FileIcon;
 }
 
-function UploadDialogScreen({ uploads, onAddFiles, onCancel, onResume, onCancelAll, accept, typesLabel, maxSizeMb = 250, pageTitle, defaultOpen, className }: UploadDialogProps) {
+function UploadDialogScreen({
+  uploads,
+  onAddFiles,
+  onCancel,
+  onResume,
+  onCancelAll,
+  accept,
+  typesLabel,
+  maxSizeMb = 250,
+  pageTitle,
+  defaultOpen,
+  className,
+}: UploadDialogProps) {
   const t = useMessages("uploadDialog", UPLOAD_DIALOG_MESSAGES);
   const format = useFormat();
   const input = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const [problem, setProblem] = useState<string>();
   const done = uploads.filter((u) => u.state === "done").length;
-  const overall = uploads.length ? Math.round(uploads.reduce((n, u) => n + u.progress, 0) / uploads.length) : 0;
-  const inFlight = uploads.some((u) => u.state === "uploading" || u.state === "paused");
-  const size = (bytes: number) => format.number(bytes / 1024 / 1024, { style: "unit", unit: "megabyte", maximumFractionDigits: 1 });
+  const overall = uploads.length
+    ? Math.round(uploads.reduce((n, u) => n + u.progress, 0) / uploads.length)
+    : 0;
+  const inFlight = uploads.some(
+    (u) => u.state === "uploading" || u.state === "paused"
+  );
+  const size = (bytes: number) =>
+    format.number(bytes / 1024 / 1024, {
+      style: "unit",
+      unit: "megabyte",
+      maximumFractionDigits: 1,
+    });
 
   const add = (list: FileList | null) => {
     const files = [...(list ?? [])];
@@ -109,7 +156,9 @@ function UploadDialogScreen({ uploads, onAddFiles, onCancel, onResume, onCancelA
                 aria-label={t.dropZone}
                 className={cn(
                   "rounded-xl border-2 border-dashed bg-background px-6 py-8 text-center transition-colors",
-                  over ? "border-primary/60 bg-primary/4" : "border-border/70 hover:border-foreground/40",
+                  over
+                    ? "border-primary/60 bg-primary/4"
+                    : "border-border/70 hover:border-foreground/40"
                 )}
                 onDragLeave={() => setOver(false)}
                 onDragOver={(e) => {
@@ -143,18 +192,34 @@ function UploadDialogScreen({ uploads, onAddFiles, onCancel, onResume, onCancelA
                 <div className="mt-3 text-sm">
                   <span className="pointer-coarse:hidden">
                     {t.drop}{" "}
-                    <button className="rounded-sm text-foreground underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring" onClick={() => input.current?.click()} type="button">
+                    <button
+                      className="rounded-sm text-foreground underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+                      onClick={() => input.current?.click()}
+                      type="button"
+                    >
                       {t.browse}
                     </button>
                   </span>
-                  <button className="hidden min-h-11 text-foreground pointer-coarse:inline" onClick={() => input.current?.click()} type="button">
+                  <button
+                    className="hidden min-h-11 text-foreground pointer-coarse:inline"
+                    onClick={() => input.current?.click()}
+                    type="button"
+                  >
                     {t.tap}
                   </button>
                 </div>
-                <div className="mt-1 text-muted-foreground text-xs">{interpolate(t.limits, { size: maxSizeMb, types: typesLabel })}</div>
+                <div className="mt-1 text-muted-foreground text-xs">
+                  {interpolate(t.limits, {
+                    size: maxSizeMb,
+                    types: typesLabel,
+                  })}
+                </div>
               </section>
               {problem ? (
-                <p className="mt-2 text-destructive-foreground text-sm" role="alert">
+                <p
+                  className="mt-2 text-destructive-foreground text-sm"
+                  role="alert"
+                >
                   {problem}
                 </p>
               ) : null}
@@ -163,7 +228,12 @@ function UploadDialogScreen({ uploads, onAddFiles, onCancel, onResume, onCancelA
                 <div className="mt-4">
                   <Progress.Root aria-label={t.overall} value={overall}>
                     <div className="mb-2 flex items-center justify-between font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
-                      <span aria-live="polite">{interpolate(t.complete, { done, total: uploads.length })}</span>
+                      <span aria-live="polite">
+                        {interpolate(t.complete, {
+                          done,
+                          total: uploads.length,
+                        })}
+                      </span>
                       <Progress.Value />
                     </div>
                     <Progress.Track className="h-1 w-full overflow-hidden rounded-full bg-muted">
@@ -177,30 +247,73 @@ function UploadDialogScreen({ uploads, onAddFiles, onCancel, onResume, onCancelA
                       const action =
                         u.state === "done"
                           ? null
-                          : (u.state === "paused" || u.state === "failed") && onResume
-                            ? { label: interpolate(u.state === "failed" ? t.retry : t.resume, { name: u.name }), run: () => onResume(u.id), icon: u.state === "failed" ? RotateCwIcon : PlayIcon }
+                          : (u.state === "paused" || u.state === "failed") &&
+                              onResume
+                            ? {
+                                label: interpolate(
+                                  u.state === "failed" ? t.retry : t.resume,
+                                  { name: u.name }
+                                ),
+                                run: () => onResume(u.id),
+                                icon:
+                                  u.state === "failed"
+                                    ? RotateCwIcon
+                                    : PlayIcon,
+                              }
                             : u.state === "uploading" && onCancel
-                              ? { label: interpolate(t.cancel, { name: u.name }), run: () => onCancel(u.id), icon: XIcon }
+                              ? {
+                                  label: interpolate(t.cancel, {
+                                    name: u.name,
+                                  }),
+                                  run: () => onCancel(u.id),
+                                  icon: XIcon,
+                                }
                               : null;
                       return (
-                        <li className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/80 px-3 py-2.5" key={u.id}>
+                        <li
+                          className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/80 px-3 py-2.5"
+                          key={u.id}
+                        >
                           <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-foreground/6">
                             <Icon aria-hidden className="size-4 opacity-70" />
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-baseline justify-between gap-2">
                               <span className="truncate text-sm">{u.name}</span>
-                              <span className="shrink-0 font-mono text-[10px] text-muted-foreground">{size(u.size)}</span>
+                              <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
+                                {size(u.size)}
+                              </span>
                             </div>
-                            <Progress.Root aria-label={interpolate(t.fileProgress, { name: u.name })} className="mt-1.5" value={u.progress}>
+                            <Progress.Root
+                              aria-label={interpolate(t.fileProgress, {
+                                name: u.name,
+                              })}
+                              className="mt-1.5"
+                              value={u.progress}
+                            >
                               <Progress.Track className="h-1 w-full overflow-hidden rounded-full bg-muted">
-                                <Progress.Indicator className={cn("h-full transition-[width] motion-reduce:transition-none", BAR[u.state])} />
+                                <Progress.Indicator
+                                  className={cn(
+                                    "h-full transition-[width] motion-reduce:transition-none",
+                                    BAR[u.state]
+                                  )}
+                                />
                               </Progress.Track>
                             </Progress.Root>
-                            {u.state === "failed" && u.error ? <p className="mt-1 text-destructive-foreground text-xs">{u.error}</p> : null}
+                            {u.state === "failed" && u.error ? (
+                              <p className="mt-1 text-destructive-foreground text-xs">
+                                {u.error}
+                              </p>
+                            ) : null}
                           </div>
                           {u.state === "done" ? (
-                            <span aria-label={interpolate(t.uploaded, { name: u.name })} className="grid size-7 shrink-0 place-items-center pointer-coarse:size-10" role="img">
+                            <span
+                              aria-label={interpolate(t.uploaded, {
+                                name: u.name,
+                              })}
+                              className="grid size-7 shrink-0 place-items-center pointer-coarse:size-10"
+                              role="img"
+                            >
                               <CheckIcon className="size-3.5 text-category-2-foreground" />
                             </span>
                           ) : action ? (
@@ -227,7 +340,9 @@ function UploadDialogScreen({ uploads, onAddFiles, onCancel, onResume, onCancelA
                   {t.cancelAll}
                 </Button>
               ) : null}
-              <DialogClose render={<Button type="button" />}>{t.done}</DialogClose>
+              <DialogClose render={<Button type="button" />}>
+                {t.done}
+              </DialogClose>
             </DialogFooter>
           </DialogContent>
         </Dialog>

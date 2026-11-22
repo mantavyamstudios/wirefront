@@ -18,8 +18,15 @@ export const scopeGroups: ApiScopeGroup[] = [
     id: "write",
     label: "Write",
     scopes: [
-      { id: "write:projects", description: "Create, update, and archive projects." },
-      { id: "write:members", description: "Invite, remove, and change roles.", destructive: true },
+      {
+        id: "write:projects",
+        description: "Create, update, and archive projects.",
+      },
+      {
+        id: "write:members",
+        description: "Invite, remove, and change roles.",
+        destructive: true,
+      },
     ],
   },
 ];
@@ -27,4 +34,7 @@ export const scopeGroups: ApiScopeGroup[] = [
 export const defaultScopes = ["read:projects", "read:members"];
 
 /** What the mocks return for `createApiKey`. */
-export const createApiKey: NewApiKey = { id: "key_1", secret: "wf_live_8f4a2c91d0b7e635" };
+export const createApiKey: NewApiKey = {
+  id: "key_1",
+  secret: "wf_live_8f4a2c91d0b7e635",
+};

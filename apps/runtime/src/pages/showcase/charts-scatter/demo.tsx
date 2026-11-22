@@ -10,10 +10,18 @@ export function ChartsScatterShowcasePage() {
   const state = useShowcaseState();
   return (
     <AccountHealthScatter
-      accounts={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listAccountHealth}
+      accounts={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : fixtures.listAccountHealth
+      }
       error="Account health didn’t load. Check your connection and try again."
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

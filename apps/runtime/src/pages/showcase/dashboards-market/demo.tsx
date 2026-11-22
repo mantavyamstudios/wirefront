@@ -17,7 +17,13 @@ export function DashboardsMarketShowcasePage() {
   return (
     <WirefrontProvider currency="USD" timeZone="America/New_York">
       <MarketsDashboard
-        data={state === "loading" || state === "error" ? undefined : state === "empty" ? { ...overview, watchlist: [], headlines: [] } : overview}
+        data={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? { ...overview, watchlist: [], headlines: [] }
+              : overview
+        }
         error="The market data feed didn’t respond. Check your connection and try again."
         onAddTicker={() => {}}
         onRangeChange={setRange}
@@ -25,7 +31,13 @@ export function DashboardsMarketShowcasePage() {
         onSelectTicker={setSymbol}
         portfolioName={fixtures.portfolioName}
         range={range}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

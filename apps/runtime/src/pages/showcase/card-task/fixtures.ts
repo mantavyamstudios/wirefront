@@ -2,7 +2,8 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import type { BoardColumn } from "./schema";
 
-const people = (...names: string[]) => names.map((name) => ({ id: name.toLowerCase().replace(/\s+/g, "-"), name }));
+const people = (...names: string[]) =>
+  names.map((name) => ({ id: name.toLowerCase().replace(/\s+/g, "-"), name }));
 
 /** Demo data for the showcase, the generated mocks and tests. */
 export const columns: BoardColumn[] = [
@@ -63,4 +64,9 @@ export const columns: BoardColumn[] = [
 ];
 
 /** What the mocks return for `getBoard`. */
-export const getBoard = { name: "Sprint 24 board", startsOn: "2026-04-22", endsOn: "2026-05-05", columns };
+export const getBoard = {
+  name: "Sprint 24 board",
+  startsOn: "2026-04-22",
+  endsOn: "2026-05-05",
+  columns,
+};

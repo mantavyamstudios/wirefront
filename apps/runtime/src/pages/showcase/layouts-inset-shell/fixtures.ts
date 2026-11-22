@@ -14,4 +14,3 @@ export const getShellContext: InsetShellContext = {
   ],
   unread: 4,
 };
-

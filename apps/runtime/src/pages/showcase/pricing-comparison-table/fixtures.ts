@@ -4,13 +4,48 @@ import type { ComparedPlan, ComparisonSection } from "./schema";
 
 /** Demo data for the showcase, the generated mocks and tests. */
 export const plans: ComparedPlan[] = [
-  { id: "starter", name: "Starter", price: 0, currency: "USD", billing: "month", action: "start" },
-  { id: "pro", name: "Pro", price: 24, currency: "USD", billing: "seat-month", action: "choose", featured: true },
-  { id: "team", name: "Team", price: 48, currency: "USD", billing: "seat-month", action: "choose" },
-  { id: "enterprise", name: "Enterprise", price: null, currency: "USD", billing: "annual-contract", action: "sales" },
+  {
+    id: "starter",
+    name: "Starter",
+    price: 0,
+    currency: "USD",
+    billing: "month",
+    action: "start",
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    price: 24,
+    currency: "USD",
+    billing: "seat-month",
+    action: "choose",
+    featured: true,
+  },
+  {
+    id: "team",
+    name: "Team",
+    price: 48,
+    currency: "USD",
+    billing: "seat-month",
+    action: "choose",
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise",
+    price: null,
+    currency: "USD",
+    billing: "annual-contract",
+    action: "sales",
+  },
 ];
 
-const row = (label: string, starter: string | boolean, pro: string | boolean, team: string | boolean, enterprise: string | boolean) => ({
+const row = (
+  label: string,
+  starter: string | boolean,
+  pro: string | boolean,
+  team: string | boolean,
+  enterprise: string | boolean
+) => ({
   label,
   values: { starter, pro, team, enterprise },
 });

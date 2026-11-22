@@ -6,5 +6,7 @@ import * as fixtures from "./fixtures";
 import { ShortcutsDialog } from "./view";
 
 export function ModalsShortcutsShowcasePage() {
-  return <ShortcutsDialog defaultOpen footerNote="v3.4" groups={fixtures.groups} />;
+  return (
+    <ShortcutsDialog defaultOpen footerNote="v3.4" groups={fixtures.groups} />
+  );
 }

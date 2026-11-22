@@ -7,7 +7,8 @@ import * as fixtures from "./fixtures";
 import type { MailFilter } from "./schema";
 import { MailTwoPane } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const demoNow = () => new Date(fixtures.now);
 
 export function LayoutsTwoPaneShowcasePage() {
@@ -18,8 +19,18 @@ export function LayoutsTwoPaneShowcasePage() {
   const shown = useMemo(() => {
     const q = search.trim().toLowerCase();
     return fixtures.messages
-      .filter((m) => (filter === "unread" ? m.unread : filter === "mentions" ? m.id === "1" : true))
-      .filter((m) => !q || `${m.from.name} ${m.subject} ${m.preview}`.toLowerCase().includes(q))
+      .filter((m) =>
+        filter === "unread"
+          ? m.unread
+          : filter === "mentions"
+            ? m.id === "1"
+            : true
+      )
+      .filter(
+        (m) =>
+          !q ||
+          `${m.from.name} ${m.subject} ${m.preview}`.toLowerCase().includes(q)
+      )
       .map((m) => (m.id === selectedId ? { ...m, body: fixtures.body(m) } : m));
   }, [filter, search, selectedId]);
   return (

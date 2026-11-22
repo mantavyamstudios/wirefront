@@ -5,7 +5,8 @@
 import * as fixtures from "./fixtures";
 import { ShareDialog } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ModalsShareLinkShowcasePage() {
   return (

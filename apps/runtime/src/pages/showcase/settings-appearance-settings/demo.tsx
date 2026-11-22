@@ -10,21 +10,37 @@ import { settingsBack, settingsNav, settingsUser } from "../_settings-nav";
 import * as fixtures from "./fixtures";
 import { ThemeSettings } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function SettingsAppearanceSettingsShowcasePage() {
   const state = useShowcaseState();
   return (
     <DevlFrame>
-      <SettingsShell activeId="appearance" back={settingsBack} groups={settingsNav} user={settingsUser}>
+      <SettingsShell
+        activeId="appearance"
+        back={settingsBack}
+        groups={settingsNav}
+        user={settingsUser}
+      >
         <ThemeSettings
           defaults={fixtures.factoryPrefs}
           error="Appearance settings didn’t load. Check your connection and try again."
           onRetry={() => {}}
           onSave={() => wait(450)}
-          prefs={state === "loading" || state === "error" ? undefined : fixtures.getThemePrefs}
+          prefs={
+            state === "loading" || state === "error"
+              ? undefined
+              : fixtures.getThemePrefs
+          }
           previewTasks={fixtures.previewTasks}
-          status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+          status={
+            state === "loading"
+              ? "loading"
+              : state === "error"
+                ? "error"
+                : "ready"
+          }
           workspace={fixtures.workspace}
         />
       </SettingsShell>

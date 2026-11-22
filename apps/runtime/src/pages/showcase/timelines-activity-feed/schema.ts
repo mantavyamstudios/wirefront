@@ -11,7 +11,17 @@ export const ActivityEvent = z
     verb: z.string(),
     context: z.string().optional(),
     /** Picks the icon and colour. */
-    kind: z.enum(["ship", "complete", "comment", "design", "invite", "commit", "reaction", "merge", "other"]),
+    kind: z.enum([
+      "ship",
+      "complete",
+      "comment",
+      "design",
+      "invite",
+      "commit",
+      "reaction",
+      "merge",
+      "other",
+    ]),
     /** When it happened (ISO 8601). */
     at: z.string(),
     /** A short extra, e.g. "v3.4.0 → production". */
@@ -25,8 +35,12 @@ export const api = defineApi({
   listActivity: {
     method: "GET",
     path: "/activity",
-    summary: "Workspace activity, newest first; pass the last id for older events",
+    summary:
+      "Workspace activity, newest first; pass the last id for older events",
     query: z.object({ before: z.string().optional() }),
-    response: z.object({ events: z.array(ActivityEvent), hasMore: z.boolean() }),
+    response: z.object({
+      events: z.array(ActivityEvent),
+      hasMore: z.boolean(),
+    }),
   },
 });

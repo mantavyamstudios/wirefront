@@ -5,5 +5,10 @@ import * as fixtures from "./fixtures";
 import { BillingPeriodPricing } from "./view";
 
 export function PricingMonthlyYearlyShowcasePage() {
-  return <BillingPeriodPricing onChoose={() => {}} plans={fixtures.listBillingPlans} />;
+  return (
+    <BillingPeriodPricing
+      onChoose={() => {}}
+      plans={fixtures.listBillingPlans}
+    />
+  );
 }

@@ -2,7 +2,11 @@
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 import { DirectionProvider } from "@base-ui/react/direction-provider";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { type Direction, parseHostMessage, type RuntimeMessage } from "@wirefront/bridge";
+import {
+  type Direction,
+  parseHostMessage,
+  type RuntimeMessage,
+} from "@wirefront/bridge";
 import { useTheme } from "@wirefront/ui/theme-provider";
 import { isOrbitThemePalette } from "@wirefront/ui/themes/types";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -25,12 +29,16 @@ interface PreviewSearch {
  * named by VITE_SHELL_ORIGIN (for example http://localhost:3000).
  */
 const SHELL_ORIGINS = new Set(
-  [typeof window === "undefined" ? "" : window.location.origin, import.meta.env.VITE_SHELL_ORIGIN ?? ""].filter(Boolean),
+  [
+    typeof window === "undefined" ? "" : window.location.origin,
+    import.meta.env.VITE_SHELL_ORIGIN ?? "",
+  ].filter(Boolean)
 );
 
 function postToShell(message: RuntimeMessage) {
   if (typeof window === "undefined" || window.parent === window) return;
-  for (const origin of SHELL_ORIGINS) window.parent.postMessage(message, origin);
+  for (const origin of SHELL_ORIGINS)
+    window.parent.postMessage(message, origin);
 }
 
 export const Route = createFileRoute("/preview/$category/$design")({
@@ -44,7 +52,8 @@ export const Route = createFileRoute("/preview/$category/$design")({
 });
 
 function PreviewError(props: Parameters<typeof DesignError>[0]) {
-  const message = props.error instanceof Error ? props.error.message : String(props.error);
+  const message =
+    props.error instanceof Error ? props.error.message : String(props.error);
   useEffect(() => postToShell({ type: "wf:error", message }), [message]);
   return <DesignError {...props} />;
 }
@@ -64,7 +73,9 @@ function PreviewRoute() {
   const found = getCategory(category);
   const states = found?.designs.find((d) => d.slug === design)?.states ?? [];
   const screenState = parseScreenState(state, states);
-  const Showcase = found ? getShowcase(found.slug as CategorySlug, design) : undefined;
+  const Showcase = found
+    ? getShowcase(found.slug as CategorySlug, design)
+    : undefined;
 
   const latest = useRef({ category, design, state, dir });
   latest.current = { category, design, state, dir };
@@ -77,8 +88,15 @@ function PreviewRoute() {
       const current = latest.current;
       switch (message.type) {
         case "wf:navigate":
-          if (message.category === current.category && message.design === current.design) {
-            postToShell({ type: "wf:ready", category: current.category, design: current.design });
+          if (
+            message.category === current.category &&
+            message.design === current.design
+          ) {
+            postToShell({
+              type: "wf:ready",
+              category: current.category,
+              design: current.design,
+            });
             return;
           }
           // A new screen starts in its default state, left to right unless the site says otherwise.
@@ -94,13 +112,20 @@ function PreviewRoute() {
           return;
         case "wf:theme":
           setPreference(message.mode);
-          if (message.palette !== undefined && isOrbitThemePalette(message.palette)) setPalette(message.palette);
+          if (
+            message.palette !== undefined &&
+            isOrbitThemePalette(message.palette)
+          )
+            setPalette(message.palette);
           return;
         case "wf:state":
           void navigate({
             to: "/preview/$category/$design",
             params: { category: current.category, design: current.design },
-            search: { dir: current.dir, state: message.state === "ready" ? undefined : message.state },
+            search: {
+              dir: current.dir,
+              state: message.state === "ready" ? undefined : message.state,
+            },
             replace: true,
           });
           return;
@@ -108,7 +133,10 @@ function PreviewRoute() {
           void navigate({
             to: "/preview/$category/$design",
             params: { category: current.category, design: current.design },
-            search: { state: current.state, dir: message.dir === "rtl" ? "rtl" : undefined },
+            search: {
+              state: current.state,
+              dir: message.dir === "rtl" ? "rtl" : undefined,
+            },
             replace: true,
           });
           return;
@@ -120,7 +148,11 @@ function PreviewRoute() {
 
   const missing = !Showcase;
   useEffect(() => {
-    if (missing) postToShell({ type: "wf:error", message: `No screen ${category}/${design}` });
+    if (missing)
+      postToShell({
+        type: "wf:error",
+        message: `No screen ${category}/${design}`,
+      });
   }, [missing, category, design]);
 
   if (!found) return <DesignNotFound category={category} />;
@@ -130,7 +162,10 @@ function PreviewRoute() {
   return (
     <ShowcaseStateProvider value={screenState}>
       <DirectionProvider direction={direction}>
-        <div className="relative min-h-svh bg-background text-foreground" dir={dir}>
+        <div
+          className="relative min-h-svh bg-background text-foreground"
+          dir={dir}
+        >
           <Fragment key={`${category}/${design}/${replays}`}>
             <Showcase />
             <ReadyMarker category={category} design={design} />
@@ -147,7 +182,13 @@ function PreviewRoute() {
  * Tools (the responsive audit, browser checks) wait for data-design-ready;
  * the site waits for wf:ready.
  */
-function ReadyMarker({ category, design }: { category: string; design: string }) {
+function ReadyMarker({
+  category,
+  design,
+}: {
+  category: string;
+  design: string;
+}) {
   useEffect(() => {
     const root = document.documentElement;
     root.setAttribute("data-design-ready", `${category}/${design}`);

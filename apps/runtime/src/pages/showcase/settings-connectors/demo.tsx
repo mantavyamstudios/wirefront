@@ -31,7 +31,8 @@ import { DevlFrame } from "../_devl-frame";
 import * as fixtures from "./fixtures";
 import { ConnectorMarketplace } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 const icons = {
   relay: <MessagesSquareIcon />,
@@ -59,7 +60,13 @@ export function SettingsConnectorsShowcasePage() {
   return (
     <DevlFrame>
       <ConnectorMarketplace
-        apps={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listConnectorApps}
+        apps={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? []
+              : fixtures.listConnectorApps
+        }
         error="The app directory didn’t load. Check your connection and try again."
         icons={icons}
         onConnect={async (id) => {
@@ -74,7 +81,13 @@ export function SettingsConnectorsShowcasePage() {
         onRequestApp={() => wait(500)}
         onRetry={() => {}}
         onSettingChange={() => wait(300)}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
         workspace={fixtures.workspace}
       />
     </DevlFrame>

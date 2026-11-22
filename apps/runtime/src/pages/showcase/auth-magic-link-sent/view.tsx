@@ -6,7 +6,11 @@ import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Card } from "@wirefront/ui/card";
 import { cn } from "@wirefront/ui/lib/utils";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ExternalLinkIcon } from "lucide-react";
@@ -47,10 +51,20 @@ function formatCountdown(s: number) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
-function MagicLinkSentScreen({ email, onResend, resendAfter = 30, expiresInMinutes, mailApp, changeEmailHref, className }: MagicLinkSentProps) {
+function MagicLinkSentScreen({
+  email,
+  onResend,
+  resendAfter = 30,
+  expiresInMinutes,
+  mailApp,
+  changeEmailHref,
+  className,
+}: MagicLinkSentProps) {
   const t = useMessages("magicLinkSent", MAGIC_LINK_SENT_MESSAGES);
   const [left, setLeft] = useState(resendAfter);
-  const resend = useAction(onResend ?? (async () => {}), { onSuccess: () => setLeft(resendAfter) });
+  const resend = useAction(onResend ?? (async () => {}), {
+    onSuccess: () => setLeft(resendAfter),
+  });
 
   useEffect(() => {
     if (left <= 0) return;
@@ -59,7 +73,12 @@ function MagicLinkSentScreen({ email, onResend, resendAfter = 30, expiresInMinut
   }, [left]);
 
   return (
-    <div className={cn("relative flex min-h-svh items-center-safe justify-center bg-background px-4 py-10", className)}>
+    <div
+      className={cn(
+        "relative flex min-h-svh items-center-safe justify-center bg-background px-4 py-10",
+        className
+      )}
+    >
       <style>{`
         @media (prefers-reduced-motion: reduce) {
           [data-magic-float] { animation: none !important; }
@@ -86,7 +105,8 @@ function MagicLinkSentScreen({ email, onResend, resendAfter = 30, expiresInMinut
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "radial-gradient(50% 40% at 50% 0%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%)",
+          background:
+            "radial-gradient(50% 40% at 50% 0%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%)",
         }}
       />
 
@@ -94,21 +114,37 @@ function MagicLinkSentScreen({ email, onResend, resendAfter = 30, expiresInMinut
         <div className="flex flex-col items-center text-center">
           <EnvelopeArt />
 
-          <div className="mt-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
-          <h1 className="mt-3 font-heading text-3xl tracking-tight">{t.title}</h1>
+          <div className="mt-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+            {t.eyebrow}
+          </div>
+          <h1 className="mt-3 font-heading text-3xl tracking-tight">
+            {t.title}
+          </h1>
 
           <p className="mt-3 text-muted-foreground text-sm">{t.sentTo}</p>
-          <div className="mt-1 break-all font-mono text-base text-foreground">{email}</div>
+          <div className="mt-1 break-all font-mono text-base text-foreground">
+            {email}
+          </div>
 
           <p className="mt-4 max-w-xs text-muted-foreground text-xs leading-relaxed">
             {t.instructions}
-            {expiresInMinutes ? ` ${interpolate(t.expires, { minutes: expiresInMinutes })}` : null}
+            {expiresInMinutes
+              ? ` ${interpolate(t.expires, { minutes: expiresInMinutes })}`
+              : null}
           </p>
 
           {mailApp || onResend ? (
             <div className="mt-7 flex w-full flex-col gap-2">
               {mailApp ? (
-                <a className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full")} href={mailApp.href} rel="noreferrer" target="_blank">
+                <a
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "lg" }),
+                    "w-full"
+                  )}
+                  href={mailApp.href}
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   {interpolate(t.openMailApp, { name: mailApp.name })}
                   <ExternalLinkIcon />
                 </a>
@@ -122,7 +158,9 @@ function MagicLinkSentScreen({ email, onResend, resendAfter = 30, expiresInMinut
                   type="button"
                   variant="ghost"
                 >
-                  {left > 0 ? interpolate(t.resendIn, { time: formatCountdown(left) }) : t.resend}
+                  {left > 0
+                    ? interpolate(t.resendIn, { time: formatCountdown(left) })
+                    : t.resend}
                 </Button>
               ) : null}
               {resend.error ? (
@@ -137,7 +175,10 @@ function MagicLinkSentScreen({ email, onResend, resendAfter = 30, expiresInMinut
             {changeEmailHref ? (
               <>
                 {t.noLinkOr}{" "}
-                <WirefrontLink className="underline hover:text-foreground" href={changeEmailHref}>
+                <WirefrontLink
+                  className="underline hover:text-foreground"
+                  href={changeEmailHref}
+                >
                   {t.differentEmail}
                 </WirefrontLink>
                 .

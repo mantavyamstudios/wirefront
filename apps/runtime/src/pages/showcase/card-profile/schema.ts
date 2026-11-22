@@ -31,5 +31,11 @@ export type ProfileSummary = z.infer<typeof ProfileSummary>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getProfileSummary: { method: "GET", path: "/people/{id}/summary", summary: "A person's card", params: z.object({ id: z.string() }), response: ProfileSummary },
+  getProfileSummary: {
+    method: "GET",
+    path: "/people/{id}/summary",
+    summary: "A person's card",
+    params: z.object({ id: z.string() }),
+    response: ProfileSummary,
+  },
 });

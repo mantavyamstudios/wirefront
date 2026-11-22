@@ -3,7 +3,13 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const MixSlice = z.object({ id: z.string(), name: z.string(), amount: z.number().nonnegative() }).meta({ id: "MixSlice" });
+export const MixSlice = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    amount: z.number().nonnegative(),
+  })
+  .meta({ id: "MixSlice" });
 export type MixSlice = z.infer<typeof MixSlice>;
 
 export const RevenueMix = z
@@ -18,5 +24,10 @@ export type RevenueMix = z.infer<typeof RevenueMix>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getRevenueMix: { method: "GET", path: "/reports/revenue-mix", summary: "Revenue by source for the quarter", response: RevenueMix },
+  getRevenueMix: {
+    method: "GET",
+    path: "/reports/revenue-mix",
+    summary: "Revenue by source for the quarter",
+    response: RevenueMix,
+  },
 });

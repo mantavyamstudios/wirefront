@@ -13,16 +13,21 @@ const demoNow = () => new Date(fixtures.now);
 function runQuery(query: ProjectsListQuery) {
   const search = query.search?.trim().toLowerCase();
   const f = query.filters ?? {};
-  const since = f.activeWithinDays ? Date.parse(fixtures.now) - f.activeWithinDays * 86_400_000 : 0;
+  const since = f.activeWithinDays
+    ? Date.parse(fixtures.now) - f.activeWithinDays * 86_400_000
+    : 0;
   const items = fixtures.projects.filter(
     (p) =>
       (!search || p.name.toLowerCase().includes(search)) &&
       (!f.status || p.status === f.status) &&
       (!f.owner || p.owner === f.owner) &&
-      Date.parse(p.lastActiveAt) >= since,
+      Date.parse(p.lastActiveAt) >= since
   );
   const start = (query.page - 1) * query.pageSize;
-  return { items: items.slice(start, start + query.pageSize), total: items.length };
+  return {
+    items: items.slice(start, start + query.pageSize),
+    total: items.length,
+  };
 }
 
 export function FilterToolbarShowcasePage() {
@@ -34,7 +39,9 @@ export function FilterToolbarShowcasePage() {
         <div className="mx-auto max-w-5xl">
           <header className="mb-6">
             <h1 className="font-heading text-xl">Toolbar filters</h1>
-            <p className="text-muted-foreground text-sm">One row · search, scoped selects, date range, density toggle.</p>
+            <p className="text-muted-foreground text-sm">
+              One row · search, scoped selects, date range, density toggle.
+            </p>
           </header>
           <ProjectsToolbar
             onCreateView={() => {}}

@@ -8,7 +8,8 @@ export const listLatestArticles: ArticleTeaser[] = [
     id: "particle-fields",
     category: "Engineering",
     title: "Building responsive particle fields with WebGL",
-    excerpt: "How we render 40k animated dots at 120fps without dropping frames on low-end devices.",
+    excerpt:
+      "How we render 40k animated dots at 120fps without dropping frames on low-end devices.",
     author: { name: "Lina Rodrigues" },
     readMinutes: 8,
     href: "#particle-fields",
@@ -18,7 +19,8 @@ export const listLatestArticles: ArticleTeaser[] = [
     id: "type-system",
     category: "Design",
     title: "Anatomy of a type system you can ship",
-    excerpt: "Three rules we follow when designing modular scales and weight ramps for product UI.",
+    excerpt:
+      "Three rules we follow when designing modular scales and weight ramps for product UI.",
     author: { name: "Priya Joshi" },
     readMinutes: 5,
     href: "#type-system",
@@ -28,7 +30,8 @@ export const listLatestArticles: ArticleTeaser[] = [
     id: "metrics",
     category: "Product",
     title: "Metrics that don’t lie: a guide to honest dashboards",
-    excerpt: "Why we ditched “engagement” and started measuring time-to-first-value instead.",
+    excerpt:
+      "Why we ditched “engagement” and started measuring time-to-first-value instead.",
     author: { name: "Marc Klein" },
     readMinutes: 12,
     href: "#metrics",

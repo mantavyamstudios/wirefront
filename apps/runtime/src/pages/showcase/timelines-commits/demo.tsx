@@ -15,11 +15,23 @@ export function TimelinesCommitsShowcasePage() {
     <WirefrontProvider locale="en-US" now={demoNow}>
       <CommitGraph
         branch={fixtures.branch}
-        commits={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listCommits}
+        commits={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? []
+              : fixtures.listCommits
+        }
         error="Commits didn’t load. Check your connection and try again."
         onRetry={() => {}}
         repo={fixtures.repo}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

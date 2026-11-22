@@ -20,11 +20,46 @@ import {
 } from "@wirefront/ui/dropdown-menu";
 import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
-import { ChevronDownIcon, ChevronRightIcon, ChevronsUpDownIcon, KeyboardIcon, LogOutIcon, MenuIcon, PanelLeftIcon, PlusIcon, SearchIcon, SettingsIcon, SquarePenIcon, UserRoundIcon, XIcon } from "lucide-react";
-import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
-import { type ReactElement, type ReactNode, useEffect, useId, useRef, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@wirefront/ui/tooltip";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ChevronsUpDownIcon,
+  KeyboardIcon,
+  LogOutIcon,
+  MenuIcon,
+  PanelLeftIcon,
+  PlusIcon,
+  SearchIcon,
+  SettingsIcon,
+  SquarePenIcon,
+  UserRoundIcon,
+  XIcon,
+} from "lucide-react";
+import {
+  AnimatePresence,
+  LayoutGroup,
+  MotionConfig,
+  motion,
+} from "motion/react";
+import {
+  type ReactElement,
+  type ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
 import type { HairlineProject, HairlineWorkspace } from "./schema";
 
@@ -92,7 +127,17 @@ export interface HairlineShellProps {
   className?: string;
 }
 
-const SWATCH = ["", "bg-category-1", "bg-category-2", "bg-category-3", "bg-category-4", "bg-category-5", "bg-category-6", "bg-category-7", "bg-category-8"];
+const SWATCH = [
+  "",
+  "bg-category-1",
+  "bg-category-2",
+  "bg-category-3",
+  "bg-category-4",
+  "bg-category-5",
+  "bg-category-6",
+  "bg-category-7",
+  "bg-category-8",
+];
 const spring = { type: "spring", stiffness: 500, damping: 40 } as const;
 const initialsOf = (name: string) =>
   name
@@ -102,7 +147,15 @@ const initialsOf = (name: string) =>
     .map((w) => w[0]?.toUpperCase())
     .join("");
 
-function RailTip({ collapsed, label, children }: { collapsed: boolean; label: ReactNode; children: ReactElement }) {
+function RailTip({
+  collapsed,
+  label,
+  children,
+}: {
+  collapsed: boolean;
+  label: ReactNode;
+  children: ReactElement;
+}) {
   return (
     <Tooltip disabled={!collapsed}>
       <TooltipTrigger render={children} />
@@ -113,7 +166,10 @@ function RailTip({ collapsed, label, children }: { collapsed: boolean; label: Re
   );
 }
 
-type SidebarProps = Omit<HairlineShellProps, "children" | "title" | "actions" | "footer" | "defaultCollapsed" | "className"> & {
+type SidebarProps = Omit<
+  HairlineShellProps,
+  "children" | "title" | "actions" | "footer" | "defaultCollapsed" | "className"
+> & {
   collapsed: boolean;
   onToggle?: () => void;
   onClose?: () => void;
@@ -142,29 +198,54 @@ function Sidebar({
 }: SidebarProps) {
   const t = useMessages("hairlineShell", HAIRLINE_SHELL_MESSAGES);
   const [projectsOpen, setProjectsOpen] = useState(true);
-  const ws = workspaces.find((w) => w.id === currentWorkspaceId) ?? workspaces[0];
+  const ws =
+    workspaces.find((w) => w.id === currentWorkspaceId) ?? workspaces[0];
   const group = useId();
-  const fade = cn("transition-opacity duration-150", collapsed && "pointer-events-none opacity-0");
+  const fade = cn(
+    "transition-opacity duration-150",
+    collapsed && "pointer-events-none opacity-0"
+  );
   const row =
     "group/row relative flex h-7 w-full cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2.5 text-start text-[13px] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset pointer-coarse:h-11";
 
-  const link = (id: string, label: string, href: string, icon: ReactNode, count?: number) => {
+  const link = (
+    id: string,
+    label: string,
+    href: string,
+    icon: ReactNode,
+    count?: number
+  ) => {
     const on = activeId === id;
     return (
       <RailTip collapsed={collapsed} key={id} label={label}>
         <WirefrontLink
           aria-current={on ? "page" : undefined}
-          className={cn(row, on ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground")}
+          className={cn(
+            row,
+            on
+              ? "bg-accent text-foreground"
+              : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+          )}
           href={href}
           onClick={onNavigate}
         >
-          {on && <motion.span className="absolute inset-s-0 top-1.5 bottom-1.5 w-0.5 rounded-full bg-foreground" layoutId="hairline-active" transition={spring} />}
+          {on && (
+            <motion.span
+              className="absolute inset-s-0 top-1.5 bottom-1.5 w-0.5 rounded-full bg-foreground"
+              layoutId="hairline-active"
+              transition={spring}
+            />
+          )}
           {icon}
           <span className={cn("min-w-0 flex-1 truncate", fade)}>{label}</span>
           {count ? (
-            <span className={cn("text-muted-foreground text-xs tabular-nums", fade)}>
+            <span
+              className={cn("text-muted-foreground text-xs tabular-nums", fade)}
+            >
               <span aria-hidden>{count}</span>
-              <span className="sr-only">, {interpolate(t.count, { count })}</span>
+              <span className="sr-only">
+                , {interpolate(t.count, { count })}
+              </span>
             </span>
           ) : null}
         </WirefrontLink>
@@ -172,11 +253,14 @@ function Sidebar({
     );
   };
 
-  const hasAccountMenu = profileHref || settingsHref || onShortcuts || onSignOut;
+  const hasAccountMenu =
+    profileHref || settingsHref || onShortcuts || onSignOut;
   const accountBody = (
     <>
       <Avatar className="size-5 shrink-0">
-        <AvatarFallback className="bg-muted text-[9px]">{initialsOf(user.name)}</AvatarFallback>
+        <AvatarFallback className="bg-muted text-[9px]">
+          {initialsOf(user.name)}
+        </AvatarFallback>
       </Avatar>
       <span className={cn("min-w-0 flex-1 truncate", fade)}>{user.name}</span>
     </>
@@ -189,17 +273,40 @@ function Sidebar({
           {ws ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="flex h-8 min-w-0 flex-1 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2 text-start outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent">
-                <span aria-hidden className={cn("flex size-5 shrink-0 items-center justify-center rounded-[calc(var(--radius)*0.5)] font-semibold text-[11px] text-white", SWATCH[ws.color])}>
+                <span
+                  aria-hidden
+                  className={cn(
+                    "flex size-5 shrink-0 items-center justify-center rounded-[calc(var(--radius)*0.5)] font-semibold text-[11px] text-white",
+                    SWATCH[ws.color]
+                  )}
+                >
                   {ws.name.charAt(0).toUpperCase()}
                 </span>
-                <span className={cn("min-w-0 truncate font-medium", fade)}>{ws.name}</span>
-                {collapsed ? <span className="sr-only">{interpolate(t.currentWorkspace, { name: ws.name })}</span> : null}
-                <ChevronDownIcon aria-hidden className={cn("size-3.5 shrink-0 text-muted-foreground", fade)} />
+                <span className={cn("min-w-0 truncate font-medium", fade)}>
+                  {ws.name}
+                </span>
+                {collapsed ? (
+                  <span className="sr-only">
+                    {interpolate(t.currentWorkspace, { name: ws.name })}
+                  </span>
+                ) : null}
+                <ChevronDownIcon
+                  aria-hidden
+                  className={cn(
+                    "size-3.5 shrink-0 text-muted-foreground",
+                    fade
+                  )}
+                />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-56">
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>{t.switchWorkspace}</DropdownMenuLabel>
-                  <DropdownMenuRadioGroup onValueChange={(v) => v !== ws.id && onSwitchWorkspace(v as string)} value={ws.id}>
+                  <DropdownMenuRadioGroup
+                    onValueChange={(v) =>
+                      v !== ws.id && onSwitchWorkspace(v as string)
+                    }
+                    value={ws.id}
+                  >
                     {workspaces.map((w) => (
                       <DropdownMenuRadioItem key={w.id} value={w.id}>
                         {w.name}
@@ -220,24 +327,49 @@ function Sidebar({
             </DropdownMenu>
           ) : null}
           {onClose ? (
-            <Button aria-label={t.closeNavigation} onClick={onClose} size="icon-sm" variant="ghost">
+            <Button
+              aria-label={t.closeNavigation}
+              onClick={onClose}
+              size="icon-sm"
+              variant="ghost"
+            >
               <XIcon />
             </Button>
           ) : onNew ? (
-            <Button aria-label={t.new} className={cn(collapsed && "hidden")} onClick={onNew} size="icon-sm" variant="ghost">
+            <Button
+              aria-label={t.new}
+              className={cn(collapsed && "hidden")}
+              onClick={onNew}
+              size="icon-sm"
+              variant="ghost"
+            >
               <SquarePenIcon />
             </Button>
           ) : null}
         </div>
 
-        <nav aria-label={t.navigation} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-1.5 py-2 scrollbar-thin">
+        <nav
+          aria-label={t.navigation}
+          className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-1.5 py-2 scrollbar-thin"
+        >
           <div className="flex flex-col gap-px">
             {onSearch ? (
               <RailTip collapsed={collapsed} label={t.search}>
-                <button className={cn(row, "text-muted-foreground hover:bg-accent/60 hover:text-foreground")} onClick={onSearch} type="button">
+                <button
+                  className={cn(
+                    row,
+                    "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+                  )}
+                  onClick={onSearch}
+                  type="button"
+                >
                   <SearchIcon aria-hidden className="size-4 shrink-0" />
-                  <span className={cn("min-w-0 flex-1 truncate", fade)}>{t.search}</span>
-                  <Kbd className={cn("h-4.5 min-w-4.5 text-[10px]", fade)}>/</Kbd>
+                  <span className={cn("min-w-0 flex-1 truncate", fade)}>
+                    {t.search}
+                  </span>
+                  <Kbd className={cn("h-4.5 min-w-4.5 text-[10px]", fade)}>
+                    /
+                  </Kbd>
                 </button>
               </RailTip>
             ) : null}
@@ -248,10 +380,15 @@ function Sidebar({
                 n.href,
                 <span className="relative shrink-0 [&_svg]:size-4">
                   {n.icon}
-                  {collapsed && n.count ? <span aria-hidden className="absolute -inset-e-0.5 -top-0.5 size-1.5 rounded-full bg-info ring-2 ring-background" /> : null}
+                  {collapsed && n.count ? (
+                    <span
+                      aria-hidden
+                      className="absolute -inset-e-0.5 -top-0.5 size-1.5 rounded-full bg-info ring-2 ring-background"
+                    />
+                  ) : null}
                 </span>,
-                n.count,
-              ),
+                n.count
+              )
             )}
           </div>
 
@@ -260,29 +397,57 @@ function Sidebar({
               <div className="relative mt-4 mb-1 flex h-6 items-center px-2.5">
                 <button
                   aria-expanded={projectsOpen}
-                  className={cn("flex cursor-pointer items-center gap-1 rounded text-muted-foreground text-xs outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring", fade)}
+                  className={cn(
+                    "flex cursor-pointer items-center gap-1 rounded text-muted-foreground text-xs outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring",
+                    fade
+                  )}
                   onClick={() => setProjectsOpen((o) => !o)}
                   tabIndex={collapsed ? -1 : 0}
                   type="button"
                 >
                   {t.projects}
-                  <ChevronRightIcon aria-hidden className={cn("size-3 transition-transform duration-200 motion-reduce:transition-none rtl:rotate-180", projectsOpen && "rotate-90 rtl:rotate-90")} />
+                  <ChevronRightIcon
+                    aria-hidden
+                    className={cn(
+                      "size-3 transition-transform duration-200 motion-reduce:transition-none rtl:rotate-180",
+                      projectsOpen && "rotate-90 rtl:rotate-90"
+                    )}
+                  />
                 </button>
-                {collapsed && <span aria-hidden className="absolute inset-x-3 top-1/2 h-px bg-border" />}
+                {collapsed && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-3 top-1/2 h-px bg-border"
+                  />
+                )}
               </div>
               <AnimatePresence initial={false}>
                 {(projectsOpen || collapsed) && (
-                  <motion.div animate={{ height: "auto", opacity: 1 }} className="flex flex-col gap-px overflow-hidden" exit={{ height: 0, opacity: 0 }} initial={{ height: 0, opacity: 0 }} transition={spring}>
+                  <motion.div
+                    animate={{ height: "auto", opacity: 1 }}
+                    className="flex flex-col gap-px overflow-hidden"
+                    exit={{ height: 0, opacity: 0 }}
+                    initial={{ height: 0, opacity: 0 }}
+                    transition={spring}
+                  >
                     {projects.map((p) =>
                       link(
                         p.id,
                         p.name,
                         p.href,
-                        <span aria-hidden className="flex size-4 shrink-0 items-center justify-center">
-                          <span className={cn("size-2.5 rounded-[calc(var(--radius)*0.3)]", SWATCH[p.color])} />
+                        <span
+                          aria-hidden
+                          className="flex size-4 shrink-0 items-center justify-center"
+                        >
+                          <span
+                            className={cn(
+                              "size-2.5 rounded-[calc(var(--radius)*0.3)]",
+                              SWATCH[p.color]
+                            )}
+                          />
                         </span>,
-                        p.count,
-                      ),
+                        p.count
+                      )
                     )}
                   </motion.div>
                 )}
@@ -296,18 +461,32 @@ function Sidebar({
             <DropdownMenu>
               <DropdownMenuTrigger className="flex h-7 min-w-0 flex-1 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-2 text-start outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-accent">
                 {accountBody}
-                {collapsed ? <span className="sr-only">{interpolate(t.account, { name: user.name })}</span> : null}
-                <ChevronsUpDownIcon aria-hidden className={cn("size-3.5 shrink-0 text-muted-foreground", fade)} />
+                {collapsed ? (
+                  <span className="sr-only">
+                    {interpolate(t.account, { name: user.name })}
+                  </span>
+                ) : null}
+                <ChevronsUpDownIcon
+                  aria-hidden
+                  className={cn(
+                    "size-3.5 shrink-0 text-muted-foreground",
+                    fade
+                  )}
+                />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-52" side="top">
                 {profileHref ? (
-                  <DropdownMenuItem render={<WirefrontLink href={profileHref} />}>
+                  <DropdownMenuItem
+                    render={<WirefrontLink href={profileHref} />}
+                  >
                     <UserRoundIcon />
                     {t.profile}
                   </DropdownMenuItem>
                 ) : null}
                 {settingsHref ? (
-                  <DropdownMenuItem render={<WirefrontLink href={settingsHref} />}>
+                  <DropdownMenuItem
+                    render={<WirefrontLink href={settingsHref} />}
+                  >
                     <SettingsIcon />
                     {t.settings}
                   </DropdownMenuItem>
@@ -331,7 +510,9 @@ function Sidebar({
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex h-7 min-w-0 flex-1 items-center gap-2 overflow-hidden px-2">{accountBody}</div>
+            <div className="flex h-7 min-w-0 flex-1 items-center gap-2 overflow-hidden px-2">
+              {accountBody}
+            </div>
           )}
           {onToggle ? (
             <RailTip
@@ -343,7 +524,13 @@ function Sidebar({
                 </span>
               }
             >
-              <Button aria-label={collapsed ? t.expand : t.collapse} className={cn(collapsed && "hidden")} onClick={onToggle} size="icon-sm" variant="ghost">
+              <Button
+                aria-label={collapsed ? t.expand : t.collapse}
+                className={cn(collapsed && "hidden")}
+                onClick={onToggle}
+                size="icon-sm"
+                variant="ghost"
+              >
                 <PanelLeftIcon className="rtl:-scale-x-100" />
               </Button>
             </RailTip>
@@ -354,7 +541,15 @@ function Sidebar({
   );
 }
 
-export function HairlineShell({ children, title, actions, footer, defaultCollapsed = false, className, ...sidebar }: HairlineShellProps) {
+export function HairlineShell({
+  children,
+  title,
+  actions,
+  footer,
+  defaultCollapsed = false,
+  className,
+  ...sidebar
+}: HairlineShellProps) {
   const t = useMessages("hairlineShell", HAIRLINE_SHELL_MESSAGES);
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
   const [drawer, setDrawer] = useState(false);
@@ -374,7 +569,11 @@ export function HairlineShell({ children, title, actions, footer, defaultCollaps
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && drawer) setDrawer(false);
       const target = e.target;
-      if (target instanceof Element && target.closest("input, textarea, select, [contenteditable='true']")) return;
+      if (
+        target instanceof Element &&
+        target.closest("input, textarea, select, [contenteditable='true']")
+      )
+        return;
       if (e.key === "[") setCollapsed((c) => !c);
       if (e.key === "/" && onSearch) {
         e.preventDefault();
@@ -388,15 +587,38 @@ export function HairlineShell({ children, title, actions, footer, defaultCollaps
   return (
     <MotionConfig reducedMotion="user">
       <TooltipProvider delay={400}>
-        <div className={cn("@container relative isolate flex h-svh w-full overflow-hidden bg-background text-foreground text-sm", className)} ref={rootRef}>
-          <motion.aside animate={{ width: collapsed ? 48 : 232 }} aria-label={t.sidebar} className="hidden shrink-0 overflow-hidden border-e @3xl:block" initial={false} transition={spring}>
-            <Sidebar {...sidebar} collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
+        <div
+          className={cn(
+            "@container relative isolate flex h-svh w-full overflow-hidden bg-background text-foreground text-sm",
+            className
+          )}
+          ref={rootRef}
+        >
+          <motion.aside
+            animate={{ width: collapsed ? 48 : 232 }}
+            aria-label={t.sidebar}
+            className="hidden shrink-0 overflow-hidden border-e @3xl:block"
+            initial={false}
+            transition={spring}
+          >
+            <Sidebar
+              {...sidebar}
+              collapsed={collapsed}
+              onToggle={() => setCollapsed((c) => !c)}
+            />
           </motion.aside>
 
           <AnimatePresence>
             {drawer && (
               <>
-                <motion.div animate={{ opacity: 1 }} aria-hidden className="absolute inset-0 z-40 bg-black/32 @3xl:hidden" exit={{ opacity: 0 }} initial={{ opacity: 0 }} onClick={() => setDrawer(false)} />
+                <motion.div
+                  animate={{ opacity: 1 }}
+                  aria-hidden
+                  className="absolute inset-0 z-40 bg-black/32 @3xl:hidden"
+                  exit={{ opacity: 0 }}
+                  initial={{ opacity: 0 }}
+                  onClick={() => setDrawer(false)}
+                />
                 <motion.div
                   animate={{ x: 0 }}
                   aria-label={t.navigation}
@@ -409,7 +631,12 @@ export function HairlineShell({ children, title, actions, footer, defaultCollaps
                   tabIndex={-1}
                   transition={spring}
                 >
-                  <Sidebar {...sidebar} collapsed={false} onClose={() => setDrawer(false)} onNavigate={() => setDrawer(false)} />
+                  <Sidebar
+                    {...sidebar}
+                    collapsed={false}
+                    onClose={() => setDrawer(false)}
+                    onNavigate={() => setDrawer(false)}
+                  />
                 </motion.div>
               </>
             )}
@@ -417,19 +644,37 @@ export function HairlineShell({ children, title, actions, footer, defaultCollaps
 
           <main className="flex min-w-0 flex-1 flex-col">
             <header className="flex h-11 shrink-0 items-center gap-2 border-b px-2 @3xl:px-3">
-              <Button aria-label={t.openNavigation} className="@3xl:hidden" onClick={() => setDrawer(true)} size="icon-sm" variant="ghost">
+              <Button
+                aria-label={t.openNavigation}
+                className="@3xl:hidden"
+                onClick={() => setDrawer(true)}
+                size="icon-sm"
+                variant="ghost"
+              >
                 <MenuIcon />
               </Button>
               {collapsed && (
-                <Button aria-label={t.expand} className="hidden @3xl:inline-flex" onClick={() => setCollapsed(false)} size="icon-sm" variant="ghost">
+                <Button
+                  aria-label={t.expand}
+                  className="hidden @3xl:inline-flex"
+                  onClick={() => setCollapsed(false)}
+                  size="icon-sm"
+                  variant="ghost"
+                >
                   <PanelLeftIcon className="rtl:-scale-x-100" />
                 </Button>
               )}
-              <div className="flex min-w-0 flex-1 items-center gap-1 ps-1">{title}</div>
+              <div className="flex min-w-0 flex-1 items-center gap-1 ps-1">
+                {title}
+              </div>
               {actions}
             </header>
             <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
-            {footer ? <footer className="flex h-10 shrink-0 items-center gap-3 border-t px-4 text-muted-foreground text-xs @3xl:px-5">{footer}</footer> : null}
+            {footer ? (
+              <footer className="flex h-10 shrink-0 items-center gap-3 border-t px-4 text-muted-foreground text-xs @3xl:px-5">
+                {footer}
+              </footer>
+            ) : null}
           </main>
         </div>
       </TooltipProvider>

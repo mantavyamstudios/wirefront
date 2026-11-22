@@ -4,8 +4,17 @@
 import * as fixtures from "./fixtures";
 import { ProductCards } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function CardProductShowcasePage() {
-  return <ProductCards collection="spring drop" onAddToBag={() => wait(600)} onWishlist={() => wait(400)} products={fixtures.products} total={fixtures.listCollection.total} />;
+  return (
+    <ProductCards
+      collection="spring drop"
+      onAddToBag={() => wait(600)}
+      onWishlist={() => wait(400)}
+      products={fixtures.products}
+      total={fixtures.listCollection.total}
+    />
+  );
 }

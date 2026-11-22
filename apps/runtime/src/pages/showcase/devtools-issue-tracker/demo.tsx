@@ -14,7 +14,11 @@ const demoNow = () => new Date(fixtures.now);
 const save = () => new Promise<void>((resolve) => setTimeout(resolve, 200));
 
 export function DevtoolsIssueTrackerShowcasePage() {
-  const next = useRef(Math.max(...fixtures.listIssues.map((i) => Number(i.id.split("-")[1]) || 0)) + 1);
+  const next = useRef(
+    Math.max(
+      ...fixtures.listIssues.map((i) => Number(i.id.split("-")[1]) || 0)
+    ) + 1
+  );
   return (
     <WirefrontProvider locale="en-US" now={demoNow} timeZone="UTC">
       <DevlFrame>
@@ -26,7 +30,11 @@ export function DevtoolsIssueTrackerShowcasePage() {
           onComment={save}
           onCreate={async ({ status }) => {
             await save();
-            return ok({ ...fixtures.createIssue, id: `${fixtures.team.key}-${next.current++}`, status });
+            return ok({
+              ...fixtures.createIssue,
+              id: `${fixtures.team.key}-${next.current++}`,
+              status,
+            });
           }}
           onDelete={save}
           onUpdate={save}

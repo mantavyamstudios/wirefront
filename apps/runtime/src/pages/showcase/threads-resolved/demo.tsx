@@ -7,12 +7,18 @@ import * as fixtures from "./fixtures";
 import { ResolvedThreads } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ThreadsResolvedShowcasePage() {
   return (
     <WirefrontProvider locale="en-US" now={demoNow} timeZone="UTC">
-      <ResolvedThreads onReopen={() => wait(400)} onShowOpen={() => {}} openCount={fixtures.listResolvedThreads.openCount} threads={fixtures.listResolvedThreads.threads} />
+      <ResolvedThreads
+        onReopen={() => wait(400)}
+        onShowOpen={() => {}}
+        openCount={fixtures.listResolvedThreads.openCount}
+        threads={fixtures.listResolvedThreads.threads}
+      />
     </WirefrontProvider>
   );
 }

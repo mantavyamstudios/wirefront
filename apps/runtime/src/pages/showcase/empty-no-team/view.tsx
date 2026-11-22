@@ -3,10 +3,18 @@
 "use client";
 
 import { Button } from "@wirefront/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import { CheckIcon, CopyIcon, MailPlusIcon } from "lucide-react";
 import { useId, useState } from "react";
 
@@ -14,7 +22,8 @@ import { useId, useState } from "react";
 export const NO_TEAM_MESSAGES = {
   members: "Members · {count}",
   title: "It’s just you in here.",
-  description: "Add teammates to share projects, leave comments, and review each other’s work.",
+  description:
+    "Add teammates to share projects, leave comments, and review each other’s work.",
   inviteLink: "Invite link",
   copy: "Copy",
   copied: "Copied",
@@ -37,7 +46,13 @@ export interface NoTeamProps {
   className?: string;
 }
 
-function NoTeamScreen({ userName, inviteUrl, onInviteByEmail, settingsHref, className }: NoTeamProps) {
+function NoTeamScreen({
+  userName,
+  inviteUrl,
+  onInviteByEmail,
+  settingsHref,
+  className,
+}: NoTeamProps) {
   const t = useMessages("noTeam", NO_TEAM_MESSAGES);
   const id = useId();
   const [copy, setCopy] = useState<"idle" | "copied" | "failed">("idle");
@@ -52,10 +67,24 @@ function NoTeamScreen({ userName, inviteUrl, onInviteByEmail, settingsHref, clas
   };
 
   return (
-    <div className={cn("relative min-h-svh overflow-x-clip bg-background", className)}>
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[60%]" style={{ background: "radial-gradient(60% 80% at 50% 0%, color-mix(in srgb, var(--foreground) 5%, transparent) 0%, transparent 70%)" }} />
+    <div
+      className={cn(
+        "relative min-h-svh overflow-x-clip bg-background",
+        className
+      )}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[60%]"
+        style={{
+          background:
+            "radial-gradient(60% 80% at 50% 0%, color-mix(in srgb, var(--foreground) 5%, transparent) 0%, transparent 70%)",
+        }}
+      />
       <div className="relative mx-auto flex min-h-svh max-w-xl flex-col items-center justify-center-safe px-4 py-10 text-center sm:px-6">
-        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.4em]">{interpolate(t.members, { count: 1 })}</div>
+        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.4em]">
+          {interpolate(t.members, { count: 1 })}
+        </div>
         <div aria-hidden className="mt-6 mb-5 flex items-center -space-x-2">
           <div className="z-10 flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground font-medium text-background text-xs shadow-sm">
             {userName.trim().charAt(0).toUpperCase()}
@@ -70,19 +99,36 @@ function NoTeamScreen({ userName, inviteUrl, onInviteByEmail, settingsHref, clas
             </div>
           ))}
         </div>
-        <h1 className="mt-1 max-w-md font-heading text-3xl leading-tight md:text-4xl">{t.title}</h1>
-        <p className="mt-3 max-w-sm text-muted-foreground text-sm leading-relaxed">{t.description}</p>
+        <h1 className="mt-1 max-w-md font-heading text-3xl leading-tight md:text-4xl">
+          {t.title}
+        </h1>
+        <p className="mt-3 max-w-sm text-muted-foreground text-sm leading-relaxed">
+          {t.description}
+        </p>
         <div className="mt-8 w-full max-w-md space-y-3">
           {inviteUrl ? (
             <InputGroup>
               <InputGroupAddon align="inline-start">
-                <label className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] max-[400px]:sr-only" htmlFor={`${id}-link`}>
+                <label
+                  className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] max-[400px]:sr-only"
+                  htmlFor={`${id}-link`}
+                >
                   {t.inviteLink}
                 </label>
               </InputGroupAddon>
-              <InputGroupInput className="min-w-0 truncate" id={`${id}-link`} readOnly value={inviteUrl} />
+              <InputGroupInput
+                className="min-w-0 truncate"
+                id={`${id}-link`}
+                readOnly
+                value={inviteUrl}
+              />
               <InputGroupAddon align="inline-end">
-                <Button onClick={() => void copyLink()} size="xs" type="button" variant="ghost">
+                <Button
+                  onClick={() => void copyLink()}
+                  size="xs"
+                  type="button"
+                  variant="ghost"
+                >
                   {copy === "copied" ? <CheckIcon /> : <CopyIcon />}
                   {copy === "copied" ? t.copied : t.copy}
                 </Button>
@@ -107,7 +153,10 @@ function NoTeamScreen({ userName, inviteUrl, onInviteByEmail, settingsHref, clas
                 <>
                   {" "}
                   {t.changeIn}{" "}
-                  <WirefrontLink className="text-foreground underline underline-offset-4" href={settingsHref}>
+                  <WirefrontLink
+                    className="text-foreground underline underline-offset-4"
+                    href={settingsHref}
+                  >
                     {t.settings}
                   </WirefrontLink>
                   .

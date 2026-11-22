@@ -19,7 +19,10 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const STATUS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "../../.test-status");
+const STATUS_DIR = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "../../.test-status"
+);
 
 export interface ProgressOptions {
   total: number;
@@ -45,7 +48,8 @@ export interface Progress {
 
 export function trackProgress(check: string, opts: ProgressOptions): Progress {
   const now = opts.now ?? Date.now;
-  const emit = opts.emit ?? ((line: string) => process.stdout.write(`${line}\n`));
+  const emit =
+    opts.emit ?? ((line: string) => process.stdout.write(`${line}\n`));
   const started = now();
   const running = new Map<string, { since: number; alertedAt: number }>();
   const alerts: string[] = [];
@@ -69,13 +73,16 @@ export function trackProgress(check: string, opts: ProgressOptions): Progress {
           failed,
           total: opts.total,
           elapsedS: Math.round((t - started) / 1000),
-          running: [...running].map(([unit, r]) => ({ unit, forS: Math.round((t - r.since) / 1000) })),
+          running: [...running].map(([unit, r]) => ({
+            unit,
+            forS: Math.round((t - r.since) / 1000),
+          })),
           alerts: alerts.slice(-20),
           updatedAt: new Date(t).toISOString(),
         },
         null,
-        2,
-      )}\n`,
+        2
+      )}\n`
     );
   };
 
@@ -89,14 +96,25 @@ export function trackProgress(check: string, opts: ProgressOptions): Progress {
   const check_ = () => {
     const t = now();
     for (const [unit, r] of running) {
-      if (t - r.since >= opts.slowUnitMs && t - r.alertedAt >= opts.slowUnitMs) {
+      if (
+        t - r.since >= opts.slowUnitMs &&
+        t - r.alertedAt >= opts.slowUnitMs
+      ) {
         r.alertedAt = t;
-        alert(`${unit} has been running for ${Math.round((t - r.since) / 1000)}s (slow threshold ${opts.slowUnitMs / 1000}s)`);
+        alert(
+          `${unit} has been running for ${Math.round((t - r.since) / 1000)}s (slow threshold ${opts.slowUnitMs / 1000}s)`
+        );
       }
     }
-    if (running.size > 0 && t - lastFinish >= opts.stallMs && t - stallAlertedAt >= opts.stallMs) {
+    if (
+      running.size > 0 &&
+      t - lastFinish >= opts.stallMs &&
+      t - stallAlertedAt >= opts.stallMs
+    ) {
       stallAlertedAt = t;
-      alert(`no progress for ${Math.round((t - lastFinish) / 1000)}s (${done}/${opts.total} done; running: ${[...running.keys()].join(", ")})`);
+      alert(
+        `no progress for ${Math.round((t - lastFinish) / 1000)}s (${done}/${opts.total} done; running: ${[...running.keys()].join(", ")})`
+      );
     }
   };
 

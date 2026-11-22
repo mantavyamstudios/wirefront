@@ -35,16 +35,43 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import { Fragment, type ReactNode, useEffect, useId, useRef, useState } from "react";
+import {
+  Fragment,
+  type ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@wirefront/ui/dropdown-menu";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, useWirefront, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
-import type { SocialArt as ProfileArt, SocialHue as ProfileHue, SocialPost as ProfilePost, SocialStreak, SocialSuggestion as ProfileSuggestion, SocialUser as ProfileUser } from "./schema";
+import type {
+  SocialArt as ProfileArt,
+  SocialHue as ProfileHue,
+  SocialPost as ProfilePost,
+  SocialStreak,
+  SocialSuggestion as ProfileSuggestion,
+  SocialUser as ProfileUser,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("socialProfile.<key>"). */
 export const SOCIAL_PROFILE_MESSAGES = {
@@ -124,26 +151,63 @@ export interface SocialProfileProps {
   onToggleFollow?: Action<boolean>;
   onToggleNotify?: Action<boolean>;
   onToggleMute?: Action<boolean>;
-  onReact?: Action<{ id: string; kind: "like" | "repost" | "bookmark"; on: boolean }>;
+  onReact?: Action<{
+    id: string;
+    kind: "like" | "repost" | "bookmark";
+    on: boolean;
+  }>;
   onFollowSuggestion?: Action<{ handle: string; following: boolean }>;
   onBack?: () => void;
   className?: string;
 }
 
-const spring = { type: "spring", stiffness: 520, damping: 44, mass: 1 } as const;
+const spring = {
+  type: "spring",
+  stiffness: 520,
+  damping: 44,
+  mass: 1,
+} as const;
 const easeOut = [0.23, 1, 0.32, 1] as const;
-const press = "transition-[color,background-color,box-shadow,scale,opacity] duration-150 ease-out active:scale-[0.97]";
+const press =
+  "transition-[color,background-color,box-shadow,scale,opacity] duration-150 ease-out active:scale-[0.97]";
 
 const hues: Record<ProfileHue, { art: string; avatar: string }> = {
-  amber: { art: "from-category-3/20 via-category-3/35 to-category-7/60", avatar: "from-category-3/35 to-category-7" },
-  rose: { art: "from-category-4/20 via-category-4/35 to-category-4", avatar: "from-category-4/35 to-category-4" },
-  violet: { art: "from-category-5/35 via-category-5/60 to-category-8", avatar: "from-category-5/60 to-category-8" },
-  teal: { art: "from-category-6/20 via-category-6/35 to-category-2", avatar: "from-category-6/35 to-category-2" },
-  sky: { art: "from-category-1/20 via-category-1/35 to-category-1", avatar: "from-category-1/35 to-category-1" },
-  orange: { art: "from-category-7/20 via-category-7/35 to-category-4/60", avatar: "from-category-7/35 to-category-4" },
-  emerald: { art: "from-category-2/20 via-category-2/35 to-category-6", avatar: "from-category-2/35 to-category-6" },
-  indigo: { art: "from-category-8/35 via-category-8/60 to-category-5-strong", avatar: "from-category-8/60 to-category-5-strong" },
-  fuchsia: { art: "from-category-5/20 via-category-5/35 to-category-5", avatar: "from-category-5/35 to-category-5" },
+  amber: {
+    art: "from-category-3/20 via-category-3/35 to-category-7/60",
+    avatar: "from-category-3/35 to-category-7",
+  },
+  rose: {
+    art: "from-category-4/20 via-category-4/35 to-category-4",
+    avatar: "from-category-4/35 to-category-4",
+  },
+  violet: {
+    art: "from-category-5/35 via-category-5/60 to-category-8",
+    avatar: "from-category-5/60 to-category-8",
+  },
+  teal: {
+    art: "from-category-6/20 via-category-6/35 to-category-2",
+    avatar: "from-category-6/35 to-category-2",
+  },
+  sky: {
+    art: "from-category-1/20 via-category-1/35 to-category-1",
+    avatar: "from-category-1/35 to-category-1",
+  },
+  orange: {
+    art: "from-category-7/20 via-category-7/35 to-category-4/60",
+    avatar: "from-category-7/35 to-category-4",
+  },
+  emerald: {
+    art: "from-category-2/20 via-category-2/35 to-category-6",
+    avatar: "from-category-2/35 to-category-6",
+  },
+  indigo: {
+    art: "from-category-8/35 via-category-8/60 to-category-5-strong",
+    avatar: "from-category-8/60 to-category-5-strong",
+  },
+  fuchsia: {
+    art: "from-category-5/20 via-category-5/35 to-category-5",
+    avatar: "from-category-5/35 to-category-5",
+  },
 };
 
 function initials(name: string) {
@@ -158,10 +222,20 @@ function initials(name: string) {
 /** Counts in the viewer's locale, compact from ten thousand. */
 function useCompact() {
   const fmt = useFormat();
-  return (n: number) => fmt.number(n, { notation: n >= 10_000 ? "compact" : "standard", maximumFractionDigits: 1 });
+  return (n: number) =>
+    fmt.number(n, {
+      notation: n >= 10_000 ? "compact" : "standard",
+      maximumFractionDigits: 1,
+    });
 }
 
-function Tween({ value, format }: { value: number; format: (n: number) => string }) {
+function Tween({
+  value,
+  format,
+}: {
+  value: number;
+  format: (n: number) => string;
+}) {
   const reduce = useReducedMotion();
   const mv = useMotionValue(value);
   const text = useTransform(mv, format);
@@ -170,7 +244,11 @@ function Tween({ value, format }: { value: number; format: (n: number) => string
       mv.set(value);
       return;
     }
-    const controls = animate(mv, value, { type: "spring", stiffness: 220, damping: 30 });
+    const controls = animate(mv, value, {
+      type: "spring",
+      stiffness: 220,
+      damping: 30,
+    });
     return () => controls.stop();
   }, [value, reduce, mv]);
   return <motion.span className="tabular-nums">{text}</motion.span>;
@@ -202,7 +280,15 @@ function Count({ value }: { value: number }) {
   );
 }
 
-function Art({ art, className, large }: { art: ProfileArt; className?: string; large?: boolean }) {
+function Art({
+  art,
+  className,
+  large,
+}: {
+  art: ProfileArt;
+  className?: string;
+  large?: boolean;
+}) {
   const scene = !art.glyph;
   return (
     <span
@@ -210,7 +296,7 @@ function Art({ art, className, large }: { art: ProfileArt; className?: string; l
       className={cn(
         "relative flex items-center justify-center overflow-hidden bg-linear-to-br text-white",
         hues[art.hue].art,
-        className,
+        className
       )}
     >
       {scene ? (
@@ -218,12 +304,25 @@ function Art({ art, className, large }: { art: ProfileArt; className?: string; l
           <span
             className={cn(
               "absolute top-[28%] left-1/2 aspect-square w-[26%] -translate-x-1/2 rounded-full",
-              art.hue === "indigo" ? "bg-category-3/11 shadow-[0_0_40px_10px] shadow-category-3/4" : "bg-category-3/12 shadow-[0_0_60px_20px] shadow-category-3/5",
+              art.hue === "indigo"
+                ? "bg-category-3/11 shadow-[0_0_40px_10px] shadow-category-3/4"
+                : "bg-category-3/12 shadow-[0_0_60px_20px] shadow-category-3/5"
             )}
           />
-          <svg aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[46%] w-full" preserveAspectRatio="none" viewBox="0 0 100 40">
-            <path className="fill-black/15" d="M0 18 L12 12 L22 16 L34 6 L46 14 L58 9 L70 15 L82 8 L100 14 V40 H0Z" />
-            <path className="fill-black/25" d="M0 26 Q20 18 40 24 T80 22 T100 24 V40 H0Z" />
+          <svg
+            aria-hidden="true"
+            className="absolute inset-x-0 bottom-0 h-[46%] w-full"
+            preserveAspectRatio="none"
+            viewBox="0 0 100 40"
+          >
+            <path
+              className="fill-black/15"
+              d="M0 18 L12 12 L22 16 L34 6 L46 14 L58 9 L70 15 L82 8 L100 14 V40 H0Z"
+            />
+            <path
+              className="fill-black/25"
+              d="M0 26 Q20 18 40 24 T80 22 T100 24 V40 H0Z"
+            />
           </svg>
           <span className="absolute inset-0 border-[6px] border-black/10" />
         </>
@@ -233,7 +332,7 @@ function Art({ art, className, large }: { art: ProfileArt; className?: string; l
           <span
             className={cn(
               "relative font-heading font-semibold leading-none drop-shadow-sm",
-              large ? "text-[min(40cqw,14rem)]" : "text-[min(52cqw,9rem)]",
+              large ? "text-[min(40cqw,14rem)]" : "text-[min(52cqw,9rem)]"
             )}
           >
             {art.glyph}
@@ -250,10 +349,10 @@ function RichText({ text }: { text: string }) {
     .split(/([@#][\w.]+\w)/g)
     .filter(Boolean)
     .map((p) => {
-    const at = offset;
-    offset += p.length;
-    return { at, p };
-  });
+      const at = offset;
+      offset += p.length;
+      return { at, p };
+    });
   return (
     <>
       {parts.map(({ at, p }) =>
@@ -263,7 +362,7 @@ function RichText({ text }: { text: string }) {
           </span>
         ) : (
           <Fragment key={at}>{p}</Fragment>
-        ),
+        )
       )}
     </>
   );
@@ -312,12 +411,24 @@ function SocialProfileScreen({
       return () => set(!next);
     },
   });
-  const followAction = useAction(onToggleFollow ?? (async () => {}), flipper(setFollowing));
-  const notifyAction = useAction(onToggleNotify ?? (async () => {}), flipper(setBell));
-  const muteAction = useAction(onToggleMute ?? (async () => {}), flipper(setMuted));
+  const followAction = useAction(
+    onToggleFollow ?? (async () => {}),
+    flipper(setFollowing)
+  );
+  const notifyAction = useAction(
+    onToggleNotify ?? (async () => {}),
+    flipper(setBell)
+  );
+  const muteAction = useAction(
+    onToggleMute ?? (async () => {}),
+    flipper(setMuted)
+  );
   const suggestAction = useAction(onFollowSuggestion ?? (async () => {}), {
     optimistic: ({ handle, following: on }) => {
-      const set = (v: boolean) => setSuggested((all) => (v ? [...all, handle] : all.filter((h) => h !== handle)));
+      const set = (v: boolean) =>
+        setSuggested((all) =>
+          v ? [...all, handle] : all.filter((h) => h !== handle)
+        );
       set(on);
       return () => set(!on);
     },
@@ -328,8 +439,19 @@ function SocialProfileScreen({
         const fn = (all: ProfilePost[]) =>
           all.map((p) => {
             if (p.id !== id) return p;
-            if (kind === "like") return { ...p, liked: v, likes: p.likes + (v === Boolean(p.liked) ? 0 : v ? 1 : -1) };
-            if (kind === "repost") return { ...p, reposted: v, reposts: p.reposts + (v === Boolean(p.reposted) ? 0 : v ? 1 : -1) };
+            if (kind === "like")
+              return {
+                ...p,
+                liked: v,
+                likes: p.likes + (v === Boolean(p.liked) ? 0 : v ? 1 : -1),
+              };
+            if (kind === "repost")
+              return {
+                ...p,
+                reposted: v,
+                reposts:
+                  p.reposts + (v === Boolean(p.reposted) ? 0 : v ? 1 : -1),
+              };
             return { ...p, bookmarked: v };
           });
         setPosts(fn);
@@ -339,12 +461,20 @@ function SocialProfileScreen({
       return () => apply(!on);
     },
   });
-  const actionError = followAction.error ?? notifyAction.error ?? muteAction.error ?? suggestAction.error ?? reactAction.error;
+  const actionError =
+    followAction.error ??
+    notifyAction.error ??
+    muteAction.error ??
+    suggestAction.error ??
+    reactAction.error;
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => () => {
-    if (copyTimer.current) clearTimeout(copyTimer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+    },
+    []
+  );
   const copyProfileLink = () => {
     navigator.clipboard?.writeText(profileUrl).catch(() => {});
     setCopied(true);
@@ -359,10 +489,24 @@ function SocialProfileScreen({
   const [compactBar, setCompactBar] = useState(false);
   useMotionValueEvent(scrollY, "change", (y) => setCompactBar(y > 150));
 
-  const followers = user.followers + (following && !initiallyFollowing ? 1 : 0) - (!following && initiallyFollowing ? 1 : 0);
+  const followers =
+    user.followers +
+    (following && !initiallyFollowing ? 1 : 0) -
+    (!following && initiallyFollowing ? 1 : 0);
 
   const react = (post: ProfilePost, kind: "like" | "repost" | "bookmark") =>
-    void reactAction.run({ id: post.id, kind, on: !(kind === "like" ? post.liked : kind === "repost" ? post.reposted : post.bookmarked) }, `${post.id}:${kind}`);
+    void reactAction.run(
+      {
+        id: post.id,
+        kind,
+        on: !(kind === "like"
+          ? post.liked
+          : kind === "repost"
+            ? post.reposted
+            : post.bookmarked),
+      },
+      `${post.id}:${kind}`
+    );
   const toggleFollow = () => {
     if (following && bell) void notifyAction.run(false);
     void followAction.run(!following);
@@ -372,7 +516,8 @@ function SocialProfileScreen({
     setTab(t);
     const el = scrollRef.current;
     const tabs = tabsRef.current;
-    if (el && tabs && el.scrollTop > tabs.offsetTop - 56) el.scrollTo({ top: tabs.offsetTop - 56 });
+    if (el && tabs && el.scrollTop > tabs.offsetTop - 56)
+      el.scrollTo({ top: tabs.offsetTop - 56 });
   };
 
   const mutualText =
@@ -381,28 +526,44 @@ function SocialProfileScreen({
       : mutuals.length === 1
         ? interpolate(t.mutualsOne, { a: mutuals[0] ?? "" })
         : mutuals.length === 2
-          ? interpolate(t.mutualsTwo, { a: mutuals[0] ?? "", b: mutuals[1] ?? "" })
-          : interpolate(t.mutualsMore, { a: mutuals[0] ?? "", b: mutuals[1] ?? "", count: mutuals.length - 2 });
-  const streakCells = (streak?.days ?? []).map((state, n) => ({ key: `day-${n}`, state }));
+          ? interpolate(t.mutualsTwo, {
+              a: mutuals[0] ?? "",
+              b: mutuals[1] ?? "",
+            })
+          : interpolate(t.mutualsMore, {
+              a: mutuals[0] ?? "",
+              b: mutuals[1] ?? "",
+              count: mutuals.length - 2,
+            });
+  const streakCells = (streak?.days ?? []).map((state, n) => ({
+    key: `day-${n}`,
+    state,
+  }));
 
   return (
     <div
       className={cn(
         "@container relative isolate flex h-190 w-full overflow-hidden bg-background text-foreground text-sm",
-        className,
+        className
       )}
     >
       <div className="relative min-w-0 flex-1 overflow-y-auto" ref={scrollRef}>
         <div className="mx-auto flex max-w-250 justify-center gap-6">
           <main className="relative w-full max-w-150 min-w-0 @3xl:border-x">
             <div className="sticky top-0 z-20 flex h-14 items-center gap-3 px-3">
-              <motion.span aria-hidden className="absolute inset-0 -z-10 border-b bg-background/85 backdrop-blur-md" style={{ opacity: barBg }} />
+              <motion.span
+                aria-hidden
+                className="absolute inset-0 -z-10 border-b bg-background/85 backdrop-blur-md"
+                style={{ opacity: barBg }}
+              />
               {onBack && (
                 <Button
                   aria-label={t.back}
                   className={cn(
                     "transition-colors",
-                    compactBar ? "" : "bg-black/30 text-white backdrop-blur-sm hover:bg-black/40",
+                    compactBar
+                      ? ""
+                      : "bg-black/30 text-white backdrop-blur-sm hover:bg-black/40"
                   )}
                   onClick={onBack}
                   size="icon-sm"
@@ -411,9 +572,16 @@ function SocialProfileScreen({
                   <ArrowLeftIcon />
                 </Button>
               )}
-              <motion.div className="flex min-w-0 flex-col" style={{ opacity: barBg }}>
-                <span className="truncate font-heading font-semibold">{user.name}</span>
-                <span className="text-muted-foreground text-xs tabular-nums">{interpolate(t.postsCount, { count: fmt.number(user.posts) })}</span>
+              <motion.div
+                className="flex min-w-0 flex-col"
+                style={{ opacity: barBg }}
+              >
+                <span className="truncate font-heading font-semibold">
+                  {user.name}
+                </span>
+                <span className="text-muted-foreground text-xs tabular-nums">
+                  {interpolate(t.postsCount, { count: fmt.number(user.posts) })}
+                </span>
               </motion.div>
               <AnimatePresence>
                 {compactBar && (
@@ -424,7 +592,13 @@ function SocialProfileScreen({
                     initial={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.15, ease: easeOut }}
                   >
-                    <Button aria-pressed={following} className={press} onClick={toggleFollow} size="sm" variant={following ? "outline" : "default"}>
+                    <Button
+                      aria-pressed={following}
+                      className={press}
+                      onClick={toggleFollow}
+                      size="sm"
+                      variant={following ? "outline" : "default"}
+                    >
                       {following ? t.following : t.follow}
                     </Button>
                   </motion.div>
@@ -439,7 +613,10 @@ function SocialProfileScreen({
                 <span className="-mt-12 rounded-full bg-background p-1 @3xl:-mt-14">
                   <Avatar className="[--avatar-size:--spacing(22)] @3xl:[--avatar-size:--spacing(26)]">
                     <AvatarFallback
-                      className={cn("bg-linear-to-br font-heading font-semibold text-2xl text-white @3xl:text-3xl", hues.violet.avatar)}
+                      className={cn(
+                        "bg-linear-to-br font-heading font-semibold text-2xl text-white @3xl:text-3xl",
+                        hues.violet.avatar
+                      )}
                     >
                       {initials(user.name)}
                     </AvatarFallback>
@@ -450,8 +627,13 @@ function SocialProfileScreen({
                     <DropdownMenuTrigger
                       render={
                         <Button
-                          aria-label={interpolate(t.moreFor, { handle: user.handle })}
-                          className={cn("size-9 rounded-full before:rounded-full sm:size-9", press)}
+                          aria-label={interpolate(t.moreFor, {
+                            handle: user.handle,
+                          })}
+                          className={cn(
+                            "size-9 rounded-full before:rounded-full sm:size-9",
+                            press
+                          )}
                           size="icon"
                           variant="outline"
                         />
@@ -466,7 +648,11 @@ function SocialProfileScreen({
                           key={copied ? "copied" : "more"}
                           transition={{ duration: 0.15, ease: easeOut }}
                         >
-                          {copied ? <CheckIcon className="text-success-foreground" /> : <EllipsisIcon />}
+                          {copied ? (
+                            <CheckIcon className="text-success-foreground" />
+                          ) : (
+                            <EllipsisIcon />
+                          )}
                         </motion.span>
                       </AnimatePresence>
                     </DropdownMenuTrigger>
@@ -475,12 +661,22 @@ function SocialProfileScreen({
                         <LinkIcon /> {t.copyProfile}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuCheckboxItem checked={muted} onCheckedChange={(v) => void muteAction.run(Boolean(v))}>
+                      <DropdownMenuCheckboxItem
+                        checked={muted}
+                        onCheckedChange={(v) => void muteAction.run(Boolean(v))}
+                      >
                         {interpolate(t.mute, { handle: user.handle })}
                       </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <FollowButton bell={bell} following={following} name={user.name} onBell={() => void notifyAction.run(!bell)} onToggle={toggleFollow} t={t} />
+                  <FollowButton
+                    bell={bell}
+                    following={following}
+                    name={user.name}
+                    onBell={() => void notifyAction.run(!bell)}
+                    onToggle={toggleFollow}
+                    t={t}
+                  />
                 </div>
               </div>
 
@@ -489,7 +685,10 @@ function SocialProfileScreen({
                   {user.name}
                   {user.verified && (
                     <>
-                      <BadgeCheckIcon aria-hidden className="size-5 fill-info text-background" />
+                      <BadgeCheckIcon
+                        aria-hidden
+                        className="size-5 fill-info text-background"
+                      />
                       <span className="sr-only">{t.verified}</span>
                     </>
                   )}
@@ -497,10 +696,14 @@ function SocialProfileScreen({
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <span>{interpolate(t.handle, { handle: user.handle })}</span>
                   {user.followsYou && (
-                    <span className="rounded-md bg-muted px-1.5 py-0.5 font-medium text-[11px] text-muted-foreground">{t.followsYou}</span>
+                    <span className="rounded-md bg-muted px-1.5 py-0.5 font-medium text-[11px] text-muted-foreground">
+                      {t.followsYou}
+                    </span>
                   )}
                   {muted && (
-                    <span className="rounded-md bg-warning/12 px-1.5 py-0.5 font-medium text-[11px] text-warning-foreground">{t.muted}</span>
+                    <span className="rounded-md bg-warning/12 px-1.5 py-0.5 font-medium text-[11px] text-warning-foreground">
+                      {t.muted}
+                    </span>
                   )}
                   <span aria-live="polite" className="sr-only">
                     {copied ? t.profileCopied : ""}
@@ -522,26 +725,47 @@ function SocialProfileScreen({
                 {user.website ? (
                   <li className="flex items-center gap-1.5">
                     <LinkIcon aria-hidden className="size-4" />
-                    <a className="rounded-sm text-info-foreground underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring" href={`https://${user.website}`} rel="noreferrer" target="_blank">
+                    <a
+                      className="rounded-sm text-info-foreground underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+                      href={`https://${user.website}`}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
                       {user.website}
                     </a>
                   </li>
                 ) : null}
                 <li className="flex items-center gap-1.5">
                   <CalendarDaysIcon aria-hidden className="size-4" />
-                  {interpolate(t.joined, { date: fmt.date(`${user.joinedAt}T00:00:00Z`, { month: "long", year: "numeric", timeZone: "UTC" }) })}
+                  {interpolate(t.joined, {
+                    date: fmt.date(`${user.joinedAt}T00:00:00Z`, {
+                      month: "long",
+                      year: "numeric",
+                      timeZone: "UTC",
+                    }),
+                  })}
                 </li>
               </ul>
 
               <div className="flex flex-wrap gap-x-4 gap-y-1">
                 <span>
-                  <span className="font-medium tabular-nums">{fmt.number(user.following)}</span> <span className="text-muted-foreground">{t.followingCount}</span>
+                  <span className="font-medium tabular-nums">
+                    {fmt.number(user.following)}
+                  </span>{" "}
+                  <span className="text-muted-foreground">
+                    {t.followingCount}
+                  </span>
                 </span>
                 <span>
                   <span className="font-medium">
-                    <Tween format={(n) => fmt.number(Math.round(n))} value={followers} />
+                    <Tween
+                      format={(n) => fmt.number(Math.round(n))}
+                      value={followers}
+                    />
                   </span>{" "}
-                  <span className="text-muted-foreground">{t.followersCount}</span>
+                  <span className="text-muted-foreground">
+                    {t.followersCount}
+                  </span>
                 </span>
               </div>
 
@@ -549,9 +773,16 @@ function SocialProfileScreen({
                 <div className="flex items-center gap-2 text-muted-foreground text-xs">
                   <span aria-hidden className="flex -space-x-1.5">
                     {mutuals.slice(0, 3).map((m, i) => (
-                      <Avatar className="ring-2 ring-background [--avatar-size:--spacing(5)]" key={m}>
+                      <Avatar
+                        className="ring-2 ring-background [--avatar-size:--spacing(5)]"
+                        key={m}
+                      >
                         <AvatarFallback
-                          className={cn("bg-linear-to-br font-semibold text-[10px] text-white", hues[(["teal", "sky", "rose"] as const)[i % 3]].avatar)}
+                          className={cn(
+                            "bg-linear-to-br font-semibold text-[10px] text-white",
+                            hues[(["teal", "sky", "rose"] as const)[i % 3]]
+                              .avatar
+                          )}
                         >
                           {m[0]}
                         </AvatarFallback>
@@ -580,7 +811,9 @@ function SocialProfileScreen({
                       aria-selected={on}
                       className={cn(
                         "relative flex h-12 flex-1 cursor-pointer items-center justify-center outline-none transition-colors hover:bg-accent/60 focus-visible:bg-accent",
-                        on ? "font-medium text-foreground" : "text-muted-foreground",
+                        on
+                          ? "font-medium text-foreground"
+                          : "text-muted-foreground"
                       )}
                       id={`${uid}-tab-${value}`}
                       key={value}
@@ -588,11 +821,18 @@ function SocialProfileScreen({
                       onKeyDown={(e) => {
                         const order = ["posts", "replies", "media"] as const;
                         const i = order.indexOf(value);
-                        const next = e.key === "ArrowRight" ? order[(i + 1) % 3] : e.key === "ArrowLeft" ? order[(i + 2) % 3] : null;
+                        const next =
+                          e.key === "ArrowRight"
+                            ? order[(i + 1) % 3]
+                            : e.key === "ArrowLeft"
+                              ? order[(i + 2) % 3]
+                              : null;
                         if (next) {
                           e.preventDefault();
                           switchTab(next);
-                          document.getElementById(`${uid}-tab-${next}`)?.focus();
+                          document
+                            .getElementById(`${uid}-tab-${next}`)
+                            ?.focus();
                         }
                       }}
                       role="tab"
@@ -613,7 +853,12 @@ function SocialProfileScreen({
               </div>
             </div>
 
-            <div aria-labelledby={`${uid}-tab-${tab}`} className="min-h-164" id={`${uid}-panel`} role="tabpanel">
+            <div
+              aria-labelledby={`${uid}-tab-${tab}`}
+              className="min-h-164"
+              id={`${uid}-panel`}
+              role="tabpanel"
+            >
               <AnimatePresence initial={false} mode="wait">
                 <motion.div
                   animate={{ opacity: 1 }}
@@ -629,7 +874,9 @@ function SocialProfileScreen({
                           key={p.id}
                           onReact={(kind) => react(p, kind)}
                           onOpenMedia={(art) => {
-                            const i = media.findIndex((m) => m.caption === art.caption);
+                            const i = media.findIndex(
+                              (m) => m.caption === art.caption
+                            );
                             if (i >= 0) setLightbox(i);
                           }}
                           post={p}
@@ -643,7 +890,14 @@ function SocialProfileScreen({
                   {tab === "replies" && (
                     <ul className="divide-y">
                       {replies.map((p) => (
-                        <PostItem key={p.id} onReact={(kind) => react(p, kind)} post={p} postUrl={postUrl(p.id)} t={t} user={user} />
+                        <PostItem
+                          key={p.id}
+                          onReact={(kind) => react(p, kind)}
+                          post={p}
+                          postUrl={postUrl(p.id)}
+                          t={t}
+                          user={user}
+                        />
                       ))}
                     </ul>
                   )}
@@ -652,15 +906,20 @@ function SocialProfileScreen({
                       {media.map((m, i) => (
                         <li className="@container" key={m.caption}>
                           <button
-                            aria-label={interpolate(t.openMedia, { caption: m.caption })}
+                            aria-label={interpolate(t.openMedia, {
+                              caption: m.caption,
+                            })}
                             className={cn(
                               "group/media relative block aspect-square w-full cursor-pointer overflow-hidden rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                              press,
+                              press
                             )}
                             onClick={() => setLightbox(i)}
                             type="button"
                           >
-                            <Art art={m} className="size-full transition-transform duration-300 ease-out [@media(hover:hover)]:group-hover/media:scale-[1.03]" />
+                            <Art
+                              art={m}
+                              className="size-full transition-transform duration-300 ease-out [@media(hover:hover)]:group-hover/media:scale-[1.03]"
+                            />
                           </button>
                         </li>
                       ))}
@@ -672,24 +931,41 @@ function SocialProfileScreen({
           </main>
 
           <aside className="sticky top-0 hidden w-75 shrink-0 flex-col gap-4 self-start py-4 @5xl:flex">
-            <section aria-labelledby={`${uid}-sugg`} className="rounded-2xl border bg-card p-4 shadow-xs/5">
+            <section
+              aria-labelledby={`${uid}-sugg`}
+              className="rounded-2xl border bg-card p-4 shadow-xs/5"
+            >
               <h3 className="font-heading font-semibold" id={`${uid}-sugg`}>
                 {t.youMightLike}
               </h3>
               <ul className="mt-3 flex flex-col gap-3">
                 {suggestions.map((s) => {
                   const on = suggested.includes(s.handle);
-                  const toggleSuggestion = () => void suggestAction.run({ handle: s.handle, following: !on }, s.handle);
+                  const toggleSuggestion = () =>
+                    void suggestAction.run(
+                      { handle: s.handle, following: !on },
+                      s.handle
+                    );
                   return (
                     <li className="flex items-center gap-3" key={s.handle}>
-                      <Avatar aria-hidden className="[--avatar-size:--spacing(9)]">
-                        <AvatarFallback className={cn("bg-linear-to-br font-semibold text-white text-xs", hues[s.hue].avatar)}>
+                      <Avatar
+                        aria-hidden
+                        className="[--avatar-size:--spacing(9)]"
+                      >
+                        <AvatarFallback
+                          className={cn(
+                            "bg-linear-to-br font-semibold text-white text-xs",
+                            hues[s.hue].avatar
+                          )}
+                        >
                           {initials(s.name)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex min-w-0 flex-1 flex-col">
                         <span className="truncate font-medium">{s.name}</span>
-                        <span className="truncate text-muted-foreground text-xs">{s.note}</span>
+                        <span className="truncate text-muted-foreground text-xs">
+                          {s.note}
+                        </span>
                       </div>
                       <Button
                         aria-pressed={on}
@@ -706,31 +982,59 @@ function SocialProfileScreen({
               </ul>
             </section>
             {streak ? (
-              <section aria-labelledby={`${uid}-alpha`} className="rounded-2xl border bg-card p-4 shadow-xs/5">
+              <section
+                aria-labelledby={`${uid}-alpha`}
+                className="rounded-2xl border bg-card p-4 shadow-xs/5"
+              >
                 <div className="flex items-baseline justify-between">
-                  <h3 className="font-heading font-semibold" id={`${uid}-alpha`}>
+                  <h3
+                    className="font-heading font-semibold"
+                    id={`${uid}-alpha`}
+                  >
                     {streak.title}
                   </h3>
-                  <span className="text-muted-foreground text-xs tabular-nums">{interpolate(t.streakProgress, { done: streak.done, total: streak.total })}</span>
+                  <span className="text-muted-foreground text-xs tabular-nums">
+                    {interpolate(t.streakProgress, {
+                      done: streak.done,
+                      total: streak.total,
+                    })}
+                  </span>
                 </div>
                 <div aria-hidden className="mt-3 grid grid-cols-15 gap-0.75">
                   {streakCells.map((c) => (
                     <span
                       className={cn(
                         "aspect-square rounded-[calc(var(--radius)*0.2)]",
-                        c.state === "future" ? "bg-muted" : c.state === "today" ? "bg-category-3/60 ring-2 ring-category-3/18" : c.state === "skipped" ? "bg-muted" : "bg-category-5/80",
+                        c.state === "future"
+                          ? "bg-muted"
+                          : c.state === "today"
+                            ? "bg-category-3/60 ring-2 ring-category-3/18"
+                            : c.state === "skipped"
+                              ? "bg-muted"
+                              : "bg-category-5/80"
                       )}
                       key={c.key}
                     />
                   ))}
                 </div>
-                {streak.note ? <p className="mt-3 text-muted-foreground text-xs">{streak.note}</p> : null}
+                {streak.note ? (
+                  <p className="mt-3 text-muted-foreground text-xs">
+                    {streak.note}
+                  </p>
+                ) : null}
               </section>
             ) : null}
             {footerLinks.length || copyright ? (
-              <nav aria-label={t.footer} className="flex flex-wrap gap-x-3 gap-y-1 px-4 text-muted-foreground text-xs">
+              <nav
+                aria-label={t.footer}
+                className="flex flex-wrap gap-x-3 gap-y-1 px-4 text-muted-foreground text-xs"
+              >
                 {footerLinks.map((l) => (
-                  <WirefrontLink className="rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring" href={l.href} key={l.href}>
+                  <WirefrontLink
+                    className="rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+                    href={l.href}
+                    key={l.href}
+                  >
                     {l.label}
                   </WirefrontLink>
                 ))}
@@ -742,11 +1046,20 @@ function SocialProfileScreen({
       </div>
 
       {actionError ? (
-        <p className="absolute inset-x-4 bottom-4 z-40 rounded-lg border bg-popover px-3 py-2 text-destructive-foreground text-sm shadow-lg" role="alert">
+        <p
+          className="absolute inset-x-4 bottom-4 z-40 rounded-lg border bg-popover px-3 py-2 text-destructive-foreground text-sm shadow-lg"
+          role="alert"
+        >
           {actionError}
         </p>
       ) : null}
-      <Lightbox index={lightbox} items={media} onChange={setLightbox} onClose={() => setLightbox(null)} t={t} />
+      <Lightbox
+        index={lightbox}
+        items={media}
+        onChange={setLightbox}
+        onClose={() => setLightbox(null)}
+        t={t}
+      />
     </div>
   );
 }
@@ -763,7 +1076,12 @@ function Cover() {
             "radial-gradient(55% 90% at 10% 15%, var(--category-3) 0%, transparent 60%), radial-gradient(45% 80% at 88% 0%, var(--category-4) 0%, transparent 65%), radial-gradient(70% 90% at 62% 115%, var(--category-5) 0%, transparent 60%), linear-gradient(120deg, var(--category-7), var(--category-4) 50%, var(--category-5))",
         }}
       />
-      <svg aria-hidden="true" className="absolute inset-0 size-full opacity-30 mix-blend-soft-light" preserveAspectRatio="none" viewBox="0 0 600 200">
+      <svg
+        aria-hidden="true"
+        className="absolute inset-0 size-full opacity-30 mix-blend-soft-light"
+        preserveAspectRatio="none"
+        viewBox="0 0 600 200"
+      >
         {COVER_LINES.map((i) => (
           <path
             d={`M-20 ${40 + i * 18} C 120 ${10 + i * 20}, 260 ${90 + i * 14}, 420 ${40 + i * 18} S 640 ${20 + i * 16}, 640 ${30 + i * 18}`}
@@ -799,7 +1117,9 @@ function FollowButton({
   const [hover, setHover] = useState(false);
   const pillW = following ? 112 : 92;
   const total = following ? pillW + 44 : pillW;
-  const move = reduce ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 30, mass: 0.9 } as const;
+  const move = reduce
+    ? { duration: 0 }
+    : ({ type: "spring", stiffness: 420, damping: 30, mass: 0.9 } as const);
   const label = following ? (hover ? t.unfollow : t.following) : t.follow;
 
   return (
@@ -816,12 +1136,26 @@ function FollowButton({
       transition={move}
     >
       <svg aria-hidden className="absolute size-0">
-        <filter colorInterpolationFilters="sRGB" height="200%" id={filterId} width="160%" x="-30%" y="-50%">
+        <filter
+          colorInterpolationFilters="sRGB"
+          height="200%"
+          id={filterId}
+          width="160%"
+          x="-30%"
+          y="-50%"
+        >
           <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="5" />
-          <feColorMatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 28 -12" />
+          <feColorMatrix
+            in="blur"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 28 -12"
+          />
         </filter>
       </svg>
-      <span aria-hidden className="absolute inset-0" style={{ filter: `url(#${filterId})` }}>
+      <span
+        aria-hidden
+        className="absolute inset-0"
+        style={{ filter: `url(#${filterId})` }}
+      >
         <motion.span
           animate={{ width: pillW }}
           className="absolute inset-y-0 inset-e-0 rounded-full bg-(--goo) transition-[background-color] duration-200"
@@ -844,7 +1178,7 @@ function FollowButton({
             aria-pressed={bell}
             className={cn(
               "absolute top-0 inset-s-0 flex size-9 cursor-pointer items-center justify-center rounded-full text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-              press,
+              press
             )}
             exit={{ opacity: 0, transition: { duration: 0.08 } }}
             initial={{ opacity: 0 }}
@@ -855,11 +1189,19 @@ function FollowButton({
             <AnimatePresence initial={false} mode="popLayout">
               <motion.span
                 animate={{ rotate: 0, opacity: 1 }}
-                initial={reduce ? { opacity: 0 } : { rotate: bell ? -18 : 0, opacity: 0 }}
+                initial={
+                  reduce
+                    ? { opacity: 0 }
+                    : { rotate: bell ? -18 : 0, opacity: 0 }
+                }
                 key={bell ? "on" : "off"}
                 transition={{ type: "spring", stiffness: 500, damping: 14 }}
               >
-                {bell ? <BellRingIcon className="size-4" /> : <BellIcon className="size-4" />}
+                {bell ? (
+                  <BellRingIcon className="size-4" />
+                ) : (
+                  <BellIcon className="size-4" />
+                )}
               </motion.span>
             </AnimatePresence>
           </motion.button>
@@ -868,11 +1210,17 @@ function FollowButton({
 
       <motion.button
         animate={{ width: pillW }}
-        aria-label={interpolate(following ? t.unfollowName : t.followName, { name })}
+        aria-label={interpolate(following ? t.unfollowName : t.followName, {
+          name,
+        })}
         aria-pressed={following}
         className={cn(
           "absolute top-0 inset-e-0 flex h-9 cursor-pointer items-center justify-center rounded-full font-medium outline-none transition-[color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97]",
-          following ? (hover ? "text-destructive-foreground" : "text-foreground") : "text-primary-foreground",
+          following
+            ? hover
+              ? "text-destructive-foreground"
+              : "text-foreground"
+            : "text-primary-foreground"
         )}
         onBlur={() => setHover(false)}
         onClick={() => {
@@ -888,8 +1236,16 @@ function FollowButton({
         <AnimatePresence initial={false} mode="popLayout">
           <motion.span
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6, filter: "blur(2px)" }}
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 6, filter: "blur(2px)" }}
+            exit={
+              reduce
+                ? { opacity: 0 }
+                : { opacity: 0, y: -6, filter: "blur(2px)" }
+            }
+            initial={
+              reduce
+                ? { opacity: 0 }
+                : { opacity: 0, y: 6, filter: "blur(2px)" }
+            }
             key={label}
             transition={{ duration: 0.16, ease: easeOut }}
           >
@@ -922,18 +1278,26 @@ function PostItem({
   const reposted = Boolean(post.reposted);
   const saved = Boolean(post.bookmarked);
   const age = now().getTime() - new Date(post.at).getTime();
-  const when = age < 86_400_000 ? fmt.relative(post.at) : fmt.date(post.at, { month: "short", day: "numeric" });
+  const when =
+    age < 86_400_000
+      ? fmt.relative(post.at)
+      : fmt.date(post.at, { month: "short", day: "numeric" });
 
   const header = (
     <div className="flex min-w-0 items-center gap-1.5">
       <span className="truncate font-medium">{user.name}</span>
       {user.verified && (
         <>
-          <BadgeCheckIcon aria-hidden className="size-4 shrink-0 fill-info text-background" />
+          <BadgeCheckIcon
+            aria-hidden
+            className="size-4 shrink-0 fill-info text-background"
+          />
           <span className="sr-only">{t.verified}</span>
         </>
       )}
-      <span className="truncate text-muted-foreground">{interpolate(t.handle, { handle: user.handle })}</span>
+      <span className="truncate text-muted-foreground">
+        {interpolate(t.handle, { handle: user.handle })}
+      </span>
       <span aria-hidden className="text-muted-foreground">
         ·
       </span>
@@ -952,16 +1316,26 @@ function PostItem({
       )}
       {post.replyTo && (
         <div className="relative flex gap-3">
-          <span aria-hidden className="absolute top-11 -bottom-3.5 inset-s-4.75 w-0.5 rounded-full bg-border" />
+          <span
+            aria-hidden
+            className="absolute top-11 -bottom-3.5 inset-s-4.75 w-0.5 rounded-full bg-border"
+          />
           <Avatar aria-hidden className="[--avatar-size:--spacing(10)]">
-            <AvatarFallback className={cn("bg-linear-to-br font-semibold text-white text-xs", hues[post.replyTo.hue].avatar)}>
+            <AvatarFallback
+              className={cn(
+                "bg-linear-to-br font-semibold text-white text-xs",
+                hues[post.replyTo.hue].avatar
+              )}
+            >
               {initials(post.replyTo.name)}
             </AvatarFallback>
           </Avatar>
           <div className="flex min-w-0 flex-1 flex-col gap-0.5 pb-1">
             <div className="flex min-w-0 items-center gap-1.5">
               <span className="truncate font-medium">{post.replyTo.name}</span>
-              <span className="truncate text-muted-foreground">{interpolate(t.handle, { handle: post.replyTo.handle })}</span>
+              <span className="truncate text-muted-foreground">
+                {interpolate(t.handle, { handle: post.replyTo.handle })}
+              </span>
             </div>
             <p className="text-pretty">{post.replyTo.text}</p>
           </div>
@@ -969,7 +1343,12 @@ function PostItem({
       )}
       <article className="flex gap-3">
         <Avatar aria-hidden className="[--avatar-size:--spacing(10)]">
-          <AvatarFallback className={cn("bg-linear-to-br font-heading font-semibold text-white text-xs", hues.violet.avatar)}>
+          <AvatarFallback
+            className={cn(
+              "bg-linear-to-br font-heading font-semibold text-white text-xs",
+              hues.violet.avatar
+            )}
+          >
             {initials(user.name)}
           </AvatarFallback>
         </Avatar>
@@ -977,20 +1356,30 @@ function PostItem({
           {header}
           {post.replyTo && (
             <span className="-mt-0.5 text-muted-foreground text-xs">
-              {t.replyingTo} <span className="text-info-foreground">{interpolate(t.handle, { handle: post.replyTo.handle })}</span>
+              {t.replyingTo}{" "}
+              <span className="text-info-foreground">
+                {interpolate(t.handle, { handle: post.replyTo.handle })}
+              </span>
             </span>
           )}
           <p className="text-pretty leading-relaxed">
             <RichText text={post.text} />
           </p>
           {post.media && post.media.length > 0 && (
-            <div className={cn("mt-1.5 grid gap-1 overflow-hidden rounded-2xl border", post.media.length > 1 ? "grid-cols-2" : "grid-cols-1")}>
+            <div
+              className={cn(
+                "mt-1.5 grid gap-1 overflow-hidden rounded-2xl border",
+                post.media.length > 1 ? "grid-cols-2" : "grid-cols-1"
+              )}
+            >
               {post.media.map((m) => (
                 <button
                   aria-label={interpolate(t.openImage, { caption: m.caption })}
                   className={cn(
                     "@container block cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-                    post.media && post.media.length > 1 ? "aspect-4/5" : "aspect-16/10",
+                    post.media && post.media.length > 1
+                      ? "aspect-4/5"
+                      : "aspect-16/10"
                   )}
                   disabled={!m.glyph || !onOpenMedia}
                   key={m.caption}
@@ -1005,25 +1394,52 @@ function PostItem({
           {post.link && (
             <a
               className={cn(
-                "mt-1.5 flex overflow-hidden rounded-2xl border outline-none transition-colors hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-ring",
+                "mt-1.5 flex overflow-hidden rounded-2xl border outline-none transition-colors hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-ring"
               )}
               href={`https://${post.link.domain}`}
               rel="noreferrer"
               target="_blank"
             >
-              <span aria-hidden className={cn("flex w-24 shrink-0 items-end gap-0.5 bg-linear-to-br p-2.5 @md:w-32", hues[post.link.hue].art)}>
-                {["bg-category-3/12", "bg-category-7", "bg-category-4-strong", "bg-category-6-strong", "bg-category-8-strong"].map((c) => (
-                  <span className={cn("h-7 flex-1 rounded-sm ring-1 ring-black/10", c)} key={c} />
+              <span
+                aria-hidden
+                className={cn(
+                  "flex w-24 shrink-0 items-end gap-0.5 bg-linear-to-br p-2.5 @md:w-32",
+                  hues[post.link.hue].art
+                )}
+              >
+                {[
+                  "bg-category-3/12",
+                  "bg-category-7",
+                  "bg-category-4-strong",
+                  "bg-category-6-strong",
+                  "bg-category-8-strong",
+                ].map((c) => (
+                  <span
+                    className={cn(
+                      "h-7 flex-1 rounded-sm ring-1 ring-black/10",
+                      c
+                    )}
+                    key={c}
+                  />
                 ))}
               </span>
               <span className="flex min-w-0 flex-col justify-center gap-0.5 px-3 py-3">
-                <span className="truncate text-muted-foreground text-xs">{post.link.domain}</span>
-                <span className="line-clamp-2 font-medium">{post.link.title}</span>
+                <span className="truncate text-muted-foreground text-xs">
+                  {post.link.domain}
+                </span>
+                <span className="line-clamp-2 font-medium">
+                  {post.link.title}
+                </span>
               </span>
             </a>
           )}
           <div className="-ms-2 mt-1 flex items-center justify-between text-muted-foreground">
-            <Stat icon={<MessageCircleIcon />} label={interpolate(t.repliesCount, { count: fmt.number(post.replies) })}>
+            <Stat
+              icon={<MessageCircleIcon />}
+              label={interpolate(t.repliesCount, {
+                count: fmt.number(post.replies),
+              })}
+            >
               {compact(post.replies)}
             </Stat>
             <PostAction
@@ -1035,8 +1451,16 @@ function PostItem({
             >
               <Count value={post.reposts} />
             </PostAction>
-            <LikeAction count={post.likes} liked={Boolean(post.liked)} onClick={() => onReact("like")} t={t} />
-            <Stat icon={<BarChart2Icon />} label={interpolate(t.viewsCount, { count: post.views })}>
+            <LikeAction
+              count={post.likes}
+              liked={Boolean(post.liked)}
+              onClick={() => onReact("like")}
+              t={t}
+            />
+            <Stat
+              icon={<BarChart2Icon />}
+              label={interpolate(t.viewsCount, { count: post.views })}
+            >
               {post.views}
             </Stat>
             <div className="flex">
@@ -1056,9 +1480,21 @@ function PostItem({
   );
 }
 
-function Stat({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) {
+function Stat({
+  icon,
+  label,
+  children,
+}: {
+  icon: ReactNode;
+  label: string;
+  children: ReactNode;
+}) {
   return (
-    <span aria-label={label} className="flex h-8 items-center gap-1.5 px-2 text-xs tabular-nums [&_svg]:size-4" role="img">
+    <span
+      aria-label={label}
+      className="flex h-8 items-center gap-1.5 px-2 text-xs tabular-nums [&_svg]:size-4"
+      role="img"
+    >
       {icon}
       <span aria-hidden>{children}</span>
     </span>
@@ -1068,9 +1504,12 @@ function Stat({ icon, label, children }: { icon: ReactNode; label: string; child
 function ShareAction({ url, t }: { url: string; t: Messages }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => () => {
-    if (timer.current) clearTimeout(timer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    []
+  );
   return (
     <PostAction
       active={copied}
@@ -1121,11 +1560,13 @@ function PostAction({
   return (
     <button
       aria-label={label}
-      aria-pressed={toggle && onClick && active !== undefined ? active : undefined}
+      aria-pressed={
+        toggle && onClick && active !== undefined ? active : undefined
+      }
       className={cn(
         "flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-2 text-xs outline-none hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4",
         press,
-        active && activeClass,
+        active && activeClass
       )}
       onClick={onClick}
       type="button"
@@ -1136,7 +1577,17 @@ function PostAction({
   );
 }
 
-function LikeAction({ liked, count, onClick, t }: { liked: boolean; count: number; onClick: () => void; t: Messages }) {
+function LikeAction({
+  liked,
+  count,
+  onClick,
+  t,
+}: {
+  liked: boolean;
+  count: number;
+  onClick: () => void;
+  t: Messages;
+}) {
   const reduce = useReducedMotion();
   const [pop, setPop] = useState(0);
   return (
@@ -1146,7 +1597,7 @@ function LikeAction({ liked, count, onClick, t }: { liked: boolean; count: numbe
       className={cn(
         "group/like flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-2 text-xs outline-none hover:bg-category-4/10 hover:text-category-4-foreground focus-visible:ring-2 focus-visible:ring-ring",
         press,
-        liked && "text-category-4-foreground",
+        liked && "text-category-4-foreground"
       )}
       onClick={() => {
         if (!liked && !reduce) setPop((p) => p + 1);
@@ -1160,7 +1611,12 @@ function LikeAction({ liked, count, onClick, t }: { liked: boolean; count: numbe
           key={pop}
           transition={{ duration: 0.32, times: [0, 0.4, 1], ease: easeOut }}
         >
-          <HeartIcon className={cn("size-4 transition-[fill] duration-150", liked && "fill-current")} />
+          <HeartIcon
+            className={cn(
+              "size-4 transition-[fill] duration-150",
+              liked && "fill-current"
+            )}
+          />
         </motion.span>
         {pop > 0 && (
           <motion.span
@@ -1198,7 +1654,8 @@ function Lightbox({
     if (open) closeRef.current?.focus();
   }, [open]);
   const item = index !== null ? items[index] : null;
-  const go = (d: number) => index !== null && onChange((index + d + items.length) % items.length);
+  const go = (d: number) =>
+    index !== null && onChange((index + d + items.length) % items.length);
   // Escape closes and the arrows step while the viewer is open.
   const keys = useRef({ go, onClose });
   keys.current = { go, onClose };
@@ -1227,7 +1684,13 @@ function Lightbox({
           transition={{ duration: 0.2, ease: easeOut }}
         >
           {/* Clicking outside the picture closes it; keyboard users have Escape and the close button. */}
-          <button aria-hidden className="absolute inset-0 -z-10 cursor-default" onClick={onClose} tabIndex={-1} type="button" />
+          <button
+            aria-hidden
+            className="absolute inset-0 -z-10 cursor-default"
+            onClick={onClose}
+            tabIndex={-1}
+            type="button"
+          />
           <button
             aria-label={t.close}
             className="absolute top-3 inset-e-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white outline-none hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white"
@@ -1252,7 +1715,11 @@ function Lightbox({
                 key={item.caption}
                 transition={{ duration: 0.15 }}
               >
-                <Art art={item} className="aspect-square w-full rounded-2xl" large />
+                <Art
+                  art={item}
+                  className="aspect-square w-full rounded-2xl"
+                  large
+                />
               </motion.div>
             </AnimatePresence>
           </motion.div>
@@ -1268,7 +1735,10 @@ function Lightbox({
             <span className="min-w-44 text-center text-sm">
               {item.caption}
               <span className="block text-white/60 text-xs tabular-nums">
-                {interpolate(t.position, { n: (index ?? 0) + 1, total: items.length })}
+                {interpolate(t.position, {
+                  n: (index ?? 0) + 1,
+                  total: items.length,
+                })}
               </span>
             </span>
             <button

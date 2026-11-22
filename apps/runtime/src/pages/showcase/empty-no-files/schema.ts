@@ -4,5 +4,9 @@ import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  uploadFiles: { method: "POST", path: "/files", summary: "Upload files (multipart/form-data, one part per file)" },
+  uploadFiles: {
+    method: "POST",
+    path: "/files",
+    summary: "Upload files (multipart/form-data, one part per file)",
+  },
 });

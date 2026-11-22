@@ -3,12 +3,26 @@
 "use client";
 
 import { Button } from "@wirefront/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@wirefront/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@wirefront/ui/card";
 import { cn } from "@wirefront/ui/lib/utils";
-import { OTPField, OTPFieldInput, OTPFieldSeparator } from "@wirefront/ui/otp-field";
+import {
+  OTPField,
+  OTPFieldInput,
+  OTPFieldSeparator,
+} from "@wirefront/ui/otp-field";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { ChevronLeftIcon } from "lucide-react";
@@ -57,8 +71,22 @@ function formatTime(totalSeconds: number) {
 
 function BrandMark() {
   return (
-    <svg aria-hidden className="size-9 text-foreground" fill="none" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="20" cy="20" opacity="0.55" r="16" stroke="currentColor" strokeDasharray="2 3" strokeWidth="1.5" />
+    <svg
+      aria-hidden
+      className="size-9 text-foreground"
+      fill="none"
+      viewBox="0 0 40 40"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx="20"
+        cy="20"
+        opacity="0.55"
+        r="16"
+        stroke="currentColor"
+        strokeDasharray="2 3"
+        strokeWidth="1.5"
+      />
       <circle cx="20" cy="20" fill="currentColor" r="6" />
     </svg>
   );
@@ -66,14 +94,27 @@ function BrandMark() {
 
 const DIGITS = Array.from({ length: CODE_LENGTH }, (_, i) => `d${i}`);
 
-function OtpVerifyScreen({ email, onVerify, onSuccess, onResend, resendAfter = 45, cancelHref, otherMethodHref, className }: OtpVerifyProps) {
+function OtpVerifyScreen({
+  email,
+  onVerify,
+  onSuccess,
+  onResend,
+  resendAfter = 45,
+  cancelHref,
+  otherMethodHref,
+  className,
+}: OtpVerifyProps) {
   const t = useMessages("otpVerify", OTP_VERIFY_MESSAGES);
   const id = useId();
   const [code, setCode] = useState("");
   const [invalid, setInvalid] = useState<string>();
   const [left, setLeft] = useState(resendAfter);
-  const verify = useAction(onVerify, { onSuccess: (session) => onSuccess?.(session) });
-  const resend = useAction(onResend ?? (async () => {}), { onSuccess: () => setLeft(resendAfter) });
+  const verify = useAction(onVerify, {
+    onSuccess: (session) => onSuccess?.(session),
+  });
+  const resend = useAction(onResend ?? (async () => {}), {
+    onSuccess: () => setLeft(resendAfter),
+  });
 
   useEffect(() => {
     if (left <= 0) return;
@@ -96,7 +137,12 @@ function OtpVerifyScreen({ email, onVerify, onSuccess, onResend, resendAfter = 4
   const half = Math.ceil(CODE_LENGTH / 2);
 
   return (
-    <div className={cn("flex min-h-svh items-start justify-center bg-background px-4 py-10 sm:items-center-safe", className)}>
+    <div
+      className={cn(
+        "flex min-h-svh items-start justify-center bg-background px-4 py-10 sm:items-center-safe",
+        className
+      )}
+    >
       <div className="w-full max-w-sm">
         {cancelHref ? (
           <WirefrontLink
@@ -113,8 +159,12 @@ function OtpVerifyScreen({ email, onVerify, onSuccess, onResend, resendAfter = 4
             <div className="flex justify-center">
               <BrandMark />
             </div>
-            <CardTitle className="mt-4 font-heading text-2xl tracking-tight">{t.title}</CardTitle>
-            <CardDescription className="text-sm">{interpolate(t.subtitle, { length: CODE_LENGTH, email })}</CardDescription>
+            <CardTitle className="mt-4 font-heading text-2xl tracking-tight">
+              {t.title}
+            </CardTitle>
+            <CardDescription className="text-sm">
+              {interpolate(t.subtitle, { length: CODE_LENGTH, email })}
+            </CardDescription>
           </CardHeader>
 
           <CardContent>
@@ -145,12 +195,22 @@ function OtpVerifyScreen({ email, onVerify, onSuccess, onResend, resendAfter = 4
                   {DIGITS.map((key, i) => (
                     <span className="contents" key={key}>
                       {i === half && <OTPFieldSeparator />}
-                      <OTPFieldInput aria-invalid={error ? true : undefined} aria-label={interpolate(t.digit, { n: i + 1, length: CODE_LENGTH })} />
+                      <OTPFieldInput
+                        aria-invalid={error ? true : undefined}
+                        aria-label={interpolate(t.digit, {
+                          n: i + 1,
+                          length: CODE_LENGTH,
+                        })}
+                      />
                     </span>
                   ))}
                 </OTPField>
                 {error ? (
-                  <p className="text-center text-destructive-foreground text-xs" id={`${id}-error`} role="alert">
+                  <p
+                    className="text-center text-destructive-foreground text-xs"
+                    id={`${id}-error`}
+                    role="alert"
+                  >
                     {error}
                   </p>
                 ) : null}
@@ -159,7 +219,9 @@ function OtpVerifyScreen({ email, onVerify, onSuccess, onResend, resendAfter = 4
               {onResend ? (
                 <div className="flex justify-center text-xs">
                   {left > 0 ? (
-                    <span className="text-muted-foreground tabular-nums">{interpolate(t.resendIn, { time: formatTime(left) })}</span>
+                    <span className="text-muted-foreground tabular-nums">
+                      {interpolate(t.resendIn, { time: formatTime(left) })}
+                    </span>
                   ) : (
                     <button
                       className="inline-flex min-h-8 items-center text-foreground underline-offset-4 transition-colors hover:underline pointer-coarse:min-h-11"
@@ -173,7 +235,13 @@ function OtpVerifyScreen({ email, onVerify, onSuccess, onResend, resendAfter = 4
                 </div>
               ) : null}
 
-              <Button aria-busy={busy} className="w-full" disabled={code.length !== CODE_LENGTH || busy} size="lg" type="submit">
+              <Button
+                aria-busy={busy}
+                className="w-full"
+                disabled={code.length !== CODE_LENGTH || busy}
+                size="lg"
+                type="submit"
+              >
                 {busy ? (
                   <>
                     <Spinner className="size-4" />
@@ -186,7 +254,10 @@ function OtpVerifyScreen({ email, onVerify, onSuccess, onResend, resendAfter = 4
 
               {otherMethodHref ? (
                 <div className="flex justify-center">
-                  <WirefrontLink className="text-muted-foreground text-xs transition-colors hover:text-foreground" href={otherMethodHref}>
+                  <WirefrontLink
+                    className="text-muted-foreground text-xs transition-colors hover:text-foreground"
+                    href={otherMethodHref}
+                  >
                     {t.otherMethod}
                   </WirefrontLink>
                 </div>

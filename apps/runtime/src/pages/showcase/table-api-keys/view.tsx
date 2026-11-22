@@ -16,7 +16,15 @@ import {
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
 import { Checkbox } from "@wirefront/ui/checkbox";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@wirefront/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@wirefront/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,25 +35,57 @@ import {
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { Spinner } from "@wirefront/ui/spinner";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@wirefront/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@wirefront/ui/table";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { CheckIcon, CopyIcon, EllipsisIcon, KeyIcon, PlusIcon, RotateCwIcon, TrashIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CopyIcon,
+  EllipsisIcon,
+  KeyIcon,
+  PlusIcon,
+  RotateCwIcon,
+  TrashIcon,
+} from "lucide-react";
 import { type ReactNode, useEffect, useId, useState } from "react";
 
-import { type ApiKey, type CreatedKey, type CreateKeyInput, KeyEnvironment, NewKeyForm } from "./schema";
+import {
+  type ApiKey,
+  type CreatedKey,
+  type CreateKeyInput,
+  KeyEnvironment,
+  NewKeyForm,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("apiKeys.<key>"). */
 export const API_KEYS_MESSAGES = {
   title: "API keys",
   subtitle: "Server-side keys never appear in client bundles.",
-  warning: "Keep these keys secret: they grant API access. Rotate any key you think was exposed.",
+  warning:
+    "Keep these keys secret: they grant API access. Rotate any key you think was exposed.",
   newKey: "New key",
   columnName: "Name",
   columnKey: "Key",
@@ -62,23 +102,27 @@ export const API_KEYS_MESSAGES = {
   rotate: "Rotate key",
   revoke: "Revoke",
   revokeTitle: "Revoke {name}?",
-  revokeDescription: "Anything using this key stops working straight away. This can’t be undone.",
+  revokeDescription:
+    "Anything using this key stops working straight away. This can’t be undone.",
   rotateTitle: "Rotate {name}?",
-  rotateDescription: "You get a new secret and the current one stops working. Update everywhere it’s used.",
+  rotateDescription:
+    "You get a new secret and the current one stops working. Update everywhere it’s used.",
   cancel: "Cancel",
   emptyTitle: "No API keys yet",
   emptyDescription: "Create a key to call the API from your servers.",
   errorTitle: "Couldn’t load API keys",
   retry: "Try again",
   createTitle: "Create an API key",
-  createDescription: "Name it after where it’s used, so you know what breaks if you revoke it.",
+  createDescription:
+    "Name it after where it’s used, so you know what breaks if you revoke it.",
   name: "Name",
   namePlaceholder: "e.g. Production server",
   environment: "Environment",
   scopes: "Scopes",
   create: "Create key",
   secretTitle: "Copy your new key",
-  secretDescription: "This is the only time you’ll see the full key. Store it somewhere safe, like your secrets manager.",
+  secretDescription:
+    "This is the only time you’ll see the full key. Store it somewhere safe, like your secrets manager.",
   copy: "Copy key",
   copied: "Copied",
   done: "Done",
@@ -104,16 +148,33 @@ export interface ApiKeysTableProps {
 const SKELETON_ROWS = ["s1", "s2", "s3", "s4"];
 const masked = (k: ApiKey) => `${k.prefix}••••${k.last4}`;
 
-function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableScopes, onCreate, onRotate, onRevoke, className }: ApiKeysTableProps) {
+function ApiKeysTableScreen({
+  keys,
+  status = "ready",
+  error,
+  onRetry,
+  availableScopes,
+  onCreate,
+  onRotate,
+  onRevoke,
+  className,
+}: ApiKeysTableProps) {
   const t = useMessages("apiKeys", API_KEYS_MESSAGES);
   const format = useFormat();
   const [creating, setCreating] = useState(false);
-  const [confirm, setConfirm] = useState<{ kind: "rotate" | "revoke"; key: ApiKey } | null>(null);
+  const [confirm, setConfirm] = useState<{
+    kind: "rotate" | "revoke";
+    key: ApiKey;
+  } | null>(null);
   const [secret, setSecret] = useState<CreatedKey | null>(null);
   const [revoked, setRevoked] = useState<ReadonlySet<string>>(new Set());
 
-  const rotate = useAction(onRotate ?? (async () => {}), { onSuccess: (created) => created && setSecret(created) });
-  const revoke = useAction(onRevoke ?? (async () => {}), { onSuccess: (_, id) => setRevoked((r) => new Set(r).add(id)) });
+  const rotate = useAction(onRotate ?? (async () => {}), {
+    onSuccess: (created) => created && setSecret(created),
+  });
+  const revoke = useAction(onRevoke ?? (async () => {}), {
+    onSuccess: (_, id) => setRevoked((r) => new Set(r).add(id)),
+  });
   const actionError = rotate.error ?? revoke.error;
   const rows = keys.filter((k) => !revoked.has(k.id));
   const day = (iso: string) => format.date(iso, { dateStyle: "medium" });
@@ -122,7 +183,9 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
     <TableRow>
       <TableCell className="whitespace-normal py-12 text-center" colSpan={6}>
         <p className="font-medium">{title}</p>
-        {description ? <p className="mt-1 text-muted-foreground text-sm">{description}</p> : null}
+        {description ? (
+          <p className="mt-1 text-muted-foreground text-sm">{description}</p>
+        ) : null}
         {action}
       </TableCell>
     </TableRow>
@@ -148,7 +211,7 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
         <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
           {t.retry}
         </Button>
-      ) : null,
+      ) : null
     );
   } else if (rows.length === 0) {
     body = message(t.emptyTitle, t.emptyDescription);
@@ -157,55 +220,91 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
       const lastUsed = k.lastUsedAt ? format.relative(k.lastUsedAt) : t.never;
       const pending = rotate.isPending(k.id) || revoke.isPending(k.id);
       return (
-        <TableRow aria-busy={pending || undefined} className={cn(pending && "opacity-60")} key={k.id}>
+        <TableRow
+          aria-busy={pending || undefined}
+          className={cn(pending && "opacity-60")}
+          key={k.id}
+        >
           <TableCell className="w-full max-w-0 ps-4 sm:w-auto sm:max-w-none">
             <div className="flex min-w-0 items-center gap-2">
               <span className="truncate font-medium">{k.name}</span>
               <Badge
                 className={cn(
                   "h-4.5 shrink-0 rounded-sm px-1 font-mono text-[10px] uppercase",
-                  k.env === "live" ? "border-category-2/30 text-category-2-foreground" : "border-category-5/30 text-category-5-foreground",
+                  k.env === "live"
+                    ? "border-category-2/30 text-category-2-foreground"
+                    : "border-category-5/30 text-category-5-foreground"
                 )}
                 variant="outline"
               >
                 {t[k.env]}
               </Badge>
             </div>
-            <div className="mt-0.5 truncate font-mono text-muted-foreground text-xs sm:hidden">{masked(k)}</div>
-            {k.expiresAt ? <div className="text-category-3-foreground text-xs">{interpolate(t.expires, { date: day(k.expiresAt) })}</div> : null}
-            <div className="mt-1 text-muted-foreground text-xs max-sm:hidden md:hidden">{interpolate(t.lastUsed, { when: lastUsed })}</div>
+            <div className="mt-0.5 truncate font-mono text-muted-foreground text-xs sm:hidden">
+              {masked(k)}
+            </div>
+            {k.expiresAt ? (
+              <div className="text-category-3-foreground text-xs">
+                {interpolate(t.expires, { date: day(k.expiresAt) })}
+              </div>
+            ) : null}
+            <div className="mt-1 text-muted-foreground text-xs max-sm:hidden md:hidden">
+              {interpolate(t.lastUsed, { when: lastUsed })}
+            </div>
           </TableCell>
           <TableCell className="max-sm:hidden">
-            <code className="inline-flex max-w-full rounded-md border bg-background px-2 py-1 font-mono text-muted-foreground text-xs">{masked(k)}</code>
+            <code className="inline-flex max-w-full rounded-md border bg-background px-2 py-1 font-mono text-muted-foreground text-xs">
+              {masked(k)}
+            </code>
           </TableCell>
           <TableCell className="max-lg:hidden">
             <div className="flex flex-wrap gap-1">
               {k.scopes.map((s) => (
-                <Badge className="h-4.5 rounded-sm px-1 font-mono text-[10px]" key={s} variant="outline">
+                <Badge
+                  className="h-4.5 rounded-sm px-1 font-mono text-[10px]"
+                  key={s}
+                  variant="outline"
+                >
                   {s}
                 </Badge>
               ))}
             </div>
           </TableCell>
-          <TableCell className="text-muted-foreground tabular-nums max-lg:hidden">{day(k.createdAt)}</TableCell>
-          <TableCell className="text-muted-foreground max-md:hidden">{lastUsed}</TableCell>
+          <TableCell className="text-muted-foreground tabular-nums max-lg:hidden">
+            {day(k.createdAt)}
+          </TableCell>
+          <TableCell className="text-muted-foreground max-md:hidden">
+            {lastUsed}
+          </TableCell>
           <TableCell className="pe-2 sm:pe-4">
             {onRotate || onRevoke ? (
               <DropdownMenu>
                 <DropdownMenuTrigger
-                  render={<Button aria-label={interpolate(t.actionsFor, { name: k.name })} className="pointer-coarse:size-11" size="icon" variant="ghost" />}
+                  render={
+                    <Button
+                      aria-label={interpolate(t.actionsFor, { name: k.name })}
+                      className="pointer-coarse:size-11"
+                      size="icon"
+                      variant="ghost"
+                    />
+                  }
                 >
                   {pending ? <Spinner /> : <EllipsisIcon />}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   {onRotate ? (
-                    <DropdownMenuItem onClick={() => setConfirm({ kind: "rotate", key: k })}>
+                    <DropdownMenuItem
+                      onClick={() => setConfirm({ kind: "rotate", key: k })}
+                    >
                       <RotateCwIcon /> {t.rotate}
                     </DropdownMenuItem>
                   ) : null}
                   {onRotate && onRevoke ? <DropdownMenuSeparator /> : null}
                   {onRevoke ? (
-                    <DropdownMenuItem onClick={() => setConfirm({ kind: "revoke", key: k })} variant="destructive">
+                    <DropdownMenuItem
+                      onClick={() => setConfirm({ kind: "revoke", key: k })}
+                      variant="destructive"
+                    >
                       <TrashIcon /> {t.revoke}
                     </DropdownMenuItem>
                   ) : null}
@@ -219,7 +318,12 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
   }
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12",
+        className
+      )}
+    >
       <div className="mx-auto max-w-5xl">
         <header className="mb-2 flex items-end justify-between gap-4">
           <div className="min-w-0">
@@ -230,14 +334,20 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
             <p className="text-muted-foreground text-sm">{t.subtitle}</p>
           </div>
           {onCreate ? (
-            <Button className="shrink-0 pointer-coarse:h-10" onClick={() => setCreating(true)} size="sm">
+            <Button
+              className="shrink-0 pointer-coarse:h-10"
+              onClick={() => setCreating(true)}
+              size="sm"
+            >
               <PlusIcon />
               {t.newKey}
             </Button>
           ) : null}
         </header>
 
-        <p className="mb-6 max-w-prose rounded-md border border-warning/20 bg-warning/5 p-3 text-warning-foreground text-xs">{t.warning}</p>
+        <p className="mb-6 max-w-prose rounded-md border border-warning/20 bg-warning/5 p-3 text-warning-foreground text-xs">
+          {t.warning}
+        </p>
 
         {actionError ? (
           <p className="mb-3 text-destructive-foreground text-sm" role="alert">
@@ -251,9 +361,15 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
               <TableRow>
                 <TableHead className="ps-4">{t.columnName}</TableHead>
                 <TableHead className="max-sm:hidden">{t.columnKey}</TableHead>
-                <TableHead className="max-lg:hidden">{t.columnScopes}</TableHead>
-                <TableHead className="max-lg:hidden">{t.columnCreated}</TableHead>
-                <TableHead className="max-md:hidden">{t.columnLastUsed}</TableHead>
+                <TableHead className="max-lg:hidden">
+                  {t.columnScopes}
+                </TableHead>
+                <TableHead className="max-lg:hidden">
+                  {t.columnCreated}
+                </TableHead>
+                <TableHead className="max-md:hidden">
+                  {t.columnLastUsed}
+                </TableHead>
                 <TableHead className="w-px pe-4">
                   <span className="sr-only">{t.actions}</span>
                 </TableHead>
@@ -278,22 +394,40 @@ function ApiKeysTableScreen({ keys, status = "ready", error, onRetry, availableS
         />
       ) : null}
 
-      <AlertDialog onOpenChange={(open) => !open && setConfirm(null)} open={confirm !== null}>
+      <AlertDialog
+        onOpenChange={(open) => !open && setConfirm(null)}
+        open={confirm !== null}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {confirm ? interpolate(confirm.kind === "revoke" ? t.revokeTitle : t.rotateTitle, { name: confirm.key.name }) : null}
+              {confirm
+                ? interpolate(
+                    confirm.kind === "revoke" ? t.revokeTitle : t.rotateTitle,
+                    { name: confirm.key.name }
+                  )
+                : null}
             </AlertDialogTitle>
-            <AlertDialogDescription>{confirm?.kind === "rotate" ? t.rotateDescription : t.revokeDescription}</AlertDialogDescription>
+            <AlertDialogDescription>
+              {confirm?.kind === "rotate"
+                ? t.rotateDescription
+                : t.revokeDescription}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t.cancel}</AlertDialogCancel>
             <Button
-              className={confirm?.kind === "revoke" ? "text-destructive-foreground" : undefined}
+              className={
+                confirm?.kind === "revoke"
+                  ? "text-destructive-foreground"
+                  : undefined
+              }
               onClick={() => {
                 if (!confirm) return;
                 const { id } = confirm.key;
-                void (confirm.kind === "revoke" ? revoke.run(id, id) : rotate.run(id, id));
+                void (confirm.kind === "revoke"
+                  ? revoke.run(id, id)
+                  : rotate.run(id, id));
                 setConfirm(null);
               }}
               variant={confirm?.kind === "revoke" ? "destructive" : "default"}
@@ -362,7 +496,14 @@ function CreateKeyDialog({
             <Label className={label} htmlFor={`${id}-env`}>
               {t.environment}
             </Label>
-            <Select items={KeyEnvironment.options.map((e) => ({ label: t[e], value: e }))} onValueChange={(v) => setEnv(v as KeyEnvironment)} value={env}>
+            <Select
+              items={KeyEnvironment.options.map((e) => ({
+                label: t[e],
+                value: e,
+              }))}
+              onValueChange={(v) => setEnv(v as KeyEnvironment)}
+              value={env}
+            >
               <SelectTrigger className="w-full" id={`${id}-env`}>
                 <SelectValue />
               </SelectTrigger>
@@ -382,9 +523,16 @@ function CreateKeyDialog({
                 <Checkbox
                   checked={scopes.includes(scope)}
                   id={`${id}-scope-${scope}`}
-                  onCheckedChange={(on) => setScopes((all) => (on ? [...all, scope] : all.filter((s) => s !== scope)))}
+                  onCheckedChange={(on) =>
+                    setScopes((all) =>
+                      on ? [...all, scope] : all.filter((s) => s !== scope)
+                    )
+                  }
                 />
-                <Label className="font-mono font-normal text-sm" htmlFor={`${id}-scope-${scope}`}>
+                <Label
+                  className="font-mono font-normal text-sm"
+                  htmlFor={`${id}-scope-${scope}`}
+                >
                   {scope}
                 </Label>
               </div>
@@ -396,10 +544,17 @@ function CreateKeyDialog({
             </p>
           ) : null}
           <DialogFooter>
-            <DialogClose disabled={form.pending} render={<Button type="button" variant="ghost" />}>
+            <DialogClose
+              disabled={form.pending}
+              render={<Button type="button" variant="ghost" />}
+            >
               {t.cancel}
             </DialogClose>
-            <Button aria-busy={form.pending} disabled={form.pending || scopes.length === 0} type="submit">
+            <Button
+              aria-busy={form.pending}
+              disabled={form.pending || scopes.length === 0}
+              type="submit"
+            >
               {form.pending ? <Spinner data-icon="inline-start" /> : null}
               {t.create}
             </Button>
@@ -410,7 +565,15 @@ function CreateKeyDialog({
   );
 }
 
-function SecretDialog({ created, onClose, t }: { created: CreatedKey | null; onClose: () => void; t: Messages }) {
+function SecretDialog({
+  created,
+  onClose,
+  t,
+}: {
+  created: CreatedKey | null;
+  onClose: () => void;
+  t: Messages;
+}) {
   const [copied, setCopied] = useState(false);
   useEffect(() => {
     if (!copied) return;
@@ -424,12 +587,16 @@ function SecretDialog({ created, onClose, t }: { created: CreatedKey | null; onC
           <DialogTitle>{t.secretTitle}</DialogTitle>
           <DialogDescription>{t.secretDescription}</DialogDescription>
         </DialogHeader>
-        <code className="break-all rounded-md border bg-muted/40 p-3 font-mono text-sm">{created?.secret}</code>
+        <code className="break-all rounded-md border bg-muted/40 p-3 font-mono text-sm">
+          {created?.secret}
+        </code>
         <DialogFooter>
           <Button
             onClick={() => {
               if (!created) return;
-              void navigator.clipboard?.writeText(created.secret).then(() => setCopied(true));
+              void navigator.clipboard
+                ?.writeText(created.secret)
+                .then(() => setCopied(true));
             }}
             type="button"
             variant="outline"

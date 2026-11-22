@@ -3,13 +3,19 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const IssueStatus = z.enum(["todo", "in-progress", "in-review", "done"]).meta({ id: "IssueStatus" });
+export const IssueStatus = z
+  .enum(["todo", "in-progress", "in-review", "done"])
+  .meta({ id: "IssueStatus" });
 export type IssueStatus = z.infer<typeof IssueStatus>;
 
-export const IssuePriority = z.enum(["urgent", "high", "medium", "low"]).meta({ id: "IssuePriority" });
+export const IssuePriority = z
+  .enum(["urgent", "high", "medium", "low"])
+  .meta({ id: "IssuePriority" });
 export type IssuePriority = z.infer<typeof IssuePriority>;
 
-export const IssuePerson = z.object({ id: z.string(), name: z.string() }).meta({ id: "IssuePerson" });
+export const IssuePerson = z
+  .object({ id: z.string(), name: z.string() })
+  .meta({ id: "IssuePerson" });
 export type IssuePerson = z.infer<typeof IssuePerson>;
 
 /** A label; `color` picks one of the eight category colours. */
@@ -85,6 +91,16 @@ export const api = defineApi({
     query: IssuesQuery,
     response: IssuesPage,
   },
-  listPeople: { method: "GET", path: "/people", summary: "People issues can be assigned to", response: z.array(IssuePerson) },
-  listLabels: { method: "GET", path: "/labels", summary: "Labels issues can have", response: z.array(IssueLabel) },
+  listPeople: {
+    method: "GET",
+    path: "/people",
+    summary: "People issues can be assigned to",
+    response: z.array(IssuePerson),
+  },
+  listLabels: {
+    method: "GET",
+    path: "/labels",
+    summary: "Labels issues can have",
+    response: z.array(IssueLabel),
+  },
 });

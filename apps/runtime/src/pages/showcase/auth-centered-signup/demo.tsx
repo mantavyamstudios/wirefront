@@ -4,7 +4,8 @@
 // Not shipped by the registry; builders pass their own.
 import { CenteredSignUp } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function AuthCenteredSignupShowcasePage() {
   return (

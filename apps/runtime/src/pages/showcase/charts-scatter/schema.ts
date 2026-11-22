@@ -21,5 +21,10 @@ export type AccountHealth = z.infer<typeof AccountHealth>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listAccountHealth: { method: "GET", path: "/reports/account-health", summary: "Satisfaction, retention and MRR for the top accounts", response: z.array(AccountHealth) },
+  listAccountHealth: {
+    method: "GET",
+    path: "/reports/account-health",
+    summary: "Satisfaction, retention and MRR for the top accounts",
+    response: z.array(AccountHealth),
+  },
 });

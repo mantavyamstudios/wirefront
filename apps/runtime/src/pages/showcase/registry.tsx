@@ -14,7 +14,9 @@ const MODULES = import.meta.glob<ShowcaseModule>(["./*.tsx", "./*/demo.tsx"], {
   eager: true,
 }) as Record<string, ShowcaseModule>;
 
-function pickShowcase(mod: ShowcaseModule | undefined): ComponentType | undefined {
+function pickShowcase(
+  mod: ShowcaseModule | undefined
+): ComponentType | undefined {
   if (!mod) return undefined;
   for (const [name, value] of Object.entries(mod)) {
     if (name.endsWith("ShowcasePage") && typeof value === "function") {
@@ -32,7 +34,10 @@ export function componentName(filename: string) {
     .join("");
 }
 
-function flatComponent(mod: ShowcaseModule | undefined, filename: string): ComponentType | undefined {
+function flatComponent(
+  mod: ShowcaseModule | undefined,
+  filename: string
+): ComponentType | undefined {
   const value = mod?.[componentName(filename)];
   return typeof value === "function" ? value : undefined;
 }
@@ -60,11 +65,12 @@ function buildShowcases(): Partial<Record<CategorySlug, Showcase>> {
   return out;
 }
 
-export const SHOWCASES: Partial<Record<CategorySlug, Showcase>> = buildShowcases();
+export const SHOWCASES: Partial<Record<CategorySlug, Showcase>> =
+  buildShowcases();
 
 export function getShowcase(
   category: CategorySlug,
-  design: string,
+  design: string
 ): ComponentType | undefined {
   return SHOWCASES[category]?.[design];
 }

@@ -7,7 +7,8 @@ import { ThemeToggle } from "@wirefront/ui/theme-toggle";
 import * as fixtures from "./fixtures";
 import { WorkspaceOnboarding } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function OnboardingShowcasePage() {
   return (
@@ -19,7 +20,10 @@ export function OnboardingShowcasePage() {
           <span className="uppercase tracking-[0.2em]">Wirefront</span>
         </div>
       }
-      caption={{ eyebrow: "First steps", text: "A guided multi-step setup, paced so each screen carries one decision at a time." }}
+      caption={{
+        eyebrow: "First steps",
+        text: "A guided multi-step setup, paced so each screen carries one decision at a time.",
+      }}
       enterHref="#workspace"
       illustration={clustersSrc}
       onCreateWorkspace={() => wait(400)}

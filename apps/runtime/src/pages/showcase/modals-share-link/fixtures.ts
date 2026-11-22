@@ -14,7 +14,11 @@ export const members: ShareMember[] = [
 ];
 
 /** What the mocks return for `listAccess`. */
-export const listAccess: { members: ShareMember[]; linkAccess: LinkAccess; linkUrl: string } = {
+export const listAccess: {
+  members: ShareMember[];
+  linkAccess: LinkAccess;
+  linkUrl: string;
+} = {
   members,
   linkAccess: "view",
   linkUrl: "https://acme.dev/d/onboarding-handbook-v3-3b9f2a",

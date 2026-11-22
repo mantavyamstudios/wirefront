@@ -12,7 +12,13 @@
  *     <SignInForm />
  *   </IllustratedAuthLayout>
  */
-import { createContext, type ReactNode, type RefObject, useContext, useRef } from "react";
+import {
+  createContext,
+  type ReactNode,
+  type RefObject,
+  useContext,
+  useRef,
+} from "react";
 
 import { ParticleField } from "./particle-field";
 import { AuthSplitLayout } from "./ui/auth-split-layout";
@@ -38,7 +44,13 @@ export interface IllustratedAuthLayoutProps {
   actions?: ReactNode;
 }
 
-export function IllustratedAuthLayout({ children, illustration, brand, caption, actions }: IllustratedAuthLayoutProps) {
+export function IllustratedAuthLayout({
+  children,
+  illustration,
+  brand,
+  caption,
+  actions,
+}: IllustratedAuthLayoutProps) {
   const typingImpulseRef = useRef(0);
   return (
     <TypingImpulseContext.Provider value={typingImpulseRef}>
@@ -46,18 +58,35 @@ export function IllustratedAuthLayout({ children, illustration, brand, caption, 
         actions={actions}
         left={
           <>
-            <ParticleField align="center" dotSize={1} renderScale={1} sampleStep={3} src={illustration} threshold={34} typingImpulseRef={typingImpulseRef} />
+            <ParticleField
+              align="center"
+              dotSize={1}
+              renderScale={1}
+              sampleStep={3}
+              src={illustration}
+              threshold={34}
+              typingImpulseRef={typingImpulseRef}
+            />
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(900px 600px at 50% 50%, transparent 45%, color-mix(in srgb, var(--background) 88%, transparent) 92%)" }}
+              style={{
+                background:
+                  "radial-gradient(900px 600px at 50% 50%, transparent 45%, color-mix(in srgb, var(--background) 88%, transparent) 92%)",
+              }}
             />
             <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-12">
               <div className="pointer-events-auto">{brand}</div>
               {caption ? (
                 <div className="max-w-md">
-                  {caption.eyebrow ? <div className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.3em]">{caption.eyebrow}</div> : null}
-                  <p className="mt-3 font-heading text-xl leading-snug md:text-2xl">{caption.text}</p>
+                  {caption.eyebrow ? (
+                    <div className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.3em]">
+                      {caption.eyebrow}
+                    </div>
+                  ) : null}
+                  <p className="mt-3 font-heading text-xl leading-snug md:text-2xl">
+                    {caption.text}
+                  </p>
                 </div>
               ) : null}
             </div>

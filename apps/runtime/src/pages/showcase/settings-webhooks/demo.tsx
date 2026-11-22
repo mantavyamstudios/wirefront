@@ -8,7 +8,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { WebhookSettings } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const demoNow = () => new Date(fixtures.now);
 
 export function SettingsWebhooksShowcasePage() {
@@ -16,7 +17,13 @@ export function SettingsWebhooksShowcasePage() {
   return (
     <WirefrontProvider now={demoNow} timeZone="UTC">
       <WebhookSettings
-        data={state === "loading" || state === "error" ? undefined : state === "empty" ? { ...fixtures.getWebhooks, endpoints: [], deliveries: [] } : fixtures.getWebhooks}
+        data={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? { ...fixtures.getWebhooks, endpoints: [], deliveries: [] }
+              : fixtures.getWebhooks
+        }
         deliveriesHref="#deliveries"
         docsHref="#docs"
         error="Webhooks didn’t load. Check your connection and try again."
@@ -35,7 +42,13 @@ export function SettingsWebhooksShowcasePage() {
         }}
         onSetPaused={() => wait(400)}
         signatureHeader="Acme-Signature"
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

@@ -25,7 +25,14 @@
  *   </ChartContainer>
  */
 
-import { createContext, type ReactNode, useContext, useLayoutEffect, useRef, useState } from "react";
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   CartesianGrid,
   Legend,
@@ -86,10 +93,13 @@ export function ChartContainer({
   // After every render, fit the Y axis to its widest label (labels change with
   // data, locale and the container's size).
   useLayoutEffect(() => {
-    const labels = ref.current?.querySelectorAll(".recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value");
+    const labels = ref.current?.querySelectorAll(
+      ".recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value"
+    );
     if (!labels?.length) return;
     let widest = 0;
-    for (const l of labels) widest = Math.max(widest, l.getBoundingClientRect().width);
+    for (const l of labels)
+      widest = Math.max(widest, l.getBoundingClientRect().width);
     const next = Math.max(Y_AXIS_MIN, Math.ceil(widest) + Y_AXIS_GAP);
     if (Math.abs(next - yWidth) > 1) setYWidth(next);
   });
@@ -102,7 +112,11 @@ export function ChartContainer({
       {/* Start at a valid size: the default -1x-1 makes Recharts warn on the
           render before the container has been measured. */}
       <YAxisWidth.Provider value={yWidth}>
-        <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 1, height: 1 }}>
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ width: 1, height: 1 }}
+        >
           {children as React.ReactElement}
         </ResponsiveContainer>
       </YAxisWidth.Provider>
@@ -191,7 +205,9 @@ export function ChartAxis({
   } as const;
   if (isY) {
     const o =
-      orientation === "left" || orientation === "right" ? orientation : undefined;
+      orientation === "left" || orientation === "right"
+        ? orientation
+        : undefined;
     // `width` acts as a floor over the measured width of the longest label.
     return (
       <YAxis
@@ -236,7 +252,9 @@ export function ChartTooltip({
         strokeOpacity: 0.25,
         strokeDasharray: "2 4",
       }}
-      content={(content) => <ChartTooltipContent {...content} valueFormatter={valueFormatter} />}
+      content={(content) => (
+        <ChartTooltipContent {...content} valueFormatter={valueFormatter} />
+      )}
       {...props}
     />
   );
@@ -245,7 +263,9 @@ export function ChartTooltip({
 function ChartTooltipContent({
   valueFormatter,
   ...props
-}: TooltipContentProps<TooltipValueType, NameType> & { valueFormatter?: (value: number) => string }) {
+}: TooltipContentProps<TooltipValueType, NameType> & {
+  valueFormatter?: (value: number) => string;
+}) {
   const { active, label, payload } = props;
   if (!active || !payload || payload.length === 0) return null;
   return (
@@ -257,13 +277,18 @@ function ChartTooltipContent({
       ) : null}
       <ul className="mt-1 flex flex-col gap-1">
         {payload.map((p, i) => (
-          <li key={String(p.dataKey ?? p.name)} className="flex items-center gap-2">
+          <li
+            key={String(p.dataKey ?? p.name)}
+            className="flex items-center gap-2"
+          >
             <span
               aria-hidden
               className="size-2 rounded-full"
               style={{ background: (p.color as string) ?? chartColor(i) }}
             />
-            <span className="text-muted-foreground">{String(p.name ?? p.dataKey)}</span>
+            <span className="text-muted-foreground">
+              {String(p.name ?? p.dataKey)}
+            </span>
             <span className="ml-auto font-mono tabular-nums text-foreground">
               {typeof p.value === "number"
                 ? (valueFormatter?.(p.value) ?? p.value.toLocaleString())

@@ -5,7 +5,11 @@
 import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { Button } from "@wirefront/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { Input } from "@wirefront/ui/input";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Separator } from "@wirefront/ui/separator";
@@ -67,19 +71,39 @@ export interface HeroSignInProps {
   hero?: ReactNode;
 }
 
-type FormProps = Pick<HeroSignInProps, "onSignIn" | "onSuccess" | "providers" | "onProvider"> & { t: typeof HERO_SIGN_IN_MESSAGES; forgot?: ReactNode };
+type FormProps = Pick<
+  HeroSignInProps,
+  "onSignIn" | "onSuccess" | "providers" | "onProvider"
+> & { t: typeof HERO_SIGN_IN_MESSAGES; forgot?: ReactNode };
 
 const fieldError = "text-destructive-foreground text-xs";
 
-function Providers({ providers = [], onProvider, t }: Pick<FormProps, "providers" | "onProvider" | "t">) {
+function Providers({
+  providers = [],
+  onProvider,
+  t,
+}: Pick<FormProps, "providers" | "onProvider" | "t">) {
   const provider = useAction(onProvider ?? (async () => {}));
   if (!onProvider || providers.length === 0) return null;
   return (
     <>
-      <div className={cn("grid gap-2.5", providers.length > 1 && "grid-cols-2")}>
+      <div
+        className={cn("grid gap-2.5", providers.length > 1 && "grid-cols-2")}
+      >
         {providers.map((p) => (
-          <Button aria-busy={provider.isPending(p.id)} disabled={provider.isPending()} key={p.id} onClick={() => void provider.run(p.id, p.id)} type="button" variant="outline">
-            {provider.isPending(p.id) ? <Spinner data-icon="inline-start" /> : p.icon}
+          <Button
+            aria-busy={provider.isPending(p.id)}
+            disabled={provider.isPending()}
+            key={p.id}
+            onClick={() => void provider.run(p.id, p.id)}
+            type="button"
+            variant="outline"
+          >
+            {provider.isPending(p.id) ? (
+              <Spinner data-icon="inline-start" />
+            ) : (
+              p.icon
+            )}
             {p.name}
           </Button>
         ))}
@@ -91,7 +115,9 @@ function Providers({ providers = [], onProvider, t }: Pick<FormProps, "providers
       ) : null}
       <div className="flex items-center gap-3">
         <Separator className="flex-1" />
-        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.orEmail}</span>
+        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+          {t.orEmail}
+        </span>
         <Separator className="flex-1" />
       </div>
     </>
@@ -100,18 +126,35 @@ function Providers({ providers = [], onProvider, t }: Pick<FormProps, "providers
 
 function SignInForm({ onSignIn, onSuccess, t, forgot }: FormProps) {
   const [reveal, setReveal] = useState(false);
-  const form = useActionForm({ schema: SignInInput, action: onSignIn, onSuccess: () => onSuccess?.() });
+  const form = useActionForm({
+    schema: SignInInput,
+    action: onSignIn,
+    onSuccess: () => onSuccess?.(),
+  });
   return (
     <Form className="flex flex-col gap-4" noValidate {...form.formProps}>
       <Field.Root className="flex flex-col gap-2" name="email">
-        <Field.Label className="font-medium text-sm leading-none">{t.email}</Field.Label>
-        <Input autoComplete="email" inputMode="email" placeholder={t.emailPlaceholder} type="email" />
+        <Field.Label className="font-medium text-sm leading-none">
+          {t.email}
+        </Field.Label>
+        <Input
+          autoComplete="email"
+          inputMode="email"
+          placeholder={t.emailPlaceholder}
+          type="email"
+        />
         <Field.Error className={fieldError} />
       </Field.Root>
       <Field.Root className="flex flex-col gap-2" name="password">
-        <Field.Label className="font-medium text-sm leading-none">{t.password}</Field.Label>
+        <Field.Label className="font-medium text-sm leading-none">
+          {t.password}
+        </Field.Label>
         <InputGroup>
-          <InputGroupInput autoComplete="current-password" placeholder={t.passwordPlaceholder} type={reveal ? "text" : "password"} />
+          <InputGroupInput
+            autoComplete="current-password"
+            placeholder={t.passwordPlaceholder}
+            type={reveal ? "text" : "password"}
+          />
           <InputGroupAddon align="inline-end">
             <button
               aria-label={reveal ? t.hidePassword : t.showPassword}
@@ -120,7 +163,11 @@ function SignInForm({ onSignIn, onSuccess, t, forgot }: FormProps) {
               onClick={() => setReveal((v) => !v)}
               type="button"
             >
-              {reveal ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+              {reveal ? (
+                <EyeOffIcon className="size-4" />
+              ) : (
+                <EyeIcon className="size-4" />
+              )}
             </button>
           </InputGroupAddon>
         </InputGroup>
@@ -131,7 +178,13 @@ function SignInForm({ onSignIn, onSuccess, t, forgot }: FormProps) {
           {form.formError}
         </p>
       ) : null}
-      <Button aria-busy={form.pending} className="mt-1 w-full" disabled={form.pending} size="lg" type="submit">
+      <Button
+        aria-busy={form.pending}
+        className="mt-1 w-full"
+        disabled={form.pending}
+        size="lg"
+        type="submit"
+      >
         {form.pending ? <Spinner data-icon="inline-start" /> : null}
         {t.submit}
       </Button>
@@ -140,10 +193,21 @@ function SignInForm({ onSignIn, onSuccess, t, forgot }: FormProps) {
   );
 }
 
-function HeroSignInScreen({ forgotPasswordHref, signUpHref, logo, hero, ...form }: HeroSignInProps) {
+function HeroSignInScreen({
+  forgotPasswordHref,
+  signUpHref,
+  logo,
+  hero,
+  ...form
+}: HeroSignInProps) {
   const t = useMessages("heroSignIn", HERO_SIGN_IN_MESSAGES);
   return (
-    <div className={cn("grid min-h-svh grid-cols-1 bg-background text-foreground", hero && "lg:grid-cols-[1.2fr_minmax(440px,1fr)]")}>
+    <div
+      className={cn(
+        "grid min-h-svh grid-cols-1 bg-background text-foreground",
+        hero && "lg:grid-cols-[1.2fr_minmax(440px,1fr)]"
+      )}
+    >
       {hero ? (
         <aside className="relative hidden overflow-hidden lg:flex lg:items-center lg:justify-center">
           <div
@@ -159,30 +223,52 @@ function HeroSignInScreen({ forgotPasswordHref, signUpHref, logo, hero, ...form 
           {hero}
         </aside>
       ) : null}
-      <div className={cn("flex items-center justify-center px-6 py-12 lg:px-12", hero && "lg:border-border/60 lg:border-s")}>
+      <div
+        className={cn(
+          "flex items-center justify-center px-6 py-12 lg:px-12",
+          hero && "lg:border-border/60 lg:border-s"
+        )}
+      >
         <Card className="w-full max-w-sm gap-0 px-5 py-8 shadow-sm sm:px-6">
-          {logo ? <div className="flex items-center justify-center">{logo}</div> : null}
-          <div className={cn("flex flex-col items-center gap-1.5 text-center", logo && "mt-5")}>
+          {logo ? (
+            <div className="flex items-center justify-center">{logo}</div>
+          ) : null}
+          <div
+            className={cn(
+              "flex flex-col items-center gap-1.5 text-center",
+              logo && "mt-5"
+            )}
+          >
             <h1 className="font-heading text-2xl tracking-tight">{t.title}</h1>
             <p className="text-muted-foreground text-sm">{t.subtitle}</p>
           </div>
           <div className="mt-6 flex flex-col gap-5">
-            <Providers onProvider={form.onProvider} providers={form.providers} t={t} />
+            <Providers
+              onProvider={form.onProvider}
+              providers={form.providers}
+              t={t}
+            />
             <SignInForm {...form} t={t} />
           </div>
           {forgotPasswordHref || signUpHref ? (
             <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 text-sm">
               {forgotPasswordHref ? (
-                <WirefrontLink className="whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground hover:underline" href={forgotPasswordHref}>
+                <WirefrontLink
+                  className="whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground hover:underline"
+                  href={forgotPasswordHref}
+                >
                   {t.forgotPassword}
                 </WirefrontLink>
               ) : null}
               {signUpHref ? (
                 <p className="whitespace-nowrap text-muted-foreground">
                   {t.newHere}{" "}
-                  <WirefrontLink className="text-foreground underline underline-offset-4" href={signUpHref}>
-            {t.signUp}
-          </WirefrontLink>
+                  <WirefrontLink
+                    className="text-foreground underline underline-offset-4"
+                    href={signUpHref}
+                  >
+                    {t.signUp}
+                  </WirefrontLink>
                 </p>
               ) : null}
             </div>

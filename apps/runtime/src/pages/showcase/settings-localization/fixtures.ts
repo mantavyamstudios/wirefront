@@ -15,7 +15,16 @@ export const getLocalePrefs: LocalePrefs = {
   numberFormat: "us",
 };
 
-export const languages = ["en-US", "en-GB", "fr-FR", "de-DE", "ja-JP", "zh-CN", "es-ES", "pt-BR"];
+export const languages = [
+  "en-US",
+  "en-GB",
+  "fr-FR",
+  "de-DE",
+  "ja-JP",
+  "zh-CN",
+  "es-ES",
+  "pt-BR",
+];
 export const timeZones = [
   "America/Los_Angeles",
   "America/Denver",

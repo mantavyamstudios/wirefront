@@ -16,7 +16,9 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 async function demoSignIn({ password }: SignInInput) {
   await wait(900);
   if (password.length < 8 || password.toLowerCase().includes("wrong")) {
-    return fail(undefined, { password: "That password doesn’t match this account." });
+    return fail(undefined, {
+      password: "That password doesn’t match this account.",
+    });
   }
   return ok(fixtures.signIn);
 }
@@ -41,7 +43,11 @@ export function AuthSignInShowcasePage() {
     <DevlFrame>
       <SignIn
         defaultEmail={fixtures.defaultEmail}
-        error={state === "error" ? "Your session expired. Sign in again to continue." : undefined}
+        error={
+          state === "error"
+            ? "Your session expired. Sign in again to continue."
+            : undefined
+        }
         forgotPasswordHref="#forgot-password"
         onMagicLink={demoMagicLink}
         onPasskey={demoPasskey}

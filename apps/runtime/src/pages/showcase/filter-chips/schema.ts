@@ -3,10 +3,14 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const CustomerStatus = z.enum(["active", "trial", "paused", "churned"]).meta({ id: "CustomerStatus" });
+export const CustomerStatus = z
+  .enum(["active", "trial", "paused", "churned"])
+  .meta({ id: "CustomerStatus" });
 export type CustomerStatus = z.infer<typeof CustomerStatus>;
 
-export const CustomerPlan = z.enum(["free", "pro", "enterprise"]).meta({ id: "CustomerPlan" });
+export const CustomerPlan = z
+  .enum(["free", "pro", "enterprise"])
+  .meta({ id: "CustomerPlan" });
 export type CustomerPlan = z.infer<typeof CustomerPlan>;
 
 export const Customer = z
@@ -46,7 +50,11 @@ export type CustomerFilters = z.infer<typeof CustomerFilters>;
 
 /** The list query as query-string parameters (arrays repeat the key). */
 export const CustomersQuery = z
-  .object({ page: z.int().min(1), pageSize: z.int().min(1).max(100), search: z.string().optional() })
+  .object({
+    page: z.int().min(1),
+    pageSize: z.int().min(1).max(100),
+    search: z.string().optional(),
+  })
   .extend(CustomerFilters.shape)
   .meta({ id: "CustomersQuery" });
 export type CustomersQuery = z.infer<typeof CustomersQuery>;

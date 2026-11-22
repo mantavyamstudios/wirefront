@@ -4,12 +4,22 @@ import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 export const Reviewer = z
-  .object({ id: z.string(), name: z.string(), state: z.enum(["approved", "changes", "pending"]), at: z.string().optional() })
+  .object({
+    id: z.string(),
+    name: z.string(),
+    state: z.enum(["approved", "changes", "pending"]),
+    at: z.string().optional(),
+  })
   .meta({ id: "Reviewer" });
 export type Reviewer = z.infer<typeof Reviewer>;
 
 export const Check = z
-  .object({ id: z.string(), name: z.string(), status: z.enum(["passed", "failing", "pending"]), durationMs: z.number().nonnegative().optional() })
+  .object({
+    id: z.string(),
+    name: z.string(),
+    status: z.enum(["passed", "failing", "pending"]),
+    durationMs: z.number().nonnegative().optional(),
+  })
   .meta({ id: "Check" });
 export type Check = z.infer<typeof Check>;
 
@@ -47,6 +57,17 @@ export type PullRequest = z.infer<typeof PullRequest>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getPullRequest: { method: "GET", path: "/repos/{repo}/pulls/{number}", summary: "A pull request with reviewers, checks and activity", params: z.object({ repo: z.string(), number: z.string() }), response: PullRequest },
-  mergePullRequest: { method: "POST", path: "/repos/{repo}/pulls/{number}/merge", summary: "Squash and merge", params: z.object({ repo: z.string(), number: z.string() }) },
+  getPullRequest: {
+    method: "GET",
+    path: "/repos/{repo}/pulls/{number}",
+    summary: "A pull request with reviewers, checks and activity",
+    params: z.object({ repo: z.string(), number: z.string() }),
+    response: PullRequest,
+  },
+  mergePullRequest: {
+    method: "POST",
+    path: "/repos/{repo}/pulls/{number}/merge",
+    summary: "Squash and merge",
+    params: z.object({ repo: z.string(), number: z.string() }),
+  },
 });

@@ -8,20 +8,29 @@ import * as fixtures from "./fixtures";
 import type { Range } from "./schema";
 import { PageviewAnalytics } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function DashboardsAnalyticsShowcasePage() {
   const state = useShowcaseState();
   const [range, setRange] = useState<Range>("30d");
   return (
     <PageviewAnalytics
-      data={state === "loading" || state === "error" ? undefined : state === "empty" ? fixtures.emptyStats : fixtures.statsFor(range)}
+      data={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? fixtures.emptyStats
+            : fixtures.statsFor(range)
+      }
       error="The analytics service didn’t respond. Check your connection and try again."
       onExport={() => wait(600)}
       onRangeChange={setRange}
       onRetry={() => {}}
       range={range}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

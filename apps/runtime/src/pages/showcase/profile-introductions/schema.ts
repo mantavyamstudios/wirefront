@@ -25,7 +25,23 @@ export type Suggestion = z.infer<typeof Suggestion>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listSuggestions: { method: "GET", path: "/suggestions/people", summary: "People the viewer may know", response: z.array(Suggestion) },
-  followSuggestion: { method: "PUT", path: "/people/{id}/follow", summary: "Follow or unfollow", params: z.object({ id: z.string() }), body: z.object({ following: z.boolean() }) },
-  dismissSuggestion: { method: "POST", path: "/suggestions/people/{id}/dismiss", summary: "Stop suggesting someone", params: z.object({ id: z.string() }) },
+  listSuggestions: {
+    method: "GET",
+    path: "/suggestions/people",
+    summary: "People the viewer may know",
+    response: z.array(Suggestion),
+  },
+  followSuggestion: {
+    method: "PUT",
+    path: "/people/{id}/follow",
+    summary: "Follow or unfollow",
+    params: z.object({ id: z.string() }),
+    body: z.object({ following: z.boolean() }),
+  },
+  dismissSuggestion: {
+    method: "POST",
+    path: "/suggestions/people/{id}/dismiss",
+    summary: "Stop suggesting someone",
+    params: z.object({ id: z.string() }),
+  },
 });

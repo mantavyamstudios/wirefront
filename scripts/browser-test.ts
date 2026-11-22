@@ -41,9 +41,15 @@ import { compare, type Counts } from "./lint-gate";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = resolve(ROOT, ".audit/browser");
 const BASELINE = resolve(ROOT, "a11y-baseline.json");
-const AXE_SOURCE = readFileSync(createRequire(import.meta.url).resolve("axe-core/axe.min.js"), "utf8");
+const AXE_SOURCE = readFileSync(
+  createRequire(import.meta.url).resolve("axe-core/axe.min.js"),
+  "utf8"
+);
 const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
-const CONCURRENCY = Math.max(1, Number.parseInt(process.env.BROWSER_CONCURRENCY ?? "4", 10) || 4);
+const CONCURRENCY = Math.max(
+  1,
+  Number.parseInt(process.env.BROWSER_CONCURRENCY ?? "4", 10) || 4
+);
 const VIEWPORTS = [
   { name: "desktop", width: 1440, height: 900 },
   { name: "mobile", width: 375, height: 812 },
@@ -51,7 +57,10 @@ const VIEWPORTS = [
 
 const args = process.argv.slice(2);
 const updateBaseline = args.includes("--update-a11y-baseline");
-const onlyDesigns = args.find((a) => a.startsWith("--design="))?.split("=")[1]?.split(",");
+const onlyDesigns = args
+  .find((a) => a.startsWith("--design="))
+  ?.split("=")[1]
+  ?.split(",");
 
 interface ScreenResult {
   errors: string[];
@@ -63,35 +72,49 @@ interface ScreenResult {
 }
 
 const designs = Object.entries(SOURCE_FILES)
-  .flatMap(([category, map]) => Object.keys(map ?? {}).map((slug) => `${category}/${slug}`))
+  .flatMap(([category, map]) =>
+    Object.keys(map ?? {}).map((slug) => `${category}/${slug}`)
+  )
   .filter((d) => !onlyDesigns || onlyDesigns.includes(d));
 
 // Every state a screen declares (designs.ts `states`) is checked too, keyed
 // <design>~<state>@<viewport>; the default "ready" state keeps <design>@<viewport>.
-const statesOf = new Map(readDesignMeta().map((d) => [`${d.category}/${d.slug}`, d.states ?? ["ready"]]));
+const statesOf = new Map(
+  readDesignMeta().map((d) => [
+    `${d.category}/${d.slug}`,
+    d.states ?? ["ready"],
+  ])
+);
 // Ready-to-wire screens (SCREEN-CONTRACT.md, definition of done) must be axe
 // clean in every state; the baseline only covers screens not yet converted.
 const ready = new Set(readyScreens());
 const isReady = (design: string) => {
   const [category, slug] = design.split("/");
-  const file = SOURCE_FILES[category as keyof typeof SOURCE_FILES]?.[slug ?? ""];
+  const file =
+    SOURCE_FILES[category as keyof typeof SOURCE_FILES]?.[slug ?? ""];
   return file !== undefined && ready.has(file);
 };
 
 const unitKey = (design: string, state: string, viewport: string) =>
-  state === "ready" ? `${design}@${viewport}` : `${design}~${state}@${viewport}`;
+  state === "ready"
+    ? `${design}@${viewport}`
+    : `${design}~${state}@${viewport}`;
 
 async function checkScreen(
   browser: Browser,
   base: string,
   design: string,
   state: string,
-  vp: (typeof VIEWPORTS)[number],
+  vp: (typeof VIEWPORTS)[number]
 ): Promise<ScreenResult> {
-  const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height } });
+  const context = await browser.newContext({
+    viewport: { width: vp.width, height: vp.height },
+  });
   const page = await context.newPage();
   const result: ScreenResult = { errors: [], warnings: [], a11y: {} };
-  page.on("pageerror", (e) => result.errors.push(`page error: ${String(e).split("\n")[0]?.slice(0, 300)}`));
+  page.on("pageerror", (e) =>
+    result.errors.push(`page error: ${String(e).split("\n")[0]?.slice(0, 300)}`)
+  );
   page.on("console", (m) => {
     const text = m.text().replace(/\s+/g, " ").slice(0, 400);
     if (m.type() === "error") result.errors.push(`console error: ${text}`);
@@ -101,12 +124,15 @@ async function checkScreen(
     // Real clock on purpose: this check is about runtime behaviour, and a frozen
     // browser clock would cause hydration mismatches the app doesn't have.
     const stateParam = state === "ready" ? "" : `?state=${state}`;
-    await page.goto(`${base}/preview/${design}${stateParam}`, { waitUntil: "networkidle", timeout: 60_000 });
+    await page.goto(`${base}/preview/${design}${stateParam}`, {
+      waitUntil: "networkidle",
+      timeout: 60_000,
+    });
     result.settleMs = await waitForSettledLayout(page);
     await page.addScriptTag({ content: AXE_SOURCE });
     const runAxe = async (only: { type: "tag" | "rule"; values: string[] }) =>
       (await page.evaluate(
-        `axe.run(document, { runOnly: ${JSON.stringify(only)}, resultTypes: ["violations"] }).then((r) => r.violations.map((v) => [v.id, v.nodes.map((n) => n.target.join(" ") + " — " + (n.failureSummary || "").replace(/\\s+/g, " ").slice(0, 240))]))`,
+        `axe.run(document, { runOnly: ${JSON.stringify(only)}, resultTypes: ["violations"] }).then((r) => r.violations.map((v) => [v.id, v.nodes.map((n) => n.target.join(" ") + " — " + (n.failureSummary || "").replace(/\\s+/g, " ").slice(0, 240))]))`
       )) as [string, string[]][];
     let violations = await runAxe({ type: "tag", values: AXE_TAGS });
     // A screen whose demo adds content on a timer (a chat reply fading in) can
@@ -125,19 +151,37 @@ async function checkScreen(
         return finite.length;
       })()`)) as number;
       if (waited > 0) {
-        const recheck = await runAxe({ type: "rule", values: ["color-contrast"] });
-        const before = violations.find(([rule]) => rule === "color-contrast")?.[1].length ?? 0;
-        const after = recheck.find(([rule]) => rule === "color-contrast")?.[1].length ?? 0;
-        console.log(`[browser] note ${design}~${state}@${vp.name}: color-contrast measured during ${waited} running animation(s); rechecked after they finished: ${before} → ${after}`);
-        violations = [...violations.filter(([rule]) => rule !== "color-contrast"), ...recheck.filter(([rule]) => rule === "color-contrast")];
+        const recheck = await runAxe({
+          type: "rule",
+          values: ["color-contrast"],
+        });
+        const before =
+          violations.find(([rule]) => rule === "color-contrast")?.[1].length ??
+          0;
+        const after =
+          recheck.find(([rule]) => rule === "color-contrast")?.[1].length ?? 0;
+        console.log(
+          `[browser] note ${design}~${state}@${vp.name}: color-contrast measured during ${waited} running animation(s); rechecked after they finished: ${before} → ${after}`
+        );
+        violations = [
+          ...violations.filter(([rule]) => rule !== "color-contrast"),
+          ...recheck.filter(([rule]) => rule === "color-contrast"),
+        ];
       }
     }
     for (const [rule, nodes] of violations) {
       result.a11y[rule] = nodes.length;
-      result.a11yNodes = [...(result.a11yNodes ?? []), ...nodes.map((n) => `${rule}: ${n}`)];
+      result.a11yNodes = [
+        ...(result.a11yNodes ?? []),
+        ...nodes.map((n) => `${rule}: ${n}`),
+      ];
     }
   } catch (err) {
-    result.errors.push(err instanceof Error ? err.message.split("\n")[0] ?? String(err) : String(err));
+    result.errors.push(
+      err instanceof Error
+        ? (err.message.split("\n")[0] ?? String(err))
+        : String(err)
+    );
   } finally {
     await context.close();
   }
@@ -147,9 +191,15 @@ async function checkScreen(
 async function main(): Promise<void> {
   const results: Record<string, ScreenResult> = {};
   const units = designs.flatMap((d) =>
-    (statesOf.get(d) ?? ["ready"]).flatMap((state) => VIEWPORTS.map((vp) => ({ design: d, state, vp }))),
+    (statesOf.get(d) ?? ["ready"]).flatMap((state) =>
+      VIEWPORTS.map((vp) => ({ design: d, state, vp }))
+    )
   );
-  const progress = trackProgress("browser", { total: units.length, slowUnitMs: 30_000, stallMs: 90_000 });
+  const progress = trackProgress("browser", {
+    total: units.length,
+    slowUnitMs: 30_000,
+    stallMs: 90_000,
+  });
 
   await withAppServer("browser", async (base) => {
     const browser = await chromium.launch();
@@ -162,13 +212,16 @@ async function main(): Promise<void> {
             progress.start(key);
             const r = await checkScreen(browser, base, u.design, u.state, u.vp);
             if (isReady(u.design) && r.a11yNodes?.length) {
-              r.errors.push(`ready-to-wire screens allow no a11y violations: ${r.a11yNodes[0]}`);
+              r.errors.push(
+                `ready-to-wire screens allow no a11y violations: ${r.a11yNodes[0]}`
+              );
             }
             results[key] = r;
             progress.done(key, r.errors.length === 0);
-            if (r.errors.length) process.stdout.write(`[browser] ✗ ${key}: ${r.errors[0]}\n`);
+            if (r.errors.length)
+              process.stdout.write(`[browser] ✗ ${key}: ${r.errors[0]}\n`);
           }
-        }),
+        })
       );
     } finally {
       await browser.close();
@@ -178,14 +231,22 @@ async function main(): Promise<void> {
   const current: Counts = Object.fromEntries(
     Object.entries(results)
       .filter(([, r]) => Object.keys(r.a11y).length > 0)
-      .map(([k, r]) => [k, r.a11y]),
+      .map(([k, r]) => [k, r.a11y])
   );
   mkdirSync(OUT, { recursive: true });
-  writeFileSync(resolve(OUT, "report.json"), `${JSON.stringify(results, null, 2)}\n`);
+  writeFileSync(
+    resolve(OUT, "report.json"),
+    `${JSON.stringify(results, null, 2)}\n`
+  );
 
-  const errored = Object.entries(results).filter(([, r]) => r.errors.length > 0);
-  const warned = Object.entries(results).filter(([, r]) => r.warnings.length > 0);
-  for (const [k, r] of warned) process.stdout.write(`[browser] warning ${k}: ${r.warnings[0]}\n`);
+  const errored = Object.entries(results).filter(
+    ([, r]) => r.errors.length > 0
+  );
+  const warned = Object.entries(results).filter(
+    ([, r]) => r.warnings.length > 0
+  );
+  for (const [k, r] of warned)
+    process.stdout.write(`[browser] warning ${k}: ${r.warnings[0]}\n`);
 
   let a11yProblems: string[] = [];
   if (updateBaseline) {
@@ -193,26 +254,46 @@ async function main(): Promise<void> {
     const kept =
       onlyDesigns && existsSync(BASELINE)
         ? Object.fromEntries(
-            Object.entries(JSON.parse(readFileSync(BASELINE, "utf8")) as Counts).filter(
-              ([k]) => !onlyDesigns.some((d) => k.startsWith(`${d}@`) || k.startsWith(`${d}~`)),
-            ),
+            Object.entries(
+              JSON.parse(readFileSync(BASELINE, "utf8")) as Counts
+            ).filter(
+              ([k]) =>
+                !onlyDesigns.some(
+                  (d) => k.startsWith(`${d}@`) || k.startsWith(`${d}~`)
+                )
+            )
           )
         : {};
-    writeFileSync(BASELINE, `${JSON.stringify({ ...kept, ...current }, null, 2)}\n`);
-    process.stdout.write(`[browser] a11y baseline recorded: ${Object.keys(current).length} screen/viewports with violations.\n`);
+    writeFileSync(
+      BASELINE,
+      `${JSON.stringify({ ...kept, ...current }, null, 2)}\n`
+    );
+    process.stdout.write(
+      `[browser] a11y baseline recorded: ${Object.keys(current).length} screen/viewports with violations.\n`
+    );
   } else if (!existsSync(BASELINE)) {
-    a11yProblems = ["a11y-baseline.json is missing; run `bun run test:browser -- --update-a11y-baseline`."];
+    a11yProblems = [
+      "a11y-baseline.json is missing; run `bun run test:browser -- --update-a11y-baseline`.",
+    ];
   } else {
     const baseline = JSON.parse(readFileSync(BASELINE, "utf8")) as Counts;
     // When only some designs ran, compare only those.
     const scoped = onlyDesigns
-      ? Object.fromEntries(Object.entries(baseline).filter(([k]) => onlyDesigns.some((d) => k.startsWith(`${d}@`) || k.startsWith(`${d}~`))))
+      ? Object.fromEntries(
+          Object.entries(baseline).filter(([k]) =>
+            onlyDesigns.some(
+              (d) => k.startsWith(`${d}@`) || k.startsWith(`${d}~`)
+            )
+          )
+        )
       : baseline;
     const { regressions, improvements } = compare(scoped, current);
     a11yProblems = regressions.map((r) => `new a11y violation: ${r}`);
     if (improvements.length && !onlyDesigns) {
       a11yProblems.push(
-        ...improvements.map((i) => `fixed (lock in with --update-a11y-baseline): ${i}`),
+        ...improvements.map(
+          (i) => `fixed (lock in with --update-a11y-baseline): ${i}`
+        )
       );
     }
   }
@@ -221,7 +302,7 @@ async function main(): Promise<void> {
   const ok = errored.length === 0 && a11yProblems.length === 0;
   progress.finish(
     `${units.length - errored.length}/${units.length} screen/viewports clean; ${warned.length} with warnings; ` +
-      `${a11yProblems.length} a11y baseline problem(s)${ok ? "" : " — FAILED"}`,
+      `${a11yProblems.length} a11y baseline problem(s)${ok ? "" : " — FAILED"}`
   );
   process.exit(ok ? 0 : 1);
 }

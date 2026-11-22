@@ -15,7 +15,19 @@ export function DevtoolsCodeReviewShowcasePage() {
   return (
     <WirefrontProvider locale="en-US" now={demoNow} timeZone="UTC">
       <DevlFrame>
-        <CodeReview files={fixtures.listPullFiles} me={fixtures.me} onComment={save} onReply={save} onResolve={save} onSubmitReview={save} onViewedChange={() => {}} people={fixtures.people} pr={fixtures.getPullRequest} threads={fixtures.listReviewThreads} viewed={fixtures.viewed} />
+        <CodeReview
+          files={fixtures.listPullFiles}
+          me={fixtures.me}
+          onComment={save}
+          onReply={save}
+          onResolve={save}
+          onSubmitReview={save}
+          onViewedChange={() => {}}
+          people={fixtures.people}
+          pr={fixtures.getPullRequest}
+          threads={fixtures.listReviewThreads}
+          viewed={fixtures.viewed}
+        />
       </DevlFrame>
     </WirefrontProvider>
   );

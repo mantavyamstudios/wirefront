@@ -6,7 +6,8 @@ import welcomeSrc from "@/assets/figures/welcome.png";
 import { ThemeToggle } from "@wirefront/ui/theme-toggle";
 import { ParticleSignIn } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function LoginShowcasePage() {
   return (
@@ -15,10 +16,15 @@ export function LoginShowcasePage() {
       brand={
         <div className="flex items-center gap-2 font-mono text-sm">
           <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-foreground" />
-          <span className="truncate uppercase tracking-[0.12em] sm:tracking-[0.2em]">Wirefront</span>
+          <span className="truncate uppercase tracking-[0.12em] sm:tracking-[0.2em]">
+            Wirefront
+          </span>
         </div>
       }
-      caption={{ eyebrow: "Sign-in design", text: "Split layout with a particle field on the left and a single centered form on the right." }}
+      caption={{
+        eyebrow: "Sign-in design",
+        text: "Split layout with a particle field on the left and a single centered form on the right.",
+      }}
       illustration={welcomeSrc}
       onMagicLink={() => wait(600)}
       onProvider={() => wait(600)}

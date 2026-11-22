@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const ProjectStatus = z.enum(["active", "paused", "archived"]).meta({ id: "ProjectStatus" });
+export const ProjectStatus = z
+  .enum(["active", "paused", "archived"])
+  .meta({ id: "ProjectStatus" });
 export type ProjectStatus = z.infer<typeof ProjectStatus>;
 
 /** A project as the list shows it. */

@@ -8,9 +8,19 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
-import { CalendarDaysIcon, CheckIcon, MapPinIcon, PlusIcon } from "lucide-react";
+import {
+  CalendarDaysIcon,
+  CheckIcon,
+  MapPinIcon,
+  PlusIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import type { PersonSummary } from "./schema";
 
@@ -60,16 +70,38 @@ function Card({ person, onToggleFollow, className }: PersonHoverCardProps) {
       return () => setFollowing(!next);
     },
   });
-  const compact = (n: number) => fmt.number(n, { notation: n >= 10_000 ? "compact" : "standard", maximumFractionDigits: 1 });
-  const firstNames = (names: string[]) => new Intl.ListFormat(locale, { type: "conjunction", style: "long" }).format(names.map((n) => n.split(" ")[0] ?? n));
+  const compact = (n: number) =>
+    fmt.number(n, {
+      notation: n >= 10_000 ? "compact" : "standard",
+      maximumFractionDigits: 1,
+    });
+  const firstNames = (names: string[]) =>
+    new Intl.ListFormat(locale, { type: "conjunction", style: "long" }).format(
+      names.map((n) => n.split(" ")[0] ?? n)
+    );
 
   return (
-    <div className={cn("relative w-[min(20rem,calc(100vw-2rem))] overflow-hidden bg-background", className)}>
-      <div aria-hidden className="h-16 bg-linear-to-br from-category-8/30 via-foreground/4 to-category-6/30" />
+    <div
+      className={cn(
+        "relative w-[min(20rem,calc(100vw-2rem))] overflow-hidden bg-background",
+        className
+      )}
+    >
+      <div
+        aria-hidden
+        className="h-16 bg-linear-to-br from-category-8/30 via-foreground/4 to-category-6/30"
+      />
       <div className="relative px-4 pb-4">
-        <Avatar aria-hidden className="-mt-7 size-14 border-4 border-background bg-foreground">
-          {person.avatarUrl ? <AvatarImage alt="" src={person.avatarUrl} /> : null}
-          <AvatarFallback className="bg-foreground text-background">{initials(person.name)}</AvatarFallback>
+        <Avatar
+          aria-hidden
+          className="-mt-7 size-14 border-4 border-background bg-foreground"
+        >
+          {person.avatarUrl ? (
+            <AvatarImage alt="" src={person.avatarUrl} />
+          ) : null}
+          <AvatarFallback className="bg-foreground text-background">
+            {initials(person.name)}
+          </AvatarFallback>
         </Avatar>
         <div className="mt-2 flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -88,7 +120,14 @@ function Card({ person, onToggleFollow, className }: PersonHoverCardProps) {
             </div>
           </div>
           {onToggleFollow ? (
-            <Button aria-pressed={following} disabled={follow.isPending()} onClick={() => void follow.run(!following)} size="sm" type="button" variant={following ? "outline" : "default"}>
+            <Button
+              aria-pressed={following}
+              disabled={follow.isPending()}
+              onClick={() => void follow.run(!following)}
+              size="sm"
+              type="button"
+              variant={following ? "outline" : "default"}
+            >
               {following ? <CheckIcon aria-hidden /> : <PlusIcon aria-hidden />}
               {following ? t.followingButton : t.follow}
             </Button>
@@ -99,7 +138,11 @@ function Card({ person, onToggleFollow, className }: PersonHoverCardProps) {
             {follow.error}
           </p>
         ) : null}
-        {person.bio ? <p className="mt-3 text-foreground/85 text-sm leading-snug">{person.bio}</p> : null}
+        {person.bio ? (
+          <p className="mt-3 text-foreground/85 text-sm leading-snug">
+            {person.bio}
+          </p>
+        ) : null}
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-muted-foreground text-xs">
           {person.location ? (
             <span className="inline-flex items-center gap-1.5">
@@ -110,27 +153,51 @@ function Card({ person, onToggleFollow, className }: PersonHoverCardProps) {
           {person.joinedAt ? (
             <span className="inline-flex items-center gap-1.5">
               <CalendarDaysIcon aria-hidden className="size-3" />
-              {interpolate(t.joined, { date: fmt.date(`${person.joinedAt}T00:00:00Z`, { month: "short", year: "numeric", timeZone: "UTC" }) })}
+              {interpolate(t.joined, {
+                date: fmt.date(`${person.joinedAt}T00:00:00Z`, {
+                  month: "short",
+                  year: "numeric",
+                  timeZone: "UTC",
+                }),
+              })}
             </span>
           ) : null}
         </div>
         <div className="mt-3 flex items-center gap-4 border-border/60 border-t pt-3 text-xs">
           <span>
-            <span className="font-mono">{compact(person.following)}</span> <span className="text-muted-foreground">{t.following}</span>
+            <span className="font-mono">{compact(person.following)}</span>{" "}
+            <span className="text-muted-foreground">{t.following}</span>
           </span>
           <span>
-            <span className="font-mono">{compact(person.followers)}</span> <span className="text-muted-foreground">{t.followers}</span>
+            <span className="font-mono">{compact(person.followers)}</span>{" "}
+            <span className="text-muted-foreground">{t.followers}</span>
           </span>
         </div>
         {person.mutuals?.names.length ? (
           <div className="mt-3 flex items-start -space-x-1.5">
             {person.mutuals.names.slice(0, 3).map((n) => (
-              <Avatar aria-hidden className="size-5 border-2 border-background" key={n}>
-                <AvatarFallback className="text-[10px]">{initials(n)}</AvatarFallback>
+              <Avatar
+                aria-hidden
+                className="size-5 border-2 border-background"
+                key={n}
+              >
+                <AvatarFallback className="text-[10px]">
+                  {initials(n)}
+                </AvatarFallback>
               </Avatar>
             ))}
             <span className="ms-3 min-w-0 text-muted-foreground text-xs">
-              {person.mutuals.more ? interpolate(t.mutualsMore, { names: person.mutuals.names.slice(0, 3).map((n) => n.split(" ")[0]).join(", "), count: person.mutuals.more }) : interpolate(t.mutuals, { names: firstNames(person.mutuals.names) })}
+              {person.mutuals.more
+                ? interpolate(t.mutualsMore, {
+                    names: person.mutuals.names
+                      .slice(0, 3)
+                      .map((n) => n.split(" ")[0])
+                      .join(", "),
+                    count: person.mutuals.more,
+                  })
+                : interpolate(t.mutuals, {
+                    names: firstNames(person.mutuals.names),
+                  })}
             </span>
           </div>
         ) : null}
@@ -153,11 +220,16 @@ function PersonHoverCardScreen(props: PersonHoverCardProps) {
         openOnHover
       >
         <Avatar aria-hidden className="size-3.5">
-          <AvatarFallback className="text-[8px]">{initials(person.name)}</AvatarFallback>
+          <AvatarFallback className="text-[8px]">
+            {initials(person.name)}
+          </AvatarFallback>
         </Avatar>
         {interpolate(t.mention, { name: person.name })}
       </PopoverTrigger>
-      <PopoverContent aria-label={interpolate(t.profile, { name: person.name })} className="overflow-hidden **:data-[slot=popover-viewport]:p-0">
+      <PopoverContent
+        aria-label={interpolate(t.profile, { name: person.name })}
+        className="overflow-hidden **:data-[slot=popover-viewport]:p-0"
+      >
         <Card {...props} />
       </PopoverContent>
     </Popover>

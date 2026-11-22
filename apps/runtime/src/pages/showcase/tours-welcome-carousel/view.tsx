@@ -3,7 +3,13 @@
 "use client";
 
 import { Button } from "@wirefront/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@wirefront/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@wirefront/ui/dialog";
 import { cn } from "@wirefront/ui/lib/utils";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { interpolate, useMessages } from "@wirefront/ui/wirefront/provider";
@@ -34,7 +40,14 @@ export interface WelcomeTourProps {
 
 // A real Dialog (focus trap, Esc, scroll lock). Swipe left/right on touch, or use ←/→ on a
 // keyboard, to move between steps. On phones it becomes a bottom sheet.
-function WelcomeTourScreen({ steps, icons = {}, open, defaultOpen = true, onOpenChange, onComplete }: WelcomeTourProps) {
+function WelcomeTourScreen({
+  steps,
+  icons = {},
+  open,
+  defaultOpen = true,
+  onOpenChange,
+  onComplete,
+}: WelcomeTourProps) {
   const t = useMessages("welcomeTour", WELCOME_TOUR_MESSAGES);
   const [step, setStep] = useState(0);
   const [isOpen, setIsOpen] = useState(open ?? defaultOpen);
@@ -43,7 +56,8 @@ function WelcomeTourScreen({ steps, icons = {}, open, defaultOpen = true, onOpen
   }, [open]);
   const last = step === steps.length - 1;
   const current = steps[step];
-  const go = (d: number) => setStep((s) => Math.min(Math.max(s + d, 0), steps.length - 1));
+  const go = (d: number) =>
+    setStep((s) => Math.min(Math.max(s + d, 0), steps.length - 1));
   const finished = useRef(false);
   const swipeRef = useRef<HTMLDivElement>(null);
   const goRef = useRef(go);
@@ -94,18 +108,30 @@ function WelcomeTourScreen({ steps, icons = {}, open, defaultOpen = true, onOpen
             <div
               aria-hidden
               className="absolute inset-0 opacity-50"
-              style={{ backgroundImage: "radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--primary) 50%, transparent), transparent 50%), radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--primary) 30%, transparent), transparent 50%)" }}
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--primary) 50%, transparent), transparent 50%), radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--primary) 30%, transparent), transparent 50%)",
+              }}
             />
             <div className="relative flex h-full items-center justify-center">
-              <div aria-hidden className="flex size-16 items-center justify-center rounded-2xl bg-background/85 shadow-lg ring-1 ring-border/60 backdrop-blur sm:size-20 [&_svg]:size-8 sm:[&_svg]:size-9">
+              <div
+                aria-hidden
+                className="flex size-16 items-center justify-center rounded-2xl bg-background/85 shadow-lg ring-1 ring-border/60 backdrop-blur sm:size-20 [&_svg]:size-8 sm:[&_svg]:size-9"
+              >
                 {icons[current.id] ?? <SparklesIcon />}
               </div>
             </div>
           </div>
           <div aria-live="polite" className="px-5 py-5 sm:px-6 sm:py-6">
-            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{current.badge}</div>
-            <DialogTitle className="mt-1 font-heading text-xl sm:text-2xl">{current.title}</DialogTitle>
-            <DialogDescription className="mt-2 text-muted-foreground text-sm leading-relaxed">{current.body}</DialogDescription>
+            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+              {current.badge}
+            </div>
+            <DialogTitle className="mt-1 font-heading text-xl sm:text-2xl">
+              {current.title}
+            </DialogTitle>
+            <DialogDescription className="mt-2 text-muted-foreground text-sm leading-relaxed">
+              {current.body}
+            </DialogDescription>
           </div>
         </div>
         <div className="flex items-center justify-between gap-3 border-border/60 border-t px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-4 sm:pb-3">
@@ -120,15 +146,31 @@ function WelcomeTourScreen({ steps, icons = {}, open, defaultOpen = true, onOpen
                 onClick={() => setStep(i)}
                 type="button"
               >
-                <span className={cn("block h-1.5 rounded-full transition-all", i === step ? "w-6 bg-foreground" : "w-1.5 bg-foreground/20 group-hover:bg-foreground/40")} />
+                <span
+                  className={cn(
+                    "block h-1.5 rounded-full transition-all",
+                    i === step
+                      ? "w-6 bg-foreground"
+                      : "w-1.5 bg-foreground/20 group-hover:bg-foreground/40"
+                  )}
+                />
               </button>
             ))}
           </div>
           <div className="flex items-center gap-2">
             {step === 0 ? (
-              <DialogClose render={<Button size="sm" type="button" variant="ghost" />}>{t.skip}</DialogClose>
+              <DialogClose
+                render={<Button size="sm" type="button" variant="ghost" />}
+              >
+                {t.skip}
+              </DialogClose>
             ) : (
-              <Button onClick={() => go(-1)} size="sm" type="button" variant="ghost">
+              <Button
+                onClick={() => go(-1)}
+                size="sm"
+                type="button"
+                variant="ghost"
+              >
                 {t.back}
               </Button>
             )}

@@ -9,7 +9,13 @@ import type { TrackerPriority } from "./schema";
 import { IssuesTable, type IssuesTableListQuery } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const RANK: Record<TrackerPriority, number> = { urgent: 0, high: 1, medium: 2, low: 3, none: 4 };
+const RANK: Record<TrackerPriority, number> = {
+  urgent: 0,
+  high: 1,
+  medium: 2,
+  low: 3,
+  none: 4,
+};
 
 /** What a backend's listIssues would do with the query. */
 function runQuery(query: IssuesTableListQuery) {
@@ -20,11 +26,18 @@ function runQuery(query: IssuesTableListQuery) {
       (!search || `${i.key} ${i.title}`.toLowerCase().includes(search)) &&
       (!f.status?.length || f.status.includes(i.status)) &&
       (!f.priority?.length || f.priority.includes(i.priority)) &&
-      (!f.assignee?.length || (i.assigneeId !== null && f.assignee.includes(i.assigneeId))) &&
-      (!f.label?.length || i.labelIds.some((l) => f.label?.includes(l))),
+      (!f.assignee?.length ||
+        (i.assigneeId !== null && f.assignee.includes(i.assigneeId))) &&
+      (!f.label?.length || i.labelIds.some((l) => f.label?.includes(l)))
   );
   const { id = "updatedAt", direction = "desc" } = query.sort ?? {};
-  items.sort((a, b) => (id === "priority" ? RANK[a.priority] - RANK[b.priority] : a.updatedAt.localeCompare(b.updatedAt)) * (direction === "asc" ? 1 : -1));
+  items.sort(
+    (a, b) =>
+      (id === "priority"
+        ? RANK[a.priority] - RANK[b.priority]
+        : a.updatedAt.localeCompare(b.updatedAt)) *
+      (direction === "asc" ? 1 : -1)
+  );
   return { items, total: items.length };
 }
 

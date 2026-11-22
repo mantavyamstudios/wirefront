@@ -7,13 +7,18 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { WorkspaceBranding } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function SettingsBrandingShowcasePage() {
   const state = useShowcaseState();
   return (
     <WorkspaceBranding
-      data={state === "loading" || state === "error" ? undefined : fixtures.getBranding}
+      data={
+        state === "loading" || state === "error"
+          ? undefined
+          : fixtures.getBranding
+      }
       defaultColors={fixtures.defaultColors}
       error="Branding didn’t load. Check your connection and try again."
       onRetry={() => {}}
@@ -22,14 +27,20 @@ export function SettingsBrandingShowcasePage() {
       onSaveEmail={() => wait(400)}
       onUploadLogo={async ({ file }) => {
         await wait(600);
-        return ok({ url: URL.createObjectURL(file), fileName: file.name, bytes: file.size });
+        return ok({
+          url: URL.createObjectURL(file),
+          fileName: file.name,
+          bytes: file.size,
+        });
       }}
       onVerifyDomain={async () => {
         await wait(800);
         return ok(fixtures.verifyDomain);
       }}
       presets={fixtures.presets}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

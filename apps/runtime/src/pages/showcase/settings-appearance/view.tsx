@@ -12,14 +12,21 @@ import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { interpolate, useMessages } from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
 import { CheckIcon, MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
-import { type ReactNode, useEffect, useId, useState, useSyncExternalStore } from "react";
+import {
+  type ReactNode,
+  useEffect,
+  useId,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import type { AppearancePrefs } from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("appearanceSettings.<key>"). */
 export const APPEARANCE_SETTINGS_MESSAGES = {
   eyebrow: "Settings · Appearance",
   title: "Make it yours",
-  subtitle: "Tweak everything from the comfort of one screen. Changes preview live on the right.",
+  subtitle:
+    "Tweak everything from the comfort of one screen. Changes preview live on the right.",
   mode: "Mode",
   modeHint: "Light, dark, or follow your system.",
   light: "Light",
@@ -53,7 +60,8 @@ export const APPEARANCE_SETTINGS_MESSAGES = {
   previewBadge: "Pro",
   previewUpdated: "Updated 2m ago",
   previewHeadline: "Three things shipped this week.",
-  previewBody: "The audit log API, scoped invites, and a simpler pricing page. Light read.",
+  previewBody:
+    "The audit log API, scoped invites, and a simpler pricing page. Light read.",
   previewRow1: "Two-factor auth",
   previewRow2: "Public sign-up",
   previewRow3: "Show project IDs",
@@ -90,13 +98,30 @@ const PALETTES: Record<Palette, { swatch: [string, string] }> = {
   amber: { swatch: ["#f59e0b", "#b45309"] },
   violet: { swatch: ["#a855f7", "#7e22ce"] },
 };
-const PALETTE_ORDER: Palette[] = ["graphite", "indigo", "crimson", "sage", "amber", "violet"];
+const PALETTE_ORDER: Palette[] = [
+  "graphite",
+  "indigo",
+  "crimson",
+  "sage",
+  "amber",
+  "violet",
+];
 
 /** Font names are proper nouns, so they aren't translated. */
 const FONTS: Record<FontId, { label: string; stack: string }> = {
-  geist: { label: "Geist", stack: '"Geist Variable", "Geist", system-ui, sans-serif' },
-  inter: { label: "Inter", stack: '"Inter Variable", "Inter", system-ui, sans-serif' },
-  mono: { label: "Geist Mono", stack: '"Geist Mono Variable", "Geist Mono", ui-monospace, "SF Mono", monospace' },
+  geist: {
+    label: "Geist",
+    stack: '"Geist Variable", "Geist", system-ui, sans-serif',
+  },
+  inter: {
+    label: "Inter",
+    stack: '"Inter Variable", "Inter", system-ui, sans-serif',
+  },
+  mono: {
+    label: "Geist Mono",
+    stack:
+      '"Geist Mono Variable", "Geist Mono", ui-monospace, "SF Mono", monospace',
+  },
 };
 const FONT_ORDER: FontId[] = ["geist", "inter", "mono"];
 const MODE_ORDER: Mode[] = ["light", "dark", "system"];
@@ -106,9 +131,14 @@ const MODE_ICON: Record<Mode, ReactNode> = {
   dark: <MoonIcon aria-hidden className="size-3.5" />,
   system: <MonitorIcon aria-hidden className="size-3.5" />,
 };
-const MODE_PREVIEW: Record<Mode, "light" | "dark" | "split"> = { light: "light", dark: "dark", system: "split" };
+const MODE_PREVIEW: Record<Mode, "light" | "dark" | "split"> = {
+  light: "light",
+  dark: "dark",
+  system: "split",
+};
 
-const card = "relative cursor-pointer rounded-xl border outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/4 border-border/60 bg-background/40 hover:border-border data-disabled:cursor-default";
+const card =
+  "relative cursor-pointer rounded-xl border outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring data-checked:border-foreground/60 data-checked:bg-foreground/4 border-border/60 bg-background/40 hover:border-border data-disabled:cursor-default";
 
 // Reading matchMedia during render made server and client HTML differ.
 // useSyncExternalStore hydrates with the server snapshot, then switches to
@@ -123,22 +153,40 @@ function useOsScheme(): "light" | "dark" {
   return useSyncExternalStore(
     subscribeOsScheme,
     () => (window.matchMedia(DARK_QUERY).matches ? "dark" : "light"),
-    () => "dark",
+    () => "dark"
   );
 }
 
-function SectionHeader({ id, title, hint }: { id: string; title: string; hint?: string }) {
+function SectionHeader({
+  id,
+  title,
+  hint,
+}: {
+  id: string;
+  title: string;
+  hint?: string;
+}) {
   return (
     <header>
       <h2 className="font-heading text-base" id={id}>
         {title}
       </h2>
-      {hint ? <p className="mt-1 text-muted-foreground text-xs">{hint}</p> : null}
+      {hint ? (
+        <p className="mt-1 text-muted-foreground text-xs">{hint}</p>
+      ) : null}
     </header>
   );
 }
 
-function AppearanceSettingsScreen({ prefs: saved, status = "ready", error, onRetry, onSave, defaults, className }: AppearanceSettingsProps) {
+function AppearanceSettingsScreen({
+  prefs: saved,
+  status = "ready",
+  error,
+  onRetry,
+  onSave,
+  defaults,
+  className,
+}: AppearanceSettingsProps) {
   const t = useMessages("appearanceSettings", APPEARANCE_SETTINGS_MESSAGES);
   const id = useId();
   const [prefs, setPrefs] = useState(saved);
@@ -150,30 +198,46 @@ function AppearanceSettingsScreen({ prefs: saved, status = "ready", error, onRet
       return () => setPrefs(before);
     },
   });
-  const set = <K extends keyof AppearancePrefs>(key: K, value: AppearancePrefs[K]) => {
-    if (prefs && prefs[key] !== value) void save.run({ ...prefs, [key]: value });
+  const set = <K extends keyof AppearancePrefs>(
+    key: K,
+    value: AppearancePrefs[K]
+  ) => {
+    if (prefs && prefs[key] !== value)
+      void save.run({ ...prefs, [key]: value });
   };
   const readOnly = !onSave;
 
   return (
     <div className={cn("min-h-svh bg-background text-foreground", className)}>
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
+        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+          {t.eyebrow}
+        </div>
         <h1 className="mt-1 font-heading text-3xl">{t.title}</h1>
         <p className="mt-1.5 text-muted-foreground text-sm">{t.subtitle}</p>
 
         {status === "error" ? (
           <div className="mt-10 rounded-xl border border-border/60 p-10 text-center">
             <p className="font-medium">{t.errorTitle}</p>
-            {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+            {error ? (
+              <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+            ) : null}
             {onRetry ? (
-              <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+              <Button
+                className="mt-4"
+                onClick={onRetry}
+                size="sm"
+                variant="outline"
+              >
                 {t.retry}
               </Button>
             ) : null}
           </div>
         ) : !prefs || status === "loading" ? (
-          <div aria-busy="true" className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div
+            aria-busy="true"
+            className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_360px]"
+          >
             <Skeleton className="h-96 w-full motion-reduce:animate-none" />
             <Skeleton className="h-96 w-full motion-reduce:animate-none" />
           </div>
@@ -181,22 +245,47 @@ function AppearanceSettingsScreen({ prefs: saved, status = "ready", error, onRet
           <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div>
               {save.error ? (
-                <p className="mb-6 text-destructive-foreground text-sm" role="alert">
+                <p
+                  className="mb-6 text-destructive-foreground text-sm"
+                  role="alert"
+                >
                   {save.error}
                 </p>
               ) : null}
               <section>
-                <SectionHeader hint={t.modeHint} id={`${id}-mode`} title={t.mode} />
-                <RadioGroup aria-labelledby={`${id}-mode`} className="mt-4 grid max-w-2xl grid-cols-3 gap-3" disabled={readOnly} onValueChange={(v) => set("mode", v as Mode)} value={prefs.mode}>
+                <SectionHeader
+                  hint={t.modeHint}
+                  id={`${id}-mode`}
+                  title={t.mode}
+                />
+                <RadioGroup
+                  aria-labelledby={`${id}-mode`}
+                  className="mt-4 grid max-w-2xl grid-cols-3 gap-3"
+                  disabled={readOnly}
+                  onValueChange={(v) => set("mode", v as Mode)}
+                  value={prefs.mode}
+                >
                   {MODE_ORDER.map((mode) => (
-                    <Radio.Root className={cn(card, "group flex flex-col gap-3 overflow-hidden text-start")} key={mode} value={mode}>
+                    <Radio.Root
+                      className={cn(
+                        card,
+                        "group flex flex-col gap-3 overflow-hidden text-start"
+                      )}
+                      key={mode}
+                      value={mode}
+                    >
                       <ModePreview scheme={MODE_PREVIEW[mode]} />
                       <span className="flex items-center justify-between px-3 pb-3 text-sm">
                         <span className="flex items-center gap-2">
                           {MODE_ICON[mode]}
                           {t[mode]}
                         </span>
-                        {prefs.mode === mode ? <CheckIcon aria-hidden className="size-3.5 opacity-80" /> : null}
+                        {prefs.mode === mode ? (
+                          <CheckIcon
+                            aria-hidden
+                            className="size-3.5 opacity-80"
+                          />
+                        ) : null}
                       </span>
                     </Radio.Root>
                   ))}
@@ -204,19 +293,53 @@ function AppearanceSettingsScreen({ prefs: saved, status = "ready", error, onRet
               </section>
 
               <section className="mt-10">
-                <SectionHeader hint={t.paletteHint} id={`${id}-palette`} title={t.palette} />
-                <RadioGroup aria-labelledby={`${id}-palette`} className="mt-4 grid max-w-2xl grid-cols-3 gap-3 sm:grid-cols-6" disabled={readOnly} onValueChange={(v) => set("palette", v as Palette)} value={prefs.palette}>
+                <SectionHeader
+                  hint={t.paletteHint}
+                  id={`${id}-palette`}
+                  title={t.palette}
+                />
+                <RadioGroup
+                  aria-labelledby={`${id}-palette`}
+                  className="mt-4 grid max-w-2xl grid-cols-3 gap-3 sm:grid-cols-6"
+                  disabled={readOnly}
+                  onValueChange={(v) => set("palette", v as Palette)}
+                  value={prefs.palette}
+                >
                   {PALETTE_ORDER.map((p) => {
                     const [a, b] = PALETTES[p].swatch;
                     return (
-                      <Radio.Root className={cn(card, "group flex flex-col items-center gap-2 p-3")} key={p} value={p}>
-                        <span aria-hidden className="relative flex size-12 items-center justify-center">
-                          <span className="absolute size-12 rounded-full opacity-30 blur-md" style={{ background: a }} />
-                          <span className="relative size-7 rounded-full ring-2 ring-background" style={{ background: a }} />
-                          <span className="-ms-3 relative size-7 rounded-full ring-2 ring-background" style={{ background: b }} />
+                      <Radio.Root
+                        className={cn(
+                          card,
+                          "group flex flex-col items-center gap-2 p-3"
+                        )}
+                        key={p}
+                        value={p}
+                      >
+                        <span
+                          aria-hidden
+                          className="relative flex size-12 items-center justify-center"
+                        >
+                          <span
+                            className="absolute size-12 rounded-full opacity-30 blur-md"
+                            style={{ background: a }}
+                          />
+                          <span
+                            className="relative size-7 rounded-full ring-2 ring-background"
+                            style={{ background: a }}
+                          />
+                          <span
+                            className="-ms-3 relative size-7 rounded-full ring-2 ring-background"
+                            style={{ background: b }}
+                          />
                         </span>
                         <span className="font-medium text-xs">{t[p]}</span>
-                        {prefs.palette === p ? <CheckIcon aria-hidden className="absolute inset-e-1.5 top-1.5 size-3 opacity-80" /> : null}
+                        {prefs.palette === p ? (
+                          <CheckIcon
+                            aria-hidden
+                            className="absolute inset-e-1.5 top-1.5 size-3 opacity-80"
+                          />
+                        ) : null}
                       </Radio.Root>
                     );
                   })}
@@ -224,7 +347,11 @@ function AppearanceSettingsScreen({ prefs: saved, status = "ready", error, onRet
               </section>
 
               <section className="mt-10">
-                <SectionHeader hint={t.densityHint} id={`${id}-density`} title={t.density} />
+                <SectionHeader
+                  hint={t.densityHint}
+                  id={`${id}-density`}
+                  title={t.density}
+                />
                 <RadioGroup
                   aria-labelledby={`${id}-density`}
                   className="mt-4 grid max-w-2xl grid-cols-3 gap-1 rounded-xl border border-border/60 bg-background/40 p-1"
@@ -245,23 +372,54 @@ function AppearanceSettingsScreen({ prefs: saved, status = "ready", error, onRet
               </section>
 
               <section className="mt-10">
-                <SectionHeader hint={t.fontHint} id={`${id}-font`} title={t.font} />
-                <RadioGroup aria-labelledby={`${id}-font`} className="mt-4 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3" disabled={readOnly} onValueChange={(v) => set("font", v as FontId)} value={prefs.font}>
+                <SectionHeader
+                  hint={t.fontHint}
+                  id={`${id}-font`}
+                  title={t.font}
+                />
+                <RadioGroup
+                  aria-labelledby={`${id}-font`}
+                  className="mt-4 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3"
+                  disabled={readOnly}
+                  onValueChange={(v) => set("font", v as FontId)}
+                  value={prefs.font}
+                >
                   {FONT_ORDER.map((f) => (
-                    <Radio.Root className={cn(card, "p-4 text-start")} key={f} value={f}>
-                      <span aria-hidden className="block text-xl tracking-tight" style={{ fontFamily: FONTS[f].stack }}>
+                    <Radio.Root
+                      className={cn(card, "p-4 text-start")}
+                      key={f}
+                      value={f}
+                    >
+                      <span
+                        aria-hidden
+                        className="block text-xl tracking-tight"
+                        style={{ fontFamily: FONTS[f].stack }}
+                      >
                         {t.fontSample}
                       </span>
-                      <span className="mt-2 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">{FONTS[f].label}</span>
-                      {prefs.font === f ? <CheckIcon aria-hidden className="absolute inset-e-2.5 top-2.5 size-3.5 opacity-80" /> : null}
+                      <span className="mt-2 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
+                        {FONTS[f].label}
+                      </span>
+                      {prefs.font === f ? (
+                        <CheckIcon
+                          aria-hidden
+                          className="absolute inset-e-2.5 top-2.5 size-3.5 opacity-80"
+                        />
+                      ) : null}
                     </Radio.Root>
                   ))}
                 </RadioGroup>
               </section>
             </div>
 
-            <aside aria-labelledby={`${id}-preview`} className="lg:sticky lg:top-12 lg:self-start">
-              <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]" id={`${id}-preview`}>
+            <aside
+              aria-labelledby={`${id}-preview`}
+              className="lg:sticky lg:top-12 lg:self-start"
+            >
+              <h2
+                className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]"
+                id={`${id}-preview`}
+              >
                 {t.preview}
               </h2>
               <div className="mt-2 flex items-center justify-between text-muted-foreground text-xs">
@@ -277,7 +435,12 @@ function AppearanceSettingsScreen({ prefs: saved, status = "ready", error, onRet
                 ) : null}
               </div>
               <div aria-hidden>
-                <PreviewPane density={prefs.density} font={prefs.font} mode={prefs.mode} palette={prefs.palette} />
+                <PreviewPane
+                  density={prefs.density}
+                  font={prefs.font}
+                  mode={prefs.mode}
+                  palette={prefs.palette}
+                />
               </div>
             </aside>
           </div>
@@ -297,11 +460,35 @@ export function AppearanceSettings(props: AppearanceSettingsProps) {
 
 const DENSITY: Record<
   Density,
-  { padCard: string; padRow: string; gapStack: string; rowH: string; text: string }
+  {
+    padCard: string;
+    padRow: string;
+    gapStack: string;
+    rowH: string;
+    text: string;
+  }
 > = {
-  comfortable: { padCard: "20px", padRow: "12px 14px", gapStack: "14px", rowH: "44px", text: "14px" },
-  cozy: { padCard: "16px", padRow: "10px 12px", gapStack: "10px", rowH: "38px", text: "13.5px" },
-  compact: { padCard: "12px", padRow: "6px 10px", gapStack: "6px", rowH: "30px", text: "12.5px" },
+  comfortable: {
+    padCard: "20px",
+    padRow: "12px 14px",
+    gapStack: "14px",
+    rowH: "44px",
+    text: "14px",
+  },
+  cozy: {
+    padCard: "16px",
+    padRow: "10px 12px",
+    gapStack: "10px",
+    rowH: "38px",
+    text: "13.5px",
+  },
+  compact: {
+    padCard: "12px",
+    padRow: "6px 10px",
+    gapStack: "6px",
+    rowH: "30px",
+    text: "12.5px",
+  },
 };
 
 const SCHEMES = {
@@ -330,8 +517,6 @@ const SCHEMES = {
 } as const;
 
 type Scheme = (typeof SCHEMES)[keyof typeof SCHEMES];
-
-
 
 function PreviewPane({
   mode,
@@ -374,9 +559,18 @@ function PreviewPane({
           {t.previewWorkspace}
         </div>
         <div className="flex items-center gap-1">
-          <span className="size-1.5 rounded-full" style={{ background: "#ef4444", opacity: 0.7 }} />
-          <span className="size-1.5 rounded-full" style={{ background: "#f59e0b", opacity: 0.7 }} />
-          <span className="size-1.5 rounded-full" style={{ background: "#22c55e", opacity: 0.7 }} />
+          <span
+            className="size-1.5 rounded-full"
+            style={{ background: "#ef4444", opacity: 0.7 }}
+          />
+          <span
+            className="size-1.5 rounded-full"
+            style={{ background: "#f59e0b", opacity: 0.7 }}
+          />
+          <span
+            className="size-1.5 rounded-full"
+            style={{ background: "#22c55e", opacity: 0.7 }}
+          />
         </div>
       </div>
 
@@ -510,7 +704,9 @@ function PreviewPane({
             className="flex items-center justify-between border-t pt-2 text-[10px] uppercase tracking-[0.25em]"
             style={{ borderColor: s.border, color: s.textMuted }}
           >
-            <span>{interpolate(t.previewMode, { mode: t[effectiveMode] })}</span>
+            <span>
+              {interpolate(t.previewMode, { mode: t[effectiveMode] })}
+            </span>
             <span>{t[density]}</span>
           </div>
         </div>
@@ -602,7 +798,6 @@ function ToggleDot({
   );
 }
 
-
 function ModePreview({ scheme }: { scheme: "light" | "dark" | "split" }) {
   if (scheme === "split") {
     return (
@@ -637,8 +832,14 @@ function MiniChrome({ scheme }: { scheme: "light" | "dark" }) {
           className="size-2.5 rounded"
           style={{ background: "var(--primary)" }}
         />
-        <span className="size-1.5 rounded-sm" style={{ background: s.textMuted, opacity: 0.45 }} />
-        <span className="size-1.5 rounded-sm" style={{ background: s.textMuted, opacity: 0.25 }} />
+        <span
+          className="size-1.5 rounded-sm"
+          style={{ background: s.textMuted, opacity: 0.45 }}
+        />
+        <span
+          className="size-1.5 rounded-sm"
+          style={{ background: s.textMuted, opacity: 0.25 }}
+        />
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-1.5 p-2">
         <span

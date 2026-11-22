@@ -5,7 +5,8 @@
 import { CheckIcon } from "lucide-react";
 import { HeroSignIn } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function AuthRightSigninShowcasePage() {
   return (
@@ -27,35 +28,35 @@ export function AuthRightSigninShowcasePage() {
 function Hero() {
   return (
     <div className="relative z-10 max-w-md px-12">
-        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
-          Open source · MIT
-        </div>
-        <h2 className="mt-3 font-heading text-4xl tracking-tight">
-          Build orbit-class products.
-        </h2>
-        <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
-          A practical scratchpad of UI patterns built on shadcn/ui — fast,
-          opinionated, accessible.
-        </p>
-
-        <ul className="mt-8 flex flex-col gap-4">
-          {FEATURES.map((f) => (
-            <li key={f.title} className="flex items-start gap-3">
-              <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border border-border bg-foreground/4">
-                <CheckIcon className="size-3 text-foreground/70" />
-              </span>
-              <div>
-                <div className="font-medium text-sm">{f.title}</div>
-                <div className="text-muted-foreground text-xs leading-relaxed">
-                  {f.blurb}
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-
-        <DashboardMock />
+      <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+        Open source · MIT
       </div>
+      <h2 className="mt-3 font-heading text-4xl tracking-tight">
+        Build orbit-class products.
+      </h2>
+      <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
+        A practical scratchpad of UI patterns built on shadcn/ui — fast,
+        opinionated, accessible.
+      </p>
+
+      <ul className="mt-8 flex flex-col gap-4">
+        {FEATURES.map((f) => (
+          <li key={f.title} className="flex items-start gap-3">
+            <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border border-border bg-foreground/4">
+              <CheckIcon className="size-3 text-foreground/70" />
+            </span>
+            <div>
+              <div className="font-medium text-sm">{f.title}</div>
+              <div className="text-muted-foreground text-xs leading-relaxed">
+                {f.blurb}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <DashboardMock />
+    </div>
   );
 }
 

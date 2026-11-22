@@ -26,19 +26,57 @@ function sampleDays() {
     const dow = new Date(t).getUTCDay();
     const weekend = dow === 0 || dow === 6;
     const r = rand();
-    const count = r < (weekend ? 0.6 : 0.18) ? 0 : Math.round(rand() * (weekend ? 4 : 14));
+    const count =
+      r < (weekend ? 0.6 : 0.18) ? 0 : Math.round(rand() * (weekend ? 4 : 14));
     return { date: new Date(t).toISOString().slice(0, 10), count };
   });
 }
 
 export const getContributions: ContributionYear = {
-  profile: { login: "mantavyam", name: "Mantavyam", bio: "Building ready-to-wire screens.", repos: 42, followers: 318, href: "#profile" },
+  profile: {
+    login: "mantavyam",
+    name: "Mantavyam",
+    bio: "Building ready-to-wire screens.",
+    repos: 42,
+    followers: 318,
+    href: "#profile",
+  },
   days: sampleDays(),
   commits: [
-    { sha: "f3b9a21c0e", message: "fix(table): keep sticky column opaque", repo: "acme/web", at: "2026-09-26T09:12:00Z", href: "#f3b9a21" },
-    { sha: "12cae71d4a", message: "feat(audit): persist 1y retention", repo: "acme/api", at: "2026-09-25T17:40:00Z", href: "#12cae71" },
-    { sha: "8a204d3b77", message: "chore: bump @wirefront/ui", repo: "orbit/ui", at: "2026-09-25T11:05:00Z", href: "#8a204d3" },
-    { sha: "7f10b5e912", message: "docs: wiring guide for calendars", repo: "orbit/ui", at: "2026-09-24T15:30:00Z", href: "#7f10b5e" },
-    { sha: "4d99a0c351", message: "fix(api): retry on 5xx", repo: "acme/api", at: "2026-09-23T10:00:00Z", href: "#4d99a0c" },
+    {
+      sha: "f3b9a21c0e",
+      message: "fix(table): keep sticky column opaque",
+      repo: "acme/web",
+      at: "2026-09-26T09:12:00Z",
+      href: "#f3b9a21",
+    },
+    {
+      sha: "12cae71d4a",
+      message: "feat(audit): persist 1y retention",
+      repo: "acme/api",
+      at: "2026-09-25T17:40:00Z",
+      href: "#12cae71",
+    },
+    {
+      sha: "8a204d3b77",
+      message: "chore: bump @wirefront/ui",
+      repo: "orbit/ui",
+      at: "2026-09-25T11:05:00Z",
+      href: "#8a204d3",
+    },
+    {
+      sha: "7f10b5e912",
+      message: "docs: wiring guide for calendars",
+      repo: "orbit/ui",
+      at: "2026-09-24T15:30:00Z",
+      href: "#7f10b5e",
+    },
+    {
+      sha: "4d99a0c351",
+      message: "fix(api): retry on 5xx",
+      repo: "acme/api",
+      at: "2026-09-23T10:00:00Z",
+      href: "#4d99a0c",
+    },
   ],
 };

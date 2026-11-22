@@ -17,15 +17,30 @@ export const FunnelStage = z
 export type FunnelStage = z.infer<typeof FunnelStage>;
 
 /** A conversion between two stages to call out, with the rate you aim for (0–1). */
-export const FunnelHighlight = z.object({ from: z.string(), to: z.string(), target: z.number().min(0).max(1).optional() }).meta({ id: "FunnelHighlight" });
+export const FunnelHighlight = z
+  .object({
+    from: z.string(),
+    to: z.string(),
+    target: z.number().min(0).max(1).optional(),
+  })
+  .meta({ id: "FunnelHighlight" });
 export type FunnelHighlight = z.infer<typeof FunnelHighlight>;
 
 export const Funnel = z
-  .object({ stages: z.array(FunnelStage), highlights: z.array(FunnelHighlight).optional() })
+  .object({
+    stages: z.array(FunnelStage),
+    highlights: z.array(FunnelHighlight).optional(),
+  })
   .meta({ id: "Funnel" });
 export type Funnel = z.infer<typeof Funnel>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getFunnel: { method: "GET", path: "/reports/onboarding-funnel", summary: "How many people reached each onboarding stage in the last 30 days", response: Funnel },
+  getFunnel: {
+    method: "GET",
+    path: "/reports/onboarding-funnel",
+    summary:
+      "How many people reached each onboarding stage in the last 30 days",
+    response: Funnel,
+  },
 });

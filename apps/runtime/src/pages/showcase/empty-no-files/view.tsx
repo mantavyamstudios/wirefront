@@ -37,7 +37,13 @@ export interface NoFilesProps {
   className?: string;
 }
 
-function NoFilesScreen({ onUpload, accept, typesLabel = "PNG, JPG, PDF", maxSizeMb = 25, className }: NoFilesProps) {
+function NoFilesScreen({
+  onUpload,
+  accept,
+  typesLabel = "PNG, JPG, PDF",
+  maxSizeMb = 25,
+  className,
+}: NoFilesProps) {
   const t = useMessages("noFiles", NO_FILES_MESSAGES);
   const inputRef = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
@@ -63,8 +69,10 @@ function NoFilesScreen({ onUpload, accept, typesLabel = "PNG, JPG, PDF", maxSize
       aria-label={t.pickFiles}
       className={cn(
         "relative rounded-2xl border-2 border-dashed bg-background px-6 py-16 transition-colors",
-        over ? "border-primary/60 bg-primary/4" : "border-border/70 hover:border-border",
-        className,
+        over
+          ? "border-primary/60 bg-primary/4"
+          : "border-border/70 hover:border-border",
+        className
       )}
       onDragLeave={() => setOver(false)}
       onDragOver={(e) => {
@@ -108,7 +116,10 @@ function NoFilesScreen({ onUpload, accept, typesLabel = "PNG, JPG, PDF", maxSize
           </span>
         </p>
         <div className="mt-5 flex items-center gap-2">
-          <Button disabled={upload.isPending()} onClick={() => inputRef.current?.click()}>
+          <Button
+            disabled={upload.isPending()}
+            onClick={() => inputRef.current?.click()}
+          >
             {upload.isPending() ? <Spinner /> : <UploadCloudIcon />}
             {t.choose}
           </Button>

@@ -18,10 +18,17 @@ export const BillingPlan = z
   .meta({ id: "BillingPlan" });
 export type BillingPlan = z.infer<typeof BillingPlan>;
 
-export const BillingPeriod = z.enum(["monthly", "yearly"]).meta({ id: "BillingPeriod" });
+export const BillingPeriod = z
+  .enum(["monthly", "yearly"])
+  .meta({ id: "BillingPeriod" });
 export type BillingPeriod = z.infer<typeof BillingPeriod>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listBillingPlans: { method: "GET", path: "/plans", summary: "Plans with monthly and yearly prices", response: z.array(BillingPlan) },
+  listBillingPlans: {
+    method: "GET",
+    path: "/plans",
+    summary: "Plans with monthly and yearly prices",
+    response: z.array(BillingPlan),
+  },
 });

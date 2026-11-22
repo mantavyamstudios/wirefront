@@ -4,7 +4,8 @@
 // Not shipped by the registry; builders pass their own.
 import { GlassSignUp } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function AuthGlassSignupShowcasePage() {
   return (
@@ -30,9 +31,23 @@ function BrandMark() {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
     >
-      <rect x="2" y="2" width="28" height="28" rx="8" stroke="white" strokeOpacity="0.85" strokeWidth="1.5" />
+      <rect
+        x="2"
+        y="2"
+        width="28"
+        height="28"
+        rx="8"
+        stroke="white"
+        strokeOpacity="0.85"
+        strokeWidth="1.5"
+      />
       <circle cx="16" cy="16" r="6" fill="white" fillOpacity="0.95" />
-      <path d="M 16 4 L 16 28" stroke="white" strokeOpacity="0.5" strokeWidth="1.25" />
+      <path
+        d="M 16 4 L 16 28"
+        stroke="white"
+        strokeOpacity="0.5"
+        strokeWidth="1.25"
+      />
     </svg>
   );
 }

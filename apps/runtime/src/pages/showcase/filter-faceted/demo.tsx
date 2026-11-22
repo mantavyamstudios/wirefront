@@ -13,11 +13,15 @@ function runQuery(query: IssuesListQuery) {
     (i) =>
       (!f.status?.length || f.status.includes(i.status)) &&
       (!f.priority?.length || f.priority.includes(i.priority)) &&
-      (!f.assignee?.length || (i.assigneeId !== null && f.assignee.includes(i.assigneeId))) &&
-      (!f.label?.length || i.labelIds.some((l) => f.label?.includes(l))),
+      (!f.assignee?.length ||
+        (i.assigneeId !== null && f.assignee.includes(i.assigneeId))) &&
+      (!f.label?.length || i.labelIds.some((l) => f.label?.includes(l)))
   );
   const start = (query.page - 1) * query.pageSize;
-  return { items: items.slice(start, start + query.pageSize), total: items.length };
+  return {
+    items: items.slice(start, start + query.pageSize),
+    total: items.length,
+  };
 }
 
 const counts = fixtures.countFacets(fixtures.issues);
@@ -30,7 +34,9 @@ export function FilterFacetedShowcasePage() {
       <div className="mx-auto max-w-4xl">
         <header className="mb-6">
           <h1 className="font-heading text-xl">Faceted filters</h1>
-          <p className="text-muted-foreground text-sm">Each facet opens a popover with multi-select options and counts.</p>
+          <p className="text-muted-foreground text-sm">
+            Each facet opens a popover with multi-select options and counts.
+          </p>
         </header>
         <IssueFilterBar
           counts={counts}

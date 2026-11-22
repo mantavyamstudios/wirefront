@@ -4,5 +4,9 @@ import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  checkConnection: { method: "GET", path: "/health", summary: "Whether the app can reach the server again" },
+  checkConnection: {
+    method: "GET",
+    path: "/health",
+    summary: "Whether the app can reach the server again",
+  },
 });

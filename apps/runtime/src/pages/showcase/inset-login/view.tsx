@@ -6,7 +6,11 @@ import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Separator } from "@wirefront/ui/separator";
 import { Spinner } from "@wirefront/ui/spinner";
@@ -15,7 +19,13 @@ import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { useActionForm } from "@wirefront/ui/wirefront/form";
 import { useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
-import { ChevronLeftIcon, EyeIcon, EyeOffIcon, MailIcon, ShuffleIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  EyeIcon,
+  EyeOffIcon,
+  MailIcon,
+  ShuffleIcon,
+} from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { SignInInput } from "./schema";
 
@@ -80,55 +90,64 @@ type Rgb = [number, number, number];
 type Colors = [Rgb, Rgb, Rgb, Rgb];
 
 /** The mesh's colour sets, in the order the palette button steps through. */
-const PALETTE_NAMES = ["Slate", "Aurora", "Sunset", "Forest", "Plum", "Cyber", "Ember", "Ice"] as const;
+const PALETTE_NAMES = [
+  "Slate",
+  "Aurora",
+  "Sunset",
+  "Forest",
+  "Plum",
+  "Cyber",
+  "Ember",
+  "Ice",
+] as const;
 type PaletteName = (typeof PALETTE_NAMES)[number];
 
 const PALETTES: Record<PaletteName, Colors> = {
   Slate: [
     [0.04, 0.04, 0.07],
     [0.13, 0.13, 0.17],
-    [0.22, 0.22, 0.30],
-    [0.06, 0.06, 0.10],
+    [0.22, 0.22, 0.3],
+    [0.06, 0.06, 0.1],
   ],
   Aurora: [
     [0.05, 0.08, 0.16],
-    [0.10, 0.32, 0.48],
-    [0.42, 0.20, 0.58],
-    [0.06, 0.10, 0.18],
+    [0.1, 0.32, 0.48],
+    [0.42, 0.2, 0.58],
+    [0.06, 0.1, 0.18],
   ],
   Sunset: [
-    [0.10, 0.05, 0.10],
+    [0.1, 0.05, 0.1],
     [0.62, 0.22, 0.28],
-    [0.50, 0.38, 0.20],
+    [0.5, 0.38, 0.2],
     [0.18, 0.05, 0.12],
   ],
   Forest: [
     [0.04, 0.09, 0.07],
     [0.08, 0.32, 0.26],
-    [0.10, 0.20, 0.32],
-    [0.05, 0.11, 0.10],
+    [0.1, 0.2, 0.32],
+    [0.05, 0.11, 0.1],
   ],
   Plum: [
-    [0.10, 0.05, 0.14],
-    [0.50, 0.16, 0.50],
-    [0.26, 0.10, 0.42],
+    [0.1, 0.05, 0.14],
+    [0.5, 0.16, 0.5],
+    [0.26, 0.1, 0.42],
     [0.08, 0.04, 0.12],
   ],
   Cyber: [
     [0.04, 0.06, 0.12],
     [0.06, 0.42, 0.52],
-    [0.55, 0.10, 0.38],
+    [0.55, 0.1, 0.38],
     [0.05, 0.05, 0.12],
   ],
   Ember: [
-    [0.10, 0.04, 0.04],
-    [0.62, 0.26, 0.10],
-    [0.45, 0.10, 0.10],
-    [0.10, 0.05, 0.05],
+    [0.1, 0.04, 0.04],
+    [0.62, 0.26, 0.1],
+    [0.45, 0.1, 0.1],
+    [0.1, 0.05, 0.05],
   ],
   Ice: [
     [0.05, 0.07, 0.12],
-    [0.20, 0.32, 0.55],
+    [0.2, 0.32, 0.55],
     [0.32, 0.42, 0.58],
     [0.07, 0.09, 0.16],
   ],
@@ -179,7 +198,12 @@ void main() {
  * Draws the mesh on `canvas` until the returned cleanup runs. Colours ease
  * from `current` toward `target`; `kick` restarts a paused loop.
  */
-function runMesh(canvas: HTMLCanvasElement, targetRef: { current: Colors }, currentRef: { current: Colors }, kickRef: { current: () => void }): (() => void) | undefined {
+function runMesh(
+  canvas: HTMLCanvasElement,
+  targetRef: { current: Colors },
+  currentRef: { current: Colors },
+  kickRef: { current: () => void }
+): (() => void) | undefined {
   const gl = canvas.getContext("webgl", { antialias: false, alpha: false });
   if (!gl) return undefined;
 
@@ -215,7 +239,7 @@ function runMesh(canvas: HTMLCanvasElement, targetRef: { current: Colors }, curr
   gl.bufferData(
     gl.ARRAY_BUFFER,
     new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-    gl.STATIC_DRAW,
+    gl.STATIC_DRAW
   );
   const posLoc = gl.getAttribLocation(prog, "a_position");
   gl.enableVertexAttribArray(posLoc);
@@ -334,19 +358,45 @@ function MeshShader({ colors }: { colors: Colors }) {
     return runMesh(canvas, targetRef, currentRef, kickRef);
   }, []);
 
-  return <canvas aria-hidden className="absolute inset-0 block h-full w-full" ref={canvasRef} />;
+  return (
+    <canvas
+      aria-hidden
+      className="absolute inset-0 block h-full w-full"
+      ref={canvasRef}
+    />
+  );
 }
 
 const fieldError = "text-destructive-foreground text-xs";
 const textShadow = { textShadow: "0 1px 16px rgba(0,0,0,0.55)" };
 
-function ArtPanel({ backHref, headline, tagline, t }: Pick<InsetSignInProps, "backHref" | "headline" | "tagline"> & { t: typeof INSET_SIGN_IN_MESSAGES }) {
+function ArtPanel({
+  backHref,
+  headline,
+  tagline,
+  t,
+}: Pick<InsetSignInProps, "backHref" | "headline" | "tagline"> & {
+  t: typeof INSET_SIGN_IN_MESSAGES;
+}) {
   const [palette, setPalette] = useState<PaletteName>("Aurora");
-  const nextPalette = () => setPalette((current) => PALETTE_NAMES[(PALETTE_NAMES.indexOf(current) + 1) % PALETTE_NAMES.length] ?? current);
+  const nextPalette = () =>
+    setPalette(
+      (current) =>
+        PALETTE_NAMES[
+          (PALETTE_NAMES.indexOf(current) + 1) % PALETTE_NAMES.length
+        ] ?? current
+    );
   return (
     <div className="relative hidden overflow-hidden bg-[#0a0a0c] lg:block">
       <MeshShader colors={PALETTES[palette]} />
-      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(120% 80% at 50% 50%, transparent 35%, rgba(0,0,0,0.55) 100%)" }} />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(120% 80% at 50% 50%, transparent 35%, rgba(0,0,0,0.55) 100%)",
+        }}
+      />
       <div className="relative flex h-full flex-col justify-between p-12">
         <div className="flex items-start justify-between">
           {backHref ? (
@@ -354,7 +404,10 @@ function ArtPanel({ backHref, headline, tagline, t }: Pick<InsetSignInProps, "ba
               className="inline-flex w-fit items-center gap-1.5 rounded-md bg-black/20 px-2 py-1 font-mono text-[11px] text-white/65 uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:text-white"
               href={backHref}
             >
-              <ChevronLeftIcon aria-hidden className="size-3.5 rtl:rotate-180" />
+              <ChevronLeftIcon
+                aria-hidden
+                className="size-3.5 rtl:rotate-180"
+              />
               {t.back}
             </WirefrontLink>
           ) : (
@@ -365,20 +418,31 @@ function ArtPanel({ backHref, headline, tagline, t }: Pick<InsetSignInProps, "ba
             onClick={nextPalette}
             type="button"
           >
-            <ShuffleIcon aria-hidden className="size-3.5 transition-transform group-hover:rotate-12" />
+            <ShuffleIcon
+              aria-hidden
+              className="size-3.5 transition-transform group-hover:rotate-12"
+            />
             <span className="sr-only">{t.palette}</span>{" "}
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em]">{palette}</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em]">
+              {palette}
+            </span>
           </button>
         </div>
         {headline || tagline ? (
           <div className="max-w-md">
             {headline ? (
-              <h2 className="font-heading font-semibold text-3xl text-white leading-tight md:text-4xl" style={{ textShadow: "0 1px 24px rgba(0,0,0,0.55)" }}>
+              <h2
+                className="font-heading font-semibold text-3xl text-white leading-tight md:text-4xl"
+                style={{ textShadow: "0 1px 24px rgba(0,0,0,0.55)" }}
+              >
                 {headline}
               </h2>
             ) : null}
             {tagline ? (
-              <p className="mt-5 max-w-sm text-sm text-white/65 leading-relaxed" style={textShadow}>
+              <p
+                className="mt-5 max-w-sm text-sm text-white/65 leading-relaxed"
+                style={textShadow}
+              >
                 {tagline}
               </p>
             ) : null}
@@ -389,10 +453,27 @@ function ArtPanel({ backHref, headline, tagline, t }: Pick<InsetSignInProps, "ba
   );
 }
 
-function InsetSignInScreen({ onSignIn, onSuccess, providers = [], onProvider, lastUsedProvider, magicLinkHref, forgotPasswordHref, signUpHref, backHref, headline, tagline, logo }: InsetSignInProps) {
+function InsetSignInScreen({
+  onSignIn,
+  onSuccess,
+  providers = [],
+  onProvider,
+  lastUsedProvider,
+  magicLinkHref,
+  forgotPasswordHref,
+  signUpHref,
+  backHref,
+  headline,
+  tagline,
+  logo,
+}: InsetSignInProps) {
   const t = useMessages("insetSignIn", INSET_SIGN_IN_MESSAGES);
   const [reveal, setReveal] = useState(false);
-  const form = useActionForm({ schema: SignInInput, action: onSignIn, onSuccess: () => onSuccess?.() });
+  const form = useActionForm({
+    schema: SignInInput,
+    action: onSignIn,
+    onSuccess: () => onSuccess?.(),
+  });
   const provider = useAction(onProvider ?? (async () => {}));
   const shown = onProvider ? providers : [];
   const hasAlternatives = shown.length > 0 || Boolean(magicLinkHref);
@@ -412,17 +493,31 @@ function InsetSignInScreen({ onSignIn, onSuccess, providers = [], onProvider, la
       {/* Edge-to-edge on phones; the inset frame appears from sm up. */}
       <div className="relative mx-auto flex min-h-svh max-w-360 items-stretch sm:p-4 md:p-10 lg:p-16">
         <div className="relative grid w-full grid-cols-1 overflow-hidden bg-card sm:rounded-3xl sm:border sm:border-border sm:shadow-2xl sm:shadow-foreground/10 lg:grid-cols-[1fr_minmax(440px,560px)]">
-          <ArtPanel backHref={backHref} headline={headline} t={t} tagline={tagline} />
+          <ArtPanel
+            backHref={backHref}
+            headline={headline}
+            t={t}
+            tagline={tagline}
+          />
           <div className="relative flex flex-col overflow-y-auto bg-card text-foreground lg:min-h-170">
             <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-5 py-10 sm:px-6 lg:py-14">
-              {logo ? <div className="flex items-center justify-center">{logo}</div> : null}
+              {logo ? (
+                <div className="flex items-center justify-center">{logo}</div>
+              ) : null}
               <div className={cn("flex flex-col gap-1.5", logo && "mt-12")}>
-                <h1 className="font-heading font-semibold text-2xl tracking-tight">{t.title}</h1>
+                <h1 className="font-heading font-semibold text-2xl tracking-tight">
+                  {t.title}
+                </h1>
                 <p className="text-muted-foreground text-sm">{t.subtitle}</p>
               </div>
 
               {shown.length ? (
-                <div className={cn("mt-6 grid gap-2.5", shown.length > 1 && "grid-cols-2")}>
+                <div
+                  className={cn(
+                    "mt-6 grid gap-2.5",
+                    shown.length > 1 && "grid-cols-2"
+                  )}
+                >
                   {shown.map((p) => (
                     <div className="relative" key={p.id}>
                       {p.id === lastUsedProvider ? (
@@ -433,10 +528,24 @@ function InsetSignInScreen({ onSignIn, onSuccess, providers = [], onProvider, la
                           {t.lastUsed}
                         </span>
                       ) : null}
-                      <Button aria-busy={provider.isPending(p.id)} className="w-full" disabled={provider.isPending()} onClick={() => void provider.run(p.id, p.id)} size="lg" type="button" variant="outline">
-                        <span className="size-4 shrink-0 [&_svg]:size-4">{provider.isPending(p.id) ? <Spinner /> : p.icon}</span>
-                        <span className="truncate whitespace-nowrap">{p.name}</span>
-                        {p.id === lastUsedProvider ? <span className="sr-only">, {t.lastUsed}</span> : null}
+                      <Button
+                        aria-busy={provider.isPending(p.id)}
+                        className="w-full"
+                        disabled={provider.isPending()}
+                        onClick={() => void provider.run(p.id, p.id)}
+                        size="lg"
+                        type="button"
+                        variant="outline"
+                      >
+                        <span className="size-4 shrink-0 [&_svg]:size-4">
+                          {provider.isPending(p.id) ? <Spinner /> : p.icon}
+                        </span>
+                        <span className="truncate whitespace-nowrap">
+                          {p.name}
+                        </span>
+                        {p.id === lastUsedProvider ? (
+                          <span className="sr-only">, {t.lastUsed}</span>
+                        ) : null}
                       </Button>
                     </div>
                   ))}
@@ -448,7 +557,14 @@ function InsetSignInScreen({ onSignIn, onSuccess, providers = [], onProvider, la
                 </p>
               ) : null}
               {magicLinkHref ? (
-                <WirefrontLink className={cn(buttonVariants({ size: "lg", variant: "outline" }), shown.length ? "mt-2.5" : "mt-6", "w-full")} href={magicLinkHref}>
+                <WirefrontLink
+                  className={cn(
+                    buttonVariants({ size: "lg", variant: "outline" }),
+                    shown.length ? "mt-2.5" : "mt-6",
+                    "w-full"
+                  )}
+                  href={magicLinkHref}
+                >
                   <MailIcon />
                   {t.magicLink}
                 </WirefrontLink>
@@ -456,23 +572,42 @@ function InsetSignInScreen({ onSignIn, onSuccess, providers = [], onProvider, la
               {hasAlternatives ? (
                 <div className="my-6 flex items-center gap-3">
                   <Separator className="flex-1" />
-                  <span className="text-[11px] text-muted-foreground">{t.or}</span>
+                  <span className="text-[11px] text-muted-foreground">
+                    {t.or}
+                  </span>
                   <Separator className="flex-1" />
                 </div>
               ) : (
                 <div className="mt-6" />
               )}
 
-              <Form className="flex flex-col gap-4" noValidate {...form.formProps}>
+              <Form
+                className="flex flex-col gap-4"
+                noValidate
+                {...form.formProps}
+              >
                 <Field.Root className="flex flex-col gap-2" name="email">
-                  <Field.Label className="font-medium text-sm leading-none">{t.email}</Field.Label>
-                  <Input autoComplete="email" inputMode="email" placeholder={t.emailPlaceholder} type="email" />
+                  <Field.Label className="font-medium text-sm leading-none">
+                    {t.email}
+                  </Field.Label>
+                  <Input
+                    autoComplete="email"
+                    inputMode="email"
+                    placeholder={t.emailPlaceholder}
+                    type="email"
+                  />
                   <Field.Error className={fieldError} />
                 </Field.Root>
                 <Field.Root className="flex flex-col gap-2" name="password">
-                  <Field.Label className="font-medium text-sm leading-none">{t.password}</Field.Label>
+                  <Field.Label className="font-medium text-sm leading-none">
+                    {t.password}
+                  </Field.Label>
                   <InputGroup>
-                    <InputGroupInput autoComplete="current-password" placeholder="••••••••" type={reveal ? "text" : "password"} />
+                    <InputGroupInput
+                      autoComplete="current-password"
+                      placeholder="••••••••"
+                      type={reveal ? "text" : "password"}
+                    />
                     <InputGroupAddon align="inline-end">
                       <button
                         aria-label={reveal ? t.hidePassword : t.showPassword}
@@ -481,7 +616,11 @@ function InsetSignInScreen({ onSignIn, onSuccess, providers = [], onProvider, la
                         onClick={() => setReveal((v) => !v)}
                         type="button"
                       >
-                        {reveal ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+                        {reveal ? (
+                          <EyeOffIcon className="size-4" />
+                        ) : (
+                          <EyeIcon className="size-4" />
+                        )}
                       </button>
                     </InputGroupAddon>
                   </InputGroup>
@@ -492,7 +631,13 @@ function InsetSignInScreen({ onSignIn, onSuccess, providers = [], onProvider, la
                     {form.formError}
                   </p>
                 ) : null}
-                <Button aria-busy={form.pending} className="mt-2" disabled={form.pending} size="lg" type="submit">
+                <Button
+                  aria-busy={form.pending}
+                  className="mt-2"
+                  disabled={form.pending}
+                  size="lg"
+                  type="submit"
+                >
                   {form.pending ? <Spinner data-icon="inline-start" /> : null}
                   {t.submit}
                 </Button>
@@ -503,13 +648,19 @@ function InsetSignInScreen({ onSignIn, onSuccess, providers = [], onProvider, la
                   {signUpHref ? (
                     <p className="whitespace-nowrap text-muted-foreground">
                       {t.noAccount}{" "}
-                      <WirefrontLink className="text-foreground underline underline-offset-4" href={signUpHref}>
+                      <WirefrontLink
+                        className="text-foreground underline underline-offset-4"
+                        href={signUpHref}
+                      >
                         {t.signUp}
                       </WirefrontLink>
                     </p>
                   ) : null}
                   {forgotPasswordHref ? (
-                    <WirefrontLink className="whitespace-nowrap text-muted-foreground hover:text-foreground hover:underline" href={forgotPasswordHref}>
+                    <WirefrontLink
+                      className="whitespace-nowrap text-muted-foreground hover:text-foreground hover:underline"
+                      href={forgotPasswordHref}
+                    >
                       {t.forgotPassword}
                     </WirefrontLink>
                   ) : null}

@@ -3,7 +3,10 @@
 import type { Session } from "./schema";
 
 /** What the mocks return for a correct code (operation `verifyTwoFactor`). */
-export const verifyTwoFactor: Session = { userId: "usr_01", redirectTo: "/dashboard" };
+export const verifyTwoFactor: Session = {
+  userId: "usr_01",
+  redirectTo: "/dashboard",
+};
 
 /** How long the demo remembers a device. */
 export const rememberDays = 30;

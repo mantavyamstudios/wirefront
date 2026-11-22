@@ -14,12 +14,24 @@ export function TimelinesStatusPageShowcasePage() {
   return (
     <WirefrontProvider locale="en-US" now={demoNow} timeZone="UTC">
       <StatusPage
-        data={state === "loading" || state === "error" ? undefined : state === "empty" ? { components: [], incidents: [] } : fixtures.getStatus}
+        data={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? { components: [], incidents: [] }
+              : fixtures.getStatus
+        }
         error="The status didn’t load. Check your connection and try again."
         host={fixtures.host}
         onRetry={() => {}}
         product={fixtures.product}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

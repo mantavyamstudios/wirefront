@@ -14,7 +14,8 @@ const demoNow = () => new Date(fixtures.now);
 export function DashboardsMetricsOverviewShowcasePage() {
   const state = useShowcaseState();
   const [range, setRange] = useState<Range>("30d");
-  const data = state === "empty" ? fixtures.emptyOverview : fixtures.overviewFor(range);
+  const data =
+    state === "empty" ? fixtures.emptyOverview : fixtures.overviewFor(range);
   return (
     <WirefrontProvider now={demoNow}>
       <MetricsOverview
@@ -25,7 +26,13 @@ export function DashboardsMetricsOverviewShowcasePage() {
         onRangeChange={setRange}
         onRetry={() => {}}
         range={range}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
         workspace={fixtures.workspace}
       />
     </WirefrontProvider>

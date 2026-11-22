@@ -7,7 +7,12 @@ import { Calendar } from "@wirefront/ui/calendar";
 import { cn } from "@wirefront/ui/lib/utils";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
 import { calendarLabels } from "@wirefront/ui/wirefront/calendar-labels";
-import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import { useState } from "react";
 import type { DayRange } from "./schema";
 
@@ -43,23 +48,46 @@ export interface DateRangePickerProps {
   className?: string;
 }
 
-type PresetId = "today" | "yesterday" | "last7" | "last14" | "last30" | "thisMonth" | "lastMonth" | "lastQuarter" | "yearToDate";
-const PRESETS: PresetId[] = ["today", "yesterday", "last7", "last14", "last30", "thisMonth", "lastMonth", "lastQuarter", "yearToDate"];
+type PresetId =
+  | "today"
+  | "yesterday"
+  | "last7"
+  | "last14"
+  | "last30"
+  | "thisMonth"
+  | "lastMonth"
+  | "lastQuarter"
+  | "yearToDate";
+const PRESETS: PresetId[] = [
+  "today",
+  "yesterday",
+  "last7",
+  "last14",
+  "last30",
+  "thisMonth",
+  "lastMonth",
+  "lastQuarter",
+  "yearToDate",
+];
 const DAY_MS = 86_400_000;
 const utc = (d: string) => new Date(`${d}T00:00:00Z`);
 const iso = (d: Date) => d.toISOString().slice(0, 10);
-const addDays = (d: string, n: number) => iso(new Date(utc(d).getTime() + n * DAY_MS));
+const addDays = (d: string, n: number) =>
+  iso(new Date(utc(d).getTime() + n * DAY_MS));
 /** Day strings as local Dates for the calendar, and back. */
 const toLocal = (d: string) => {
   const [y, m, day] = d.split("-").map(Number);
   return new Date(y ?? 1970, (m ?? 1) - 1, day ?? 1);
 };
-const fromLocal = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const fromLocal = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 function presetRange(id: PresetId, today: string): DayRange {
   const [y, m] = today.split("-").map(Number) as [number, number];
-  const monthStart = (yy: number, mm: number) => iso(new Date(Date.UTC(yy, mm - 1, 1)));
-  const monthEnd = (yy: number, mm: number) => iso(new Date(Date.UTC(yy, mm, 0)));
+  const monthStart = (yy: number, mm: number) =>
+    iso(new Date(Date.UTC(yy, mm - 1, 1)));
+  const monthEnd = (yy: number, mm: number) =>
+    iso(new Date(Date.UTC(yy, mm, 0)));
   switch (id) {
     case "today":
       return { from: today, to: today };
@@ -78,27 +106,49 @@ function presetRange(id: PresetId, today: string): DayRange {
     case "lastQuarter": {
       const q = Math.floor((m - 1) / 3);
       const startMonth = q * 3 - 2; // first month of the previous quarter (may be <= 0, Date.UTC rolls back a year)
-      return { from: monthStart(y, startMonth), to: monthEnd(y, startMonth + 2) };
+      return {
+        from: monthStart(y, startMonth),
+        to: monthEnd(y, startMonth + 2),
+      };
     }
     case "yearToDate":
       return { from: `${y}-01-01`, to: today };
   }
 }
 
-function DateRangePickerScreen({ defaultValue, onApply, weekStartsOn = 1, className }: DateRangePickerProps) {
+function DateRangePickerScreen({
+  defaultValue,
+  onApply,
+  weekStartsOn = 1,
+  className,
+}: DateRangePickerProps) {
   const t = useMessages("dateRangePicker", DATE_RANGE_PICKER_MESSAGES);
   const fmt = useFormat();
   const { now, timeZone, locale } = useWirefront();
-  const today = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(now());
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now());
   const [from, setFrom] = useState(defaultValue.from);
   const [to, setTo] = useState<string | undefined>(defaultValue.to);
   const [month, setMonth] = useState(() => toLocal(defaultValue.from));
-  const active = to ? PRESETS.find((p) => {
-    const r = presetRange(p, today);
-    return r.from === from && r.to === to;
-  }) : undefined;
-  const short = (d: string) => fmt.date(utc(d), { month: "short", day: "numeric", timeZone: "UTC" });
-  const long = (d: string) => fmt.date(utc(d), { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+  const active = to
+    ? PRESETS.find((p) => {
+        const r = presetRange(p, today);
+        return r.from === from && r.to === to;
+      })
+    : undefined;
+  const short = (d: string) =>
+    fmt.date(utc(d), { month: "short", day: "numeric", timeZone: "UTC" });
+  const long = (d: string) =>
+    fmt.date(utc(d), {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "UTC",
+    });
   const choose = (r: DayRange) => {
     setFrom(r.from);
     setTo(r.to);
@@ -109,20 +159,33 @@ function DateRangePickerScreen({ defaultValue, onApply, weekStartsOn = 1, classN
     // md+: popover-style card with a presets rail and two months side by side.
     // Phones: a full-screen sheet — presets become a wrapping chip row, the months
     // stack, and Apply sits in a sticky footer above the home indicator.
-    <div className={cn("min-h-svh bg-background sm:grid sm:place-items-center sm:p-6 lg:p-8", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background sm:grid sm:place-items-center sm:p-6 lg:p-8",
+        className
+      )}
+    >
       <div className="flex min-h-svh flex-col bg-background sm:min-h-0 sm:w-full sm:max-w-xl sm:overflow-hidden sm:rounded-xl sm:border sm:border-border sm:shadow-xl md:grid md:w-auto md:max-w-none md:grid-cols-[180px_minmax(0,1fr)]">
         <aside className="border-border/60 border-b bg-background p-3 md:border-e md:border-b-0">
-          <h2 className="px-1 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] md:px-2" id="date-range-presets">
+          <h2
+            className="px-1 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] md:px-2"
+            id="date-range-presets"
+          >
             {t.quickRange}
           </h2>
-          <ul aria-labelledby="date-range-presets" className="mt-1 flex flex-wrap gap-1.5 md:flex-col md:flex-nowrap md:gap-0.5">
+          <ul
+            aria-labelledby="date-range-presets"
+            className="mt-1 flex flex-wrap gap-1.5 md:flex-col md:flex-nowrap md:gap-0.5"
+          >
             {PRESETS.map((p) => (
               <li className="shrink-0" key={p}>
                 <button
                   aria-pressed={active === p}
                   className={cn(
                     "min-h-8 w-full whitespace-nowrap rounded-full border px-3 py-1.5 text-start text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10 md:rounded-md md:border-0 md:px-2 md:pointer-coarse:min-h-8",
-                    active === p ? "border-foreground bg-foreground text-background" : "border-border/60 text-muted-foreground hover:bg-foreground/3 hover:text-foreground",
+                    active === p
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-border/60 text-muted-foreground hover:bg-foreground/3 hover:text-foreground"
                   )}
                   onClick={() => choose(presetRange(p, today))}
                   type="button"
@@ -133,15 +196,25 @@ function DateRangePickerScreen({ defaultValue, onApply, weekStartsOn = 1, classN
             ))}
           </ul>
           <div className="mt-3 border-border/60 border-t pt-3">
-            <h2 className="px-1 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] md:px-2">{t.custom}</h2>
+            <h2 className="px-1 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] md:px-2">
+              {t.custom}
+            </h2>
             <dl className="mt-2 grid grid-cols-2 gap-1.5 md:px-1">
               <div className="rounded-md border border-border/60 bg-background px-2 py-1.5">
-                <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{t.from}</dt>
-                <dd className="mt-0.5 truncate font-mono text-[11px]">{short(from)}</dd>
+                <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                  {t.from}
+                </dt>
+                <dd className="mt-0.5 truncate font-mono text-[11px]">
+                  {short(from)}
+                </dd>
               </div>
               <div className="rounded-md border border-border/60 bg-background px-2 py-1.5">
-                <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{t.to}</dt>
-                <dd className="mt-0.5 truncate font-mono text-[11px]">{to ? short(to) : t.none}</dd>
+                <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                  {t.to}
+                </dt>
+                <dd className="mt-0.5 truncate font-mono text-[11px]">
+                  {to ? short(to) : t.none}
+                </dd>
               </div>
             </dl>
           </div>
@@ -163,20 +236,43 @@ function DateRangePickerScreen({ defaultValue, onApply, weekStartsOn = 1, classN
                   setTo(undefined);
                 } else setTo(picked);
               }}
-              selected={{ from: toLocal(from), to: to ? toLocal(to) : undefined }}
+              selected={{
+                from: toLocal(from),
+                to: to ? toLocal(to) : undefined,
+              }}
               today={toLocal(today)}
               weekStartsOn={weekStartsOn}
             />
           </div>
           <div className="sticky bottom-0 flex flex-col gap-3 border-border/60 border-t bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:static sm:flex-row sm:items-center sm:justify-between sm:pb-4">
-            <p aria-live="polite" className="font-mono text-[11px] text-muted-foreground">
-              {to ? interpolate(t.summary, { count: Math.round((utc(to).getTime() - utc(from).getTime()) / DAY_MS) + 1, from: short(from), to: long(to) }) : t.pickEnd}
+            <p
+              aria-live="polite"
+              className="font-mono text-[11px] text-muted-foreground"
+            >
+              {to
+                ? interpolate(t.summary, {
+                    count:
+                      Math.round(
+                        (utc(to).getTime() - utc(from).getTime()) / DAY_MS
+                      ) + 1,
+                    from: short(from),
+                    to: long(to),
+                  })
+                : t.pickEnd}
             </p>
             <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
-              <Button onClick={() => choose(defaultValue)} type="button" variant="ghost">
+              <Button
+                onClick={() => choose(defaultValue)}
+                type="button"
+                variant="ghost"
+              >
                 {t.reset}
               </Button>
-              <Button disabled={!to} onClick={() => to && onApply({ from, to })} type="button">
+              <Button
+                disabled={!to}
+                onClick={() => to && onApply({ from, to })}
+                type="button"
+              >
                 {t.apply}
               </Button>
             </div>

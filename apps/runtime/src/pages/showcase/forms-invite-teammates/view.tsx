@@ -6,24 +6,55 @@ import { Button, buttonVariants } from "@wirefront/ui/button";
 import { Label } from "@wirefront/ui/label";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@wirefront/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Spinner } from "@wirefront/ui/spinner";
 import { Textarea } from "@wirefront/ui/textarea";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { ArrowRightIcon, CheckIcon, ChevronDownIcon, CopyIcon, LinkIcon, ShieldIcon, SparklesIcon, XIcon } from "lucide-react";
-import { type ClipboardEvent, type KeyboardEvent, useEffect, useId, useState } from "react";
+import {
+  ArrowRightIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  CopyIcon,
+  LinkIcon,
+  ShieldIcon,
+  SparklesIcon,
+  XIcon,
+} from "lucide-react";
+import {
+  type ClipboardEvent,
+  type KeyboardEvent,
+  useEffect,
+  useId,
+  useState,
+} from "react";
 import * as z from "zod";
 
-import { type Invitation, InviteRole, type SendInvitesInput, type SendInvitesResult } from "./schema";
+import {
+  type Invitation,
+  InviteRole,
+  type SendInvitesInput,
+  type SendInvitesResult,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("inviteTeammates.<key>"). */
 export const INVITE_TEAMMATES_MESSAGES = {
   eyebrow: "Members · invite",
   title: "Bring people in.",
-  subtitle: "Paste or type emails — separate with spaces, commas, or new lines.",
+  subtitle:
+    "Paste or type emails — separate with spaces, commas, or new lines.",
   expires: "Links expire after {days} days.",
   invitees: "Invitees",
   defaultRole: "Default role",
@@ -54,7 +85,8 @@ export const INVITE_TEAMMATES_MESSAGES = {
   copyLink: "Copy link",
   copied: "Copied",
   autoJoinTitle: "Domain auto-join is on",
-  autoJoinBody: "Anyone with an @{domain} email joins automatically — no invite needed.",
+  autoJoinBody:
+    "Anyone with an @{domain} email joins automatically — no invite needed.",
   manage: "Manage",
 };
 
@@ -81,7 +113,8 @@ interface Chip extends Invitation {
 
 const Email = z.email();
 const SPLIT = /[\s,;]+/;
-const initials = (email: string) => email.trim().split("@")[0]?.slice(0, 2).toUpperCase() || "??";
+const initials = (email: string) =>
+  email.trim().split("@")[0]?.slice(0, 2).toUpperCase() || "??";
 
 function InviteTeammatesScreen({
   onSend,
@@ -96,7 +129,9 @@ function InviteTeammatesScreen({
 }: InviteTeammatesProps) {
   const t = useMessages("inviteTeammates", INVITE_TEAMMATES_MESSAGES);
   const id = useId();
-  const [chips, setChips] = useState<Chip[]>(() => defaultInvitees.map((inv) => ({ ...inv, key: inv.email.toLowerCase() })));
+  const [chips, setChips] = useState<Chip[]>(() =>
+    defaultInvitees.map((inv) => ({ ...inv, key: inv.email.toLowerCase() }))
+  );
   const [draft, setDraft] = useState("");
   const [defaultRole, setDefaultRole] = useState<InviteRole>("member");
   const [message, setMessage] = useState(defaultMessage);
@@ -104,21 +139,32 @@ function InviteTeammatesScreen({
   const [sentCount, setSentCount] = useState<number>();
 
   const isValid = (email: string) => Email.safeParse(email).success;
-  const isAutoJoin = (email: string) => Boolean(autoJoinDomain) && email.toLowerCase().endsWith(`@${autoJoinDomain?.toLowerCase()}`);
-  const sendable = chips.filter((c) => isValid(c.email) && !isAutoJoin(c.email));
-  const autojoin = chips.filter((c) => isValid(c.email) && isAutoJoin(c.email)).length;
+  const isAutoJoin = (email: string) =>
+    Boolean(autoJoinDomain) &&
+    email.toLowerCase().endsWith(`@${autoJoinDomain?.toLowerCase()}`);
+  const sendable = chips.filter(
+    (c) => isValid(c.email) && !isAutoJoin(c.email)
+  );
+  const autojoin = chips.filter(
+    (c) => isValid(c.email) && isAutoJoin(c.email)
+  ).length;
   const invalid = chips.filter((c) => !isValid(c.email)).length;
 
   const send = useAction(onSend, {
     onSuccess: (result) => {
-      setChips((all) => all.filter((c) => !sendable.some((s) => s.key === c.key)));
+      setChips((all) =>
+        all.filter((c) => !sendable.some((s) => s.key === c.key))
+      );
       setSentCount(result?.sent ?? sendable.length);
       onSent?.(result);
     },
   });
 
   const addEmails = (raw: string) => {
-    const parts = raw.split(SPLIT).map((s) => s.trim()).filter(Boolean);
+    const parts = raw
+      .split(SPLIT)
+      .map((s) => s.trim())
+      .filter(Boolean);
     if (!parts.length) return;
     setSentCount(undefined);
     setChips((prev) => {
@@ -135,7 +181,12 @@ function InviteTeammatesScreen({
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" || e.key === "," || e.key === ";" || e.key === "Tab") {
+    if (
+      e.key === "Enter" ||
+      e.key === "," ||
+      e.key === ";" ||
+      e.key === "Tab"
+    ) {
       if (!draft.trim()) return;
       e.preventDefault();
       addEmails(draft);
@@ -158,32 +209,66 @@ function InviteTeammatesScreen({
     e.preventDefault();
     if (!sendable.length || send.isPending()) return;
     const note = showMessage ? message.trim() : "";
-    void send.run({ invitations: sendable.map(({ email, role }) => ({ email, role })), ...(note ? { message: note } : {}) });
+    void send.run({
+      invitations: sendable.map(({ email, role }) => ({ email, role })),
+      ...(note ? { message: note } : {}),
+    });
   };
 
   const roleLabel = (r: InviteRole) => t[r];
-  const sendLabel = sendable.length === 0 ? t.sendNone : sendable.length === 1 ? t.sendOne : interpolate(t.sendOther, { count: sendable.length });
-  const mono = "font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]";
+  const sendLabel =
+    sendable.length === 0
+      ? t.sendNone
+      : sendable.length === 1
+        ? t.sendOne
+        : interpolate(t.sendOther, { count: sendable.length });
+  const mono =
+    "font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]";
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-8 text-foreground sm:px-6 sm:py-16", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-8 text-foreground sm:px-6 sm:py-16",
+        className
+      )}
+    >
       <div className="mx-auto max-w-2xl">
-        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
+        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+          {t.eyebrow}
+        </div>
         <h1 className="mt-1 font-heading text-3xl">{t.title}</h1>
         <p className="mt-2 text-muted-foreground text-sm">
           {t.subtitle}
-          {expiresInDays ? ` ${interpolate(t.expires, { days: expiresInDays })}` : null}
+          {expiresInDays
+            ? ` ${interpolate(t.expires, { days: expiresInDays })}`
+            : null}
         </p>
 
-        <form className="mt-8 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-5" onSubmit={submit}>
+        <form
+          className="mt-8 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-5"
+          onSubmit={submit}
+        >
           <div className="flex items-center justify-between gap-3">
             <Label className="font-medium text-sm" htmlFor={`${id}-emails`}>
               {t.invitees}
             </Label>
             <div className="flex items-center gap-2">
-              <span className={cn(mono, "hidden sm:inline")}>{t.defaultRole}</span>
-              <Select items={InviteRole.options.map((r) => ({ value: r, label: roleLabel(r) }))} onValueChange={(v) => setDefaultRole(v as InviteRole)} value={defaultRole}>
-                <SelectTrigger aria-label={t.defaultRole} className="h-8 w-32 text-sm pointer-coarse:h-11" size="sm">
+              <span className={cn(mono, "hidden sm:inline")}>
+                {t.defaultRole}
+              </span>
+              <Select
+                items={InviteRole.options.map((r) => ({
+                  value: r,
+                  label: roleLabel(r),
+                }))}
+                onValueChange={(v) => setDefaultRole(v as InviteRole)}
+                value={defaultRole}
+              >
+                <SelectTrigger
+                  aria-label={t.defaultRole}
+                  className="h-8 w-32 text-sm pointer-coarse:h-11"
+                  size="sm"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent align="start">
@@ -191,7 +276,9 @@ function InviteTeammatesScreen({
                     <SelectItem key={r} value={r}>
                       <div className="flex flex-col">
                         <span>{roleLabel(r)}</span>
-                        <span className="text-muted-foreground text-xs">{t[`${r}Description`]}</span>
+                        <span className="text-muted-foreground text-xs">
+                          {t[`${r}Description`]}
+                        </span>
                       </div>
                     </SelectItem>
                   ))}
@@ -206,8 +293,14 @@ function InviteTeammatesScreen({
                 autoJoin={isValid(chip.email) && isAutoJoin(chip.email)}
                 chip={chip}
                 key={chip.key}
-                onRemove={() => setChips((prev) => prev.filter((c) => c.key !== chip.key))}
-                onRole={(role) => setChips((prev) => prev.map((c) => (c.key === chip.key ? { ...c, role } : c)))}
+                onRemove={() =>
+                  setChips((prev) => prev.filter((c) => c.key !== chip.key))
+                }
+                onRole={(role) =>
+                  setChips((prev) =>
+                    prev.map((c) => (c.key === chip.key ? { ...c, role } : c))
+                  )
+                }
                 t={t}
                 valid={isValid(chip.email)}
               />
@@ -230,7 +323,10 @@ function InviteTeammatesScreen({
             />
           </div>
 
-          <div aria-live="polite" className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+          <div
+            aria-live="polite"
+            className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]"
+          >
             <span>{interpolate(t.toInvite, { count: sendable.length })}</span>
             {autojoin > 0 ? (
               <span className="flex items-center gap-1">
@@ -238,7 +334,11 @@ function InviteTeammatesScreen({
                 {interpolate(t.autoJoinCount, { count: autojoin })}
               </span>
             ) : null}
-            {invalid > 0 ? <span className="text-destructive-foreground">{interpolate(t.invalidCount, { count: invalid })}</span> : null}
+            {invalid > 0 ? (
+              <span className="text-destructive-foreground">
+                {interpolate(t.invalidCount, { count: invalid })}
+              </span>
+            ) : null}
           </div>
 
           {showMessage ? (
@@ -247,31 +347,63 @@ function InviteTeammatesScreen({
                 <Label className="font-medium text-sm" htmlFor={`${id}-note`}>
                   {t.note}
                 </Label>
-                <button className={cn(mono, "min-h-8 px-1 hover:text-foreground pointer-coarse:min-h-11")} onClick={() => setShowMessage(false)} type="button">
+                <button
+                  className={cn(
+                    mono,
+                    "min-h-8 px-1 hover:text-foreground pointer-coarse:min-h-11"
+                  )}
+                  onClick={() => setShowMessage(false)}
+                  type="button"
+                >
                   {t.hide}
                 </button>
               </div>
-              <Textarea id={`${id}-note`} maxLength={500} onChange={(e) => setMessage(e.target.value)} placeholder={t.notePlaceholder} rows={3} value={message} />
+              <Textarea
+                id={`${id}-note`}
+                maxLength={500}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder={t.notePlaceholder}
+                rows={3}
+                value={message}
+              />
             </div>
           ) : (
-            <button className={cn(mono, "mt-3 min-h-8 hover:text-foreground pointer-coarse:min-h-11")} onClick={() => setShowMessage(true)} type="button">
+            <button
+              className={cn(
+                mono,
+                "mt-3 min-h-8 hover:text-foreground pointer-coarse:min-h-11"
+              )}
+              onClick={() => setShowMessage(true)}
+              type="button"
+            >
               {t.addNote}
             </button>
           )}
 
           {send.error ? (
-            <p className="mt-4 text-destructive-foreground text-sm" role="alert">
+            <p
+              className="mt-4 text-destructive-foreground text-sm"
+              role="alert"
+            >
               {send.error}
             </p>
           ) : sentCount !== undefined ? (
-            <p className="mt-4 text-category-2-foreground text-sm" role="status">
+            <p
+              className="mt-4 text-category-2-foreground text-sm"
+              role="status"
+            >
               {interpolate(t.sent, { count: sentCount })}
             </p>
           ) : null}
 
           <div className="mt-6 flex flex-col-reverse gap-3 border-border/60 border-t pt-5 sm:flex-row sm:items-center sm:justify-between">
             {inviteLink ? <CopyLinkButton link={inviteLink} t={t} /> : <span />}
-            <Button aria-busy={send.isPending()} className="pointer-coarse:h-11 max-sm:w-full" disabled={sendable.length === 0 || send.isPending()} type="submit">
+            <Button
+              aria-busy={send.isPending()}
+              className="pointer-coarse:h-11 max-sm:w-full"
+              disabled={sendable.length === 0 || send.isPending()}
+              type="submit"
+            >
               {send.isPending() ? <Spinner data-icon="inline-start" /> : null}
               {sendLabel}
               <ArrowRightIcon />
@@ -285,10 +417,15 @@ function InviteTeammatesScreen({
               <ShieldIcon className="mt-0.5 size-4 shrink-0 opacity-60" />
               <div className="min-w-0 flex-1">
                 <div className="font-medium">{t.autoJoinTitle}</div>
-                <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">{interpolate(t.autoJoinBody, { domain: autoJoinDomain })}</p>
+                <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">
+                  {interpolate(t.autoJoinBody, { domain: autoJoinDomain })}
+                </p>
               </div>
               {manageAutoJoinHref ? (
-                <WirefrontLink className={buttonVariants({ variant: "ghost", size: "sm" })} href={manageAutoJoinHref}>
+                <WirefrontLink
+                  className={buttonVariants({ variant: "ghost", size: "sm" })}
+                  href={manageAutoJoinHref}
+                >
                   {t.manage}
                 </WirefrontLink>
               ) : null}
@@ -321,16 +458,23 @@ function ChipPill({
     <span
       className={cn(
         "group inline-flex h-7 items-center gap-1.5 rounded-full border pe-1 ps-1 text-xs",
-        !valid && "border-destructive/50 bg-destructive/8 text-destructive-foreground",
-        valid && autoJoin && "border-category-2/30 bg-category-2/8 text-foreground",
-        valid && !autoJoin && "border-border bg-foreground/3 text-foreground",
+        !valid &&
+          "border-destructive/50 bg-destructive/8 text-destructive-foreground",
+        valid &&
+          autoJoin &&
+          "border-category-2/30 bg-category-2/8 text-foreground",
+        valid && !autoJoin && "border-border bg-foreground/3 text-foreground"
       )}
     >
       <span
         aria-hidden
         className={cn(
           "flex size-5 shrink-0 items-center justify-center rounded-full font-mono text-[9px] uppercase",
-          autoJoin ? "bg-category-2/15 text-category-2-foreground" : valid ? "bg-foreground/6 text-muted-foreground" : "bg-destructive/15 text-destructive-foreground",
+          autoJoin
+            ? "bg-category-2/15 text-category-2-foreground"
+            : valid
+              ? "bg-foreground/6 text-muted-foreground"
+              : "bg-destructive/15 text-destructive-foreground"
         )}
       >
         {valid ? initials(chip.email) : "!"}
@@ -345,7 +489,10 @@ function ChipPill({
       ) : valid ? (
         <Popover>
           <PopoverTrigger
-            aria-label={interpolate(t.changeRole, { role: t[chip.role], email: chip.email })}
+            aria-label={interpolate(t.changeRole, {
+              role: t[chip.role],
+              email: chip.email,
+            })}
             render={
               <button
                 className="flex h-6 items-center gap-0.5 rounded-full px-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:bg-foreground/6 hover:text-foreground pointer-coarse:h-8"
@@ -365,17 +512,26 @@ function ChipPill({
                 onClick={() => onRole(r)}
                 type="button"
               >
-                <CheckIcon className={cn("mt-0.5 size-3.5 shrink-0", r === chip.role ? "opacity-100" : "opacity-0")} />
+                <CheckIcon
+                  className={cn(
+                    "mt-0.5 size-3.5 shrink-0",
+                    r === chip.role ? "opacity-100" : "opacity-0"
+                  )}
+                />
                 <div className="flex-1">
                   <div>{t[r]}</div>
-                  <div className="text-muted-foreground text-xs">{t[`${r}Description`]}</div>
+                  <div className="text-muted-foreground text-xs">
+                    {t[`${r}Description`]}
+                  </div>
                 </div>
               </button>
             ))}
           </PopoverContent>
         </Popover>
       ) : (
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em]">{t.invalid}</span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em]">
+          {t.invalid}
+        </span>
       )}
 
       <button
@@ -400,14 +556,22 @@ function CopyLinkButton({ link, t }: { link: string; t: Messages }) {
   return (
     <button
       className="group inline-flex min-w-0 max-w-full items-center gap-2 rounded-md border border-border/60 border-dashed px-2.5 py-1.5 font-mono text-[11px] text-muted-foreground transition-colors hover:border-border hover:text-foreground pointer-coarse:min-h-11"
-      onClick={() => void navigator.clipboard?.writeText(link).then(() => setCopied(true))}
+      onClick={() =>
+        void navigator.clipboard?.writeText(link).then(() => setCopied(true))
+      }
       type="button"
     >
-      {copied ? <CheckIcon className="size-3.5 text-category-2-foreground" /> : <LinkIcon className="size-3.5 opacity-60 group-hover:opacity-100" />}
+      {copied ? (
+        <CheckIcon className="size-3.5 text-category-2-foreground" />
+      ) : (
+        <LinkIcon className="size-3.5 opacity-60 group-hover:opacity-100" />
+      )}
       <span className="truncate">{link.replace(/^https?:\/\//, "")}</span>
       <span className="flex items-center gap-1">
         <CopyIcon className="size-3" />
-        <span className="uppercase tracking-[0.2em]">{copied ? t.copied : t.copyLink}</span>
+        <span className="uppercase tracking-[0.2em]">
+          {copied ? t.copied : t.copyLink}
+        </span>
       </span>
     </button>
   );

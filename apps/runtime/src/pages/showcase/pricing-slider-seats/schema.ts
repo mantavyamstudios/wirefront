@@ -20,10 +20,17 @@ export const SeatPlan = z
   .meta({ id: "SeatPlan" });
 export type SeatPlan = z.infer<typeof SeatPlan>;
 
-export const SeatSelection = z.object({ seats: z.int().min(1), billing: z.enum(["monthly", "yearly"]) }).meta({ id: "SeatSelection" });
+export const SeatSelection = z
+  .object({ seats: z.int().min(1), billing: z.enum(["monthly", "yearly"]) })
+  .meta({ id: "SeatSelection" });
 export type SeatSelection = z.infer<typeof SeatSelection>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getSeatPlan: { method: "GET", path: "/plans/seats", summary: "The per-seat plan and its limits", response: SeatPlan },
+  getSeatPlan: {
+    method: "GET",
+    path: "/plans/seats",
+    summary: "The per-seat plan and its limits",
+    response: SeatPlan,
+  },
 });

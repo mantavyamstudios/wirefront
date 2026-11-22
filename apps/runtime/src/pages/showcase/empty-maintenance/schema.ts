@@ -11,6 +11,15 @@ export type MaintenanceWindow = z.infer<typeof MaintenanceWindow>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getMaintenance: { method: "GET", path: "/status/maintenance", summary: "The current maintenance window", response: MaintenanceWindow },
-  subscribeToUpdates: { method: "POST", path: "/status/subscriptions", summary: "Email me when maintenance ends" },
+  getMaintenance: {
+    method: "GET",
+    path: "/status/maintenance",
+    summary: "The current maintenance window",
+    response: MaintenanceWindow,
+  },
+  subscribeToUpdates: {
+    method: "POST",
+    path: "/status/subscriptions",
+    summary: "Email me when maintenance ends",
+  },
 });

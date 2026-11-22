@@ -22,7 +22,8 @@ import { useMessages, useWirefront } from "./provider";
 
 export const SCREEN_BOUNDARY_MESSAGES = {
   title: "This section couldn’t load",
-  description: "Something went wrong while showing it. Try again, or reload the page if it keeps happening.",
+  description:
+    "Something went wrong while showing it. Try again, or reload the page if it keeps happening.",
   retry: "Try again",
 };
 
@@ -34,9 +35,15 @@ interface Props {
   fallback?: (retry: () => void, error: Error) => ReactNode;
 }
 
-type Report = (error: Error, info: { screen: string; componentStack?: string }) => void;
+type Report = (
+  error: Error,
+  info: { screen: string; componentStack?: string }
+) => void;
 
-class Boundary extends Component<Props & { report?: Report }, { error: Error | null }> {
+class Boundary extends Component<
+  Props & { report?: Report },
+  { error: Error | null }
+> {
   state = { error: null as Error | null };
 
   static getDerivedStateFromError(error: Error) {
@@ -44,7 +51,10 @@ class Boundary extends Component<Props & { report?: Report }, { error: Error | n
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    this.props.report?.(error, { screen: this.props.name, componentStack: info.componentStack ?? undefined });
+    this.props.report?.(error, {
+      screen: this.props.name,
+      componentStack: info.componentStack ?? undefined,
+    });
   }
 
   retry = () => this.setState({ error: null });
@@ -52,16 +62,25 @@ class Boundary extends Component<Props & { report?: Report }, { error: Error | n
   render() {
     const { error } = this.state;
     if (!error) return this.props.children;
-    return this.props.fallback ? this.props.fallback(this.retry, error) : <Fallback onRetry={this.retry} />;
+    return this.props.fallback ? (
+      this.props.fallback(this.retry, error)
+    ) : (
+      <Fallback onRetry={this.retry} />
+    );
   }
 }
 
 function Fallback({ onRetry }: { onRetry: () => void }) {
   const t = useMessages("screenBoundary", SCREEN_BOUNDARY_MESSAGES);
   return (
-    <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed px-6 py-10 text-center text-sm" role="alert">
+    <div
+      className="flex flex-col items-center gap-2 rounded-xl border border-dashed px-6 py-10 text-center text-sm"
+      role="alert"
+    >
       <p className="font-medium">{t.title}</p>
-      <p className="max-w-sm text-pretty text-muted-foreground">{t.description}</p>
+      <p className="max-w-sm text-pretty text-muted-foreground">
+        {t.description}
+      </p>
       <button
         className="mt-2 inline-flex h-8 items-center rounded-md border bg-background px-3 font-medium outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
         onClick={onRetry}

@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const SeatRange = z.enum(["50-100", "100-500", "500-1000", "1000+"]).meta({ id: "SeatRange" });
+export const SeatRange = z
+  .enum(["50-100", "100-500", "500-1000", "1000+"])
+  .meta({ id: "SeatRange" });
 export type SeatRange = z.infer<typeof SeatRange>;
 
 /** What "Request a call" sends. */
@@ -20,5 +22,10 @@ export type SalesInquiry = z.infer<typeof SalesInquiry>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  requestCall: { method: "POST", path: "/sales/inquiries", summary: "Ask sales to get in touch", body: SalesInquiry },
+  requestCall: {
+    method: "POST",
+    path: "/sales/inquiries",
+    summary: "Ask sales to get in touch",
+    body: SalesInquiry,
+  },
 });

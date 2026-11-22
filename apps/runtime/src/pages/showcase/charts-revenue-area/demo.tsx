@@ -10,10 +10,18 @@ export function ChartsRevenueAreaShowcasePage() {
   const state = useShowcaseState();
   return (
     <RevenueBreakdownChart
-      data={state === "loading" || state === "error" ? undefined : state === "empty" ? { months: [] } : fixtures.getRevenueBreakdown}
+      data={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? { months: [] }
+            : fixtures.getRevenueBreakdown
+      }
       error="Revenue didn’t load. Check your connection and try again."
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

@@ -9,8 +9,17 @@ import { Skeleton } from "@wirefront/ui/skeleton";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
-import { type Action, type AsyncStatus, ok } from "@wirefront/ui/wirefront/types";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
+import {
+  type Action,
+  type AsyncStatus,
+  ok,
+} from "@wirefront/ui/wirefront/types";
 import {
   AlertTriangleIcon,
   CheckCircle2Icon,
@@ -31,7 +40,11 @@ import {
   XIcon,
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import type { Passkey, SecurityOverview as Overview, SignInSession } from "./schema";
+import type {
+  Passkey,
+  SecurityOverview as Overview,
+  SignInSession,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("securityOverview.<key>"). */
 export const SECURITY_OVERVIEW_MESSAGES = {
@@ -45,7 +58,8 @@ export const SECURITY_OVERVIEW_MESSAGES = {
   manage: "Manage",
   setUp: "Set up",
   passkeys: "Passkeys",
-  passkeysHint: "Phishing-resistant sign-in via Touch ID, Face ID, or hardware keys.",
+  passkeysHint:
+    "Phishing-resistant sign-in via Touch ID, Face ID, or hardware keys.",
   addPasskey: "Add passkey",
   neverUsed: "Never used",
   removePasskey: "Remove {name}",
@@ -60,12 +74,14 @@ export const SECURITY_OVERVIEW_MESSAGES = {
   revokeOthersHint: "Signs out everything except this device.",
   revokeOthers: "Sign out of all other sessions",
   recovery: "Recovery codes",
-  recoveryHint: "Use one of these one-time codes if you lose access to your authenticator.",
+  recoveryHint:
+    "Use one of these one-time codes if you lose access to your authenticator.",
   codesLeft: "{count} unused codes left.",
   reveal: "Reveal codes",
   hide: "Hide codes",
   hidden: "Hidden",
-  regenerateWarning: "Regenerating invalidates every code above. Store the new set somewhere safe.",
+  regenerateWarning:
+    "Regenerating invalidates every code above. Store the new set somewhere safe.",
   regenerate: "Regenerate codes",
   errorTitle: "Couldn’t load security settings",
   retry: "Try again",
@@ -131,12 +147,15 @@ function SecurityOverviewScreen({
       setShown(true);
     },
   });
-  const regenerate = useAction(onRegenerateCodes ?? (async () => ok<string[]>([])), {
-    onSuccess: (list) => {
-      setCodes(list);
-      setShown(true);
-    },
-  });
+  const regenerate = useAction(
+    onRegenerateCodes ?? (async () => ok<string[]>([])),
+    {
+      onSuccess: (list) => {
+        setCodes(list);
+        setShown(true);
+      },
+    }
+  );
   const ready = status === "ready" && data ? data : undefined;
   const others = ready?.sessions.filter((s) => !s.current).length ?? 0;
   const toggleCodes = () => {
@@ -145,21 +164,35 @@ function SecurityOverviewScreen({
     else void reveal.run();
   };
   // The placeholder shows the right number of blurred slots before the codes are fetched.
-  const slots = codes ?? Array.from({ length: ready?.recoveryCodesLeft ?? 8 }, (_, i) => `XXXX-XXXX-${String(i).padStart(4, "0")}`);
+  const slots =
+    codes ??
+    Array.from(
+      { length: ready?.recoveryCodesLeft ?? 8 },
+      (_, i) => `XXXX-XXXX-${String(i).padStart(4, "0")}`
+    );
 
   return (
     <div className={cn("min-h-svh bg-background text-foreground", className)}>
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
+        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+          {t.eyebrow}
+        </div>
         <h1 className="mt-1 font-heading text-3xl">{t.title}</h1>
         <p className="mt-1.5 text-muted-foreground text-sm">{t.subtitle}</p>
 
         {status === "error" ? (
           <div className="mt-8 rounded-xl border border-border/60 p-10 text-center">
             <p className="font-medium">{t.errorTitle}</p>
-            {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+            {error ? (
+              <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+            ) : null}
             {onRetry ? (
-              <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+              <Button
+                className="mt-4"
+                onClick={onRetry}
+                size="sm"
+                variant="outline"
+              >
                 {t.retry}
               </Button>
             ) : null}
@@ -167,7 +200,10 @@ function SecurityOverviewScreen({
         ) : !ready ? (
           <div aria-busy="true" className="mt-8 flex flex-col gap-3">
             {SKELETON_ROWS.map((key) => (
-              <Skeleton className="h-32 w-full rounded-xl motion-reduce:animate-none" key={key} />
+              <Skeleton
+                className="h-32 w-full rounded-xl motion-reduce:animate-none"
+                key={key}
+              />
             ))}
           </div>
         ) : (
@@ -176,7 +212,9 @@ function SecurityOverviewScreen({
               aria-labelledby="security-2fa"
               className={cn(
                 "mt-8 overflow-hidden rounded-xl border",
-                ready.twoFactor.enabled ? "border-category-2/30 bg-linear-to-br from-category-2/[0.07] to-category-2/2" : "border-category-3/30 bg-category-3/4",
+                ready.twoFactor.enabled
+                  ? "border-category-2/30 bg-linear-to-br from-category-2/[0.07] to-category-2/2"
+                  : "border-category-3/30 bg-category-3/4"
               )}
             >
               <div className="flex flex-wrap items-start gap-3 p-4 sm:flex-nowrap sm:gap-4 sm:p-5">
@@ -184,51 +222,91 @@ function SecurityOverviewScreen({
                   aria-hidden
                   className={cn(
                     "flex size-10 shrink-0 items-center justify-center rounded-lg",
-                    ready.twoFactor.enabled ? "bg-category-2/15 text-category-2-foreground" : "bg-category-3/15 text-category-3-foreground",
+                    ready.twoFactor.enabled
+                      ? "bg-category-2/15 text-category-2-foreground"
+                      : "bg-category-3/15 text-category-3-foreground"
                   )}
                 >
-                  {ready.twoFactor.enabled ? <ShieldCheckIcon className="size-5" /> : <ShieldAlertIcon className="size-5" />}
+                  {ready.twoFactor.enabled ? (
+                    <ShieldCheckIcon className="size-5" />
+                  ) : (
+                    <ShieldAlertIcon className="size-5" />
+                  )}
                 </div>
                 <div className="min-w-0 flex-1 max-sm:basis-[calc(100%-3.25rem)]">
-                  <h2 className="flex flex-wrap items-center gap-2" id="security-2fa">
+                  <h2
+                    className="flex flex-wrap items-center gap-2"
+                    id="security-2fa"
+                  >
                     <span className="font-medium text-sm">{t.twoFactor}</span>{" "}
                     <span
                       className={cn(
                         "inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em]",
-                        ready.twoFactor.enabled ? "bg-category-2/15 text-category-2-foreground" : "bg-category-3/15 text-category-3-foreground",
+                        ready.twoFactor.enabled
+                          ? "bg-category-2/15 text-category-2-foreground"
+                          : "bg-category-3/15 text-category-3-foreground"
                       )}
                     >
-                      {ready.twoFactor.enabled ? <CheckCircle2Icon aria-hidden className="size-2.5" /> : null}
+                      {ready.twoFactor.enabled ? (
+                        <CheckCircle2Icon aria-hidden className="size-2.5" />
+                      ) : null}
                       {ready.twoFactor.enabled ? t.enabled : t.disabled}
                     </span>
                   </h2>
-                  {ready.twoFactor.enabled ? <p className="mt-1 text-muted-foreground text-xs">{ready.twoFactor.method}</p> : null}
+                  {ready.twoFactor.enabled ? (
+                    <p className="mt-1 text-muted-foreground text-xs">
+                      {ready.twoFactor.method}
+                    </p>
+                  ) : null}
                   {ready.twoFactor.lastVerifiedAt ? (
                     <div className="mt-2 inline-flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
                       <ClockIcon aria-hidden className="size-2.5" />
-                      {interpolate(t.lastVerified, { when: format.relative(ready.twoFactor.lastVerifiedAt) })}
+                      {interpolate(t.lastVerified, {
+                        when: format.relative(ready.twoFactor.lastVerifiedAt),
+                      })}
                     </div>
                   ) : null}
                 </div>
                 {twoFactorHref ? (
-                  <WirefrontLink className={cn(buttonVariants({ size: "sm", variant: "ghost" }), "max-sm:ms-13")} href={twoFactorHref}>
+                  <WirefrontLink
+                    className={cn(
+                      buttonVariants({ size: "sm", variant: "ghost" }),
+                      "max-sm:ms-13"
+                    )}
+                    href={twoFactorHref}
+                  >
                     {ready.twoFactor.enabled ? t.manage : t.setUp}
                   </WirefrontLink>
                 ) : null}
               </div>
             </section>
 
-            <section aria-labelledby="security-passkeys" className="mt-3 rounded-xl border border-border/60 bg-background/40">
+            <section
+              aria-labelledby="security-passkeys"
+              className="mt-3 rounded-xl border border-border/60 bg-background/40"
+            >
               <header className="flex flex-wrap items-start justify-between gap-3 p-4 sm:p-5">
                 <div>
                   <h2 className="font-heading text-base" id="security-passkeys">
                     {t.passkeys}
                   </h2>
-                  <p className="mt-1 text-muted-foreground text-xs">{t.passkeysHint}</p>
+                  <p className="mt-1 text-muted-foreground text-xs">
+                    {t.passkeysHint}
+                  </p>
                 </div>
                 {onAddPasskey ? (
-                  <Button aria-busy={addPasskey.isPending()} disabled={addPasskey.isPending()} onClick={() => void addPasskey.run()} size="sm" type="button">
-                    {addPasskey.isPending() ? <Spinner data-icon="inline-start" /> : <PlusIcon />}
+                  <Button
+                    aria-busy={addPasskey.isPending()}
+                    disabled={addPasskey.isPending()}
+                    onClick={() => void addPasskey.run()}
+                    size="sm"
+                    type="button"
+                  >
+                    {addPasskey.isPending() ? (
+                      <Spinner data-icon="inline-start" />
+                    ) : (
+                      <PlusIcon />
+                    )}
                     {t.addPasskey}
                   </Button>
                 ) : null}
@@ -242,18 +320,32 @@ function SecurityOverviewScreen({
               {ready.passkeys.length ? (
                 <ul>
                   {ready.passkeys.map((p) => (
-                    <li className="flex items-center gap-3 border-border/40 border-b px-4 py-3.5 last:border-b-0 sm:gap-4 sm:px-5" key={p.id}>
-                      <div aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/6 text-muted-foreground">
+                    <li
+                      className="flex items-center gap-3 border-border/40 border-b px-4 py-3.5 last:border-b-0 sm:gap-4 sm:px-5"
+                      key={p.id}
+                    >
+                      <div
+                        aria-hidden
+                        className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/6 text-muted-foreground"
+                      >
                         {KIND_ICON[p.kind]}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="font-medium text-sm">{p.name}</div>
-                        <div className="mt-0.5 text-muted-foreground text-xs">{p.detail}</div>
+                        <div className="mt-0.5 text-muted-foreground text-xs">
+                          {p.detail}
+                        </div>
                       </div>
-                      <div className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:block">{p.lastUsedAt ? format.relative(p.lastUsedAt) : t.neverUsed}</div>
+                      <div className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:block">
+                        {p.lastUsedAt
+                          ? format.relative(p.lastUsedAt)
+                          : t.neverUsed}
+                      </div>
                       {onRemovePasskey ? (
                         <button
-                          aria-label={interpolate(t.removePasskey, { name: p.name })}
+                          aria-label={interpolate(t.removePasskey, {
+                            name: p.name,
+                          })}
                           className="inline-flex shrink-0 items-center justify-center rounded-md p-1.5 text-muted-foreground outline-none transition-colors hover:bg-destructive/10 hover:text-destructive-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 pointer-coarse:p-3"
                           disabled={removePasskey.isPending(p.id)}
                           onClick={() => void removePasskey.run(p.id, p.id)}
@@ -266,19 +358,31 @@ function SecurityOverviewScreen({
                   ))}
                 </ul>
               ) : (
-                <p className="px-5 py-6 text-center text-muted-foreground text-sm">{t.noPasskeys}</p>
+                <p className="px-5 py-6 text-center text-muted-foreground text-sm">
+                  {t.noPasskeys}
+                </p>
               )}
             </section>
 
-            <section aria-labelledby="security-sessions" className="mt-3 rounded-xl border border-border/60 bg-background/40">
+            <section
+              aria-labelledby="security-sessions"
+              className="mt-3 rounded-xl border border-border/60 bg-background/40"
+            >
               <header className="flex items-center justify-between gap-3 p-4 sm:p-5">
                 <div>
                   <h2 className="font-heading text-base" id="security-sessions">
                     {t.sessions}
                   </h2>
-                  <p className="mt-1 text-muted-foreground text-xs">{interpolate(t.sessionCount, { count: ready.sessions.length })}</p>
+                  <p className="mt-1 text-muted-foreground text-xs">
+                    {interpolate(t.sessionCount, {
+                      count: ready.sessions.length,
+                    })}
+                  </p>
                 </div>
-                <span aria-hidden className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:inline">
+                <span
+                  aria-hidden
+                  className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] sm:inline"
+                >
                   {t.sessionColumns}
                 </span>
               </header>
@@ -293,25 +397,38 @@ function SecurityOverviewScreen({
                   <li
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-3 sm:gap-4",
-                      s.current ? "bg-category-2/6 ring-1 ring-category-2/25" : "transition-colors hover:bg-foreground/3",
+                      s.current
+                        ? "bg-category-2/6 ring-1 ring-category-2/25"
+                        : "transition-colors hover:bg-foreground/3"
                     )}
                     key={s.id}
                   >
                     <div
                       aria-hidden
-                      className={cn("flex size-9 shrink-0 items-center justify-center rounded-md", s.current ? "bg-category-2/15 text-category-2-foreground" : "bg-foreground/6 text-muted-foreground")}
+                      className={cn(
+                        "flex size-9 shrink-0 items-center justify-center rounded-md",
+                        s.current
+                          ? "bg-category-2/15 text-category-2-foreground"
+                          : "bg-foreground/6 text-muted-foreground"
+                      )}
                     >
                       {KIND_ICON[s.kind]}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="inline-flex items-center gap-1 font-medium text-sm">
-                          <MapPinIcon aria-hidden className="size-3 opacity-50" />
+                          <MapPinIcon
+                            aria-hidden
+                            className="size-3 opacity-50"
+                          />
                           {s.location}
                         </span>
                         {s.current ? (
                           <span className="inline-flex items-center gap-1 rounded bg-category-2/15 px-1.5 py-0.5 font-mono text-[10px] text-category-2-foreground uppercase tracking-[0.2em]">
-                            <CheckCircle2Icon aria-hidden className="size-2.5" />
+                            <CheckCircle2Icon
+                              aria-hidden
+                              className="size-2.5"
+                            />
                             {t.thisDevice}
                           </span>
                         ) : null}
@@ -321,14 +438,22 @@ function SecurityOverviewScreen({
                       </div>
                     </div>
                     <div className="hidden flex-col items-end text-end sm:flex">
-                      <span className="font-mono text-[11px] text-muted-foreground">{s.ip}</span>
-                      <span className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{format.relative(s.lastActiveAt)}</span>
+                      <span className="font-mono text-[11px] text-muted-foreground">
+                        {s.ip}
+                      </span>
+                      <span className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                        {format.relative(s.lastActiveAt)}
+                      </span>
                     </div>
                     {s.current ? (
-                      <span className="shrink-0 text-end font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:w-17">{t.current}</span>
+                      <span className="shrink-0 text-end font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:w-17">
+                        {t.current}
+                      </span>
                     ) : onRevokeSession ? (
                       <button
-                        aria-label={interpolate(t.revokeIn, { location: s.location })}
+                        aria-label={interpolate(t.revokeIn, {
+                          location: s.location,
+                        })}
                         className="inline-flex shrink-0 items-center justify-center gap-1 rounded-md border border-border/60 bg-background/40 px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none transition-colors hover:border-destructive/40 hover:text-destructive-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 sm:w-17 pointer-coarse:min-h-10"
                         disabled={revoke.isPending(s.id)}
                         onClick={() => void revoke.run(s.id, s.id)}
@@ -346,7 +471,9 @@ function SecurityOverviewScreen({
                   <Separator />
                   {/* Stacks below sm: the long-label button can't shrink, so it gets its own row. */}
                   <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-muted-foreground text-xs">{t.revokeOthersHint}</p>
+                    <p className="text-muted-foreground text-xs">
+                      {t.revokeOthersHint}
+                    </p>
                     <Button
                       aria-busy={revokeOthers.isPending()}
                       className="border-destructive/40 text-destructive-foreground hover:bg-destructive/10 max-sm:w-full"
@@ -356,7 +483,11 @@ function SecurityOverviewScreen({
                       type="button"
                       variant="outline"
                     >
-                      {revokeOthers.isPending() ? <Spinner data-icon="inline-start" /> : <LogOutIcon />}
+                      {revokeOthers.isPending() ? (
+                        <Spinner data-icon="inline-start" />
+                      ) : (
+                        <LogOutIcon />
+                      )}
                       {t.revokeOthers}
                     </Button>
                   </div>
@@ -365,21 +496,44 @@ function SecurityOverviewScreen({
             </section>
 
             {onRevealCodes ? (
-              <section aria-labelledby="security-codes" className="mt-3 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-6">
+              <section
+                aria-labelledby="security-codes"
+                className="mt-3 rounded-xl border border-border/60 bg-background/40 p-4 sm:p-6"
+              >
                 <header className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2">
                       <KeyRoundIcon aria-hidden className="size-4 opacity-60" />
-                      <h2 className="font-heading text-base" id="security-codes">
+                      <h2
+                        className="font-heading text-base"
+                        id="security-codes"
+                      >
                         {t.recovery}
                       </h2>
                     </div>
                     <p className="mt-1 text-muted-foreground text-xs">
-                      {t.recoveryHint} {interpolate(t.codesLeft, { count: ready.recoveryCodesLeft })}
+                      {t.recoveryHint}{" "}
+                      {interpolate(t.codesLeft, {
+                        count: ready.recoveryCodesLeft,
+                      })}
                     </p>
                   </div>
-                  <Button aria-busy={reveal.isPending()} aria-expanded={shown} disabled={reveal.isPending()} onClick={toggleCodes} size="sm" type="button" variant="ghost">
-                    {reveal.isPending() ? <Spinner data-icon="inline-start" /> : shown ? <EyeOffIcon /> : <EyeIcon />}
+                  <Button
+                    aria-busy={reveal.isPending()}
+                    aria-expanded={shown}
+                    disabled={reveal.isPending()}
+                    onClick={toggleCodes}
+                    size="sm"
+                    type="button"
+                    variant="ghost"
+                  >
+                    {reveal.isPending() ? (
+                      <Spinner data-icon="inline-start" />
+                    ) : shown ? (
+                      <EyeOffIcon />
+                    ) : (
+                      <EyeIcon />
+                    )}
                     {shown ? t.hide : t.reveal}
                   </Button>
                 </header>
@@ -390,18 +544,35 @@ function SecurityOverviewScreen({
                 ) : null}
 
                 <div className="relative mt-4">
-                  <ol aria-hidden={!shown} className={cn("grid grid-cols-2 gap-2 transition", !shown && "select-none blur-sm")}>
+                  <ol
+                    aria-hidden={!shown}
+                    className={cn(
+                      "grid grid-cols-2 gap-2 transition",
+                      !shown && "select-none blur-sm"
+                    )}
+                  >
                     {slots.map((code, i) => (
-                      <li className="flex items-center gap-2 rounded-md border border-border/50 bg-background/60 px-2.5 py-2 sm:gap-3 sm:px-3" key={code}>
-                        <span aria-hidden className="font-mono text-[10px] text-muted-foreground tabular-nums">
+                      <li
+                        className="flex items-center gap-2 rounded-md border border-border/50 bg-background/60 px-2.5 py-2 sm:gap-3 sm:px-3"
+                        key={code}
+                      >
+                        <span
+                          aria-hidden
+                          className="font-mono text-[10px] text-muted-foreground tabular-nums"
+                        >
                           {String(i + 1).padStart(2, "0")}
                         </span>
-                        <span className="font-mono text-[12px] tracking-wide sm:text-[13px] sm:tracking-wider">{shown ? code : "••••-••••-••••"}</span>
+                        <span className="font-mono text-[12px] tracking-wide sm:text-[13px] sm:tracking-wider">
+                          {shown ? code : "••••-••••-••••"}
+                        </span>
                       </li>
                     ))}
                   </ol>
                   {!shown ? (
-                    <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 flex items-center justify-center"
+                    >
                       <span className="rounded-full bg-background/80 px-3 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] ring-1 ring-border/60 backdrop-blur">
                         {t.hidden}
                       </span>
@@ -412,8 +583,13 @@ function SecurityOverviewScreen({
                 {onRegenerateCodes ? (
                   <div className="mt-5 flex flex-col gap-3 rounded-lg border border-category-3/30 bg-category-3/6 p-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-start gap-2.5">
-                      <AlertTriangleIcon aria-hidden className="mt-0.5 size-3.5 shrink-0 text-category-3-foreground" />
-                      <p className="text-category-3-foreground text-xs leading-relaxed">{t.regenerateWarning}</p>
+                      <AlertTriangleIcon
+                        aria-hidden
+                        className="mt-0.5 size-3.5 shrink-0 text-category-3-foreground"
+                      />
+                      <p className="text-category-3-foreground text-xs leading-relaxed">
+                        {t.regenerateWarning}
+                      </p>
                     </div>
                     <Button
                       aria-busy={regenerate.isPending()}
@@ -424,7 +600,11 @@ function SecurityOverviewScreen({
                       type="button"
                       variant="outline"
                     >
-                      {regenerate.isPending() ? <Spinner data-icon="inline-start" /> : <RefreshCwIcon />}
+                      {regenerate.isPending() ? (
+                        <Spinner data-icon="inline-start" />
+                      ) : (
+                        <RefreshCwIcon />
+                      )}
                       {t.regenerate}
                     </Button>
                   </div>

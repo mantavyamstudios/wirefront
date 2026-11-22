@@ -11,19 +11,30 @@ import type { ComponentProps } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
 import * as fixtures from "@/pages/showcase/dashboards-metrics-overview/fixtures";
-import { api, Overview } from "@/pages/showcase/dashboards-metrics-overview/schema";
+import {
+  api,
+  Overview,
+} from "@/pages/showcase/dashboards-metrics-overview/schema";
 import { MetricsOverview } from "@/pages/showcase/dashboards-metrics-overview/view";
 
 afterEach(cleanup);
 
 const now = () => new Date(fixtures.now);
 
-function renderOverview(props: Partial<ComponentProps<typeof MetricsOverview>> = {}, provider: { locale?: string; currency?: string } = {}) {
+function renderOverview(
+  props: Partial<ComponentProps<typeof MetricsOverview>> = {},
+  provider: { locale?: string; currency?: string } = {}
+) {
   const onRangeChange = vi.fn();
   render(
     <WirefrontProvider now={now} {...provider}>
-      <MetricsOverview data={fixtures.getOverview} onRangeChange={onRangeChange} range="30d" {...props} />
-    </WirefrontProvider>,
+      <MetricsOverview
+        data={fixtures.getOverview}
+        onRangeChange={onRangeChange}
+        range="30d"
+        {...props}
+      />
+    </WirefrontProvider>
   );
   return { onRangeChange };
 }
@@ -54,7 +65,9 @@ describe("MetricsOverview", () => {
     fireEvent.click(screen.getByRole("button", { name: "30d" }));
     expect(onRangeChange).toHaveBeenCalledTimes(1);
     expect(screen.getByText("2 minutes ago")).toBeTruthy();
-    expect(screen.getByRole("img").getAttribute("aria-label")).toBe("Active users over 30 days, latest 12,600");
+    expect(screen.getByRole("img").getAttribute("aria-label")).toBe(
+      "Active users over 30 days, latest 12,600"
+    );
   });
 
   it("shows loading, empty and error states", () => {
@@ -68,7 +81,12 @@ describe("MetricsOverview", () => {
     cleanup();
 
     const onRetry = vi.fn();
-    renderOverview({ data: undefined, status: "error", error: "Timed out.", onRetry });
+    renderOverview({
+      data: undefined,
+      status: "error",
+      error: "Timed out.",
+      onRetry,
+    });
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
     expect(onRetry).toHaveBeenCalled();
   });
@@ -81,7 +99,10 @@ describe("MetricsOverview", () => {
 
   it("describes its backend operation, and the fixtures satisfy it", () => {
     expect(Object.keys(api)).toEqual(["getOverview"]);
-    for (const range of ["7d", "30d", "90d"] as const) expect(Overview.safeParse(fixtures.overviewFor(range)).success).toBe(true);
+    for (const range of ["7d", "30d", "90d"] as const)
+      expect(Overview.safeParse(fixtures.overviewFor(range)).success).toBe(
+        true
+      );
     expect(Overview.safeParse(fixtures.emptyOverview).success).toBe(true);
   });
 });

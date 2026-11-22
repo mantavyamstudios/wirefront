@@ -39,7 +39,8 @@ const DESIGNS = path.join(RUNTIME, "src/lib/designs.ts");
 const SOURCE_FILES = path.join(RUNTIME, "src/pages/showcase/source-files.ts");
 const SHOWCASE = path.join(RUNTIME, "src/pages/showcase");
 const GROUPS = path.join(ROOT, "apps/www/lib/screens/groups.ts");
-const HEADER = "// SPDX-License-Identifier: MIT\n// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront\n";
+const HEADER =
+  "// SPDX-License-Identifier: MIT\n// Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront\n";
 
 const fail = (message: string): never => {
   console.error(`screen:new: ${message}`);
@@ -50,26 +51,45 @@ const fail = (message: string): never => {
 // Arguments
 
 const args = process.argv.slice(2);
-const flag = (name: string) => args.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
-const target = args.find((a) => !a.startsWith("--")) ?? fail("usage: bun run screen:new <group>/<kind>/<screen> --title=… --blurb=…");
+const flag = (name: string) =>
+  args.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
+const target =
+  args.find((a) => !a.startsWith("--")) ??
+  fail("usage: bun run screen:new <group>/<kind>/<screen> --title=… --blurb=…");
 const [group, kind, screen, ...rest] = target.split("/");
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-if (rest.length || !group || !kind || !screen) fail(`"${target}" is not <group>/<kind>/<screen>`);
-for (const s of [group, kind, screen]) if (!SLUG.test(s)) fail(`"${s}" is not a lowercase, hyphenated slug`);
-const title = flag("title") ?? fail("--title is required (the screen's name, e.g. --title=\"Release notes\")");
-const blurb = flag("blurb") ?? fail("--blurb is required (one sentence: what the screen does)");
+if (rest.length || !group || !kind || !screen)
+  fail(`"${target}" is not <group>/<kind>/<screen>`);
+for (const s of [group, kind, screen])
+  if (!SLUG.test(s)) fail(`"${s}" is not a lowercase, hyphenated slug`);
+const title =
+  flag("title") ??
+  fail(
+    '--title is required (the screen\'s name, e.g. --title="Release notes")'
+  );
+const blurb =
+  flag("blurb") ??
+  fail("--blurb is required (one sentence: what the screen does)");
 const skipSnapshot = args.includes("--skip-snapshot");
 
-const pascal = (s: string) => s.split("-").map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join("");
-const camel = (s: string) => pascal(s).charAt(0).toLowerCase() + pascal(s).slice(1);
+const pascal = (s: string) =>
+  s
+    .split("-")
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join("");
+const camel = (s: string) =>
+  pascal(s).charAt(0).toLowerCase() + pascal(s).slice(1);
 const folder = `${kind}-${screen}`;
-const component = /^[0-9]/.test(pascal(screen)) ? `Screen${pascal(screen)}` : pascal(screen);
+const component = /^[0-9]/.test(pascal(screen))
+  ? `Screen${pascal(screen)}`
+  : pascal(screen);
 const messagesConst = `${folder.replaceAll("-", "_").toUpperCase()}_MESSAGES`;
 const namespace = camel(folder);
 const showcasePage = `${pascal(folder)}ShowcasePage`;
 const q = (s: string) => JSON.stringify(s);
 
-if (existsSync(path.join(SHOWCASE, folder))) fail(`apps/runtime/src/pages/showcase/${folder}/ already exists`);
+if (existsSync(path.join(SHOWCASE, folder)))
+  fail(`apps/runtime/src/pages/showcase/${folder}/ already exists`);
 
 // ---------------------------------------------------------------------------
 // Inserting into the catalogue files: find the spot with the TypeScript AST,
@@ -81,12 +101,19 @@ interface Edit {
 }
 
 function parse(file: string): ts.SourceFile {
-  return ts.createSourceFile(file, readFileSync(file, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  return ts.createSourceFile(
+    file,
+    readFileSync(file, "utf8"),
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS
+  );
 }
 
 function apply(file: string, edits: Edit[]) {
   let text = readFileSync(file, "utf8");
-  for (const edit of [...edits].sort((a, b) => b.at - a.at)) text = text.slice(0, edit.at) + edit.text + text.slice(edit.at);
+  for (const edit of [...edits].sort((a, b) => b.at - a.at))
+    text = text.slice(0, edit.at) + edit.text + text.slice(edit.at);
   writeFileSync(file, text);
 }
 
@@ -94,7 +121,12 @@ function variable(source: ts.SourceFile, name: string): ts.Expression {
   for (const statement of source.statements) {
     if (!ts.isVariableStatement(statement)) continue;
     for (const decl of statement.declarationList.declarations) {
-      if (ts.isIdentifier(decl.name) && decl.name.text === name && decl.initializer) return decl.initializer;
+      if (
+        ts.isIdentifier(decl.name) &&
+        decl.name.text === name &&
+        decl.initializer
+      )
+        return decl.initializer;
     }
   }
   return fail(`${path.relative(ROOT, source.fileName)} has no \`${name}\``);
@@ -103,98 +135,209 @@ function variable(source: ts.SourceFile, name: string): ts.Expression {
 const keyOf = (p: ts.ObjectLiteralElementLike, source: ts.SourceFile) =>
   p.name ? p.name.getText(source).replace(/^["']|["']$/g, "") : undefined;
 
-function property(obj: ts.ObjectLiteralExpression, key: string, source: ts.SourceFile): ts.PropertyAssignment | undefined {
-  return obj.properties.find((p): p is ts.PropertyAssignment => ts.isPropertyAssignment(p) && keyOf(p, source) === key);
+function property(
+  obj: ts.ObjectLiteralExpression,
+  key: string,
+  source: ts.SourceFile
+): ts.PropertyAssignment | undefined {
+  return obj.properties.find(
+    (p): p is ts.PropertyAssignment =>
+      ts.isPropertyAssignment(p) && keyOf(p, source) === key
+  );
 }
 
-function stringProp(obj: ts.ObjectLiteralExpression, key: string, source: ts.SourceFile): string | undefined {
+function stringProp(
+  obj: ts.ObjectLiteralExpression,
+  key: string,
+  source: ts.SourceFile
+): string | undefined {
   const p = property(obj, key, source);
-  return p && ts.isStringLiteral(p.initializer) ? p.initializer.text : undefined;
+  return p && ts.isStringLiteral(p.initializer)
+    ? p.initializer.text
+    : undefined;
 }
 
 /** The indentation of the line `node` starts on. */
 function indentOf(node: ts.Node, source: ts.SourceFile): string {
   const { line } = source.getLineAndCharacterOfPosition(node.getStart(source));
   const start = source.getPositionOfLineAndCharacter(line, 0);
-  return /^\s*/.exec(source.text.slice(start, node.getStart(source)))?.[0] ?? "";
+  return (
+    /^\s*/.exec(source.text.slice(start, node.getStart(source)))?.[0] ?? ""
+  );
 }
 
 /** Text inserted after the last element of an array or object literal, at its indentation. */
-function append(list: ts.NodeArray<ts.Node>, container: ts.Node, source: ts.SourceFile, item: string): Edit {
+function append(
+  list: ts.NodeArray<ts.Node>,
+  container: ts.Node,
+  source: ts.SourceFile,
+  item: string
+): Edit {
   const last = list.at(-1);
-  if (!last) return fail(`${path.relative(ROOT, source.fileName)}: an empty list at line ${source.getLineAndCharacterOfPosition(container.getStart(source)).line + 1}`);
+  if (!last)
+    return fail(
+      `${path.relative(ROOT, source.fileName)}: an empty list at line ${source.getLineAndCharacterOfPosition(container.getStart(source)).line + 1}`
+    );
   const indent = indentOf(last, source);
-  const body = item.split("\n").map((line, i) => (i === 0 ? line : `${indent}${line}`)).join("\n");
+  const body = item
+    .split("\n")
+    .map((line, i) => (i === 0 ? line : `${indent}${line}`))
+    .join("\n");
   return { at: last.getEnd(), text: `,\n${indent}${body}` };
 }
 
-const asArray = (e: ts.Expression, what: string) => (ts.isArrayLiteralExpression(e) ? e : fail(`${what} is not an array literal`));
-const asObject = (e: ts.Expression, what: string) => (ts.isObjectLiteralExpression(e) ? e : fail(`${what} is not an object literal`));
+const asArray = (e: ts.Expression, what: string) =>
+  ts.isArrayLiteralExpression(e) ? e : fail(`${what} is not an array literal`);
+const asObject = (e: ts.Expression, what: string) =>
+  ts.isObjectLiteralExpression(e)
+    ? e
+    : fail(`${what} is not an object literal`);
 
 // designs.ts
 const designsSource = parse(DESIGNS);
 const categories = asArray(variable(designsSource, "CATEGORIES"), "CATEGORIES");
 const categoryNodes = categories.elements.filter(ts.isObjectLiteralExpression);
-const category = categoryNodes.find((c) => stringProp(c, "slug", designsSource) === kind);
+const category = categoryNodes.find(
+  (c) => stringProp(c, "slug", designsSource) === kind
+);
 const designEntry = `{\n  slug: ${q(screen)},\n  title: ${q(title)},\n  blurb: ${q(blurb)},\n  status: "new",\n  states: ["ready", "loading", "empty", "error"],\n}`;
 const designEdits: Edit[] = [];
 if (category) {
-  const designs = asArray(property(category, "designs", designsSource)?.initializer ?? fail(`category ${kind} has no designs`), `${kind}.designs`);
+  const designs = asArray(
+    property(category, "designs", designsSource)?.initializer ??
+      fail(`category ${kind} has no designs`),
+    `${kind}.designs`
+  );
   for (const d of designs.elements.filter(ts.isObjectLiteralExpression)) {
-    if (stringProp(d, "slug", designsSource) === screen) fail(`${kind}/${screen} is already in designs.ts`);
+    if (stringProp(d, "slug", designsSource) === screen)
+      fail(`${kind}/${screen} is already in designs.ts`);
   }
-  designEdits.push(append(designs.elements, designs, designsSource, designEntry));
+  designEdits.push(
+    append(designs.elements, designs, designsSource, designEntry)
+  );
 } else {
-  const kindTitle = flag("kind-title") ?? fail(`"${kind}" is a new kind: pass --kind-title and --kind-blurb`);
-  const kindBlurb = flag("kind-blurb") ?? fail(`"${kind}" is a new kind: pass --kind-blurb`);
+  const kindTitle =
+    flag("kind-title") ??
+    fail(`"${kind}" is a new kind: pass --kind-title and --kind-blurb`);
+  const kindBlurb =
+    flag("kind-blurb") ?? fail(`"${kind}" is a new kind: pass --kind-blurb`);
   const icon = flag("icon") ?? "WireframeCard";
-  if (!new RegExp(`\\b${icon}\\b`).test(designsSource.text.slice(0, designsSource.text.indexOf("export type CategorySlug")))) {
-    fail(`--icon=${icon} is not imported in designs.ts (pick one of the Wireframe… icons it imports)`);
+  if (
+    !new RegExp(`\\b${icon}\\b`).test(
+      designsSource.text.slice(
+        0,
+        designsSource.text.indexOf("export type CategorySlug")
+      )
+    )
+  ) {
+    fail(
+      `--icon=${icon} is not imported in designs.ts (pick one of the Wireframe… icons it imports)`
+    );
   }
-  const union = designsSource.statements.find((s): s is ts.TypeAliasDeclaration => ts.isTypeAliasDeclaration(s) && s.name.text === "CategorySlug");
+  const union = designsSource.statements.find(
+    (s): s is ts.TypeAliasDeclaration =>
+      ts.isTypeAliasDeclaration(s) && s.name.text === "CategorySlug"
+  );
   const unionType = union?.type;
   const members =
-    unionType && ts.isUnionTypeNode(unionType) ? unionType.types : fail("designs.ts: CategorySlug is not a union of strings");
-  designEdits.push({ at: members.at(-1)?.getEnd() ?? fail("CategorySlug is empty"), text: `\n  | ${q(kind)}` });
+    unionType && ts.isUnionTypeNode(unionType)
+      ? unionType.types
+      : fail("designs.ts: CategorySlug is not a union of strings");
+  designEdits.push({
+    at: members.at(-1)?.getEnd() ?? fail("CategorySlug is empty"),
+    text: `\n  | ${q(kind)}`,
+  });
   const categoryEntry = `{\n  slug: ${q(kind)},\n  title: ${q(kindTitle)},\n  blurb: ${q(kindBlurb)},\n  Icon: ${icon},\n  designs: [\n    ${designEntry.split("\n").join("\n    ")},\n  ],\n}`;
-  designEdits.push(append(categories.elements, categories, designsSource, categoryEntry));
+  designEdits.push(
+    append(categories.elements, categories, designsSource, categoryEntry)
+  );
 }
 
 // source-files.ts
 const sourceFilesSource = parse(SOURCE_FILES);
-const sourceMap = asObject(variable(sourceFilesSource, "SOURCE_FILES"), "SOURCE_FILES");
+const sourceMap = asObject(
+  variable(sourceFilesSource, "SOURCE_FILES"),
+  "SOURCE_FILES"
+);
 const kindMap = property(sourceMap, kind, sourceFilesSource);
 const keyText = (k: string) => (/^[a-z_$][\w$]*$/i.test(k) ? k : q(k));
 const sourceEdits: Edit[] = [];
 if (kindMap) {
   const map = asObject(kindMap.initializer, `SOURCE_FILES.${kind}`);
-  if (property(map, screen, sourceFilesSource)) fail(`${kind}/${screen} is already in source-files.ts`);
-  sourceEdits.push(append(map.properties, map, sourceFilesSource, `${keyText(screen)}: ${q(folder)}`));
+  if (property(map, screen, sourceFilesSource))
+    fail(`${kind}/${screen} is already in source-files.ts`);
+  sourceEdits.push(
+    append(
+      map.properties,
+      map,
+      sourceFilesSource,
+      `${keyText(screen)}: ${q(folder)}`
+    )
+  );
 } else {
-  sourceEdits.push(append(sourceMap.properties, sourceMap, sourceFilesSource, `${keyText(kind)}: {\n  ${keyText(screen)}: ${q(folder)},\n}`));
+  sourceEdits.push(
+    append(
+      sourceMap.properties,
+      sourceMap,
+      sourceFilesSource,
+      `${keyText(kind)}: {\n  ${keyText(screen)}: ${q(folder)},\n}`
+    )
+  );
 }
 
 // groups.ts
 const groupsSource = parse(GROUPS);
-const groups = asArray(variable(groupsSource, "SCREEN_GROUPS"), "SCREEN_GROUPS");
+const groups = asArray(
+  variable(groupsSource, "SCREEN_GROUPS"),
+  "SCREEN_GROUPS"
+);
 const groupNodes = groups.elements.filter(ts.isObjectLiteralExpression);
 const kindGroup = groupNodes.find((g) => {
   const kinds = property(g, "kinds", groupsSource)?.initializer;
-  return kinds && ts.isArrayLiteralExpression(kinds) && kinds.elements.some((k) => ts.isStringLiteral(k) && k.text === kind);
+  return (
+    kinds &&
+    ts.isArrayLiteralExpression(kinds) &&
+    kinds.elements.some((k) => ts.isStringLiteral(k) && k.text === kind)
+  );
 });
 const groupEdits: Edit[] = [];
 if (kindGroup) {
   const actual = stringProp(kindGroup, "slug", groupsSource);
-  if (actual !== group) fail(`kind "${kind}" is in group "${actual}", not "${group}": use ${actual}/${kind}/${screen}`);
+  if (actual !== group)
+    fail(
+      `kind "${kind}" is in group "${actual}", not "${group}": use ${actual}/${kind}/${screen}`
+    );
 } else {
-  const existing = groupNodes.find((g) => stringProp(g, "slug", groupsSource) === group);
+  const existing = groupNodes.find(
+    (g) => stringProp(g, "slug", groupsSource) === group
+  );
   if (existing) {
-    const kinds = asArray(property(existing, "kinds", groupsSource)?.initializer ?? fail(`group ${group} has no kinds`), `${group}.kinds`);
-    groupEdits.push({ at: kinds.elements.at(-1)?.getEnd() ?? fail(`group ${group} lists no kinds`), text: `, ${q(kind)}` });
+    const kinds = asArray(
+      property(existing, "kinds", groupsSource)?.initializer ??
+        fail(`group ${group} has no kinds`),
+      `${group}.kinds`
+    );
+    groupEdits.push({
+      at:
+        kinds.elements.at(-1)?.getEnd() ??
+        fail(`group ${group} lists no kinds`),
+      text: `, ${q(kind)}`,
+    });
   } else {
-    const groupTitle = flag("group-title") ?? fail(`"${group}" is a new group: pass --group-title and --group-meaning`);
-    const meaning = flag("group-meaning") ?? fail(`"${group}" is a new group: pass --group-meaning`);
-    groupEdits.push(append(groups.elements, groups, groupsSource, `{ slug: ${q(group)}, title: ${q(groupTitle)}, meaning: ${q(meaning)}, kinds: [${q(kind)}] }`));
+    const groupTitle =
+      flag("group-title") ??
+      fail(`"${group}" is a new group: pass --group-title and --group-meaning`);
+    const meaning =
+      flag("group-meaning") ??
+      fail(`"${group}" is a new group: pass --group-meaning`);
+    groupEdits.push(
+      append(
+        groups.elements,
+        groups,
+        groupsSource,
+        `{ slug: ${q(group)}, title: ${q(groupTitle)}, meaning: ${q(meaning)}, kinds: [${q(kind)}] }`
+      )
+    );
   }
 }
 
@@ -437,21 +580,49 @@ apply(DESIGNS, designEdits);
 apply(SOURCE_FILES, sourceEdits);
 if (groupEdits.length) apply(GROUPS, groupEdits);
 
-console.log(`Scaffolded ${group}/${kind}/${screen} in apps/runtime/src/pages/showcase/${folder}/ and registered it.`);
+console.log(
+  `Scaffolded ${group}/${kind}/${screen} in apps/runtime/src/pages/showcase/${folder}/ and registered it.`
+);
 
-function run(label: string, command: string, commandArgs: string[], cwd = ROOT) {
+function run(
+  label: string,
+  command: string,
+  commandArgs: string[],
+  cwd = ROOT
+) {
   console.log(`\n> ${label}`);
   const result = spawnSync(command, commandArgs, { cwd, stdio: "inherit" });
-  if (result.status !== 0) fail(`${label} failed (exit ${result.status ?? result.signal}); fix it and run the step again`);
+  if (result.status !== 0)
+    fail(
+      `${label} failed (exit ${result.status ?? result.signal}); fix it and run the step again`
+    );
 }
 
 run("shadcn registry item", "bun", ["run", "registry"]);
-run("screens manifest, sidebar and MDX page", "bun", ["run", "--cwd", "apps/www", "screens:manifest"]);
-run("screen docs (usage example typechecked)", "bun", ["run", "--cwd", "apps/www", "screens:docs", "--check"]);
+run("screens manifest, sidebar and MDX page", "bun", [
+  "run",
+  "--cwd",
+  "apps/www",
+  "screens:manifest",
+]);
+run("screen docs (usage example typechecked)", "bun", [
+  "run",
+  "--cwd",
+  "apps/www",
+  "screens:docs",
+  "--check",
+]);
 if (skipSnapshot) {
-  console.log(`\nPreviews skipped (--skip-snapshot). The catalogue test needs them: bun run snapshot -- --design=${kind}/${screen}`);
+  console.log(
+    `\nPreviews skipped (--skip-snapshot). The catalogue test needs them: bun run snapshot -- --design=${kind}/${screen}`
+  );
 } else {
-  run("light and dark previews", "bun", ["run", "snapshot", "--", `--design=${kind}/${screen}`]);
+  run("light and dark previews", "bun", [
+    "run",
+    "snapshot",
+    "--",
+    `--design=${kind}/${screen}`,
+  ]);
 }
 
 console.log(`

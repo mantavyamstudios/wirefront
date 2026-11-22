@@ -21,6 +21,16 @@ export type PresencePerson = z.infer<typeof PresencePerson>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listPresence: { method: "GET", path: "/presence", summary: "Everyone's presence in the workspace", response: z.array(PresencePerson) },
-  setMyPresence: { method: "PUT", path: "/me/presence", summary: "Set do not disturb on or off", body: z.object({ presence: Presence }) },
+  listPresence: {
+    method: "GET",
+    path: "/presence",
+    summary: "Everyone's presence in the workspace",
+    response: z.array(PresencePerson),
+  },
+  setMyPresence: {
+    method: "PUT",
+    path: "/me/presence",
+    summary: "Set do not disturb on or off",
+    body: z.object({ presence: Presence }),
+  },
 });

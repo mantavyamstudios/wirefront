@@ -13,12 +13,20 @@ export function DashboardsEngineeringShowcasePage() {
   const [range, setRange] = useState<VelocityRange>("30d");
   return (
     <EngineeringVelocity
-      data={state === "loading" || state === "error" ? undefined : state === "empty" ? fixtures.emptyVelocity : fixtures.getVelocity}
+      data={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? fixtures.emptyVelocity
+            : fixtures.getVelocity
+      }
       error="The metrics service didn’t respond. Check your connection and try again."
       onRangeChange={setRange}
       onRetry={() => {}}
       range={range}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

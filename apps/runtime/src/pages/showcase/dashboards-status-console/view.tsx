@@ -11,10 +11,20 @@ import { Button } from "@wirefront/ui/button";
 import { Kbd } from "@wirefront/ui/kbd";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Skeleton } from "@wirefront/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@wirefront/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@wirefront/ui/tooltip";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
 import {
   ActivityIcon,
@@ -31,9 +41,21 @@ import {
   SirenIcon,
   XIcon,
 } from "lucide-react";
-import { AnimatePresence, MotionConfig, motion, useReducedMotion } from "motion/react";
+import {
+  AnimatePresence,
+  MotionConfig,
+  motion,
+  useReducedMotion,
+} from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import type { ConsoleDeploy, ConsolePerson, IncidentState, PostUpdateInput, ServiceHealth, StatusOverview } from "./schema";
+import type {
+  ConsoleDeploy,
+  ConsolePerson,
+  IncidentState,
+  PostUpdateInput,
+  ServiceHealth,
+  StatusOverview,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("statusConsole.<key>"). */
 export const STATUS_CONSOLE_MESSAGES = {
@@ -67,7 +89,8 @@ export const STATUS_CONSOLE_MESSAGES = {
   uptimeTitle: "{name} uptime",
   platform: "Platform",
   uptimeDays: "{value} · {days} days",
-  uptimeSummary: "{value} uptime over {days} days; {incidents} days with degraded service",
+  uptimeSummary:
+    "{value} uptime over {days} days; {incidents} days with degraded service",
   daysAgo: "{days} days ago",
   today: "Today",
   dayDegraded: "{day} · {minutes} min degraded",
@@ -141,10 +164,26 @@ const avatarTone: Record<number, string> = {
   7: "bg-category-7/14 text-category-7-foreground",
   8: "bg-category-8/14 text-category-8-foreground",
 };
-const healthDot: Record<ServiceHealth, string> = { operational: "bg-success", degraded: "bg-warning", down: "bg-destructive" };
-const healthText: Record<ServiceHealth, string> = { operational: "text-success-foreground", degraded: "text-warning-foreground", down: "text-destructive-foreground" };
-const healthStroke: Record<ServiceHealth, string> = { operational: "stroke-success", degraded: "stroke-warning", down: "stroke-destructive" };
-const healthFill: Record<ServiceHealth, string> = { operational: "fill-transparent", degraded: "fill-warning/12", down: "fill-destructive/12" };
+const healthDot: Record<ServiceHealth, string> = {
+  operational: "bg-success",
+  degraded: "bg-warning",
+  down: "bg-destructive",
+};
+const healthText: Record<ServiceHealth, string> = {
+  operational: "text-success-foreground",
+  degraded: "text-warning-foreground",
+  down: "text-destructive-foreground",
+};
+const healthStroke: Record<ServiceHealth, string> = {
+  operational: "stroke-success",
+  degraded: "stroke-warning",
+  down: "stroke-destructive",
+};
+const healthFill: Record<ServiceHealth, string> = {
+  operational: "fill-transparent",
+  degraded: "fill-warning/12",
+  down: "fill-destructive/12",
+};
 const stateTone: Record<IncidentState, { dot: string; text: string }> = {
   alert: { dot: "bg-destructive", text: "text-destructive-foreground" },
   investigating: { dot: "bg-warning", text: "text-warning-foreground" },
@@ -153,7 +192,12 @@ const stateTone: Record<IncidentState, { dot: string; text: string }> = {
   resolved: { dot: "bg-success", text: "text-success-foreground" },
   note: { dot: "bg-muted-foreground", text: "text-muted-foreground" },
 };
-const PROGRESS: IncidentState[] = ["investigating", "identified", "monitoring", "resolved"];
+const PROGRESS: IncidentState[] = [
+  "investigating",
+  "identified",
+  "monitoring",
+  "resolved",
+];
 
 type RailId = "overview" | "incidents" | "deploys" | "oncall";
 const RAIL_ORDER: RailId[] = ["overview", "incidents", "deploys", "oncall"];
@@ -178,20 +222,47 @@ function fmtMs(ms: number) {
   return ms >= 1000 ? `${(ms / 1000).toFixed(1)}s` : `${Math.round(ms)}ms`;
 }
 
-function Sparkline({ values, health, max }: { values: number[]; health: ServiceHealth; max: number }) {
+function Sparkline({
+  values,
+  health,
+  max,
+}: {
+  values: number[];
+  health: ServiceHealth;
+  max: number;
+}) {
   if (values.length < 2) return null;
   const w = 120;
   const h = 24;
   const top = Math.max(max, ...values) * 1.2 || 1;
-  const pts = values.map((v, i) => [(i / (values.length - 1)) * w, h - (v / top) * (h - 4) - 2] as const);
-  const line = pts.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
+  const pts = values.map(
+    (v, i) =>
+      [(i / (values.length - 1)) * w, h - (v / top) * (h - 4) - 2] as const
+  );
+  const line = pts
+    .map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`)
+    .join(" ");
   const area = `${line} L${w} ${h} L0 ${h} Z`;
   const calm = health === "operational";
   return (
-    <svg aria-hidden className="h-6 w-full overflow-visible" preserveAspectRatio="none" viewBox={`0 0 ${w} ${h}`}>
-      <path className={cn("stroke-none transition-[fill] duration-500", calm ? "fill-transparent" : healthFill[health])} d={area} />
+    <svg
+      aria-hidden
+      className="h-6 w-full overflow-visible"
+      preserveAspectRatio="none"
+      viewBox={`0 0 ${w} ${h}`}
+    >
       <path
-        className={cn("fill-none transition-[stroke] duration-500", calm ? "stroke-muted-foreground/60" : healthStroke[health])}
+        className={cn(
+          "stroke-none transition-[fill] duration-500",
+          calm ? "fill-transparent" : healthFill[health]
+        )}
+        d={area}
+      />
+      <path
+        className={cn(
+          "fill-none transition-[stroke] duration-500",
+          calm ? "stroke-muted-foreground/60" : healthStroke[health]
+        )}
         d={line}
         strokeLinejoin="round"
         strokeWidth="1.25"
@@ -201,11 +272,28 @@ function Sparkline({ values, health, max }: { values: number[]; health: ServiceH
   );
 }
 
-function PersonAvatar({ person, size = "size-6" }: { person?: ConsolePerson; size?: string }) {
+function PersonAvatar({
+  person,
+  size = "size-6",
+}: {
+  person?: ConsolePerson;
+  size?: string;
+}) {
   if (!person) return null;
   return (
     <Avatar className={size}>
-      <AvatarFallback className={cn("font-medium text-[10px]", avatarTone[person.category ?? 1])}>{person.bot ? <ActivityIcon className="size-3" /> : initials(person.name)}</AvatarFallback>
+      <AvatarFallback
+        className={cn(
+          "font-medium text-[10px]",
+          avatarTone[person.category ?? 1]
+        )}
+      >
+        {person.bot ? (
+          <ActivityIcon className="size-3" />
+        ) : (
+          initials(person.name)
+        )}
+      </AvatarFallback>
     </Avatar>
   );
 }
@@ -233,7 +321,9 @@ function StatusConsoleScreen({
   const [focusIdx, setFocusIdx] = useState(0);
   const [paged, setPaged] = useState<string | null>(null);
   const [note, setNote] = useState("");
-  const [toast, setToast] = useState<{ key: string; text: string } | null>(null);
+  const [toast, setToast] = useState<{ key: string; text: string } | null>(
+    null
+  );
   const [railOn, setRailOn] = useState<RailId>("overview");
   const [clock, setClock] = useState(() => now().getTime());
   const rootRef = useRef<HTMLDivElement>(null);
@@ -247,21 +337,38 @@ function StatusConsoleScreen({
   const incident = data?.incident ?? null;
   const updates = incident?.updates ?? [];
   const person = (id?: string) => people.find((p) => p.id === id);
-  const serviceName = (id: string) => services.find((s) => s.id === id)?.name ?? id;
-  const incidentState = updates.filter((u) => u.state !== "note" && u.state !== "alert").at(-1)?.state ?? "investigating";
+  const serviceName = (id: string) =>
+    services.find((s) => s.id === id)?.name ?? id;
+  const incidentState =
+    updates.filter((u) => u.state !== "note" && u.state !== "alert").at(-1)
+      ?.state ?? "investigating";
   const resolved = !incident || incidentState === "resolved";
 
   const page = useAction(onPage ?? (async () => {}), {
     onSuccess: (_, id) => {
       setPaged(id);
-      setToast({ key: `page-${id}`, text: interpolate(t.pagedToast, { name: person(id)?.name.split(" ")[0] ?? id }) });
+      setToast({
+        key: `page-${id}`,
+        text: interpolate(t.pagedToast, {
+          name: person(id)?.name.split(" ")[0] ?? id,
+        }),
+      });
     },
   });
-  const post = useAction(onPostUpdate ?? (async () => {}), { onSuccess: () => setNote("") });
+  const post = useAction(onPostUpdate ?? (async () => {}), {
+    onSuccess: () => setNote(""),
+  });
   const rollback = useAction(onRollback ?? (async () => {}), {
     onSuccess: (_, id) => {
       const d = data?.deploys.find((x) => x.id === id);
-      if (d) setToast({ key: `rollback-${id}`, text: interpolate(t.rolledBackToast, { sha: d.sha, service: serviceName(d.serviceId) }) });
+      if (d)
+        setToast({
+          key: `rollback-${id}`,
+          text: interpolate(t.rolledBackToast, {
+            sha: d.sha,
+            service: serviceName(d.serviceId),
+          }),
+        });
     },
   });
   const failure = page.error ?? post.error ?? rollback.error;
@@ -281,22 +388,41 @@ function StatusConsoleScreen({
   const updateCount = updates.length;
   useEffect(() => {
     const el = timelineRef.current;
-    if (el && updateCount) el.scrollTo({ top: el.scrollHeight, behavior: reduce ? "auto" : "smooth" });
+    if (el && updateCount)
+      el.scrollTo({
+        top: el.scrollHeight,
+        behavior: reduce ? "auto" : "smooth",
+      });
   }, [updateCount, reduce]);
 
   // Keyboard: 1–9 filter by service, P pages the primary, Esc clears; arrows move between services.
-  const latest = useRef({ services, onCall: data?.onCall, canPage: Boolean(onPage), page });
-  latest.current = { services, onCall: data?.onCall, canPage: Boolean(onPage), page };
+  const latest = useRef({
+    services,
+    onCall: data?.onCall,
+    canPage: Boolean(onPage),
+    page,
+  });
+  latest.current = {
+    services,
+    onCall: data?.onCall,
+    canPage: Boolean(onPage),
+    page,
+  };
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
     const onKey = (e: KeyboardEvent) => {
       const target = e.target;
-      if (target instanceof HTMLElement && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+      if (
+        target instanceof HTMLElement &&
+        (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
+      )
+        return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const { services: list, onCall, canPage, page: pager } = latest.current;
       if (e.key === "Escape") setSelected(null);
-      else if (e.key.toLowerCase() === "p" && canPage && onCall) void pager.run(onCall.primary.personId, onCall.primary.personId);
+      else if (e.key.toLowerCase() === "p" && canPage && onCall)
+        void pager.run(onCall.primary.personId, onCall.primary.personId);
       else if (/^[1-9]$/.test(e.key)) {
         const i = Number(e.key) - 1;
         const s = list[i];
@@ -314,12 +440,20 @@ function StatusConsoleScreen({
     const list = listRef.current;
     if (!list) return;
     const onKey = (e: KeyboardEvent) => {
-      const moves: Record<string, number> = { ArrowDown: 1, ArrowUp: -1, j: 1, k: -1 };
+      const moves: Record<string, number> = {
+        ArrowDown: 1,
+        ArrowUp: -1,
+        j: 1,
+        k: -1,
+      };
       const move = moves[e.key];
       if (move === undefined) return;
       e.preventDefault();
       setFocusIdx((cur) => {
-        const next = Math.max(0, Math.min(latest.current.services.length - 1, cur + move));
+        const next = Math.max(
+          0,
+          Math.min(latest.current.services.length - 1, cur + move)
+        );
         cardRefs.current[next]?.focus();
         return next;
       });
@@ -334,8 +468,15 @@ function StatusConsoleScreen({
       const box = scrollRef.current;
       const el = box?.querySelector<HTMLElement>(`[data-rail="${id}"]`);
       if (!box || !el) return;
-      const top = el.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - 12;
-      box.scrollTo({ top: id === "overview" ? 0 : top, behavior: reduce ? "auto" : "smooth" });
+      const top =
+        el.getBoundingClientRect().top -
+        box.getBoundingClientRect().top +
+        box.scrollTop -
+        12;
+      box.scrollTo({
+        top: id === "overview" ? 0 : top,
+        behavior: reduce ? "auto" : "smooth",
+      });
     });
   };
 
@@ -346,20 +487,45 @@ function StatusConsoleScreen({
   };
 
   const degraded = services.filter((s) => s.health !== "operational");
-  const overall: ServiceHealth = degraded.some((s) => s.health === "down") ? "down" : degraded.length ? "degraded" : "operational";
+  const overall: ServiceHealth = degraded.some((s) => s.health === "down")
+    ? "down"
+    : degraded.length
+      ? "degraded"
+      : "operational";
   const deploys = data?.deploys ?? [];
-  const visibleDeploys = selected ? deploys.filter((d) => d.serviceId === selected) : deploys;
+  const visibleDeploys = selected
+    ? deploys.filter((d) => d.serviceId === selected)
+    : deploys;
   const days = data?.uptime.days ?? [];
-  const pct = (v: number) => format.number(v, { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const ago = updatedAt ? Math.max(0, Math.round((clock - Date.parse(updatedAt)) / 1000)) : null;
+  const pct = (v: number) =>
+    format.number(v, {
+      style: "percent",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  const ago = updatedAt
+    ? Math.max(0, Math.round((clock - Date.parse(updatedAt)) / 1000))
+    : null;
   const ready = status === "ready" && data;
 
   return (
     <MotionConfig reducedMotion="user">
       <TooltipProvider delay={300}>
-        <div className={cn("@container relative isolate flex h-190 w-full overflow-hidden bg-sidebar text-foreground text-sm outline-none", className)} ref={rootRef}>
-          <nav aria-label={t.console} className="hidden w-14 shrink-0 flex-col items-center gap-1 py-3 @3xl:flex">
-            <span aria-hidden className="mb-3 flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+        <div
+          className={cn(
+            "@container relative isolate flex h-190 w-full overflow-hidden bg-sidebar text-foreground text-sm outline-none",
+            className
+          )}
+          ref={rootRef}
+        >
+          <nav
+            aria-label={t.console}
+            className="hidden w-14 shrink-0 flex-col items-center gap-1 py-3 @3xl:flex"
+          >
+            <span
+              aria-hidden
+              className="mb-3 flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+            >
               <ActivityIcon className="size-4" />
             </span>
             {RAIL_ORDER.map((id) => {
@@ -373,7 +539,9 @@ function StatusConsoleScreen({
                         aria-label={t[r.label]}
                         className={cn(
                           "relative flex size-9 cursor-pointer items-center justify-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                          id === railOn ? "bg-background text-foreground shadow-xs/5 ring-1 ring-border dark:bg-accent dark:ring-0" : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                          id === railOn
+                            ? "bg-background text-foreground shadow-xs/5 ring-1 ring-border dark:bg-accent dark:ring-0"
+                            : "text-muted-foreground hover:bg-accent hover:text-foreground"
                         )}
                         onClick={() => jump(id)}
                         type="button"
@@ -381,7 +549,12 @@ function StatusConsoleScreen({
                     }
                   >
                     <r.icon aria-hidden className="size-4" />
-                    {id === "incidents" && !resolved && <span aria-hidden className="absolute top-1.5 inset-e-1.5 size-1.5 rounded-full bg-destructive" />}
+                    {id === "incidents" && !resolved && (
+                      <span
+                        aria-hidden
+                        className="absolute top-1.5 inset-e-1.5 size-1.5 rounded-full bg-destructive"
+                      />
+                    )}
                   </TooltipTrigger>
                   <TooltipContent side="right">{t[r.label]}</TooltipContent>
                 </Tooltip>
@@ -396,7 +569,12 @@ function StatusConsoleScreen({
             <header className="flex h-14 shrink-0 items-center gap-3 border-b px-3 @lg:px-4">
               <h1 className="truncate font-semibold">{t.title}</h1>
               {environments.length > 1 && environment ? (
-                <RadioGroup aria-label={t.environment} className="flex rounded-lg bg-muted p-0.5" onValueChange={(v) => onEnvironmentChange?.(v as string)} value={environment}>
+                <RadioGroup
+                  aria-label={t.environment}
+                  className="flex rounded-lg bg-muted p-0.5"
+                  onValueChange={(v) => onEnvironmentChange?.(v as string)}
+                  value={environment}
+                >
                   {environments.map((e) => (
                     <Radio.Root
                       className="relative h-6 cursor-pointer rounded-md px-2 font-medium text-muted-foreground text-xs outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-background data-checked:text-foreground data-checked:shadow-xs/5 dark:data-checked:bg-accent"
@@ -422,15 +600,23 @@ function StatusConsoleScreen({
                   <span
                     className={cn(
                       "flex h-7 items-center gap-1.5 rounded-full border px-2.5 font-medium text-xs transition-colors duration-500",
-                      overall === "operational" ? "border-success/30 bg-success/8 text-success-foreground" : "border-warning/40 bg-warning/10 text-warning-foreground",
+                      overall === "operational"
+                        ? "border-success/30 bg-success/8 text-success-foreground"
+                        : "border-warning/40 bg-warning/10 text-warning-foreground"
                     )}
                     role="status"
                   >
-                    {overall === "operational" ? <CheckIcon aria-hidden className="size-3.5" /> : <CircleAlertIcon aria-hidden className="size-3.5" />}
+                    {overall === "operational" ? (
+                      <CheckIcon aria-hidden className="size-3.5" />
+                    ) : (
+                      <CircleAlertIcon aria-hidden className="size-3.5" />
+                    )}
                     {overall === "operational" ? (
                       <>
                         <span className="@lg:hidden">{t.allClear}</span>
-                        <span className="hidden @lg:inline">{t.allOperational}</span>
+                        <span className="hidden @lg:inline">
+                          {t.allOperational}
+                        </span>
                       </>
                     ) : (
                       interpolate(t.degradedCount, { count: degraded.length })
@@ -440,13 +626,25 @@ function StatusConsoleScreen({
               </div>
             </header>
 
-            <div className="min-h-0 flex-1 overflow-y-auto scrollbar-thin" ref={scrollRef}>
+            <div
+              className="min-h-0 flex-1 overflow-y-auto scrollbar-thin"
+              ref={scrollRef}
+            >
               {status === "error" ? (
                 <div className="flex h-full flex-col items-center justify-center px-6 text-center">
                   <p className="font-medium">{t.errorTitle}</p>
-                  {error ? <p className="mt-1 max-w-xs text-pretty text-muted-foreground text-xs">{error}</p> : null}
+                  {error ? (
+                    <p className="mt-1 max-w-xs text-pretty text-muted-foreground text-xs">
+                      {error}
+                    </p>
+                  ) : null}
                   {onRetry ? (
-                    <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+                    <Button
+                      className="mt-4"
+                      onClick={onRetry}
+                      size="sm"
+                      variant="outline"
+                    >
                       {t.retry}
                     </Button>
                   ) : null}
@@ -459,25 +657,39 @@ function StatusConsoleScreen({
               ) : (
                 <div className="grid grid-cols-1 gap-4 p-3 @lg:p-4 @5xl:grid-cols-[minmax(0,1fr)_340px] @5xl:grid-rows-[auto_1fr]">
                   <div className="flex min-w-0 flex-col gap-4 self-start @5xl:col-start-1 @5xl:row-span-2 @5xl:row-start-1">
-                    <section aria-labelledby="console-services" className="overflow-hidden rounded-xl border bg-card" data-rail="overview">
+                    <section
+                      aria-labelledby="console-services"
+                      className="overflow-hidden rounded-xl border bg-card"
+                      data-rail="overview"
+                    >
                       <div className="flex h-11 items-center justify-between gap-3 border-b px-3">
                         <h2 className="font-medium" id="console-services">
                           {t.services}
                         </h2>
                         <span className="truncate text-muted-foreground text-xs">
                           {selected ? (
-                            <button className="cursor-pointer rounded outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring" onClick={() => setSelected(null)} type="button">
-                              {t.clearFilter} <Kbd className="ms-1">{t.escKey}</Kbd>
+                            <button
+                              className="cursor-pointer rounded outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                              onClick={() => setSelected(null)}
+                              type="button"
+                            >
+                              {t.clearFilter}{" "}
+                              <Kbd className="ms-1">{t.escKey}</Kbd>
                             </button>
                           ) : (
                             <span aria-hidden>
-                              <span className="hidden @lg:inline">{t.press} </span>
+                              <span className="hidden @lg:inline">
+                                {t.press}{" "}
+                              </span>
                               <Kbd>1</Kbd>–<Kbd>9</Kbd> {t.filterHint}
                             </span>
                           )}
                         </span>
                       </div>
-                      <div aria-hidden className="hidden h-8 items-center gap-4 border-b bg-muted/40 px-3 text-[11px] text-muted-foreground @xl:flex">
+                      <div
+                        aria-hidden
+                        className="hidden h-8 items-center gap-4 border-b bg-muted/40 px-3 text-[11px] text-muted-foreground @xl:flex"
+                      >
                         <span className="min-w-0 flex-1">{t.colService}</span>
                         <span className="w-32 @4xl:w-40">{t.colTrend}</span>
                         <span className="w-14 text-end">{t.colP95}</span>
@@ -493,16 +705,30 @@ function StatusConsoleScreen({
                               className={cn(
                                 "group/row relative flex h-11 min-w-0 items-center gap-4 px-3 transition-[background-color,opacity] duration-150 ease-out focus-within:bg-accent/60",
                                 on ? "bg-accent/70" : "hover:bg-accent/40",
-                                selected && !on && "opacity-50",
+                                selected && !on && "opacity-50"
                               )}
                               key={s.id}
                             >
-                              {on && <motion.span className="absolute inset-y-0 inset-s-0 w-0.5 bg-foreground" layoutId="service-rail" transition={{ type: "spring", stiffness: 520, damping: 42 }} />}
+                              {on && (
+                                <motion.span
+                                  className="absolute inset-y-0 inset-s-0 w-0.5 bg-foreground"
+                                  layoutId="service-rail"
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 520,
+                                    damping: 42,
+                                  }}
+                                />
+                              )}
                               {/* The filter toggle covers the whole row (before:inset-0); its name is the service, health and region. */}
                               <button
                                 aria-pressed={on}
                                 className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 text-start outline-none before:absolute before:inset-0"
-                                onClick={() => setSelected((cur) => (cur === s.id ? null : s.id))}
+                                onClick={() =>
+                                  setSelected((cur) =>
+                                    cur === s.id ? null : s.id
+                                  )
+                                }
                                 onFocus={() => setFocusIdx(i)}
                                 ref={(el) => {
                                   cardRefs.current[i] = el;
@@ -510,25 +736,71 @@ function StatusConsoleScreen({
                                 tabIndex={i === focusIdx ? 0 : -1}
                                 type="button"
                               >
-                                <span aria-hidden className="relative flex size-2 shrink-0">
-                                  {!calm && <span className={cn("absolute inset-0 rounded-full opacity-60 motion-safe:animate-ping motion-reduce:hidden", healthDot[s.health])} />}
-                                  <span className={cn("relative size-2 rounded-full transition-colors duration-500", healthDot[s.health])} />
+                                <span
+                                  aria-hidden
+                                  className="relative flex size-2 shrink-0"
+                                >
+                                  {!calm && (
+                                    <span
+                                      className={cn(
+                                        "absolute inset-0 rounded-full opacity-60 motion-safe:animate-ping motion-reduce:hidden",
+                                        healthDot[s.health]
+                                      )}
+                                    />
+                                  )}
+                                  <span
+                                    className={cn(
+                                      "relative size-2 rounded-full transition-colors duration-500",
+                                      healthDot[s.health]
+                                    )}
+                                  />
                                 </span>
-                                <span className="truncate font-medium">{s.name}</span>{" "}
-                                {calm ? <span className="sr-only">{t[s.health]}</span> : <span className={cn("shrink-0 text-xs transition-colors duration-500", healthText[s.health])}>{t[s.health]}</span>}{" "}
-                                {s.region ? <span className="ms-auto hidden shrink-0 font-mono text-[11px] text-muted-foreground @md:inline @xl:hidden @3xl:inline">{s.region}</span> : null}
+                                <span className="truncate font-medium">
+                                  {s.name}
+                                </span>{" "}
+                                {calm ? (
+                                  <span className="sr-only">{t[s.health]}</span>
+                                ) : (
+                                  <span
+                                    className={cn(
+                                      "shrink-0 text-xs transition-colors duration-500",
+                                      healthText[s.health]
+                                    )}
+                                  >
+                                    {t[s.health]}
+                                  </span>
+                                )}{" "}
+                                {s.region ? (
+                                  <span className="ms-auto hidden shrink-0 font-mono text-[11px] text-muted-foreground @md:inline @xl:hidden @3xl:inline">
+                                    {s.region}
+                                  </span>
+                                ) : null}
                               </button>
                               <span className="pointer-events-none hidden w-32 shrink-0 @xl:block @4xl:w-40">
-                                <Sparkline health={s.health} max={s.p95Ms} values={s.p95Trend} />
+                                <Sparkline
+                                  health={s.health}
+                                  max={s.p95Ms}
+                                  values={s.p95Trend}
+                                />
                               </span>
-                              <span className={cn("pointer-events-none w-14 shrink-0 text-end font-medium tabular-nums transition-colors duration-500", calm ? "text-foreground" : healthText[s.health])}>
-                                <span className="sr-only">{t.p95}</span> {fmtMs(s.p95Ms)}
+                              <span
+                                className={cn(
+                                  "pointer-events-none w-14 shrink-0 text-end font-medium tabular-nums transition-colors duration-500",
+                                  calm
+                                    ? "text-foreground"
+                                    : healthText[s.health]
+                                )}
+                              >
+                                <span className="sr-only">{t.p95}</span>{" "}
+                                {fmtMs(s.p95Ms)}
                               </span>
                               <span className="pointer-events-none hidden w-14 shrink-0 text-end text-muted-foreground tabular-nums @md:block">
-                                {pct(s.errorRate)} <span className="sr-only">{t.errors}</span>
+                                {pct(s.errorRate)}{" "}
+                                <span className="sr-only">{t.errors}</span>
                               </span>
                               <span className="pointer-events-none hidden w-16 shrink-0 text-end text-muted-foreground tabular-nums @xl:block">
-                                {pct(s.uptime)} <span className="sr-only">{t.uptimeLabel}</span>
+                                {pct(s.uptime)}{" "}
+                                <span className="sr-only">{t.uptimeLabel}</span>
                               </span>
                             </li>
                           );
@@ -536,21 +808,43 @@ function StatusConsoleScreen({
                       </ul>
                     </section>
 
-                    <section aria-labelledby="console-uptime" className="rounded-xl border bg-card px-3 pt-3 pb-2.5">
+                    <section
+                      aria-labelledby="console-uptime"
+                      className="rounded-xl border bg-card px-3 pt-3 pb-2.5"
+                    >
                       <div className="flex items-baseline justify-between gap-3">
-                        <h2 className="truncate font-medium" id="console-uptime">
-                          {interpolate(t.uptimeTitle, { name: selected ? serviceName(selected) : t.platform })}
+                        <h2
+                          className="truncate font-medium"
+                          id="console-uptime"
+                        >
+                          {interpolate(t.uptimeTitle, {
+                            name: selected ? serviceName(selected) : t.platform,
+                          })}
                         </h2>
-                        <span className="shrink-0 text-muted-foreground text-xs tabular-nums">{interpolate(t.uptimeDays, { value: pct(data.uptime.value), days: days.length })}</span>
+                        <span className="shrink-0 text-muted-foreground text-xs tabular-nums">
+                          {interpolate(t.uptimeDays, {
+                            value: pct(data.uptime.value),
+                            days: days.length,
+                          })}
+                        </span>
                       </div>
                       <div
-                        aria-label={interpolate(t.uptimeSummary, { value: pct(data.uptime.value), days: days.length, incidents: days.filter((d) => d.degradedMinutes > 0).length })}
+                        aria-label={interpolate(t.uptimeSummary, {
+                          value: pct(data.uptime.value),
+                          days: days.length,
+                          incidents: days.filter((d) => d.degradedMinutes > 0)
+                            .length,
+                        })}
                         className="mt-3 flex h-6 gap-0.75"
                         role="img"
                       >
                         {days.map((d, i) => {
                           const last = i === days.length - 1;
-                          const label = last ? t.today : interpolate(t.daysAgo, { days: days.length - 1 - i });
+                          const label = last
+                            ? t.today
+                            : interpolate(t.daysAgo, {
+                                days: days.length - 1 - i,
+                              });
                           return (
                             <Tooltip key={d.date}>
                               <TooltipTrigger
@@ -558,25 +852,45 @@ function StatusConsoleScreen({
                                   <span
                                     className={cn(
                                       "h-full min-w-0 flex-1 rounded-[calc(var(--radius)*0.2)] transition-[background-color,opacity] duration-500 hover:opacity-70",
-                                      d.degradedMinutes === 0 ? "bg-success/60" : last && !resolved ? "bg-destructive" : "bg-warning",
+                                      d.degradedMinutes === 0
+                                        ? "bg-success/60"
+                                        : last && !resolved
+                                          ? "bg-destructive"
+                                          : "bg-warning"
                                     )}
                                   />
                                 }
                               />
-                              <TooltipContent>{d.degradedMinutes ? interpolate(t.dayDegraded, { day: label, minutes: d.degradedMinutes }) : interpolate(t.dayClear, { day: label })}</TooltipContent>
+                              <TooltipContent>
+                                {d.degradedMinutes
+                                  ? interpolate(t.dayDegraded, {
+                                      day: label,
+                                      minutes: d.degradedMinutes,
+                                    })
+                                  : interpolate(t.dayClear, { day: label })}
+                              </TooltipContent>
                             </Tooltip>
                           );
                         })}
                       </div>
-                      <div aria-hidden className="mt-2 flex justify-between text-[11px] text-muted-foreground">
-                        <span>{interpolate(t.daysAgo, { days: days.length })}</span>
+                      <div
+                        aria-hidden
+                        className="mt-2 flex justify-between text-[11px] text-muted-foreground"
+                      >
+                        <span>
+                          {interpolate(t.daysAgo, { days: days.length })}
+                        </span>
                         <span>{t.today}</span>
                       </div>
                     </section>
                   </div>
 
                   <div className="order-first flex min-w-0 flex-col gap-4 @5xl:order-0 @5xl:col-start-2 @5xl:row-start-1">
-                    <section aria-labelledby="console-incident" className="flex flex-col overflow-hidden rounded-xl border bg-card" data-rail="incidents">
+                    <section
+                      aria-labelledby="console-incident"
+                      className="flex flex-col overflow-hidden rounded-xl border bg-card"
+                      data-rail="incidents"
+                    >
                       {incident ? (
                         <>
                           <div className="flex flex-col gap-1.5 px-3 pt-3">
@@ -584,37 +898,77 @@ function StatusConsoleScreen({
                               <span
                                 className={cn(
                                   "flex h-5 items-center gap-1 rounded-full px-1.5 font-medium transition-colors duration-500",
-                                  resolved ? "bg-success/10 text-success-foreground" : "bg-warning/12 text-warning-foreground",
+                                  resolved
+                                    ? "bg-success/10 text-success-foreground"
+                                    : "bg-warning/12 text-warning-foreground"
                                 )}
                               >
-                                {resolved ? <CheckIcon aria-hidden className="size-3" /> : <SirenIcon aria-hidden className="size-3" />}
+                                {resolved ? (
+                                  <CheckIcon aria-hidden className="size-3" />
+                                ) : (
+                                  <SirenIcon aria-hidden className="size-3" />
+                                )}
                                 {resolved ? t.resolvedBadge : t.ongoing}
                               </span>
-                              <span className="font-mono text-[11px]">{incident.ref}</span>
+                              <span className="font-mono text-[11px]">
+                                {incident.ref}
+                              </span>
                               <span aria-hidden>·</span>
                               <span>{incident.severity}</span>
-                              <time className="ms-auto tabular-nums" dateTime={incident.startedAt}>
+                              <time
+                                className="ms-auto tabular-nums"
+                                dateTime={incident.startedAt}
+                              >
                                 {format.time(incident.startedAt)}
                               </time>
                             </div>
-                            <h2 className="text-pretty font-medium leading-snug" id="console-incident">
+                            <h2
+                              className="text-pretty font-medium leading-snug"
+                              id="console-incident"
+                            >
                               {incident.title}
                             </h2>
                           </div>
-                          <ol aria-label={t.incident} className="mt-3 flex gap-1 px-3">
+                          <ol
+                            aria-label={t.incident}
+                            className="mt-3 flex gap-1 px-3"
+                          >
                             {PROGRESS.map((st) => {
-                              const done = PROGRESS.indexOf(st) <= PROGRESS.indexOf(incidentState);
+                              const done =
+                                PROGRESS.indexOf(st) <=
+                                PROGRESS.indexOf(incidentState);
                               return (
-                                <li aria-current={st === incidentState ? "step" : undefined} className="flex min-w-0 flex-1 flex-col gap-1" key={st}>
-                                  <span aria-hidden className="h-1 overflow-hidden rounded-full bg-muted">
+                                <li
+                                  aria-current={
+                                    st === incidentState ? "step" : undefined
+                                  }
+                                  className="flex min-w-0 flex-1 flex-col gap-1"
+                                  key={st}
+                                >
+                                  <span
+                                    aria-hidden
+                                    className="h-1 overflow-hidden rounded-full bg-muted"
+                                  >
                                     <motion.span
                                       animate={{ scaleX: done ? 1 : 0 }}
-                                      className={cn("block h-full origin-left rounded-full", stateTone[st].dot)}
+                                      className={cn(
+                                        "block h-full origin-left rounded-full",
+                                        stateTone[st].dot
+                                      )}
                                       initial={false}
                                       transition={{ duration: 0.4, ease }}
                                     />
                                   </span>
-                                  <span className={cn("truncate text-[11px] transition-colors", done ? "text-foreground" : "text-muted-foreground")}>{t[st]}</span>
+                                  <span
+                                    className={cn(
+                                      "truncate text-[11px] transition-colors",
+                                      done
+                                        ? "text-foreground"
+                                        : "text-muted-foreground"
+                                    )}
+                                  >
+                                    {t[st]}
+                                  </span>
                                 </li>
                               );
                             })}
@@ -629,21 +983,57 @@ function StatusConsoleScreen({
                                 const p = person(u.by);
                                 const tone = stateTone[u.state];
                                 return (
-                                  <motion.li animate={{ opacity: 1, y: 0 }} className="relative flex gap-2.5" initial={{ opacity: 0, y: 8 }} key={u.id} transition={{ duration: 0.3, ease }}>
-                                    {i < updates.length - 1 && <span aria-hidden className="absolute top-6 -bottom-3 inset-s-2.75 w-px bg-border" />}
+                                  <motion.li
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="relative flex gap-2.5"
+                                    initial={{ opacity: 0, y: 8 }}
+                                    key={u.id}
+                                    transition={{ duration: 0.3, ease }}
+                                  >
+                                    {i < updates.length - 1 && (
+                                      <span
+                                        aria-hidden
+                                        className="absolute top-6 -bottom-3 inset-s-2.75 w-px bg-border"
+                                      />
+                                    )}
                                     <span className="relative">
                                       <PersonAvatar person={p} />
                                     </span>
                                     <div className="min-w-0 flex-1">
                                       <div className="flex items-center gap-1.5 text-xs">
-                                        <span aria-hidden className={cn("size-1.5 rounded-full", tone.dot)} />
-                                        <span className={cn("font-medium", tone.text)}>{t[u.state]}</span>
-                                        {p ? <span className="text-muted-foreground">· {u.by === currentUserId ? t.you : p.name.split(" ")[0]}</span> : null}
-                                        <time className="ms-auto text-muted-foreground tabular-nums" dateTime={u.at}>
+                                        <span
+                                          aria-hidden
+                                          className={cn(
+                                            "size-1.5 rounded-full",
+                                            tone.dot
+                                          )}
+                                        />
+                                        <span
+                                          className={cn(
+                                            "font-medium",
+                                            tone.text
+                                          )}
+                                        >
+                                          {t[u.state]}
+                                        </span>
+                                        {p ? (
+                                          <span className="text-muted-foreground">
+                                            ·{" "}
+                                            {u.by === currentUserId
+                                              ? t.you
+                                              : p.name.split(" ")[0]}
+                                          </span>
+                                        ) : null}
+                                        <time
+                                          className="ms-auto text-muted-foreground tabular-nums"
+                                          dateTime={u.at}
+                                        >
                                           {format.time(u.at)}
                                         </time>
                                       </div>
-                                      <p className="mt-0.5 text-pretty text-[13px] text-foreground/90 leading-5">{u.text}</p>
+                                      <p className="mt-0.5 text-pretty text-[13px] text-foreground/90 leading-5">
+                                        {u.text}
+                                      </p>
                                     </div>
                                   </motion.li>
                                 );
@@ -659,7 +1049,8 @@ function StatusConsoleScreen({
                                   onChange={(e) => setNote(e.target.value)}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") submitNote();
-                                    if (e.key === "Escape") e.currentTarget.blur();
+                                    if (e.key === "Escape")
+                                      e.currentTarget.blur();
                                   }}
                                   placeholder={t.postPlaceholder}
                                   value={note}
@@ -680,53 +1071,97 @@ function StatusConsoleScreen({
                         </>
                       ) : (
                         <div className="flex items-center gap-2 p-3 text-muted-foreground text-sm">
-                          <CheckIcon aria-hidden className="size-4 text-success-foreground" />
+                          <CheckIcon
+                            aria-hidden
+                            className="size-4 text-success-foreground"
+                          />
                           <h2 id="console-incident">{t.noIncident}</h2>
                         </div>
                       )}
                     </section>
 
-                    <section aria-labelledby="console-oncall" className="rounded-xl border bg-card p-3" data-rail="oncall">
+                    <section
+                      aria-labelledby="console-oncall"
+                      className="rounded-xl border bg-card p-3"
+                      data-rail="oncall"
+                    >
                       <div className="flex items-center justify-between">
                         <h2 className="font-medium" id="console-oncall">
                           {t.onCall}
                         </h2>
                         <span className="text-muted-foreground text-xs">
-                          {interpolate(t.onCallUntil, { team: data.onCall.team, until: format.date(data.onCall.until, { weekday: "short", hour: "2-digit", minute: "2-digit" }) })}
+                          {interpolate(t.onCallUntil, {
+                            team: data.onCall.team,
+                            until: format.date(data.onCall.until, {
+                              weekday: "short",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }),
+                          })}
                         </span>
                       </div>
                       <ul className="mt-3 flex flex-col gap-2.5">
                         {[
-                          { slot: data.onCall.primary, role: t.primary, primary: true },
-                          { slot: data.onCall.secondary, role: t.secondary, primary: false },
+                          {
+                            slot: data.onCall.primary,
+                            role: t.primary,
+                            primary: true,
+                          },
+                          {
+                            slot: data.onCall.secondary,
+                            role: t.secondary,
+                            primary: false,
+                          },
                         ].map(({ slot, role, primary }) => {
                           const p = person(slot.personId);
                           const wasPaged = paged === slot.personId;
                           return (
-                            <li className="flex items-center gap-2.5" key={slot.personId}>
+                            <li
+                              className="flex items-center gap-2.5"
+                              key={slot.personId}
+                            >
                               <span className="relative">
                                 <PersonAvatar person={p} size="size-8" />
-                                <span aria-hidden className="absolute -inset-e-0.5 -bottom-0.5 size-2.5 rounded-full bg-success ring-2 ring-card" />
+                                <span
+                                  aria-hidden
+                                  className="absolute -inset-e-0.5 -bottom-0.5 size-2.5 rounded-full bg-success ring-2 ring-card"
+                                />
                               </span>
                               <div className="min-w-0 flex-1 leading-tight">
-                                <div className="truncate font-medium">{p?.name ?? slot.personId}</div>
+                                <div className="truncate font-medium">
+                                  {p?.name ?? slot.personId}
+                                </div>
                                 <div className="truncate text-muted-foreground text-xs">
-                                  {interpolate(t.local, { role, time: format.time(clock, { timeStyle: "short", timeZone: slot.timeZone }), city: slot.city })}
+                                  {interpolate(t.local, {
+                                    role,
+                                    time: format.time(clock, {
+                                      timeStyle: "short",
+                                      timeZone: slot.timeZone,
+                                    }),
+                                    city: slot.city,
+                                  })}
                                 </div>
                               </div>
                               {onPage ? (
                                 <Button
                                   aria-busy={page.isPending(slot.personId)}
                                   className="transition-[box-shadow,scale] duration-150 ease-out active:scale-[0.97]"
-                                  disabled={wasPaged || page.isPending(slot.personId)}
-                                  onClick={() => void page.run(slot.personId, slot.personId)}
+                                  disabled={
+                                    wasPaged || page.isPending(slot.personId)
+                                  }
+                                  onClick={() =>
+                                    void page.run(slot.personId, slot.personId)
+                                  }
                                   size="xs"
                                   variant={primary ? "outline" : "ghost"}
                                 >
                                   {wasPaged ? <CheckIcon /> : <BellRingIcon />}
                                   {wasPaged ? t.paged : t.page}
                                   {primary && !wasPaged && (
-                                    <Kbd aria-hidden className="ms-0.5 h-4 min-w-4 text-[10px]">
+                                    <Kbd
+                                      aria-hidden
+                                      className="ms-0.5 h-4 min-w-4 text-[10px]"
+                                    >
                                       P
                                     </Kbd>
                                   )}
@@ -748,10 +1183,16 @@ function StatusConsoleScreen({
                       <h2 className="font-medium" id="console-deploys">
                         {t.deploys}
                       </h2>
-                      {selected && <span className="truncate text-muted-foreground text-xs">{serviceName(selected)}</span>}
+                      {selected && (
+                        <span className="truncate text-muted-foreground text-xs">
+                          {serviceName(selected)}
+                        </span>
+                      )}
                     </div>
                     {visibleDeploys.length === 0 ? (
-                      <p className="px-3 py-6 text-center text-muted-foreground text-xs">{t.noDeploys}</p>
+                      <p className="px-3 py-6 text-center text-muted-foreground text-xs">
+                        {t.noDeploys}
+                      </p>
                     ) : (
                       <ul className="flex flex-col">
                         <AnimatePresence initial={false}>
@@ -769,46 +1210,91 @@ function StatusConsoleScreen({
                                   aria-hidden
                                   className={cn(
                                     "flex size-6 shrink-0 items-center justify-center rounded-full border",
-                                    d.status === "succeeded" && "border-success/30 text-success-foreground",
-                                    d.status === "rolling" && "border-info/40 text-info-foreground",
-                                    d.status === "failed" && "border-destructive/40 text-destructive-foreground",
-                                    d.status === "rolled-back" && "text-muted-foreground",
+                                    d.status === "succeeded" &&
+                                      "border-success/30 text-success-foreground",
+                                    d.status === "rolling" &&
+                                      "border-info/40 text-info-foreground",
+                                    d.status === "failed" &&
+                                      "border-destructive/40 text-destructive-foreground",
+                                    d.status === "rolled-back" &&
+                                      "text-muted-foreground"
                                   )}
                                 >
-                                  {d.status === "rolled-back" ? <RotateCcwIcon className="size-3" /> : <GitCommitHorizontalIcon className="size-3.5" />}
+                                  {d.status === "rolled-back" ? (
+                                    <RotateCcwIcon className="size-3" />
+                                  ) : (
+                                    <GitCommitHorizontalIcon className="size-3.5" />
+                                  )}
                                 </span>
                                 <span className="min-w-0 flex-1">
-                                  <span className={cn("block truncate", d.status === "rolled-back" && "text-muted-foreground line-through decoration-muted-foreground/40")}>{d.message}</span>
+                                  <span
+                                    className={cn(
+                                      "block truncate",
+                                      d.status === "rolled-back" &&
+                                        "text-muted-foreground line-through decoration-muted-foreground/40"
+                                    )}
+                                  >
+                                    {d.message}
+                                  </span>
                                   <span className="mt-0.5 flex items-center gap-1.5 text-muted-foreground text-xs">
-                                    <span className="font-mono text-[11px]">{d.sha}</span>
+                                    <span className="font-mono text-[11px]">
+                                      {d.sha}
+                                    </span>
                                     <span aria-hidden>·</span>
-                                    <span className="truncate">{serviceName(d.serviceId)}</span>
-                                    {d.status === "rolled-back" && <span className="shrink-0">· {t.rolledBack}</span>}
-                                    {d.status === "rolling" && <span className="shrink-0 text-info-foreground">· {t.rollingOut}</span>}
+                                    <span className="truncate">
+                                      {serviceName(d.serviceId)}
+                                    </span>
+                                    {d.status === "rolled-back" && (
+                                      <span className="shrink-0">
+                                        · {t.rolledBack}
+                                      </span>
+                                    )}
+                                    {d.status === "rolling" && (
+                                      <span className="shrink-0 text-info-foreground">
+                                        · {t.rollingOut}
+                                      </span>
+                                    )}
                                   </span>
                                   {d.status === "rolling" && (
-                                    <span aria-hidden className="mt-1.5 block h-1 overflow-hidden rounded-full bg-muted">
+                                    <span
+                                      aria-hidden
+                                      className="mt-1.5 block h-1 overflow-hidden rounded-full bg-muted"
+                                    >
                                       <motion.span
-                                        animate={{ scaleX: (d.progress ?? 0) / 100 }}
+                                        animate={{
+                                          scaleX: (d.progress ?? 0) / 100,
+                                        }}
                                         className="block h-full origin-left rounded-full bg-info"
                                         initial={{ scaleX: 0 }}
-                                        transition={{ duration: 0.45, ease: "easeOut" }}
+                                        transition={{
+                                          duration: 0.45,
+                                          ease: "easeOut",
+                                        }}
                                       />
                                     </span>
                                   )}
                                 </span>
                                 <span className="shrink-0 whitespace-nowrap text-end text-muted-foreground text-xs tabular-nums">
-                                  {d.status === "rolling" ? format.number((d.progress ?? 0) / 100, { style: "percent" }) : format.relative(d.at)}
+                                  {d.status === "rolling"
+                                    ? format.number((d.progress ?? 0) / 100, {
+                                        style: "percent",
+                                      })
+                                    : format.relative(d.at)}
                                 </span>
                                 {onRollback && d.status === "succeeded" ? (
                                   <Tooltip>
                                     <TooltipTrigger
                                       render={
                                         <Button
-                                          aria-label={interpolate(t.rollBackSha, { sha: d.sha })}
+                                          aria-label={interpolate(
+                                            t.rollBackSha,
+                                            { sha: d.sha }
+                                          )}
                                           className="text-muted-foreground hover:text-foreground"
                                           disabled={rollback.isPending(d.id)}
-                                          onClick={() => void rollback.run(d.id, d.id)}
+                                          onClick={() =>
+                                            void rollback.run(d.id, d.id)
+                                          }
                                           size="icon-xs"
                                           variant="ghost"
                                         />
@@ -816,10 +1302,15 @@ function StatusConsoleScreen({
                                     >
                                       <RotateCcwIcon />
                                     </TooltipTrigger>
-                                    <TooltipContent>{t.rollBack}</TooltipContent>
+                                    <TooltipContent>
+                                      {t.rollBack}
+                                    </TooltipContent>
                                   </Tooltip>
                                 ) : (
-                                  <span aria-hidden className="size-7 shrink-0 sm:size-6" />
+                                  <span
+                                    aria-hidden
+                                    className="size-7 shrink-0 sm:size-6"
+                                  />
                                 )}
                               </div>
                             </motion.li>
@@ -832,7 +1323,10 @@ function StatusConsoleScreen({
               )}
             </div>
 
-            <div aria-live="polite" className="pointer-events-none absolute inset-x-0 bottom-4 z-40 flex justify-center px-4">
+            <div
+              aria-live="polite"
+              className="pointer-events-none absolute inset-x-0 bottom-4 z-40 flex justify-center px-4"
+            >
               <AnimatePresence mode="popLayout">
                 {failure ? (
                   <motion.div
@@ -854,7 +1348,13 @@ function StatusConsoleScreen({
                     transition={{ duration: 0.2, ease }}
                   >
                     {toast.text}
-                    <Button aria-label={t.dismiss} className="rounded-full" onClick={() => setToast(null)} size="icon-xs" variant="ghost">
+                    <Button
+                      aria-label={t.dismiss}
+                      className="rounded-full"
+                      onClick={() => setToast(null)}
+                      size="icon-xs"
+                      variant="ghost"
+                    >
                       <XIcon />
                     </Button>
                   </motion.div>

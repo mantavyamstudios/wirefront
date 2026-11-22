@@ -22,7 +22,13 @@ import {
   XIcon,
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import { Dialog, DialogFooter, DialogHeader, DialogContent, DialogTitle } from "@wirefront/ui/dialog";
+import {
+  Dialog,
+  DialogFooter,
+  DialogHeader,
+  DialogContent,
+  DialogTitle,
+} from "@wirefront/ui/dialog";
 import { Input } from "@wirefront/ui/input";
 import { Label } from "@wirefront/ui/label";
 import { Textarea } from "@wirefront/ui/textarea";
@@ -105,7 +111,11 @@ function Checklist() {
 
   const items = [
     { label: "Create a project", done: projects.length > 5, hint: "Press N" },
-    { label: "Invite a teammate", done: members.some((m) => m.invited), hint: "Press I" },
+    {
+      label: "Invite a teammate",
+      done: members.some((m) => m.invited),
+      hint: "Press I",
+    },
     { label: "Try the command palette", done: false, hint: "⌘K" },
     { label: "Switch the theme", done: false, hint: "Press T" },
   ];
@@ -122,8 +132,19 @@ function Checklist() {
           </p>
         </div>
         <div className="relative size-8">
-          <svg aria-hidden="true" viewBox="0 0 36 36" className="size-8 -rotate-90">
-            <circle cx="18" cy="18" r="14" fill="none" className="stroke-foreground/10" strokeWidth="3" />
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 36 36"
+            className="size-8 -rotate-90"
+          >
+            <circle
+              cx="18"
+              cy="18"
+              r="14"
+              fill="none"
+              className="stroke-foreground/10"
+              strokeWidth="3"
+            />
             <circle
               cx="18"
               cy="18"
@@ -160,7 +181,9 @@ function Checklist() {
             >
               {it.done ? <CheckIcon className="size-3" /> : null}
             </span>
-            <span className={`flex-1 text-sm ${it.done ? "text-muted-foreground line-through" : ""}`}>
+            <span
+              className={`flex-1 text-sm ${it.done ? "text-muted-foreground line-through" : ""}`}
+            >
               {it.label}
             </span>
             <kbd className="rounded border border-border/60 bg-background/80 px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground">
@@ -174,14 +197,8 @@ function Checklist() {
 }
 
 function CommandPalette() {
-  const {
-    overlay,
-    setOverlay,
-    setView,
-    projects,
-    members,
-    pushToast,
-  } = useDemo();
+  const { overlay, setOverlay, setView, projects, members, pushToast } =
+    useDemo();
   const { toggleLightDark } = useTheme();
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -198,23 +215,116 @@ function CommandPalette() {
   };
 
   const commands: Cmd[] = [
-    { id: "go-home", label: "Go to home", Icon: HomeIcon, section: "Navigate", kbd: ["G", "H"], run: () => { setView("home"); setOverlay(null); } },
-    { id: "go-projects", label: "Go to projects", Icon: LayersIcon, section: "Navigate", kbd: ["G", "P"], run: () => { setView("projects"); setOverlay(null); } },
-    { id: "go-members", label: "Go to members", Icon: UsersIcon, section: "Navigate", kbd: ["G", "M"], run: () => { setView("members"); setOverlay(null); } },
-    { id: "go-inbox", label: "Go to inbox", Icon: InboxIcon, section: "Navigate", kbd: ["G", "I"], run: () => { setView("inbox"); setOverlay(null); } },
-    { id: "go-settings", label: "Go to settings", Icon: SettingsIcon, section: "Navigate", kbd: ["G", "S"], run: () => { setView("settings"); setOverlay(null); } },
-    { id: "shortcuts", label: "Show keyboard shortcuts", Icon: KeyboardIcon, section: "Actions", kbd: ["?"], run: () => setOverlay("shortcuts") },
-    { id: "new-project", label: "New project…", Icon: PlusIcon, section: "Actions", kbd: ["N"], run: () => setOverlay("new-project") },
-    { id: "invite", label: "Invite teammates…", Icon: UsersIcon, section: "Actions", kbd: ["I"], run: () => setOverlay("invite") },
-    { id: "theme", label: "Toggle theme", Icon: SunMoonIcon, section: "Actions", kbd: ["T"], run: () => { toggleLightDark(); setOverlay(null); } },
-    { id: "settings-action", label: "Open settings", Icon: SettingsIcon, section: "Actions", run: () => { setOverlay(null); pushToast({ kind: "info", title: "Settings would open here." }); } },
+    {
+      id: "go-home",
+      label: "Go to home",
+      Icon: HomeIcon,
+      section: "Navigate",
+      kbd: ["G", "H"],
+      run: () => {
+        setView("home");
+        setOverlay(null);
+      },
+    },
+    {
+      id: "go-projects",
+      label: "Go to projects",
+      Icon: LayersIcon,
+      section: "Navigate",
+      kbd: ["G", "P"],
+      run: () => {
+        setView("projects");
+        setOverlay(null);
+      },
+    },
+    {
+      id: "go-members",
+      label: "Go to members",
+      Icon: UsersIcon,
+      section: "Navigate",
+      kbd: ["G", "M"],
+      run: () => {
+        setView("members");
+        setOverlay(null);
+      },
+    },
+    {
+      id: "go-inbox",
+      label: "Go to inbox",
+      Icon: InboxIcon,
+      section: "Navigate",
+      kbd: ["G", "I"],
+      run: () => {
+        setView("inbox");
+        setOverlay(null);
+      },
+    },
+    {
+      id: "go-settings",
+      label: "Go to settings",
+      Icon: SettingsIcon,
+      section: "Navigate",
+      kbd: ["G", "S"],
+      run: () => {
+        setView("settings");
+        setOverlay(null);
+      },
+    },
+    {
+      id: "shortcuts",
+      label: "Show keyboard shortcuts",
+      Icon: KeyboardIcon,
+      section: "Actions",
+      kbd: ["?"],
+      run: () => setOverlay("shortcuts"),
+    },
+    {
+      id: "new-project",
+      label: "New project…",
+      Icon: PlusIcon,
+      section: "Actions",
+      kbd: ["N"],
+      run: () => setOverlay("new-project"),
+    },
+    {
+      id: "invite",
+      label: "Invite teammates…",
+      Icon: UsersIcon,
+      section: "Actions",
+      kbd: ["I"],
+      run: () => setOverlay("invite"),
+    },
+    {
+      id: "theme",
+      label: "Toggle theme",
+      Icon: SunMoonIcon,
+      section: "Actions",
+      kbd: ["T"],
+      run: () => {
+        toggleLightDark();
+        setOverlay(null);
+      },
+    },
+    {
+      id: "settings-action",
+      label: "Open settings",
+      Icon: SettingsIcon,
+      section: "Actions",
+      run: () => {
+        setOverlay(null);
+        pushToast({ kind: "info", title: "Settings would open here." });
+      },
+    },
     ...projects.map((p) => ({
       id: `proj-${p.id}`,
       label: p.name,
       hint: "Project",
       Icon: LayersIcon,
       section: "Projects",
-      run: () => { setView("projects"); setOverlay(null); },
+      run: () => {
+        setView("projects");
+        setOverlay(null);
+      },
     })),
     ...members.slice(0, 8).map((m) => ({
       id: `mem-${m.id}`,
@@ -222,14 +332,20 @@ function CommandPalette() {
       hint: m.email,
       Icon: UsersIcon,
       section: "Members",
-      run: () => { setView("members"); setOverlay(null); },
+      run: () => {
+        setView("members");
+        setOverlay(null);
+      },
     })),
   ];
 
   const filtered = commands.filter((c) => {
     if (!query.trim()) return true;
     const q = query.toLowerCase();
-    return c.label.toLowerCase().includes(q) || (c.hint?.toLowerCase().includes(q) ?? false);
+    return (
+      c.label.toLowerCase().includes(q) ||
+      (c.hint?.toLowerCase().includes(q) ?? false)
+    );
   });
 
   useEffect(() => {
@@ -260,7 +376,9 @@ function CommandPalette() {
       setActive((a) => (a + 1) % Math.max(filtered.length, 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActive((a) => (a - 1 + filtered.length) % Math.max(filtered.length, 1));
+      setActive(
+        (a) => (a - 1 + filtered.length) % Math.max(filtered.length, 1)
+      );
     } else if (e.key === "Enter") {
       e.preventDefault();
       filtered[active]?.run();
@@ -298,7 +416,9 @@ function CommandPalette() {
         <div className="max-h-105 overflow-y-auto py-1">
           {filtered.length === 0 ? (
             <div className="px-4 py-12 text-center">
-              <p className="text-muted-foreground text-sm">No matches for "{query}".</p>
+              <p className="text-muted-foreground text-sm">
+                No matches for "{query}".
+              </p>
             </div>
           ) : (
             sections.map((s) => (
@@ -317,11 +437,15 @@ function CommandPalette() {
                           onMouseEnter={() => setActive(idx)}
                           onClick={() => c.run()}
                           className={`flex w-full items-center gap-3 px-4 py-2 text-left transition-colors ${
-                            isActive ? "bg-foreground/6" : "hover:bg-foreground/3"
+                            isActive
+                              ? "bg-foreground/6"
+                              : "hover:bg-foreground/3"
                           }`}
                         >
                           <c.Icon className="size-4 shrink-0 opacity-70" />
-                          <span className="flex-1 truncate text-sm">{c.label}</span>
+                          <span className="flex-1 truncate text-sm">
+                            {c.label}
+                          </span>
                           {c.hint ? (
                             <span className="hidden font-mono text-[10px] text-muted-foreground sm:inline">
                               {c.hint}
@@ -330,7 +454,10 @@ function CommandPalette() {
                           {c.kbd ? (
                             <span className="flex items-center gap-1">
                               {c.kbd.map((k) => (
-                                <kbd key={k} className="rounded border border-border/60 bg-background/80 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                                <kbd
+                                  key={k}
+                                  className="rounded border border-border/60 bg-background/80 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
+                                >
                                   {k}
                                 </kbd>
                               ))}
@@ -352,12 +479,18 @@ function CommandPalette() {
         <div className="flex items-center justify-between gap-3 border-t border-border/60 bg-foreground/2 px-4 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5">
-              <kbd className="rounded border border-border/60 bg-background/80 px-1 py-0.5 normal-case">↑</kbd>
-              <kbd className="rounded border border-border/60 bg-background/80 px-1 py-0.5 normal-case">↓</kbd>
+              <kbd className="rounded border border-border/60 bg-background/80 px-1 py-0.5 normal-case">
+                ↑
+              </kbd>
+              <kbd className="rounded border border-border/60 bg-background/80 px-1 py-0.5 normal-case">
+                ↓
+              </kbd>
               navigate
             </span>
             <span className="flex items-center gap-1.5">
-              <kbd className="rounded border border-border/60 bg-background/80 px-1 py-0.5 normal-case">↵</kbd>
+              <kbd className="rounded border border-border/60 bg-background/80 px-1 py-0.5 normal-case">
+                ↵
+              </kbd>
               run
             </span>
           </div>
@@ -372,7 +505,9 @@ function NewProjectDialog() {
   const { overlay, setOverlay, addProject, pushToast } = useDemo();
   const [name, setName] = useState("");
   const [color, setColor] = useState<string>(PROJECT_COLORS[0]);
-  const [visibility, setVisibility] = useState<"private" | "team" | "public">("team");
+  const [visibility, setVisibility] = useState<"private" | "team" | "public">(
+    "team"
+  );
   const open = overlay === "new-project";
 
   // Reset form on close.
@@ -397,7 +532,10 @@ function NewProjectDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={(o) => setOverlay(o ? "new-project" : null)}>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => setOverlay(o ? "new-project" : null)}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New project</DialogTitle>
@@ -411,7 +549,7 @@ function NewProjectDialog() {
                 placeholder="e.g. Q4 launch"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                />
+              />
             </div>
 
             <div>
@@ -431,7 +569,9 @@ function NewProjectDialog() {
                         : ""
                     }`}
                   >
-                    {color === c ? <CheckIcon className="size-4 text-white" /> : null}
+                    {color === c ? (
+                      <CheckIcon className="size-4 text-white" />
+                    ) : null}
                   </button>
                 ))}
               </div>
@@ -442,14 +582,39 @@ function NewProjectDialog() {
                 Visibility
               </Label>
               <div className="mt-3 grid grid-cols-3 gap-2">
-                <VisibilityCard id="private" label="Private" description="Just you." Icon={LockIcon} active={visibility === "private"} onSelect={setVisibility} />
-                <VisibilityCard id="team" label="Team" description="Workspace members." Icon={UsersIcon} active={visibility === "team"} onSelect={setVisibility} />
-                <VisibilityCard id="public" label="Public" description="Anyone with link." Icon={GlobeIcon} active={visibility === "public"} onSelect={setVisibility} />
+                <VisibilityCard
+                  id="private"
+                  label="Private"
+                  description="Just you."
+                  Icon={LockIcon}
+                  active={visibility === "private"}
+                  onSelect={setVisibility}
+                />
+                <VisibilityCard
+                  id="team"
+                  label="Team"
+                  description="Workspace members."
+                  Icon={UsersIcon}
+                  active={visibility === "team"}
+                  onSelect={setVisibility}
+                />
+                <VisibilityCard
+                  id="public"
+                  label="Public"
+                  description="Anyone with link."
+                  Icon={GlobeIcon}
+                  active={visibility === "public"}
+                  onSelect={setVisibility}
+                />
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" type="button" onClick={() => setOverlay(null)}>
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={() => setOverlay(null)}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={!name.trim()}>
@@ -492,7 +657,9 @@ function VisibilityCard({
       <Icon className="size-4 opacity-80" />
       <div>
         <div className="font-medium text-xs">{label}</div>
-        <p className="mt-0.5 text-muted-foreground text-[10px] leading-snug">{description}</p>
+        <p className="mt-0.5 text-muted-foreground text-[10px] leading-snug">
+          {description}
+        </p>
       </div>
     </button>
   );
@@ -500,7 +667,9 @@ function VisibilityCard({
 
 function InviteDialog() {
   const { overlay, setOverlay, addMembers, pushToast } = useDemo();
-  const [rows, setRows] = useState<{ id: number; email: string; role: Member["role"] }[]>([
+  const [rows, setRows] = useState<
+    { id: number; email: string; role: Member["role"] }[]
+  >([
     { id: 1, email: "", role: "member" },
     { id: 2, email: "", role: "member" },
   ]);
@@ -518,10 +687,14 @@ function InviteDialog() {
   }, [open]);
 
   const filled = rows.filter((r) => r.email.trim()).length;
-  const addRow = () => setRows((rs) => [...rs, { id: Date.now(), email: "", role: "member" }]);
-  const removeRow = (id: number) => setRows((rs) => (rs.length === 1 ? rs : rs.filter((r) => r.id !== id)));
-  const change = (id: number, patch: Partial<{ email: string; role: Member["role"] }>) =>
-    setRows((rs) => rs.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  const addRow = () =>
+    setRows((rs) => [...rs, { id: Date.now(), email: "", role: "member" }]);
+  const removeRow = (id: number) =>
+    setRows((rs) => (rs.length === 1 ? rs : rs.filter((r) => r.id !== id)));
+  const change = (
+    id: number,
+    patch: Partial<{ email: string; role: Member["role"] }>
+  ) => setRows((rs) => rs.map((r) => (r.id === id ? { ...r, ...patch } : r)));
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -554,24 +727,36 @@ function InviteDialog() {
             </div>
             <ul className="mt-3 flex flex-col gap-2">
               {rows.map((r) => (
-                <li key={r.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-2">
+                <li
+                  key={r.id}
+                  className="grid grid-cols-[1fr_auto_auto] items-center gap-2"
+                >
                   <Input
                     type="email"
                     placeholder="name@example.com"
                     value={r.email}
                     onChange={(e) => change(r.id, { email: e.target.value })}
-                    />
+                  />
                   <div className="relative">
                     <select
                       value={r.role}
-                      onChange={(e) => change(r.id, { role: e.target.value as Member["role"] })}
+                      onChange={(e) =>
+                        change(r.id, { role: e.target.value as Member["role"] })
+                      }
                       className="h-9 appearance-none rounded-lg border border-input bg-background pl-3 pr-8 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/24"
                     >
                       <option value="admin">Admin</option>
                       <option value="member">Member</option>
                       <option value="viewer">Viewer</option>
                     </select>
-                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden className="pointer-events-none absolute right-2.5 top-1/2 size-3.5 -translate-y-1/2 opacity-60">
+                    <svg
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      aria-hidden
+                      className="pointer-events-none absolute right-2.5 top-1/2 size-3.5 -translate-y-1/2 opacity-60"
+                    >
                       <polyline points="4 6 8 10 12 6" />
                     </svg>
                   </div>
@@ -587,14 +772,23 @@ function InviteDialog() {
                 </li>
               ))}
             </ul>
-            <Button size="sm" variant="ghost" type="button" onClick={addRow} className="mt-3">
+            <Button
+              size="sm"
+              variant="ghost"
+              type="button"
+              onClick={addRow}
+              className="mt-3"
+            >
               <PlusIcon />
               Add another
             </Button>
 
             <div className="mt-5 flex flex-col gap-1.5">
               <Label htmlFor="invite-msg">
-                Message <span className="font-normal text-muted-foreground">(optional)</span>
+                Message{" "}
+                <span className="font-normal text-muted-foreground">
+                  (optional)
+                </span>
               </Label>
               <Textarea
                 id="invite-msg"
@@ -606,7 +800,11 @@ function InviteDialog() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" type="button" onClick={() => setOverlay(null)}>
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={() => setOverlay(null)}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={filled === 0}>

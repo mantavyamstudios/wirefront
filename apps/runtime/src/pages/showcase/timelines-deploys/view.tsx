@@ -5,14 +5,31 @@
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
-import { CheckCircle2Icon, CircleAlertIcon, GitBranchIcon, RefreshCwIcon, RotateCcwIcon, XCircleIcon } from "lucide-react";
+import {
+  CheckCircle2Icon,
+  CircleAlertIcon,
+  GitBranchIcon,
+  RefreshCwIcon,
+  RotateCcwIcon,
+  XCircleIcon,
+} from "lucide-react";
 import { useState } from "react";
 import type { Deploy } from "./schema";
 
@@ -71,14 +88,26 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-function StatusGlyph({ status, label }: { status: Deploy["status"]; label: string }) {
+function StatusGlyph({
+  status,
+  label,
+}: {
+  status: Deploy["status"];
+  label: string;
+}) {
   const icon =
     status === "succeeded" ? (
-      <CheckCircle2Icon aria-hidden className="size-5 text-category-2-foreground" />
+      <CheckCircle2Icon
+        aria-hidden
+        className="size-5 text-category-2-foreground"
+      />
     ) : status === "failed" ? (
       <XCircleIcon aria-hidden className="size-5 text-category-4-foreground" />
     ) : status === "rolled-back" ? (
-      <CircleAlertIcon aria-hidden className="size-5 text-category-3-foreground" />
+      <CircleAlertIcon
+        aria-hidden
+        className="size-5 text-category-3-foreground"
+      />
     ) : (
       <span aria-hidden className="relative grid size-5 place-items-center">
         <span className="absolute size-3 rounded-full bg-foreground/30 motion-safe:animate-ping" />
@@ -93,7 +122,16 @@ function StatusGlyph({ status, label }: { status: Deploy["status"]; label: strin
   );
 }
 
-function DeployHistoryScreen({ deploys, project, status = "ready", error, onRetry, onRefresh, onRollBack, className }: DeployHistoryProps) {
+function DeployHistoryScreen({
+  deploys,
+  project,
+  status = "ready",
+  error,
+  onRetry,
+  onRefresh,
+  onRollBack,
+  className,
+}: DeployHistoryProps) {
   const t = useMessages("deployHistory", DEPLOY_HISTORY_MESSAGES);
   const fmt = useFormat();
   const [env, setEnv] = useState<Env | "all">("all");
@@ -101,21 +139,44 @@ function DeployHistoryScreen({ deploys, project, status = "ready", error, onRetr
   const rollBack = useAction(onRollBack ?? (async () => {}));
   const duration = (ms: number) => {
     const total = Math.round(ms / 1000);
-    return interpolate(t.minutes, { m: Math.floor(total / 60), s: String(total % 60).padStart(2, "0") });
+    return interpolate(t.minutes, {
+      m: Math.floor(total / 60),
+      s: String(total % 60).padStart(2, "0"),
+    });
   };
   const shown = (deploys ?? []).filter((d) => env === "all" || d.env === env);
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10",
+        className
+      )}
+    >
       <div className="mx-auto max-w-4xl">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{interpolate(t.eyebrow, { project })}</div>
+            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+              {interpolate(t.eyebrow, { project })}
+            </div>
             <h1 className="mt-1 font-heading text-2xl">{t.title}</h1>
           </div>
           <div className="flex items-center gap-2">
-            <Select items={{ all: t.allEnvs, production: t.production, staging: t.staging, preview: t.preview }} onValueChange={(v) => v && setEnv(v as Env | "all")} value={env}>
-              <SelectTrigger aria-label={t.env} className="w-auto min-w-32 font-mono text-[10px] uppercase tracking-[0.25em]" size="sm">
+            <Select
+              items={{
+                all: t.allEnvs,
+                production: t.production,
+                staging: t.staging,
+                preview: t.preview,
+              }}
+              onValueChange={(v) => v && setEnv(v as Env | "all")}
+              value={env}
+            >
+              <SelectTrigger
+                aria-label={t.env}
+                className="w-auto min-w-32 font-mono text-[10px] uppercase tracking-[0.25em]"
+                size="sm"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent align="end">
@@ -134,7 +195,14 @@ function DeployHistoryScreen({ deploys, project, status = "ready", error, onRetr
                 onClick={() => void refresh.run()}
                 type="button"
               >
-                <RefreshCwIcon aria-hidden className={cn("size-3", refresh.isPending() && "animate-spin motion-reduce:animate-none")} />
+                <RefreshCwIcon
+                  aria-hidden
+                  className={cn(
+                    "size-3",
+                    refresh.isPending() &&
+                      "animate-spin motion-reduce:animate-none"
+                  )}
+                />
                 {t.refresh}
               </button>
             ) : null}
@@ -150,9 +218,16 @@ function DeployHistoryScreen({ deploys, project, status = "ready", error, onRetr
           {status === "error" ? (
             <div className="py-12 text-center">
               <p className="font-medium">{t.errorTitle}</p>
-              {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+              {error ? (
+                <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+              ) : null}
               {onRetry ? (
-                <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+                <Button
+                  className="mt-4"
+                  onClick={onRetry}
+                  size="sm"
+                  variant="outline"
+                >
                   {t.retry}
                 </Button>
               ) : null}
@@ -160,11 +235,16 @@ function DeployHistoryScreen({ deploys, project, status = "ready", error, onRetr
           ) : !deploys || status === "loading" ? (
             <div aria-busy="true" className="flex flex-col gap-3 p-4">
               {["a", "b", "c", "d"].map((k) => (
-                <Skeleton className="h-12 w-full motion-reduce:animate-none" key={k} />
+                <Skeleton
+                  className="h-12 w-full motion-reduce:animate-none"
+                  key={k}
+                />
               ))}
             </div>
           ) : shown.length === 0 ? (
-            <p className="py-12 text-center text-muted-foreground text-sm">{t.empty}</p>
+            <p className="py-12 text-center text-muted-foreground text-sm">
+              {t.empty}
+            </p>
           ) : (
             <ul className="divide-y divide-border/40">
               {shown.map((d) => (
@@ -176,10 +256,19 @@ function DeployHistoryScreen({ deploys, project, status = "ready", error, onRetr
                 >
                   <StatusGlyph label={t[d.status]} status={d.status} />
                   <div className="max-md:col-start-2 max-md:row-start-1">
-                    <span className={cn("rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.25em]", ENV_TONE[d.env])}>{t[d.env]}</span>
+                    <span
+                      className={cn(
+                        "rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.25em]",
+                        ENV_TONE[d.env]
+                      )}
+                    >
+                      {t[d.env]}
+                    </span>
                   </div>
                   <div className="min-w-0 max-md:col-start-2">
-                    <div className="line-clamp-2 text-sm md:truncate">{d.message}</div>
+                    <div className="line-clamp-2 text-sm md:truncate">
+                      {d.message}
+                    </div>
                     <div className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-[10px] text-muted-foreground">
                       <GitBranchIcon aria-hidden className="size-3" />
                       {d.branch}
@@ -191,28 +280,43 @@ function DeployHistoryScreen({ deploys, project, status = "ready", error, onRetr
                   </div>
                   <div className="flex min-w-0 items-center gap-2 max-md:col-start-2">
                     <Avatar aria-hidden className="size-5 shrink-0">
-                      <AvatarFallback className="text-[10px]">{initials(d.author)}</AvatarFallback>
+                      <AvatarFallback className="text-[10px]">
+                        {initials(d.author)}
+                      </AvatarFallback>
                     </Avatar>
                     <span className="truncate text-xs">{d.author}</span>
-                    <time className="shrink-0 font-mono text-[10px] text-muted-foreground md:ms-auto" dateTime={d.at}>
+                    <time
+                      className="shrink-0 font-mono text-[10px] text-muted-foreground md:ms-auto"
+                      dateTime={d.at}
+                    >
                       {fmt.relative(d.at)}
                     </time>
                   </div>
-                  {onRollBack && d.env === "production" && d.status === "succeeded" ? (
+                  {onRollBack &&
+                  d.env === "production" &&
+                  d.status === "succeeded" ? (
                     <button
                       className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-background px-2 py-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 max-md:col-start-3 max-md:row-start-1 pointer-coarse:min-h-10"
                       disabled={rollBack.isPending()}
                       onClick={() => void rollBack.run(d.id, d.id)}
                       type="button"
                     >
-                      {rollBack.isPending(d.id) ? <Spinner className="size-3" /> : <RotateCcwIcon aria-hidden className="size-3" />}
-                      <span className="sr-only">{interpolate(t.rollBackSha, { sha: d.sha })}</span>
+                      {rollBack.isPending(d.id) ? (
+                        <Spinner className="size-3" />
+                      ) : (
+                        <RotateCcwIcon aria-hidden className="size-3" />
+                      )}
+                      <span className="sr-only">
+                        {interpolate(t.rollBackSha, { sha: d.sha })}
+                      </span>
                       <span aria-hidden className="max-sm:hidden">
                         {t.rollBack}
                       </span>
                     </button>
                   ) : (
-                    <span className="font-mono text-[10px] text-muted-foreground max-md:col-start-3 max-md:row-start-1">{d.id}</span>
+                    <span className="font-mono text-[10px] text-muted-foreground max-md:col-start-3 max-md:row-start-1">
+                      {d.id}
+                    </span>
                   )}
                 </li>
               ))}

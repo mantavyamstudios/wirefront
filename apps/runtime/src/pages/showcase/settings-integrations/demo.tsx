@@ -6,17 +6,26 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { IntegrationDirectory } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function SettingsIntegrationsShowcasePage() {
   const state = useShowcaseState();
   return (
     <IntegrationDirectory
       error="The integrations service didn’t respond. Check your connection and try again."
-      integrations={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listIntegrations}
+      integrations={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : fixtures.listIntegrations
+      }
       onConnect={() => wait(800)}
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

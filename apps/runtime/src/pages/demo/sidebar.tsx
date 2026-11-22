@@ -15,11 +15,24 @@ import {
   UsersIcon,
 } from "lucide-react";
 import type { ComponentType } from "react";
-import { DropdownMenu, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@wirefront/ui/dropdown-menu";
 import { useDemo, type View } from "./store";
 import { must } from "@/lib/must";
 
-const NAV: { id: View; label: string; Icon: ComponentType<{ className?: string }> }[] = [
+const NAV: {
+  id: View;
+  label: string;
+  Icon: ComponentType<{ className?: string }>;
+}[] = [
   { id: "home", label: "Home", Icon: HomeIcon },
   { id: "inbox", label: "Inbox", Icon: InboxIcon },
   { id: "projects", label: "Projects", Icon: LayersIcon },
@@ -42,7 +55,10 @@ export function DemoSidebar() {
     openProject,
   } = useDemo();
   const me = must(members[0], "the signed-in member");
-  const ws = must(workspaces.find((w) => w.id === currentWorkspaceId), "the current workspace");
+  const ws = must(
+    workspaces.find((w) => w.id === currentWorkspaceId),
+    "the current workspace"
+  );
   const unread = threads.filter((t) => t.unread).length;
 
   const stars = projects.filter((p) => p.starred);
@@ -60,9 +76,13 @@ export function DemoSidebar() {
           }
         >
           <div className="flex min-w-0 items-center gap-2.5">
-            <div className={`size-7 shrink-0 rounded-md ring-1 ring-border/60 ${ws.tone}`} />
+            <div
+              className={`size-7 shrink-0 rounded-md ring-1 ring-border/60 ${ws.tone}`}
+            />
             <div className="min-w-0">
-              <div className="truncate font-medium text-sm leading-tight">{ws.name}</div>
+              <div className="truncate font-medium text-sm leading-tight">
+                {ws.name}
+              </div>
               <div className="truncate font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] leading-tight">
                 {ws.plan} · {ws.members} members
               </div>
@@ -79,7 +99,9 @@ export function DemoSidebar() {
                 onClick={() => switchWorkspace(w.id)}
                 className="gap-2.5"
               >
-                <div className={`size-6 shrink-0 rounded-md ring-1 ring-border/60 ${w.tone}`} />
+                <div
+                  className={`size-6 shrink-0 rounded-md ring-1 ring-border/60 ${w.tone}`}
+                />
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm">{w.name}</div>
                   <div className="truncate font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
@@ -214,7 +236,9 @@ export function DemoSidebar() {
             />
           }
         >
-          <div className={`flex size-7 items-center justify-center rounded-full font-medium text-[11px] ${me.tone}`}>
+          <div
+            className={`flex size-7 items-center justify-center rounded-full font-medium text-[11px] ${me.tone}`}
+          >
             {me.initials}
           </div>
           <div className="min-w-0 flex-1">
@@ -228,7 +252,9 @@ export function DemoSidebar() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" side="top" className="w-56">
           <div className="flex items-center gap-2.5 px-3 py-2">
-            <div className={`flex size-7 shrink-0 items-center justify-center rounded-full font-medium text-[11px] ${me.tone}`}>
+            <div
+              className={`flex size-7 shrink-0 items-center justify-center rounded-full font-medium text-[11px] ${me.tone}`}
+            >
               {me.initials}
             </div>
             <div className="min-w-0 flex-1">

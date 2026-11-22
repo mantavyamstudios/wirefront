@@ -10,10 +10,18 @@ export function ChartsBarGroupedShowcasePage() {
   const state = useShowcaseState();
   return (
     <QuarterlyComparisonChart
-      data={state === "loading" || state === "error" ? undefined : state === "empty" ? { series: [], rows: [] } : fixtures.getPeriodComparison}
+      data={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? { series: [], rows: [] }
+            : fixtures.getPeriodComparison
+      }
       error="Bookings didn’t load. Check your connection and try again."
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

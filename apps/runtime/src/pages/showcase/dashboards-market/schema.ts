@@ -4,7 +4,9 @@ import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** The featured chart's span. */
-export const ChartRange = z.enum(["1D", "1W", "1M", "1Y", "ALL"]).meta({ id: "ChartRange" });
+export const ChartRange = z
+  .enum(["1D", "1W", "1M", "1Y", "ALL"])
+  .meta({ id: "ChartRange" });
 export type ChartRange = z.infer<typeof ChartRange>;
 
 /** Prices are in the provider's currency. */
@@ -44,7 +46,9 @@ export const MarketOverview = z
       /** Today's change in money. */
       change: z.number(),
       /** Largest first; shares are fractions that add up to 1. */
-      allocation: z.array(z.object({ name: z.string(), share: z.number().min(0).max(1) })),
+      allocation: z.array(
+        z.object({ name: z.string(), share: z.number().min(0).max(1) })
+      ),
     }),
     /** Each with a 24-hour series. */
     watchlist: z.array(Quote),
@@ -59,7 +63,8 @@ export const api = defineApi({
   getMarketOverview: {
     method: "GET",
     path: "/markets/overview",
-    summary: "The featured ticker over a range, portfolio, watchlist and headlines",
+    summary:
+      "The featured ticker over a range, portfolio, watchlist and headlines",
     query: z.object({ symbol: z.string().optional(), range: ChartRange }),
     response: MarketOverview,
   },

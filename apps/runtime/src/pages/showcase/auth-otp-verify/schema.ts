@@ -8,12 +8,21 @@ export const CODE_LENGTH = 6;
 
 /** What the screen sends when the code is complete. */
 export const OtpInput = z
-  .object({ code: z.string().regex(new RegExp(`^\\d{${CODE_LENGTH}}$`), `Enter the ${CODE_LENGTH}-digit code.`) })
+  .object({
+    code: z
+      .string()
+      .regex(
+        new RegExp(`^\\d{${CODE_LENGTH}}$`),
+        `Enter the ${CODE_LENGTH}-digit code.`
+      ),
+  })
   .meta({ id: "OtpInput" });
 export type OtpInput = z.infer<typeof OtpInput>;
 
 /** What a successful sign-in returns. `redirectTo` lets the backend choose where to go next. */
-export const Session = z.object({ userId: z.string(), redirectTo: z.string().optional() }).meta({ id: "Session" });
+export const Session = z
+  .object({ userId: z.string(), redirectTo: z.string().optional() })
+  .meta({ id: "Session" });
 export type Session = z.infer<typeof Session>;
 
 /** The backend operations this screen calls. */
@@ -24,7 +33,10 @@ export const api = defineApi({
     summary: "Sign in with the one-time code emailed for this sign-in attempt",
     body: OtpInput,
     response: Session,
-    errors: { 400: "The code is wrong", 410: "The code has expired; send a new one" },
+    errors: {
+      400: "The code is wrong",
+      410: "The code has expired; send a new one",
+    },
   },
   resendOtp: {
     method: "POST",

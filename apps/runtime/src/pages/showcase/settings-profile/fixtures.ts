@@ -22,4 +22,10 @@ export const languages = [
   { value: "ja", label: "日本語" },
 ];
 
-export const timeZones = ["America/Los_Angeles", "America/New_York", "UTC", "Europe/Berlin", "Asia/Tokyo"];
+export const timeZones = [
+  "America/Los_Angeles",
+  "America/New_York",
+  "UTC",
+  "Europe/Berlin",
+  "Asia/Tokyo",
+];

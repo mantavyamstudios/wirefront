@@ -13,7 +13,15 @@ export const Notification = z
     /** What it happened to, e.g. a doc title. */
     context: z.string().optional(),
     /** Picks the badge icon; "mention" also feeds the Mentions filter. */
-    kind: z.enum(["mention", "review", "reply", "reaction", "settings", "deploy", "other"]),
+    kind: z.enum([
+      "mention",
+      "review",
+      "reply",
+      "reaction",
+      "settings",
+      "deploy",
+      "other",
+    ]),
     /** When it happened (ISO 8601). */
     at: z.string(),
     read: z.boolean(),
@@ -25,6 +33,15 @@ export type Notification = z.infer<typeof Notification>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listNotifications: { method: "GET", path: "/notifications", summary: "Recent notifications, newest first", response: z.array(Notification) },
-  markAllNotificationsRead: { method: "POST", path: "/notifications/read-all", summary: "Mark every notification read" },
+  listNotifications: {
+    method: "GET",
+    path: "/notifications",
+    summary: "Recent notifications, newest first",
+    response: z.array(Notification),
+  },
+  markAllNotificationsRead: {
+    method: "POST",
+    path: "/notifications/read-all",
+    summary: "Mark every notification read",
+  },
 });

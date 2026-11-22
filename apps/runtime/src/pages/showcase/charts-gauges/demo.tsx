@@ -11,9 +11,17 @@ export function ChartsGaugesShowcasePage() {
   return (
     <SloGauges
       error="Objectives didn’t load. Check your connection and try again."
-      objectives={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listObjectives}
+      objectives={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : fixtures.listObjectives
+      }
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

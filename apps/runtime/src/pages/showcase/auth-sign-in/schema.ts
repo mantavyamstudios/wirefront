@@ -14,11 +14,15 @@ export const SignInInput = z
 export type SignInInput = z.infer<typeof SignInInput>;
 
 /** What "Email me a sign-in link" submits. */
-export const MagicLinkInput = SignInInput.pick({ email: true }).meta({ id: "MagicLinkInput" });
+export const MagicLinkInput = SignInInput.pick({ email: true }).meta({
+  id: "MagicLinkInput",
+});
 export type MagicLinkInput = z.infer<typeof MagicLinkInput>;
 
 /** An OAuth provider's path parameter, e.g. "google" or "github". */
-export const ProviderParams = z.object({ provider: z.string() }).meta({ id: "ProviderParams" });
+export const ProviderParams = z
+  .object({ provider: z.string() })
+  .meta({ id: "ProviderParams" });
 
 /** What a successful sign-in returns. `redirectTo` lets the backend choose where to go next. */
 export const Session = z
@@ -37,12 +41,16 @@ export const api = defineApi({
     summary: "Sign in with email and password",
     body: SignInInput,
     response: Session,
-    errors: { 401: "The email or password is wrong", 429: "Too many attempts; try again later" },
+    errors: {
+      401: "The email or password is wrong",
+      429: "Too many attempts; try again later",
+    },
   },
   signInWithPasskey: {
     method: "POST",
     path: "/auth/passkey",
-    summary: "Sign in with a passkey (WebAuthn assertion verified by the backend)",
+    summary:
+      "Sign in with a passkey (WebAuthn assertion verified by the backend)",
     response: Session,
     errors: { 401: "The passkey wasn't accepted" },
   },
@@ -56,7 +64,8 @@ export const api = defineApi({
   startOAuth: {
     method: "POST",
     path: "/auth/oauth/{provider}",
-    summary: "Start sign-in with an OAuth provider; the backend returns where to redirect",
+    summary:
+      "Start sign-in with an OAuth provider; the backend returns where to redirect",
     params: ProviderParams,
     response: Session,
   },

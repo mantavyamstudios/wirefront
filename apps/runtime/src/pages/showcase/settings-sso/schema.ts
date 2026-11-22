@@ -54,9 +54,34 @@ export type SsoTestResult = z.infer<typeof SsoTestResult>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listSsoProviders: { method: "GET", path: "/sso/providers", summary: "Identity providers you can connect", response: z.array(SsoProvider) },
-  getSsoConfig: { method: "GET", path: "/sso/config", summary: "The SSO setup in progress", response: SsoConfig },
-  saveMappings: { method: "PUT", path: "/sso/config/mappings", summary: "Save the attribute mapping", body: z.array(AttributeMapping) },
-  testSso: { method: "POST", path: "/sso/test", summary: "Run a test login and return the asserted attributes", response: SsoTestResult },
-  enforceSso: { method: "POST", path: "/sso/enforce", summary: "Require SSO for every member and revoke password sessions", errors: { 409: "Run a successful test first" } },
+  listSsoProviders: {
+    method: "GET",
+    path: "/sso/providers",
+    summary: "Identity providers you can connect",
+    response: z.array(SsoProvider),
+  },
+  getSsoConfig: {
+    method: "GET",
+    path: "/sso/config",
+    summary: "The SSO setup in progress",
+    response: SsoConfig,
+  },
+  saveMappings: {
+    method: "PUT",
+    path: "/sso/config/mappings",
+    summary: "Save the attribute mapping",
+    body: z.array(AttributeMapping),
+  },
+  testSso: {
+    method: "POST",
+    path: "/sso/test",
+    summary: "Run a test login and return the asserted attributes",
+    response: SsoTestResult,
+  },
+  enforceSso: {
+    method: "POST",
+    path: "/sso/enforce",
+    summary: "Require SSO for every member and revoke password sessions",
+    errors: { 409: "Run a successful test first" },
+  },
 });

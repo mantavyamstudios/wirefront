@@ -21,7 +21,9 @@ export interface ListSort {
  * report changes through `onQueryChange`; the builder sends it to their API.
  * `page` starts at 1.
  */
-export interface ListQuery<Filters extends Record<string, unknown> = Record<string, unknown>> {
+export interface ListQuery<
+  Filters extends Record<string, unknown> = Record<string, unknown>,
+> {
   page: number;
   pageSize: number;
   sort?: ListSort;
@@ -43,22 +45,36 @@ export type ActionResult<Output = void> =
  * (failure, using the error's message).
  */
 // biome-ignore lint/suspicious/noConfusingVoidType: `void` is what lets builders pass a plain `async (x) => { await api(x) }` (Promise<void>) as well as actions that return a result on some paths; void-free unions break both (see tests/wirefront-contract.test.tsx). Approved exception, D-014.
-export type Action<Input = void, Output = void> = (input: Input) => Promise<ActionResult<Output> | void>;
+export type Action<Input = void, Output = void> = (
+  input: Input
+) => Promise<ActionResult<Output> | void>;
 
-export const ok = <Output>(data: Output): ActionResult<Output> => ({ ok: true, data });
+export const ok = <Output>(data: Output): ActionResult<Output> => ({
+  ok: true,
+  data,
+});
 
-export const fail = (error?: string, fieldErrors?: FieldErrors): ActionResult<never> => ({
+export const fail = (
+  error?: string,
+  fieldErrors?: FieldErrors
+): ActionResult<never> => ({
   ok: false,
   error,
   fieldErrors,
 });
 
 /** Run an action and normalise whatever it returns or throws into an ActionResult. */
-export async function settle<Input, Output>(action: Action<Input, Output>, input: Input): Promise<ActionResult<Output>> {
+export async function settle<Input, Output>(
+  action: Action<Input, Output>,
+  input: Input
+): Promise<ActionResult<Output>> {
   try {
     const result = await action(input);
     return result ?? ({ ok: true, data: undefined } as ActionResult<Output>);
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : String(err) };
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : String(err),
+    };
   }
 }

@@ -6,11 +6,18 @@ import { defineApi } from "@wirefront/ui/wirefront/api";
 /** What the profile form saves. Reuse it to validate the request on the server. */
 export const AccountProfileInput = z
   .object({
-    displayName: z.string().trim().min(1, "Enter a display name.").max(48, "Keep it to 48 characters or fewer."),
+    displayName: z
+      .string()
+      .trim()
+      .min(1, "Enter a display name.")
+      .max(48, "Keep it to 48 characters or fewer."),
     handle: z
       .string()
       .trim()
-      .regex(/^[a-z0-9_]{2,24}$/, "Use 2–24 lowercase letters, numbers or underscores."),
+      .regex(
+        /^[a-z0-9_]{2,24}$/,
+        "Use 2–24 lowercase letters, numbers or underscores."
+      ),
     pronouns: z.string().trim().max(32),
     bio: z.string().trim().max(240, "Keep it to 240 characters or fewer."),
     /** A language code from the offered options, e.g. "en". */
@@ -30,7 +37,12 @@ export type AccountProfile = z.infer<typeof AccountProfile>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getAccountProfile: { method: "GET", path: "/me/profile", summary: "The signed-in user's profile", response: AccountProfile },
+  getAccountProfile: {
+    method: "GET",
+    path: "/me/profile",
+    summary: "The signed-in user's profile",
+    response: AccountProfile,
+  },
   saveAccountProfile: {
     method: "PATCH",
     path: "/me/profile",
@@ -38,6 +50,14 @@ export const api = defineApi({
     body: AccountProfileInput,
     errors: { 409: "That handle is taken" },
   },
-  uploadAvatar: { method: "PUT", path: "/me/avatar", summary: "Replace the profile photo (multipart image upload)" },
-  removeAvatar: { method: "DELETE", path: "/me/avatar", summary: "Remove the profile photo" },
+  uploadAvatar: {
+    method: "PUT",
+    path: "/me/avatar",
+    summary: "Replace the profile photo (multipart image upload)",
+  },
+  removeAvatar: {
+    method: "DELETE",
+    path: "/me/avatar",
+    summary: "Remove the profile photo",
+  },
 });

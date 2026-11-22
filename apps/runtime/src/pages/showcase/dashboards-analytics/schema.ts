@@ -17,7 +17,13 @@ export const DailyViews = z
   .meta({ id: "DailyViews" });
 export type DailyViews = z.infer<typeof DailyViews>;
 
-export const TrafficSource = z.object({ id: z.string(), label: z.string(), views: z.number().int().nonnegative() }).meta({ id: "TrafficSource" });
+export const TrafficSource = z
+  .object({
+    id: z.string(),
+    label: z.string(),
+    views: z.number().int().nonnegative(),
+  })
+  .meta({ id: "TrafficSource" });
 export type TrafficSource = z.infer<typeof TrafficSource>;
 
 export const TopPage = z
@@ -60,14 +66,16 @@ export const api = defineApi({
   getPageviews: {
     method: "GET",
     path: "/analytics/pageviews",
-    summary: "Pageviews, their trend, sources, top pages and countries for a period",
+    summary:
+      "Pageviews, their trend, sources, top pages and countries for a period",
     query: z.object({ range: Range }),
     response: PageviewStats,
   },
   exportPageviews: {
     method: "GET",
     path: "/analytics/pageviews.csv",
-    summary: "The same period as CSV; the screen hands the download to the browser",
+    summary:
+      "The same period as CSV; the screen hands the download to the browser",
     query: z.object({ range: Range }),
   },
 });

@@ -15,7 +15,9 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 async function demoSignUp({ email }: SignUpInput) {
   await wait(900);
   if (email.toLowerCase() === fixtures.takenEmail) {
-    return fail(undefined, { email: "An account with this email already exists. Sign in instead." });
+    return fail(undefined, {
+      email: "An account with this email already exists. Sign in instead.",
+    });
   }
   return ok(fixtures.signUp);
 }
@@ -23,7 +25,13 @@ async function demoSignUp({ email }: SignUpInput) {
 export function AuthSignUpShowcasePage() {
   return (
     <DevlFrame>
-      <SignUp onSignUp={demoSignUp} privacyHref="#privacy" product={fixtures.product} signInHref="#sign-in" termsHref="#terms" />
+      <SignUp
+        onSignUp={demoSignUp}
+        privacyHref="#privacy"
+        product={fixtures.product}
+        signInHref="#sign-in"
+        termsHref="#terms"
+      />
     </DevlFrame>
   );
 }

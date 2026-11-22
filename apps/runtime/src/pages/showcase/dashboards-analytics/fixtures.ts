@@ -3,7 +3,10 @@
 import type { DailyViews, PageviewStats, Range } from "./schema";
 
 /** Demo data for the showcase, the generated mocks and tests. */
-const SHAPE = [18, 22, 19, 28, 24, 31, 35, 30, 38, 41, 36, 44, 48, 52, 46, 54, 58, 53, 61, 67, 62, 70, 75, 80, 72, 84, 90, 86, 95, 100];
+const SHAPE = [
+  18, 22, 19, 28, 24, 31, 35, 30, 38, 41, 36, 44, 48, 52, 46, 54, 58, 53, 61,
+  67, 62, 70, 75, 80, 72, 84, 90, 86, 95, 100,
+];
 const DAYS: Record<Range, number> = { "7d": 7, "30d": 30, "90d": 90 };
 const END = Date.UTC(2026, 3, 25);
 
@@ -36,7 +39,11 @@ export function statsFor(range: Range): PageviewStats {
     pages: [
       { path: "/", views: Math.round(14_280 * scale), change: 0.12 },
       { path: "/pricing", views: Math.round(6410 * scale), change: 0.34 },
-      { path: "/docs/quickstart", views: Math.round(4180 * scale), change: 0.08 },
+      {
+        path: "/docs/quickstart",
+        views: Math.round(4180 * scale),
+        change: 0.08,
+      },
       { path: "/blog/launch", views: Math.round(3022 * scale), change: 2.2 },
       { path: "/changelog", views: Math.round(1840 * scale), change: -0.03 },
     ],
@@ -52,4 +59,11 @@ export function statsFor(range: Range): PageviewStats {
 
 export const getPageviews = statsFor("30d");
 
-export const emptyStats: PageviewStats = { total: 0, change: 0, daily: [], sources: [], pages: [], countries: [] };
+export const emptyStats: PageviewStats = {
+  total: 0,
+  change: 0,
+  daily: [],
+  sources: [],
+  pages: [],
+  countries: [],
+};

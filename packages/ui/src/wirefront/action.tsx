@@ -29,7 +29,10 @@ export interface ActionOptions<Input, Output> {
   onError?: (message: string, input: Input) => void;
 }
 
-export function useAction<Input = void, Output = void>(action: Action<Input, Output>, options: ActionOptions<Input, Output> = {}) {
+export function useAction<Input = void, Output = void>(
+  action: Action<Input, Output>,
+  options: ActionOptions<Input, Output> = {}
+) {
   const [pending, setPending] = useState<ReadonlySet<string>>(new Set());
   const [error, setError] = useState<string>();
   const optionsRef = useRef(options);
@@ -56,13 +59,14 @@ export function useAction<Input = void, Output = void>(action: Action<Input, Out
       }
       return result;
     },
-    [action],
+    [action]
   );
 
   return {
     run,
     /** Whether any run, or the run with this key, is in flight. */
-    isPending: (key?: string) => (key === undefined ? pending.size > 0 : pending.has(key)),
+    isPending: (key?: string) =>
+      key === undefined ? pending.size > 0 : pending.has(key),
     /** The last failure's message. */
     error,
   };

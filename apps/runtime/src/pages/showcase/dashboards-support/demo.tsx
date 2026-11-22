@@ -15,11 +15,23 @@ export function DashboardsSupportShowcasePage() {
     <WirefrontProvider now={demoNow}>
       <SupportQueue
         breachesHref="#breaches"
-        data={state === "loading" || state === "error" ? undefined : state === "empty" ? fixtures.emptyQueue : fixtures.getQueueOverview}
+        data={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? fixtures.emptyQueue
+              : fixtures.getQueueOverview
+        }
         error="The helpdesk didn’t respond. Check your connection and try again."
         onRetry={() => {}}
         scope={fixtures.scope}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

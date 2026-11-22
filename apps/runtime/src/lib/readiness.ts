@@ -10,7 +10,9 @@ import type { CategorySlug } from "./designs";
 import { SOURCE_FILES } from "../pages/showcase/source-files";
 
 const VIEWS = import.meta.glob("../pages/showcase/*/view.tsx");
-const READY_FOLDERS = new Set(Object.keys(VIEWS).map((path) => path.split("/").at(-2)));
+const READY_FOLDERS = new Set(
+  Object.keys(VIEWS).map((path) => path.split("/").at(-2))
+);
 
 export type Readiness = "ready" | "preview";
 

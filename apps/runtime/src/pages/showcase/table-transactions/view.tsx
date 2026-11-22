@@ -4,22 +4,68 @@
 
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Separator } from "@wirefront/ui/separator";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { Spinner } from "@wirefront/ui/spinner";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@wirefront/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@wirefront/ui/table";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { pageCount, withFilter, withPage, withSearch } from "@wirefront/ui/wirefront/list";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
-import type { Action, AsyncStatus, ListQuery } from "@wirefront/ui/wirefront/types";
-import { ArrowDownLeftIcon, ArrowDownToLineIcon, ArrowUpRightIcon, CalendarIcon, ChevronLeftIcon, ChevronRightIcon, RefreshCcwIcon, SearchIcon } from "lucide-react";
+import {
+  pageCount,
+  withFilter,
+  withPage,
+  withSearch,
+} from "@wirefront/ui/wirefront/list";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
+import type {
+  Action,
+  AsyncStatus,
+  ListQuery,
+} from "@wirefront/ui/wirefront/types";
+import {
+  ArrowDownLeftIcon,
+  ArrowDownToLineIcon,
+  ArrowUpRightIcon,
+  CalendarIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  RefreshCcwIcon,
+  SearchIcon,
+} from "lucide-react";
 import type { ReactNode } from "react";
 
-import type { PaymentMethod, Transaction, TransactionAccount, TransactionFilters, TransactionsPage, TransactionStatus } from "./schema";
+import type {
+  PaymentMethod,
+  Transaction,
+  TransactionAccount,
+  TransactionFilters,
+  TransactionsPage,
+  TransactionStatus,
+} from "./schema";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("transactionsTable.<key>"). */
 export const TRANSACTIONS_TABLE_MESSAGES = {
@@ -132,20 +178,54 @@ function TransactionsTableScreen({
   const to = Math.min(query.page * query.pageSize, total);
   const filters = query.filters ?? {};
   const filtered = Boolean(query.search) || Object.keys(filters).length > 0;
-  const signed = (amount: number, currency: string) => format.money(amount, currency, { signDisplay: "exceptZero" });
-  const when = (iso: string) => format.date(iso, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  const signed = (amount: number, currency: string) =>
+    format.money(amount, currency, { signDisplay: "exceptZero" });
+  const when = (iso: string) =>
+    format.date(iso, {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-  const accountItems = [{ value: ALL, label: t.allAccounts }, ...accounts.map((a) => ({ value: a.id, label: a.label }))];
+  const accountItems = [
+    { value: ALL, label: t.allAccounts },
+    ...accounts.map((a) => ({ value: a.id, label: a.label })),
+  ];
   const directionItems = [
     { value: ALL, label: t.bothDirections },
     { value: "in", label: t.incoming },
     { value: "out", label: t.outgoing },
   ];
-  const rangeItems = [{ value: ALL, label: t.anyTime }, ...rangeOptions.map((days) => ({ value: String(days), label: interpolate(t.lastDays, { count: days }) }))];
+  const rangeItems = [
+    { value: ALL, label: t.anyTime },
+    ...rangeOptions.map((days) => ({
+      value: String(days),
+      label: interpolate(t.lastDays, { count: days }),
+    })),
+  ];
 
-  const select = (label: string, items: { value: string; label: string }[], value: string, onChange: (value: string) => void, width: string, icon?: ReactNode) => (
-    <Select items={items} onValueChange={(v) => onChange(v ?? ALL)} value={value}>
-      <SelectTrigger aria-label={label} className={cn(width, "max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10")} size="sm">
+  const select = (
+    label: string,
+    items: { value: string; label: string }[],
+    value: string,
+    onChange: (value: string) => void,
+    width: string,
+    icon?: ReactNode
+  ) => (
+    <Select
+      items={items}
+      onValueChange={(v) => onChange(v ?? ALL)}
+      value={value}
+    >
+      <SelectTrigger
+        aria-label={label}
+        className={cn(
+          width,
+          "max-sm:w-[calc(50%-0.25rem)] pointer-coarse:h-10"
+        )}
+        size="sm"
+      >
         {icon}
         <SelectValue />
       </SelectTrigger>
@@ -163,7 +243,9 @@ function TransactionsTableScreen({
     <TableRow>
       <TableCell className="whitespace-normal py-12 text-center" colSpan={6}>
         <p className="font-medium">{title}</p>
-        {description ? <p className="mt-1 text-muted-foreground text-sm">{description}</p> : null}
+        {description ? (
+          <p className="mt-1 text-muted-foreground text-sm">{description}</p>
+        ) : null}
         {action}
       </TableCell>
     </TableRow>
@@ -195,34 +277,65 @@ function TransactionsTableScreen({
         <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
           {t.retry}
         </Button>
-      ) : null,
+      ) : null
     );
   } else if (items.length === 0) {
     body = filtered
       ? message(
           t.noMatchTitle,
           t.noMatchDescription,
-          <Button className="mt-4" onClick={() => onQueryChange({ ...query, search: undefined, filters: undefined, page: 1 })} size="sm" variant="outline">
+          <Button
+            className="mt-4"
+            onClick={() =>
+              onQueryChange({
+                ...query,
+                search: undefined,
+                filters: undefined,
+                page: 1,
+              })
+            }
+            size="sm"
+            variant="outline"
+          >
             {t.clearFilters}
-          </Button>,
+          </Button>
         )
       : message(t.emptyTitle, t.emptyDescription);
   } else {
     body = items.map((tx: Transaction) => {
       const voided = tx.status === "failed" || tx.status === "refunded";
-      const amount = signed(tx.direction === "in" ? tx.amount : -tx.amount, tx.currency);
+      const amount = signed(
+        tx.direction === "in" ? tx.amount : -tx.amount,
+        tx.currency
+      );
       return (
         <TableRow key={tx.id}>
-          <TableCell className="ps-4 text-muted-foreground tabular-nums max-sm:hidden">{when(tx.occurredAt)}</TableCell>
+          <TableCell className="ps-4 text-muted-foreground tabular-nums max-sm:hidden">
+            {when(tx.occurredAt)}
+          </TableCell>
           <TableCell className="w-full max-w-0 max-sm:ps-4 sm:w-auto sm:max-w-none">
             <div className="flex items-center gap-2">
               <div
                 className={cn(
                   "flex size-7 shrink-0 items-center justify-center rounded-full",
-                  tx.direction === "in" ? "bg-category-2/10 text-category-2-foreground" : "bg-muted text-muted-foreground",
+                  tx.direction === "in"
+                    ? "bg-category-2/10 text-category-2-foreground"
+                    : "bg-muted text-muted-foreground"
                 )}
               >
-                {tx.direction === "in" ? <ArrowDownLeftIcon aria-label={t.received} className="size-3.5" role="img" /> : <ArrowUpRightIcon aria-label={t.sent} className="size-3.5" role="img" />}
+                {tx.direction === "in" ? (
+                  <ArrowDownLeftIcon
+                    aria-label={t.received}
+                    className="size-3.5"
+                    role="img"
+                  />
+                ) : (
+                  <ArrowUpRightIcon
+                    aria-label={t.sent}
+                    className="size-3.5"
+                    role="img"
+                  />
+                )}
               </div>
               <div className="min-w-0">
                 <div className="truncate font-medium">{tx.description}</div>
@@ -230,13 +343,20 @@ function TransactionsTableScreen({
                   <span className="sm:hidden">{when(tx.occurredAt)} · </span>
                   {tx.id}
                 </div>
-                <div className="truncate text-muted-foreground text-xs lg:hidden">{tx.counterparty}</div>
+                <div className="truncate text-muted-foreground text-xs lg:hidden">
+                  {tx.counterparty}
+                </div>
               </div>
             </div>
           </TableCell>
-          <TableCell className="text-muted-foreground max-lg:hidden">{tx.counterparty}</TableCell>
+          <TableCell className="text-muted-foreground max-lg:hidden">
+            {tx.counterparty}
+          </TableCell>
           <TableCell className="max-xl:hidden">
-            <Badge className={cn(tag, "font-mono text-[10px]")} variant="outline">
+            <Badge
+              className={cn(tag, "font-mono text-[10px]")}
+              variant="outline"
+            >
               {t[tx.method as PaymentMethod]}
             </Badge>
           </TableCell>
@@ -246,10 +366,30 @@ function TransactionsTableScreen({
             </Badge>
           </TableCell>
           <TableCell className="pe-4 text-end">
-            <div className={cn("font-mono tabular-nums", voided ? "text-muted-foreground line-through" : tx.direction === "in" ? "text-category-2-foreground" : "text-foreground")}>{amount}</div>
-            {tx.fee ? <div className="font-mono text-[10px] text-muted-foreground">{interpolate(t.fee, { amount: format.money(tx.fee, tx.currency) })}</div> : null}
+            <div
+              className={cn(
+                "font-mono tabular-nums",
+                voided
+                  ? "text-muted-foreground line-through"
+                  : tx.direction === "in"
+                    ? "text-category-2-foreground"
+                    : "text-foreground"
+              )}
+            >
+              {amount}
+            </div>
+            {tx.fee ? (
+              <div className="font-mono text-[10px] text-muted-foreground">
+                {interpolate(t.fee, {
+                  amount: format.money(tx.fee, tx.currency),
+                })}
+              </div>
+            ) : null}
             {tx.status !== "succeeded" ? (
-              <Badge className={cn(tag, "mt-1 sm:hidden", STATUS_CLASS[tx.status])} variant="outline">
+              <Badge
+                className={cn(tag, "mt-1 sm:hidden", STATUS_CLASS[tx.status])}
+                variant="outline"
+              >
                 {t[tx.status]}
               </Badge>
             ) : null}
@@ -262,24 +402,48 @@ function TransactionsTableScreen({
   const summary = page?.summary;
   const tile = (label: string, value: number, positive?: boolean) => (
     <div className="flex items-baseline justify-between gap-2 rounded-xl border bg-card px-4 py-3 shadow-xs/5 min-[480px]:block min-[480px]:p-4">
-      <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{label}</div>
-      <div className={cn("font-heading font-semibold text-xl tabular-nums min-[480px]:mt-1.5 lg:text-2xl", positive ? "text-category-2-foreground" : "text-foreground")}>
-        {summary ? signed(value, summary.currency) : <Skeleton className="h-6 w-24 motion-reduce:animate-none" />}
+      <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+        {label}
+      </div>
+      <div
+        className={cn(
+          "font-heading font-semibold text-xl tabular-nums min-[480px]:mt-1.5 lg:text-2xl",
+          positive ? "text-category-2-foreground" : "text-foreground"
+        )}
+      >
+        {summary ? (
+          signed(value, summary.currency)
+        ) : (
+          <Skeleton className="h-6 w-24 motion-reduce:animate-none" />
+        )}
       </div>
     </div>
   );
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12",
+        className
+      )}
+    >
       <div className="mx-auto max-w-6xl">
         <header className="mb-4 flex items-end justify-between gap-4">
           <div className="min-w-0">
             <h1 className="font-heading text-xl">{t.title}</h1>
-            {subtitle ? <p className="text-muted-foreground text-sm">{subtitle}</p> : null}
+            {subtitle ? (
+              <p className="text-muted-foreground text-sm">{subtitle}</p>
+            ) : null}
           </div>
           <div className="flex shrink-0 items-center gap-2">
             {onRefresh ? (
-              <Button aria-label={t.refresh} className="pointer-coarse:h-10" onClick={onRefresh} size="sm" variant="ghost">
+              <Button
+                aria-label={t.refresh}
+                className="pointer-coarse:h-10"
+                onClick={onRefresh}
+                size="sm"
+                variant="ghost"
+              >
                 <RefreshCcwIcon />
                 <span aria-hidden className="max-sm:hidden">
                   {t.refresh}
@@ -321,32 +485,72 @@ function TransactionsTableScreen({
           <div className="flex flex-wrap items-center gap-2 border-b p-3">
             <InputGroup className="w-full sm:w-64">
               <InputGroupAddon>
-                <SearchIcon aria-hidden className="size-4 text-muted-foreground" />
+                <SearchIcon
+                  aria-hidden
+                  className="size-4 text-muted-foreground"
+                />
               </InputGroupAddon>
               <InputGroupInput
                 aria-label={t.search}
-                onChange={(e) => onQueryChange(withSearch(query, e.target.value))}
+                onChange={(e) =>
+                  onQueryChange(withSearch(query, e.target.value))
+                }
                 placeholder={t.searchPlaceholder}
                 type="search"
                 value={query.search ?? ""}
               />
             </InputGroup>
-            <Separator className="mx-1 h-6 max-sm:hidden" orientation="vertical" />
+            <Separator
+              className="mx-1 h-6 max-sm:hidden"
+              orientation="vertical"
+            />
             {accounts.length > 1
-              ? select(t.account, accountItems, filters.account ?? ALL, (v) => onQueryChange(withFilter(query, "account", v === ALL ? undefined : v)), "w-36")
+              ? select(
+                  t.account,
+                  accountItems,
+                  filters.account ?? ALL,
+                  (v) =>
+                    onQueryChange(
+                      withFilter(query, "account", v === ALL ? undefined : v)
+                    ),
+                  "w-36"
+                )
               : null}
-            {select(t.direction, directionItems, filters.direction ?? ALL, (v) => onQueryChange(withFilter(query, "direction", v === ALL ? undefined : v)), "w-32")}
+            {select(
+              t.direction,
+              directionItems,
+              filters.direction ?? ALL,
+              (v) =>
+                onQueryChange(
+                  withFilter(query, "direction", v === ALL ? undefined : v)
+                ),
+              "w-32"
+            )}
             {select(
               t.range,
               rangeItems,
               filters.withinDays ? String(filters.withinDays) : ALL,
-              (v) => onQueryChange(withFilter(query, "withinDays", v === ALL ? undefined : Number(v))),
+              (v) =>
+                onQueryChange(
+                  withFilter(
+                    query,
+                    "withinDays",
+                    v === ALL ? undefined : Number(v)
+                  )
+                ),
               "w-40",
-              <CalendarIcon aria-hidden className="text-muted-foreground" />,
+              <CalendarIcon aria-hidden className="text-muted-foreground" />
             )}
             {status === "ready" ? (
-              <span aria-live="polite" className="ms-auto font-mono text-[11px] text-muted-foreground">
-                {total === 1 ? t.resultsOne : interpolate(t.resultsOther, { count: format.number(total) })}
+              <span
+                aria-live="polite"
+                className="ms-auto font-mono text-[11px] text-muted-foreground"
+              >
+                {total === 1
+                  ? t.resultsOne
+                  : interpolate(t.resultsOther, {
+                      count: format.number(total),
+                    })}
               </span>
             ) : null}
           </div>
@@ -359,26 +563,59 @@ function TransactionsTableScreen({
           <Table aria-busy={status === "loading"}>
             <TableHeader>
               <TableRow>
-                <TableHead className="ps-4 max-sm:hidden">{t.columnDate}</TableHead>
-                <TableHead className="max-sm:ps-4">{t.columnDescription}</TableHead>
-                <TableHead className="max-lg:hidden">{t.columnCounterparty}</TableHead>
-                <TableHead className="max-xl:hidden">{t.columnMethod}</TableHead>
-                <TableHead className="max-sm:hidden">{t.columnStatus}</TableHead>
-                <TableHead className="pe-4 text-end">{t.columnAmount}</TableHead>
+                <TableHead className="ps-4 max-sm:hidden">
+                  {t.columnDate}
+                </TableHead>
+                <TableHead className="max-sm:ps-4">
+                  {t.columnDescription}
+                </TableHead>
+                <TableHead className="max-lg:hidden">
+                  {t.columnCounterparty}
+                </TableHead>
+                <TableHead className="max-xl:hidden">
+                  {t.columnMethod}
+                </TableHead>
+                <TableHead className="max-sm:hidden">
+                  {t.columnStatus}
+                </TableHead>
+                <TableHead className="pe-4 text-end">
+                  {t.columnAmount}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>{body}</TableBody>
           </Table>
 
           {status === "ready" && total > 0 ? (
-            <nav aria-label={t.pagination} className="flex items-center justify-between gap-2 border-t p-3 text-muted-foreground text-xs">
-              <span className="tabular-nums">{interpolate(t.showing, { from, to, total })}</span>
+            <nav
+              aria-label={t.pagination}
+              className="flex items-center justify-between gap-2 border-t p-3 text-muted-foreground text-xs"
+            >
+              <span className="tabular-nums">
+                {interpolate(t.showing, { from, to, total })}
+              </span>
               {pages > 1 ? (
                 <div className="flex items-center gap-2">
-                  <Button aria-label={t.previous} disabled={query.page <= 1} onClick={() => onQueryChange(withPage(query, query.page - 1, total))} size="icon-sm" variant="outline">
+                  <Button
+                    aria-label={t.previous}
+                    disabled={query.page <= 1}
+                    onClick={() =>
+                      onQueryChange(withPage(query, query.page - 1, total))
+                    }
+                    size="icon-sm"
+                    variant="outline"
+                  >
                     <ChevronLeftIcon />
                   </Button>
-                  <Button aria-label={t.next} disabled={query.page >= pages} onClick={() => onQueryChange(withPage(query, query.page + 1, total))} size="icon-sm" variant="outline">
+                  <Button
+                    aria-label={t.next}
+                    disabled={query.page >= pages}
+                    onClick={() =>
+                      onQueryChange(withPage(query, query.page + 1, total))
+                    }
+                    size="icon-sm"
+                    variant="outline"
+                  >
                     <ChevronRightIcon />
                   </Button>
                 </div>

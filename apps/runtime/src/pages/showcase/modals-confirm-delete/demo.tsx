@@ -12,5 +12,11 @@ async function demoDelete() {
 }
 
 export function ModalsConfirmDeleteShowcasePage() {
-  return <ConfirmDelete defaultOpen onDelete={demoDelete} workspace={fixtures.getWorkspaceSummary} />;
+  return (
+    <ConfirmDelete
+      defaultOpen
+      onDelete={demoDelete}
+      workspace={fixtures.getWorkspaceSummary}
+    />
+  );
 }

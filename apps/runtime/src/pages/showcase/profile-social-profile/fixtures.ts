@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-import type { SocialArt, SocialPost, SocialStreak, SocialSuggestion, SocialUser } from "./schema";
+import type {
+  SocialArt,
+  SocialPost,
+  SocialStreak,
+  SocialSuggestion,
+  SocialUser,
+} from "./schema";
 
 /** Demo data for the showcase, the generated mocks and tests. */
 export const now = "2026-10-22T15:00:00Z";
@@ -45,7 +51,11 @@ export const listPosts: SocialPost[] = [
     id: "p3",
     text: "Wrote up how I pull colour palettes out of the old matchbox labels my grandad kept in a biscuit tin. Five palettes, free to use.",
     at: "2026-10-20T16:00:00Z",
-    link: { domain: "wrenhalloway.studio", title: "Palettes from the matchbox drawer", hue: "orange" },
+    link: {
+      domain: "wrenhalloway.studio",
+      title: "Palettes from the matchbox drawer",
+      hue: "orange",
+    },
     replies: 22,
     reposts: 88,
     likes: 604,
@@ -79,7 +89,12 @@ export const listPosts: SocialPost[] = [
 export const listReplies: SocialPost[] = [
   {
     id: "r1",
-    replyTo: { name: "Mira Castell", handle: "mira.draws", text: "What pens are you using for the ink studies? They look so soft.", hue: "teal" },
+    replyTo: {
+      name: "Mira Castell",
+      handle: "mira.draws",
+      text: "What pens are you using for the ink studies? They look so soft.",
+      hue: "teal",
+    },
     text: "A 0.3 fineliner for outlines and a brush pen that’s about 80% dried out. The dry one is the secret.",
     at: "2026-10-22T14:00:00Z",
     replies: 4,
@@ -89,7 +104,12 @@ export const listReplies: SocialPost[] = [
   },
   {
     id: "r2",
-    replyTo: { name: "Otto Brennan", handle: "ottotype", text: "Serif or sans for a bakery that’s been open since 1962?", hue: "sky" },
+    replyTo: {
+      name: "Otto Brennan",
+      handle: "ottotype",
+      text: "Serif or sans for a bakery that’s been open since 1962?",
+      hue: "sky",
+    },
     text: "Chunky slab, slightly too tight, like it was hand-painted on the window by someone in a hurry. Bakeries deserve swagger.",
     at: "2026-10-21T16:00:00Z",
     replies: 12,
@@ -99,7 +119,12 @@ export const listReplies: SocialPost[] = [
   },
   {
     id: "r3",
-    replyTo: { name: "Priya Nair", handle: "priyanair", text: "Do you plan the whole alphabet or wing it day by day?", hue: "fuchsia" },
+    replyTo: {
+      name: "Priya Nair",
+      handle: "priyanair",
+      text: "Do you plan the whole alphabet or wing it day by day?",
+      hue: "fuchsia",
+    },
     text: "Wing it, then quietly redraw the ones that don’t match. Q has been redrawn six times. Q knows what it did.",
     at: "2026-10-19T16:00:00Z",
     replies: 6,
@@ -122,12 +147,32 @@ export const listMedia: SocialArt[] = [
 ];
 
 export const listSuggestions: SocialSuggestion[] = [
-  { name: "Mira Castell", handle: "mira.draws", hue: "teal", note: "Follows you" },
-  { name: "Otto Brennan", handle: "ottotype", hue: "sky", note: "Type designer" },
-  { name: "Nightjar Studio", handle: "nightjar.studio", hue: "indigo", note: "Wren’s studio" },
+  {
+    name: "Mira Castell",
+    handle: "mira.draws",
+    hue: "teal",
+    note: "Follows you",
+  },
+  {
+    name: "Otto Brennan",
+    handle: "ottotype",
+    hue: "sky",
+    note: "Type designer",
+  },
+  {
+    name: "Nightjar Studio",
+    handle: "nightjar.studio",
+    hue: "indigo",
+    note: "Wren’s studio",
+  },
 ];
 
-export const mutuals = ["Mira Castell", "Otto Brennan", "Priya Nair", "Jonah Ifeanyi"];
+export const mutuals = [
+  "Mira Castell",
+  "Otto Brennan",
+  "Priya Nair",
+  "Jonah Ifeanyi",
+];
 
 /** The last 60 days of the letter-a-day habit, oldest first. */
 export const streak: SocialStreak = {
@@ -135,7 +180,15 @@ export const streak: SocialStreak = {
   done: 297,
   total: 365,
   note: "The last 60 days. Seven skipped, all of them Mondays.",
-  days: Array.from({ length: 60 }, (_, i) => (i > 51 ? "future" : i === 51 ? "today" : i % 7 === 3 && i < 49 ? "skipped" : "done")),
+  days: Array.from({ length: 60 }, (_, i) =>
+    i > 51
+      ? "future"
+      : i === 51
+        ? "today"
+        : i % 7 === 3 && i < 49
+          ? "skipped"
+          : "done"
+  ),
 };
 
 export const footerLinks = [

@@ -6,7 +6,15 @@ import { Separator } from "@wirefront/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@wirefront/ui/tooltip";
 import { cn } from "@wirefront/ui/lib/utils";
 import { useMessages } from "@wirefront/ui/wirefront/provider";
-import { Fragment, type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("selectionToolbar.<key>"). */
 export const SELECTION_TOOLBAR_MESSAGES = {
@@ -26,7 +34,10 @@ export interface SelectionToolbarProps {
   children: ReactNode;
   actions: SelectionAction[];
   /** Called with the action and the selected text. The selection stays put. */
-  onAction: (id: string, selection: { text: string; range: Range | null }) => void;
+  onAction: (
+    id: string,
+    selection: { text: string; range: Range | null }
+  ) => void;
   /** Show the toolbar above the content without a selection (e.g. for a help tour or touch hint). */
   forceOpen?: boolean;
   className?: string;
@@ -37,9 +48,16 @@ type Position = { top: number; left: number; placement: "above" | "below" };
 const GAP = 8;
 const EDGE = 8;
 // SSR-safe layout effect.
-const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+const useIsoLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-export function SelectionToolbar({ children, actions, onAction, forceOpen, className }: SelectionToolbarProps) {
+export function SelectionToolbar({
+  children,
+  actions,
+  onAction,
+  forceOpen,
+  className,
+}: SelectionToolbarProps) {
   const t = useMessages("selectionToolbar", SELECTION_TOOLBAR_MESSAGES);
   const contentRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
@@ -52,14 +70,23 @@ export function SelectionToolbar({ children, actions, onAction, forceOpen, class
   const measure = useCallback(() => {
     if (forceOpen) {
       const rect = contentRef.current?.getBoundingClientRect();
-      if (rect) setAnchor({ top: rect.top, bottom: rect.top, centerX: rect.left + rect.width / 2 });
+      if (rect)
+        setAnchor({
+          top: rect.top,
+          bottom: rect.top,
+          centerX: rect.left + rect.width / 2,
+        });
       return;
     }
     const range = rangeRef.current;
     if (!range) return;
     const rect = range.getBoundingClientRect();
     if (rect.width === 0 && rect.height === 0) return;
-    setAnchor({ top: rect.top, bottom: rect.bottom, centerX: rect.left + rect.width / 2 });
+    setAnchor({
+      top: rect.top,
+      bottom: rect.bottom,
+      centerX: rect.left + rect.width / 2,
+    });
   }, [forceOpen]);
 
   useEffect(() => {
@@ -73,7 +100,10 @@ export function SelectionToolbar({ children, actions, onAction, forceOpen, class
       if (!sel || sel.isCollapsed || sel.rangeCount === 0) return clear();
       const range = sel.getRangeAt(0);
       const container = range.commonAncestorContainer;
-      const node = container.nodeType === Node.TEXT_NODE ? container.parentElement : (container as Element);
+      const node =
+        container.nodeType === Node.TEXT_NODE
+          ? container.parentElement
+          : (container as Element);
       if (!node || !contentRef.current?.contains(node)) return clear();
       rangeRef.current = range;
       if (!forceOpen) measure();
@@ -83,7 +113,11 @@ export function SelectionToolbar({ children, actions, onAction, forceOpen, class
     const onPointerDown = (e: PointerEvent) => {
       pointerDown.current = true;
       const target = e.target as Node;
-      if (!contentRef.current?.contains(target) && !toolbarRef.current?.contains(target)) clear();
+      if (
+        !contentRef.current?.contains(target) &&
+        !toolbarRef.current?.contains(target)
+      )
+        clear();
     };
     const onPointerUp = () => {
       pointerDown.current = false;
@@ -119,8 +153,12 @@ export function SelectionToolbar({ children, actions, onAction, forceOpen, class
     const coarse = window.matchMedia?.("(pointer: coarse)").matches ?? false;
     const fitsAbove = anchor.top - height - GAP >= EDGE;
     const placement = !coarse && fitsAbove ? "above" : "below";
-    const top = placement === "above" ? anchor.top - height - GAP : anchor.bottom + GAP;
-    const left = Math.max(EDGE, Math.min(window.innerWidth - width - EDGE, anchor.centerX - width / 2));
+    const top =
+      placement === "above" ? anchor.top - height - GAP : anchor.bottom + GAP;
+    const left = Math.max(
+      EDGE,
+      Math.min(window.innerWidth - width - EDGE, anchor.centerX - width / 2)
+    );
     setPos({ top, left, placement });
   }, [anchor]);
 
@@ -132,7 +170,7 @@ export function SelectionToolbar({ children, actions, onAction, forceOpen, class
           aria-label={t.toolbar}
           className={cn(
             "fixed z-50 inline-flex max-w-[calc(100vw-16px)] flex-wrap items-center justify-center gap-1 rounded-2xl border border-border bg-card px-1 py-1 shadow-lg transition-opacity duration-150 motion-reduce:transition-none sm:rounded-full",
-            pos ? "opacity-100" : "pointer-events-none opacity-0",
+            pos ? "opacity-100" : "pointer-events-none opacity-0"
           )}
           data-placement={pos?.placement}
           // Keep the text selection when pressing toolbar buttons.
@@ -143,14 +181,21 @@ export function SelectionToolbar({ children, actions, onAction, forceOpen, class
         >
           {actions.map((a, i) => (
             <Fragment key={a.id}>
-              {a.group && i > 0 ? <Separator className="h-4" orientation="vertical" /> : null}
+              {a.group && i > 0 ? (
+                <Separator className="h-4" orientation="vertical" />
+              ) : null}
               <Tooltip>
                 <TooltipTrigger
                   render={
                     <button
                       aria-label={a.label}
                       className="inline-flex size-7 shrink-0 items-center justify-center rounded-full text-foreground/80 transition-colors hover:bg-foreground/6 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 pointer-coarse:size-10 [&_svg]:size-4"
-                      onClick={() => onAction(a.id, { text: rangeRef.current?.toString() ?? "", range: rangeRef.current })}
+                      onClick={() =>
+                        onAction(a.id, {
+                          text: rangeRef.current?.toString() ?? "",
+                          range: rangeRef.current,
+                        })
+                      }
                       type="button"
                     >
                       {a.icon}

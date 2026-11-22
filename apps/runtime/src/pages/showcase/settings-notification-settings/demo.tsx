@@ -9,13 +9,23 @@ import { settingsBack, settingsNav, settingsUser } from "../_settings-nav";
 import * as fixtures from "./fixtures";
 import { NotificationSettings } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function SettingsNotificationSettingsShowcasePage() {
   return (
     <DevlFrame>
-      <SettingsShell activeId="notifications" back={settingsBack} groups={settingsNav} user={settingsUser}>
-        <NotificationSettings data={fixtures.getNotificationSettings} onSave={() => wait(500)} product={fixtures.product} />
+      <SettingsShell
+        activeId="notifications"
+        back={settingsBack}
+        groups={settingsNav}
+        user={settingsUser}
+      >
+        <NotificationSettings
+          data={fixtures.getNotificationSettings}
+          onSave={() => wait(500)}
+          product={fixtures.product}
+        />
       </SettingsShell>
     </DevlFrame>
   );

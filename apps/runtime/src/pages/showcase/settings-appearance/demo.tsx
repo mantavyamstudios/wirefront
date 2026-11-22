@@ -6,7 +6,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { AppearanceSettings } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function SettingsAppearanceShowcasePage() {
   const state = useShowcaseState();
@@ -16,8 +17,14 @@ export function SettingsAppearanceShowcasePage() {
       error="Appearance settings didn’t load. Check your connection and try again."
       onRetry={() => {}}
       onSave={() => wait(300)}
-      prefs={state === "loading" || state === "error" ? undefined : fixtures.getAppearance}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      prefs={
+        state === "loading" || state === "error"
+          ? undefined
+          : fixtures.getAppearance
+      }
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

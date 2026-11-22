@@ -7,7 +7,17 @@ import type { Profile, ProfileZone } from "./schema";
 export const now = "2026-09-20T12:00:00.000Z";
 export const product = "Ridgeline";
 export const domain = "ridgeline.app";
-export const takenUsernames = ["ada", "adal", "lindqvist", "admin", "support", "hello", "team", "ridgeline", "design"];
+export const takenUsernames = [
+  "ada",
+  "adal",
+  "lindqvist",
+  "admin",
+  "support",
+  "hello",
+  "team",
+  "ridgeline",
+  "design",
+];
 
 /** What the mocks return for `getProfile`. */
 export const getProfile: Profile = {

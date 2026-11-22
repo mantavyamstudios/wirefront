@@ -19,7 +19,12 @@
  * pixels the pane has grown by since the drag started into a new value, so the
  * value can be pixels, a percentage or anything else.
  */
-import { type KeyboardEvent, type PointerEvent, type ReactNode, useRef } from "react";
+import {
+  type KeyboardEvent,
+  type PointerEvent,
+  type ReactNode,
+  useRef,
+} from "react";
 
 import { cn } from "../lib/utils";
 

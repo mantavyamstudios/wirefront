@@ -5,7 +5,13 @@
 // and deletes save after a short wait. Not shipped by the registry.
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
 import { ok } from "@wirefront/ui/wirefront/types";
-import { ClockIcon, HouseIcon, StarIcon, Trash2Icon, UsersRoundIcon } from "lucide-react";
+import {
+  ClockIcon,
+  HouseIcon,
+  StarIcon,
+  Trash2Icon,
+  UsersRoundIcon,
+} from "lucide-react";
 import { useRef, useState } from "react";
 import { DevlFrame } from "../_devl-frame";
 import * as fixtures from "./fixtures";
@@ -48,9 +54,19 @@ export function AppsFolderViewShowcasePage() {
             const n = added.current++;
             const sample = fixtures.uploads[n % fixtures.uploads.length];
             if (!sample) return;
-            const file: FolderFile = { ...sample, id: `up-${n}`, editedBy: fixtures.me, editedAt: fixtures.now };
+            const file: FolderFile = {
+              ...sample,
+              id: `up-${n}`,
+              editedBy: fixtures.me,
+              editedAt: fixtures.now,
+            };
             if (folderId === "root") setFiles((f) => [file, ...f]);
-            else setFolders((fs) => fs.map((f) => (f.id === folderId ? { ...f, files: [file, ...f.files] } : f)));
+            else
+              setFolders((fs) =>
+                fs.map((f) =>
+                  f.id === folderId ? { ...f, files: [file, ...f.files] } : f
+                )
+              );
           }}
           path={fixtures.path}
           places={places}

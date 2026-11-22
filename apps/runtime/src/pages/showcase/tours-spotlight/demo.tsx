@@ -15,14 +15,20 @@ export function ToursSpotlightShowcasePage() {
   return (
     <div className="relative min-h-svh bg-background text-foreground">
       <div className="grid min-h-svh grid-cols-1 md:grid-cols-[220px_1fr]">
-        <aside aria-hidden className="space-y-2 border-border/60 border-e bg-foreground/2 p-4 max-md:hidden">
+        <aside
+          aria-hidden
+          className="space-y-2 border-border/60 border-e bg-foreground/2 p-4 max-md:hidden"
+        >
           <div className="h-3 w-24 rounded bg-foreground/15" />
           <div className="h-2 w-32 rounded bg-foreground/10" />
           <div className="h-2 w-28 rounded bg-foreground/10" />
         </aside>
         <main className="min-w-0 p-4 pb-64 sm:p-6 lg:p-10">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex h-9 min-w-0 flex-1 basis-full items-center gap-2 rounded-lg border border-border/60 px-3 text-muted-foreground text-sm sm:max-w-xs sm:basis-auto" data-tour="search">
+            <div
+              className="flex h-9 min-w-0 flex-1 basis-full items-center gap-2 rounded-lg border border-border/60 px-3 text-muted-foreground text-sm sm:max-w-xs sm:basis-auto"
+              data-tour="search"
+            >
               <SearchIcon aria-hidden className="size-4 shrink-0" />
               <span className="truncate">Search…</span>
             </div>
@@ -30,25 +36,49 @@ export function ToursSpotlightShowcasePage() {
               <PlusIcon />
               New project
             </Button>
-            <Button data-tour="invite" size="sm" type="button" variant="outline">
+            <Button
+              data-tour="invite"
+              size="sm"
+              type="button"
+              variant="outline"
+            >
               <UserPlusIcon />
               Invite
             </Button>
           </div>
-          <div aria-hidden className="mt-8 h-3 w-48 max-w-full rounded bg-foreground/20" />
-          <div aria-hidden className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3" data-tour="projects">
+          <div
+            aria-hidden
+            className="mt-8 h-3 w-48 max-w-full rounded bg-foreground/20"
+          />
+          <div
+            aria-hidden
+            className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3"
+            data-tour="projects"
+          >
             {CARDS.map((k) => (
-              <div className="h-24 rounded-xl border border-border/50 bg-foreground/2" key={k} />
+              <div
+                className="h-24 rounded-xl border border-border/50 bg-foreground/2"
+                key={k}
+              />
             ))}
           </div>
           {open ? null : (
-            <Button className="mt-6" onClick={() => setOpen(true)} type="button" variant="outline">
+            <Button
+              className="mt-6"
+              onClick={() => setOpen(true)}
+              type="button"
+              variant="outline"
+            >
               Restart tour
             </Button>
           )}
         </main>
       </div>
-      <SpotlightTour onClose={() => setOpen(false)} open={open} steps={fixtures.steps} />
+      <SpotlightTour
+        onClose={() => setOpen(false)}
+        open={open}
+        steps={fixtures.steps}
+      />
     </div>
   );
 }

@@ -7,18 +7,21 @@ import { useMemo, useState } from "react";
 import * as fixtures from "./fixtures";
 import { LogsTable } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 /** What a backend would do with a filter like "severity:error service:billing". */
 function runFilter(filter: string) {
   const terms = filter.trim().toLowerCase().split(/\s+/).filter(Boolean);
   return fixtures.entries.filter((e) =>
     terms.every((term) => {
-      const [key, value] = term.includes(":") ? term.split(":") : [undefined, term];
+      const [key, value] = term.includes(":")
+        ? term.split(":")
+        : [undefined, term];
       if (key === "severity") return e.severity === value;
       if (key === "service") return e.service === value;
       return e.message.toLowerCase().includes(term);
-    }),
+    })
   );
 }
 

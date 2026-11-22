@@ -12,7 +12,8 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 /** Simulated backend: a code of one repeated digit (e.g. 000000) is wrong. */
 async function demoVerify({ code }: OtpInput) {
   await wait(1000);
-  if (/^(\d)\1+$/.test(code)) return fail("That code didn’t work. Check the email and try again.");
+  if (/^(\d)\1+$/.test(code))
+    return fail("That code didn’t work. Check the email and try again.");
   return ok(fixtures.verifyOtp);
 }
 
@@ -22,6 +23,12 @@ async function demoResend() {
 
 export function AuthOtpVerifyShowcasePage() {
   return (
-    <OtpVerify cancelHref="#cancel" email={fixtures.email} onResend={demoResend} onVerify={demoVerify} otherMethodHref="#other-method" />
+    <OtpVerify
+      cancelHref="#cancel"
+      email={fixtures.email}
+      onResend={demoResend}
+      onVerify={demoVerify}
+      otherMethodHref="#other-method"
+    />
   );
 }

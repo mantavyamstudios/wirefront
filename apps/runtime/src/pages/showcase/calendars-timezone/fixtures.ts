@@ -33,7 +33,14 @@ export const availableZones = [
   "Pacific/Auckland",
 ];
 
-export const defaultZones = ["America/Los_Angeles", "America/New_York", "Europe/London", "Europe/Berlin", "Asia/Kolkata", "Asia/Tokyo"];
+export const defaultZones = [
+  "America/Los_Angeles",
+  "America/New_York",
+  "Europe/London",
+  "Europe/Berlin",
+  "Asia/Kolkata",
+  "Asia/Tokyo",
+];
 
 export const quickPicks: QuickPick[] = [
   { id: "ny-morning", label: "Mornings (NY)", start: 9, hours: 1 },

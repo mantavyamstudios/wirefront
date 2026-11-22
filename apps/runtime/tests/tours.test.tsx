@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { fail } from "@wirefront/ui/wirefront/types";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import * as arrowFx from "@/pages/showcase/tours-arrow-tooltip/fixtures";
@@ -25,7 +31,16 @@ beforeAll(() => {
     unobserve() {}
     disconnect() {}
   } as unknown as typeof ResizeObserver;
-  window.matchMedia ??= ((q: string) => ({ matches: false, media: q, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, onchange: null, dispatchEvent: () => false })) as typeof window.matchMedia;
+  window.matchMedia ??= ((q: string) => ({
+    matches: false,
+    media: q,
+    addEventListener() {},
+    removeEventListener() {},
+    addListener() {},
+    removeListener() {},
+    onchange: null,
+    dispatchEvent: () => false,
+  })) as typeof window.matchMedia;
 });
 afterEach(cleanup);
 
@@ -47,11 +62,17 @@ describe("tours", () => {
     render(<WelcomeTour onComplete={onComplete} steps={welcomeFx.steps} />);
     expect(await screen.findByText("Welcome to Orbit.")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Next" }));
-    expect(screen.getByText("Projects are how you organise work.")).toBeTruthy();
+    expect(
+      screen.getByText("Projects are how you organise work.")
+    ).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Back" }));
     expect(screen.getByText("Welcome to Orbit.")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Go to step 4" }));
-    expect(screen.getByRole("button", { name: "Go to step 4" }).getAttribute("aria-current")).toBe("step");
+    expect(
+      screen
+        .getByRole("button", { name: "Go to step 4" })
+        .getAttribute("aria-current")
+    ).toBe("step");
     fireEvent.click(screen.getByRole("button", { name: "Get started" }));
     await waitFor(() => expect(onComplete).toHaveBeenCalledWith(true));
   });
@@ -69,9 +90,11 @@ describe("tours", () => {
       <>
         <Targets ids={spotFx.steps.map((s) => s.target)} />
         <SpotlightTour onClose={onClose} open steps={spotFx.steps} />
-      </>,
+      </>
     );
-    const dialog = await screen.findByRole("dialog", { name: /Search anything/ });
+    const dialog = await screen.findByRole("dialog", {
+      name: /Search anything/,
+    });
     expect(dialog).toBeTruthy();
     expect(screen.getByText("Step 1 of 4")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Next" }));
@@ -87,7 +110,7 @@ describe("tours", () => {
       <>
         <Targets ids={["search"]} />
         <SpotlightTour onClose={onClose} open steps={one} />
-      </>,
+      </>
     );
     fireEvent.click(await screen.findByRole("button", { name: "Done" }));
     expect(onClose).toHaveBeenCalledWith(true);
@@ -99,8 +122,13 @@ describe("tours", () => {
     render(
       <>
         <Targets ids={arrowFx.steps.map((s) => s.target)} />
-        <TooltipTour onClose={onClose} onStepChange={onStepChange} open steps={arrowFx.steps} />
-      </>,
+        <TooltipTour
+          onClose={onClose}
+          onStepChange={onStepChange}
+          open
+          steps={arrowFx.steps}
+        />
+      </>
     );
     expect(await screen.findByText("Filter by status.")).toBeTruthy();
     expect(onStepChange).toHaveBeenLastCalledWith("status");
@@ -118,9 +146,11 @@ describe("tours", () => {
     render(
       <div className="relative">
         <FeatureBeacon hint={hint} onDismiss={onDismiss} />
-      </div>,
+      </div>
     );
-    fireEvent.click(screen.getByRole("button", { name: `Hint: ${hint.title}` }));
+    fireEvent.click(
+      screen.getByRole("button", { name: `Hint: ${hint.title}` })
+    );
     expect(await screen.findByText(hint.body)).toBeTruthy();
     expect(screen.getByText(/New · April 26/)).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Got it" }));
@@ -129,7 +159,9 @@ describe("tours", () => {
 
   it("TipCard renders actions only when wired and dismisses by id", () => {
     const onDismiss = vi.fn();
-    const { rerender } = render(<TipCard onDismiss={onDismiss} tip={tipFx.getNextTip} />);
+    const { rerender } = render(
+      <TipCard onDismiss={onDismiss} tip={tipFx.getNextTip} />
+    );
     expect(screen.getByRole("complementary", { name: "Tip" })).toBeTruthy();
     expect(screen.getByText("Tip · 1 of 8")).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Try it" })).toBeNull();
@@ -137,26 +169,51 @@ describe("tours", () => {
     fireEvent.click(screen.getByRole("button", { name: "Dismiss tip" }));
     expect(onDismiss).toHaveBeenCalledWith("group-by-team");
     const onTry = vi.fn();
-    rerender(<TipCard allHref="/tips" onDismiss={onDismiss} onTry={onTry} tip={tipFx.getNextTip} />);
+    rerender(
+      <TipCard
+        allHref="/tips"
+        onDismiss={onDismiss}
+        onTry={onTry}
+        tip={tipFx.getNextTip}
+      />
+    );
     fireEvent.click(screen.getByRole("button", { name: "Try it" }));
     expect(onTry).toHaveBeenCalled();
-    expect(screen.getByRole("link", { name: /See all tips/ }).getAttribute("href")).toBe("/tips");
+    expect(
+      screen.getByRole("link", { name: /See all tips/ }).getAttribute("href")
+    ).toBe("/tips");
     rerender(<TipCard onDismiss={onDismiss} />);
     expect(screen.queryByRole("complementary")).toBeNull();
   });
 
   it("SetupChecklist ticks optimistically and rolls back on failure", async () => {
-    const onToggle = vi.fn(async ({ id }: { id: string }) => (id === "api-key" ? fail("Couldn’t save.") : undefined));
-    render(<SetupChecklist onToggle={onToggle} tasks={checklistFx.listSetupTasks} />);
+    const onToggle = vi.fn(async ({ id }: { id: string }) =>
+      id === "api-key" ? fail("Couldn’t save.") : undefined
+    );
+    render(
+      <SetupChecklist onToggle={onToggle} tasks={checklistFx.listSetupTasks} />
+    );
     expect(screen.getByText("2 of 5 complete")).toBeTruthy();
-    const theme = screen.getByRole("checkbox", { name: /Pick a theme/ }) as HTMLInputElement;
+    const theme = screen.getByRole("checkbox", {
+      name: /Pick a theme/,
+    }) as HTMLInputElement;
     fireEvent.click(theme);
-    await waitFor(() => expect(screen.getByText("3 of 5 complete")).toBeTruthy());
+    await waitFor(() =>
+      expect(screen.getByText("3 of 5 complete")).toBeTruthy()
+    );
     expect(onToggle).toHaveBeenCalledWith({ id: "theme", done: true });
-    fireEvent.click(screen.getByRole("checkbox", { name: /Generate an API key/ }));
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: /Generate an API key/ })
+    );
     expect(await screen.findByRole("alert")).toBeTruthy();
     expect(screen.getByText("3 of 5 complete")).toBeTruthy();
-    expect((screen.getByRole("checkbox", { name: /Generate an API key/ }) as HTMLInputElement).checked).toBe(false);
+    expect(
+      (
+        screen.getByRole("checkbox", {
+          name: /Generate an API key/,
+        }) as HTMLInputElement
+      ).checked
+    ).toBe(false);
   });
 
   it("SetupChecklist offers hide once everything is done", () => {

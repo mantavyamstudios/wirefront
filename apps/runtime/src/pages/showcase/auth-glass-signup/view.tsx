@@ -6,7 +6,11 @@ import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { Button } from "@wirefront/ui/button";
 import { Input } from "@wirefront/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Separator } from "@wirefront/ui/separator";
 import { Spinner } from "@wirefront/ui/spinner";
@@ -69,8 +73,7 @@ function Required({ t }: { t: typeof GLASS_SIGN_UP_MESSAGES }) {
     <>
       <span aria-hidden className="text-white/45">
         *
-      </span>
-      {" "}
+      </span>{" "}
       <span className="sr-only">{t.required}</span>
     </>
   );
@@ -118,7 +121,10 @@ function BlobBackground() {
 }
 `;
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+    >
       <style>{styles}</style>
       <div
         className="glass-bg-blob-1 absolute top-[-20vmax] inset-s-[-15vmax] h-[60vmax] w-[60vmax] rounded-full"
@@ -159,10 +165,21 @@ function BlobBackground() {
   );
 }
 
-function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, signInHref, logo }: GlassSignUpProps) {
+function GlassSignUpScreen({
+  onSignUp,
+  onSuccess,
+  providers = [],
+  onProvider,
+  signInHref,
+  logo,
+}: GlassSignUpProps) {
   const t = useMessages("glassSignUp", GLASS_SIGN_UP_MESSAGES);
   const [reveal, setReveal] = useState(false);
-  const form = useActionForm({ schema: SignUpInput, action: onSignUp, onSuccess: (_, input) => onSuccess?.(input) });
+  const form = useActionForm({
+    schema: SignUpInput,
+    action: onSignUp,
+    onSuccess: (_, input) => onSuccess?.(input),
+  });
   const provider = useAction(onProvider ?? (async () => {}));
   const shown = onProvider ? providers : [];
 
@@ -171,14 +188,24 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
       <BlobBackground />
       <div className="relative z-10 w-full max-w-md rounded-2xl border border-white/15 bg-white/6 p-5 shadow-2xl backdrop-blur-lg backdrop-saturate-150 sm:p-8 sm:backdrop-blur-xl">
         {logo ? <div className="flex justify-center">{logo}</div> : null}
-        <div className={cn("flex flex-col items-center text-center", logo && "mt-7")}>
+        <div
+          className={cn(
+            "flex flex-col items-center text-center",
+            logo && "mt-7"
+          )}
+        >
           <h1 className="font-heading text-3xl tracking-tight">{t.title}</h1>
           <p className="mt-2 text-sm text-white/65">{t.subtitle}</p>
         </div>
 
         {shown.length ? (
           <>
-            <div className={cn("mt-7 grid gap-2.5", shown.length > 1 && "grid-cols-2")}>
+            <div
+              className={cn(
+                "mt-7 grid gap-2.5",
+                shown.length > 1 && "grid-cols-2"
+              )}
+            >
               {shown.map((p) => (
                 <button
                   aria-busy={provider.isPending(p.id)}
@@ -188,7 +215,9 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
                   onClick={() => void provider.run(p.id, p.id)}
                   type="button"
                 >
-                  <span className="size-4 shrink-0 [&_svg]:size-4">{provider.isPending(p.id) ? <Spinner /> : p.icon}</span>
+                  <span className="size-4 shrink-0 [&_svg]:size-4">
+                    {provider.isPending(p.id) ? <Spinner /> : p.icon}
+                  </span>
                   <span className="truncate whitespace-nowrap">{p.name}</span>
                 </button>
               ))}
@@ -200,7 +229,9 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
             ) : null}
             <div className="my-6 flex items-center gap-3">
               <Separator className="flex-1 bg-white/15" />
-              <span className="font-mono text-[10px] text-white/55 uppercase tracking-[0.3em]">{t.or}</span>
+              <span className="font-mono text-[10px] text-white/55 uppercase tracking-[0.3em]">
+                {t.or}
+              </span>
               <Separator className="flex-1 bg-white/15" />
             </div>
           </>
@@ -229,7 +260,12 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
               <Required t={t} />
             </Field.Label>
             <InputGroup className="border-white/15 bg-white/6 text-white focus-within:border-white/30 hover:bg-white/8">
-              <InputGroupInput autoComplete="new-password" className="text-white placeholder:text-white/50" placeholder="••••••••" type={reveal ? "text" : "password"} />
+              <InputGroupInput
+                autoComplete="new-password"
+                className="text-white placeholder:text-white/50"
+                placeholder="••••••••"
+                type={reveal ? "text" : "password"}
+              />
               <InputGroupAddon align="inline-end">
                 <button
                   aria-label={reveal ? t.hidePassword : t.showPassword}
@@ -238,7 +274,11 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
                   onClick={() => setReveal((v) => !v)}
                   type="button"
                 >
-                  {reveal ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+                  {reveal ? (
+                    <EyeOffIcon className="size-4" />
+                  ) : (
+                    <EyeIcon className="size-4" />
+                  )}
                 </button>
               </InputGroupAddon>
             </InputGroup>
@@ -264,7 +304,10 @@ function GlassSignUpScreen({ onSignUp, onSuccess, providers = [], onProvider, si
         {signInHref ? (
           <p className="mt-6 text-center text-white/65 text-xs">
             {t.haveAccount}{" "}
-            <WirefrontLink className="text-white underline underline-offset-2 hover:text-white" href={signInHref}>
+            <WirefrontLink
+              className="text-white underline underline-offset-2 hover:text-white"
+              href={signInHref}
+            >
               {t.signIn}
             </WirefrontLink>
           </p>

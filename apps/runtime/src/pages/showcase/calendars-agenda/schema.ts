@@ -22,5 +22,10 @@ export type AgendaEvent = z.infer<typeof AgendaEvent>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listAgenda: { method: "GET", path: "/calendar/agenda", summary: "Events for today and tomorrow, in order", response: z.array(AgendaEvent) },
+  listAgenda: {
+    method: "GET",
+    path: "/calendar/agenda",
+    summary: "Events for today and tomorrow, in order",
+    response: z.array(AgendaEvent),
+  },
 });

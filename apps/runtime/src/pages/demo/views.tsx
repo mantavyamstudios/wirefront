@@ -20,7 +20,13 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { Button } from "@wirefront/ui/button";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@wirefront/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@wirefront/ui/dropdown-menu";
 import { useDemo, type Member, type Project } from "./store";
 import { InboxView } from "./views-inbox";
 import { SettingsView } from "./views-settings";
@@ -40,7 +46,11 @@ export function DemoView() {
     <div className="flex-1 overflow-y-auto px-8 py-8">
       {view === "home" ? <HomeView /> : null}
       {view === "projects" ? (
-        selectedProjectId ? <ProjectDetailView /> : <ProjectsView />
+        selectedProjectId ? (
+          <ProjectDetailView />
+        ) : (
+          <ProjectsView />
+        )
       ) : null}
       {view === "members" ? <MembersView /> : null}
       {view === "settings" ? <SettingsView /> : null}
@@ -93,17 +103,22 @@ function HomeView() {
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-[3fr_2fr]">
-        <Card title="Today's tasks" trailing={
-          <Button
-            size="sm"
-            variant="ghost"
-            type="button"
-            onClick={() => pushToast({ kind: "info", title: "Task added — soon™" })}
-          >
-            <PlusIcon />
-            New
-          </Button>
-        }>
+        <Card
+          title="Today's tasks"
+          trailing={
+            <Button
+              size="sm"
+              variant="ghost"
+              type="button"
+              onClick={() =>
+                pushToast({ kind: "info", title: "Task added — soon™" })
+              }
+            >
+              <PlusIcon />
+              New
+            </Button>
+          }
+        >
           <ul className="mt-3 flex flex-col">
             {[
               "Review Maya's audit log PR",
@@ -123,7 +138,9 @@ function HomeView() {
                 >
                   <CircleIcon className="size-3" />
                 </button>
-                <span className={`flex-1 truncate text-sm ${i === 4 ? "text-muted-foreground line-through" : ""}`}>
+                <span
+                  className={`flex-1 truncate text-sm ${i === 4 ? "text-muted-foreground line-through" : ""}`}
+                >
                   {t}
                 </span>
                 <span className="rounded bg-foreground/5 px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground uppercase tracking-[0.2em]">
@@ -140,11 +157,36 @@ function HomeView() {
         <Card title="Recent activity">
           <ul className="mt-3 flex flex-col gap-3.5">
             {[
-              { who: "Maya", what: "deployed", target: "main → production", time: "2m" },
-              { who: "James", what: "opened", target: "PR #128 — audit log", time: "8m" },
-              { who: "Riya", what: "invited", target: "5 new members", time: "21m" },
-              { who: "Dani", what: "archived", target: "marketing-v1 project", time: "1h" },
-              { who: "Alex", what: "rolled back", target: "release 0.4.1", time: "2h" },
+              {
+                who: "Maya",
+                what: "deployed",
+                target: "main → production",
+                time: "2m",
+              },
+              {
+                who: "James",
+                what: "opened",
+                target: "PR #128 — audit log",
+                time: "8m",
+              },
+              {
+                who: "Riya",
+                what: "invited",
+                target: "5 new members",
+                time: "21m",
+              },
+              {
+                who: "Dani",
+                what: "archived",
+                target: "marketing-v1 project",
+                time: "1h",
+              },
+              {
+                who: "Alex",
+                what: "rolled back",
+                target: "release 0.4.1",
+                time: "2h",
+              },
             ].map((a) => (
               <li key={a.target} className="flex items-start gap-3 text-sm">
                 <span className="mt-0.5 flex size-6 items-center justify-center rounded-full bg-foreground/6 font-medium text-[10px]">
@@ -188,12 +230,22 @@ function HomeView() {
 }
 
 function ProjectsView() {
-  const { projects, setOverlay, toggleStar, requestArchive, openProject, pushToast } = useDemo();
+  const {
+    projects,
+    setOverlay,
+    toggleStar,
+    requestArchive,
+    openProject,
+    pushToast,
+  } = useDemo();
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<"all" | "starred" | Project["visibility"]>("all");
+  const [filter, setFilter] = useState<
+    "all" | "starred" | Project["visibility"]
+  >("all");
 
   const visible = projects.filter((p) => {
-    if (query.trim() && !p.name.toLowerCase().includes(query.toLowerCase())) return false;
+    if (query.trim() && !p.name.toLowerCase().includes(query.toLowerCase()))
+      return false;
     if (filter === "all") return true;
     if (filter === "starred") return !!p.starred;
     return p.visibility === filter;
@@ -208,7 +260,11 @@ function ProjectsView() {
           </div>
           <h1 className="mt-1 font-heading text-3xl">Projects</h1>
         </div>
-        <Button size="sm" type="button" onClick={() => setOverlay("new-project")}>
+        <Button
+          size="sm"
+          type="button"
+          onClick={() => setOverlay("new-project")}
+        >
           <PlusIcon />
           New project
         </Button>
@@ -310,7 +366,11 @@ function ProjectsView() {
                   <td className="px-3 py-3 text-muted-foreground text-xs">
                     {p.updatedAt}
                   </td>
-                  <td className="px-3 py-3 text-right" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                  <td
+                    className="px-3 py-3 text-right"
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => e.stopPropagation()}
+                  >
                     <DropdownMenu>
                       <DropdownMenuTrigger
                         render={
@@ -342,7 +402,10 @@ function ProjectsView() {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() =>
-                            pushToast({ kind: "info", title: "Duplicated (demo only)" })
+                            pushToast({
+                              kind: "info",
+                              title: "Duplicated (demo only)",
+                            })
                           }
                         >
                           <CopyIcon />
@@ -370,10 +433,14 @@ function ProjectsView() {
 }
 
 function MembersView() {
-  const { members, setOverlay, setMemberRole, removeMember, pushToast } = useDemo();
+  const { members, setOverlay, setMemberRole, removeMember, pushToast } =
+    useDemo();
   const [query, setQuery] = useState("");
-  const visible = members.filter((m) =>
-    !query.trim() || m.name.toLowerCase().includes(query.toLowerCase()) || m.email.toLowerCase().includes(query.toLowerCase()),
+  const visible = members.filter(
+    (m) =>
+      !query.trim() ||
+      m.name.toLowerCase().includes(query.toLowerCase()) ||
+      m.email.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
@@ -404,14 +471,23 @@ function MembersView() {
       <div className="mt-6 overflow-hidden rounded-xl border border-border/60">
         <ul className="divide-y divide-border/40">
           {visible.map((m, i) => (
-            <li key={m.id} className="group flex items-center gap-4 px-4 py-3 transition-colors hover:bg-foreground/2">
+            <li
+              key={m.id}
+              className="group flex items-center gap-4 px-4 py-3 transition-colors hover:bg-foreground/2"
+            >
               <div className="relative">
-                <div className={`flex size-9 items-center justify-center rounded-full font-medium text-xs ${m.tone}`}>
+                <div
+                  className={`flex size-9 items-center justify-center rounded-full font-medium text-xs ${m.tone}`}
+                >
                   {m.initials}
                 </div>
                 <span
                   className={`absolute right-0 bottom-0 size-2.5 rounded-full ring-2 ring-background ${
-                    m.status === "online" ? "bg-emerald-500" : m.status === "away" ? "bg-amber-500" : "bg-muted-foreground/40"
+                    m.status === "online"
+                      ? "bg-emerald-500"
+                      : m.status === "away"
+                        ? "bg-amber-500"
+                        : "bg-muted-foreground/40"
                   }`}
                 />
               </div>
@@ -429,7 +505,9 @@ function MembersView() {
                     </span>
                   ) : null}
                 </div>
-                <div className="truncate text-muted-foreground text-xs">{m.email}</div>
+                <div className="truncate text-muted-foreground text-xs">
+                  {m.email}
+                </div>
               </div>
               <div className="hidden font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] sm:block">
                 {m.lastActive}
@@ -448,7 +526,11 @@ function MembersView() {
                   aria-label="Remove"
                   onClick={() => {
                     removeMember(m.id);
-                    pushToast({ kind: "info", title: "Removed", body: `${m.name} no longer has access.` });
+                    pushToast({
+                      kind: "info",
+                      title: "Removed",
+                      body: `${m.name} no longer has access.`,
+                    });
                   }}
                   className="rounded-md p-1.5 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 hover:bg-foreground/5 hover:text-destructive"
                 >
@@ -502,10 +584,22 @@ function RoleSelect({
 function VisibilityPill({ v }: { v: Project["visibility"] }) {
   const cfg =
     v === "public"
-      ? { Icon: GlobeIcon, label: "Public", className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400" }
+      ? {
+          Icon: GlobeIcon,
+          label: "Public",
+          className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
+        }
       : v === "team"
-        ? { Icon: UsersIcon, label: "Team", className: "bg-foreground/6 text-foreground" }
-        : { Icon: LockIcon, label: "Private", className: "bg-foreground/4 text-muted-foreground" };
+        ? {
+            Icon: UsersIcon,
+            label: "Team",
+            className: "bg-foreground/6 text-foreground",
+          }
+        : {
+            Icon: LockIcon,
+            label: "Private",
+            className: "bg-foreground/4 text-muted-foreground",
+          };
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] ${cfg.className}`}

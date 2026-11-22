@@ -18,5 +18,11 @@ export type SpotlightStep = z.infer<typeof SpotlightStep>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  completeSpotlightTour: { method: "POST", path: "/me/tours/{id}/complete", summary: "Remember that the user finished or closed a tour", params: z.object({ id: z.string() }), body: z.object({ finished: z.boolean() }) },
+  completeSpotlightTour: {
+    method: "POST",
+    path: "/me/tours/{id}/complete",
+    summary: "Remember that the user finished or closed a tour",
+    params: z.object({ id: z.string() }),
+    body: z.object({ finished: z.boolean() }),
+  },
 });

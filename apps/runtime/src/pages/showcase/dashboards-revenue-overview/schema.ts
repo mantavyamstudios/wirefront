@@ -5,11 +5,15 @@ import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** The period shown. The previous period of the same length is used for comparisons. */
-export const RangeKey = z.enum(["7d", "30d", "90d", "12m"]).meta({ id: "RevenueRangeKey" });
+export const RangeKey = z
+  .enum(["7d", "30d", "90d", "12m"])
+  .meta({ id: "RevenueRangeKey" });
 export type RangeKey = z.infer<typeof RangeKey>;
 
 /** What kind of event a moment is; sets its icon and colour. */
-export const MomentKind = z.enum(["promo", "pricing", "partner", "incident"]).meta({ id: "MomentKind" });
+export const MomentKind = z
+  .enum(["promo", "pricing", "partner", "incident"])
+  .meta({ id: "MomentKind" });
 export type MomentKind = z.infer<typeof MomentKind>;
 
 /** One day's revenue, split by channel key. Amounts are in the provider's currency (major units). */
@@ -21,7 +25,9 @@ export const RevenueDay = z
   .meta({ id: "RevenueDay" });
 export type RevenueDay = z.infer<typeof RevenueDay>;
 
-export const RevenueChannel = z.object({ key: z.string(), label: z.string() }).meta({ id: "RevenueChannel" });
+export const RevenueChannel = z
+  .object({ key: z.string(), label: z.string() })
+  .meta({ id: "RevenueChannel" });
 export type RevenueChannel = z.infer<typeof RevenueChannel>;
 
 /** Something that happened and is worth pinning on the line: a sale, a price change, an outage. */

@@ -19,10 +19,17 @@ export const MailMessage = z
   .meta({ id: "MailMessage" });
 export type MailMessage = z.infer<typeof MailMessage>;
 
-export const MailFilter = z.enum(["all", "unread", "mentions"]).meta({ id: "MailFilter" });
+export const MailFilter = z
+  .enum(["all", "unread", "mentions"])
+  .meta({ id: "MailFilter" });
 export type MailFilter = z.infer<typeof MailFilter>;
 
-export const MailReply = z.object({ messageId: z.string(), body: z.string().trim().min(1, "Write a reply first.") }).meta({ id: "MailReply" });
+export const MailReply = z
+  .object({
+    messageId: z.string(),
+    body: z.string().trim().min(1, "Write a reply first."),
+  })
+  .meta({ id: "MailReply" });
 export type MailReply = z.infer<typeof MailReply>;
 
 const ById = z.object({ id: z.string() });
@@ -36,8 +43,30 @@ export const api = defineApi({
     query: z.object({ filter: MailFilter, search: z.string().optional() }),
     response: z.object({ items: z.array(MailMessage), unread: z.int().min(0) }),
   },
-  getMessage: { method: "GET", path: "/mail/{id}", summary: "One message with its body", params: ById, response: MailMessage },
-  archiveMessage: { method: "POST", path: "/mail/{id}/archive", summary: "Archive a message", params: ById },
-  deleteMessage: { method: "DELETE", path: "/mail/{id}", summary: "Delete a message", params: ById },
-  replyToMessage: { method: "POST", path: "/mail/{id}/replies", summary: "Reply to a message", params: ById, body: MailReply.pick({ body: true }) },
+  getMessage: {
+    method: "GET",
+    path: "/mail/{id}",
+    summary: "One message with its body",
+    params: ById,
+    response: MailMessage,
+  },
+  archiveMessage: {
+    method: "POST",
+    path: "/mail/{id}/archive",
+    summary: "Archive a message",
+    params: ById,
+  },
+  deleteMessage: {
+    method: "DELETE",
+    path: "/mail/{id}",
+    summary: "Delete a message",
+    params: ById,
+  },
+  replyToMessage: {
+    method: "POST",
+    path: "/mail/{id}/replies",
+    summary: "Reply to a message",
+    params: ById,
+    body: MailReply.pick({ body: true }),
+  },
 });

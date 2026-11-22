@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
 // Includes MIT-licensed code © 2026 Sean Brydon (devl.dev) · see https://github.com/mantavyamstudios/wirefront/blob/main/NOTICE.md
-import type { DiffFile, PullRequest, ReviewPerson, ReviewThread } from "./schema";
+import type {
+  DiffFile,
+  PullRequest,
+  ReviewPerson,
+  ReviewThread,
+} from "./schema";
 
 /** The demo clock; comment times are relative to it. */
 export const now = "2026-05-12T15:00:00Z";
@@ -16,7 +21,16 @@ export const people: ReviewPerson[] = [
   { id: "jonas", name: "Jonas Weber", tone: "blue" },
 ];
 
-export const getPullRequest: PullRequest = { number: 482, title: "Park poison messages after three failed attempts", author: "sam", base: "main", head: "sam/dead-letter-queue", commits: 4, checks: { passed: 12, total: 12 }, reviewers: ["leo", "jonas"] };
+export const getPullRequest: PullRequest = {
+  number: 482,
+  title: "Park poison messages after three failed attempts",
+  author: "sam",
+  base: "main",
+  head: "sam/dead-letter-queue",
+  commits: 4,
+  checks: { passed: 12, total: 12 },
+  reviewers: ["leo", "jonas"],
+};
 
 /** Files already marked viewed. */
 export const viewed = ["docs/webhooks/retries.md"];
@@ -40,7 +54,8 @@ export const listPullFiles: DiffFile[] = [
  const queue = new Queue("webhooks");`,
       },
       {
-        header: "@@ -38,15 +39,31 @@ export async function consume(batchSize = 50)",
+        header:
+          "@@ -38,15 +39,31 @@ export async function consume(batchSize = 50)",
         oldStart: 38,
         newStart: 39,
         lines: ` export async function consume(batchSize = 50) {
@@ -212,7 +227,6 @@ export const listPullFiles: DiffFile[] = [
   },
 ];
 
-
 export const listReviewThreads: ReviewThread[] = [
   {
     id: "t1",
@@ -220,11 +234,34 @@ export const listReviewThreads: ReviewThread[] = [
     line: 3,
     side: "new",
     comments: [
-      { id: "c1", author: "leo", body: "Should `MAX_ATTEMPTS` come from the endpoint’s retry policy? Ops will want to tune it for the noisy integrations.", createdAt: "2026-05-12T13:00:00Z" },
-      { id: "c2", author: "sam", body: "Fair. I’d keep the constant as the default and read `endpoint.retryPolicy` in a follow-up, so this one stays small.", createdAt: "2026-05-12T14:00:00Z" },
+      {
+        id: "c1",
+        author: "leo",
+        body: "Should `MAX_ATTEMPTS` come from the endpoint’s retry policy? Ops will want to tune it for the noisy integrations.",
+        createdAt: "2026-05-12T13:00:00Z",
+      },
+      {
+        id: "c2",
+        author: "sam",
+        body: "Fair. I’d keep the constant as the default and read `endpoint.retryPolicy` in a follow-up, so this one stays small.",
+        createdAt: "2026-05-12T14:00:00Z",
+      },
     ],
   },
-  { id: "t2", file: "src/queue/dead-letter.ts", line: 29, side: "new", comments: [{ id: "c3", author: "leo", body: "`queue` isn’t imported in this file, so `replay` will throw the first time someone clicks it.", createdAt: "2026-05-12T14:12:00Z" }] },
+  {
+    id: "t2",
+    file: "src/queue/dead-letter.ts",
+    line: 29,
+    side: "new",
+    comments: [
+      {
+        id: "c3",
+        author: "leo",
+        body: "`queue` isn’t imported in this file, so `replay` will throw the first time someone clicks it.",
+        createdAt: "2026-05-12T14:12:00Z",
+      },
+    ],
+  },
   {
     id: "t3",
     file: "src/queue/retry.ts",
@@ -232,8 +269,18 @@ export const listReviewThreads: ReviewThread[] = [
     side: "new",
     resolved: true,
     comments: [
-      { id: "c4", author: "jonas", body: "30s cap feels low for endpoints that are down for a deploy.", createdAt: "2026-05-12T12:00:00Z" },
-      { id: "c5", author: "sam", body: "It only applies to the three attempts now. Anything longer goes to the dead-letter queue.", createdAt: "2026-05-12T12:05:00Z" },
+      {
+        id: "c4",
+        author: "jonas",
+        body: "30s cap feels low for endpoints that are down for a deploy.",
+        createdAt: "2026-05-12T12:00:00Z",
+      },
+      {
+        id: "c5",
+        author: "sam",
+        body: "It only applies to the three attempts now. Anything longer goes to the dead-letter queue.",
+        createdAt: "2026-05-12T12:05:00Z",
+      },
     ],
   },
 ];

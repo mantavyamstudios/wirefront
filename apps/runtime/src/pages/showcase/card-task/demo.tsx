@@ -6,5 +6,13 @@ import { TaskBoard } from "./view";
 
 export function CardTaskShowcasePage() {
   const board = fixtures.getBoard;
-  return <TaskBoard columns={board.columns} endsOn={board.endsOn} startsOn={board.startsOn} taskHref={(task) => `#${task.key}`} title={board.name} />;
+  return (
+    <TaskBoard
+      columns={board.columns}
+      endsOn={board.endsOn}
+      startsOn={board.startsOn}
+      taskHref={(task) => `#${task.key}`}
+      title={board.name}
+    />
+  );
 }

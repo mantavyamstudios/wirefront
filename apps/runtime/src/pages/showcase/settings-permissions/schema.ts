@@ -32,18 +32,37 @@ export const Capability = z
   .meta({ id: "Capability" });
 export type Capability = z.infer<typeof Capability>;
 
-export const CapabilityGroup = z.object({ id: z.string(), label: z.string(), capabilities: z.array(Capability) }).meta({ id: "CapabilityGroup" });
+export const CapabilityGroup = z
+  .object({
+    id: z.string(),
+    label: z.string(),
+    capabilities: z.array(Capability),
+  })
+  .meta({ id: "CapabilityGroup" });
 export type CapabilityGroup = z.infer<typeof CapabilityGroup>;
 
-export const PermissionMatrix = z.object({ roles: z.array(PermissionRole), groups: z.array(CapabilityGroup) }).meta({ id: "PermissionMatrix" });
+export const PermissionMatrix = z
+  .object({ roles: z.array(PermissionRole), groups: z.array(CapabilityGroup) })
+  .meta({ id: "PermissionMatrix" });
 export type PermissionMatrix = z.infer<typeof PermissionMatrix>;
 
-export const SetGrantInput = z.object({ roleId: z.string(), capabilityId: z.string(), allowed: z.boolean() }).meta({ id: "SetGrantInput" });
+export const SetGrantInput = z
+  .object({
+    roleId: z.string(),
+    capabilityId: z.string(),
+    allowed: z.boolean(),
+  })
+  .meta({ id: "SetGrantInput" });
 export type SetGrantInput = z.infer<typeof SetGrantInput>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getPermissions: { method: "GET", path: "/workspace/permissions", summary: "Roles and what each can do", response: PermissionMatrix },
+  getPermissions: {
+    method: "GET",
+    path: "/workspace/permissions",
+    summary: "Roles and what each can do",
+    response: PermissionMatrix,
+  },
   setGrant: {
     method: "PUT",
     path: "/workspace/roles/{roleId}/capabilities/{capabilityId}",

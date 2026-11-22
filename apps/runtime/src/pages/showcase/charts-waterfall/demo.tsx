@@ -10,10 +10,16 @@ export function ChartsWaterfallShowcasePage() {
   const state = useShowcaseState();
   return (
     <ArrWaterfall
-      data={state === "loading" || state === "error" ? undefined : fixtures.getArrMovement}
+      data={
+        state === "loading" || state === "error"
+          ? undefined
+          : fixtures.getArrMovement
+      }
       error="ARR movement didn’t load. Check your connection and try again."
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

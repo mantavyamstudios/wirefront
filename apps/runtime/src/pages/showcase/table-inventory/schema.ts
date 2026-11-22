@@ -33,7 +33,9 @@ export const InventoryQuery = z
   .meta({ id: "InventoryQuery" });
 export type InventoryQuery = z.infer<typeof InventoryQuery>;
 
-export const InventoryPage = z.object({ items: z.array(InventoryItem), total: z.int().min(0) }).meta({ id: "InventoryPage" });
+export const InventoryPage = z
+  .object({ items: z.array(InventoryItem), total: z.int().min(0) })
+  .meta({ id: "InventoryPage" });
 export type InventoryPage = z.infer<typeof InventoryPage>;
 
 /** The backend operations this screen calls. */

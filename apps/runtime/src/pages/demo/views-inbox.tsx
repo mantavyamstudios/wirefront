@@ -22,12 +22,16 @@ export function InboxView() {
   const visible = threads.filter((t) => {
     if (query.trim()) {
       const q = query.toLowerCase();
-      if (!t.subject.toLowerCase().includes(q) && !t.preview.toLowerCase().includes(q)) {
+      if (
+        !t.subject.toLowerCase().includes(q) &&
+        !t.preview.toLowerCase().includes(q)
+      ) {
         return false;
       }
     }
     if (tab === "unread") return t.unread;
-    if (tab === "mentions") return t.preview.includes("@") || t.subject.includes("@");
+    if (tab === "mentions")
+      return t.preview.includes("@") || t.subject.includes("@");
     return true;
   });
 
@@ -118,39 +122,43 @@ function ThreadRow({
         }`}
         onClick={onClick}
       >
-      {thread.unread ? (
-        <span className="-translate-y-1/2 absolute top-1/2 left-1.5 size-1.5 rounded-full bg-primary" />
-      ) : null}
-      <div className="flex items-start gap-3">
-        {author ? (
-          <div
-            className={`flex size-8 shrink-0 items-center justify-center rounded-full font-medium text-[11px] ${author.tone}`}
-          >
-            {author.initials}
-          </div>
+        {thread.unread ? (
+          <span className="-translate-y-1/2 absolute top-1/2 left-1.5 size-1.5 rounded-full bg-primary" />
         ) : null}
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-2">
-            <span className={`truncate text-sm ${thread.unread ? "font-semibold" : "font-medium"}`}>
-              {author?.name ?? "Someone"}
-            </span>
-            <span className="font-mono text-[10px] text-muted-foreground/70">
-              {thread.time}
-            </span>
+        <div className="flex items-start gap-3">
+          {author ? (
+            <div
+              className={`flex size-8 shrink-0 items-center justify-center rounded-full font-medium text-[11px] ${author.tone}`}
+            >
+              {author.initials}
+            </div>
+          ) : null}
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between gap-2">
+              <span
+                className={`truncate text-sm ${thread.unread ? "font-semibold" : "font-medium"}`}
+              >
+                {author?.name ?? "Someone"}
+              </span>
+              <span className="font-mono text-[10px] text-muted-foreground/70">
+                {thread.time}
+              </span>
+            </div>
+            <div className="mt-0.5 flex items-center gap-1.5">
+              {thread.pinned ? (
+                <PinIcon className="size-3 shrink-0 text-amber-500" />
+              ) : null}
+              <span className="truncate text-foreground/85 text-xs">
+                {thread.subject}
+              </span>
+            </div>
+            <p
+              className={`mt-0.5 line-clamp-2 text-xs leading-snug ${thread.unread ? "text-foreground/80" : "text-muted-foreground"}`}
+            >
+              {thread.preview}
+            </p>
           </div>
-          <div className="mt-0.5 flex items-center gap-1.5">
-            {thread.pinned ? (
-              <PinIcon className="size-3 shrink-0 text-amber-500" />
-            ) : null}
-            <span className="truncate text-foreground/85 text-xs">
-              {thread.subject}
-            </span>
-          </div>
-          <p className={`mt-0.5 line-clamp-2 text-xs leading-snug ${thread.unread ? "text-foreground/80" : "text-muted-foreground"}`}>
-            {thread.preview}
-          </p>
         </div>
-      </div>
       </button>
     </li>
   );
@@ -176,8 +184,12 @@ function ThreadDetail({ thread }: { thread: Thread }) {
       <header className="flex items-center justify-between border-b border-border/60 px-6 py-3.5">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            {thread.pinned ? <PinIcon className="size-3.5 text-amber-500" /> : null}
-            <h2 className="truncate font-heading text-base">{thread.subject}</h2>
+            {thread.pinned ? (
+              <PinIcon className="size-3.5 text-amber-500" />
+            ) : null}
+            <h2 className="truncate font-heading text-base">
+              {thread.subject}
+            </h2>
           </div>
           <div className="mt-1 flex items-center gap-1.5">
             <div className="flex items-center -space-x-1.5">
@@ -191,7 +203,8 @@ function ThreadDetail({ thread }: { thread: Thread }) {
               ))}
             </div>
             <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em]">
-              {participants.length} participant{participants.length === 1 ? "" : "s"}
+              {participants.length} participant
+              {participants.length === 1 ? "" : "s"}
             </span>
           </div>
         </div>
@@ -255,10 +268,7 @@ function ThreadDetail({ thread }: { thread: Thread }) {
         })}
       </div>
 
-      <form
-        onSubmit={onSubmit}
-        className="border-t border-border/60 px-6 py-4"
-      >
+      <form onSubmit={onSubmit} className="border-t border-border/60 px-6 py-4">
         <div className="rounded-xl border border-border/60 bg-background/40 p-2 focus-within:border-foreground/40">
           <textarea
             value={draft}
@@ -275,13 +285,22 @@ function ThreadDetail({ thread }: { thread: Thread }) {
           />
           <div className="flex items-center justify-between border-t border-border/40 pt-2">
             <div className="flex items-center gap-0.5">
-              <button type="button" className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground">
+              <button
+                type="button"
+                className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+              >
                 <PaperclipIcon className="size-3.5" />
               </button>
-              <button type="button" className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground">
+              <button
+                type="button"
+                className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+              >
                 <AtSignIcon className="size-3.5" />
               </button>
-              <button type="button" className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground">
+              <button
+                type="button"
+                className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+              >
                 <SmileIcon className="size-3.5" />
               </button>
             </div>

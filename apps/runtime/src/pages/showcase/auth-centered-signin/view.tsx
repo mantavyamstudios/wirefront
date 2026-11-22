@@ -5,7 +5,11 @@
 import { Field } from "@base-ui/react/field";
 import { Form } from "@base-ui/react/form";
 import { Button } from "@wirefront/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { Input } from "@wirefront/ui/input";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Separator } from "@wirefront/ui/separator";
@@ -64,19 +68,39 @@ export interface CenteredSignInProps {
   logo?: ReactNode;
 }
 
-type FormProps = Pick<CenteredSignInProps, "onSignIn" | "onSuccess" | "providers" | "onProvider"> & { t: typeof CENTERED_SIGN_IN_MESSAGES; forgot?: ReactNode };
+type FormProps = Pick<
+  CenteredSignInProps,
+  "onSignIn" | "onSuccess" | "providers" | "onProvider"
+> & { t: typeof CENTERED_SIGN_IN_MESSAGES; forgot?: ReactNode };
 
 const fieldError = "text-destructive-foreground text-xs";
 
-function Providers({ providers = [], onProvider, t }: Pick<FormProps, "providers" | "onProvider" | "t">) {
+function Providers({
+  providers = [],
+  onProvider,
+  t,
+}: Pick<FormProps, "providers" | "onProvider" | "t">) {
   const provider = useAction(onProvider ?? (async () => {}));
   if (!onProvider || providers.length === 0) return null;
   return (
     <>
-      <div className={cn("grid gap-2.5", providers.length > 1 && "grid-cols-2")}>
+      <div
+        className={cn("grid gap-2.5", providers.length > 1 && "grid-cols-2")}
+      >
         {providers.map((p) => (
-          <Button aria-busy={provider.isPending(p.id)} disabled={provider.isPending()} key={p.id} onClick={() => void provider.run(p.id, p.id)} type="button" variant="outline">
-            {provider.isPending(p.id) ? <Spinner data-icon="inline-start" /> : p.icon}
+          <Button
+            aria-busy={provider.isPending(p.id)}
+            disabled={provider.isPending()}
+            key={p.id}
+            onClick={() => void provider.run(p.id, p.id)}
+            type="button"
+            variant="outline"
+          >
+            {provider.isPending(p.id) ? (
+              <Spinner data-icon="inline-start" />
+            ) : (
+              p.icon
+            )}
             {p.name}
           </Button>
         ))}
@@ -88,7 +112,9 @@ function Providers({ providers = [], onProvider, t }: Pick<FormProps, "providers
       ) : null}
       <div className="flex items-center gap-3">
         <Separator className="flex-1" />
-        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.orEmail}</span>
+        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+          {t.orEmail}
+        </span>
         <Separator className="flex-1" />
       </div>
     </>
@@ -97,18 +123,35 @@ function Providers({ providers = [], onProvider, t }: Pick<FormProps, "providers
 
 function SignInForm({ onSignIn, onSuccess, t, forgot }: FormProps) {
   const [reveal, setReveal] = useState(false);
-  const form = useActionForm({ schema: SignInInput, action: onSignIn, onSuccess: () => onSuccess?.() });
+  const form = useActionForm({
+    schema: SignInInput,
+    action: onSignIn,
+    onSuccess: () => onSuccess?.(),
+  });
   return (
     <Form className="flex flex-col gap-4" noValidate {...form.formProps}>
       <Field.Root className="flex flex-col gap-2" name="email">
-        <Field.Label className="font-medium text-sm leading-none">{t.email}</Field.Label>
-        <Input autoComplete="email" inputMode="email" placeholder={t.emailPlaceholder} type="email" />
+        <Field.Label className="font-medium text-sm leading-none">
+          {t.email}
+        </Field.Label>
+        <Input
+          autoComplete="email"
+          inputMode="email"
+          placeholder={t.emailPlaceholder}
+          type="email"
+        />
         <Field.Error className={fieldError} />
       </Field.Root>
       <Field.Root className="flex flex-col gap-2" name="password">
-        <Field.Label className="font-medium text-sm leading-none">{t.password}</Field.Label>
+        <Field.Label className="font-medium text-sm leading-none">
+          {t.password}
+        </Field.Label>
         <InputGroup>
-          <InputGroupInput autoComplete="current-password" placeholder={t.passwordPlaceholder} type={reveal ? "text" : "password"} />
+          <InputGroupInput
+            autoComplete="current-password"
+            placeholder={t.passwordPlaceholder}
+            type={reveal ? "text" : "password"}
+          />
           <InputGroupAddon align="inline-end">
             <button
               aria-label={reveal ? t.hidePassword : t.showPassword}
@@ -117,7 +160,11 @@ function SignInForm({ onSignIn, onSuccess, t, forgot }: FormProps) {
               onClick={() => setReveal((v) => !v)}
               type="button"
             >
-              {reveal ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+              {reveal ? (
+                <EyeOffIcon className="size-4" />
+              ) : (
+                <EyeIcon className="size-4" />
+              )}
             </button>
           </InputGroupAddon>
         </InputGroup>
@@ -128,7 +175,13 @@ function SignInForm({ onSignIn, onSuccess, t, forgot }: FormProps) {
           {form.formError}
         </p>
       ) : null}
-      <Button aria-busy={form.pending} className="mt-1 w-full" disabled={form.pending} size="lg" type="submit">
+      <Button
+        aria-busy={form.pending}
+        className="mt-1 w-full"
+        disabled={form.pending}
+        size="lg"
+        type="submit"
+      >
         {form.pending ? <Spinner data-icon="inline-start" /> : null}
         {t.submit}
       </Button>
@@ -137,7 +190,12 @@ function SignInForm({ onSignIn, onSuccess, t, forgot }: FormProps) {
   );
 }
 
-function CenteredSignInScreen({ forgotPasswordHref, signUpHref, logo, ...form }: CenteredSignInProps) {
+function CenteredSignInScreen({
+  forgotPasswordHref,
+  signUpHref,
+  logo,
+  ...form
+}: CenteredSignInProps) {
   const t = useMessages("centeredSignIn", CENTERED_SIGN_IN_MESSAGES);
   return (
     <div className="relative flex min-h-svh items-center-safe justify-center bg-background px-4 py-12 text-foreground">
@@ -156,26 +214,38 @@ function CenteredSignInScreen({ forgotPasswordHref, signUpHref, logo, ...form }:
           <CardHeader className="flex flex-col items-center gap-4 p-0 text-center">
             {logo}
             <div className="flex flex-col gap-1.5">
-              <h1 className="font-heading text-2xl tracking-tight">{t.title}</h1>
+              <h1 className="font-heading text-2xl tracking-tight">
+                {t.title}
+              </h1>
               <p className="text-muted-foreground text-sm">{t.subtitle}</p>
             </div>
           </CardHeader>
           <CardContent className="mt-6 flex flex-col gap-5 p-0">
-            <Providers onProvider={form.onProvider} providers={form.providers} t={t} />
+            <Providers
+              onProvider={form.onProvider}
+              providers={form.providers}
+              t={t}
+            />
             <SignInForm {...form} t={t} />
             {forgotPasswordHref || signUpHref ? (
               <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 text-xs">
                 {forgotPasswordHref ? (
-                  <WirefrontLink className="text-muted-foreground transition-colors hover:text-foreground hover:underline" href={forgotPasswordHref}>
+                  <WirefrontLink
+                    className="text-muted-foreground transition-colors hover:text-foreground hover:underline"
+                    href={forgotPasswordHref}
+                  >
                     {t.forgotPassword}
                   </WirefrontLink>
                 ) : null}
                 {signUpHref ? (
                   <p className="text-muted-foreground">
                     {t.noAccount}{" "}
-                    <WirefrontLink className="text-foreground underline underline-offset-4" href={signUpHref}>
-            {t.signUp}
-          </WirefrontLink>
+                    <WirefrontLink
+                      className="text-foreground underline underline-offset-4"
+                      href={signUpHref}
+                    >
+                      {t.signUp}
+                    </WirefrontLink>
                   </p>
                 ) : null}
               </div>

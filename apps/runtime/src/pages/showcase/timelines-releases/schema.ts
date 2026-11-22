@@ -34,7 +34,23 @@ export type Release = z.infer<typeof Release>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getRelease: { method: "GET", path: "/releases/{version}", summary: "A release and its promotion steps", params: z.object({ version: z.string() }), response: Release },
-  pauseRelease: { method: "POST", path: "/releases/{version}/pause", summary: "Hold the rollout at its current step", params: z.object({ version: z.string() }) },
-  rollBackRelease: { method: "POST", path: "/releases/{version}/rollback", summary: "Roll the release back everywhere it reached", params: z.object({ version: z.string() }) },
+  getRelease: {
+    method: "GET",
+    path: "/releases/{version}",
+    summary: "A release and its promotion steps",
+    params: z.object({ version: z.string() }),
+    response: Release,
+  },
+  pauseRelease: {
+    method: "POST",
+    path: "/releases/{version}/pause",
+    summary: "Hold the rollout at its current step",
+    params: z.object({ version: z.string() }),
+  },
+  rollBackRelease: {
+    method: "POST",
+    path: "/releases/{version}/rollback",
+    summary: "Roll the release back everywhere it reached",
+    params: z.object({ version: z.string() }),
+  },
 });

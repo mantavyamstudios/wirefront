@@ -30,9 +30,13 @@ export function TableAuditLogShowcasePage() {
       onLoadMore={async () => {
         await wait(700);
       }}
-      onRemoveFilter={(id) => setFilters((all) => all.filter((f) => f.id !== id))}
+      onRemoveFilter={(id) =>
+        setFilters((all) => all.filter((f) => f.id !== id))
+      }
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
       total={state === "empty" ? 0 : fixtures.listAuditEvents.total}
     />
   );

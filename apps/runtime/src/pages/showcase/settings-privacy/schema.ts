@@ -4,7 +4,13 @@ import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 export const ExportCategory = z
-  .object({ id: z.string(), label: z.string(), hint: z.string(), bytes: z.number().int().nonnegative(), includedByDefault: z.boolean() })
+  .object({
+    id: z.string(),
+    label: z.string(),
+    hint: z.string(),
+    bytes: z.number().int().nonnegative(),
+    includedByDefault: z.boolean(),
+  })
   .meta({ id: "ExportCategory" });
 export type ExportCategory = z.infer<typeof ExportCategory>;
 
@@ -22,7 +28,15 @@ export const DataExport = z
 export type DataExport = z.infer<typeof DataExport>;
 
 /** Days to keep something; null keeps it forever. */
-export const RetentionDays = z.union([z.literal(30), z.literal(90), z.literal(180), z.literal(365), z.null()]).meta({ id: "RetentionDays" });
+export const RetentionDays = z
+  .union([
+    z.literal(30),
+    z.literal(90),
+    z.literal(180),
+    z.literal(365),
+    z.null(),
+  ])
+  .meta({ id: "RetentionDays" });
 export type RetentionDays = z.infer<typeof RetentionDays>;
 
 export const RetentionRule = z
@@ -45,21 +59,44 @@ export const PrivacySettings = z
     latestExport: DataExport.nullable(),
     retention: z.array(RetentionRule),
     /** Set while the account is queued for deletion. */
-    deletion: z.object({ requestedAt: z.iso.datetime({ offset: true }), scheduledFor: z.iso.datetime({ offset: true }) }).nullable(),
+    deletion: z
+      .object({
+        requestedAt: z.iso.datetime({ offset: true }),
+        scheduledFor: z.iso.datetime({ offset: true }),
+      })
+      .nullable(),
   })
   .meta({ id: "PrivacySettings" });
 export type PrivacySettings = z.infer<typeof PrivacySettings>;
 
-export const RequestExportInput = z.object({ categories: z.array(z.string()).min(1, "Choose at least one category.") }).meta({ id: "RequestExportInput" });
+export const RequestExportInput = z
+  .object({
+    categories: z.array(z.string()).min(1, "Choose at least one category."),
+  })
+  .meta({ id: "RequestExportInput" });
 export type RequestExportInput = z.infer<typeof RequestExportInput>;
 
-export const SetRetentionInput = z.object({ id: z.string(), days: RetentionDays }).meta({ id: "SetRetentionInput" });
+export const SetRetentionInput = z
+  .object({ id: z.string(), days: RetentionDays })
+  .meta({ id: "SetRetentionInput" });
 export type SetRetentionInput = z.infer<typeof SetRetentionInput>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getPrivacy: { method: "GET", path: "/me/privacy", summary: "Export options, the latest export, retention rules and deletion status", response: PrivacySettings },
-  requestExport: { method: "POST", path: "/me/exports", summary: "Start building an archive of the chosen categories", body: RequestExportInput, response: DataExport },
+  getPrivacy: {
+    method: "GET",
+    path: "/me/privacy",
+    summary:
+      "Export options, the latest export, retention rules and deletion status",
+    response: PrivacySettings,
+  },
+  requestExport: {
+    method: "POST",
+    path: "/me/exports",
+    summary: "Start building an archive of the chosen categories",
+    body: RequestExportInput,
+    response: DataExport,
+  },
   setRetention: {
     method: "PUT",
     path: "/me/retention/{id}",
@@ -68,6 +105,14 @@ export const api = defineApi({
     body: SetRetentionInput.pick({ days: true }),
     errors: { 403: "Your workspace requires a shorter period" },
   },
-  requestDeletion: { method: "POST", path: "/me/deletion", summary: "Queue the account for deletion after the grace period" },
-  cancelDeletion: { method: "DELETE", path: "/me/deletion", summary: "Cancel a queued deletion" },
+  requestDeletion: {
+    method: "POST",
+    path: "/me/deletion",
+    summary: "Queue the account for deletion after the grace period",
+  },
+  cancelDeletion: {
+    method: "DELETE",
+    path: "/me/deletion",
+    summary: "Cancel a queued deletion",
+  },
 });

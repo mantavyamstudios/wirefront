@@ -8,7 +8,9 @@ export const ShellUser = z
   .meta({ id: "ShellUser" });
 export type ShellUser = z.infer<typeof ShellUser>;
 
-export const ShellWorkspace = z.object({ id: z.string(), name: z.string() }).meta({ id: "ShellWorkspace" });
+export const ShellWorkspace = z
+  .object({ id: z.string(), name: z.string() })
+  .meta({ id: "ShellWorkspace" });
 export type ShellWorkspace = z.infer<typeof ShellWorkspace>;
 
 export const ShellContext = z
@@ -23,5 +25,10 @@ export type ShellContext = z.infer<typeof ShellContext>;
 
 /** The backend operations this screen calls. Navigation itself is your app's config. */
 export const api = defineApi({
-  getShellContext: { method: "GET", path: "/me/shell", summary: "Who is signed in, which workspace, and unread count", response: ShellContext },
+  getShellContext: {
+    method: "GET",
+    path: "/me/shell",
+    summary: "Who is signed in, which workspace, and unread count",
+    response: ShellContext,
+  },
 });

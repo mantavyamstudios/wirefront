@@ -16,8 +16,16 @@ export function ProfileDirectoryShowcasePage() {
       onMessage={() => {}}
       onRetry={() => {}}
       onVideoCall={() => {}}
-      people={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listContacts}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      people={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : fixtures.listContacts
+      }
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

@@ -10,8 +10,18 @@ const demoNow = () => new Date(fixtures.now);
 
 export function CalendarsTimezoneShowcasePage() {
   return (
-    <WirefrontProvider locale="en-US" now={demoNow} timeZone={fixtures.homeZone}>
-      <MeetingPlanner availableZones={fixtures.availableZones} defaultZones={fixtures.defaultZones} homeZone={fixtures.homeZone} onUseTime={() => {}} quickPicks={fixtures.quickPicks} />
+    <WirefrontProvider
+      locale="en-US"
+      now={demoNow}
+      timeZone={fixtures.homeZone}
+    >
+      <MeetingPlanner
+        availableZones={fixtures.availableZones}
+        defaultZones={fixtures.defaultZones}
+        homeZone={fixtures.homeZone}
+        onUseTime={() => {}}
+        quickPicks={fixtures.quickPicks}
+      />
     </WirefrontProvider>
   );
 }

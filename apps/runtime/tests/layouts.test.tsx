@@ -4,10 +4,25 @@
 /**
  * The wiring contract of the layout frames converted in Phase 7.
  */
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { WirefrontProvider } from "@wirefront/ui/wirefront/provider";
 import { HomeIcon, InboxIcon } from "lucide-react";
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import * as hairlineFixtures from "@/pages/showcase/layouts-hairline-shell/fixtures";
 import { HairlineShell } from "@/pages/showcase/layouts-hairline-shell/view";
 import * as canvasFixtures from "@/pages/showcase/layouts-canvas-tools/fixtures";
@@ -36,15 +51,28 @@ afterEach(cleanup);
 describe("MiniRailShell", () => {
   const items = [
     { id: "home", label: "Home", href: "/home", icon: <HomeIcon /> },
-    { id: "inbox", label: "Inbox", href: "/inbox", icon: <InboxIcon />, count: 4 },
+    {
+      id: "inbox",
+      label: "Inbox",
+      href: "/inbox",
+      icon: <InboxIcon />,
+      count: 4,
+    },
   ];
 
   it("renders the page, links destinations with unread counts and switches workspace", () => {
     const onSwitchWorkspace = vi.fn();
     render(
-      <MiniRailShell activeId="inbox" currentWorkspaceId="acme" items={items} onSwitchWorkspace={onSwitchWorkspace} user={miniFixtures.user} workspaces={miniFixtures.listWorkspaces}>
+      <MiniRailShell
+        activeId="inbox"
+        currentWorkspaceId="acme"
+        items={items}
+        onSwitchWorkspace={onSwitchWorkspace}
+        user={miniFixtures.user}
+        workspaces={miniFixtures.listWorkspaces}
+      >
         <p>Page body</p>
-      </MiniRailShell>,
+      </MiniRailShell>
     );
     expect(screen.getByText("Page body")).toBeTruthy();
     const inbox = screen.getAllByRole("link", { name: /Inbox, 4 unread/ });
@@ -67,38 +95,79 @@ describe("WorkspaceRailShell", () => {
         context={railFixtures.getRailContext}
         onSearch={onSearch}
         sections={[
-          { id: "main", items: [{ id: "inbox", label: "Inbox", href: "/inbox", count: 4, unread: true }] },
-          { id: "projects", label: "Projects", items: [{ id: "q3", label: "Q3 planning", href: "/p/q3", color: 3 }], action: { label: "New project", onClick: onNew } },
+          {
+            id: "main",
+            items: [
+              {
+                id: "inbox",
+                label: "Inbox",
+                href: "/inbox",
+                count: 4,
+                unread: true,
+              },
+            ],
+          },
+          {
+            id: "projects",
+            label: "Projects",
+            items: [
+              { id: "q3", label: "Q3 planning", href: "/p/q3", color: 3 },
+            ],
+            action: { label: "New project", onClick: onNew },
+          },
         ]}
       >
         <p>Page body</p>
-      </WorkspaceRailShell>,
+      </WorkspaceRailShell>
     );
-    expect(screen.getAllByRole("link", { name: "Q3 planning" })[0]?.getAttribute("aria-current")).toBe("page");
-    expect(screen.getAllByRole("link", { name: "Inbox, 4 unread" }).length).toBeGreaterThan(0);
-    fireEvent.click(screen.getAllByRole("button", { name: "New project" })[0] as HTMLElement);
+    expect(
+      screen
+        .getAllByRole("link", { name: "Q3 planning" })[0]
+        ?.getAttribute("aria-current")
+    ).toBe("page");
+    expect(
+      screen.getAllByRole("link", { name: "Inbox, 4 unread" }).length
+    ).toBeGreaterThan(0);
+    fireEvent.click(
+      screen.getAllByRole("button", { name: "New project" })[0] as HTMLElement
+    );
     expect(onNew).toHaveBeenCalled();
     fireEvent.keyDown(window, { key: "k", ctrlKey: true });
     expect(onSearch).toHaveBeenCalledTimes(1);
-    expect(screen.queryByRole("button", { name: /Switch workspace/ })).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /Switch workspace/ })
+    ).toBeNull();
   });
 });
 
 describe("DocsTreeShell", () => {
   it("opens the active page's folders, links pages and toggles folders", () => {
     render(
-      <DocsTreeShell activeId="events-projector" tree={docsFixtures.getDocsTree}>
+      <DocsTreeShell
+        activeId="events-projector"
+        tree={docsFixtures.getDocsTree}
+      >
         <p>Doc</p>
-      </DocsTreeShell>,
+      </DocsTreeShell>
     );
-    const nav = screen.getAllByRole("navigation", { name: "Documentation" })[0] as HTMLElement;
-    expect(within(nav).getByRole("link", { name: "Projectors" }).getAttribute("aria-current")).toBe("page");
+    const nav = screen.getAllByRole("navigation", {
+      name: "Documentation",
+    })[0] as HTMLElement;
+    expect(
+      within(nav)
+        .getByRole("link", { name: "Projectors" })
+        .getAttribute("aria-current")
+    ).toBe("page");
     const guides = within(nav).getByRole("button", { name: "Guides" });
     expect(guides.getAttribute("aria-expanded")).toBe("false");
     expect(within(nav).queryByRole("link", { name: "Write a job" })).toBeNull();
     fireEvent.click(guides);
     expect(guides.getAttribute("aria-expanded")).toBe("true");
-    expect(within(nav).getByRole("link", { name: "Write a job" }).getAttribute("href")).toBe("#add-job");
+    expect(
+      within(nav)
+        .getByRole("link", { name: "Write a job" })
+        .getAttribute("href")
+    ).toBe("#add-job");
     expect(screen.queryByRole("button", { name: "New page" })).toBeNull();
   });
 
@@ -107,9 +176,11 @@ describe("DocsTreeShell", () => {
     render(
       <DocsTreeShell onSearch={onSearch} tree={docsFixtures.getDocsTree}>
         <input aria-label="field" />
-      </DocsTreeShell>,
+      </DocsTreeShell>
     );
-    fireEvent.keyDown(screen.getByRole("textbox", { name: "field" }), { key: "/" });
+    fireEvent.keyDown(screen.getByRole("textbox", { name: "field" }), {
+      key: "/",
+    });
     expect(onSearch).not.toHaveBeenCalled();
     fireEvent.keyDown(window, { key: "/" });
     expect(onSearch).toHaveBeenCalledTimes(1);
@@ -123,10 +194,18 @@ describe("InboxRail", () => {
     const onArchiveRead = vi.fn(async () => {});
     render(
       <WirefrontProvider locale="en-US" now={() => new Date(inboxFixtures.now)}>
-        <InboxRail filter="all" onArchiveRead={onArchiveRead} onFilterChange={onFilterChange} onSelect={onSelect} selectedId="3" threads={inboxFixtures.threads} unread={3}>
+        <InboxRail
+          filter="all"
+          onArchiveRead={onArchiveRead}
+          onFilterChange={onFilterChange}
+          onSelect={onSelect}
+          selectedId="3"
+          threads={inboxFixtures.threads}
+          unread={3}
+        >
           <p>Conversation</p>
         </InboxRail>
-      </WirefrontProvider>,
+      </WirefrontProvider>
     );
     expect(screen.getByRole("heading", { name: "Inbox" })).toBeTruthy();
     expect(screen.getByText(", 3 unread")).toBeTruthy();
@@ -135,7 +214,11 @@ describe("InboxRail", () => {
     expect(onFilterChange).toHaveBeenCalledWith("unread");
     fireEvent.click(screen.getByRole("button", { name: /James Lin/ }));
     expect(onSelect).toHaveBeenCalledWith("2");
-    expect(screen.getByRole("button", { name: /Riya Patel/ }).getAttribute("aria-current")).toBe("true");
+    expect(
+      screen
+        .getByRole("button", { name: /Riya Patel/ })
+        .getAttribute("aria-current")
+    ).toBe("true");
     fireEvent.click(screen.getByRole("button", { name: "Archive read" }));
     await waitFor(() => expect(onArchiveRead).toHaveBeenCalled());
   });
@@ -143,11 +226,23 @@ describe("InboxRail", () => {
 
 describe("MailTwoPane", () => {
   const renderIt = (extra: Partial<Parameters<typeof MailTwoPane>[0]> = {}) => {
-    const props = { onFilterChange: vi.fn(), onSearchChange: vi.fn(), onSelect: vi.fn() };
+    const props = {
+      onFilterChange: vi.fn(),
+      onSearchChange: vi.fn(),
+      onSelect: vi.fn(),
+    };
     render(
       <WirefrontProvider locale="en-US" now={() => new Date(mailFixtures.now)}>
-        <MailTwoPane filter="all" messages={mailFixtures.messages} search="" selectedId="3" unread={5} {...props} {...extra} />
-      </WirefrontProvider>,
+        <MailTwoPane
+          filter="all"
+          messages={mailFixtures.messages}
+          search=""
+          selectedId="3"
+          unread={5}
+          {...props}
+          {...extra}
+        />
+      </WirefrontProvider>
     );
     return props;
   };
@@ -157,7 +252,10 @@ describe("MailTwoPane", () => {
     expect(screen.getByText("5 unread")).toBeTruthy();
     fireEvent.click(screen.getByRole("radio", { name: "Unread" }));
     expect(onFilterChange).toHaveBeenCalledWith("unread");
-    fireEvent.change(screen.getByRole("searchbox", { name: "Search threads" }), { target: { value: "dmarc" } });
+    fireEvent.change(
+      screen.getByRole("searchbox", { name: "Search threads" }),
+      { target: { value: "dmarc" } }
+    );
     expect(onSearchChange).toHaveBeenCalledWith("dmarc");
     fireEvent.click(screen.getByRole("button", { name: /James Lin/ }));
     expect(onSelect).toHaveBeenCalledWith("2");
@@ -169,14 +267,26 @@ describe("MailTwoPane", () => {
   it("needs text to reply, sends it and clears the box; archives the open message", async () => {
     const onReply = vi.fn(async () => {});
     const onArchive = vi.fn(async () => {});
-    renderIt({ onReply, onArchive, messages: mailFixtures.messages.map((m) => (m.id === "3" ? { ...m, body: "Para one.\n\nPara two." } : m)) });
+    renderIt({
+      onReply,
+      onArchive,
+      messages: mailFixtures.messages.map((m) =>
+        m.id === "3" ? { ...m, body: "Para one.\n\nPara two." } : m
+      ),
+    });
     expect(screen.getByText("Para two.")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
-    expect((await screen.findByRole("alert")).textContent).toBe("Write a reply first.");
-    const box = screen.getByRole("textbox", { name: "Reply to Riya Patel" }) as HTMLTextAreaElement;
+    expect((await screen.findByRole("alert")).textContent).toBe(
+      "Write a reply first."
+    );
+    const box = screen.getByRole("textbox", {
+      name: "Reply to Riya Patel",
+    }) as HTMLTextAreaElement;
     fireEvent.change(box, { target: { value: "On it." } });
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
-    await waitFor(() => expect(onReply).toHaveBeenCalledWith({ messageId: "3", body: "On it." }));
+    await waitFor(() =>
+      expect(onReply).toHaveBeenCalledWith({ messageId: "3", body: "On it." })
+    );
     await waitFor(() => expect(box.value).toBe(""));
     fireEvent.click(screen.getByRole("button", { name: "Archive" }));
     await waitFor(() => expect(onArchive).toHaveBeenCalledWith("3"));
@@ -202,10 +312,20 @@ describe("ChatWorkspace", () => {
     window.matchMedia = realMatchMedia;
   });
 
-  const renderIt = (extra: Partial<Parameters<typeof ChatWorkspace>[0]> = {}) => {
-    const props = { onSelect: vi.fn(), onSwitchWorkspace: vi.fn(), onSend: vi.fn(async () => {}) };
+  const renderIt = (
+    extra: Partial<Parameters<typeof ChatWorkspace>[0]> = {}
+  ) => {
+    const props = {
+      onSelect: vi.fn(),
+      onSwitchWorkspace: vi.fn(),
+      onSend: vi.fn(async () => {}),
+    };
     render(
-      <WirefrontProvider locale="en-US" now={() => new Date(chatFixtures.now)} timeZone="UTC">
+      <WirefrontProvider
+        locale="en-US"
+        now={() => new Date(chatFixtures.now)}
+        timeZone="UTC"
+      >
         <ChatWorkspace
           activeId="design"
           channels={chatFixtures.channels}
@@ -217,7 +337,7 @@ describe("ChatWorkspace", () => {
           {...props}
           {...extra}
         />
-      </WirefrontProvider>,
+      </WirefrontProvider>
     );
     return props;
   };
@@ -226,7 +346,9 @@ describe("ChatWorkspace", () => {
     const { onSelect, onSwitchWorkspace } = renderIt();
     expect(screen.getByText("Yesterday")).toBeTruthy();
     expect(screen.getByText("Today")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Ada Okafor, offline, 5 unread" })).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "Ada Okafor, offline, 5 unread" })
+    ).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /engineering/ }));
     expect(onSelect).toHaveBeenCalledWith("engineering");
     fireEvent.click(screen.getByRole("button", { name: "Moss" }));
@@ -238,13 +360,23 @@ describe("ChatWorkspace", () => {
 
   it("sends on Enter, keeps Shift+Enter for new lines and clears after sending", async () => {
     const { onSend } = renderIt();
-    const box = screen.getByRole("textbox", { name: "Message #design" }) as HTMLTextAreaElement;
-    expect((screen.getByRole("button", { name: "Send" }) as HTMLButtonElement).disabled).toBe(true);
+    const box = screen.getByRole("textbox", {
+      name: "Message #design",
+    }) as HTMLTextAreaElement;
+    expect(
+      (screen.getByRole("button", { name: "Send" }) as HTMLButtonElement)
+        .disabled
+    ).toBe(true);
     fireEvent.change(box, { target: { value: "Looks good" } });
     fireEvent.keyDown(box, { key: "Enter", shiftKey: true });
     expect(onSend).not.toHaveBeenCalled();
     fireEvent.keyDown(box, { key: "Enter" });
-    await waitFor(() => expect(onSend).toHaveBeenCalledWith({ channelId: "design", body: "Looks good" }));
+    await waitFor(() =>
+      expect(onSend).toHaveBeenCalledWith({
+        channelId: "design",
+        body: "Looks good",
+      })
+    );
     await waitFor(() => expect(box.value).toBe(""));
   });
 });
@@ -252,16 +384,37 @@ describe("ChatWorkspace", () => {
 describe("FocusReader", () => {
   it("starts focused, leaves focus on Esc and shows the rails and table of contents", () => {
     render(
-      <FocusReader activeDocumentId="spacing" brand="Scratchpad" documents={readerFixtures.listDocuments} nav={[]} toc={readerFixtures.toc} user={readerFixtures.user}>
+      <FocusReader
+        activeDocumentId="spacing"
+        brand="Scratchpad"
+        documents={readerFixtures.listDocuments}
+        nav={[]}
+        toc={readerFixtures.toc}
+        user={readerFixtures.user}
+      >
         <h1>Essay</h1>
-      </FocusReader>,
+      </FocusReader>
     );
-    expect(screen.getByRole("progressbar", { name: "Reading progress" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Exit focus mode" })).toBeTruthy();
+    expect(
+      screen.getByRole("progressbar", { name: "Reading progress" })
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "Exit focus mode" })
+    ).toBeTruthy();
     fireEvent.keyDown(window, { key: "Escape" });
-    expect(screen.getByRole("button", { name: "Enter focus mode" })).toBeTruthy();
-    expect(screen.getAllByRole("link", { name: "Notes on spacing" })[0]?.getAttribute("aria-current")).toBe("page");
-    expect(screen.getAllByRole("link", { name: "The iteration loop" })[0]?.getAttribute("href")).toBe("#loop");
+    expect(
+      screen.getByRole("button", { name: "Enter focus mode" })
+    ).toBeTruthy();
+    expect(
+      screen
+        .getAllByRole("link", { name: "Notes on spacing" })[0]
+        ?.getAttribute("aria-current")
+    ).toBe("page");
+    expect(
+      screen
+        .getAllByRole("link", { name: "The iteration loop" })[0]
+        ?.getAttribute("href")
+    ).toBe("#loop");
   });
 });
 
@@ -269,9 +422,16 @@ describe("SelectionToolbar", () => {
   it("shows the toolbar when forced open and reports actions", () => {
     const onAction = vi.fn();
     render(
-      <SelectionToolbar actions={[{ id: "bold", label: "Bold", icon: <span /> }, { id: "link", label: "Link", icon: <span />, group: true }]} forceOpen onAction={onAction}>
+      <SelectionToolbar
+        actions={[
+          { id: "bold", label: "Bold", icon: <span /> },
+          { id: "link", label: "Link", icon: <span />, group: true },
+        ]}
+        forceOpen
+        onAction={onAction}
+      >
         <p>Text</p>
-      </SelectionToolbar>,
+      </SelectionToolbar>
     );
     const toolbar = screen.getByRole("toolbar", { name: "Formatting" });
     fireEvent.click(within(toolbar).getByRole("button", { name: "Link" }));
@@ -280,9 +440,12 @@ describe("SelectionToolbar", () => {
 
   it("stays hidden without a selection", () => {
     render(
-      <SelectionToolbar actions={[{ id: "bold", label: "Bold", icon: <span /> }]} onAction={vi.fn()}>
+      <SelectionToolbar
+        actions={[{ id: "bold", label: "Bold", icon: <span /> }]}
+        onAction={vi.fn()}
+      >
         <p>Text</p>
-      </SelectionToolbar>,
+      </SelectionToolbar>
     );
     expect(screen.queryByRole("toolbar")).toBeNull();
   });
@@ -295,18 +458,32 @@ describe("BottomTabShell", () => {
         activeId="alerts"
         tabs={[
           { id: "home", label: "Home", href: "/", icon: <span /> },
-          { id: "create", label: "Create", href: "/new", icon: <span />, primary: true },
-          { id: "alerts", label: "Alerts", href: "/alerts", icon: <span />, badge: 3 },
+          {
+            id: "create",
+            label: "Create",
+            href: "/new",
+            icon: <span />,
+            primary: true,
+          },
+          {
+            id: "alerts",
+            label: "Alerts",
+            href: "/alerts",
+            icon: <span />,
+            badge: 3,
+          },
         ]}
         title="Notifications"
       >
         <p>Page</p>
-      </BottomTabShell>,
+      </BottomTabShell>
     );
     expect(screen.getByRole("heading", { name: "Notifications" })).toBeTruthy();
     const alerts = screen.getByRole("link", { name: "Alerts, 3 new" });
     expect(alerts.getAttribute("aria-current")).toBe("page");
-    expect(screen.getByRole("link", { name: "Create" }).getAttribute("href")).toBe("/new");
+    expect(
+      screen.getByRole("link", { name: "Create" }).getAttribute("href")
+    ).toBe("/new");
     expect(screen.queryByRole("button", { name: "Back" })).toBeNull();
   });
 });
@@ -320,7 +497,15 @@ describe("HairlineShell", () => {
       <HairlineShell
         activeId="atlas"
         currentWorkspaceId="northwind"
-        nav={[{ id: "inbox", label: "Inbox", href: "/inbox", icon: <span />, count: 4 }]}
+        nav={[
+          {
+            id: "inbox",
+            label: "Inbox",
+            href: "/inbox",
+            icon: <span />,
+            count: 4,
+          },
+        ]}
         onSearch={onSearch}
         onSwitchWorkspace={onSwitchWorkspace}
         projects={projects}
@@ -329,14 +514,22 @@ describe("HairlineShell", () => {
         workspaces={workspaces}
       >
         <p>Issues</p>
-      </HairlineShell>,
+      </HairlineShell>
     );
-    expect(screen.getByRole("link", { name: "Atlas redesign, 5 open" }).getAttribute("aria-current")).toBe("page");
-    expect(screen.getByRole("link", { name: "Inbox, 4 open" }).getAttribute("href")).toBe("/inbox");
+    expect(
+      screen
+        .getByRole("link", { name: "Atlas redesign, 5 open" })
+        .getAttribute("aria-current")
+    ).toBe("page");
+    expect(
+      screen.getByRole("link", { name: "Inbox, 4 open" }).getAttribute("href")
+    ).toBe("/inbox");
     fireEvent.keyDown(screen.getByText("Issues"), { key: "/" });
     expect(onSearch).toHaveBeenCalledTimes(1);
     fireEvent.keyDown(screen.getByText("Issues"), { key: "[" });
-    expect(screen.getAllByRole("button", { name: "Expand sidebar" }).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: "Expand sidebar" }).length
+    ).toBeGreaterThan(0);
     expect(screen.queryByRole("button", { name: "New" })).toBeNull();
   });
 });
@@ -344,34 +537,77 @@ describe("HairlineShell", () => {
 describe("CanvasEditor", () => {
   it("reports shapes after an edit, deletes the selection with the Delete key and hides unwired controls", async () => {
     const onChange = vi.fn();
-    render(<CanvasEditor defaultSelectedId="card" defaultShapes={canvasFixtures.getCanvas} onChange={onChange} />);
+    render(
+      <CanvasEditor
+        defaultSelectedId="card"
+        defaultShapes={canvasFixtures.getCanvas}
+        onChange={onChange}
+      />
+    );
     expect(onChange).not.toHaveBeenCalled();
-    expect(screen.getAllByText("1 selected · 320 × 180").length).toBeGreaterThan(0);
-    fireEvent.click(screen.getAllByRole("button", { name: "Hide Avatar" })[0] as HTMLElement);
-    await waitFor(() => expect(onChange).toHaveBeenLastCalledWith(expect.arrayContaining([expect.objectContaining({ id: "avatar", visible: false })])));
+    expect(
+      screen.getAllByText("1 selected · 320 × 180").length
+    ).toBeGreaterThan(0);
+    fireEvent.click(
+      screen.getAllByRole("button", { name: "Hide Avatar" })[0] as HTMLElement
+    );
+    await waitFor(() =>
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ id: "avatar", visible: false }),
+        ])
+      )
+    );
     fireEvent.keyDown(window, { key: "Delete" });
-    await waitFor(() => expect(((onChange.mock.lastCall?.[0] ?? []) as { id: string }[]).map((x) => x.id)).toEqual(["hero", "avatar"]));
+    await waitFor(() =>
+      expect(
+        ((onChange.mock.lastCall?.[0] ?? []) as { id: string }[]).map(
+          (x) => x.id
+        )
+      ).toEqual(["hero", "avatar"])
+    );
     expect(screen.queryByRole("button", { name: "Share" })).toBeNull();
     expect(screen.getByRole("toolbar", { name: "Tools" })).toBeTruthy();
-    expect(screen.queryByRole("button", { name: /Pen|Place image/ })).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /Pen|Place image/ })
+    ).toBeNull();
   });
 });
 
 describe("PaneResizer", () => {
-  const renderIt = (extra: Partial<Parameters<typeof PaneResizer>[0]> = {}, dir = "ltr") => {
+  const renderIt = (
+    extra: Partial<Parameters<typeof PaneResizer>[0]> = {},
+    dir = "ltr"
+  ) => {
     const props = { onChange: vi.fn(), onReset: vi.fn() };
     render(
       <div dir={dir}>
-        <PaneResizer fromDrag={(start, grown) => start + grown} label="Resize" max={600} min={200} side="start" value={400} {...props} {...extra} />
-      </div>,
+        <PaneResizer
+          fromDrag={(start, grown) => start + grown}
+          label="Resize"
+          max={600}
+          min={200}
+          side="start"
+          value={400}
+          {...props}
+          {...extra}
+        />
+      </div>
     );
-    return { ...props, handle: screen.getByRole("separator", { name: "Resize" }) };
+    return {
+      ...props,
+      handle: screen.getByRole("separator", { name: "Resize" }),
+    };
   };
 
   it("is a focusable window splitter with its range", () => {
     const { handle } = renderIt();
     expect(handle.getAttribute("tabindex")).toBe("0");
-    expect([handle.getAttribute("aria-valuemin"), handle.getAttribute("aria-valuenow"), handle.getAttribute("aria-valuemax")]).toEqual(["200", "400", "600"]);
+    expect([
+      handle.getAttribute("aria-valuemin"),
+      handle.getAttribute("aria-valuenow"),
+      handle.getAttribute("aria-valuemax"),
+    ]).toEqual(["200", "400", "600"]);
   });
 
   it("grows the start pane with ArrowRight, by more with Shift, and clamps", () => {
@@ -414,10 +650,22 @@ describe("PaneResizer", () => {
 describe("SplitPanes", () => {
   it("shows both panes, reports the split and resets it", () => {
     const onSplitChange = vi.fn();
-    render(<SplitPanes end={<p>Preview body</p>} endLabel="Preview" onSplitChange={onSplitChange} start={<p>Code body</p>} startLabel="Code" />);
-    expect(screen.getByRole("region", { name: "Code" }).textContent).toBe("Code body");
+    render(
+      <SplitPanes
+        end={<p>Preview body</p>}
+        endLabel="Preview"
+        onSplitChange={onSplitChange}
+        start={<p>Code body</p>}
+        startLabel="Code"
+      />
+    );
+    expect(screen.getByRole("region", { name: "Code" }).textContent).toBe(
+      "Code body"
+    );
     expect(screen.getByText("50% / 50%")).toBeTruthy();
-    fireEvent.keyDown(screen.getByRole("separator", { name: "Resize panes" }), { key: "ArrowRight" });
+    fireEvent.keyDown(screen.getByRole("separator", { name: "Resize panes" }), {
+      key: "ArrowRight",
+    });
     expect(onSplitChange).toHaveBeenLastCalledWith(55);
     expect(screen.getByText("55% / 45%")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Reset" }));

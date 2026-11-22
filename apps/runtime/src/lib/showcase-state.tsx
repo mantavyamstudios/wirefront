@@ -23,12 +23,21 @@ export function useShowcaseState(): ScreenState {
 }
 
 /** A ?state= value, kept to the states the design supports; anything else is "ready". */
-export function parseScreenState(value: unknown, supported: readonly ScreenState[] = []): ScreenState {
-  return typeof value === "string" && (supported as readonly string[]).includes(value) ? (value as ScreenState) : "ready";
+export function parseScreenState(
+  value: unknown,
+  supported: readonly ScreenState[] = []
+): ScreenState {
+  return typeof value === "string" &&
+    (supported as readonly string[]).includes(value)
+    ? (value as ScreenState)
+    : "ready";
 }
 
 /** The next state when cycling with the S key. */
-export function nextScreenState(current: ScreenState, supported: readonly ScreenState[]): ScreenState {
+export function nextScreenState(
+  current: ScreenState,
+  supported: readonly ScreenState[]
+): ScreenState {
   if (supported.length === 0) return "ready";
   const i = supported.indexOf(current);
   return supported[(i + 1) % supported.length] ?? "ready";

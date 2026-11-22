@@ -9,10 +9,18 @@ export const PASSWORD_MIN_LENGTH = 8;
 /** What the form checks before calling the backend: a new password, typed twice. */
 export const NewPasswordForm = z
   .object({
-    password: z.string().min(PASSWORD_MIN_LENGTH, `Use at least ${PASSWORD_MIN_LENGTH} characters.`),
+    password: z
+      .string()
+      .min(
+        PASSWORD_MIN_LENGTH,
+        `Use at least ${PASSWORD_MIN_LENGTH} characters.`
+      ),
     confirm: z.string(),
   })
-  .refine((v) => v.password === v.confirm, { message: "The passwords don’t match.", path: ["confirm"] })
+  .refine((v) => v.password === v.confirm, {
+    message: "The passwords don’t match.",
+    path: ["confirm"],
+  })
   .meta({ id: "NewPasswordForm" });
 
 /** What the backend receives: the token from the reset link and the new password. */
@@ -29,8 +37,12 @@ export const api = defineApi({
   resetPassword: {
     method: "POST",
     path: "/auth/password-reset/confirm",
-    summary: "Set a new password with the token from a reset link; the token stops working once used",
+    summary:
+      "Set a new password with the token from a reset link; the token stops working once used",
     body: ResetPasswordInput,
-    errors: { 400: "The password doesn't meet the rules", 410: "The link has expired or was already used" },
+    errors: {
+      400: "The password doesn't meet the rules",
+      410: "The link has expired or was already used",
+    },
   },
 });

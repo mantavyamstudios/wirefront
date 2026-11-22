@@ -8,9 +8,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@wirefront/ui/avatar";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { interpolate, useFormat, useMessages } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
-import { ArchiveIcon, ChevronLeftIcon, InboxIcon, SearchIcon } from "lucide-react";
+import {
+  ArchiveIcon,
+  ChevronLeftIcon,
+  InboxIcon,
+  SearchIcon,
+} from "lucide-react";
 import type { ReactNode } from "react";
 
 import type { InboxFilter, InboxThread } from "./schema";
@@ -53,7 +62,17 @@ export interface InboxRailProps {
 }
 
 const FILTERS: InboxFilter[] = ["unread", "all", "mentions"];
-const TINT = ["", "bg-category-1-strong", "bg-category-2-strong", "bg-category-3-strong", "bg-category-4-strong", "bg-category-5-strong", "bg-category-6-strong", "bg-category-7-strong", "bg-category-8-strong"];
+const TINT = [
+  "",
+  "bg-category-1-strong",
+  "bg-category-2-strong",
+  "bg-category-3-strong",
+  "bg-category-4-strong",
+  "bg-category-5-strong",
+  "bg-category-6-strong",
+  "bg-category-7-strong",
+  "bg-category-8-strong",
+];
 const initialsOf = (name: string) =>
   name
     .split(/\s+/)
@@ -82,8 +101,18 @@ export function InboxRail({
   const selected = threads.find((x) => x.id === selectedId);
 
   return (
-    <div className={cn("min-h-svh bg-background text-foreground md:grid md:grid-cols-[minmax(280px,340px)_minmax(0,1fr)]", className)}>
-      <aside className={cn("flex min-h-svh flex-col border-border/60 bg-foreground/2 md:sticky md:top-0 md:h-svh md:min-h-0 md:border-e", detailOpen && "max-md:hidden")}>
+    <div
+      className={cn(
+        "min-h-svh bg-background text-foreground md:grid md:grid-cols-[minmax(280px,340px)_minmax(0,1fr)]",
+        className
+      )}
+    >
+      <aside
+        className={cn(
+          "flex min-h-svh flex-col border-border/60 bg-foreground/2 md:sticky md:top-0 md:h-svh md:min-h-0 md:border-e",
+          detailOpen && "max-md:hidden"
+        )}
+      >
         <div className="border-border/60 border-b px-4 py-3">
           <div className="flex items-center gap-2">
             <InboxIcon aria-hidden className="size-4 opacity-70" />
@@ -91,7 +120,9 @@ export function InboxRail({
             {unread ? (
               <span className="rounded-full bg-foreground/10 px-1.5 py-0.5 font-mono text-[10px] text-foreground">
                 <span aria-hidden>{unread}</span>
-                <span className="sr-only">, {interpolate(t.unreadCount, { count: unread })}</span>
+                <span className="sr-only">
+                  , {interpolate(t.unreadCount, { count: unread })}
+                </span>
               </span>
             ) : null}
           </div>
@@ -102,7 +133,9 @@ export function InboxRail({
               type="button"
             >
               <SearchIcon aria-hidden className="size-3.5 opacity-50" />
-              <span className="flex-1 truncate text-muted-foreground text-xs">{t.search}</span>
+              <span className="flex-1 truncate text-muted-foreground text-xs">
+                {t.search}
+              </span>
             </button>
           ) : null}
         </div>
@@ -120,20 +153,29 @@ export function InboxRail({
               value={f}
             >
               {t[f]}
-              {f === "unread" && unread ? <span aria-hidden> · {unread}</span> : null}
+              {f === "unread" && unread ? (
+                <span aria-hidden> · {unread}</span>
+              ) : null}
             </Radio.Root>
           ))}
         </RadioGroup>
 
         <ul className="flex-1 overflow-y-auto">
-          {threads.length === 0 ? <li className="px-4 py-10 text-center text-muted-foreground text-sm">{t.empty}</li> : null}
+          {threads.length === 0 ? (
+            <li className="px-4 py-10 text-center text-muted-foreground text-sm">
+              {t.empty}
+            </li>
+          ) : null}
           {threads.map((thread) => {
             const active = thread.id === selectedId;
             return (
               <li className="border-border/40 border-b" key={thread.id}>
                 <button
                   aria-current={active ? "true" : undefined}
-                  className={cn("relative w-full px-4 py-3 text-start outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset", active ? "md:bg-foreground/6" : "hover:bg-foreground/3")}
+                  className={cn(
+                    "relative w-full px-4 py-3 text-start outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+                    active ? "md:bg-foreground/6" : "hover:bg-foreground/3"
+                  )}
                   onClick={() => onSelect(thread.id)}
                   type="button"
                 >
@@ -143,18 +185,48 @@ export function InboxRail({
                     </span>
                   ) : null}
                   <div className="flex items-start gap-3">
-                    <Avatar className={cn("size-8 shrink-0", TINT[thread.color])}>
-                      {thread.from.avatarUrl ? <AvatarImage alt="" src={thread.from.avatarUrl} /> : null}
-                      <AvatarFallback className={cn("font-medium text-[11px] text-white", TINT[thread.color])}>{initialsOf(thread.from.name)}</AvatarFallback>
+                    <Avatar
+                      className={cn("size-8 shrink-0", TINT[thread.color])}
+                    >
+                      {thread.from.avatarUrl ? (
+                        <AvatarImage alt="" src={thread.from.avatarUrl} />
+                      ) : null}
+                      <AvatarFallback
+                        className={cn(
+                          "font-medium text-[11px] text-white",
+                          TINT[thread.color]
+                        )}
+                      >
+                        {initialsOf(thread.from.name)}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-2">
-                        <span className={cn("truncate text-sm", thread.unread ? "font-semibold" : "font-medium")}>{thread.from.name}</span>
-                        <time className="shrink-0 font-mono text-[10px] text-muted-foreground" dateTime={thread.at}>
+                        <span
+                          className={cn(
+                            "truncate text-sm",
+                            thread.unread ? "font-semibold" : "font-medium"
+                          )}
+                        >
+                          {thread.from.name}
+                        </span>
+                        <time
+                          className="shrink-0 font-mono text-[10px] text-muted-foreground"
+                          dateTime={thread.at}
+                        >
                           {format.relative(thread.at)}
                         </time>
                       </div>
-                      <p className={cn("mt-0.5 line-clamp-2 text-xs leading-snug", thread.unread ? "text-foreground/80" : "text-muted-foreground")}>{thread.preview}</p>
+                      <p
+                        className={cn(
+                          "mt-0.5 line-clamp-2 text-xs leading-snug",
+                          thread.unread
+                            ? "text-foreground/80"
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        {thread.preview}
+                      </p>
                     </div>
                   </div>
                 </button>
@@ -164,7 +236,11 @@ export function InboxRail({
         </ul>
 
         <div className="flex items-center justify-between border-border/60 border-t px-4 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-          <span>{threads.length === 1 ? t.threadsOne : interpolate(t.threads, { count: threads.length })}</span>
+          <span>
+            {threads.length === 1
+              ? t.threadsOne
+              : interpolate(t.threads, { count: threads.length })}
+          </span>
           {onArchiveRead ? (
             <button
               aria-busy={archive.isPending()}
@@ -173,19 +249,31 @@ export function InboxRail({
               onClick={() => void archive.run()}
               type="button"
             >
-              {archive.isPending() ? <Spinner className="size-3" /> : <ArchiveIcon aria-hidden className="size-3" />}
+              {archive.isPending() ? (
+                <Spinner className="size-3" />
+              ) : (
+                <ArchiveIcon aria-hidden className="size-3" />
+              )}
               {t.archiveRead}
             </button>
           ) : null}
         </div>
         {archive.error ? (
-          <p className="px-4 pb-2 text-destructive-foreground text-xs" role="alert">
+          <p
+            className="px-4 pb-2 text-destructive-foreground text-xs"
+            role="alert"
+          >
             {archive.error}
           </p>
         ) : null}
       </aside>
 
-      <main className={cn("flex min-h-svh min-w-0 flex-col md:min-h-0", !detailOpen && "max-md:hidden")}>
+      <main
+        className={cn(
+          "flex min-h-svh min-w-0 flex-col md:min-h-0",
+          !detailOpen && "max-md:hidden"
+        )}
+      >
         {/* Phones: a back bar above the conversation. */}
         {onBack ? (
           <div className="sticky top-0 z-10 flex h-14 items-center gap-2 border-border/60 border-b bg-background/90 px-2 backdrop-blur md:hidden">
@@ -197,7 +285,11 @@ export function InboxRail({
               <ChevronLeftIcon aria-hidden className="size-4 rtl:rotate-180" />
               {t.back}
             </button>
-            {selected ? <span className="truncate font-medium text-sm">{selected.from.name}</span> : null}
+            {selected ? (
+              <span className="truncate font-medium text-sm">
+                {selected.from.name}
+              </span>
+            ) : null}
           </div>
         ) : null}
         {children}

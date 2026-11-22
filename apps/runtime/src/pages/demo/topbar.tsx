@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Wirefront © 2026 Mantavyam Studios — https://github.com/mantavyamstudios/wirefront
-import { ArrowLeftIcon, BellIcon, KeyboardIcon, SearchIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  BellIcon,
+  KeyboardIcon,
+  SearchIcon,
+} from "lucide-react";
 import { ThemeToggle } from "@wirefront/ui/theme-toggle";
 import { useDemo, type View } from "./store";
 

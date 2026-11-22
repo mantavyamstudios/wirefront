@@ -10,13 +10,24 @@
  */
 import * as z from "zod";
 
-import type { ApiContract, ApiOperation } from "../../packages/ui/src/wirefront/api";
+import type {
+  ApiContract,
+  ApiOperation,
+} from "../../packages/ui/src/wirefront/api";
 
 type JsonSchema = Record<string, unknown>;
 
 /** Convert a zod schema, moving named definitions into `components`. */
-function toSchema(schema: z.ZodType, components: Record<string, JsonSchema>, io: "input" | "output"): JsonSchema {
-  const json = z.toJSONSchema(schema, { target: "draft-2020-12", io, unrepresentable: "any" }) as JsonSchema;
+function toSchema(
+  schema: z.ZodType,
+  components: Record<string, JsonSchema>,
+  io: "input" | "output"
+): JsonSchema {
+  const json = z.toJSONSchema(schema, {
+    target: "draft-2020-12",
+    io,
+    unrepresentable: "any",
+  }) as JsonSchema;
   const defs = (json.$defs ?? {}) as Record<string, JsonSchema>;
   delete json.$defs;
   delete json.$schema;
@@ -24,12 +35,18 @@ function toSchema(schema: z.ZodType, components: Record<string, JsonSchema>, io:
     if (Array.isArray(value)) return value.map(rewrite);
     if (value && typeof value === "object") {
       return Object.fromEntries(
-        Object.entries(value).map(([k, v]) => [k, k === "$ref" && typeof v === "string" ? v.replace("#/$defs/", "#/components/schemas/") : rewrite(v)]),
+        Object.entries(value).map(([k, v]) => [
+          k,
+          k === "$ref" && typeof v === "string"
+            ? v.replace("#/$defs/", "#/components/schemas/")
+            : rewrite(v),
+        ])
       );
     }
     return value;
   };
-  for (const [name, def] of Object.entries(defs)) components[name] = rewrite(def) as JsonSchema;
+  for (const [name, def] of Object.entries(defs))
+    components[name] = rewrite(def) as JsonSchema;
   return rewrite(json) as JsonSchema;
 }
 
@@ -40,7 +57,9 @@ function parameters(op: ApiOperation, components: Record<string, JsonSchema>) {
     ["query", op.query],
   ] as const) {
     if (!obj) continue;
-    for (const [name, field] of Object.entries(obj.shape as Record<string, z.ZodType>)) {
+    for (const [name, field] of Object.entries(
+      obj.shape as Record<string, z.ZodType>
+    )) {
       out.push({
         name,
         in: where,
@@ -64,9 +83,19 @@ export function toOpenApi(contract: ApiContract, options: OpenApiOptions) {
   const paths: Record<string, Record<string, unknown>> = {};
   for (const [operationId, op] of Object.entries(contract)) {
     const responses: Record<string, unknown> = op.response
-      ? { "200": { description: "OK", content: { "application/json": { schema: toSchema(op.response, components, "output") } } } }
+      ? {
+          "200": {
+            description: "OK",
+            content: {
+              "application/json": {
+                schema: toSchema(op.response, components, "output"),
+              },
+            },
+          },
+        }
       : { "204": { description: "No Content" } };
-    for (const [status, description] of Object.entries(op.errors ?? {})) responses[status] = { description };
+    for (const [status, description] of Object.entries(op.errors ?? {}))
+      responses[status] = { description };
     const params = parameters(op, components);
     const pathItem = paths[op.path] ?? {};
     paths[op.path] = pathItem;
@@ -75,16 +104,31 @@ export function toOpenApi(contract: ApiContract, options: OpenApiOptions) {
       ...(op.summary ? { summary: op.summary } : {}),
       ...(params.length ? { parameters: params } : {}),
       ...(op.body
-        ? { requestBody: { required: true, content: { "application/json": { schema: toSchema(op.body, components, "input") } } } }
+        ? {
+            requestBody: {
+              required: true,
+              content: {
+                "application/json": {
+                  schema: toSchema(op.body, components, "input"),
+                },
+              },
+            },
+          }
         : {}),
       responses,
     };
   }
   return {
     openapi: "3.1.0",
-    info: { title: options.title, version: options.version ?? "1.0.0", ...(options.description ? { description: options.description } : {}) },
+    info: {
+      title: options.title,
+      version: options.version ?? "1.0.0",
+      ...(options.description ? { description: options.description } : {}),
+    },
     paths,
-    ...(Object.keys(components).length ? { components: { schemas: components } } : {}),
+    ...(Object.keys(components).length
+      ? { components: { schemas: components } }
+      : {}),
   };
 }
 
@@ -95,7 +139,10 @@ export function toOpenApi(contract: ApiContract, options: OpenApiOptions) {
  *
  *   toMswHandlers(api, { contractImport: "./schema", fixturesImport: "./fixtures" })
  */
-export function toMswHandlers(contract: ApiContract, opts: { contractImport: string; fixturesImport: string; baseUrl?: string }): string {
+export function toMswHandlers(
+  contract: ApiContract,
+  opts: { contractImport: string; fixturesImport: string; baseUrl?: string }
+): string {
   const base = opts.baseUrl ?? "";
   const lines = Object.entries(contract).map(([operationId, op]) => {
     const path = `${base}${op.path.replace(/\{(\w+)\}/g, ":$1")}`;

@@ -7,17 +7,57 @@ import type { MailLabel, MailMessage, MailPerson, MailThread } from "./schema";
 export const now = "2026-10-23T10:00:00Z";
 
 /** Demo data for the showcase, the generated mocks and tests. */
-export const account: MailPerson = { name: "Maya Okafor", email: "maya@kestrel.dev", tone: "teal" };
+export const account: MailPerson = {
+  name: "Maya Okafor",
+  email: "maya@kestrel.dev",
+  tone: "teal",
+};
 
-const jonas: MailPerson = { name: "Jonas Weber", email: "jonas@kestrel.dev", tone: "blue" };
-const priya: MailPerson = { name: "Priya Raman", email: "priya@kestrel.dev", tone: "violet" };
-const ana: MailPerson = { name: "Ana Sousa", email: "ana@kestrel.dev", tone: "orange" };
-const noor: MailPerson = { name: "Noor Haddad", email: "noor@fieldnote.app", tone: "emerald" };
-const leo: MailPerson = { name: "Leo Marchetti", email: "leo@kestrel.dev", tone: "rose" };
-const sam: MailPerson = { name: "Sam Whitfield", email: "sam@kestrel.dev", tone: "amber" };
-const felix: MailPerson = { name: "Felix Bauer", email: "felix@bauer-legal.eu", tone: "sky" };
-const harbor: MailPerson = { name: "Harbor Bank", email: "statements@harborbank.example", tone: "teal" };
-const ellie: MailPerson = { name: "Ellie Park", email: "ellie.park@hey.example", tone: "violet" };
+const jonas: MailPerson = {
+  name: "Jonas Weber",
+  email: "jonas@kestrel.dev",
+  tone: "blue",
+};
+const priya: MailPerson = {
+  name: "Priya Raman",
+  email: "priya@kestrel.dev",
+  tone: "violet",
+};
+const ana: MailPerson = {
+  name: "Ana Sousa",
+  email: "ana@kestrel.dev",
+  tone: "orange",
+};
+const noor: MailPerson = {
+  name: "Noor Haddad",
+  email: "noor@fieldnote.app",
+  tone: "emerald",
+};
+const leo: MailPerson = {
+  name: "Leo Marchetti",
+  email: "leo@kestrel.dev",
+  tone: "rose",
+};
+const sam: MailPerson = {
+  name: "Sam Whitfield",
+  email: "sam@kestrel.dev",
+  tone: "amber",
+};
+const felix: MailPerson = {
+  name: "Felix Bauer",
+  email: "felix@bauer-legal.eu",
+  tone: "sky",
+};
+const harbor: MailPerson = {
+  name: "Harbor Bank",
+  email: "statements@harborbank.example",
+  tone: "teal",
+};
+const ellie: MailPerson = {
+  name: "Ellie Park",
+  email: "ellie.park@hey.example",
+  tone: "violet",
+};
 
 export const listLabels: MailLabel[] = [
   { id: "product", name: "Product", tone: "violet" },
@@ -44,7 +84,9 @@ export const listThreads: MailThread[] = [
           "Sharing the first pass of the Q4 pricing numbers so we're not reading them cold on Thursday.",
           "Short version: seat expansion is carrying us, but the Starter tier churns at 6.1% a month. I'd like us to decide whether we fold it into Team or raise the floor.",
         ],
-        attachments: [{ name: "q4-pricing-model.xlsx", size: "184 KB", kind: "sheet" }],
+        attachments: [
+          { name: "q4-pricing-model.xlsx", size: "184 KB", kind: "sheet" },
+        ],
       },
       {
         id: "m2",
@@ -126,7 +168,9 @@ export const listThreads: MailThread[] = [
           "Packet for Friday's debrief is attached: resume, take-home, and notes from the two technical rounds.",
           "Strong yes from systems design. Mixed signal on the collaboration round, so I'd like your read on it.",
         ],
-        attachments: [{ name: "packet-r-alvarez.pdf", size: "1.1 MB", kind: "pdf" }],
+        attachments: [
+          { name: "packet-r-alvarez.pdf", size: "1.1 MB", kind: "pdf" },
+        ],
       },
     ],
   },
@@ -157,7 +201,9 @@ export const listThreads: MailThread[] = [
         from: account,
         to: "to Leo",
         sentAt: "2026-10-21T09:00:00Z",
-        body: ["Anything with a big table and a door that closes works for me."],
+        body: [
+          "Anything with a big table and a door that closes works for me.",
+        ],
       },
       {
         id: "m2",
@@ -185,7 +231,9 @@ export const listThreads: MailThread[] = [
         body: [
           "Second round of redlines attached. We accepted your liability cap; the open item is the 60-day termination notice.",
         ],
-        attachments: [{ name: "msa-redlines-v2.docx", size: "96 KB", kind: "doc" }],
+        attachments: [
+          { name: "msa-redlines-v2.docx", size: "96 KB", kind: "doc" },
+        ],
       },
     ],
   },
@@ -199,7 +247,9 @@ export const listThreads: MailThread[] = [
         from: harbor,
         to: "to me",
         sentAt: "2026-10-20T09:00:00Z",
-        body: ["Your statement for the account ending 0417 is ready to view in online banking."],
+        body: [
+          "Your statement for the account ending 0417 is ready to view in online banking.",
+        ],
       },
     ],
   },
@@ -213,7 +263,9 @@ export const listThreads: MailThread[] = [
         from: ellie,
         to: "to me",
         sentAt: "2026-10-19T09:00:00Z",
-        body: ["Back in town from Tuesday. That place by the canal still good?"],
+        body: [
+          "Back in town from Tuesday. That place by the canal still good?",
+        ],
       },
     ],
   },
@@ -227,7 +279,9 @@ export const listThreads: MailThread[] = [
         from: account,
         to: "to Ana",
         sentAt: "2026-10-18T09:00:00Z",
-        body: ["Looks right. Let's hold the second designer req until we see Q4 numbers."],
+        body: [
+          "Looks right. Let's hold the second designer req until we see Q4 numbers.",
+        ],
       },
     ],
   },
@@ -236,7 +290,15 @@ export const listThreads: MailThread[] = [
     subject: "Board update draft",
     folder: "drafts",
     messages: [
-      { id: "m1", from: account, to: "to Board", sentAt: "2026-10-17T09:00:00Z", body: ["Headline for the quarter: net revenue retention back above 120%."] },
+      {
+        id: "m1",
+        from: account,
+        to: "to Board",
+        sentAt: "2026-10-17T09:00:00Z",
+        body: [
+          "Headline for the quarter: net revenue retention back above 120%.",
+        ],
+      },
     ],
   },
   {
@@ -244,12 +306,43 @@ export const listThreads: MailThread[] = [
     subject: "Your flight to Lisbon is confirmed",
     folder: "archive",
     messages: [
-      { id: "m1", from: { name: "Gull Air", email: "trips@gullair.example", tone: "sky" }, to: "to me", sentAt: "2026-10-12T09:00:00Z", body: ["Booking reference KX4Q2M. Check-in opens 24 hours before departure."] },
+      {
+        id: "m1",
+        from: { name: "Gull Air", email: "trips@gullair.example", tone: "sky" },
+        to: "to me",
+        sentAt: "2026-10-12T09:00:00Z",
+        body: [
+          "Booking reference KX4Q2M. Check-in opens 24 hours before departure.",
+        ],
+      },
     ],
   },
 ];
 
 export const storage = { usedGb: 11.2, totalGb: 30 };
-export const quickReplies = ["Thanks, on it.", "Can we talk Thursday?", "Looks good to me."];
-export const replyToThread: MailMessage = { id: "reply", from: account, to: "to Jonas", sentAt: now, body: ["Thanks, on it."] };
-export const sendMail: MailThread = { id: "sent-1", subject: "(no subject)", folder: "sent", messages: [{ id: "m1", from: account, to: "to someone@example.com", sentAt: now, body: [] }] };
+export const quickReplies = [
+  "Thanks, on it.",
+  "Can we talk Thursday?",
+  "Looks good to me.",
+];
+export const replyToThread: MailMessage = {
+  id: "reply",
+  from: account,
+  to: "to Jonas",
+  sentAt: now,
+  body: ["Thanks, on it."],
+};
+export const sendMail: MailThread = {
+  id: "sent-1",
+  subject: "(no subject)",
+  folder: "sent",
+  messages: [
+    {
+      id: "m1",
+      from: account,
+      to: "to someone@example.com",
+      sentAt: now,
+      body: [],
+    },
+  ],
+};

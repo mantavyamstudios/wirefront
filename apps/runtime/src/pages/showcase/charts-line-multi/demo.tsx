@@ -14,16 +14,27 @@ export function ChartsLineMultiShowcasePage() {
   const state = useShowcaseState();
   const [range, setRange] = useState("30d");
   const days = fixtures.ranges[range as keyof typeof fixtures.ranges] ?? 30;
-  const data = { ...fixtures.getDailyActiveUsers, points: fixtures.getDailyActiveUsers.points.slice(-days) };
+  const data = {
+    ...fixtures.getDailyActiveUsers,
+    points: fixtures.getDailyActiveUsers.points.slice(-days),
+  };
   return (
     <PlatformUsageChart
-      data={state === "loading" || state === "error" ? undefined : state === "empty" ? { ...data, points: [] } : data}
+      data={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? { ...data, points: [] }
+            : data
+      }
       error="Usage didn’t load. Check your connection and try again."
       onRangeChange={setRange}
       onRetry={() => {}}
       range={range}
       ranges={RANGES}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

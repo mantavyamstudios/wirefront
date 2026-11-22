@@ -40,7 +40,11 @@ export function ScrollRegion({
   orientation?: "vertical" | "horizontal" | "both";
 }) {
   return (
-    <ScrollAreaPrimitive.Root className={cn("relative", className)} data-slot="scroll-region" {...props}>
+    <ScrollAreaPrimitive.Root
+      className={cn("relative", className)}
+      data-slot="scroll-region"
+      {...props}
+    >
       <ScrollAreaPrimitive.Viewport className="size-full rounded-[inherit] outline-none transition-[color,box-shadow] focus-visible:outline-1 focus-visible:ring-[3px] focus-visible:ring-ring/50">
         {children}
       </ScrollAreaPrimitive.Viewport>

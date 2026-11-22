@@ -8,7 +8,8 @@ import * as fixtures from "./fixtures";
 import { ReleasePromotion } from "./view";
 
 const demoNow = () => new Date(fixtures.now);
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function TimelinesReleasesShowcasePage() {
   const state = useShowcaseState();
@@ -19,8 +20,18 @@ export function TimelinesReleasesShowcasePage() {
         onPause={() => wait(600)}
         onRetry={() => {}}
         onRollBack={() => wait(900)}
-        release={state === "loading" || state === "error" ? undefined : fixtures.getRelease}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        release={
+          state === "loading" || state === "error"
+            ? undefined
+            : fixtures.getRelease
+        }
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

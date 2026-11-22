@@ -25,11 +25,17 @@ export type Integration = z.infer<typeof Integration>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listIntegrations: { method: "GET", path: "/integrations", summary: "Every integration and whether it's connected", response: z.array(Integration) },
+  listIntegrations: {
+    method: "GET",
+    path: "/integrations",
+    summary: "Every integration and whether it's connected",
+    response: z.array(Integration),
+  },
   connectIntegration: {
     method: "POST",
     path: "/integrations/{id}/connect",
-    summary: "Start connecting an integration; usually returns an OAuth URL to redirect to",
+    summary:
+      "Start connecting an integration; usually returns an OAuth URL to redirect to",
     params: z.object({ id: z.string() }),
     response: z.object({ redirectUrl: z.string().optional() }),
   },

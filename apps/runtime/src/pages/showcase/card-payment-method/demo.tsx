@@ -4,8 +4,16 @@
 import * as fixtures from "./fixtures";
 import { PaymentMethods } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function CardPaymentMethodShowcasePage() {
-  return <PaymentMethods cards={fixtures.listCards} onAddCard={() => {}} onMakePrimary={() => wait(500)} processor="your payment processor" />;
+  return (
+    <PaymentMethods
+      cards={fixtures.listCards}
+      onAddCard={() => {}}
+      onMakePrimary={() => wait(500)}
+      processor="your payment processor"
+    />
+  );
 }

@@ -8,8 +8,10 @@ import * as fixtures from "./fixtures";
 import { createErrorToasts, ErrorToaster, notifyError } from "./view";
 
 const toasts = createErrorToasts();
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
-const show = () => notifyError(toasts, { ...fixtures.inviteFailed, retry: () => wait(1200) });
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
+const show = () =>
+  notifyError(toasts, { ...fixtures.inviteFailed, retry: () => wait(1200) });
 
 export function ToastsErrorRetryShowcasePage() {
   useEffect(() => {
@@ -18,7 +20,11 @@ export function ToastsErrorRetryShowcasePage() {
   return (
     <ErrorToaster toastManager={toasts}>
       <div className="relative min-h-svh bg-background text-foreground">
-        <ToastBackdrop action="Send invite" onAction={show} topPadding="pt-48" />
+        <ToastBackdrop
+          action="Send invite"
+          onAction={show}
+          topPadding="pt-48"
+        />
       </div>
     </ErrorToaster>
   );

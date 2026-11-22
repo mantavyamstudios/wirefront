@@ -6,7 +6,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { SuggestedIntros } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function ProfileIntroductionsShowcasePage() {
   const state = useShowcaseState();
@@ -17,8 +18,16 @@ export function ProfileIntroductionsShowcasePage() {
       onDismiss={() => wait(300)}
       onFollow={() => wait(300)}
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
-      suggestions={state === "loading" || state === "error" ? undefined : state === "empty" ? [] : fixtures.listSuggestions}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
+      suggestions={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? []
+            : fixtures.listSuggestions
+      }
     />
   );
 }

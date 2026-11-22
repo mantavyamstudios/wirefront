@@ -15,16 +15,32 @@ function runQuery(all: Invoice[], query: InvoicesListQuery): InvoicesPage {
   const search = query.search?.trim().toLowerCase();
   let items = all.filter(
     (i) =>
-      (!search || [i.number, i.customer, i.email].some((v) => v.toLowerCase().includes(search))) &&
-      (!query.filters?.status || i.status === query.filters.status),
+      (!search ||
+        [i.number, i.customer, i.email].some((v) =>
+          v.toLowerCase().includes(search)
+        )) &&
+      (!query.filters?.status || i.status === query.filters.status)
   );
   if (query.sort) {
     const { id, direction } = query.sort;
-    const key = (i: Invoice) => (id === "amount" ? i.amount : id === "dueAt" ? (i.dueAt ?? "") : i.issuedAt);
-    items = [...items].sort((a, b) => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0) * (direction === "asc" ? 1 : -1));
+    const key = (i: Invoice) =>
+      id === "amount"
+        ? i.amount
+        : id === "dueAt"
+          ? (i.dueAt ?? "")
+          : i.issuedAt;
+    items = [...items].sort(
+      (a, b) =>
+        (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0) *
+        (direction === "asc" ? 1 : -1)
+    );
   }
   const start = (query.page - 1) * query.pageSize;
-  return { items: items.slice(start, start + query.pageSize), total: items.length, outstanding: { amount: fixtures.outstandingOf(items), currency: "USD" } };
+  return {
+    items: items.slice(start, start + query.pageSize),
+    total: items.length,
+    outstanding: { amount: fixtures.outstandingOf(items), currency: "USD" },
+  };
 }
 
 async function demoExport() {
@@ -33,8 +49,14 @@ async function demoExport() {
 
 export function TableInvoicesShowcasePage() {
   const state = useShowcaseState();
-  const [query, setQuery] = useState<InvoicesListQuery>({ page: 1, pageSize: 20 });
-  const page = useMemo(() => runQuery(state === "empty" ? [] : fixtures.invoices, query), [state, query]);
+  const [query, setQuery] = useState<InvoicesListQuery>({
+    page: 1,
+    pageSize: 20,
+  });
+  const page = useMemo(
+    () => runQuery(state === "empty" ? [] : fixtures.invoices, query),
+    [state, query]
+  );
   return (
     <InvoicesTable
       error="The billing service didn’t respond. Check your connection and try again."
@@ -45,7 +67,9 @@ export function TableInvoicesShowcasePage() {
       onRetry={() => {}}
       page={state === "loading" || state === "error" ? undefined : page}
       query={query}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

@@ -3,11 +3,15 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const ProductCategory = z.object({ id: z.string(), label: z.string() }).meta({ id: "ProductCategory" });
+export const ProductCategory = z
+  .object({ id: z.string(), label: z.string() })
+  .meta({ id: "ProductCategory" });
 export type ProductCategory = z.infer<typeof ProductCategory>;
 
 /** A colour option; `swatch` is any CSS colour. */
-export const ProductColor = z.object({ id: z.string(), label: z.string(), swatch: z.string() }).meta({ id: "ProductColor" });
+export const ProductColor = z
+  .object({ id: z.string(), label: z.string(), swatch: z.string() })
+  .meta({ id: "ProductColor" });
 export type ProductColor = z.infer<typeof ProductColor>;
 
 export const ListedProduct = z
@@ -47,7 +51,10 @@ export type ProductFilters = z.infer<typeof ProductFilters>;
 
 /** How many products have each category, and each minimum rating. */
 export const ProductFacetCounts = z
-  .object({ category: z.record(z.string(), z.int().min(0)), ratingMin: z.record(z.string(), z.int().min(0)) })
+  .object({
+    category: z.record(z.string(), z.int().min(0)),
+    ratingMin: z.record(z.string(), z.int().min(0)),
+  })
   .meta({ id: "ProductFacetCounts" });
 export type ProductFacetCounts = z.infer<typeof ProductFacetCounts>;
 
@@ -59,7 +66,12 @@ export const ProductsQuery = z
 export type ProductsQuery = z.infer<typeof ProductsQuery>;
 
 export const ProductsPage = z
-  .object({ items: z.array(ListedProduct), total: z.int().min(0), overall: z.int().min(0), counts: ProductFacetCounts })
+  .object({
+    items: z.array(ListedProduct),
+    total: z.int().min(0),
+    overall: z.int().min(0),
+    counts: ProductFacetCounts,
+  })
   .meta({ id: "ProductsPage" });
 export type ProductsPage = z.infer<typeof ProductsPage>;
 
@@ -72,6 +84,16 @@ export const api = defineApi({
     query: ProductsQuery,
     response: ProductsPage,
   },
-  listCategories: { method: "GET", path: "/products/categories", summary: "The categories to filter by", response: z.array(ProductCategory) },
-  listColors: { method: "GET", path: "/products/colors", summary: "The colours to filter by", response: z.array(ProductColor) },
+  listCategories: {
+    method: "GET",
+    path: "/products/categories",
+    summary: "The categories to filter by",
+    response: z.array(ProductCategory),
+  },
+  listColors: {
+    method: "GET",
+    path: "/products/colors",
+    summary: "The colours to filter by",
+    response: z.array(ProductColor),
+  },
 });

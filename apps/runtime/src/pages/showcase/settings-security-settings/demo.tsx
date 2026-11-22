@@ -12,19 +12,28 @@ import * as fixtures from "./fixtures";
 import type { ChangePasswordInput } from "./schema";
 import { SecuritySettings } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const demoNow = () => new Date(fixtures.now);
 
 async function demoChangePassword({ currentPassword }: ChangePasswordInput) {
   await wait(700);
-  if (currentPassword.toLowerCase().includes("wrong")) return fail(undefined, { currentPassword: "That isn’t your current password." });
+  if (currentPassword.toLowerCase().includes("wrong"))
+    return fail(undefined, {
+      currentPassword: "That isn’t your current password.",
+    });
 }
 
 export function SettingsSecuritySettingsShowcasePage() {
   return (
     <WirefrontProvider now={demoNow}>
       <DevlFrame>
-        <SettingsShell activeId="security" back={settingsBack} groups={settingsNav} user={settingsUser}>
+        <SettingsShell
+          activeId="security"
+          back={settingsBack}
+          groups={settingsNav}
+          user={settingsUser}
+        >
           <SecuritySettings
             accountEmail={fixtures.accountEmail}
             data={fixtures.getSecurity}

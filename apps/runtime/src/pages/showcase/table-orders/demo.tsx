@@ -8,24 +8,40 @@ import * as fixtures from "./fixtures";
 import type { Order } from "./schema";
 import { OrdersTable, type OrdersListQuery } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 /** What a backend's listOrders would do with the query (the demo has one page of the 248). */
 function runQuery(all: Order[], query: OrdersListQuery) {
   const { id = "placedAt", direction = "desc" } = query.sort ?? {};
-  const items = [...all].sort((a, b) => (id === "total" ? a.total - b.total : a.placedAt.localeCompare(b.placedAt)) * (direction === "asc" ? 1 : -1));
+  const items = [...all].sort(
+    (a, b) =>
+      (id === "total"
+        ? a.total - b.total
+        : a.placedAt.localeCompare(b.placedAt)) * (direction === "asc" ? 1 : -1)
+  );
   return { items, total: fixtures.listOrders.total };
 }
 
 export function TableOrdersShowcasePage() {
   const [db, setDb] = useState(fixtures.orders);
-  const [query, setQuery] = useState<OrdersListQuery>({ page: 1, pageSize: 6, sort: { id: "placedAt", direction: "desc" } });
+  const [query, setQuery] = useState<OrdersListQuery>({
+    page: 1,
+    pageSize: 6,
+    sort: { id: "placedAt", direction: "desc" },
+  });
   const page = useMemo(() => runQuery(db, query), [db, query]);
   return (
     <OrdersTable
       onMarkShipped={async (ids) => {
         await wait(600);
-        setDb((rows) => rows.map((o) => (ids.includes(o.id) && o.stage !== "delivered" ? { ...o, stage: "shipped" } : o)));
+        setDb((rows) =>
+          rows.map((o) =>
+            ids.includes(o.id) && o.stage !== "delivered"
+              ? { ...o, stage: "shipped" }
+              : o
+          )
+        );
       }}
       onPrintLabels={async () => {
         await wait(800);

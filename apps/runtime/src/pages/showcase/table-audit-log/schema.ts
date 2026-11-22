@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const Outcome = z.enum(["success", "denied", "alert"]).meta({ id: "AuditOutcome" });
+export const Outcome = z
+  .enum(["success", "denied", "alert"])
+  .meta({ id: "AuditOutcome" });
 export type Outcome = z.infer<typeof Outcome>;
 
 export const AuditEntry = z
@@ -52,8 +54,12 @@ export const api = defineApi({
   listAuditEvents: {
     method: "GET",
     path: "/audit-events",
-    summary: "Security events, newest first; filters are your own query parameters",
-    query: z.object({ cursor: z.string().optional(), limit: z.int().min(1).max(200) }),
+    summary:
+      "Security events, newest first; filters are your own query parameters",
+    query: z.object({
+      cursor: z.string().optional(),
+      limit: z.int().min(1).max(200),
+    }),
     response: AuditPage,
   },
   exportAuditEvents: {

@@ -5,50 +5,95 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { compare, countDiagnostics, warningLines } from "../../../scripts/lint-gate";
+import {
+  compare,
+  countDiagnostics,
+  warningLines,
+} from "../../../scripts/lint-gate";
 
-const diag = (path: string, category: string, severity = "error") => ({ category, severity, location: { path } });
+const diag = (path: string, category: string, severity = "error") => ({
+  category,
+  severity,
+  location: { path },
+});
 
 describe("lint gate", () => {
   it("counts errors per file and rule; warnings and infos never count", () => {
     expect(
-      countDiagnostics([diag("a.tsx", "lint/x"), diag("a.tsx", "lint/x", "warning"), diag("a.tsx", "lint/y", "information"), diag("b.tsx", "lint/z")]),
+      countDiagnostics([
+        diag("a.tsx", "lint/x"),
+        diag("a.tsx", "lint/x", "warning"),
+        diag("a.tsx", "lint/y", "information"),
+        diag("b.tsx", "lint/z"),
+      ])
     ).toEqual({ "a.tsx": { "lint/x": 1 }, "b.tsx": { "lint/z": 1 } });
   });
 
   it("lists every warning with its location, rule and message", () => {
-    const warning = { ...diag("a.tsx", "lint/x", "warning"), message: "Avoid it.", location: { path: "a.tsx", start: { line: 3, column: 7 } } };
-    expect(warningLines([warning, diag("b.tsx", "lint/z")])).toEqual(["a.tsx:3:7 lint/x: Avoid it."]);
+    const warning = {
+      ...diag("a.tsx", "lint/x", "warning"),
+      message: "Avoid it.",
+      location: { path: "a.tsx", start: { line: 3, column: 7 } },
+    };
+    expect(warningLines([warning, diag("b.tsx", "lint/z")])).toEqual([
+      "a.tsx:3:7 lint/x: Avoid it.",
+    ]);
   });
 
   it("passes when nothing changed", () => {
     const counts = { "a.tsx": { "lint/x": 2 } };
-    expect(compare(counts, counts)).toEqual({ regressions: [], improvements: [] });
+    expect(compare(counts, counts)).toEqual({
+      regressions: [],
+      improvements: [],
+    });
   });
 
   it("flags a new problem in a file, a new rule and a new file", () => {
-    const { regressions } = compare({ "a.tsx": { "lint/x": 1 } }, { "a.tsx": { "lint/x": 2, "lint/y": 1 }, "b.tsx": { "lint/z": 1 } });
-    expect(regressions).toEqual(["a.tsx: lint/x 1 → 2", "a.tsx: lint/y 0 → 1", "b.tsx: lint/z 0 → 1"]);
+    const { regressions } = compare(
+      { "a.tsx": { "lint/x": 1 } },
+      { "a.tsx": { "lint/x": 2, "lint/y": 1 }, "b.tsx": { "lint/z": 1 } }
+    );
+    expect(regressions).toEqual([
+      "a.tsx: lint/x 1 → 2",
+      "a.tsx: lint/y 0 → 1",
+      "b.tsx: lint/z 0 → 1",
+    ]);
   });
 
   it("reports fixed problems so the baseline can be tightened", () => {
-    const { regressions, improvements } = compare({ "a.tsx": { "lint/x": 2 } }, {});
+    const { regressions, improvements } = compare(
+      { "a.tsx": { "lint/x": 2 } },
+      {}
+    );
     expect(regressions).toEqual([]);
     expect(improvements).toEqual(["a.tsx: lint/x 2 → 0"]);
   });
 
   it("excludes exactly the vendored shadcn/ui components from lint, nothing of Wirefront's", () => {
-    const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+    const root = path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../.."
+    );
     const dir = "packages/ui/src/components/ui";
     const vendored = readdirSync(path.join(root, dir))
       .filter((f) => {
-        const head = readFileSync(path.join(root, dir, f), "utf8").slice(0, 300);
-        return head.includes("SPDX-License-Identifier: MIT") && head.includes("shadcn/ui");
+        const head = readFileSync(path.join(root, dir, f), "utf8").slice(
+          0,
+          300
+        );
+        return (
+          head.includes("SPDX-License-Identifier: MIT") &&
+          head.includes("shadcn/ui")
+        );
       })
       .map((f) => `!${dir}/${f}`)
       .sort();
-    const biome = JSON.parse(readFileSync(path.join(root, "biome.json"), "utf8")) as { files: { includes: string[] } };
-    const excluded = biome.files.includes.filter((p) => p.startsWith(`!${dir}/`)).sort();
+    const biome = JSON.parse(
+      readFileSync(path.join(root, "biome.json"), "utf8")
+    ) as { files: { includes: string[] } };
+    const excluded = biome.files.includes
+      .filter((p) => p.startsWith(`!${dir}/`))
+      .sort();
     expect(excluded).toEqual(vendored);
   });
 });

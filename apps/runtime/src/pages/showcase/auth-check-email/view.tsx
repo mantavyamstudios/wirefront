@@ -8,9 +8,18 @@ import { cn } from "@wirefront/ui/lib/utils";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
-import { ArrowLeftIcon, ArrowRightIcon, CheckCircle2Icon, MailIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckCircle2Icon,
+  MailIcon,
+} from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 
 /** Every string on the screen; override any of them with WirefrontProvider `messages` ("checkEmail.<key>"). */
@@ -50,7 +59,18 @@ export interface CheckEmailProps {
   actions?: ReactNode;
 }
 
-function CheckEmailScreen({ email, onResend, resendAfter = 30, expiresInMinutes, changeEmailHref, supportHref, illustration, brand, caption, actions }: CheckEmailProps) {
+function CheckEmailScreen({
+  email,
+  onResend,
+  resendAfter = 30,
+  expiresInMinutes,
+  changeEmailHref,
+  supportHref,
+  illustration,
+  brand,
+  caption,
+  actions,
+}: CheckEmailProps) {
   const t = useMessages("checkEmail", CHECK_EMAIL_MESSAGES);
   const [left, setLeft] = useState(resendAfter);
   const [sent, setSent] = useState(0);
@@ -68,15 +88,26 @@ function CheckEmailScreen({ email, onResend, resendAfter = 30, expiresInMinutes,
   }, [left]);
 
   return (
-    <IllustratedAuthLayout actions={actions} brand={brand} caption={caption} illustration={illustration}>
+    <IllustratedAuthLayout
+      actions={actions}
+      brand={brand}
+      caption={caption}
+      illustration={illustration}
+    >
       <div className="w-full max-w-lg">
         <div className="inline-flex size-11 items-center justify-center rounded-full bg-category-2/15 text-category-2-foreground">
           <CheckCircle2Icon aria-hidden className="size-5" />
         </div>
-        <div className="mt-5 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
+        <div className="mt-5 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.3em]">
+          {t.eyebrow}
+        </div>
         <h1 className="mt-2 font-heading text-3xl leading-tight">{t.title}</h1>
         <p className="mt-2 max-w-md text-muted-foreground text-sm leading-relaxed">
-          {t.sentTo} <span className="font-medium text-foreground">{email}</span>. {expiresInMinutes ? interpolate(t.expires, { minutes: expiresInMinutes }) : t.clickIt}
+          {t.sentTo}{" "}
+          <span className="font-medium text-foreground">{email}</span>.{" "}
+          {expiresInMinutes
+            ? interpolate(t.expires, { minutes: expiresInMinutes })
+            : t.clickIt}
         </p>
 
         <div className="mt-7 flex flex-col gap-2">
@@ -86,20 +117,37 @@ function CheckEmailScreen({ email, onResend, resendAfter = 30, expiresInMinutes,
             {t.openMail}
           </a>
           {onResend ? (
-            <Button aria-busy={resend.isPending()} disabled={left > 0 || resend.isPending()} onClick={() => void resend.run()} size="lg" type="button" variant="ghost">
+            <Button
+              aria-busy={resend.isPending()}
+              disabled={left > 0 || resend.isPending()}
+              onClick={() => void resend.run()}
+              size="lg"
+              type="button"
+              variant="ghost"
+            >
               {resend.isPending() ? <Spinner data-icon="inline-start" /> : null}
-              {left > 0 ? interpolate(t.resendIn, { seconds: String(left).padStart(2, "0") }) : t.resend}
+              {left > 0
+                ? interpolate(t.resendIn, {
+                    seconds: String(left).padStart(2, "0"),
+                  })
+                : t.resend}
             </Button>
           ) : null}
         </div>
 
         <div aria-live="polite">
           {resend.error ? (
-            <p className="mt-3 text-destructive-foreground text-sm" role="alert">
+            <p
+              className="mt-3 text-destructive-foreground text-sm"
+              role="alert"
+            >
               {resend.error}
             </p>
           ) : sent > 0 ? (
-            <div className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-category-2/10 px-2 py-1 font-mono text-[10px] text-category-2-foreground uppercase tracking-[0.25em]" role="status">
+            <div
+              className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-category-2/10 px-2 py-1 font-mono text-[10px] text-category-2-foreground uppercase tracking-[0.25em]"
+              role="status"
+            >
               <CheckCircle2Icon aria-hidden className="size-3" />
               {interpolate(t.sentAgain, { count: sent })}
             </div>
@@ -109,17 +157,34 @@ function CheckEmailScreen({ email, onResend, resendAfter = 30, expiresInMinutes,
         {changeEmailHref || supportHref ? (
           <div className="mt-8 border-border/60 border-t pt-5">
             {changeEmailHref ? (
-              <WirefrontLink className="inline-flex min-h-8 items-center gap-1.5 text-muted-foreground text-sm transition-colors hover:text-foreground pointer-coarse:min-h-11" href={changeEmailHref}>
-                <ArrowLeftIcon aria-hidden className="size-3.5 rtl:rotate-180" />
+              <WirefrontLink
+                className="inline-flex min-h-8 items-center gap-1.5 text-muted-foreground text-sm transition-colors hover:text-foreground pointer-coarse:min-h-11"
+                href={changeEmailHref}
+              >
+                <ArrowLeftIcon
+                  aria-hidden
+                  className="size-3.5 rtl:rotate-180"
+                />
                 {t.differentEmail}
               </WirefrontLink>
             ) : null}
             {supportHref ? (
-              <p className={cn("text-muted-foreground text-xs leading-relaxed", changeEmailHref && "mt-3")}>
+              <p
+                className={cn(
+                  "text-muted-foreground text-xs leading-relaxed",
+                  changeEmailHref && "mt-3"
+                )}
+              >
                 {t.noEmail}{" "}
-                <WirefrontLink className="inline-flex items-center gap-1 text-foreground underline-offset-4 hover:underline" href={supportHref}>
+                <WirefrontLink
+                  className="inline-flex items-center gap-1 text-foreground underline-offset-4 hover:underline"
+                  href={supportHref}
+                >
                   {t.support}
-                  <ArrowRightIcon aria-hidden className="size-3 rtl:rotate-180" />
+                  <ArrowRightIcon
+                    aria-hidden
+                    className="size-3 rtl:rotate-180"
+                  />
                 </WirefrontLink>
               </p>
             ) : null}

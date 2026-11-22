@@ -20,11 +20,24 @@ export const UpcomingEvent = z
   .meta({ id: "UpcomingEvent" });
 export type UpcomingEvent = z.infer<typeof UpcomingEvent>;
 
-export const RsvpInput = z.object({ eventId: z.string(), response: z.enum(["accepted", "declined"]) }).meta({ id: "RsvpInput" });
+export const RsvpInput = z
+  .object({ eventId: z.string(), response: z.enum(["accepted", "declined"]) })
+  .meta({ id: "RsvpInput" });
 export type RsvpInput = z.infer<typeof RsvpInput>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listUpcomingEvents: { method: "GET", path: "/me/events/upcoming", summary: "The next events on the user's calendar", response: z.array(UpcomingEvent) },
-  rsvp: { method: "PUT", path: "/events/{eventId}/rsvp", summary: "Accept or decline an event", params: z.object({ eventId: z.string() }), body: RsvpInput.pick({ response: true }) },
+  listUpcomingEvents: {
+    method: "GET",
+    path: "/me/events/upcoming",
+    summary: "The next events on the user's calendar",
+    response: z.array(UpcomingEvent),
+  },
+  rsvp: {
+    method: "PUT",
+    path: "/events/{eventId}/rsvp",
+    summary: "Accept or decline an event",
+    params: z.object({ eventId: z.string() }),
+    body: RsvpInput.pick({ response: true }),
+  },
 });

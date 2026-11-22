@@ -10,10 +10,18 @@ export function ChartsDonutShowcasePage() {
   const state = useShowcaseState();
   return (
     <RevenueMixDonut
-      data={state === "loading" || state === "error" ? undefined : state === "empty" ? { slices: [] } : fixtures.getRevenueMix}
+      data={
+        state === "loading" || state === "error"
+          ? undefined
+          : state === "empty"
+            ? { slices: [] }
+            : fixtures.getRevenueMix
+      }
       error="The revenue mix didn’t load. Check your connection and try again."
       onRetry={() => {}}
-      status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+      status={
+        state === "loading" ? "loading" : state === "error" ? "error" : "ready"
+      }
     />
   );
 }

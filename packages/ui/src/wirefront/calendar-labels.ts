@@ -13,7 +13,10 @@ export function calendarLabels(locale?: string) {
     // how to order a combined weekday + month + year pattern (Node's ICU 79
     // gives "Monday, February 2026", Chromium "February 2026 Monday"), which
     // breaks hydration when the server and the browser format it.
-    labelDayButton: (date: Date, modifiers: { today?: boolean; selected?: boolean }) =>
+    labelDayButton: (
+      date: Date,
+      modifiers: { today?: boolean; selected?: boolean }
+    ) =>
       `${modifiers.today ? "Today, " : ""}${date.getDate()}, ${date.toLocaleDateString(locale, { weekday: "long" })}, ${date.toLocaleDateString(locale, { month: "long", year: "numeric" })}${modifiers.selected ? ", selected" : ""}`,
   };
 }

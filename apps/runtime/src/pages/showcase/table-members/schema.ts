@@ -3,11 +3,15 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const Role = z.enum(["owner", "admin", "member", "viewer"]).meta({ id: "Role" });
+export const Role = z
+  .enum(["owner", "admin", "member", "viewer"])
+  .meta({ id: "Role" });
 export type Role = z.infer<typeof Role>;
 
 /** Roles that can be given to someone. Ownership moves with a transfer, never a role change. */
-export const AssignableRole = Role.exclude(["owner"]).meta({ id: "AssignableRole" });
+export const AssignableRole = Role.exclude(["owner"]).meta({
+  id: "AssignableRole",
+});
 export type AssignableRole = z.infer<typeof AssignableRole>;
 
 export const Member = z
@@ -58,7 +62,9 @@ export const InviteInput = z
   .meta({ id: "InviteInput" });
 export type InviteInput = z.infer<typeof InviteInput>;
 
-export const RoleUpdate = z.object({ role: AssignableRole }).meta({ id: "RoleUpdate" });
+export const RoleUpdate = z
+  .object({ role: AssignableRole })
+  .meta({ id: "RoleUpdate" });
 export type RoleUpdate = z.infer<typeof RoleUpdate>;
 
 const MemberParams = z.object({ id: z.string() });

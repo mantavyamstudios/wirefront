@@ -10,20 +10,31 @@ import { settingsBack, settingsNav, settingsUser } from "../_settings-nav";
 import * as fixtures from "./fixtures";
 import { ProfileSettings } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const demoNow = () => new Date(fixtures.now);
 
 async function demoCheckUsername(username: string) {
   await wait(300);
   const available = !fixtures.takenUsernames.includes(username);
-  return { available, suggestions: available ? [] : [`${username}-hq`, `hey-${username}`, `${username}-studio`] };
+  return {
+    available,
+    suggestions: available
+      ? []
+      : [`${username}-hq`, `hey-${username}`, `${username}-studio`],
+  };
 }
 
 export function SettingsProfileSettingsShowcasePage() {
   return (
     <WirefrontProvider now={demoNow}>
       <DevlFrame>
-        <SettingsShell activeId="profile" back={settingsBack} groups={settingsNav} user={settingsUser}>
+        <SettingsShell
+          activeId="profile"
+          back={settingsBack}
+          groups={settingsNav}
+          user={settingsUser}
+        >
           <ProfileSettings
             checkUsername={demoCheckUsername}
             domain={fixtures.domain}

@@ -15,7 +15,9 @@ import { DeliveryTracker } from "./view";
 const start = Date.parse(fixtures.now);
 const demoNow = () => new Date(fixtures.now);
 const SECONDS = 40;
-const arrivesAt = new Date(start + fixtures.routeMinutes * (1 - fixtures.startAt) * 60_000).toISOString();
+const arrivesAt = new Date(
+  start + fixtures.routeMinutes * (1 - fixtures.startAt) * 60_000
+).toISOString();
 
 function trackingAt(progress: number): DeliveryTracking {
   return {
@@ -29,15 +31,20 @@ function trackingAt(progress: number): DeliveryTracking {
 
 function replyTo(text: string) {
   const s = text.toLowerCase();
-  if (s.includes("door")) return "No problem, I’ll leave it by the door and send a photo.";
-  if (s.includes("bell") || s.includes("ring")) return "Will do, I’ll ring when I’m outside.";
-  if (s.includes("down") || s.includes("coming")) return "Great, see you downstairs in a few minutes.";
+  if (s.includes("door"))
+    return "No problem, I’ll leave it by the door and send a photo.";
+  if (s.includes("bell") || s.includes("ring"))
+    return "Will do, I’ll ring when I’m outside.";
+  if (s.includes("down") || s.includes("coming"))
+    return "Great, see you downstairs in a few minutes.";
   return "Got it, thanks!";
 }
 
 export function CommerceDeliveryTrackerShowcasePage() {
   const [tracking, setTracking] = useState(() => trackingAt(fixtures.startAt));
-  const [messages, setMessages] = useState<DeliveryMessage[]>(fixtures.listCourierMessages);
+  const [messages, setMessages] = useState<DeliveryMessage[]>(
+    fixtures.listCourierMessages
+  );
   const [typing, setTyping] = useState(false);
   const count = useRef(0);
   const timers = useRef<number[]>([]);
@@ -46,7 +53,10 @@ export function CommerceDeliveryTrackerShowcasePage() {
     let elapsed = 0;
     const id = window.setInterval(() => {
       elapsed += 1;
-      const progress = Math.min(1, fixtures.startAt + ((1 - fixtures.startAt) * elapsed) / SECONDS);
+      const progress = Math.min(
+        1,
+        fixtures.startAt + ((1 - fixtures.startAt) * elapsed) / SECONDS
+      );
       setTracking(trackingAt(progress));
       if (progress >= 1) window.clearInterval(id);
     }, 1000);
@@ -56,26 +66,45 @@ export function CommerceDeliveryTrackerShowcasePage() {
     () => () => {
       for (const id of timers.current) window.clearTimeout(id);
     },
-    [],
+    []
   );
 
   const stamp = () => new Date(start + ++count.current * 60_000).toISOString();
 
   return (
-    <WirefrontProvider currency="USD" locale="en-US" now={demoNow} timeZone="UTC">
+    <WirefrontProvider
+      currency="USD"
+      locale="en-US"
+      now={demoNow}
+      timeZone="UTC"
+    >
       <DevlFrame>
         <DeliveryTracker
           courierTyping={typing}
           messages={messages}
           onRate={async () => {}}
           onSendMessage={async ({ text }) => {
-            const sent: DeliveryMessage = { id: `me-${count.current + 1}`, from: "me", text, sentAt: stamp() };
+            const sent: DeliveryMessage = {
+              id: `me-${count.current + 1}`,
+              from: "me",
+              text,
+              sentAt: stamp(),
+            };
             timers.current.push(
               window.setTimeout(() => setTyping(true), 500),
               window.setTimeout(() => {
                 setTyping(false);
-                setMessages((m) => [...m, sent, { id: `c-${count.current + 1}`, from: "courier", text: replyTo(text), sentAt: stamp() }]);
-              }, 1700),
+                setMessages((m) => [
+                  ...m,
+                  sent,
+                  {
+                    id: `c-${count.current + 1}`,
+                    from: "courier",
+                    text: replyTo(text),
+                    sentAt: stamp(),
+                  },
+                ]);
+              }, 1700)
             );
             return ok(sent);
           }}

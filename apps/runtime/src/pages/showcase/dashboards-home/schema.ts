@@ -38,7 +38,9 @@ export const Today = z
   .meta({ id: "Today" });
 export type Today = z.infer<typeof Today>;
 
-export const SetTaskDoneInput = z.object({ id: z.string(), done: z.boolean() }).meta({ id: "SetTaskDoneInput" });
+export const SetTaskDoneInput = z
+  .object({ id: z.string(), done: z.boolean() })
+  .meta({ id: "SetTaskDoneInput" });
 export type SetTaskDoneInput = z.infer<typeof SetTaskDoneInput>;
 
 /** The backend operations this screen calls. */

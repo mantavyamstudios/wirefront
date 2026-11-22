@@ -19,6 +19,19 @@ export type ResolvedThread = z.infer<typeof ResolvedThread>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listResolvedThreads: { method: "GET", path: "/threads", summary: "Resolved threads, newest first, and how many are still open", response: z.object({ threads: z.array(ResolvedThread), openCount: z.number().int().min(0) }) },
-  reopenThread: { method: "POST", path: "/threads/{id}/reopen", summary: "Reopen a resolved thread", params: z.object({ id: z.string() }) },
+  listResolvedThreads: {
+    method: "GET",
+    path: "/threads",
+    summary: "Resolved threads, newest first, and how many are still open",
+    response: z.object({
+      threads: z.array(ResolvedThread),
+      openCount: z.number().int().min(0),
+    }),
+  },
+  reopenThread: {
+    method: "POST",
+    path: "/threads/{id}/reopen",
+    summary: "Reopen a resolved thread",
+    params: z.object({ id: z.string() }),
+  },
 });

@@ -5,11 +5,21 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@wirefront/ui/avatar";
 import { Badge } from "@wirefront/ui/badge";
 import { Button, buttonVariants } from "@wirefront/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@wirefront/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@wirefront/ui/card";
 import { cn } from "@wirefront/ui/lib/utils";
 import { Separator } from "@wirefront/ui/separator";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import { MailIcon, MapPinIcon, MessageSquareIcon } from "lucide-react";
 
 import type { ProfileStat, ProfileSummary } from "./schema";
@@ -37,18 +47,35 @@ const initialsOf = (name: string) =>
     .map((w) => w[0]?.toUpperCase())
     .join("");
 
-function ProfileCardScreen({ person, onMessage, profileHref, className }: ProfileCardProps) {
+function ProfileCardScreen({
+  person,
+  onMessage,
+  profileHref,
+  className,
+}: ProfileCardProps) {
   const t = useMessages("profileCard", PROFILE_CARD_MESSAGES);
   const format = useFormat();
   const statValue = (s: ProfileStat) =>
     s.unit === "percent"
-      ? format.number(s.value / 100, { style: "percent", maximumFractionDigits: 1 })
+      ? format.number(s.value / 100, {
+          style: "percent",
+          maximumFractionDigits: 1,
+        })
       : s.unit
-        ? format.number(s.value, { style: "unit", unit: s.unit, unitDisplay: "narrow" })
+        ? format.number(s.value, {
+            style: "unit",
+            unit: s.unit,
+            unitDisplay: "narrow",
+          })
         : format.number(s.value);
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-16", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-16",
+        className
+      )}
+    >
       <div className="mx-auto max-w-md">
         <Card className="overflow-hidden">
           <div
@@ -61,8 +88,12 @@ function ProfileCardScreen({ person, onMessage, profileHref, className }: Profil
           />
           <CardHeader className="relative -mt-10 pb-2">
             <Avatar className="size-20 border-4 border-background">
-              {person.avatarUrl ? <AvatarImage alt="" src={person.avatarUrl} /> : null}
-              <AvatarFallback className="bg-foreground font-heading font-semibold text-background text-xl">{initialsOf(person.name)}</AvatarFallback>
+              {person.avatarUrl ? (
+                <AvatarImage alt="" src={person.avatarUrl} />
+              ) : null}
+              <AvatarFallback className="bg-foreground font-heading font-semibold text-background text-xl">
+                {initialsOf(person.name)}
+              </AvatarFallback>
             </Avatar>
             <CardTitle className="mt-3 flex items-center gap-2">
               {person.name}
@@ -72,7 +103,9 @@ function ProfileCardScreen({ person, onMessage, profileHref, className }: Profil
                 </Badge>
               ) : null}
             </CardTitle>
-            {person.headline ? <p className="text-muted-foreground text-sm">{person.headline}</p> : null}
+            {person.headline ? (
+              <p className="text-muted-foreground text-sm">{person.headline}</p>
+            ) : null}
           </CardHeader>
           <CardContent className="pt-2">
             {person.location || person.email ? (
@@ -86,7 +119,10 @@ function ProfileCardScreen({ person, onMessage, profileHref, className }: Profil
                 {person.email ? (
                   <div className="flex items-center gap-2">
                     <MailIcon aria-hidden className="size-3.5" />
-                    <a className="rounded-sm hover:text-foreground hover:underline" href={`mailto:${person.email}`}>
+                    <a
+                      className="rounded-sm hover:text-foreground hover:underline"
+                      href={`mailto:${person.email}`}
+                    >
                       {person.email}
                     </a>
                   </div>
@@ -96,11 +132,20 @@ function ProfileCardScreen({ person, onMessage, profileHref, className }: Profil
             {person.stats.length ? (
               <>
                 <Separator className="my-4" />
-                <dl className="grid gap-2 text-center" style={{ gridTemplateColumns: `repeat(${person.stats.length}, minmax(0, 1fr))` }}>
+                <dl
+                  className="grid gap-2 text-center"
+                  style={{
+                    gridTemplateColumns: `repeat(${person.stats.length}, minmax(0, 1fr))`,
+                  }}
+                >
                   {person.stats.map((s) => (
                     <div className="flex flex-col-reverse" key={s.label}>
-                      <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">{s.label}</dt>
-                      <dd className="font-heading font-semibold text-base">{statValue(s)}</dd>
+                      <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">
+                        {s.label}
+                      </dt>
+                      <dd className="font-heading font-semibold text-base">
+                        {statValue(s)}
+                      </dd>
                     </div>
                   ))}
                 </dl>
@@ -116,7 +161,13 @@ function ProfileCardScreen({ person, onMessage, profileHref, className }: Profil
                 </Button>
               ) : null}
               {profileHref ? (
-                <WirefrontLink className={cn(buttonVariants({ variant: "outline" }), "flex-1")} href={profileHref}>
+                <WirefrontLink
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "flex-1"
+                  )}
+                  href={profileHref}
+                >
                   {t.viewProfile}
                 </WirefrontLink>
               ) : null}

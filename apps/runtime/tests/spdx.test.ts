@@ -13,25 +13,44 @@ describe("SPDX headers", () => {
   });
 
   it("credit devl.dev and Wirefront correctly", () => {
-    expect(headerLines("packages/ui/src/components/ui/segmented-control.tsx", "")[1]).toContain("Mantavyam Studios");
-    expect(headerLines("apps/runtime/src/x.tsx", "// Ported from devl.dev (…)")[2]).toContain("Sean Brydon");
+    expect(
+      headerLines("packages/ui/src/components/ui/segmented-control.tsx", "")[1]
+    ).toContain("Mantavyam Studios");
+    expect(
+      headerLines("apps/runtime/src/x.tsx", "// Ported from devl.dev (…)")[2]
+    ).toContain("Sean Brydon");
     expect(headerLines("apps/runtime/src/x.tsx", "")).toHaveLength(2);
   });
 
   it("mark every UI kit component as shadcn/ui (MIT) or Wirefront (MIT), with no coss ui left", () => {
-    const dir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../packages/ui/src/components/ui");
+    const dir = path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../../packages/ui/src/components/ui"
+    );
     const wrong = readdirSync(dir).filter((f) => {
-      const head = readFileSync(path.join(dir, f), "utf8").split("\n").slice(0, 3).join("\n");
-      const shadcn = head.includes("SPDX-License-Identifier: MIT") && head.includes("shadcn/ui");
-      const wirefront = head.includes("SPDX-License-Identifier: MIT") && head.includes("Mantavyam Studios");
+      const head = readFileSync(path.join(dir, f), "utf8")
+        .split("\n")
+        .slice(0, 3)
+        .join("\n");
+      const shadcn =
+        head.includes("SPDX-License-Identifier: MIT") &&
+        head.includes("shadcn/ui");
+      const wirefront =
+        head.includes("SPDX-License-Identifier: MIT") &&
+        head.includes("Mantavyam Studios");
       return !(shadcn || wirefront) || /cal\.com|coss/i.test(head);
     });
     expect(wrong).toEqual([]);
   });
 
   it("keep a shebang first and are added only once", () => {
-    const once = withHeader("scripts/x.ts", "#!/usr/bin/env tsx\nconsole.log(1);\n");
-    expect(once.startsWith("#!/usr/bin/env tsx\n// SPDX-License-Identifier: MIT\n")).toBe(true);
+    const once = withHeader(
+      "scripts/x.ts",
+      "#!/usr/bin/env tsx\nconsole.log(1);\n"
+    );
+    expect(
+      once.startsWith("#!/usr/bin/env tsx\n// SPDX-License-Identifier: MIT\n")
+    ).toBe(true);
     expect(withHeader("scripts/x.ts", once)).toBe(once);
   });
 });

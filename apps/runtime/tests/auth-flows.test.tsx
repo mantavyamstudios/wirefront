@@ -5,7 +5,13 @@
  * The wiring contract of the auth screens after sign-in: what each action
  * receives, and what the screen shows for success, failure and unwired options.
  */
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { fail, ok } from "@wirefront/ui/wirefront/types";
 import { ForgotPassword } from "@/pages/showcase/auth-forgot-password/view";
@@ -19,14 +25,18 @@ import { VerifyEmail } from "@/pages/showcase/auth-verify-email/view";
 afterEach(cleanup);
 
 const session = { userId: "usr_01", redirectTo: "/dashboard" };
-const type = (label: string | RegExp, value: string) => fireEvent.change(screen.getByLabelText(label), { target: { value } });
-const click = (name: string | RegExp) => fireEvent.click(screen.getByRole("button", { name }));
+const type = (label: string | RegExp, value: string) =>
+  fireEvent.change(screen.getByLabelText(label), { target: { value } });
+const click = (name: string | RegExp) =>
+  fireEvent.click(screen.getByRole("button", { name }));
 
 /** Type a code into an OTP field, one digit per input. The first digit is named by the field's label. */
 function enterCode(field: string, code: string) {
   [...code].forEach((digit, i) => {
     const label = i === 0 ? field : `Digit ${i + 1} of ${code.length}`;
-    const input = screen.getAllByLabelText(label).find((el) => el.tagName === "INPUT");
+    const input = screen
+      .getAllByLabelText(label)
+      .find((el) => el.tagName === "INPUT");
     if (!input) throw new Error(`no input labelled "${label}"`);
     fireEvent.change(input, { target: { value: digit } });
   });
@@ -38,7 +48,9 @@ describe("SignUp", () => {
     const onSuccess = vi.fn();
     render(<SignUp onSignUp={onSignUp} onSuccess={onSuccess} product="Acme" />);
     click("Create account");
-    expect(await screen.findByText("Enter a valid email address.")).toBeTruthy();
+    expect(
+      await screen.findByText("Enter a valid email address.")
+    ).toBeTruthy();
     expect(onSignUp).not.toHaveBeenCalled();
 
     type("Name", "Ada");
@@ -46,12 +58,21 @@ describe("SignUp", () => {
     type("Password", "correct-horse");
     click("Create account");
     expect(await screen.findByText("Account created")).toBeTruthy();
-    expect(onSignUp).toHaveBeenCalledWith({ name: "Ada", email: "ada@acme.dev", password: "correct-horse" });
+    expect(onSignUp).toHaveBeenCalledWith({
+      name: "Ada",
+      email: "ada@acme.dev",
+      password: "correct-horse",
+    });
     expect(onSuccess).toHaveBeenCalledWith({ userId: "usr_02" });
   });
 
   it("shows the backend's field error and hides unwired links", async () => {
-    render(<SignUp onSignUp={async () => fail(undefined, { email: "Already registered." })} product="Acme" />);
+    render(
+      <SignUp
+        onSignUp={async () => fail(undefined, { email: "Already registered." })}
+        product="Acme"
+      />
+    );
     type("Work email", "ada@acme.dev");
     type("Password", "correct-horse");
     click("Create account");
@@ -64,10 +85,16 @@ describe("SignUp", () => {
 describe("ForgotPassword", () => {
   it("sends the link, confirms, and resends to the same address", async () => {
     const onSend = vi.fn(async () => {});
-    render(<ForgotPassword expiresInMinutes={30} onSend={onSend} resendAfter={0} />);
+    render(
+      <ForgotPassword expiresInMinutes={30} onSend={onSend} resendAfter={0} />
+    );
     type("Email", "ada@acme.dev");
     click("Send reset link");
-    expect(await screen.findByText("We sent a reset link to ada@acme.dev. It expires in 30 minutes.")).toBeTruthy();
+    expect(
+      await screen.findByText(
+        "We sent a reset link to ada@acme.dev. It expires in 30 minutes."
+      )
+    ).toBeTruthy();
     expect(onSend).toHaveBeenCalledWith({ email: "ada@acme.dev" });
     click("Resend");
     await waitFor(() => expect(onSend).toHaveBeenCalledTimes(2));
@@ -88,20 +115,34 @@ describe("ResetPassword", () => {
     type("Confirm password", "correct-horse");
     click("Update password");
     expect(await screen.findByText("Password updated")).toBeTruthy();
-    expect(onReset).toHaveBeenCalledWith({ token: "tok_1", password: "correct-horse" });
+    expect(onReset).toHaveBeenCalledWith({
+      token: "tok_1",
+      password: "correct-horse",
+    });
   });
 
   it("shows an expired link instead of the form", () => {
-    render(<ResetPassword forgotPasswordHref="/forgot" linkError="Expired." onReset={vi.fn()} token="tok_1" />);
+    render(
+      <ResetPassword
+        forgotPasswordHref="/forgot"
+        linkError="Expired."
+        onReset={vi.fn()}
+        token="tok_1"
+      />
+    );
     expect(screen.getByText("This link has expired")).toBeTruthy();
     expect(screen.queryByLabelText("New password")).toBeNull();
-    expect(screen.getByText("Request a new link").closest("a")?.getAttribute("href")).toBe("/forgot");
+    expect(
+      screen.getByText("Request a new link").closest("a")?.getAttribute("href")
+    ).toBe("/forgot");
   });
 });
 
 describe("code screens", () => {
   it("VerifyEmail verifies a complete code and shows the backend's error", async () => {
-    const onVerify = vi.fn(async ({ code }: { code: string }) => (code === "111111" ? fail("Wrong code.") : undefined));
+    const onVerify = vi.fn(async ({ code }: { code: string }) =>
+      code === "111111" ? fail("Wrong code.") : undefined
+    );
     render(<VerifyEmail email="ada@acme.dev" onVerify={onVerify} />);
     enterCode("Verification code", "111111");
     expect((await screen.findByRole("alert")).textContent).toBe("Wrong code.");
@@ -116,7 +157,13 @@ describe("code screens", () => {
   it("OtpVerify signs in with the code and reports the session", async () => {
     const onVerify = vi.fn(async () => ok(session));
     const onSuccess = vi.fn();
-    render(<OtpVerify email="ada@acme.dev" onSuccess={onSuccess} onVerify={onVerify} />);
+    render(
+      <OtpVerify
+        email="ada@acme.dev"
+        onSuccess={onSuccess}
+        onVerify={onVerify}
+      />
+    );
     enterCode("One-time code", "123456");
     await waitFor(() => expect(onSuccess).toHaveBeenCalledWith(session));
     expect(onVerify).toHaveBeenCalledWith({ code: "123456" });
@@ -128,19 +175,32 @@ describe("code screens", () => {
     enterCode("Authentication code", "123456");
     fireEvent.click(screen.getByRole("switch"));
     click("Verify");
-    await waitFor(() => expect(onVerify).toHaveBeenCalledWith({ method: "totp", code: "123456", rememberDevice: true }));
+    await waitFor(() =>
+      expect(onVerify).toHaveBeenCalledWith({
+        method: "totp",
+        code: "123456",
+        rememberDevice: true,
+      })
+    );
 
     click("Use a recovery code instead");
     type("Recovery code", "abcde-12345");
     click("Verify");
-    await waitFor(() => expect(onVerify).toHaveBeenLastCalledWith({ method: "recovery", code: "abcde-12345" }));
+    await waitFor(() =>
+      expect(onVerify).toHaveBeenLastCalledWith({
+        method: "recovery",
+        code: "abcde-12345",
+      })
+    );
   });
 });
 
 describe("MagicLinkSent", () => {
   it("resends when wired and hides what isn't", async () => {
     const onResend = vi.fn(async () => {});
-    render(<MagicLinkSent email="ada@acme.dev" onResend={onResend} resendAfter={0} />);
+    render(
+      <MagicLinkSent email="ada@acme.dev" onResend={onResend} resendAfter={0} />
+    );
     click("Resend link");
     await waitFor(() => expect(onResend).toHaveBeenCalled());
     expect(screen.queryByText(/Open /)).toBeNull();

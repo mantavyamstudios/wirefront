@@ -12,10 +12,19 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 /** Simulated backend: an app code of one repeated digit (e.g. 000000) is wrong. */
 async function demoVerify(input: TwoFactorInput) {
   await wait(800);
-  if (input.method === "totp" && /^(\d)\1+$/.test(input.code)) return fail("That code didn’t work. Codes change every 30 seconds; try the current one.");
+  if (input.method === "totp" && /^(\d)\1+$/.test(input.code))
+    return fail(
+      "That code didn’t work. Codes change every 30 seconds; try the current one."
+    );
   return ok(fixtures.verifyTwoFactor);
 }
 
 export function AuthTwoFactorShowcasePage() {
-  return <TwoFactor onVerify={demoVerify} rememberDays={fixtures.rememberDays} supportHref="#support" />;
+  return (
+    <TwoFactor
+      onVerify={demoVerify}
+      rememberDays={fixtures.rememberDays}
+      supportHref="#support"
+    />
+  );
 }

@@ -4,18 +4,59 @@
 
 import { Badge } from "@wirefront/ui/badge";
 import { Button, buttonVariants } from "@wirefront/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@wirefront/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wirefront/ui/select";
 import { Skeleton } from "@wirefront/ui/skeleton";
 import { Spinner } from "@wirefront/ui/spinner";
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@wirefront/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@wirefront/ui/table";
 import { useAction } from "@wirefront/ui/wirefront/action";
-import { pageCount, toggleSort, withFilter, withPage, withSearch } from "@wirefront/ui/wirefront/list";
-import { interpolate, useFormat, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
-import type { Action, AsyncStatus, ListQuery } from "@wirefront/ui/wirefront/types";
+import {
+  pageCount,
+  toggleSort,
+  withFilter,
+  withPage,
+  withSearch,
+} from "@wirefront/ui/wirefront/list";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
+import type {
+  Action,
+  AsyncStatus,
+  ListQuery,
+} from "@wirefront/ui/wirefront/types";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { ArrowDownIcon, ArrowDownToLineIcon, ArrowUpIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon, SearchIcon } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowDownToLineIcon,
+  ArrowUpIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  PlusIcon,
+  SearchIcon,
+} from "lucide-react";
 import type { ReactNode } from "react";
 
 import { type Invoice, InvoiceStatus, type InvoicesPage } from "./schema";
@@ -78,12 +119,27 @@ export interface InvoicesTableProps {
   className?: string;
 }
 
-const STATUS_STYLE: Record<InvoiceStatus, { className: string; dot: string }> = {
-  paid: { className: "border-success/20 bg-success/10 text-success-foreground", dot: "bg-success" },
-  open: { className: "border-category-3/20 bg-category-3/10 text-category-3-foreground", dot: "bg-category-3" },
-  overdue: { className: "border-destructive/20 bg-destructive/10 text-destructive-foreground", dot: "bg-destructive" },
-  void: { className: "border-border bg-muted text-muted-foreground", dot: "bg-muted-foreground/50" },
-};
+const STATUS_STYLE: Record<InvoiceStatus, { className: string; dot: string }> =
+  {
+    paid: {
+      className: "border-success/20 bg-success/10 text-success-foreground",
+      dot: "bg-success",
+    },
+    open: {
+      className:
+        "border-category-3/20 bg-category-3/10 text-category-3-foreground",
+      dot: "bg-category-3",
+    },
+    overdue: {
+      className:
+        "border-destructive/20 bg-destructive/10 text-destructive-foreground",
+      dot: "bg-destructive",
+    },
+    void: {
+      className: "border-border bg-muted text-muted-foreground",
+      dot: "bg-muted-foreground/50",
+    },
+  };
 const SKELETON_ROWS = ["s1", "s2", "s3", "s4", "s5"];
 const FOOTER_SPANS = [
   [1, "sm:hidden"],
@@ -112,20 +168,39 @@ function InvoicesTableScreen({
   const pages = pageCount(query, total);
   const from = total === 0 ? 0 : (query.page - 1) * query.pageSize + 1;
   const to = Math.min(query.page * query.pageSize, total);
-  const money = (amount: number, currency: string) => format.money(amount, currency);
-  const day = (iso: string) => format.date(iso, { month: "short", day: "numeric", timeZone: "UTC" });
+  const money = (amount: number, currency: string) =>
+    format.money(amount, currency);
+  const day = (iso: string) =>
+    format.date(iso, { month: "short", day: "numeric", timeZone: "UTC" });
 
-  const sortHead = (id: "issuedAt" | "dueAt" | "amount", label: string, cellClass?: string) => {
+  const sortHead = (
+    id: "issuedAt" | "dueAt" | "amount",
+    label: string,
+    cellClass?: string
+  ) => {
     const active = query.sort?.id === id ? query.sort.direction : undefined;
     return (
-      <TableHead aria-sort={active === "asc" ? "ascending" : active === "desc" ? "descending" : "none"} className={cellClass}>
+      <TableHead
+        aria-sort={
+          active === "asc"
+            ? "ascending"
+            : active === "desc"
+              ? "descending"
+              : "none"
+        }
+        className={cellClass}
+      >
         <button
           className="-mx-1 inline-flex items-center gap-1 rounded-sm px-1 outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           onClick={() => onQueryChange(toggleSort(query, id))}
           type="button"
         >
           {label}
-          {active === "asc" ? <ArrowUpIcon className="size-3" /> : active === "desc" ? <ArrowDownIcon className="size-3" /> : null}
+          {active === "asc" ? (
+            <ArrowUpIcon className="size-3" />
+          ) : active === "desc" ? (
+            <ArrowDownIcon className="size-3" />
+          ) : null}
         </button>
       </TableHead>
     );
@@ -135,7 +210,9 @@ function InvoicesTableScreen({
     <TableRow>
       <TableCell className="whitespace-normal py-12 text-center" colSpan={6}>
         <p className="font-medium">{title}</p>
-        {description ? <p className="mt-1 text-muted-foreground text-sm">{description}</p> : null}
+        {description ? (
+          <p className="mt-1 text-muted-foreground text-sm">{description}</p>
+        ) : null}
         {action}
       </TableCell>
     </TableRow>
@@ -164,16 +241,25 @@ function InvoicesTableScreen({
         <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
           {t.retry}
         </Button>
-      ) : null,
+      ) : null
     );
   } else if (items.length === 0) {
     body = filtered
       ? message(
           t.noMatchTitle,
           t.noMatchDescription,
-          <Button className="mt-4" onClick={() => onQueryChange(withFilter(withSearch(query, ""), "status", undefined))} size="sm" variant="outline">
+          <Button
+            className="mt-4"
+            onClick={() =>
+              onQueryChange(
+                withFilter(withSearch(query, ""), "status", undefined)
+              )
+            }
+            size="sm"
+            variant="outline"
+          >
             {t.clearFilters}
-          </Button>,
+          </Button>
         )
       : message(t.emptyTitle, t.emptyDescription);
   } else {
@@ -186,7 +272,10 @@ function InvoicesTableScreen({
         </Badge>
       );
       const number = invoiceHref ? (
-        <WirefrontLink className="rounded-sm underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring" href={invoiceHref(inv)}>
+        <WirefrontLink
+          className="rounded-sm underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+          href={invoiceHref(inv)}
+        >
           {inv.number}
         </WirefrontLink>
       ) : (
@@ -195,25 +284,37 @@ function InvoicesTableScreen({
       const due = inv.dueAt ? day(inv.dueAt) : t.noDueDate;
       return (
         <TableRow key={inv.id}>
-          <TableCell className="ps-4 font-mono text-sm max-sm:hidden">{number}</TableCell>
+          <TableCell className="ps-4 font-mono text-sm max-sm:hidden">
+            {number}
+          </TableCell>
           <TableCell className="w-full max-w-0 max-sm:ps-4 sm:w-auto sm:max-w-none">
             <div className="truncate font-medium">{inv.customer}</div>
-            <div className="truncate text-muted-foreground text-xs">{inv.email}</div>
+            <div className="truncate text-muted-foreground text-xs">
+              {inv.email}
+            </div>
             <div className="mt-0.5 font-mono text-[11px] text-muted-foreground md:hidden">
               <span className="sm:hidden">{number} · </span>
               {interpolate(t.due, { date: due })}
             </div>
           </TableCell>
-          <TableCell className="text-muted-foreground max-md:hidden">{day(inv.issuedAt)}</TableCell>
-          <TableCell className="text-muted-foreground max-md:hidden">{due}</TableCell>
+          <TableCell className="text-muted-foreground max-md:hidden">
+            {day(inv.issuedAt)}
+          </TableCell>
+          <TableCell className="text-muted-foreground max-md:hidden">
+            {due}
+          </TableCell>
           <TableCell className="max-sm:hidden">{badge}</TableCell>
           <TableCell className="pe-4 text-end font-mono tabular-nums">
             {inv.status === "void" ? (
-              <span className="text-muted-foreground line-through">{money(inv.amount, inv.currency)}</span>
+              <span className="text-muted-foreground line-through">
+                {money(inv.amount, inv.currency)}
+              </span>
             ) : (
               money(inv.amount, inv.currency)
             )}
-            <div className="mt-1 flex justify-end font-sans sm:hidden">{badge}</div>
+            <div className="mt-1 flex justify-end font-sans sm:hidden">
+              {badge}
+            </div>
           </TableCell>
         </TableRow>
       );
@@ -221,13 +322,20 @@ function InvoicesTableScreen({
   }
 
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-6 sm:px-6 sm:py-12",
+        className
+      )}
+    >
       <div className="mx-auto max-w-5xl">
         <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <h1 className="font-heading text-xl">{t.title}</h1>
             <p className="text-muted-foreground text-sm">
-              {total === 1 ? t.countOne : interpolate(t.countOther, { count: format.number(total) })}
+              {total === 1
+                ? t.countOne
+                : interpolate(t.countOther, { count: format.number(total) })}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -246,7 +354,13 @@ function InvoicesTableScreen({
               </Button>
             ) : null}
             {newInvoiceHref ? (
-              <WirefrontLink className={cn(buttonVariants({ size: "sm" }), "pointer-coarse:h-10")} href={newInvoiceHref}>
+              <WirefrontLink
+                className={cn(
+                  buttonVariants({ size: "sm" }),
+                  "pointer-coarse:h-10"
+                )}
+                href={newInvoiceHref}
+              >
                 <PlusIcon />
                 {t.newInvoice}
               </WirefrontLink>
@@ -268,8 +382,15 @@ function InvoicesTableScreen({
             />
           </InputGroup>
           <Select
-            items={[{ label: t.allStatuses, value: "all" }, ...InvoiceStatus.options.map((s) => ({ label: t[s], value: s }))]}
-            onValueChange={(v) => onQueryChange(withFilter(query, "status", v === "all" ? undefined : v))}
+            items={[
+              { label: t.allStatuses, value: "all" },
+              ...InvoiceStatus.options.map((s) => ({ label: t[s], value: s })),
+            ]}
+            onValueChange={(v) =>
+              onQueryChange(
+                withFilter(query, "status", v === "all" ? undefined : v)
+              )
+            }
             value={query.filters?.status ?? "all"}
           >
             <SelectTrigger aria-label={t.status} className="sm:w-40">
@@ -301,11 +422,17 @@ function InvoicesTableScreen({
           <Table aria-busy={status === "loading"}>
             <TableHeader>
               <TableRow>
-                <TableHead className="ps-4 max-sm:hidden">{t.columnInvoice}</TableHead>
-                <TableHead className="max-sm:ps-4">{t.columnCustomer}</TableHead>
+                <TableHead className="ps-4 max-sm:hidden">
+                  {t.columnInvoice}
+                </TableHead>
+                <TableHead className="max-sm:ps-4">
+                  {t.columnCustomer}
+                </TableHead>
                 {sortHead("issuedAt", t.columnIssued, "max-md:hidden")}
                 {sortHead("dueAt", t.columnDue, "max-md:hidden")}
-                <TableHead className="max-sm:hidden">{t.columnStatus}</TableHead>
+                <TableHead className="max-sm:hidden">
+                  {t.columnStatus}
+                </TableHead>
                 {sortHead("amount", t.columnAmount, "pe-4 text-end")}
               </TableRow>
             </TableHeader>
@@ -316,10 +443,14 @@ function InvoicesTableScreen({
                 {FOOTER_SPANS.map(([span, cls]) => (
                   <TableRow className={cls} key={span}>
                     <TableCell className="ps-4" colSpan={span}>
-                      {t.outstanding} <span className="max-sm:hidden">{t.outstandingNote}</span>
+                      {t.outstanding}{" "}
+                      <span className="max-sm:hidden">{t.outstandingNote}</span>
                     </TableCell>
                     <TableCell className="pe-4 text-end font-mono tabular-nums">
-                      {money(page.outstanding.amount, page.outstanding.currency)}
+                      {money(
+                        page.outstanding.amount,
+                        page.outstanding.currency
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -329,12 +460,19 @@ function InvoicesTableScreen({
         </div>
 
         {status === "ready" && pages > 1 ? (
-          <nav aria-label={t.pagination} className="mt-3 flex items-center justify-end gap-2 text-muted-foreground text-sm">
-            <span className="tabular-nums">{interpolate(t.range, { from, to, total })}</span>
+          <nav
+            aria-label={t.pagination}
+            className="mt-3 flex items-center justify-end gap-2 text-muted-foreground text-sm"
+          >
+            <span className="tabular-nums">
+              {interpolate(t.range, { from, to, total })}
+            </span>
             <Button
               aria-label={t.previous}
               disabled={query.page <= 1}
-              onClick={() => onQueryChange(withPage(query, query.page - 1, total))}
+              onClick={() =>
+                onQueryChange(withPage(query, query.page - 1, total))
+              }
               size="icon-sm"
               variant="outline"
             >
@@ -343,7 +481,9 @@ function InvoicesTableScreen({
             <Button
               aria-label={t.next}
               disabled={query.page >= pages}
-              onClick={() => onQueryChange(withPage(query, query.page + 1, total))}
+              onClick={() =>
+                onQueryChange(withPage(query, query.page + 1, total))
+              }
               size="icon-sm"
               variant="outline"
             >

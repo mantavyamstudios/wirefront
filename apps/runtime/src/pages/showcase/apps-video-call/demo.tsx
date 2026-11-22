@@ -23,7 +23,9 @@ const DROPS: { op: "join" | "leave"; index: number }[] = [
 
 export function AppsVideoCallShowcasePage() {
   const mountedAt = useRef(0);
-  const [participants, setParticipants] = useState<CallPerson[]>(fixtures.participants);
+  const [participants, setParticipants] = useState<CallPerson[]>(
+    fixtures.participants
+  );
   const [speakerId, setSpeakerId] = useState<string | null>("tomas");
   const [messages, setMessages] = useState<CallMessage[]>(fixtures.messages);
   const [reactions, setReactions] = useState<CallReaction[]>([]);
@@ -33,7 +35,10 @@ export function AppsVideoCallShowcasePage() {
   live.current = participants;
 
   // The demo clock runs from the fixture time at real speed.
-  const demoNow = () => new Date(start + (mountedAt.current ? performance.now() - mountedAt.current : 0));
+  const demoNow = () =>
+    new Date(
+      start + (mountedAt.current ? performance.now() - mountedAt.current : 0)
+    );
   useEffect(() => {
     mountedAt.current = performance.now();
   }, []);
@@ -45,24 +50,44 @@ export function AppsVideoCallShowcasePage() {
       const people = live.current;
       if (n % 3 === 0) {
         const talkers = people.filter((p) => !p.muted);
-        setSpeakerId(talkers.length ? (talkers[n % talkers.length]?.id ?? null) : null);
+        setSpeakerId(
+          talkers.length ? (talkers[n % talkers.length]?.id ?? null) : null
+        );
       }
       if (n % 8 === 4) {
         const step = DROPS[Math.floor(n / 8) % DROPS.length];
-        const person = step ? fixtures.dropIns[step.index % fixtures.dropIns.length] : undefined;
+        const person = step
+          ? fixtures.dropIns[step.index % fixtures.dropIns.length]
+          : undefined;
         if (step && person) {
           const here = people.some((p) => p.id === person.id);
-          if (step.op === "join" && !here) setParticipants((ps) => [...ps, person]);
-          if (step.op === "leave" && here) setParticipants((ps) => ps.filter((p) => p.id !== person.id));
+          if (step.op === "join" && !here)
+            setParticipants((ps) => [...ps, person]);
+          if (step.op === "leave" && here)
+            setParticipants((ps) => ps.filter((p) => p.id !== person.id));
         }
       }
       if (n % 5 === 2) {
         const who = people[n % Math.max(people.length, 1)];
         const emoji = CALL_REACTIONS[n % 5];
-        if (who && emoji) setReactions((rs) => [...rs.slice(-10), { id: `r${n}`, emoji, name: who.name.split(" ")[0] ?? who.name }]);
+        if (who && emoji)
+          setReactions((rs) => [
+            ...rs.slice(-10),
+            { id: `r${n}`, emoji, name: who.name.split(" ")[0] ?? who.name },
+          ]);
       }
-      const line = n % 14 === 10 ? fixtures.script[Math.floor(n / 14)] : undefined;
-      if (line && people.some((p) => p.id === line.authorId)) setMessages((m) => [...m, { id: `s${n}`, authorId: line.authorId, text: line.text, sentAt: new Date(start + n * 1000).toISOString() }]);
+      const line =
+        n % 14 === 10 ? fixtures.script[Math.floor(n / 14)] : undefined;
+      if (line && people.some((p) => p.id === line.authorId))
+        setMessages((m) => [
+          ...m,
+          {
+            id: `s${n}`,
+            authorId: line.authorId,
+            text: line.text,
+            sentAt: new Date(start + n * 1000).toISOString(),
+          },
+        ]);
     }, 1000);
     return () => clearInterval(id);
   }, [inCall]);
@@ -76,14 +101,32 @@ export function AppsVideoCallShowcasePage() {
           meetingCode={fixtures.meetingCode}
           messages={messages}
           onLeave={() => setInCall(false)}
-          onMuteAll={() => setParticipants((ps) => ps.map((p) => ({ ...p, muted: true })))}
-          onMuteParticipant={(id) => setParticipants((ps) => ps.map((p) => (p.id === id ? { ...p, muted: true } : p)))}
+          onMuteAll={() =>
+            setParticipants((ps) => ps.map((p) => ({ ...p, muted: true })))
+          }
+          onMuteParticipant={(id) =>
+            setParticipants((ps) =>
+              ps.map((p) => (p.id === id ? { ...p, muted: true } : p))
+            )
+          }
           onRateCall={() => {}}
           onReact={() => {}}
           onRejoin={() => setInCall(true)}
-          onRemoveParticipant={(id) => setParticipants((ps) => ps.filter((p) => p.id !== id))}
+          onRemoveParticipant={(id) =>
+            setParticipants((ps) => ps.filter((p) => p.id !== id))
+          }
           onSelectDevice={() => {}}
-          onSendMessage={async ({ text }) => setMessages((m) => [...m, { id: `you-${m.length}`, authorId: fixtures.you.id, text, sentAt: demoNow().toISOString() }])}
+          onSendMessage={async ({ text }) =>
+            setMessages((m) => [
+              ...m,
+              {
+                id: `you-${m.length}`,
+                authorId: fixtures.you.id,
+                text,
+                sentAt: demoNow().toISOString(),
+              },
+            ])
+          }
           onToggleCamera={() => {}}
           onToggleHand={() => {}}
           onToggleMic={() => {}}

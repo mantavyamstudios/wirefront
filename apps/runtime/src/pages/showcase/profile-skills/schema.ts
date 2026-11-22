@@ -21,6 +21,18 @@ export type Skill = z.infer<typeof Skill>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listSkills: { method: "GET", path: "/people/{id}/skills", summary: "A person's skills and endorsements", params: z.object({ id: z.string() }), response: z.array(Skill) },
-  endorseSkill: { method: "PUT", path: "/skills/{id}/endorsement", summary: "Endorse or un-endorse a skill", params: z.object({ id: z.string() }), body: z.object({ endorsed: z.boolean() }) },
+  listSkills: {
+    method: "GET",
+    path: "/people/{id}/skills",
+    summary: "A person's skills and endorsements",
+    params: z.object({ id: z.string() }),
+    response: z.array(Skill),
+  },
+  endorseSkill: {
+    method: "PUT",
+    path: "/skills/{id}/endorsement",
+    summary: "Endorse or un-endorse a skill",
+    params: z.object({ id: z.string() }),
+    body: z.object({ endorsed: z.boolean() }),
+  },
 });

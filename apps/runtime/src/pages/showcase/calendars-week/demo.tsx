@@ -18,10 +18,22 @@ export function CalendarsWeekShowcasePage() {
     <WirefrontProvider locale="en-GB" now={demoNow} timeZone="UTC">
       <WeekSchedule
         error="The schedule didn’t load. Check your connection and try again."
-        events={state === "loading" || state === "error" ? undefined : state === "empty" || weekStart !== fixtures.weekStart ? [] : fixtures.listWeekEvents}
+        events={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty" || weekStart !== fixtures.weekStart
+              ? []
+              : fixtures.listWeekEvents
+        }
         onRetry={() => {}}
         onWeekChange={setWeekStart}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
         weekStart={weekStart}
       />
     </WirefrontProvider>

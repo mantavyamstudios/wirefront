@@ -4,7 +4,9 @@ import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
 /** What "Resend link" sends. */
-export const ResendSignInLinkInput = z.object({ email: z.email() }).meta({ id: "ResendSignInLinkInput" });
+export const ResendSignInLinkInput = z
+  .object({ email: z.email() })
+  .meta({ id: "ResendSignInLinkInput" });
 export type ResendSignInLinkInput = z.infer<typeof ResendSignInLinkInput>;
 
 /** The backend operations this screen calls. */

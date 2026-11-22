@@ -4,10 +4,20 @@
 
 import { Avatar, AvatarFallback } from "@wirefront/ui/avatar";
 import { Button } from "@wirefront/ui/button";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@wirefront/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@wirefront/ui/sheet";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useFormat, useMessages, useWirefront } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useFormat,
+  useMessages,
+  useWirefront,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action } from "@wirefront/ui/wirefront/types";
 import { MessageSquareIcon } from "lucide-react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
@@ -53,7 +63,19 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-function Thread({ comments, onReply, onResolve, error, t }: { comments: ThreadComment[]; onReply: (body: string) => void; onResolve?: () => void; error?: string; t: typeof INLINE_THREAD_MESSAGES }) {
+function Thread({
+  comments,
+  onReply,
+  onResolve,
+  error,
+  t,
+}: {
+  comments: ThreadComment[];
+  onReply: (body: string) => void;
+  onResolve?: () => void;
+  error?: string;
+  t: typeof INLINE_THREAD_MESSAGES;
+}) {
   const fmt = useFormat();
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -71,22 +93,35 @@ function Thread({ comments, onReply, onResolve, error, t }: { comments: ThreadCo
       </h2>
       <div className="mt-1 flex items-center gap-2 rounded-md bg-category-3/6 px-2.5 py-1 ring-1 ring-category-3/20 lg:-ms-6 lg:rounded-s-none">
         <span aria-hidden className="size-1.5 rounded-full bg-category-3" />
-        <span className="font-mono text-[10px] text-category-3-foreground uppercase tracking-[0.25em]">{t.anchored}</span>
+        <span className="font-mono text-[10px] text-category-3-foreground uppercase tracking-[0.25em]">
+          {t.anchored}
+        </span>
       </div>
       {comments.map((c) => (
         <article className="space-y-1" key={c.id}>
           <div className="flex items-center gap-2">
             <Avatar aria-hidden className="size-6">
-              <AvatarFallback className="text-[10px]">{initials(c.author.name)}</AvatarFallback>
+              <AvatarFallback className="text-[10px]">
+                {initials(c.author.name)}
+              </AvatarFallback>
             </Avatar>
             <span className="font-medium text-sm">{c.author.name}</span>
-            <time className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]" dateTime={c.createdAt}>
+            <time
+              className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]"
+              dateTime={c.createdAt}
+            >
               {fmt.relative(c.createdAt)}
             </time>
           </div>
-          <p className="ms-8 text-muted-foreground text-sm leading-relaxed">{c.body}</p>
+          <p className="ms-8 text-muted-foreground text-sm leading-relaxed">
+            {c.body}
+          </p>
           <div className="ms-6 flex items-center gap-1">
-            <button className="min-h-8 rounded px-2 font-mono text-[11px] text-muted-foreground outline-none transition-colors hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10" onClick={() => inputRef.current?.focus()} type="button">
+            <button
+              className="min-h-8 rounded px-2 font-mono text-[11px] text-muted-foreground outline-none transition-colors hover:bg-foreground/4 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10"
+              onClick={() => inputRef.current?.focus()}
+              type="button"
+            >
               {t.reply}
             </button>
           </div>
@@ -109,7 +144,9 @@ function Thread({ comments, onReply, onResolve, error, t }: { comments: ThreadCo
           value={draft}
         />
         <div className="flex items-center justify-between gap-2 border-border/40 border-t pt-2">
-          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] pointer-coarse:invisible">{t.shortcut}</span>
+          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.25em] pointer-coarse:invisible">
+            {t.shortcut}
+          </span>
           <Button disabled={!draft.trim()} size="sm" type="submit">
             {t.send}
           </Button>
@@ -121,7 +158,11 @@ function Thread({ comments, onReply, onResolve, error, t }: { comments: ThreadCo
         ) : null}
       </form>
       {onResolve ? (
-        <button className="min-h-8 rounded px-1.5 font-mono text-[11px] text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10" onClick={onResolve} type="button">
+        <button
+          className="min-h-8 rounded px-1.5 font-mono text-[11px] text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-10"
+          onClick={onResolve}
+          type="button"
+        >
           {t.resolve}
         </button>
       ) : null}
@@ -131,7 +172,15 @@ function Thread({ comments, onReply, onResolve, error, t }: { comments: ThreadCo
 
 // lg+: the document with the thread in a margin rail. Below lg: one column; the anchored passage
 // carries a comment badge that opens the same thread in a bottom sheet.
-function InlineThreadScreen({ before, anchor, after, comments: initial, currentUser, onReply, onResolve }: InlineThreadProps) {
+function InlineThreadScreen({
+  before,
+  anchor,
+  after,
+  comments: initial,
+  currentUser,
+  onReply,
+  onResolve,
+}: InlineThreadProps) {
   const t = useMessages("inlineThread", INLINE_THREAD_MESSAGES);
   const { now } = useWirefront();
   const tempId = useId();
@@ -141,12 +190,21 @@ function InlineThreadScreen({ before, anchor, after, comments: initial, currentU
   const reply = useAction(onReply, {
     optimistic: ({ body }) => {
       const id = `${tempId}-${++seq.current}`;
-      setComments((c) => [...c, { id, author: currentUser, createdAt: now().toISOString(), body }]);
+      setComments((c) => [
+        ...c,
+        { id, author: currentUser, createdAt: now().toISOString(), body },
+      ]);
       return () => setComments((c) => c.filter((x) => x.id !== id));
     },
   });
   const thread = (
-    <Thread comments={comments} error={reply.error} onReply={(body) => reply.run({ body })} onResolve={onResolve} t={t} />
+    <Thread
+      comments={comments}
+      error={reply.error}
+      onReply={(body) => reply.run({ body })}
+      onResolve={onResolve}
+      t={t}
+    />
   );
 
   return (
@@ -155,16 +213,23 @@ function InlineThreadScreen({ before, anchor, after, comments: initial, currentU
         <article className="min-w-0">
           {before}
           <div className="relative mt-4">
-            <div className="rounded-md bg-category-3/8 px-3 py-2 text-foreground/90 text-sm leading-relaxed ring-1 ring-category-3/30">{anchor}</div>
+            <div className="rounded-md bg-category-3/8 px-3 py-2 text-foreground/90 text-sm leading-relaxed ring-1 ring-category-3/30">
+              {anchor}
+            </div>
             <Sheet>
               <SheetTrigger
-                aria-label={interpolate(t.openThread, { count: comments.length })}
+                aria-label={interpolate(t.openThread, {
+                  count: comments.length,
+                })}
                 className="absolute -inset-e-2 -top-3 inline-flex min-h-8 items-center gap-1 rounded-full bg-category-3 px-2.5 font-mono text-[11px] text-white shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 lg:hidden pointer-coarse:min-h-10"
               >
                 <MessageSquareIcon aria-hidden className="size-3" />
                 {comments.length}
               </SheetTrigger>
-              <SheetContent className="max-h-[85svh] pb-[env(safe-area-inset-bottom)]" side="bottom">
+              <SheetContent
+                className="max-h-[85svh] pb-[env(safe-area-inset-bottom)]"
+                side="bottom"
+              >
                 <SheetTitle className="sr-only">{t.sheetTitle}</SheetTitle>
                 <div className="overflow-y-auto p-4">{thread}</div>
               </SheetContent>
@@ -172,7 +237,10 @@ function InlineThreadScreen({ before, anchor, after, comments: initial, currentU
           </div>
           {after}
         </article>
-        <aside aria-label={t.rail} className="border-border/60 border-s ps-6 max-lg:hidden">
+        <aside
+          aria-label={t.rail}
+          className="border-border/60 border-s ps-6 max-lg:hidden"
+        >
           {thread}
         </aside>
       </div>

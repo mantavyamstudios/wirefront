@@ -4,10 +4,23 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const CollaboratorTone = z.enum(["info", "success", "violet", "warning"]);
+export const CollaboratorTone = z.enum([
+  "info",
+  "success",
+  "violet",
+  "warning",
+]);
 export type CollaboratorTone = z.infer<typeof CollaboratorTone>;
 
-export const Collaborator = z.object({ id: z.string(), name: z.string(), initials: z.string(), tone: CollaboratorTone, /** An AI agent rather than a person. */ agent: z.boolean().optional() }).meta({ id: "Collaborator" });
+export const Collaborator = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    initials: z.string(),
+    tone: CollaboratorTone,
+    /** An AI agent rather than a person. */ agent: z.boolean().optional(),
+  })
+  .meta({ id: "Collaborator" });
 export type Collaborator = z.infer<typeof Collaborator>;
 
 export const DocBlock = z
@@ -38,28 +51,95 @@ export const SharedDoc = z
 export type SharedDoc = z.infer<typeof SharedDoc>;
 
 export const DocComment = z
-  .object({ id: z.string(), /** The block it is anchored to. */ block: z.string(), author: z.string(), text: z.string(), createdAt: z.string(), reply: z.object({ author: z.string(), text: z.string() }).optional() })
+  .object({
+    id: z.string(),
+    /** The block it is anchored to. */ block: z.string(),
+    author: z.string(),
+    text: z.string(),
+    createdAt: z.string(),
+    reply: z.object({ author: z.string(), text: z.string() }).optional(),
+  })
   .meta({ id: "DocComment" });
 export type DocComment = z.infer<typeof DocComment>;
 
 export const DocSuggestion = z
-  .object({ id: z.string(), /** The block the text is appended to. */ block: z.string(), /** The agent suggesting it. */ author: z.string(), text: z.string(), note: z.string() })
+  .object({
+    id: z.string(),
+    /** The block the text is appended to. */ block: z.string(),
+    /** The agent suggesting it. */ author: z.string(),
+    text: z.string(),
+    note: z.string(),
+  })
   .meta({ id: "DocSuggestion" });
 export type DocSuggestion = z.infer<typeof DocSuggestion>;
 
 export const DocCursor = z
-  .object({ person: z.string(), block: z.string(), /** The caret sits after the first occurrence of this text in the block. */ after: z.string(), /** e.g. "reading", shown beside the name. */ activity: z.string().optional(), idle: z.boolean().optional() })
+  .object({
+    person: z.string(),
+    block: z.string(),
+    /** The caret sits after the first occurrence of this text in the block. */ after:
+      z.string(),
+    /** e.g. "reading", shown beside the name. */ activity: z
+      .string()
+      .optional(),
+    idle: z.boolean().optional(),
+  })
   .meta({ id: "DocCursor" });
 export type DocCursor = z.infer<typeof DocCursor>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getSharedDoc: { method: "GET", path: "/docs/{id}", summary: "The doc and its blocks", params: z.object({ id: z.string() }), response: SharedDoc },
-  listCollaborators: { method: "GET", path: "/docs/{id}/collaborators", summary: "People and agents on the doc", params: z.object({ id: z.string() }), response: z.array(Collaborator) },
-  listDocComments: { method: "GET", path: "/docs/{id}/comments", summary: "Open comments", params: z.object({ id: z.string() }), response: z.array(DocComment) },
-  getPendingSuggestion: { method: "GET", path: "/docs/{id}/suggestions/next", summary: "The next agent suggestion to review", params: z.object({ id: z.string() }), response: DocSuggestion },
-  acceptSuggestion: { method: "POST", path: "/suggestions/{id}/accept", summary: "Apply a suggestion to the doc", params: z.object({ id: z.string() }) },
-  rejectSuggestion: { method: "POST", path: "/suggestions/{id}/reject", summary: "Discard a suggestion", params: z.object({ id: z.string() }) },
-  resolveDocComment: { method: "POST", path: "/comments/{id}/resolve", summary: "Resolve a comment", params: z.object({ id: z.string() }) },
-  replyToDocComment: { method: "POST", path: "/comments/{id}/reply", summary: "Reply to a comment", params: z.object({ id: z.string() }), body: z.object({ text: z.string().min(1) }) },
+  getSharedDoc: {
+    method: "GET",
+    path: "/docs/{id}",
+    summary: "The doc and its blocks",
+    params: z.object({ id: z.string() }),
+    response: SharedDoc,
+  },
+  listCollaborators: {
+    method: "GET",
+    path: "/docs/{id}/collaborators",
+    summary: "People and agents on the doc",
+    params: z.object({ id: z.string() }),
+    response: z.array(Collaborator),
+  },
+  listDocComments: {
+    method: "GET",
+    path: "/docs/{id}/comments",
+    summary: "Open comments",
+    params: z.object({ id: z.string() }),
+    response: z.array(DocComment),
+  },
+  getPendingSuggestion: {
+    method: "GET",
+    path: "/docs/{id}/suggestions/next",
+    summary: "The next agent suggestion to review",
+    params: z.object({ id: z.string() }),
+    response: DocSuggestion,
+  },
+  acceptSuggestion: {
+    method: "POST",
+    path: "/suggestions/{id}/accept",
+    summary: "Apply a suggestion to the doc",
+    params: z.object({ id: z.string() }),
+  },
+  rejectSuggestion: {
+    method: "POST",
+    path: "/suggestions/{id}/reject",
+    summary: "Discard a suggestion",
+    params: z.object({ id: z.string() }),
+  },
+  resolveDocComment: {
+    method: "POST",
+    path: "/comments/{id}/resolve",
+    summary: "Resolve a comment",
+    params: z.object({ id: z.string() }),
+  },
+  replyToDocComment: {
+    method: "POST",
+    path: "/comments/{id}/reply",
+    summary: "Reply to a comment",
+    params: z.object({ id: z.string() }),
+    body: z.object({ text: z.string().min(1) }),
+  },
 });

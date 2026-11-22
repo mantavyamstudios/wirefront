@@ -31,7 +31,13 @@ export const Billing = z
     }),
     monthlyPrice: Money,
     paymentMethod: z
-      .object({ brand: z.string(), last4: z.string().length(4), expMonth: z.int().min(1).max(12), expYear: z.int(), email: z.email().optional() })
+      .object({
+        brand: z.string(),
+        last4: z.string().length(4),
+        expMonth: z.int().min(1).max(12),
+        expYear: z.int(),
+        email: z.email().optional(),
+      })
       .nullable(),
     credits: Money,
     taxId: z.object({ type: z.string(), value: z.string() }).nullable(),
@@ -42,7 +48,20 @@ export type Billing = z.infer<typeof Billing>;
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getBilling: { method: "GET", path: "/billing", summary: "Plan, payment method, credits and recent invoices", response: Billing },
-  cancelPlan: { method: "POST", path: "/billing/cancel", summary: "Cancel at the end of the current period" },
-  exportInvoices: { method: "POST", path: "/billing/invoices/export", summary: "Email a zip of every invoice to the billing contact" },
+  getBilling: {
+    method: "GET",
+    path: "/billing",
+    summary: "Plan, payment method, credits and recent invoices",
+    response: Billing,
+  },
+  cancelPlan: {
+    method: "POST",
+    path: "/billing/cancel",
+    summary: "Cancel at the end of the current period",
+  },
+  exportInvoices: {
+    method: "POST",
+    path: "/billing/invoices/export",
+    summary: "Email a zip of every invoice to the billing contact",
+  },
 });

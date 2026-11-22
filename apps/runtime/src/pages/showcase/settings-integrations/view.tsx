@@ -10,7 +10,11 @@ import { Skeleton } from "@wirefront/ui/skeleton";
 import { Spinner } from "@wirefront/ui/spinner";
 import { useAction } from "@wirefront/ui/wirefront/action";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
-import { interpolate, useMessages, WirefrontLink } from "@wirefront/ui/wirefront/provider";
+import {
+  interpolate,
+  useMessages,
+  WirefrontLink,
+} from "@wirefront/ui/wirefront/provider";
 import type { Action, AsyncStatus } from "@wirefront/ui/wirefront/types";
 import { CheckIcon, ExternalLinkIcon, SearchIcon } from "lucide-react";
 import { useState } from "react";
@@ -48,7 +52,13 @@ export interface IntegrationDirectoryProps {
 }
 
 /** Monogram colours, picked by name so a tile keeps its colour. */
-const TONES = ["bg-foreground text-background", "bg-category-5-strong text-white", "bg-category-4-strong text-white", "bg-category-8-strong text-white", "bg-category-3-strong text-white"];
+const TONES = [
+  "bg-foreground text-background",
+  "bg-category-5-strong text-white",
+  "bg-category-4-strong text-white",
+  "bg-category-8-strong text-white",
+  "bg-category-3-strong text-white",
+];
 const SKELETON_CARDS = ["c1", "c2", "c3", "c4", "c5", "c6"];
 const ALL = "__all";
 const CONNECTED = "__connected";
@@ -59,7 +69,14 @@ function tone(name: string) {
   return TONES[h % TONES.length];
 }
 
-function IntegrationDirectoryScreen({ integrations, status = "ready", error, onRetry, onConnect, className }: IntegrationDirectoryProps) {
+function IntegrationDirectoryScreen({
+  integrations,
+  status = "ready",
+  error,
+  onRetry,
+  onConnect,
+  className,
+}: IntegrationDirectoryProps) {
   const t = useMessages("integrationDirectory", INTEGRATION_DIRECTORY_MESSAGES);
   const [filter, setFilter] = useState(ALL);
   const [query, setQuery] = useState("");
@@ -84,16 +101,32 @@ function IntegrationDirectoryScreen({ integrations, status = "ready", error, onR
   return (
     <div className={cn("min-h-svh bg-background text-foreground", className)}>
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">{t.eyebrow}</div>
+        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
+          {t.eyebrow}
+        </div>
         <h1 className="mt-1 font-heading text-3xl">{t.title}</h1>
-        {ready ? <p className="mt-1.5 text-muted-foreground text-sm">{interpolate(t.summary, { connected, available: list.length - connected })}</p> : null}
+        {ready ? (
+          <p className="mt-1.5 text-muted-foreground text-sm">
+            {interpolate(t.summary, {
+              connected,
+              available: list.length - connected,
+            })}
+          </p>
+        ) : null}
 
         {status === "error" ? (
           <div className="mt-8 rounded-xl border border-border/60 p-10 text-center">
             <p className="font-medium">{t.errorTitle}</p>
-            {error ? <p className="mt-1 text-muted-foreground text-sm">{error}</p> : null}
+            {error ? (
+              <p className="mt-1 text-muted-foreground text-sm">{error}</p>
+            ) : null}
             {onRetry ? (
-              <Button className="mt-4" onClick={onRetry} size="sm" variant="outline">
+              <Button
+                className="mt-4"
+                onClick={onRetry}
+                size="sm"
+                variant="outline"
+              >
                 {t.retry}
               </Button>
             ) : null}
@@ -112,7 +145,12 @@ function IntegrationDirectoryScreen({ integrations, status = "ready", error, onR
                   value={query}
                 />
               </div>
-              <RadioGroup aria-label={t.category} className="flex flex-wrap gap-1.5" onValueChange={(v) => setFilter(v as string)} value={filter}>
+              <RadioGroup
+                aria-label={t.category}
+                className="flex flex-wrap gap-1.5"
+                onValueChange={(v) => setFilter(v as string)}
+                value={filter}
+              >
                 {options.map((o) => (
                   <Radio.Root
                     className="min-h-7 cursor-pointer rounded-md border border-border/60 px-2.5 py-1.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-checked:border-transparent data-checked:bg-foreground data-checked:text-background pointer-coarse:min-h-10"
@@ -126,24 +164,49 @@ function IntegrationDirectoryScreen({ integrations, status = "ready", error, onR
             </div>
 
             {connect.error ? (
-              <p className="mt-4 text-destructive-foreground text-sm" role="alert">
+              <p
+                className="mt-4 text-destructive-foreground text-sm"
+                role="alert"
+              >
                 {connect.error}
               </p>
             ) : null}
 
-            <ul aria-busy={status === "loading"} className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <ul
+              aria-busy={status === "loading"}
+              className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            >
               {ready
                 ? visible.map((i) => (
-                    <li className="group flex flex-col gap-3 rounded-xl border border-border/60 bg-background/40 p-4 transition-colors hover:border-foreground/30" key={i.id}>
+                    <li
+                      className="group flex flex-col gap-3 rounded-xl border border-border/60 bg-background/40 p-4 transition-colors hover:border-foreground/30"
+                      key={i.id}
+                    >
                       <div className="flex items-start justify-between">
                         {i.logoUrl ? (
-                          <img alt="" className="size-10 rounded-lg object-cover" height={40} src={i.logoUrl} width={40} />
+                          <img
+                            alt=""
+                            className="size-10 rounded-lg object-cover"
+                            height={40}
+                            src={i.logoUrl}
+                            width={40}
+                          />
                         ) : (
-                          <div aria-hidden className={cn("flex size-10 items-center justify-center rounded-lg font-medium text-[12px]", tone(i.name))}>
+                          <div
+                            aria-hidden
+                            className={cn(
+                              "flex size-10 items-center justify-center rounded-lg font-medium text-[12px]",
+                              tone(i.name)
+                            )}
+                          >
                             {i.name.slice(0, 2).toUpperCase()}
                           </div>
                         )}
-                        {i.badge ? <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{i.badge}</span> : null}
+                        {i.badge ? (
+                          <span className="rounded bg-foreground/6 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                            {i.badge}
+                          </span>
+                        ) : null}
                       </div>
                       <div>
                         <h2 className="flex items-center gap-2">
@@ -155,18 +218,42 @@ function IntegrationDirectoryScreen({ integrations, status = "ready", error, onR
                             </span>
                           ) : null}
                         </h2>
-                        <div className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{i.category}</div>
-                        <p className="mt-2 text-muted-foreground text-xs leading-relaxed">{i.description}</p>
+                        <div className="mt-0.5 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                          {i.category}
+                        </div>
+                        <p className="mt-2 text-muted-foreground text-xs leading-relaxed">
+                          {i.description}
+                        </p>
                       </div>
                       <div className="mt-auto flex items-center gap-2 pt-1">
                         {i.connected && i.configureHref ? (
-                          <WirefrontLink className={cn(buttonVariants({ size: "sm", variant: "outline" }), "flex-1")} href={i.configureHref}>
-                            {t.configure} <span className="sr-only">{i.name}</span>
+                          <WirefrontLink
+                            className={cn(
+                              buttonVariants({
+                                size: "sm",
+                                variant: "outline",
+                              }),
+                              "flex-1"
+                            )}
+                            href={i.configureHref}
+                          >
+                            {t.configure}{" "}
+                            <span className="sr-only">{i.name}</span>
                           </WirefrontLink>
                         ) : !i.connected && onConnect ? (
-                          <Button aria-busy={connect.isPending(i.id)} className="flex-1" disabled={connect.isPending()} onClick={() => void connect.run(i.id, i.id)} size="sm" type="button">
-                            {connect.isPending(i.id) ? <Spinner data-icon="inline-start" /> : null}
-                            {t.connect} <span className="sr-only">{i.name}</span>
+                          <Button
+                            aria-busy={connect.isPending(i.id)}
+                            className="flex-1"
+                            disabled={connect.isPending()}
+                            onClick={() => void connect.run(i.id, i.id)}
+                            size="sm"
+                            type="button"
+                          >
+                            {connect.isPending(i.id) ? (
+                              <Spinner data-icon="inline-start" />
+                            ) : null}
+                            {t.connect}{" "}
+                            <span className="sr-only">{i.name}</span>
                           </Button>
                         ) : (
                           <span className="flex-1" />
@@ -177,7 +264,10 @@ function IntegrationDirectoryScreen({ integrations, status = "ready", error, onR
                             className="inline-flex shrink-0 items-center justify-center rounded-md border border-border/60 bg-background/40 p-2 text-muted-foreground transition-colors hover:text-foreground pointer-coarse:size-10"
                             href={i.docsUrl}
                           >
-                            <ExternalLinkIcon aria-hidden className="size-3.5" />
+                            <ExternalLinkIcon
+                              aria-hidden
+                              className="size-3.5"
+                            />
                           </WirefrontLink>
                         ) : null}
                       </div>
@@ -192,7 +282,9 @@ function IntegrationDirectoryScreen({ integrations, status = "ready", error, onR
 
             {ready && visible.length === 0 ? (
               <div className="mt-8 rounded-xl border border-border/70 border-dashed bg-background/30 px-6 py-12 text-center">
-                <p className="text-muted-foreground text-sm">{q ? interpolate(t.noMatch, { query }) : t.none}</p>
+                <p className="text-muted-foreground text-sm">
+                  {q ? interpolate(t.noMatch, { query }) : t.none}
+                </p>
               </div>
             ) : null}
           </>

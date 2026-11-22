@@ -6,7 +6,9 @@ import * as fixtures from "./fixtures";
 import { CommandPalette } from "./view";
 
 const [suggestions, ...rest] = fixtures.actions;
-const groups = suggestions ? [suggestions, ...fixtures.searchCommands, ...rest] : fixtures.searchCommands;
+const groups = suggestions
+  ? [suggestions, ...fixtures.searchCommands, ...rest]
+  : fixtures.searchCommands;
 
 export function ModalsCommandPaletteShowcasePage() {
   return <CommandPalette defaultOpen groups={groups} onSelect={() => {}} />;

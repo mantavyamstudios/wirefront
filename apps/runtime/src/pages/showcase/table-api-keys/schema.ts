@@ -3,7 +3,9 @@
 import * as z from "zod";
 import { defineApi } from "@wirefront/ui/wirefront/api";
 
-export const KeyEnvironment = z.enum(["live", "test"]).meta({ id: "KeyEnvironment" });
+export const KeyEnvironment = z
+  .enum(["live", "test"])
+  .meta({ id: "KeyEnvironment" });
 export type KeyEnvironment = z.infer<typeof KeyEnvironment>;
 
 /**
@@ -28,7 +30,9 @@ export const ApiKey = z
 export type ApiKey = z.infer<typeof ApiKey>;
 
 /** What the "New key" dialog's form checks. */
-export const NewKeyForm = z.object({ name: z.string().trim().min(1, "Name the key after where it's used.").max(80) });
+export const NewKeyForm = z.object({
+  name: z.string().trim().min(1, "Name the key after where it's used.").max(80),
+});
 
 export const CreateKeyInput = NewKeyForm.extend({
   env: KeyEnvironment,
@@ -37,15 +41,28 @@ export const CreateKeyInput = NewKeyForm.extend({
 export type CreateKeyInput = z.infer<typeof CreateKeyInput>;
 
 /** A new or rotated key, with its secret: the only time the secret leaves the server. */
-export const CreatedKey = z.object({ key: ApiKey, secret: z.string() }).meta({ id: "CreatedKey" });
+export const CreatedKey = z
+  .object({ key: ApiKey, secret: z.string() })
+  .meta({ id: "CreatedKey" });
 export type CreatedKey = z.infer<typeof CreatedKey>;
 
 const KeyParams = z.object({ id: z.string() });
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  listKeys: { method: "GET", path: "/api-keys", summary: "List API keys (never their secrets)", response: z.array(ApiKey) },
-  createKey: { method: "POST", path: "/api-keys", summary: "Create a key; the response holds its secret once", body: CreateKeyInput, response: CreatedKey },
+  listKeys: {
+    method: "GET",
+    path: "/api-keys",
+    summary: "List API keys (never their secrets)",
+    response: z.array(ApiKey),
+  },
+  createKey: {
+    method: "POST",
+    path: "/api-keys",
+    summary: "Create a key; the response holds its secret once",
+    body: CreateKeyInput,
+    response: CreatedKey,
+  },
   rotateKey: {
     method: "POST",
     path: "/api-keys/{id}/rotate",
@@ -53,5 +70,10 @@ export const api = defineApi({
     params: KeyParams,
     response: CreatedKey,
   },
-  revokeKey: { method: "DELETE", path: "/api-keys/{id}", summary: "Revoke a key", params: KeyParams },
+  revokeKey: {
+    method: "DELETE",
+    path: "/api-keys/{id}",
+    summary: "Revoke a key",
+    params: KeyParams,
+  },
 });

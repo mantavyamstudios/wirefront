@@ -8,7 +8,8 @@ import { useShowcaseState } from "@/lib/showcase-state";
 import * as fixtures from "./fixtures";
 import { SecurityOverview } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const demoNow = () => new Date(fixtures.now);
 
 export function SettingsSecurityShowcasePage() {
@@ -16,7 +17,17 @@ export function SettingsSecurityShowcasePage() {
   return (
     <WirefrontProvider now={demoNow}>
       <SecurityOverview
-        data={state === "loading" || state === "error" ? undefined : state === "empty" ? { ...fixtures.getSecurity, passkeys: [], sessions: fixtures.getSecurity.sessions.slice(0, 1) } : fixtures.getSecurity}
+        data={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty"
+              ? {
+                  ...fixtures.getSecurity,
+                  passkeys: [],
+                  sessions: fixtures.getSecurity.sessions.slice(0, 1),
+                }
+              : fixtures.getSecurity
+        }
         error="Security settings didn’t load. Check your connection and try again."
         onAddPasskey={() => wait(800)}
         onRegenerateCodes={async () => {
@@ -31,7 +42,13 @@ export function SettingsSecurityShowcasePage() {
         }}
         onRevokeOtherSessions={() => wait(600)}
         onRevokeSession={() => wait(500)}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
         twoFactorHref="#two-factor"
       />
     </WirefrontProvider>

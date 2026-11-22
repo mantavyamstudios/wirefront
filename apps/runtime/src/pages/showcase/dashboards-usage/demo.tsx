@@ -18,7 +18,13 @@ export function DashboardsUsageShowcasePage() {
         invoiceHref="#invoice"
         manageHref="#billing"
         onRetry={() => {}}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
         upgrade={{ plan: "Enterprise", href: "#upgrade" }}
         usage={state === "ready" ? fixtures.getUsage : undefined}
       />

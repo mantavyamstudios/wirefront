@@ -3,7 +3,8 @@
 // Showcase only: the empty state in sample page chrome. Not shipped by the registry.
 import { Offline } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function EmptyOfflineShowcasePage() {
   return (

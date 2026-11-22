@@ -18,12 +18,24 @@ export function CalendarsMonthShowcasePage() {
     <WirefrontProvider locale="en-US" now={demoNow} timeZone="UTC">
       <MonthCalendar
         error="The calendar didn’t load. Check your connection and try again."
-        events={state === "loading" || state === "error" ? undefined : state === "empty" || month !== fixtures.month ? [] : fixtures.listMonthEvents}
+        events={
+          state === "loading" || state === "error"
+            ? undefined
+            : state === "empty" || month !== fixtures.month
+              ? []
+              : fixtures.listMonthEvents
+        }
         month={month}
         onCreateEvent={() => {}}
         onMonthChange={setMonth}
         onRetry={() => {}}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

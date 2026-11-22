@@ -15,7 +15,10 @@ async function demoCheckSlug(slug: string) {
 
 async function demoCreate(input: CreateWorkspaceInput) {
   await wait(900);
-  if (fixtures.takenSlugs.includes(input.slug)) return fail(undefined, { name: "A workspace already uses that URL. Try another name." });
+  if (fixtures.takenSlugs.includes(input.slug))
+    return fail(undefined, {
+      name: "A workspace already uses that URL. Try another name.",
+    });
   return ok({ ...fixtures.createWorkspace, ...input });
 }
 

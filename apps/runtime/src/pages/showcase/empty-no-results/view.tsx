@@ -4,8 +4,19 @@
 
 import { Badge } from "@wirefront/ui/badge";
 import { Button } from "@wirefront/ui/button";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@wirefront/ui/empty";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@wirefront/ui/input-group";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@wirefront/ui/empty";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@wirefront/ui/input-group";
 import { cn } from "@wirefront/ui/lib/utils";
 import { interpolate, useMessages } from "@wirefront/ui/wirefront/provider";
 import { ScreenBoundary } from "@wirefront/ui/wirefront/boundary";
@@ -41,12 +52,23 @@ export interface NoResultsStateProps {
 }
 
 /** The empty state on its own, for any list or table whose query found nothing. */
-function NoResultsStateScreen({ query, filterCount = 0, onClearFilters, onClearSearch, className }: NoResultsStateProps) {
+function NoResultsStateScreen({
+  query,
+  filterCount = 0,
+  onClearFilters,
+  onClearSearch,
+  className,
+}: NoResultsStateProps) {
   const t = useMessages("noResults", NO_RESULTS_MESSAGES);
   const canClearFilters = Boolean(onClearFilters && filterCount > 0);
   const canClearSearch = Boolean(onClearSearch && query);
   return (
-    <div className={cn("rounded-xl border border-border/70 border-dashed bg-background/40", className)}>
+    <div
+      className={cn(
+        "rounded-xl border border-border/70 border-dashed bg-background/40",
+        className
+      )}
+    >
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
@@ -95,10 +117,23 @@ export interface NoResultsProps {
 }
 
 /** A search with filter chips above the empty state: the page a filtered list shows when nothing matches. */
-function NoResultsScreen({ query, onQueryChange, filters, onRemoveFilter, onClearFilters, searchPlaceholder, className }: NoResultsProps) {
+function NoResultsScreen({
+  query,
+  onQueryChange,
+  filters,
+  onRemoveFilter,
+  onClearFilters,
+  searchPlaceholder,
+  className,
+}: NoResultsProps) {
   const t = useMessages("noResults", NO_RESULTS_MESSAGES);
   return (
-    <div className={cn("min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12", className)}>
+    <div
+      className={cn(
+        "min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12",
+        className
+      )}
+    >
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         <InputGroup>
           <InputGroupAddon align="inline-start">
@@ -115,9 +150,15 @@ function NoResultsScreen({ query, onQueryChange, filters, onRemoveFilter, onClea
 
         {filters.length ? (
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">{t.filters}</span>
+            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+              {t.filters}
+            </span>
             {filters.map((f) => (
-              <Badge className="gap-1 font-mono text-[11px]" key={f.id} variant="outline">
+              <Badge
+                className="gap-1 font-mono text-[11px]"
+                key={f.id}
+                variant="outline"
+              >
                 {f.label}
                 <button
                   aria-label={interpolate(t.removeFilter, { label: f.label })}
@@ -129,13 +170,23 @@ function NoResultsScreen({ query, onQueryChange, filters, onRemoveFilter, onClea
                 </button>
               </Badge>
             ))}
-            <Button className="ms-1" onClick={onClearFilters} size="xs" variant="ghost">
+            <Button
+              className="ms-1"
+              onClick={onClearFilters}
+              size="xs"
+              variant="ghost"
+            >
               {t.clearAll}
             </Button>
           </div>
         ) : null}
 
-        <NoResultsState filterCount={filters.length} onClearFilters={onClearFilters} onClearSearch={() => onQueryChange("")} query={query} />
+        <NoResultsState
+          filterCount={filters.length}
+          onClearFilters={onClearFilters}
+          onClearSearch={() => onQueryChange("")}
+          query={query}
+        />
       </div>
     </div>
   );

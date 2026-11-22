@@ -20,11 +20,16 @@ export type ComparedPlan = z.infer<typeof ComparedPlan>;
 
 /** One feature row; values are keyed by plan id: text, or true/false for included/not. */
 export const ComparisonRow = z
-  .object({ label: z.string(), values: z.record(z.string(), z.union([z.string(), z.boolean()])) })
+  .object({
+    label: z.string(),
+    values: z.record(z.string(), z.union([z.string(), z.boolean()])),
+  })
   .meta({ id: "ComparisonRow" });
 export type ComparisonRow = z.infer<typeof ComparisonRow>;
 
-export const ComparisonSection = z.object({ title: z.string(), rows: z.array(ComparisonRow) }).meta({ id: "ComparisonSection" });
+export const ComparisonSection = z
+  .object({ title: z.string(), rows: z.array(ComparisonRow) })
+  .meta({ id: "ComparisonSection" });
 export type ComparisonSection = z.infer<typeof ComparisonSection>;
 
 /** The backend operations this screen calls. */
@@ -33,6 +38,9 @@ export const api = defineApi({
     method: "GET",
     path: "/plans/comparison",
     summary: "Plans and the features to compare them on",
-    response: z.object({ plans: z.array(ComparedPlan), sections: z.array(ComparisonSection) }),
+    response: z.object({
+      plans: z.array(ComparedPlan),
+      sections: z.array(ComparisonSection),
+    }),
   },
 });

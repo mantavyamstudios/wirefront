@@ -9,7 +9,8 @@ import * as fixtures from "./fixtures";
 import type { DataExport, PrivacySettings } from "./schema";
 import { PrivacyData } from "./view";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 const demoNow = () => new Date(fixtures.now);
 
 export function SettingsPrivacyShowcasePage() {
@@ -30,7 +31,11 @@ export function SettingsPrivacyShowcasePage() {
     return () => window.clearInterval(id);
   }, [running]);
 
-  const data: PrivacySettings = { ...fixtures.getPrivacy, latestExport, deletion };
+  const data: PrivacySettings = {
+    ...fixtures.getPrivacy,
+    latestExport,
+    deletion,
+  };
   return (
     <WirefrontProvider now={demoNow}>
       <PrivacyData
@@ -50,7 +55,13 @@ export function SettingsPrivacyShowcasePage() {
         }}
         onRetry={() => {}}
         onSetRetention={() => wait(300)}
-        status={state === "loading" ? "loading" : state === "error" ? "error" : "ready"}
+        status={
+          state === "loading"
+            ? "loading"
+            : state === "error"
+              ? "error"
+              : "ready"
+        }
       />
     </WirefrontProvider>
   );

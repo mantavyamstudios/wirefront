@@ -7,9 +7,24 @@ import type { ConnectorApp, ConnectorSetting } from "./schema";
 export const workspace = "Northwind";
 
 const defaultSettings = (): ConnectorSetting[] => [
-  { id: "sync", label: "Sync every 15 minutes", hint: "Keep records fresh in the background.", on: true },
-  { id: "notify", label: "Notify on errors", hint: "Post to #ops when a sync fails.", on: true },
-  { id: "agents", label: "Allow agents to write", hint: "Agents can create and edit records.", on: false },
+  {
+    id: "sync",
+    label: "Sync every 15 minutes",
+    hint: "Keep records fresh in the background.",
+    on: true,
+  },
+  {
+    id: "notify",
+    label: "Notify on errors",
+    hint: "Post to #ops when a sync fails.",
+    on: true,
+  },
+  {
+    id: "agents",
+    label: "Allow agents to write",
+    hint: "Agents can create and edit records.",
+    on: false,
+  },
 ];
 
 export const listConnectorApps: ConnectorApp[] = [
@@ -17,34 +32,45 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "relay",
     name: "Relay",
     blurb: "Team chat with threads and huddles.",
-    description: "Post agent summaries to channels, reply in threads and turn messages into tasks without leaving chat.",
+    description:
+      "Post agent summaries to channels, reply in threads and turn messages into tasks without leaving chat.",
     category: "Communication",
     tone: "info",
     tag: "Popular",
     installs: 48200,
     addedAt: "2025-03-10",
     connected: true,
-    permissions: ["Read public channels", "Post messages as the app", "Read user profiles"],
+    permissions: [
+      "Read public channels",
+      "Post messages as the app",
+      "Read user profiles",
+    ],
     settings: defaultSettings(),
   },
   {
     id: "postbox",
     name: "Postbox",
     blurb: "Shared inboxes for the whole team.",
-    description: "Triage shared inboxes, draft replies with your agents and sync labels both ways.",
+    description:
+      "Triage shared inboxes, draft replies with your agents and sync labels both ways.",
     category: "Communication",
     tone: "orange",
     installs: 21900,
     addedAt: "2025-09-16",
     connected: false,
-    permissions: ["Read and label conversations", "Create drafts", "Send on your behalf"],
+    permissions: [
+      "Read and label conversations",
+      "Create drafts",
+      "Send on your behalf",
+    ],
     settings: defaultSettings(),
   },
   {
     id: "huddle",
     name: "Huddle",
     blurb: "Video calls with live transcripts.",
-    description: "Pull transcripts into your workspace after every call and let agents write the follow-up.",
+    description:
+      "Pull transcripts into your workspace after every call and let agents write the follow-up.",
     category: "Communication",
     tone: "rose",
     tag: "New",
@@ -58,21 +84,27 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "forge",
     name: "Forge",
     blurb: "Git hosting, reviews and pipelines.",
-    description: "Link pull requests to tasks, summarise diffs and post review checklists automatically.",
+    description:
+      "Link pull requests to tasks, summarise diffs and post review checklists automatically.",
     category: "Developer",
     tone: "violet",
     tag: "Popular",
     installs: 39100,
     addedAt: "2024-11-10",
     connected: true,
-    permissions: ["Read repositories", "Comment on pull requests", "Read pipeline status"],
+    permissions: [
+      "Read repositories",
+      "Comment on pull requests",
+      "Read pipeline status",
+    ],
     settings: defaultSettings(),
   },
   {
     id: "tracer",
     name: "Tracer",
     blurb: "Error tracking that groups the noise.",
-    description: "Open an incident when a new error spikes and hand the stack trace to a debugging agent.",
+    description:
+      "Open an incident when a new error spikes and hand the stack trace to a debugging agent.",
     category: "Developer",
     tone: "rose",
     installs: 12800,
@@ -85,7 +117,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "launchpad",
     name: "Launchpad",
     blurb: "Preview deploys for every branch.",
-    description: "Get a preview link on every branch and let agents check it before you merge.",
+    description:
+      "Get a preview link on every branch and let agents check it before you merge.",
     category: "Developer",
     tone: "teal",
     tag: "Beta",
@@ -99,7 +132,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "tally",
     name: "Tally",
     blurb: "Invoices that chase themselves.",
-    description: "Draft invoices from closed deals and send polite reminders when they slip past due.",
+    description:
+      "Draft invoices from closed deals and send polite reminders when they slip past due.",
     category: "Finance",
     tone: "success",
     installs: 8700,
@@ -112,7 +146,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "coffer",
     name: "Coffer",
     blurb: "Expense cards and receipt matching.",
-    description: "Match receipts to card spend and flag anything that breaks policy.",
+    description:
+      "Match receipts to card spend and flag anything that breaks policy.",
     category: "Finance",
     tone: "amber",
     tag: "New",
@@ -126,7 +161,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "inkwell",
     name: "Inkwell",
     blurb: "Collaborative design files.",
-    description: "Attach frames to specs, collect feedback and export assets straight into tasks.",
+    description:
+      "Attach frames to specs, collect feedback and export assets straight into tasks.",
     category: "Design",
     tone: "orange",
     tag: "Popular",
@@ -140,7 +176,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "swatch",
     name: "Swatch",
     blurb: "One home for brand assets.",
-    description: "Keep logos, colours and type in one place so agents always use the current brand.",
+    description:
+      "Keep logos, colours and type in one place so agents always use the current brand.",
     category: "Design",
     tone: "amber",
     installs: 5200,
@@ -153,7 +190,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "silo",
     name: "Silo",
     blurb: "Warehouse sync on a schedule.",
-    description: "Query your warehouse in plain language and schedule exports into reports.",
+    description:
+      "Query your warehouse in plain language and schedule exports into reports.",
     category: "Data",
     tone: "violet",
     tag: "Popular",
@@ -167,7 +205,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "gridline",
     name: "Gridline",
     blurb: "Spreadsheets your agents can edit.",
-    description: "Read ranges, append rows and keep a sheet in sync with any table in your workspace.",
+    description:
+      "Read ranges, append rows and keep a sheet in sync with any table in your workspace.",
     category: "Data",
     tone: "success",
     installs: 26100,
@@ -180,7 +219,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "beacon",
     name: "Beacon",
     blurb: "Product analytics and funnels.",
-    description: "Ask why a funnel dropped and get a chart back, with the events that explain it.",
+    description:
+      "Ask why a funnel dropped and get a chart back, with the events that explain it.",
     category: "Data",
     tone: "info",
     installs: 9800,
@@ -193,7 +233,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "harbor",
     name: "Harbor Desk",
     blurb: "Support tickets with SLAs.",
-    description: "Let a triage agent tag, prioritise and draft first replies on every new ticket.",
+    description:
+      "Let a triage agent tag, prioritise and draft first replies on every new ticket.",
     category: "Support",
     tone: "teal",
     tag: "Popular",
@@ -207,7 +248,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "murmur",
     name: "Murmur",
     blurb: "Public feedback boards and voting.",
-    description: "Cluster feature requests by theme and post a weekly digest to your team.",
+    description:
+      "Cluster feature requests by theme and post a weekly digest to your team.",
     category: "Support",
     tone: "warning",
     tag: "Beta",
@@ -221,7 +263,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "lumen",
     name: "Lumen Search",
     blurb: "Semantic search over every doc.",
-    description: "Index your docs and wikis so agents can cite the exact paragraph they used.",
+    description:
+      "Index your docs and wikis so agents can cite the exact paragraph they used.",
     category: "AI",
     tone: "amber",
     tag: "New",
@@ -235,7 +278,8 @@ export const listConnectorApps: ConnectorApp[] = [
     id: "scribe",
     name: "Scribe",
     blurb: "Meeting notes that write themselves.",
-    description: "Turn any recording into notes, decisions and owners, then file them where they belong.",
+    description:
+      "Turn any recording into notes, decisions and owners, then file them where they belong.",
     category: "AI",
     tone: "orange",
     installs: 11200,
@@ -248,6 +292,5 @@ export const listConnectorApps: ConnectorApp[] = [
 
 /** The first connection attempt to these apps fails in the demo, with this reason. */
 export const authErrors: Record<string, string> = {
-  "silo": "\"The service account is missing the warehouse reader role.\""
+  silo: '"The service account is missing the warehouse reader role."',
 };
-

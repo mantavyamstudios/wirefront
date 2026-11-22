@@ -6,4 +6,7 @@ import type { MaintenanceWindow } from "./schema";
 export const now = "2026-10-24T12:06:00Z";
 
 /** What the mocks return for `getMaintenance`. */
-export const getMaintenance: MaintenanceWindow = { startedAt: "2026-10-24T12:00:00Z", endsAt: "2026-10-24T12:18:00Z" };
+export const getMaintenance: MaintenanceWindow = {
+  startedAt: "2026-10-24T12:00:00Z",
+  endsAt: "2026-10-24T12:18:00Z",
+};

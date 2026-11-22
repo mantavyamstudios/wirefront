@@ -27,6 +27,18 @@ const ById = z.object({ id: z.string() });
 
 /** The backend operations this screen calls. */
 export const api = defineApi({
-  getCanvas: { method: "GET", path: "/canvases/{id}", summary: "A canvas's shapes", params: ById, response: z.array(CanvasShape) },
-  saveCanvas: { method: "PUT", path: "/canvases/{id}", summary: "Save a canvas's shapes", params: ById, body: z.array(CanvasShape) },
+  getCanvas: {
+    method: "GET",
+    path: "/canvases/{id}",
+    summary: "A canvas's shapes",
+    params: ById,
+    response: z.array(CanvasShape),
+  },
+  saveCanvas: {
+    method: "PUT",
+    path: "/canvases/{id}",
+    summary: "Save a canvas's shapes",
+    params: ById,
+    body: z.array(CanvasShape),
+  },
 });

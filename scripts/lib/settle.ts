@@ -47,7 +47,7 @@ export const SETTLE_STEP_MS = 100;
 export const SETTLE_MOTION_MS = 5_000;
 export const SETTLE_WATCHDOG_MS = Math.max(
   1,
-  Number.parseInt(process.env.SETTLE_WATCHDOG_MS ?? "45000", 10) || 45_000,
+  Number.parseInt(process.env.SETTLE_WATCHDOG_MS ?? "45000", 10) || 45_000
 );
 
 /** The design crashed: the route's error component marked <html data-design-error>. */
@@ -59,7 +59,10 @@ export class DesignCrashedError extends Error {
 }
 
 export class LayoutNeverSettledError extends Error {
-  constructor(watchdogMs: number, detail = `still changing after ${watchdogMs}ms`) {
+  constructor(
+    watchdogMs: number,
+    detail = `still changing after ${watchdogMs}ms`
+  ) {
     super(`layout never settled (${detail})`);
     this.name = "LayoutNeverSettledError";
   }
@@ -163,7 +166,7 @@ const SETTLE = `(async ({ quietMs, watchdogMs, timerMs, stepMs, motionSteps }) =
  */
 export async function waitForSettledLayout(page: Page): Promise<number> {
   const result = (await page.evaluate(
-    `${SETTLE}(${JSON.stringify({ quietMs: SETTLE_QUIET_MS, watchdogMs: SETTLE_WATCHDOG_MS, timerMs: SETTLE_TIMER_MS, stepMs: SETTLE_STEP_MS, motionSteps: SETTLE_MOTION_MS / SETTLE_STEP_MS })})`,
+    `${SETTLE}(${JSON.stringify({ quietMs: SETTLE_QUIET_MS, watchdogMs: SETTLE_WATCHDOG_MS, timerMs: SETTLE_TIMER_MS, stepMs: SETTLE_STEP_MS, motionSteps: SETTLE_MOTION_MS / SETTLE_STEP_MS })})`
   )) as { settled: boolean; settleMs: number; error?: string };
   if (result.error !== undefined) throw new DesignCrashedError(result.error);
   if (!result.settled) throw new LayoutNeverSettledError(SETTLE_WATCHDOG_MS);
