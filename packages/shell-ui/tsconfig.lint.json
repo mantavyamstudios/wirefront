@@ -5,6 +5,6 @@
       "@workspace/ui/*": ["./src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "*.config.mts"],
   "exclude": ["node_modules", "dist"]
 }

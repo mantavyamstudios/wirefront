@@ -71,7 +71,6 @@ const Field = ({
   orientation = "vertical",
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof fieldVariants>) => (
-  // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- Field groups arbitrary form controls and inline help; fieldset adds unrelated form semantics.
   <div
     className={cn(fieldVariants({ orientation }), className)}
     data-orientation={orientation}

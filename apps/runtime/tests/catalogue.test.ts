@@ -144,7 +144,8 @@ describe("catalogue", () => {
       for (const file of Object.values(map ?? {})) {
         for (const source of [path.join(SHOWCASE_DIR, `${file}.tsx`), path.join(SHOWCASE_DIR, file, "view.tsx")].filter((f) => existsSync(f))) {
           // Lines that define a token ("--foreground": "var(--color-neutral-800)", a theme preview) may use the palette.
-          const code = withoutCodeSamples(readFileSync(source, "utf8")).replace(/^\s*["']--[\w-]+["']\s*:.*$/gm, "");
+          // `\s*` after the colon also takes a value the formatter wrapped onto the next line.
+          const code = withoutCodeSamples(readFileSync(source, "utf8")).replace(/^\s*["']--[\w-]+["']\s*:\s*.*$/gm, "");
           for (const m of code.matchAll(raw)) problems.push(`${path.relative(SHOWCASE_DIR, source)}: ${m[0]}`);
         }
       }

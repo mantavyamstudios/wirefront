@@ -9,7 +9,7 @@
     "build": "vite build && node scripts/write-404.mjs",
     "start": "node .output/server/index.mjs",
     "pretypecheck": "node scripts/ensure-route-tree.mjs",
-    "typecheck": "tsc -b && tsc -p tests && tsc -p tsconfig.shipped.json",
+    "typecheck": "tsc -b && tsc -p tests && tsc -p tsconfig.shipped.json && tsc -p scripts",
     "generate:og": "node scripts/generate-og.mjs",
     "test": "vitest run",
     "test:watch": "vitest"

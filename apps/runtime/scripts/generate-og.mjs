@@ -30,6 +30,7 @@ const logoDataUrl = `data:image/png;base64,${logoBytes.toString('base64')}`
 
 // Mirrors @wirefront/ui Badge `outline` variant at `lg` size: rounded-sm,
 // border-input bg-background, font-medium, dark-mode background tint.
+/** @param {string} label */
 const Badge = (label) =>
   h(
     'div',

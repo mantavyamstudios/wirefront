@@ -4,6 +4,7 @@ import { parseRuntimeMessage } from "@wirefront/bridge";
 import type { Direction, HostMessage, ScreenState } from "@wirefront/bridge";
 import { DEFAULT_PALETTE } from "@wirefront/ui/themes";
 import type { OrbitThemePalette } from "@wirefront/ui/themes/types";
+import { Button } from "@workspace/ui/components/ui/button";
 import { useAnimate, useReducedMotion } from "motion/react";
 import { useTheme } from "next-themes";
 import {
@@ -178,6 +179,13 @@ const isFixed = (el: HTMLElement): boolean => {
 const EASE = [0.32, 0.72, 0, 1] as const;
 /** How long after a host-driven switch/reset a focus jump into the iframe is undone. */
 const FOCUS_GUARD_MS = 1500;
+/**
+ * How long the first load may take before the frame stops waiting for
+ * `wf:ready`. Built pages report ready in about a second; the runtime's dev
+ * server compiles a screen on first open, which can take several seconds on
+ * a busy machine. 15 s covers both without leaving a spinner up indefinitely.
+ */
+const READY_TIMEOUT_MS = 15_000;
 
 export interface ScreensRuntimeHandle {
   reset: () => void;
@@ -223,6 +231,10 @@ export const ScreensRuntimeFrame = ({
   const [src, setSrc] = useState<string | undefined>(undefined);
   const firstSrc = useRef(initialSrc);
   const [ready, setReady] = useState(false);
+  // The first load passed READY_TIMEOUT_MS without `wf:ready`.
+  const [stalled, setStalled] = useState(false);
+  // Bumped by Reload, which restarts the time limit.
+  const [attempt, setAttempt] = useState(0);
   const [device, setDevice] = useState<FlowDevice>("desktop");
   const [palette, setPalette] = useState<OrbitThemePalette>(DEFAULT_PALETTE);
   const [dir, setDir] = useState<Direction>("ltr");
@@ -328,6 +340,7 @@ export const ScreensRuntimeFrame = ({
       if (data?.type === "wf:ready") {
         shownRef.current = `${data.category}/${data.design}`;
         setReady(true);
+        setStalled(false);
       } else if (data?.type === "wf:error") {
         console.warn("[screens runtime]", data.message);
       }
@@ -336,6 +349,33 @@ export const ScreensRuntimeFrame = ({
     setSrc(firstSrc.current);
     return () => window.removeEventListener("message", onMessage);
   }, []);
+
+  // A runtime that never reports ready would leave the spinner up for good:
+  // after READY_TIMEOUT_MS, say so in the console and offer a reload. A late
+  // `wf:ready` still shows the preview.
+  useEffect(() => {
+    if (!src || ready) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      console.warn(
+        `[screens runtime] ${src} didn't report ready within ${READY_TIMEOUT_MS / 1000} s (attempt ${attempt + 1}); the runtime may be down, still compiling, or blocked. Showing a reload option.`
+      );
+      setStalled(true);
+    }, READY_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [src, ready, attempt]);
+
+  const reloadFrame = () => {
+    const iframe = iframeRef.current;
+    if (!iframe || !src) {
+      return;
+    }
+    setStalled(false);
+    setAttempt((n) => n + 1);
+    // Re-assigning src reloads the page; a cross-origin frame can't be told to reload.
+    iframe.src = src;
+  };
 
   // Screen switches: tell the running page instead of reloading the iframe.
   useEffect(() => {
@@ -521,7 +561,20 @@ export const ScreensRuntimeFrame = ({
               }}
               title="Screen preview"
             />
-            {!ready && <BlocksPreviewLoadingOverlay className="rounded-none" />}
+            {!ready && !stalled && (
+              <BlocksPreviewLoadingOverlay className="rounded-none" />
+            )}
+            {!ready && stalled && (
+              <div
+                className="bg-secondary/80 text-muted-foreground absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 p-4 text-center text-sm backdrop-blur-sm"
+                role="alert"
+              >
+                <p>The preview is taking longer than usual to load.</p>
+                <Button onClick={reloadFrame} size="sm" variant="outline">
+                  Reload preview
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

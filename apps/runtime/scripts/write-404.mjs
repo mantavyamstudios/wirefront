@@ -15,7 +15,8 @@ const out = resolve(root, '.output/public/404.html')
 
 const port = await new Promise((done, fail) => {
   const probe = createServer().listen(0, '127.0.0.1', () => {
-    const { port } = probe.address()
+    // A TCP listener always reports an AddressInfo (a string is only for pipes).
+    const { port } = /** @type {import('node:net').AddressInfo} */ (probe.address())
     probe.close(() => done(port))
   })
   probe.on('error', fail)

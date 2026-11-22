@@ -632,7 +632,6 @@ export function ParticleField({
     // Tuning props (threshold, dotSize, align, etc.) are read from refs,
     // so we intentionally don't include them here — re-running this effect
     // would tear down the canvas and particle state, defeating morphs.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Morph into a new source without tearing down the particle system. The

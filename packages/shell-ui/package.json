@@ -5,7 +5,6 @@
   "type": "module",
   "exports": {
     "./globals.css": "./src/styles/globals.css",
-    "./postcss.config": "./postcss.config.mjs",
     "./lib/get-strict-context": "./src/lib/get-strict-context.tsx",
     "./lib/get-motion-component": "./src/lib/get-motion-component.ts",
     "./lib/*": "./src/lib/*.ts",
@@ -20,7 +19,8 @@
     "./components/*": "./src/components/*.tsx"
   },
   "scripts": {
-    "lint": "ultracite check"
+    "lint": "ultracite check",
+    "typecheck": "tsc -p tsconfig.lint.json"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
