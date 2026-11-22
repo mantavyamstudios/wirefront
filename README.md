@@ -37,7 +37,7 @@ A backend-agnostic catalogue of production-grade UI screens built on [shadcn/ui]
 | Distribution | The shadcn registry: one item per screen at `/r/<kind>-<screen>.json` |
 | Monorepo | Bun 1.4.5 workspaces, Turborepo |
 | Tests | Vitest and Testing Library (unit and wiring tests), Playwright (browser, responsive, visual, site and bridge checks), axe-core |
-| Lint | Biome for the runtime, UI package, bridge and scripts, behind a ratcheting lint gate (`lint-baseline.json`); Ultracite (oxlint and oxfmt, strict preset) for the site and the shell |
+| Lint and format | Biome (lint and format) for the runtime, UI package, bridge and scripts, behind a ratcheting lint gate (`lint-baseline.json`); Ultracite (oxlint and oxfmt, strict preset) for the site and the shell. Both formatters use the same style |
 | Hosting | Cloudflare Workers static assets (`wrangler.jsonc`), no Worker script |
 | CI | GitHub Actions (`.github/workflows/ci.yml`), CLA Assistant (`.github/workflows/cla.yml`) |
 
@@ -323,6 +323,7 @@ The same reference is appended to the screen's Markdown at `/llms-screens.mdx/â€
 | `bun run typecheck` | every workspace, including the strict template settings (`tsconfig.shipped.json`) and `scripts/` |
 | `bun run test` | unit, wiring, contract and catalogue tests (Vitest) |
 | `bun run lint` | Biome on the runtime, the UI package, the bridge and `scripts/`; errors fail, warnings are printed |
+| `bun run format:check` | Biome's formatter on the same folders; unformatted files fail (`bun run format` fixes them) |
 | `bun run --cwd apps/www lint`, `bun run --cwd packages/shell-ui lint` | Ultracite on the site and the shell: oxlint (errors fail, warnings are printed) and an oxfmt format check |
 | `bun run lint:gate` | no new lint errors against `lint-baseline.json` (empty: there is no lint debt); warnings are listed, and annotated in CI, but never fail |
 | `bun run spdx:check` | the MIT licence header on every source file |
@@ -336,7 +337,7 @@ The same reference is appended to the screen's Markdown at `/llms-screens.mdx/â€
 | `bun run test:install` | every registry item installed into fresh Next.js, Vite and TanStack Start apps, which then typecheck and build |
 | `bun run test:bundle` | each screen's gzipped size against `bundle-budget.json` |
 
-The pre-push hook runs the typecheck, the licence check, the lint gate and the tests.
+The pre-push hook runs the typecheck, the licence check, the lint gate, the format check and the tests.
 
 ## Continuous integration
 
@@ -345,7 +346,7 @@ The pre-push hook runs the typecheck, the licence check, the lint gate and the t
 | Job | Steps |
 | --- | --- |
 | Typecheck, licence headers, tests, build, bundle budget | `typecheck`, `spdx:check`, `test`, `build`, `test:bundle` |
-| Lint | `lint:gate`, `lint`, then Ultracite on the site and the shell; lint errors or unformatted files fail the run, warnings are reported only |
+| Lint | `lint:gate`, `lint`, `format:check`, then Ultracite on the site and the shell; lint errors or unformatted files fail the run, warnings are reported only |
 | Install | `test:install` |
 | Browser check | `test:browser`, report uploaded |
 | Responsive audit | `audit:responsive -- --strict`, report uploaded |

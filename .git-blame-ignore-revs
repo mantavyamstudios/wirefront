@@ -1,0 +1,5 @@
+# Formatting-only commits, skipped by git blame (GitHub reads this file).
+# Locally: git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# style: format the runtime, packages/ui, the bridge and scripts with Biome
+2e17cd17717b15cf32f16cf516b98856c2e3fd2b

@@ -15,6 +15,9 @@ bun run --silent spdx:check
 echo "▸ pre-push: lint (no new problems)"
 bun run --silent lint:gate
 
+echo "▸ pre-push: formatting"
+bun run --silent format:check
+
 echo "▸ pre-push: tests"
 bun run --silent test
 

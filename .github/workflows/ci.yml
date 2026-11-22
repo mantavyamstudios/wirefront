@@ -51,6 +51,8 @@ jobs:
         run: bun run lint:gate
       - name: Full lint, runtime and packages (fails on lint errors)
         run: bun run lint
+      - name: Format check, runtime and packages, Biome (fails on unformatted files)
+        run: bun run format:check
       - name: Site lint and format, Ultracite (fails on lint errors or unformatted files)
         run: bun run --cwd apps/www lint
       - name: Shell lint and format, Ultracite (fails on lint errors or unformatted files)

@@ -28,6 +28,7 @@ Requires Node 24 and npm 10 or later.
 | `bun run test` | Catalogue integrity, panel navigation, server render of every screen, registry installability, licence headers |
 | `bun run spdx:check` | Every source file has its licence header (`bun run spdx` adds missing ones) |
 | `bun run lint` | Biome lint rules, including accessibility (full report) |
+| `bun run format:check` | Biome's formatter on the runtime, `packages/ui`, the bridge and `scripts/` (`bun run format` fixes files); the site and the shell are formatted by Ultracite (`bun run --cwd apps/www lint:fix`) |
 | `bun run lint:gate` | No new lint problems: existing ones are recorded per file in `lint-baseline.json` and may only go down. After fixing some, run `bun run lint:baseline` and commit the file |
 | `bun run test:install` | Installs every registry item into fresh shadcn Next.js, Vite and TanStack Start projects, then typechecks and builds them (first run scaffolds the projects, a few minutes) |
 | `bun run test:browser` | Every screen in a real browser at desktop and mobile width: fails on page errors, console errors, hydration mismatches, crashed routes and new accessibility violations (axe, per-screen baseline) |
@@ -35,9 +36,9 @@ Requires Node 24 and npm 10 or later.
 | `bun run test:phase` | All of the phase checks in sequence (see [TESTING.md](TESTING.md)) |
 | `bun run audit:responsive` | Every screen at 375 / 768 / 1024 / 1440px |
 
-Browser checks start and stop their own server; you don't need `bun run dev` running. [TESTING.md](TESTING.md) maps every failure mode to its check.
+Browser checks start and stop their own server; you don't need `bun run dev` running. [TESTING.md](TESTING.md) maps every failure mode to its check; [CHECKS.md](CHECKS.md) lists every rule switched off or suppressed, and why.
 
-`git push` runs the pre-push hook: typecheck, licence headers, the lint gate and tests. If it fails, fix the cause rather than skipping the hook; CI runs the same checks on every pull request.
+`git push` runs the pre-push hook: typecheck, licence headers, the lint gate, the format check and tests. If it fails, fix the cause rather than skipping the hook; CI runs the same checks on every pull request.
 
 ## Adding or changing a screen
 

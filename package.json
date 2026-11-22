@@ -16,6 +16,8 @@
     "build": "turbo run build",
     "prebuild": "bun run registry",
     "lint": "biome lint",
+    "format": "biome format --write",
+    "format:check": "biome format",
     "pretypecheck": "bun run registry",
     "typecheck": "turbo run typecheck && tsc -p scripts",
     "registry": "tsx scripts/build-registry.ts",
