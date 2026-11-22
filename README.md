@@ -316,6 +316,8 @@ The same reference is appended to the screen's Markdown at `/llms-screens.mdx/â€
 
 [TESTING.md](TESTING.md) lists the failure modes each check covers. Nothing is skipped, silenced or retried into passing.
 
+[CHECKS.md](CHECKS.md) is the reference for what runs where (linters, formatters, git hooks, CI), every rule switched off or suppressed and why, the baselines, known warnings, deprecations and planned cleanup.
+
 | Command | What it checks |
 | --- | --- |
 | `bun run typecheck` | every workspace, including the strict template settings (`tsconfig.shipped.json`) and `scripts/` |
@@ -468,6 +470,7 @@ The site's own origin is `SITE_URL` in `apps/www/lib/site.ts`; `VITE_SITE_URL` s
 | Deployment | `wrangler.jsonc`, `.github/workflows/ci.yml` (`deploy` job), `.github/workflows/preview-cleanup.yml` |
 | Registry build (targets, CSS variables, dependencies) | `scripts/build-registry.ts` |
 | Lint, bundle and accessibility baselines | `lint-baseline.json`, `bundle-budget.json`, `a11y-baseline.json` |
+| Checks reference (rules off, suppressions, known warnings, deprecations) | `CHECKS.md` |
 
 ## Useful commands
 
